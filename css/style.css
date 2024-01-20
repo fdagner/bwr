@@ -1,0 +1,196 @@
+body {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background: linear-gradient(to top, lightskyblue, #fff);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+main {
+    display: flex;
+    flex-direction:column;
+    gap: 15px;
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+}
+
+.box {
+    border: 1px solid #ddd;
+    background-color: #f5f5f5;
+    padding: 8px;}
+
+  p {
+    margin: 0px 0px 10px 0px;
+    padding: 6px;
+  }
+
+  /* Styles für Links */
+  a {
+    color: #ff4800;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  /* Hover-Effekt für Links */
+  a:hover {
+    color: #ff7f00;
+  }
+
+  select {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ff4800;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  /* Styles für Button */
+  button {
+    padding: 8px 8px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff4800;
+    /* Orange Farbe */
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+    /* Hover-Effekt für Button */
+  button:hover {
+    background-color: #fc8042;
+  }
+
+  .icon {
+    padding: 8px 8px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    /* Orange Farbe */
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  summary {
+    padding: 8px 8px;
+    border: 1px solid #ddd;
+    background-color: #f5f5f5;
+    background-color: #f5f5f5;
+    /* Orange Farbe */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+
+  #radioOptionsContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .radioKonto {
+    width: 150px;
+  }
+
+  table {
+    margin: 0 auto
+  }
+
+  #buttonContainer {
+    width: 100%
+  }
+
+  /* Style the tab */
+.tab {
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  float: left;
+  cursor: pointer;
+  outline: none;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  border-radius: 0px;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #fc8042;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+}
+
+[contenteditable] { 
+  padding: 1em; 
+  margin:1em;
+  outline: 2px dashed #CCC; 
+  position: relative;
+}
+
+[contenteditable]:hover { 
+  outline: 2px dashed #c32e04; 
+}
+
+[contenteditable]:after {
+  position: absolute;
+  content:'✏';
+  right: -30px;
+  top: -30px;
+  font-size: 3em;
+  transform: rotate(45deg);
+}
+
+textarea {
+  width: 800px;
+  height: 500px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.flex-row {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap:8px;
+  margin: 4px;
+}
+
+.flex-column input {
+  display:flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap:8px
+}
+
+.exportButtons {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap:4px
+}
+
+footer {
+  background-color: #fff;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 5px;
+  padding: 0px 30px 0px 30px;
+}
