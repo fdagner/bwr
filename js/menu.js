@@ -11,11 +11,4 @@ function openCity(evt, cityName) {
     document.getElementById(cityName).style.display = "block";
     evt.currentTarget.className += " active";
 
-    // Hide or show the details element based on the active tab
-    var moodleDropdown = document.getElementById("moodleDropdown");
-    if (cityName === "t-konto" || cityName === "buchungssatz") {
-        moodleDropdown.style.display = "block";
-    } else {
-        moodleDropdown.style.display = "none";
-    }
 }

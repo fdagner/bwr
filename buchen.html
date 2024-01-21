@@ -249,6 +249,16 @@
         <script src="js/geschaeftsfaelle.js"></script>
         <script src="js/moodle.js"></script>
         <script>
+
+          // Hide or show the details element based on the active tab
+          var moodleDropdown = document.getElementById("moodleDropdown");
+          if (cityName === "t-konto" || cityName === "buchungssatz") {
+            moodleDropdown.style.display = "block";
+          } else {
+            moodleDropdown.style.display = "none";
+          }
+        </script>
+          <script>
           // Get the element with id="defaultOpen" and click on it
           document.getElementById("defaultOpen").click();
         </script>

@@ -168,8 +168,8 @@ textarea {
   display:flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap:8px;
-  margin: 4px;
+  gap:14px;
+  margin: 8px 0px 8px 0px;
 }
 
 .flex-column input {
@@ -177,6 +177,13 @@ textarea {
   flex-direction: column;
   flex-wrap: wrap;
   gap:8px
+}
+
+.flex-column {
+  display:flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap:14px
 }
 
 .exportButtons {
@@ -194,3 +201,15 @@ footer {
   margin-top: 5px;
   padding: 0px 30px 0px 30px;
 }
+
+.grid {
+display: grid;
+gap: 12px;
+grid-template-columns: 1fr 2fr;
+}
+
+.grid3 {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr 1fr;
+  }
