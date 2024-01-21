@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/menu.js"></script>
+    <script src="js/html2canvas.min.js"></script>
+    <script src="js/js-yaml.min.js"></script>
+    <title>Belege</title>
+</head>
+
+<body>
+    <main>
+        <a href="index.html">Zurück zur Übersicht</a>
+        <h1>Belege erstellen</h1>
+        <nav class="tab">
+            <button class="tablinks" onclick="openCity(event, 'modellunternehmen')">Belege
+                erstellen</button>
+            <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'rechnung')">Rechnung</button>
+        </nav>
+        <section id="modellunternehmen" class="tabcontent">
+
+            <p>Hier können Sie Belege erstellen und als PNG, HTML oder SVG herunterladen. Der Vorteil von SVG ist, dass
+                das Format responsive ist und auch auf mobilen Geräten gut aussieht. Außerdem können Skripte eingebettet
+                werden, wenn Sie SVG inline in HTML einfügen.
+                Zum Beispiel kann im Rechnungsdatum das aktuelle Jahr abgerufen werden und sie müssen sich in Ihrem
+                Moodlekurs erst mal nicht um aktuelle Belege kümmern.</p>
+            <h2>Eigene Modellunternehmen</h2>
+            <p>Sie können auch Daten Ihrer Modellunternehmen verwenden.
+                Laden Sie hierzu die <a href="js/unternehmen.yml">Standarddaten</a> herunter und bearbeiten Sie diese
+                mit einem einfachen Texteditor. Achten Sie darauf, die Yaml-Struktur nicht zu verändern.
+                Anschließend können Sie ihre Datei lokal im Browser hochladen und Ihre eigenen Unternehmen auswählen.
+                Sie können dann einfach bei jedem Seitenbesuch ihre Daten einspielen.</p>
+            Eigene Datei hochladen: <input type="file" id="fileInput" accept=".yml"
+                onchange="handleFileUpload()"><br><br><button onclick="deleteAndLoadDefaultData()">Daten
+                zurücksetzen</button>
+        </section>
+        <section id="rechnung" class="tabcontent">
+            <h2>Rechnung (beta)</h2>
+            <div class="box">
+                <h3>Allgemeine Daten</h3>
+                <div class="flex-row">
+                    <div>
+                        <label for="datenLieferer">Lieferer: </label>
+                        <select id="datenLieferer" onchange="loadSupplierData()">
+                        </select>
+                    </div>
+                    <div><label for="datenKunde">Rechnungsempfänger:</label>
+                        <select id="datenKunde" onchange="loadCompanyData()">
+                        </select>
+                    </div>
+                    <div>
+                        Eigenes Logo hochladen: <input type="file" accept="image/*" onchange="loadLogo(event)">
+                    </div>
+                    <div><label for="colorPicker">Akzentfarbe:</label>
+                        <input type="color" id="colorPicker" value="#7db9f5">
+                    </div>
+                    <div>
+                        <div>
+                            <h3>Daten</h3>
+                            <div class="grid3">
+                                <div><label for="artikelInput">Artikelbezeichnung Pos. 1:</label>
+                                    <input type="text" id="artikelInput" placeholder="Artikelbezeichnung" />
+                                </div>
+                                <div><label for="mengeInput">Menge Pos. 1:<br></label>
+                                    <input type="number" id="mengeInput" placeholder="Menge" min="0" max="1000" /><input
+                                        type="text" id="einheitInput" placeholder="Einheit" />
+                                </div>
+                                <div>
+                                    <label for="einzelpreisInput">Einzelpreis Pos. 1:<br></label>
+                                    <input type="number" id="einzelpreisInput" min="0" placeholder="Einzelpreis" />
+                                </div>
+                                <div>
+                                    <label for="artikelInput">Artikelbezeichnung Pos. 2:</label>
+                                    <input type="text" id="artikelInput2" placeholder="Artikelbezeichnung" />
+                                </div>
+                                <div>
+                                    <label for="mengeInput">Menge Pos. 2:<br></label>
+                                    <input type="number" id="mengeInput2" placeholder="Menge" min="0" max="1000" />
+                                    <input type="text" id="einheitInput2" placeholder="Einheit" />
+                                </div>
+                                <div>
+                                    <label for="einzelpreisInput">Einzelpreis Pos. 2:<br></label>
+                                    <input type="number" id="einzelpreisInput2" min="0" placeholder="Einzelpreis" />
+                                </div>
+                                <div>
+                                    <label for="rabattInput">Rabatt (%):<br></label>
+                                    <input type="number" id="rabattInput" placeholder="Rabatt eingeben" />
+                                </div>
+                                <div>
+                                    <label for="umsatzsteuerInput">Umsatzsteuer:<br></label>
+                                    <input type="number" id="umsatzsteuerInput" value="19" min="0"
+                                        placeholder="Umsatzsteuer eingeben" />
+                                </div>
+                                <div>
+                                    <label for="zahlungszielInput">Zahlungsziel:<br></label>
+                                    <input type="number" id="zahlungszielInput" value="30" min="0"
+                                        placeholder="Zahlungsziel eingeben" />
+                                </div>
+                                <div>
+                                    <label for="skontoInput">Skonto:<br></label>
+                                    <input type="number" id="skontoInput" value="2" min="0"
+                                        placeholder="Skonto eingeben" />
+                                </div>
+                                <div>
+                                    <label for="skontoInput">Skontofrist:<br></label>
+                                    <input type="number" id="skontofristInput" value="20" min="0"
+                                        placeholder="Skontofrist eingeben" />
+                                </div>
+                                <div> Datum:<br><label for="tag">Tag:</label>
+                                    <select id="tag">
+                                        <!-- Füge Optionen für die Tage hinzu -->
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                        <option value="25">25</option>
+                                        <option value="26">26</option>
+                                        <option value="27">27</option>
+                                        <option value="28">28</option>
+                                        <option value="29">29</option>
+                                        <option value="30">30</option>
+                                        <option value="31">31</option>
+                                    </select>
+
+                                    <label for="monat">Monat:</label>
+                                    <select id="monat">
+                                        <!-- Füge Optionen für die Monate hinzu -->
+                                        <option value="01">Januar</option>
+                                        <option value="02">Februar</option>
+                                        <option value="03">März</option>
+                                        <option value="04">April</option>
+                                        <option value="05">Mai</option>
+                                        <option value="06">Juni</option>
+                                        <option value="07">Juli</option>
+                                        <option value="08">August</option>
+                                        <option value="09">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Dezember</option>
+                                    </select><label for="jahr">Jahr:</label>
+                                    <input type="text" id="jahr" value="" min="0" placeholder="Jahr" /><br>
+                                    Skript verwenden: <input type="checkbox" id="scriptJahr" onchange="toggleInput()">
+                                </div>
+                                <div>
+                                    <label for="svgDropdown">Vorlage<br></label>
+                                    <select id="svgDropdown">
+                                        <option value="template1">Vorlage 1</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="applySVGholen()">Daten übernehmen</button><br><br>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="rechnung1Container" style="border:1px solid #000;">
+                </div>
+
+                <div class="exportButtons">
+                    <button class="icon" type="button" onclick="rechnungHerunterladenAlsPNG()"><svg
+                            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                        </svg></button>
+                    <button class="icon" type="button" onclick="rechnungHerunterladen()"><svg
+                            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+                            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+                        </svg></button>
+                    <button class="icon" type="button" onclick="rechnungKopiereInZwischenablage()"><svg
+                            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+                            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+                        </svg></button>
+        </section>
+    </main>
+    <script src="js/belege.js"></script>
+
+    <script>
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+</body>
+
+</html>
