@@ -209,7 +209,8 @@ grid-template-columns: 1fr 2fr;
 }
 
 .grid3 {
-  display: grid;
+  width: 100%;
   gap: 12px;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   }
