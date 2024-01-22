@@ -136,7 +136,7 @@ function loadCompanyData() {
     document.getElementById('strasseKunde').textContent = selectedCompany.unternehmen.adresse.strasse;
     document.getElementById('plzKunde').textContent = selectedCompany.unternehmen.adresse.plz + ' ' + selectedCompany.unternehmen.adresse.ort;
     const rechnungsNummer = Math.floor(Math.random() * 900) + 100;
-    document.getElementById('rechnungsNummer').textContent = 'NR-' + rechnungsNummer;
+    document.getElementById('rechnungsNummer').textContent = rechnungsNummer;
     nummerKunde = selectedCompany.unternehmen.id;
     loadSupplierData(nummerKunde);
 }
@@ -152,8 +152,8 @@ function loadSupplierData() {
     document.getElementById('nameLangLieferer').textContent = selectedSupplier.unternehmen.name + ' ' + selectedSupplier.unternehmen.rechtsform;
     document.getElementById('strasseLieferer').textContent = selectedSupplier.unternehmen.adresse.strasse;
     document.getElementById('plzLieferer').textContent = selectedSupplier.unternehmen.adresse.plz + ' ' + selectedSupplier.unternehmen.adresse.ort;
-    document.getElementById('adresseLieferer').textContent = selectedSupplier.unternehmen.name + ', ' + selectedSupplier.unternehmen.rechtsform + ' ' + selectedSupplier.unternehmen.adresse.strasse +
-        ', ' + selectedSupplier.unternehmen.adresse.plz + ' ' + selectedSupplier.unternehmen.adresse.ort + ', ' +
+    document.getElementById('adresseLieferer').textContent = selectedSupplier.unternehmen.name + ' ' + selectedSupplier.unternehmen.rechtsform + ' - ' + selectedSupplier.unternehmen.adresse.strasse +
+        ' - ' + selectedSupplier.unternehmen.adresse.plz + ' ' + selectedSupplier.unternehmen.adresse.ort + ' - ' +
         selectedSupplier.unternehmen.adresse.land;
     document.getElementById('ansprechpartnerLieferer').textContent = selectedSupplier.unternehmen.inhaber;
     document.getElementById('telefonLieferer').textContent = selectedSupplier.unternehmen.kontakt.telefon;
@@ -166,27 +166,23 @@ function loadSupplierData() {
 
     let handelsregister = null;
 
-    if (selectedSupplier.unternehmen.rechtsform !== "e. K." && selectedSupplier.unternehmen.rechtsform !== "e. Kfr." && selectedSupplier.unternehmen.rechtsform !== "OHG" && selectedSupplier.unternehmen.rechtsform !== "KG") {
-        handelsregister = "HRB";
-    } else {
-        handelsregister = "HRA";
-    }
+    const erlaubteRechtsformen = ["e. K.", "e. Kfr.", "OHG", "KG", "GmbH & Co. KG", "GmbH & Co. OHG"];
+    handelsregister = erlaubteRechtsformen.includes(selectedSupplier.unternehmen.rechtsform) ? "HRA" : "HRB";
 
     document.getElementById('amtsgerichtLieferer').textContent = 'Amtsgericht ' + selectedSupplier.unternehmen.adresse.ort + ' ' + handelsregister;
     document.getElementById('ustidLieferer').textContent = 'UST-IdNr.: ' + selectedSupplier.unternehmen.ust_id;
     document.getElementById('steuernummerLieferer').textContent = 'Steuernummer: ' + selectedSupplier.unternehmen.steuernummer;
 
-  
+
     const logoUrl = selectedSupplier.unternehmen.logo;
     const svgContainer = document.getElementById('rechnungSVG');
     const existingImage = document.getElementById('uploaded-image');
     const rectElement = document.getElementById('logo-placeholder');
-    
-    // Entferne das vorhandene Bild, falls vorhanden
-    if (existingImage) {
+
+    const existingImages = svgContainer.querySelectorAll('#uploaded-image');
+    existingImages.forEach(existingImage => {
         svgContainer.removeChild(existingImage);
-    }
-    
+    });
     // Erstelle ein <image>-Element und füge es zur SVG hinzu
     const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
     image.setAttribute('id', 'uploaded-image');
@@ -194,17 +190,46 @@ function loadSupplierData() {
     image.setAttribute('y', rectElement.getAttribute('y'));
     image.setAttribute('width', rectElement.getAttribute('width'));
     image.setAttribute('height', rectElement.getAttribute('height'));
-    
+
     // Setze den href-Attribut basierend auf logoUrl oder den Standardwert
     if (logoUrl && logoUrl.trim() !== '') {
-        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', logoUrl);
+        // Überprüfe, ob logoUrl eine externe URL oder ein Pfad zu einer lokalen Datei ist
+        if (logoUrl.startsWith('http') || logoUrl.startsWith('data:image')) {
+            // Wenn logoUrl bereits eine externe URL oder eine Data-URL ist, setze sie direkt
+            image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', logoUrl);
+            svgContainer.appendChild(image);
+        } else {
+            // Lade das Bild, konvertiere es in Base64 und setze es als Data-URL
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
+                    svgContainer.appendChild(image);
+                };
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', logoUrl);
+            xhr.responseType = 'blob';
+            xhr.send();
+        }
     } else {
-        // Wenn der Eintrag in YAML leer ist, lade den Standard-SVG
-        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 'media/pic/standard.svg');
-    }
-    
-    svgContainer.appendChild(image);
+        // Wenn der Eintrag in YAML leer ist, lade den Standard-SVG als Base64
+        const standardImageURL = 'media/pic/standard.svg';
 
+        const xhrStandard = new XMLHttpRequest();
+        xhrStandard.onload = function () {
+            const reader = new FileReader();
+            reader.onloadend = function () {
+                image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
+                svgContainer.appendChild(image);
+            };
+            reader.readAsDataURL(xhrStandard.response);
+        };
+        xhrStandard.open('GET', standardImageURL);
+        xhrStandard.responseType = 'blob';
+        xhrStandard.send();
+    }
 }
 
 // Funktion zum Laden eines Logos
@@ -249,13 +274,13 @@ function applyOrderData() {
 
     const selectedTag = document.getElementById('tag').value;
     const selectedMonat = document.getElementById('monat').value;
-    
+
     // Formatieren von Tag und Monat
     const formattedDatum = `${selectedTag}.${selectedMonat}.`;
 
     // Annahme: Alle Elemente mit der Klasse 'rechnungsDatum' sollen aktualisiert werden
     const elementsWithClass = document.getElementsByClassName('rechnungsDatum');
- // Iteriere durch alle Elemente und setze das formatierte Datum
+    // Iteriere durch alle Elemente und setze das formatierte Datum
     for (const element of elementsWithClass) {
         element.textContent = formattedDatum;
     }
@@ -268,23 +293,23 @@ function applyOrderData() {
         for (const yearelement of yearelementsWithClass) {
             yearelement.textContent = selectedJahr.value;
         }
-    
+
     } else {
 
-    const customDefs = document.getElementById('customDefs');
-    const customJsScript = document.getElementById('customJs');
-    const useScript = document.getElementById('scriptJahr').checked;
+        const customDefs = document.getElementById('customDefs');
+        const customJsScript = document.getElementById('customJs');
+        const useScript = document.getElementById('scriptJahr').checked;
 
-    if (customJsScript) {
-        customJsScript.remove();
-    }
+        if (customJsScript) {
+            customJsScript.remove();
+        }
 
-    if (useScript) {
-        // Füge das dynamische Script zum SVG hinzu
-        const dynamicScript = document.createElement('script');
-        dynamicScript.type = 'text/javascript';
-        dynamicScript.id = 'customJs';
-        dynamicScript.text = `
+        if (useScript) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJs';
+            dynamicScript.text = `
             function getCurrentYear() {
                 return new Date().getFullYear();
             }
@@ -299,18 +324,26 @@ function applyOrderData() {
             }
         `;
 
-        customDefs.appendChild(dynamicScript); 
-       
-    }
-    SVGonLoad(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoad(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
     }
 
-    
-     // Lese die eingegebenen Daten aus den Input-Feldern
+
+    // Hilfsfunktion, um den numerischen Wert eines Eingabefelds zu erhalten
+    function getNumericValue(inputId) {
+        const inputValue = document.getElementById(inputId).value;
+        return parseFloat(inputValue) || 0; // Rückgabe von 0, wenn die Umwandlung fehlschlägt
+    }
+
+
+
+    // Lese die eingegebenen Daten aus den Input-Feldern
     const artikel = document.getElementById('artikelInput').value;
-    const menge = parseFloat(document.getElementById('mengeInput').value);
+    const menge = getNumericValue('mengeInput');
     const einheit = document.getElementById('einheitInput').value;
-    const einzelpreis = parseFloat(document.getElementById('einzelpreisInput').value);
+    const einzelpreis = getNumericValue('einzelpreisInput');
 
     // Lese die eingegebenen Daten aus den Input-Feldern
     const artikel2 = document.getElementById('artikelInput2').value;
@@ -318,12 +351,13 @@ function applyOrderData() {
     const einheit2 = document.getElementById('einheitInput2').value;
     const einzelpreis2 = parseFloat(document.getElementById('einzelpreisInput2').value);
 
-
-    const rabattInput = document.getElementById('rabattInput').value;
-    const umsatzsteuerInput = document.getElementById('umsatzsteuerInput').value;
-    const zahlungszielInput = document.getElementById('zahlungszielInput').value;
-    const skontoInput = document.getElementById('skontoInput').value;
-    const skontofristInput = document.getElementById('skontofristInput').value;
+    // Verwendung der Hilfsfunktion für verschiedene Eingabefelder
+    const rabattInput = getNumericValue('rabattInput');
+    const bezugskostenInput = getNumericValue('bezugskostenInput');
+    const umsatzsteuerInput = getNumericValue('umsatzsteuerInput');
+    const zahlungszielInput = getNumericValue('zahlungszielInput');
+    const skontoInput = getNumericValue('skontoInput');
+    const skontofristInput = getNumericValue('skontofristInput');
     let gesamtpreis1 = menge * einzelpreis;
     let gesamtpreis2 = menge2 * einzelpreis2;
 
@@ -371,39 +405,68 @@ function applyOrderData() {
     // Berechne die Zwischensumme
     const zwischensumme = gesamtpreis1 + gesamtpreis2;
     const rabattsumme = zwischensumme * rabattInput / 100;
-    let warenwert;
+    let nettowert;
     let umsatzsteuersumme;
     let gesamtRechnungsbetrag;
 
     // Setze die Zwischensumme in das SVG-Textelement
     document.getElementById('zwischensumme').textContent = formatCurrency(zwischensumme);
-
+    document.getElementById('bezugskostenSumme').textContent = formatCurrency(bezugskostenInput);
     if (rabattInput > 0) {
         document.getElementById('rabatt').textContent = '- ' + rabattInput + ' % Rabatt'
         document.getElementById('rabattsumme').textContent = formatCurrency(rabattsumme);
-        warenwert = zwischensumme - rabattsumme;
+        nettowert = zwischensumme - rabattsumme + bezugskostenInput
     } else {
         document.getElementById('rabatt').textContent = ' '
         document.getElementById('rabattsumme').textContent = ' ';
-        warenwert = zwischensumme;
+        nettowert = zwischensumme + bezugskostenInput;
     }
 
-    document.getElementById('warenwert').textContent = formatCurrency(warenwert);
+    document.getElementById('nettowert').textContent = formatCurrency(nettowert);
 
     if (umsatzsteuerInput > 0) {
-        umsatzsteuersumme = warenwert * umsatzsteuerInput / 100
+        umsatzsteuersumme = nettowert * umsatzsteuerInput / 100
         document.getElementById('ust').textContent = '+ ' + umsatzsteuerInput;
         document.getElementById('ustsumme').textContent = formatCurrency(umsatzsteuersumme);
-        gesamtRechnungsbetrag = warenwert + umsatzsteuersumme;
+        gesamtRechnungsbetrag = nettowert + umsatzsteuersumme;
     } else {
         umsatzsteuersumme = ' ';
         document.getElementById('ust').textContent = ' '
         document.getElementById('ustsumme').textContent = ' ';
-        gesamtRechnungsbetrag = warenwert;
+        gesamtRechnungsbetrag = nettowert;
     }
 
 
     document.getElementById('rechnungsbetrag').textContent = formatCurrency(gesamtRechnungsbetrag);
+
+    // Platz machen wenn keine Bezugskosten
+    const warenwertUstRechnungsbetrag = document.getElementById('warenwertUstRechnungsbetrag');
+    const gBezugskosten = document.getElementById('gBezugskosten');
+
+    // Hier überprüfen wir, ob bezugskostenInput gleich 0 ist
+    if (bezugskostenInput > 0) {
+        // Ändere den Transform-Wert, um die Y-Position um 20 zu verringern
+        warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, 0)');
+    } else {
+        // Setze den Transform-Wert auf den ursprünglichen Wert oder einen anderen Wert nach Bedarf
+        warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -30)');
+        gBezugskosten.remove()
+    }
+
+    const inputLieferbedingung = document.getElementById("lieferbedingungInput");
+    const bezugskostenBedingung = document.getElementById('bezugskostenBedingung');
+
+    if (inputLieferbedingung.checked) {
+        if (bezugskostenInput > 0) {
+            bezugskostenBedingung.textContent = "ab Werk";
+        } else {
+            bezugskostenBedingung.textContent = "frei Haus";
+        }
+
+    } else {
+        bezugskostenBedingung.textContent = "";
+    }
+
 
 
     loadCompanyData(); // Laden der Kundeninformationen
@@ -424,29 +487,34 @@ function formatCurrency(amount) {
 function updateColors() {
     let colorPicker = document.getElementById("colorPicker");
     let colorElements = document.querySelectorAll(".colorSVG");
-
+    let textColorliefererInformationen2 = document.getElementById('liefererInformationen2')
+    if (textColorliefererInformationen2 !== null) {
+        textColorliefererInformationen2.setAttribute("fill", colorPicker.value);
+    }
+    else {
+    }
     colorElements.forEach(function (element) {
         element.setAttribute("fill", colorPicker.value);
     });
+    adjustTextColor();
+
 }
 
-   
 
 // Initialisierung der Farben beim Laden des DOM
 document.addEventListener("DOMContentLoaded", function () {
     let colorPicker = document.getElementById("colorPicker");
-
     colorPicker.addEventListener("input", updateColors);
 
     let observer = new MutationObserver(updateColors);
 
     let body = document.body;
-
     // Konfiguration für den Observer
     let config = { childList: true, subtree: true };
 
     // Starten des Observers
     observer.observe(body, config);
+
 });
 
 function applySVGholen() {
@@ -454,6 +522,64 @@ function applySVGholen() {
         applyOrderData();
     });
 }
+
+function hexToRgb(hex) {
+    hex = hex.replace(/^#/, '');
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+
+    return [r, g, b];
+}
+
+function calculateContrast(rgb1, rgb2) {
+    const brightness1 = (rgb1[0] * 299 + rgb1[1] * 587 + rgb1[2] * 114) / 1000;
+    const brightness2 = (rgb2[0] * 299 + rgb2[1] * 587 + rgb2[2] * 114) / 1000;
+
+    const contrast = Math.abs(brightness1 - brightness2);
+
+    return contrast;
+}
+
+
+function adjustTextColor() {
+    const colorSVGElements = document.querySelectorAll('.colorSVG');
+    const liefererInformationen = document.getElementById('liefererInformationen');
+    const footerText = document.getElementById('footerText');
+
+    if (liefererInformationen !== null) {
+
+        // Überprüfe, ob das Element gefunden wurde, bevor die Hintergrundfarbe abgerufen wird
+        if (colorSVGElements.length > 0) {
+            // Nehme den Hex-Wert des ersten Rechtecks mit der Klasse "colorSVG"
+            const backgroundColorHex = colorSVGElements[0].getAttribute('fill');
+
+            // Wandele den Hex-Wert in RGB um
+            const rgbBackground = hexToRgb(backgroundColorHex);
+            const textColor = liefererInformationen.getAttribute('fill');
+
+            // Überprüfe, ob RGB-Werte gültig sind
+            if (rgbBackground && rgbBackground.length === 3) {
+                const rgbText = hexToRgb(textColor);
+
+                if (rgbText && rgbText.length === 3) {
+                    const contrast = calculateContrast(rgbBackground, rgbText);
+
+                    // Hier kannst du den Schwellenwert für den Kontrast anpassen
+                    const contrastThreshold = 100;
+                    const newTextColor = contrast > contrastThreshold ? '#000' : '#fff';
+
+                    // Setze die Textfarbe unabhängig von der vorherigen Bedingung
+                    liefererInformationen.setAttribute('fill', newTextColor);
+                    footerText.setAttribute('fill', newTextColor);
+                }
+            } else { }
+        }
+    }
+}
+
+
 
 async function applySVG() {
     let selectedTemplate = document.getElementById("svgDropdown").value;
@@ -530,6 +656,8 @@ function toggleInput() {
     }
 }
 
+
+
 function rechnungHerunterladen() {
     const rechnungHTML = document.getElementById('rechnung1Container').innerHTML.replace(/&nbsp;/g, ' ');;
     const blob = new Blob([rechnungHTML], { type: 'svg' });
@@ -565,15 +693,15 @@ function rechnungHerunterladenAlsPNG() {
 function validateInputs() {
     // Validierung für Artikelbezeichnung Pos. 1
     let artikelInput = document.getElementById("artikelInput");
-    if (!isValidInput(artikelInput.value, 22)) {
-        alert("Bitte geben Sie eine gültige Artikelbezeichnung Pos. 1 ein. Maximal 22 Zeichen!");
+    if (!isValidInput(artikelInput.value, 25)) {
+        alert("Bitte geben Sie eine gültige Artikelbezeichnung Pos. 1 ein. Maximal 25 Zeichen!");
         return false;
     }
 
     // Validierung für Artikelbezeichnung Pos. 2
     let artikelInput2 = document.getElementById("artikelInput2");
-    if (!isValidInput(artikelInput2.value, 22)) {
-        alert("Bitte geben Sie eine gültige Artikelbezeichnung Pos. 2 ein. Maximal 22 Zeichen!");
+    if (!isValidInput(artikelInput2.value, 25)) {
+        alert("Bitte geben Sie eine gültige Artikelbezeichnung Pos. 2 ein. Maximal 25 Zeichen!");
         return false;
     }
 
@@ -642,6 +770,13 @@ function validateInputs() {
         return false;
     }
 
+    // Validierung für Bezugskosten
+    let bezugskostenInput = document.getElementById("bezugskostenInput");
+    if (!isValidNumberInput(bezugskostenInput.value, 0, 9999999)) {
+        alert("Bitte geben Sie bei Bezugsoksten gültige Werte zwischen 0 und 9999 ein");
+        return false;
+    }
+
     // Validierung für Zahlungsziel und Skontofrist
     let zahlungszielInput = document.getElementById("zahlungszielInput");
     let skontofristInput = document.getElementById("skontofristInput");
@@ -660,8 +795,8 @@ function isValidInput(value, maxLength) {
         return false;
     }
 
-     // Überprüfung auf leeren Wert
-     if (value.trim() === "") {
+    // Überprüfung auf leeren Wert
+    if (value.trim() === "") {
         return true; // Leer ist gültig
     }
 
@@ -674,13 +809,14 @@ function isValidNumberInput(value, minValue, maxValue) {
     // Überprüfung auf HTML-Tags und Skripte
     const regex = /<.*?>/g;
     if (regex.test(value)) {
+        alert("Ungültige Eingabe: HTML-Tags oder Skripte sind nicht erlaubt.");
         return false;
     }
 
- // Überprüfung auf leeren Wert
- if (value.trim() === "") {
-    return true; // Leer ist gültig
-}
+    // Überprüfung auf leeren Wert
+    if (value.trim() === "") {
+        return true; // Leer ist gültig
+    }
 
     // Überprüfung auf gültige Zahl im angegebenen Bereich
     const numericValue = parseFloat(value);
