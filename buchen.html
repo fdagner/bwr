@@ -23,6 +23,7 @@
         <button class="tablinks" onclick="openCity(event, 'buchungssatz')">Buchungssatz</button>
         <button class="tablinks" onclick="openCity(event, 'vorkontierung')">Vorkontierung</button>
         <button class="tablinks" onclick="openCity(event, 'geschaeftsfaelle')">Geschäftsfälle</button>
+        <button class="tablinks" onclick="openCity(event, 'inventar')">Inventar</button>
         <button class="tablinks" onclick="openCity(event, 'bilanz')">Bilanz</button>
       </nav>
     </header>
@@ -30,10 +31,10 @@
       <h2>T-Konto</h2>
       <details>
         <summary>Anleitung</summary>
-        <div style="border: 1px solid #ddd;padding: 4px;">
+        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <video style="width:100%;margin: 0 auto;" poster="media/pic/screenshot1.png" controls>
             <source src="media/video/t-konto.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Your bser does not support the video tag.
           </video>
         </div>
       </details>
@@ -44,7 +45,7 @@
         <select id="kontoAuswahl" name="kontoAuswahl">
         </select>
         <br>
-        <div style="display:flex;flex-direction: row;flex-wrap: wrap;gap:4px">
+        <div style="display:flex;flex-direction:justify;flex-wrap: wrap;gap:4px">
           <label for="anzahlZeilen">Anzahl der Zeilen (1-10):</label>
           <input type="number" id="anzahlZeilen" name="anzahlZeilen" value="4" min="1" max="10" required>
           <label>
@@ -98,10 +99,10 @@
       <h2>Buchungssatz</h2>
       <details>
         <summary>Anleitung</summary>
-        <div style="border: 1px solid #ddd;padding: 4px;">
+        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <video style="width:100%;margin: 0 auto;" poster="media/pic/screenshot2.png" controls>
             <source src="media/video/buchungssatz.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Your bser does not support the video tag.
           </video>
         </div>
       </details><br>
@@ -155,10 +156,10 @@
       <h2>Vorkontierung</h2>
       <details>
         <summary>Anleitung</summary>
-        <div style="border: 1px solid #ddd;padding: 4px;">
+        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <video style="width:100%;margin: 0 auto;" poster="media/pic/screenshot1.png" controls>
             <source src="media/video/t-konto.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Your bser does not support the video tag.
           </video>
         </div>
       </details><br>🚧
@@ -168,10 +169,10 @@
       <h2>Geschäftsfälle</h2>
       <details>
         <summary>Anleitung</summary>
-        <div style="border: 1px solid #ddd;padding: 4px;">
+        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <video style="width:100%;margin: 0 auto;" poster="media/pic/screenshot1.png" controls>
             <source src="media/video/t-konto.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Your bser does not support the video tag.
           </video>
         </div>
       </details><br>
@@ -203,17 +204,229 @@
         </div>
         <div id="output" style="min-height: 300px" contenteditable="true"></div>
       </div>
+    </section>
+
+    <section id="inventar" class="tabcontent">
+      <h2>Inventar</h2>
+
+      <div class="box">
+        <p>Sie können hier ein Inventar mit Zufallszahlen erstellen.</p>
+        <button onclick="generateRandomInventar()"><svg xmlns="http://www.w3.org/2000/svg" fill="white" height="16"
+            width="16"
+            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H352c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V80c0-17.7-14.3-32-32-32s-32 14.3-32 32v35.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V432c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H160c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z" />
+          </svg> Inventar erstellen</button>
+      </div><br>
+      <div id="inventarContainer" style="width:650px;margin: 0 auto" contenteditable="true">
+        <table style="width:650px;border-collapse:collapse" id="inventarTable">
+          <tr style="padding-left:6px;border: 1px solid #000;background-color: #98bbff;font-weight: bold">
+            <td style="width:50%"></td>
+            <td style="width:25%;text-align:center">Vorspalte</td>
+            <td style="width:25%;text-align:center">Hauptspalte</td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000"><b>A. Vermögen</b></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000"><b>I. Anlagevermögen</b></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="GR">Grundstücke</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="GR-value"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="BVG">Betriebs- und Verwaltungsgebäude</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BVG-value"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="MA">Maschinen und Anlagen</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="MA-value"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="FP">Fuhrpark</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FP-value"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000;text-indent: 2em;" id="FP1">LKW</td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FP1-value"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000;text-indent: 2em;" id="FP2">PKW</td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FP2-value"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="BM">Büromaschinen</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BM-value"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="BGA">Büromöbel und Geschäftsausstattung</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BGA-value"></td>
+          </tr>
+          <tr style="background-color: #ccc">
+            <td style="padding-left:6px;border: 1px solid #000" id="AV"><b>Summe des Anlagevermögens</b></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="AV-value">
+              <b></b></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000"><b>II. Umlaufvermögen</b></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="VORR">Vorräte</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="VORR-value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="FO">Forderungen</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FO-value"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="BK">Bank</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BK-value"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000;text-indent: 2em;" id="BK1">KreditBank</td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BK1-value"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000;text-indent: 2em;" id="BK2">StadtBank</td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BK2-value"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="KA">Kasse</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="KA-value"></td>
+          </tr>
+          <tr style="background-color: #ccc">
+            <td style="padding-left:6px;border: 1px solid #000" id="UV"><b>Summe des Umlaufvermögens</b></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="UV-value">
+              <b></b></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000"><b>B. Schulden</b></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000">I. Langfristige Schulden</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="LBKV">Langfristige Bankverbindlichkeiten</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="LBKV-value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000">II. Kurzfristige Schulden</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="KBKV">Kurzfristige Bankverbindlichkeiten</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="KBKV-value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="VE">Verbindlichkeiten</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="VE-value"></td>
+          </tr>
+          <tr style="background-color: #ccc">
+            <td style="padding-left:6px;border: 1px solid #000" id="FK"><b>Summe der Schulden</b></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FK-value">
+              <b></b></td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000"><b>C. Ermittlung des Reinvermögens</b></td>
+            <td style="padding-left:6px;border: 1px solid #000">
+              </tf>
+            <td style="padding-left:6px;border: 1px solid #000">
+              </tf>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="AVUV">Summe des Vermögens</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="AVUV-value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-left:6px;border: 1px solid #000" id="FK"> - Summe der Schulden</td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FKSum-value">
+            </td>
+          </tr>
+          <tr style="background-color: #ccc">
+            <td style="padding-left:6px;border: 1px solid #000" id="EK"><b> = Eigenkapital (Reinvermögen)</b></td>
+            <td style="padding-left:6px;border: 1px solid #000"></td>
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px;font-weight: bold" id="EK-Value">
+            </td>
+          </tr>
+        </table>
+
+      </div>
+      <div class="exportButtons">
+        <button class="icon" type="button" onclick="inventarHerunterladenAlsPNG()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+          </svg></button>
+        <button class="icon" type="button" id="officeButtoninventar" data-clipboard-target="#inventarContainer"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
+          </svg></button>
+        <button class="icon" type="button" onclick="inventarHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
+            height="16" width="12"
+            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+          </svg></button>
+        <button class="icon" type="button" onclick="inventarKopiereInZwischenablage()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+          </svg></button>
+      </div>
 
     </section>
+
 
     <section id="bilanz" class="tabcontent">
       <h2>Bilanz</h2>
       <details>
         <summary>Anleitung</summary>
-        <div style="border: 1px solid #ddd;padding: 4px;">
+        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <video style="width:100%;margin: 0 auto;" poster="media/pic/screenshot1.png" controls>
             <source src="media/video/t-konto.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Your bser does not support the video tag.
           </video>
         </div>
       </details><br>🚧
@@ -223,7 +436,7 @@
       <h2>Tools</h2>
       <details id="moodleDropdown">
         <summary>Kontenplan für Moodle eintragen: Multichoice-Fragetyp Lückentext_(Cloze)</summary>
-        <div style="border: 1px solid #ddd;padding: 4px;">
+        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <p><small>Markieren Sie das Konto, das mit 100% bewertet werden soll und ziehen Sie anschließend das nun grüne
               Icon an die gewünschte Stelle. Es sollte dort anschließend "{1:MULTICHOICE:~..." erscheinen.</small></p>
           <div id="kontenplan" draggable="true" ondragstart="handleDragStart(event)"
@@ -238,7 +451,9 @@
           <div id="radioOptionsContainer" style="text-align:left"></div>
         </div>
         <div id="dragContainer" ondragstart="handleDragStart(event)"
-          style="min-width:400px;word-wrap: break-word;display: none;">{1:MULTICHOICE:~0500&nbsp;GR&nbsp;&nbsp;&nbsp;~0530&nbsp;BVG&nbsp;&nbsp;&nbsp;~0700&nbsp;MA&nbsp;&nbsp;&nbsp;~0840&nbsp;FP&nbsp;&nbsp;&nbsp;~0860&nbsp;BM&nbsp;&nbsp;&nbsp;~0870&nbsp;BGA&nbsp;&nbsp;&nbsp;~0890&nbsp;GWG&nbsp;&nbsp;&nbsp;~1500&nbsp;WP&nbsp;&nbsp;&nbsp;~2000&nbsp;R&nbsp;&nbsp;&nbsp;~2010&nbsp;F&nbsp;&nbsp;&nbsp;~2020&nbsp;H&nbsp;&nbsp;&nbsp;~2030&nbsp;B&nbsp;&nbsp;&nbsp;~2400&nbsp;FO&nbsp;&nbsp;&nbsp;~2470&nbsp;ZWFO&nbsp;&nbsp;&nbsp;~2600&nbsp;VORST&nbsp;&nbsp;&nbsp;~2800&nbsp;BK&nbsp;&nbsp;&nbsp;~2880&nbsp;KA&nbsp;&nbsp;&nbsp;~2900&nbsp;ARA&nbsp;&nbsp;&nbsp;~3000&nbsp;EK&nbsp;&nbsp;&nbsp;~3001&nbsp;P&nbsp;&nbsp;&nbsp;~3670&nbsp;EWB&nbsp;&nbsp;&nbsp;~3680&nbsp;PWB&nbsp;&nbsp;&nbsp;~3900&nbsp;RST&nbsp;&nbsp;&nbsp;~4200&nbsp;KBKV&nbsp;&nbsp;&nbsp;~4250&nbsp;LBKV&nbsp;&nbsp;&nbsp;~4400&nbsp;VE&nbsp;&nbsp;&nbsp;~4800&nbsp;UST&nbsp;&nbsp;&nbsp;~4830&nbsp;VFA&nbsp;&nbsp;&nbsp;~4840&nbsp;VSV&nbsp;&nbsp;&nbsp;~4900&nbsp;PRA&nbsp;&nbsp;&nbsp;~5000&nbsp;UEFE&nbsp;&nbsp;&nbsp;~5001&nbsp;EBFE&nbsp;&nbsp;&nbsp;~5400&nbsp;EMP&nbsp;&nbsp;&nbsp;~5430&nbsp;ASBE&nbsp;&nbsp;&nbsp;~5490&nbsp;PFE&nbsp;&nbsp;&nbsp;~5495&nbsp;EFO&nbsp;&nbsp;&nbsp;~5650&nbsp;EAWP&nbsp;&nbsp;&nbsp;~5710&nbsp;ZE&nbsp;&nbsp;&nbsp;~5780&nbsp;DDE&nbsp;&nbsp;&nbsp;~6000&nbsp;AWR&nbsp;&nbsp;&nbsp;~6001&nbsp;BZKR&nbsp;&nbsp;&nbsp;~6002&nbsp;NR&nbsp;&nbsp;&nbsp;~6010&nbsp;AWF&nbsp;&nbsp;&nbsp;~6011&nbsp;BZKF&nbsp;&nbsp;&nbsp;~6012&nbsp;NF&nbsp;&nbsp;&nbsp;~6020&nbsp;AWH&nbsp;&nbsp;&nbsp;~6021&nbsp;BZKH&nbsp;&nbsp;&nbsp;~6022&nbsp;NH&nbsp;&nbsp;&nbsp;~6030&nbsp;AWB&nbsp;&nbsp;&nbsp;~6031&nbsp;BZKB&nbsp;&nbsp;&nbsp;~6032&nbsp;NB&nbsp;&nbsp;&nbsp;~6040&nbsp;AWVM&nbsp;&nbsp;&nbsp;~6140&nbsp;AFR&nbsp;&nbsp;&nbsp;~6160&nbsp;FRI&nbsp;&nbsp;&nbsp;~6200&nbsp;LG&nbsp;&nbsp;&nbsp;~6400&nbsp;AGASV&nbsp;&nbsp;&nbsp;~6520&nbsp;ABSA&nbsp;&nbsp;&nbsp;~6540&nbsp;ABGWG&nbsp;&nbsp;&nbsp;~6700&nbsp;AWMP&nbsp;&nbsp;&nbsp;~6730&nbsp;GEB&nbsp;&nbsp;&nbsp;~6750&nbsp;KGV&nbsp;&nbsp;&nbsp;~6760&nbsp;PROV&nbsp;&nbsp;&nbsp;~6770&nbsp;RBK&nbsp;&nbsp;&nbsp;~6800&nbsp;BMK&nbsp;&nbsp;&nbsp;~6820&nbsp;KOM&nbsp;&nbsp;&nbsp;~6850&nbsp;REK&nbsp;&nbsp;&nbsp;~6870&nbsp;WER&nbsp;&nbsp;&nbsp;~6900&nbsp;VBEI&nbsp;&nbsp;&nbsp;~6950&nbsp;ABFO&nbsp;&nbsp;&nbsp;~6990&nbsp;PFAW&nbsp;&nbsp;&nbsp;~7000&nbsp;GWST&nbsp;&nbsp;&nbsp;~7020&nbsp;GRST&nbsp;&nbsp;&nbsp;~7030&nbsp;KFZST&nbsp;&nbsp;&nbsp;~7460&nbsp;VAWP&nbsp;&nbsp;&nbsp;~7510&nbsp;ZAW&nbsp;&nbsp;&nbsp;~8010&nbsp;SKB&nbsp;&nbsp;&nbsp;~8020&nbsp;GUV}</div>
+          style="min-width:400px;word-wrap: break-word;display: none;">
+          {1:MULTICHOICE:~0500&nbsp;GR&nbsp;&nbsp;&nbsp;~0530&nbsp;BVG&nbsp;&nbsp;&nbsp;~0700&nbsp;MA&nbsp;&nbsp;&nbsp;~0840&nbsp;FP&nbsp;&nbsp;&nbsp;~0860&nbsp;BM&nbsp;&nbsp;&nbsp;~0870&nbsp;BGA&nbsp;&nbsp;&nbsp;~0890&nbsp;GWG&nbsp;&nbsp;&nbsp;~1500&nbsp;WP&nbsp;&nbsp;&nbsp;~2000&nbsp;R&nbsp;&nbsp;&nbsp;~2010&nbsp;F&nbsp;&nbsp;&nbsp;~2020&nbsp;H&nbsp;&nbsp;&nbsp;~2030&nbsp;B&nbsp;&nbsp;&nbsp;~2400&nbsp;FO&nbsp;&nbsp;&nbsp;~2470&nbsp;ZWFO&nbsp;&nbsp;&nbsp;~2600&nbsp;VORST&nbsp;&nbsp;&nbsp;~2800&nbsp;BK&nbsp;&nbsp;&nbsp;~2880&nbsp;KA&nbsp;&nbsp;&nbsp;~2900&nbsp;ARA&nbsp;&nbsp;&nbsp;~3000&nbsp;EK&nbsp;&nbsp;&nbsp;~3001&nbsp;P&nbsp;&nbsp;&nbsp;~3670&nbsp;EWB&nbsp;&nbsp;&nbsp;~3680&nbsp;PWB&nbsp;&nbsp;&nbsp;~3900&nbsp;RST&nbsp;&nbsp;&nbsp;~4200&nbsp;KBKV&nbsp;&nbsp;&nbsp;~4250&nbsp;LBKV&nbsp;&nbsp;&nbsp;~4400&nbsp;VE&nbsp;&nbsp;&nbsp;~4800&nbsp;UST&nbsp;&nbsp;&nbsp;~4830&nbsp;VFA&nbsp;&nbsp;&nbsp;~4840&nbsp;VSV&nbsp;&nbsp;&nbsp;~4900&nbsp;PRA&nbsp;&nbsp;&nbsp;~5000&nbsp;UEFE&nbsp;&nbsp;&nbsp;~5001&nbsp;EBFE&nbsp;&nbsp;&nbsp;~5400&nbsp;EMP&nbsp;&nbsp;&nbsp;~5430&nbsp;ASBE&nbsp;&nbsp;&nbsp;~5490&nbsp;PFE&nbsp;&nbsp;&nbsp;~5495&nbsp;EFO&nbsp;&nbsp;&nbsp;~5650&nbsp;EAWP&nbsp;&nbsp;&nbsp;~5710&nbsp;ZE&nbsp;&nbsp;&nbsp;~5780&nbsp;DDE&nbsp;&nbsp;&nbsp;~6000&nbsp;AWR&nbsp;&nbsp;&nbsp;~6001&nbsp;BZKR&nbsp;&nbsp;&nbsp;~6002&nbsp;NR&nbsp;&nbsp;&nbsp;~6010&nbsp;AWF&nbsp;&nbsp;&nbsp;~6011&nbsp;BZKF&nbsp;&nbsp;&nbsp;~6012&nbsp;NF&nbsp;&nbsp;&nbsp;~6020&nbsp;AWH&nbsp;&nbsp;&nbsp;~6021&nbsp;BZKH&nbsp;&nbsp;&nbsp;~6022&nbsp;NH&nbsp;&nbsp;&nbsp;~6030&nbsp;AWB&nbsp;&nbsp;&nbsp;~6031&nbsp;BZKB&nbsp;&nbsp;&nbsp;~6032&nbsp;NB&nbsp;&nbsp;&nbsp;~6040&nbsp;AWVM&nbsp;&nbsp;&nbsp;~6140&nbsp;AFR&nbsp;&nbsp;&nbsp;~6160&nbsp;FRI&nbsp;&nbsp;&nbsp;~6200&nbsp;LG&nbsp;&nbsp;&nbsp;~6400&nbsp;AGASV&nbsp;&nbsp;&nbsp;~6520&nbsp;ABSA&nbsp;&nbsp;&nbsp;~6540&nbsp;ABGWG&nbsp;&nbsp;&nbsp;~6700&nbsp;AWMP&nbsp;&nbsp;&nbsp;~6730&nbsp;GEB&nbsp;&nbsp;&nbsp;~6750&nbsp;KGV&nbsp;&nbsp;&nbsp;~6760&nbsp;PROV&nbsp;&nbsp;&nbsp;~6770&nbsp;RBK&nbsp;&nbsp;&nbsp;~6800&nbsp;BMK&nbsp;&nbsp;&nbsp;~6820&nbsp;KOM&nbsp;&nbsp;&nbsp;~6850&nbsp;REK&nbsp;&nbsp;&nbsp;~6870&nbsp;WER&nbsp;&nbsp;&nbsp;~6900&nbsp;VBEI&nbsp;&nbsp;&nbsp;~6950&nbsp;ABFO&nbsp;&nbsp;&nbsp;~6990&nbsp;PFAW&nbsp;&nbsp;&nbsp;~7000&nbsp;GWST&nbsp;&nbsp;&nbsp;~7020&nbsp;GRST&nbsp;&nbsp;&nbsp;~7030&nbsp;KFZST&nbsp;&nbsp;&nbsp;~7460&nbsp;VAWP&nbsp;&nbsp;&nbsp;~7510&nbsp;ZAW&nbsp;&nbsp;&nbsp;~8010&nbsp;SKB&nbsp;&nbsp;&nbsp;~8020&nbsp;GUV}
+        </div>
       </details>
       <aside>
 
@@ -247,18 +462,13 @@
         <script src="js/t-konto.js"></script>
         <script src="js/buchungssatz.js"></script>
         <script src="js/geschaeftsfaelle.js"></script>
+        <script src="js/inventar.js"></script>
         <script src="js/moodle.js"></script>
         <script>
 
-          // Hide or show the details element based on the active tab
-          var moodleDropdown = document.getElementById("moodleDropdown");
-          if (cityName === "t-konto" || cityName === "buchungssatz") {
-            moodleDropdown.style.display = "block";
-          } else {
-            moodleDropdown.style.display = "none";
-          }
+
         </script>
-          <script>
+        <script>
           // Get the element with id="defaultOpen" and click on it
           document.getElementById("defaultOpen").click();
         </script>
