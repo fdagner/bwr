@@ -45,7 +45,7 @@
         <select id="kontoAuswahl" name="kontoAuswahl">
         </select>
         <br>
-        <div style="display:flex;flex-direction:justify;flex-wrap: wrap;gap:4px">
+        <div style="display:flex;flex-wrap: wrap;gap:4px">
           <label for="anzahlZeilen">Anzahl der Zeilen (1-10):</label>
           <input type="number" id="anzahlZeilen" name="anzahlZeilen" value="4" min="1" max="10" required>
           <label>
@@ -118,7 +118,7 @@
           </svg> Vorlage für Buchungssatz erstellen</button>
       </form><br>
       <div id="buchungssatzButtonContainer" style="margin:0 auto;">
-        <div style="min-width:550px" contenteditable="true">
+        <div style="width:750px" contenteditable="true">
           <div id="buchungssatzContainer" style="min-height: 50px;margin: 0 auto"></div>
         </div>
         <div class="exportButtons">
@@ -279,7 +279,8 @@
             <td style="padding-left:6px;border: 1px solid #000" id="AV"><b>Summe des Anlagevermögens</b></td>
             <td style="padding-left:6px;border: 1px solid #000"></td>
             <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="AV-value">
-              <b></b></td>
+              <b></b>
+            </td>
           </tr>
           <tr>
             <td style="padding-left:6px;border: 1px solid #000"><b>II. Umlaufvermögen</b></td>
@@ -321,7 +322,8 @@
             <td style="padding-left:6px;border: 1px solid #000" id="UV"><b>Summe des Umlaufvermögens</b></td>
             <td style="padding-left:6px;border: 1px solid #000"></td>
             <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="UV-value">
-              <b></b></td>
+              <b></b>
+            </td>
           </tr>
           <tr>
             <td style="padding-left:6px;border: 1px solid #000"><b>B. Schulden</b></td>
@@ -359,7 +361,8 @@
             <td style="padding-left:6px;border: 1px solid #000" id="FK"><b>Summe der Schulden</b></td>
             <td style="padding-left:6px;border: 1px solid #000"></td>
             <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FK-value">
-              <b></b></td>
+              <b></b>
+            </td>
           </tr>
           <tr>
             <td style="padding-left:6px;border: 1px solid #000"><b>C. Ermittlung des Reinvermögens</b></td>
@@ -383,7 +386,8 @@
           <tr style="background-color: #ccc">
             <td style="padding-left:6px;border: 1px solid #000" id="EK"><b> = Eigenkapital (Reinvermögen)</b></td>
             <td style="padding-left:6px;border: 1px solid #000"></td>
-            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px;font-weight: bold" id="EK-Value">
+            <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px;font-weight: bold"
+              id="EK-Value">
             </td>
           </tr>
         </table>
@@ -469,6 +473,13 @@
 
         </script>
         <script>
+          // Hide or show the details element based on the active tab
+          let moodleDropdown = document.getElementById("moodleDropdown");
+          if (tabcontent === "t-konto" || cityName === "buchungssatz") {
+            moodleDropdown.style.display = "block";
+          } else {
+            moodleDropdown.style.display = "none";
+          }
           // Get the element with id="defaultOpen" and click on it
           document.getElementById("defaultOpen").click();
         </script>
