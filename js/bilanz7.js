@@ -1,20 +1,18 @@
-function generateRandomInventar() {
+function generateRandomBilanz7() {
     const valueRanges = {
-        "GR-value": { min: 1500000, max: 1000000 },
-        "BVG-value": { min: 2500000, max: 5000000 },
-        "MA-value": { min: 10000, max: 200000 },
-        "FP1-value": { min: 10000, max: 80000 },
-        "FP2-value": { min: 50000, max: 150000 },
-        "BM-value": { min: 5000, max: 20000 },
-        "BGA-value": { min: 20000, max: 200000 },
-        "VORR-value": { min: 20000, max: 100000 },
-        "FO-value": { min: 2000, max: 500000 },
-        "BK1-value": { min: 20000, max: 200000 },
-        "BK2-value": { min: 20000, max: 200000 },
-        "KA-value": { min: 500, max: 5000 },
-        "LBKV-value": { min: 50000, max: 4500000 },
-        "KBKV-value": { min: 5000, max: 50000 },
-        "VE-value": { min: 5000, max: 50000 },
+        "value-GR": { min: 1500000, max: 1000000 },
+        "value-BVG": { min: 2500000, max: 5000000 },
+        "value-MA": { min: 10000, max: 200000 },
+        "value-FP": { min: 10000, max: 80000 },
+        "value-BM": { min: 5000, max: 20000 },
+        "value-BGA": { min: 20000, max: 200000 },
+        "value-VORR": { min: 20000, max: 100000 },
+        "value-FO": { min: 2000, max: 500000 },
+        "value-BK": { min: 40000, max: 400000 },
+        "value-KA": { min: 500, max: 5000 },
+        "value-LBKV": { min: 50000, max: 4500000 },
+        "value-KBKV": { min: 5000, max: 50000 },
+        "value-VE": { min: 5000, max: 50000 },
     };
 
 
@@ -50,76 +48,62 @@ function generateRandomInventar() {
         updateCellValueById(id, randomValue);
     }
 
-    calculateAndSetSum(["FP1-value", "FP2-value"], "FP-value");
-    calculateAndSetSum(["BK1-value", "BK2-value"], "BK-value");
+    const avuvCellIds = ["value-GR", "value-BVG", "value-MA", "value-FP", "value-BM", "value-BGA", "value-VORR", "value-FO", "value-BK", "value-KA"];
+    const fkCellIds = ["value-LBKV", "value-KBKV", "value-VE"]
+    calculateAndSetSum(avuvCellIds, "value-AVUV");
+    const fkValue = fkCellIds.reduce((acc, id) => {
+        const value = parseFloat(document.getElementById(id)?.textContent.replace(/[^0-9,-]+/g, '')) || 0;
+        return acc + value;
+    }, 0);
+    
 
-    const avCellIds = ["GR-value", "BVG-value", "MA-value", "FP-value", "BM-value", "BGA-value"];
-    const uvCellIds = ["VORR-value", "FO-value", "BK-value", "KA-value"];
-    const fkCellIds = ["LBKV-value", "KBKV-value", "VE-value"]
-
-    calculateAndSetSum(avCellIds, "AV-value");
-    calculateAndSetSum(uvCellIds, "UV-value");
-    calculateAndSetSum(fkCellIds, "FK-value");
-
-    const avuvCellIds = ["AV-value", "UV-value"];
-    const fkCellId = "FK-value";
-    const ekCellId = "EK-value";
-
-    calculateAndSetSum(avuvCellIds, "AVUV-value");
-    calculateAndSetSum(["LBKV-value", "KBKV-value", "VE-value"], "FK-value");
-    calculateAndSetSum(["AVUV-value", "FK-value"], ekCellId);
-
-    const fkSumValue = parseFloat(document.getElementById("FK-value").textContent.replace(/[^0-9,-]+/g, '')) || 0;
-    updateCellValueById("FKSum-value", fkSumValue);
-
-    // Berechne und setze EK-Value gleich AVUV-Value - FK-Value
-    const avuvValue = parseFloat(document.getElementById("AVUV-value").textContent.replace(/[^0-9,-]+/g, '')) || 0;
-    const fkValue = parseFloat(document.getElementById("FK-value").textContent.replace(/[^0-9,-]+/g, '')) || 0;
+    const avuvValue = parseFloat(document.getElementById("value-AVUV").textContent.replace(/[^0-9,-]+/g, '')) || 0;
+    updateCellValueById("value-AVUV2", avuvValue);
     const ekValue = avuvValue - fkValue;
-    updateCellValueById("EK-Value", ekValue);
+    updateCellValueById("value-EK", ekValue);
 }
 
 
-function inventarHerunterladen() {
-    const inventarHTML = document.getElementById('inventarContainer').innerHTML;
-    const blob = new Blob([inventarHTML], { type: 'text/html' });
+function bilanz7Herunterladen() {
+    const bilanz7HTML = document.getElementById('bilanz7Container').innerHTML;
+    const blob = new Blob([bilanz7HTML], { type: 'text/html' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'inventar.html';
+    a.download = 'bilanz7.html';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 }
 
-function inventarKopiereInZwischenablage() {
-    const inventarHTML = document.getElementById('inventarContainer').innerHTML;
-    navigator.clipboard.writeText(inventarHTML)
+function bilanz7KopiereInZwischenablage() {
+    const bilanz7HTML = document.getElementById('bilanz7Container').innerHTML;
+    navigator.clipboard.writeText(bilanz7HTML)
         .then(() => alert('Code wurde in die Zwischenablage kopiert'))
         .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
-function inventarHerunterladenAlsPNG() {
-    const inventarContainer = document.getElementById('inventarContainer');
+function bilanz7HerunterladenAlsPNG() {
+    const bilanz7Container = document.getElementById('bilanz7Container');
 
-    html2canvas(inventarContainer).then(canvas => {
+    html2canvas(bilanz7Container).then(canvas => {
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;
-        a.download = 'inventar.png';
+        a.download = 'bilanz7.png';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
     });
 }
 
-let clipboardinventar = new ClipboardJS('#officeButtoninventar');
+let clipboardbilanz7 = new ClipboardJS('#officeButtonbilanz7');
 
-clipboardinventar.on('success', function (e) {
+clipboardbilanz7.on('success', function (e) {
     console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
     alert("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
-clipboardinventar.on('error', function (e) {
+clipboardbilanz7.on('error', function (e) {
     console.error("Fehler beim Kopieren der Tabelle: ", e.action);
     alert("Fehler beim Kopieren der Tabelle.");
 });
