@@ -142,6 +142,7 @@ main {
   margin:1em;
   outline: 2px dashed #CCC; 
   position: relative;
+  background-color: #fff;
 }
 
 [contenteditable]:hover { 
