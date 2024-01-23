@@ -20,7 +20,7 @@ function generiereTKonto() {
   const buttonContainer = document.getElementById('buttonContainer');
 
 
-  let tkontoHTML = '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p><table style="border-collapse: collapse;width:650px;background-color:#fff"><tbody><tr><th style="width:25%;text-align:left" tabindex="1">Soll</th><th style="text-align:center;" colspan="2" tabindex="1">' + kontoAuswahl + '</th><th style="width:25%;text-align:right;" tabindex="1">Haben</th></tr>';
+  let tkontoHTML = '<table style="border-collapse: collapse;width:650px;background-color:#fff"><tbody><tr><th style="width:25%;text-align:left" tabindex="1">Soll</th><th style="text-align:center;" colspan="2" tabindex="1">' + kontoAuswahl + '</th><th style="width:25%;text-align:right;" tabindex="1">Haben</th></tr>';
 
   for (let i = 0; i < anzahlZeilen; i++) {
     tkontoHTML += '<tr style="border-top: 1px solid #AAAAAA;">' +

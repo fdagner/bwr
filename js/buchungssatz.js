@@ -3,7 +3,7 @@ function generiereBuchungssatz() {
   const buchungssatzContainer = document.getElementById('buchungssatzContainer');
   const buchungssatzButtonContainer = document.getElementById('buchungssatzButtonContainer');
 
-  let buchungssatzHTML = '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p><table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:750px;"><tbody>';
+  let buchungssatzHTML = '<table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:750px;"><tbody>';
 
   for (let i = 0; i < anzahlZeilenBuchungssatz; i++) {
     buchungssatzHTML += '<tr>';
@@ -79,4 +79,5 @@ window.onload = function () {
   generiereBuchungssatz();
   generiereVorkontierung();
   generateRandomInventar()
+  generateRandomBilanz7()
 };
