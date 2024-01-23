@@ -77,5 +77,6 @@ clipboardBuchungssatz.on('error', function (e) {
 window.onload = function () {
   generiereTKonto();
   generiereBuchungssatz();
+  generiereVorkontierung();
   generateRandomInventar()
 };

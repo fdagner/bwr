@@ -12,11 +12,16 @@ function openCity(evt, cityName) {
     evt.currentTarget.className += " active";
 
  // Hide or show the details element based on the active tab
- var moodleDropdown = document.getElementById("moodleDropdown");
- if (tabcontent === "t-konto" || cityName === "buchungssatz") {
-   moodleDropdown.style.display = "block";
+ let moodleDropdown = document.getElementById("moodleDropdown");
+
+ if (moodleDropdown) {
+   if (cityName === "t-konto" || cityName === "buchungssatz" || cityName === "vorkontierung") {
+     moodleDropdown.style.display = "block";
+   } else {
+     moodleDropdown.style.display = "none";
+   }
  } else {
-   moodleDropdown.style.display = "none";
+   console.error("Das Element mit der ID 'moodleDropdown' wurde nicht gefunden.");
  }
 
 }
