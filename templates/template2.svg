@@ -89,13 +89,12 @@
     </g>
   </g>
 <!--Gruppe für Zahlungsbedingungen-->
-  <g id="Zahlungsbedingungen" text-anchor="start">
-    <text x="0" y="800" font-family="Calibri" font-size="20" fill="#333">
-    <tspan x="15" dy="1.5em">Vielen Dank für Ihren Auftrag!</tspan>
-    <tspan x="15" dy="1.5em">Zahlbar innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen rein netto.</tspan>
-    <tspan x="15" dy="1.5em">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto.</tspan>
-    <tspan x="15" dy="1.5em">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum.</tspan>
-    </text>
+
+   <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Calibri" font-size="20" fill="#333">
+    <text x="350" y="830">Vielen Dank für Ihren Auftrag!</text>
+    <text x="350" y="860">Zahlbar innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
+    <text id="skontotext" x="350" y="890">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto</text>
+    <text x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
   </g>
   <g id="footerText" transform="translate(0,-10)" fill="#fff">
     <text id="bankLieferer" x="20" y="1000" font-family="Calibri" font-size="15" fill="#000" />
