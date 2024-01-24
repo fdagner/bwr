@@ -48,12 +48,12 @@ function reloadDropdownOptions() {
     yamlData.forEach(company => {
         const optionCustomer = document.createElement('option');
         optionCustomer.value = company.unternehmen.name;
-        optionCustomer.text = company.unternehmen.name;
+        optionCustomer.text = company.unternehmen.name+ ' ' +company.unternehmen.rechtsform;;
         dropdownCustomer.appendChild(optionCustomer);
 
         const optionSupplier = document.createElement('option');
         optionSupplier.value = company.unternehmen.name;
-        optionSupplier.text = company.unternehmen.name;
+        optionSupplier.text = company.unternehmen.name+ ' ' +company.unternehmen.rechtsform;;
         dropdownSupplier.appendChild(optionSupplier);
     });
 }
@@ -111,12 +111,12 @@ fetch('js/unternehmen.yml')
         yamlData.forEach(company => {
             const optionCustomer = document.createElement('option');
             optionCustomer.value = company.unternehmen.name;
-            optionCustomer.text = company.unternehmen.name;
+            optionCustomer.text = company.unternehmen.name+ ' ' +company.unternehmen.rechtsform;
             dropdownCustomer.appendChild(optionCustomer);
 
             const optionSupplier = document.createElement('option');
             optionSupplier.value = company.unternehmen.name;
-            optionSupplier.text = company.unternehmen.name;
+            optionSupplier.text = company.unternehmen.name+ ' ' + company.unternehmen.rechtsform;
             dropdownSupplier.appendChild(optionSupplier);
         });
 
@@ -167,7 +167,15 @@ function loadSupplierData() {
     let handelsregister = null;
 
     const erlaubteRechtsformen = ["e. K.", "e. Kfr.", "OHG", "KG", "GmbH & Co. KG", "GmbH & Co. OHG"];
-    handelsregister = erlaubteRechtsformen.includes(selectedSupplier.unternehmen.rechtsform) ? "HRA" : "HRB";
+    handelsregister;
+    
+    if (erlaubteRechtsformen.includes(selectedSupplier.unternehmen.rechtsform)) {
+        handelsregister = "HRA";
+    } else if (selectedSupplier.unternehmen.rechtsform === "") {
+        handelsregister = "";
+    } else {
+        handelsregister = "HRB";
+    }
 
     document.getElementById('amtsgerichtLieferer').textContent = 'Amtsgericht ' + selectedSupplier.unternehmen.adresse.ort + ' ' + handelsregister;
     document.getElementById('ustidLieferer').textContent = 'UST-IdNr.: ' + selectedSupplier.unternehmen.ust_id;
@@ -399,8 +407,21 @@ function applyOrderData() {
 
     document.getElementById('zahlungsziel').textContent = zahlungszielInput;
     document.getElementById('skonto').textContent = skontoInput;
-    document.getElementById('skontofrist').textContent = skontofristInput;
 
+    // Überprüfen, ob skontoInput 0 oder leer ist
+    if (skontoInput === "" || parseFloat(skontoInput) === 0) {
+        // Falls 0 oder leer, das Element mit der ID "skontotext" entfernen
+        const skontotextElement = document.getElementById('skontotext');
+        if (skontotextElement) {
+            skontotextElement.remove();
+        }
+    } else {
+        // Falls nicht 0 oder leer, den Text des Elements mit der ID "skonto" setzen
+        document.getElementById('skonto').textContent = skontoInput;
+        document.getElementById('skontofrist').textContent = skontofristInput;
+
+    }
+    
     // Berechne und setze den Gesamtbetrag der Rechnung
     // Berechne die Zwischensumme
     const zwischensumme = gesamtpreis1 + gesamtpreis2;

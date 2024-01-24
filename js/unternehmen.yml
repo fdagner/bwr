@@ -338,3 +338,25 @@
     iban: "DE89370400000532000077"
     bic: "COBADEFFXXX"
     inhaber: "Thorsten Fiedler"
+
+- unternehmen:
+    id: "17"
+    name: "Petra Meininger"
+    motto: "Rechtsanwältin"
+    bank: "Sparbank"
+    rechtsform: ""
+    logo: ""
+    adresse:
+      strasse: "Platz der Einheit 85"
+      plz: "90431"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "0911 2654-1"
+      email: "info@meiningerp.de"
+      internet: "meiningerp.de"
+    ust_id: "DE443455666"
+    steuernummer: "181/044/1331"
+    iban: "DE89370400000876000077"
+    bic: "COBADFGHXXX"
+    inhaber: "Petra Meininger"
