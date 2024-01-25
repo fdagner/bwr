@@ -44,7 +44,7 @@
     // Funktion zum Generieren einer zufälligen Zahl
     function generateRandomAnzahl() {
       const randomNumber = getRandomIntegerWithSteps(2, 10, 1);
-      return `${randomNumber} Büroregale`;
+      return randomNumber;
     }
 
     // Paare von Elementen und den entsprechenden kontenWerkstoffe
@@ -52,7 +52,7 @@
       "Rohstoffe": "6000 AWR",
       "Fremdbauteile": "6010 AWF",
       "Hilfsstoffe": "6020 AWH",
-      "Betriebsstoffe": "6030 AWB"
+      "Betriebsstoffe": "6030 AWB" 
       // ... füge weitere Paare hinzu, wenn nötig
     };
 
@@ -135,7 +135,7 @@
       if (inputWerkstoffe.checked) {
         return Math.round(Math.random() * 49 + 2) * 100; // 2 to 50 times 100 (to round to the nearest hundred)
       } else if (inputSachanlagen.checked) {
-        return Math.round(Math.random() * 290 + 10) * 100; // 10 to 300 times 100 (to round to the nearest hundred)
+        return Math.round(Math.random() * 99 + 20) * 100; // 10 to 300 times 100 (to round to the nearest hundred)
       }
       // Fallback-Wert, falls keine Checkbox ausgewählt ist
       return 0;
@@ -184,7 +184,7 @@
       const zufaelligesSachanlagen = selectedarray_Sachanlagen[Math.floor(Math.random() * selectedarray_Sachanlagen.length)];
       const zufaelligesFormulierung_Wert = array_Formulierung_Wert[Math.floor(Math.random() * array_Formulierung_Wert.length)];
       const antwortWerkstoff = kontenWerkstoffe[zufaelligesWerkstoff] || kontenWerkstoffe_2[zufaelligesWerkstoff];
-      const antwortSachanlagen = kontenSachanlagen[zufaelligesSachanlagen] || kontenSachanlagen_2[zufaelligesSachanlagen] 
+      const antwortSachanlagen = kontenSachanlagen[zufaelligesSachanlagen] || kontenSachanlagen_2[zufaelligesSachanlagen];
       const nettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
       const Wert = generateRandomNettoWert();
       const nettoWert = formatCurrency(Wert);
@@ -195,6 +195,7 @@
       } else {
         zufaelligesNettowert = nettoOderBrutto === 'Netto' ? `${nettoWert} netto` : `brutto ${bruttoWert}`;
       }
+ 
       const zufaelligesZahlung = array_Zahlung[Math.floor(Math.random() * array_Zahlung.length)];
       const antwortZahlung = kontenZahlung[zufaelligesZahlung]
 
