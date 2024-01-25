@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T-Konto-Generator</title>
+  <title>Buchführung</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/kontenplan.js"></script>
@@ -154,7 +154,7 @@
 
     <section id="vorkontierung" class="tabcontent">
       <h2>Vorkontierung</h2>
-        <form id="vorkontierungForm" class="box">
+      <form id="vorkontierungForm" class="box">
         <label for="anzahlZeilen">Anzahl der Zeilen (1-20):</label>
         <input type="number" id="anzahlZeilenVorkontierung" name="anzahlZeilen" value="2" min="1" max="20" required>
         <br><br>
@@ -201,19 +201,20 @@
 
     <section id="einkauf" class="tabcontent">
       <h2>Einkauf</h2>
-     <br>
+      <br>
 
       <div id="generator-container">
         <div class="box">
           <p>Sie können hier zufällige Geschäftsfälle generieren. Passen Sie ggf. Beträge und Bezeichnungen an Ihr
             Modellunternehmen an. </p>
-           <input type="radio" name="einkauf" id="inputWerkstoffe" value="werkstoffe" checked> Werkstoffe
+          <input type="radio" name="einkauf" id="inputWerkstoffe" value="werkstoffe" checked> Werkstoffe
           </label>
           <label>
             <input type="radio" name="einkauf" id="inputSachanlagen" value="sachanlagen"> Aktivierung von Sachanlagen
           </label>
           <br><label for="mitRabatt">Rabatt:</label>
-          <input type="checkbox" id="mitRabatt"><br>
+          <input type="checkbox" id="mitRabatt"> | <label for="mitBezuguskosten">Bezugskosten:</label><input
+            type="checkbox" id="mitBezugskosten" disabled><br>
           <label for="anzahlDropdown">Anzahl der Geschäftsfälle:</label>
           <select id="anzahlDropdown">
             <option value="1">1</option>
@@ -229,35 +230,35 @@
           </select><br>
           <button onclick="zeigeZufaelligenSatz()">Aufgaben erstellen</button>
         </div>
-          <div id="einkaufContainer" contenteditable="true"></div>
-          <div class="exportButtons">
-            <button class="icon" type="button" onclick="einkaufHerunterladenAlsPNG()"><svg xmlns="http://www.w3.org/2000/svg"
-                height="16" width="16"
-                viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                <path
-                  d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-              </svg></button>
-            <button class="icon" type="button" id="officeButton" data-clipboard-target="#einkaufContainer"><svg
-                xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                <path
-                  d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
-              </svg></button>
-            <button class="icon" type="button" onclick="einkaufHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
-                height="16" width="12"
-                viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                <path
-                  d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-              </svg></button>
-            <button class="icon" type="button" onclick="einkaufKopiereInZwischenablage()"><svg xmlns="http://www.w3.org/2000/svg"
-                height="16" width="20"
-                viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                <path
-                  d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-              </svg></button>
-          </div><br>
-        </div>
-      </section>
+        <div id="einkaufContainer" contenteditable="true"></div>
+        <div class="exportButtons">
+          <button class="icon" type="button" onclick="einkaufHerunterladenAlsPNG()"><svg
+              xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+              viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg></button>
+          <button class="icon" type="button" id="officeButton" data-clipboard-target="#einkaufContainer"><svg
+              xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+              viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
+            </svg></button>
+          <button class="icon" type="button" onclick="einkaufHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
+              height="16" width="12"
+              viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg></button>
+          <button class="icon" type="button" onclick="einkaufKopiereInZwischenablage()"><svg
+              xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+              viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg></button>
+        </div><br>
+      </div>
+    </section>
 
     <section id="inventar" class="tabcontent">
       <h2>Inventar</h2>
@@ -507,21 +508,24 @@
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Betriebs- und Verwaltungsgebäude</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-BVG"></td>
-              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Langfristige Bankverbindlichkeiten</td>
+              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Langfristige Bankverbindlichkeiten
+              </td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-LBKV"></td>
             </tr>
 
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Maschinen und Anlagen</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-MA"></td>
-              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Kurzfristige Bankverbindlichkeiten</td>
+              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Kurzfristige Bankverbindlichkeiten
+              </td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-KBKV"></td>
             </tr>
-            
+
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Fuhrpark</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-FP"></td>
-              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Verbindlichkeiten bei Lieferern</td>
+              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Verbindlichkeiten bei Lieferern
+              </td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-VE"></td>
             </tr>
 
@@ -531,7 +535,7 @@
               <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;"></td>
               <td style="width:20%;text-align:right;padding-right: 4px;"></td>
             </tr>
-            
+
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Büromöbel- und Geschäftsausst.</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-BGA"></td>
@@ -539,7 +543,7 @@
               <td style="width:20%;text-align:right;padding-right: 4px;"></td>
             </tr>
 
-            
+
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Vorräte</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-VORR"></td>
@@ -579,8 +583,8 @@
 
       </div>
       <div class="exportButtons">
-        <button class="icon" type="button" onclick="bilanz7HerunterladenAlsPNG()"><svg xmlns="http://www.w3.org/2000/svg"
-            height="16" width="16"
+        <button class="icon" type="button" onclick="bilanz7HerunterladenAlsPNG()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
             viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
@@ -625,7 +629,9 @@
           <div id="radioOptionsContainer" style="text-align:left"></div>
         </div>
         <div id="dragContainer" ondragstart="handleDragStart(event)"
-          style="min-width:400px;word-wrap: break-word;display: none;">{1:MULTICHOICE:~0500&nbsp;GR&nbsp;&nbsp;&nbsp;~0530&nbsp;BVG&nbsp;&nbsp;&nbsp;~0700&nbsp;MA&nbsp;&nbsp;&nbsp;~0840&nbsp;FP&nbsp;&nbsp;&nbsp;~0860&nbsp;BM&nbsp;&nbsp;&nbsp;~0870&nbsp;BGA&nbsp;&nbsp;&nbsp;~0890&nbsp;GWG&nbsp;&nbsp;&nbsp;~1500&nbsp;WP&nbsp;&nbsp;&nbsp;~2000&nbsp;R&nbsp;&nbsp;&nbsp;~2010&nbsp;F&nbsp;&nbsp;&nbsp;~2020&nbsp;H&nbsp;&nbsp;&nbsp;~2030&nbsp;B&nbsp;&nbsp;&nbsp;~2400&nbsp;FO&nbsp;&nbsp;&nbsp;~2470&nbsp;ZWFO&nbsp;&nbsp;&nbsp;~2600&nbsp;VORST&nbsp;&nbsp;&nbsp;~2800&nbsp;BK&nbsp;&nbsp;&nbsp;~2880&nbsp;KA&nbsp;&nbsp;&nbsp;~2900&nbsp;ARA&nbsp;&nbsp;&nbsp;~3000&nbsp;EK&nbsp;&nbsp;&nbsp;~3001&nbsp;P&nbsp;&nbsp;&nbsp;~3670&nbsp;EWB&nbsp;&nbsp;&nbsp;~3680&nbsp;PWB&nbsp;&nbsp;&nbsp;~3900&nbsp;RST&nbsp;&nbsp;&nbsp;~4200&nbsp;KBKV&nbsp;&nbsp;&nbsp;~4250&nbsp;LBKV&nbsp;&nbsp;&nbsp;~4400&nbsp;VE&nbsp;&nbsp;&nbsp;~4800&nbsp;UST&nbsp;&nbsp;&nbsp;~4830&nbsp;VFA&nbsp;&nbsp;&nbsp;~4840&nbsp;VSV&nbsp;&nbsp;&nbsp;~4900&nbsp;PRA&nbsp;&nbsp;&nbsp;~5000&nbsp;UEFE&nbsp;&nbsp;&nbsp;~5001&nbsp;EBFE&nbsp;&nbsp;&nbsp;~5400&nbsp;EMP&nbsp;&nbsp;&nbsp;~5430&nbsp;ASBE&nbsp;&nbsp;&nbsp;~5490&nbsp;PFE&nbsp;&nbsp;&nbsp;~5495&nbsp;EFO&nbsp;&nbsp;&nbsp;~5650&nbsp;EAWP&nbsp;&nbsp;&nbsp;~5710&nbsp;ZE&nbsp;&nbsp;&nbsp;~5780&nbsp;DDE&nbsp;&nbsp;&nbsp;~6000&nbsp;AWR&nbsp;&nbsp;&nbsp;~6001&nbsp;BZKR&nbsp;&nbsp;&nbsp;~6002&nbsp;NR&nbsp;&nbsp;&nbsp;~6010&nbsp;AWF&nbsp;&nbsp;&nbsp;~6011&nbsp;BZKF&nbsp;&nbsp;&nbsp;~6012&nbsp;NF&nbsp;&nbsp;&nbsp;~6020&nbsp;AWH&nbsp;&nbsp;&nbsp;~6021&nbsp;BZKH&nbsp;&nbsp;&nbsp;~6022&nbsp;NH&nbsp;&nbsp;&nbsp;~6030&nbsp;AWB&nbsp;&nbsp;&nbsp;~6031&nbsp;BZKB&nbsp;&nbsp;&nbsp;~6032&nbsp;NB&nbsp;&nbsp;&nbsp;~6040&nbsp;AWVM&nbsp;&nbsp;&nbsp;~6140&nbsp;AFR&nbsp;&nbsp;&nbsp;~6160&nbsp;FRI&nbsp;&nbsp;&nbsp;~6200&nbsp;LG&nbsp;&nbsp;&nbsp;~6400&nbsp;AGASV&nbsp;&nbsp;&nbsp;~6520&nbsp;ABSA&nbsp;&nbsp;&nbsp;~6540&nbsp;ABGWG&nbsp;&nbsp;&nbsp;~6700&nbsp;AWMP&nbsp;&nbsp;&nbsp;~6730&nbsp;GEB&nbsp;&nbsp;&nbsp;~6750&nbsp;KGV&nbsp;&nbsp;&nbsp;~6760&nbsp;PROV&nbsp;&nbsp;&nbsp;~6770&nbsp;RBK&nbsp;&nbsp;&nbsp;~6800&nbsp;BMK&nbsp;&nbsp;&nbsp;~6820&nbsp;KOM&nbsp;&nbsp;&nbsp;~6850&nbsp;REK&nbsp;&nbsp;&nbsp;~6870&nbsp;WER&nbsp;&nbsp;&nbsp;~6900&nbsp;VBEI&nbsp;&nbsp;&nbsp;~6950&nbsp;ABFO&nbsp;&nbsp;&nbsp;~6990&nbsp;PFAW&nbsp;&nbsp;&nbsp;~7000&nbsp;GWST&nbsp;&nbsp;&nbsp;~7020&nbsp;GRST&nbsp;&nbsp;&nbsp;~7030&nbsp;KFZST&nbsp;&nbsp;&nbsp;~7460&nbsp;VAWP&nbsp;&nbsp;&nbsp;~7510&nbsp;ZAW&nbsp;&nbsp;&nbsp;~8010&nbsp;SKB&nbsp;&nbsp;&nbsp;~8020&nbsp;GUV}</div>
+          style="min-width:400px;word-wrap: break-word;display: none;">
+          {1:MULTICHOICE:~0500&nbsp;GR&nbsp;&nbsp;&nbsp;~0530&nbsp;BVG&nbsp;&nbsp;&nbsp;~0700&nbsp;MA&nbsp;&nbsp;&nbsp;~0840&nbsp;FP&nbsp;&nbsp;&nbsp;~0860&nbsp;BM&nbsp;&nbsp;&nbsp;~0870&nbsp;BGA&nbsp;&nbsp;&nbsp;~0890&nbsp;GWG&nbsp;&nbsp;&nbsp;~1500&nbsp;WP&nbsp;&nbsp;&nbsp;~2000&nbsp;R&nbsp;&nbsp;&nbsp;~2010&nbsp;F&nbsp;&nbsp;&nbsp;~2020&nbsp;H&nbsp;&nbsp;&nbsp;~2030&nbsp;B&nbsp;&nbsp;&nbsp;~2400&nbsp;FO&nbsp;&nbsp;&nbsp;~2470&nbsp;ZWFO&nbsp;&nbsp;&nbsp;~2600&nbsp;VORST&nbsp;&nbsp;&nbsp;~2800&nbsp;BK&nbsp;&nbsp;&nbsp;~2880&nbsp;KA&nbsp;&nbsp;&nbsp;~2900&nbsp;ARA&nbsp;&nbsp;&nbsp;~3000&nbsp;EK&nbsp;&nbsp;&nbsp;~3001&nbsp;P&nbsp;&nbsp;&nbsp;~3670&nbsp;EWB&nbsp;&nbsp;&nbsp;~3680&nbsp;PWB&nbsp;&nbsp;&nbsp;~3900&nbsp;RST&nbsp;&nbsp;&nbsp;~4200&nbsp;KBKV&nbsp;&nbsp;&nbsp;~4250&nbsp;LBKV&nbsp;&nbsp;&nbsp;~4400&nbsp;VE&nbsp;&nbsp;&nbsp;~4800&nbsp;UST&nbsp;&nbsp;&nbsp;~4830&nbsp;VFA&nbsp;&nbsp;&nbsp;~4840&nbsp;VSV&nbsp;&nbsp;&nbsp;~4900&nbsp;PRA&nbsp;&nbsp;&nbsp;~5000&nbsp;UEFE&nbsp;&nbsp;&nbsp;~5001&nbsp;EBFE&nbsp;&nbsp;&nbsp;~5400&nbsp;EMP&nbsp;&nbsp;&nbsp;~5430&nbsp;ASBE&nbsp;&nbsp;&nbsp;~5490&nbsp;PFE&nbsp;&nbsp;&nbsp;~5495&nbsp;EFO&nbsp;&nbsp;&nbsp;~5650&nbsp;EAWP&nbsp;&nbsp;&nbsp;~5710&nbsp;ZE&nbsp;&nbsp;&nbsp;~5780&nbsp;DDE&nbsp;&nbsp;&nbsp;~6000&nbsp;AWR&nbsp;&nbsp;&nbsp;~6001&nbsp;BZKR&nbsp;&nbsp;&nbsp;~6002&nbsp;NR&nbsp;&nbsp;&nbsp;~6010&nbsp;AWF&nbsp;&nbsp;&nbsp;~6011&nbsp;BZKF&nbsp;&nbsp;&nbsp;~6012&nbsp;NF&nbsp;&nbsp;&nbsp;~6020&nbsp;AWH&nbsp;&nbsp;&nbsp;~6021&nbsp;BZKH&nbsp;&nbsp;&nbsp;~6022&nbsp;NH&nbsp;&nbsp;&nbsp;~6030&nbsp;AWB&nbsp;&nbsp;&nbsp;~6031&nbsp;BZKB&nbsp;&nbsp;&nbsp;~6032&nbsp;NB&nbsp;&nbsp;&nbsp;~6040&nbsp;AWVM&nbsp;&nbsp;&nbsp;~6140&nbsp;AFR&nbsp;&nbsp;&nbsp;~6160&nbsp;FRI&nbsp;&nbsp;&nbsp;~6200&nbsp;LG&nbsp;&nbsp;&nbsp;~6400&nbsp;AGASV&nbsp;&nbsp;&nbsp;~6520&nbsp;ABSA&nbsp;&nbsp;&nbsp;~6540&nbsp;ABGWG&nbsp;&nbsp;&nbsp;~6700&nbsp;AWMP&nbsp;&nbsp;&nbsp;~6730&nbsp;GEB&nbsp;&nbsp;&nbsp;~6750&nbsp;KGV&nbsp;&nbsp;&nbsp;~6760&nbsp;PROV&nbsp;&nbsp;&nbsp;~6770&nbsp;RBK&nbsp;&nbsp;&nbsp;~6800&nbsp;BMK&nbsp;&nbsp;&nbsp;~6820&nbsp;KOM&nbsp;&nbsp;&nbsp;~6850&nbsp;REK&nbsp;&nbsp;&nbsp;~6870&nbsp;WER&nbsp;&nbsp;&nbsp;~6900&nbsp;VBEI&nbsp;&nbsp;&nbsp;~6950&nbsp;ABFO&nbsp;&nbsp;&nbsp;~6990&nbsp;PFAW&nbsp;&nbsp;&nbsp;~7000&nbsp;GWST&nbsp;&nbsp;&nbsp;~7020&nbsp;GRST&nbsp;&nbsp;&nbsp;~7030&nbsp;KFZST&nbsp;&nbsp;&nbsp;~7460&nbsp;VAWP&nbsp;&nbsp;&nbsp;~7510&nbsp;ZAW&nbsp;&nbsp;&nbsp;~8010&nbsp;SKB&nbsp;&nbsp;&nbsp;~8020&nbsp;GUV}
+        </div>
       </details>
       <aside>
 
@@ -649,12 +655,14 @@
   </main>
   <footer>
     <p>
-        <small>
-        Soweit nicht anders gekennzeichnet unterliegen alle per Button exportierbaren Inhalte der Lizenz <a href="https://creativecommons.org/publicdomain/mark/1.0/deed.de">CC0 1.0 Deed</a>. 
-        Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen.<br>
+      <small>
+        Soweit nicht anders gekennzeichnet unterliegen alle per Button exportierbaren Inhalte der Lizenz <a
+          href="https://creativecommons.org/publicdomain/mark/1.0/deed.de">CC0 1.0 Deed</a>.
+        Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a
+          href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen.<br>
         <a href="https://github.com/fdagner">fdagner</a> · BwR<br><br>
         <img src="media/pic/oer.svg" style="min-width: 100px;width:10%;">
-        </small>
+      </small>
     </p>
   </footer>
 </body>
