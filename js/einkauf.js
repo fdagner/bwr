@@ -1,5 +1,19 @@
 const inputWerkstoffe = document.getElementById('inputWerkstoffe');
 const inputSachanlagen = document.getElementById('inputSachanlagen');
+const anzahlDropdown = document.getElementById('anzahlDropdown');
+const mitRabatt = document.getElementById('mitRabatt');
+const mitBezugskosten = document.getElementById('mitBezugskosten');
+
+
+inputWerkstoffe.addEventListener('change', function () {
+  mitBezugskosten.disabled = !inputWerkstoffe.checked;
+});
+inputSachanlagen.addEventListener('change', function () {
+  mitBezugskosten.disabled = inputSachanlagen.checked;
+});
+// Initiales Setup
+mitBezugskosten.disabled = !inputWerkstoffe.checked;
+
 
 // Funktion zum Generieren einer zufälligen Zahl
 function generateRandomAnzahl() {
@@ -7,21 +21,43 @@ function generateRandomAnzahl() {
   return randomNumber;
 }
 
-// Paare von Elementen und den entsprechenden kontenWerkstoffe
+// Kontenplan
 const kontenWerkstoffe = {
-  "Rohstoffe": "6000 AWR",
-  "Fremdbauteile": "6010 AWF",
-  "Hilfsstoffe": "6020 AWH",
-  "Betriebsstoffe": "6030 AWB" 
-  // ... füge weitere Paare hinzu, wenn nötig
+  "Rohstoffe": {
+    "Hauptkonto": "6000 AWR",
+    "Unterkonto": "6001 BZKR",
+  },
+  "Fremdbauteile": {
+    "Hauptkonto": "6010 AWF",
+    "Unterkonto": "6011 BZKF"
+  },
+  "Hilfsstoffe": {
+    "Hauptkonto": "6020 AWH",
+    "Unterkonto": "6021 BZKH",
+  },
+  "Betriebsstoffe": {
+    "Hauptkonto": "6030 AWB",
+    "Unterkonto": "6031 BZKB"
+  },
 };
 
 const kontenWerkstoffe_2 = {
-  "von Rohstoffen": "6000 AWR",
-  "von Fremdbauteilen": "6010 AWF",
-  "von Hilfsstoffen": "6020 AWH",
-  "von Betriebsstoffen": "6030 AWB"
-  // ... füge weitere Paare hinzu, wenn nötig
+  "von Rohstoffen": {
+    "Hauptkonto": "6000 AWR",
+    "Unterkonto": "6001 BZKR",
+  },
+  "von Fremdbauteilen": {
+    "Hauptkonto": "6010 AWF",
+    "Unterkonto": "6011 BZKF"
+  },
+  "von Hilfsstoffen": {
+    "Hauptkonto": "6020 AWH",
+    "Unterkonto": "6021 BZKH",
+  },
+  "von Betriebsstoffen": {
+    "Hauptkonto": "6030 AWB",
+    "Unterkonto": "6031 BZKB"
+  },
 };
 
 const kontenSachanlagen = {
@@ -67,37 +103,36 @@ const kontenSachanlagen_2 = {
 };
 
 let kontenZahlung;
-function inputChangeCategory()
-{
-if (inputWerkstoffe.checked) {
-  kontenZahlung = {
-    "in bar": "2880 KA",
-    "per Barzahlung": "2880 KA",
-    "per Banküberweisung": "2800 BK",
-    "gegen Rechnung": "4400 VE",
-    "nebst Erhalt einer Eingangsrechnung": "4400 VE",
-    "auf Rechnung": "4400 VE",
-    "auf Ziel": "4400 VE",
-  }
-} else if (inputSachanlagen.checked) {
-  kontenZahlung = {
-    "per Banküberweisung": "2800 BK",
-    "gegen Rechnung": "4400 VE",
-    "nebst Erhalt einer Eingangsrechnung": "4400 VE",
-    "auf Rechnung": "4400 VE",
-    "auf Ziel": "4400 VE",
+function inputChangeCategory() {
+  if (inputWerkstoffe.checked) {
+    kontenZahlung = {
+      "in bar": "2880 KA",
+      "per Barzahlung": "2880 KA",
+      "per Banküberweisung": "2800 BK",
+      "gegen Rechnung": "4400 VE",
+      "nebst Erhalt einer Eingangsrechnung": "4400 VE",
+      "auf Rechnung": "4400 VE",
+      "auf Ziel": "4400 VE",
+    }
+  } else if (inputSachanlagen.checked) {
+    kontenZahlung = {
+      "per Banküberweisung": "2800 BK",
+      "gegen Rechnung": "4400 VE",
+      "nebst Erhalt einer Eingangsrechnung": "4400 VE",
+      "auf Rechnung": "4400 VE",
+      "auf Ziel": "4400 VE",
+    }
   }
 }
-}
 
 
 
-// Funktion zur Generierung einer Zufallsganzzahl zwischen 100 und 5000 (gerundet auf hunderte Stellen)
+// Funktion zur Generierung einer Zufallsganzzahl
 function generateRandomNettoWert() {
   if (inputWerkstoffe.checked) {
-    return Math.round(Math.random() * 49 + 2) * 100; // 2 to 50 times 100 (to round to the nearest hundred)
+    return Math.round(Math.random() * 49 + 2) * 100;
   } else if (inputSachanlagen.checked) {
-    return Math.round(Math.random() * 99 + 20) * 100; // 10 to 300 times 100 (to round to the nearest hundred)
+    return Math.round(Math.random() * 99 + 20) * 100;
   }
   // Fallback-Wert, falls keine Checkbox ausgewählt ist
   return 0;
@@ -110,7 +145,11 @@ function getRandomIntegerWithSteps(min, max, step) {
 }
 
 function getRandomRabatt() {
-  return getRandomIntegerWithSteps(5, 20, 5);
+  return getRandomIntegerWithSteps(5, 25, 5);
+}
+
+function getRandomBezugskosten() {
+  return getRandomIntegerWithSteps(10, 50, 5);
 }
 
 function formatCurrency(value) {
@@ -119,42 +158,54 @@ function formatCurrency(value) {
 function erstelleZufallssatz() {
   inputChangeCategory();
   const array_Rabatt = getRandomRabatt();
-// Arrays mit verschiedenen Teilen des Satzes
-const array_Subjekt = ['Wir kaufen ', 'Wir beziehen ', 'Unsere Firma kauft ', 'Wir erwerben ', 'Wir haben bezogen: ', 'Wir haben gekauft: '];
-const array_Subjekt_2 = ['Kauf ', 'Einkauf ', 'Erwerb ', 'Beschaffung ', 'Bezug '];
-const array_Werkstoffe = Object.keys(kontenWerkstoffe);
-const array_Werkstoffe_2 = Object.keys(kontenWerkstoffe_2);
-const array_Sachanlagen = Object.keys(kontenSachanlagen);
-const array_Sachanlagen_2 = Object.keys(kontenSachanlagen_2);
-const array_Formulierung_Wert = ['mit einem Aufwand in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'mit einem finanziellen Einsatz von', 'im Umfang von'];
-const array_Zahlung = Object.keys(kontenZahlung);
-const array_Formulierung_Rabatt = [`, abzüglich ${array_Rabatt} % Rabatt`];
-const array_Formulierung_Rabatt_2 = [
-  `. Ausgehandelt wurde zusätzlich ${array_Rabatt} % Treuerabatt`,
-  `. ${array_Rabatt} % Sonderrabatt können abgezogen werden`,
-  `. ${array_Rabatt} % Rabatt können abgezogen werden`,
-  `. Wir erhalten ${array_Rabatt} % Kundenrabatt`,
-  `. Wir erhalten ${array_Rabatt} % Rabatt`,
-];
+  let array_Bezugskosten = getRandomBezugskosten();
+  array_Bezugskosten = formatCurrency(array_Bezugskosten);
+  // Arrays mit verschiedenen Teilen des Satzes
+  const array_Subjekt = ['Wir kaufen ', 'Wir beziehen ', 'Unsere Firma kauft ', 'Wir erwerben ', 'Wir haben bezogen: ', 'Wir haben gekauft: '];
+  const array_Subjekt_2 = ['Kauf ', 'Einkauf ', 'Erwerb ', 'Beschaffung ', 'Bezug '];
+  const array_Werkstoffe = Object.keys(kontenWerkstoffe);
+  const array_Werkstoffe_2 = Object.keys(kontenWerkstoffe_2);
+  const array_Sachanlagen = Object.keys(kontenSachanlagen);
+  const array_Sachanlagen_2 = Object.keys(kontenSachanlagen_2);
+  const array_Formulierung_Wert = ['mit einem Aufwand in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'mit einem finanziellen Einsatz von', 'im Umfang von'];
+  const array_Zahlung = Object.keys(kontenZahlung);
+  const array_Formulierung_Rabatt = [`, abzüglich ${array_Rabatt} % Rabatt`];
+  const array_Formulierung_Rabatt_2 = [
+    `. Ausgehandelt wurde zusätzlich ${array_Rabatt} % Treuerabatt`,
+    `. ${array_Rabatt} % Sonderrabatt können abgezogen werden`,
+    `. ${array_Rabatt} % Rabatt können abgezogen werden`,
+    `. Wir erhalten ${array_Rabatt} % Kundenrabatt`,
+    `. Wir erhalten ${array_Rabatt} % Rabatt`,
+  ];
+  const array_Formulierung_Bezugskosten = [
+    `. Versandkosten mit netto ${array_Bezugskosten} fallen obendrein an`,
+    `. Wir zahlen zudem zusätzlich Verpackungskosten in Höhe von ${array_Bezugskosten} netto`,
+    `. Transportversicherung und Rollgeld betragen darüber hinaus netto ${array_Bezugskosten}`,
+    `. Die Leihverpackung in Höhe von ${array_Bezugskosten} netto wird zusätzlich berechnet`,
+    `. Netto ${array_Bezugskosten} an Tansportkosten werden zusätzlich berechnet`,
+    `. Versandkosten in Höhe von netto ${array_Bezugskosten} fallen darüber hinaus an`,
+    `. Es fallen des Weiteren Frachtgebühren in Höhe von netto ${array_Bezugskosten} an.`,
+    `. Es werden noch netto ${array_Bezugskosten} an Versandkosten berechnet`,
+  ];
 
-// Funktion zum Erstellen eines zufälligen Satzes
+  // Funktion zum Erstellen eines zufälligen Satzes
 
   // Zufällige Auswahl der Elemente und der alternativen Arrays
   const selectedarray_Subjekt = Math.random() < 0.5 ? array_Subjekt : array_Subjekt_2;
   const selectedarray_Werkstoffe = selectedarray_Subjekt === array_Subjekt_2 ? array_Werkstoffe_2 : array_Werkstoffe;
   const selectedarray_Sachanlagen = selectedarray_Subjekt === array_Subjekt_2 ? array_Sachanlagen_2 : array_Sachanlagen;
-
   // Zufällige Auswahl der Elemente aus den ausgewählten Arrays
   const zufaelligesSubjekt = selectedarray_Subjekt[Math.floor(Math.random() * selectedarray_Subjekt.length)];
   const zufaelligesWerkstoff = selectedarray_Werkstoffe[Math.floor(Math.random() * selectedarray_Werkstoffe.length)];
   const zufaelligesSachanlagen = selectedarray_Sachanlagen[Math.floor(Math.random() * selectedarray_Sachanlagen.length)];
   const zufaelligesFormulierung_Wert = array_Formulierung_Wert[Math.floor(Math.random() * array_Formulierung_Wert.length)];
-  const antwortWerkstoff = kontenWerkstoffe[zufaelligesWerkstoff] || kontenWerkstoffe_2[zufaelligesWerkstoff];
+  const antwortWerkstoff = kontenWerkstoffe[zufaelligesWerkstoff]?.Hauptkonto || kontenWerkstoffe_2[zufaelligesWerkstoff]?.Hauptkonto;
+  const antwortBezugskosten = kontenWerkstoffe[zufaelligesWerkstoff]?.Unterkonto || kontenWerkstoffe_2[zufaelligesWerkstoff]?.Unterkonto;
   const antwortSachanlagen = kontenSachanlagen[zufaelligesSachanlagen] || kontenSachanlagen_2[zufaelligesSachanlagen];
   const nettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
   const Wert = generateRandomNettoWert();
   const nettoWert = formatCurrency(Wert);
-  const bruttoWert = formatCurrency(Math.round(Wert * 0.19 + Wert));
+  let bruttoWert = formatCurrency(Math.round(Wert * 0.19 + Wert));
   let zufaelligesNettowert;
   if (inputWerkstoffe.checked) {
     zufaelligesNettowert = nettoOderBrutto === 'Netto' ? `Listenpreis ${nettoWert} netto` : `brutto ${bruttoWert}`;
@@ -169,7 +220,7 @@ const array_Formulierung_Rabatt_2 = [
   let zufaelligesFormulierung_Rabatt;
   let zufaelligesFormulierung_Rabatt_2;
   let berechnung_nettoWert;
-   const mitRabatt = document.getElementById('mitRabatt');
+
   if (mitRabatt.checked) {
     zufaelligesRabatt = array_Rabatt;
     zufaelligesFormulierung_Rabatt = array_Formulierung_Rabatt[Math.floor(Math.random() * array_Formulierung_Rabatt.length)];
@@ -184,8 +235,21 @@ const array_Formulierung_Rabatt_2 = [
 
   let antwort_nettoWert = formatCurrency(berechnung_nettoWert);
   let berechnung_USTWert = berechnung_nettoWert * 0.19;
-  let USTWert = formatCurrency(berechnung_USTWert);
   let berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert);
+  let zufaelligesFormulierung_Bezugskosten
+  if (inputWerkstoffe.checked && mitBezugskosten.checked) {
+    zufaelligesBezugskosten = array_Bezugskosten;
+    zufaelligesFormulierung_Bezugskosten = array_Formulierung_Bezugskosten[Math.floor(Math.random() * array_Formulierung_Bezugskosten.length)];
+    berechnung_USTWert = (berechnung_nettoWert + parseFloat(array_Bezugskosten)) * 0.19;
+    berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert) + parseFloat(array_Bezugskosten);
+    bruttoWert = formatCurrency(Math.round(Wert * 0.19 + Wert) + parseFloat(array_Bezugskosten) * 0.19 + parseFloat(array_Bezugskosten));
+  } else {
+    zufaelligesBezugskosten = "";
+    zufaelligesFormulierung_Bezugskosten = "";
+    berechnung_USTWert = berechnung_USTWert;
+  }
+  let bezugskostenWert = formatCurrency(array_Bezugskosten);
+  let USTWert = formatCurrency(berechnung_USTWert);
   let antwort_bruttoWert = formatCurrency(berechnung_bruttoWert);
 
   // Zusammenfügen der ausgewählten Elemente zu einem Satz
@@ -194,17 +258,20 @@ const array_Formulierung_Rabatt_2 = [
 
   if (inputWerkstoffe.checked) {
     if (randomValue < 0.33) {
-      zufaelligerSatz = `${zufaelligesSubjekt} ${zufaelligesWerkstoff} ${zufaelligesZahlung} ${zufaelligesFormulierung_Wert} ${zufaelligesNettowert} ${zufaelligesFormulierung_Rabatt}.`;
+      zufaelligerSatz = `${zufaelligesSubjekt} ${zufaelligesWerkstoff} ${zufaelligesZahlung} ${zufaelligesFormulierung_Wert} ${zufaelligesNettowert} ${zufaelligesFormulierung_Rabatt} ${zufaelligesFormulierung_Bezugskosten}.`;
     } else if (randomValue < 0.66) {
-      zufaelligerSatz = `${zufaelligesSubjekt} ${zufaelligesWerkstoff} ${zufaelligesFormulierung_Wert} ${zufaelligesNettowert} ${zufaelligesZahlung} ${zufaelligesFormulierung_Rabatt_2}.`;
+      zufaelligerSatz = `${zufaelligesSubjekt} ${zufaelligesWerkstoff} ${zufaelligesFormulierung_Wert} ${zufaelligesNettowert} ${zufaelligesZahlung} ${zufaelligesFormulierung_Rabatt_2} ${zufaelligesFormulierung_Bezugskosten}.`;
     } else {
-      zufaelligerSatz = `${zufaelligesSubjekt} ${zufaelligesWerkstoff} ${zufaelligesZahlung} ${zufaelligesFormulierung_Wert} ${zufaelligesNettowert} ${zufaelligesFormulierung_Rabatt_2}.`;
+      zufaelligerSatz = `${zufaelligesSubjekt} ${zufaelligesWerkstoff} ${zufaelligesZahlung} ${zufaelligesFormulierung_Wert} ${zufaelligesNettowert} ${zufaelligesFormulierung_Rabatt_2} ${zufaelligesFormulierung_Bezugskosten}.`;
     } const antwort_1 = `${antwortWerkstoff}`;
     const wert_1 = `${antwort_nettoWert}`;
     const antwort_2 = `${antwortZahlung}`;
-    const wert_2 =  `${antwort_bruttoWert}`;
+    const antwort_bezugskosten = `${antwortBezugskosten}`;
+    const antwort_bezugskostenWert = `${bezugskostenWert}`;
+    const wert_2 = `${antwort_bruttoWert}`;
 
-    return [zufaelligerSatz, antwort_1, wert_1, USTWert, antwort_2, wert_2];
+
+    return [zufaelligerSatz, antwort_1, wert_1, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, antwort_2, wert_2];
   } else if (inputSachanlagen.checked) {
     if (randomValue < 0.33) {
       zufaelligerSatz = `${zufaelligesSubjekt} ${zufaelligesSachanlagen} ${zufaelligesZahlung} ${zufaelligesFormulierung_Wert} ${zufaelligesNettowert} ${zufaelligesFormulierung_Rabatt}.`;
@@ -215,25 +282,27 @@ const array_Formulierung_Rabatt_2 = [
     } const antwort_1 = `${antwortSachanlagen}`;
     const wert_1 = `${antwort_nettoWert}`;
     const antwort_2 = `${antwortZahlung}`;
-    const wert_2 =  `${antwort_bruttoWert}`;
+    const antwort_bezugskosten = `${antwortBezugskosten}`;
+    const antwort_bezugskostenWert = `${bezugskostenWert}`;
+    const wert_2 = `${antwort_bruttoWert}`;
 
-    return [zufaelligerSatz, antwort_1, wert_1, USTWert, antwort_2, wert_2];
+    return [zufaelligerSatz, antwort_1, wert_1, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, antwort_2, wert_2,];
   }
 
 }
 
 
 function zeigeZufaelligenSatz() {
-  const anzahlDropdown = document.getElementById('anzahlDropdown');
+
   const anzahl = parseInt(anzahlDropdown.value);
 
-  let satzOutput = '<h2>Aufgaben</h2>'; // Start der nummerierten Liste
-  satzOutput += '<ol>'; // Start der nummerierten Liste
+  let satzOutput = '<h2>Aufgaben</h2>';
+  satzOutput += '<ol>';
   let antwortOutput = `<h2>Lösung:</h2>`;
-  antwortOutput += '<ol>'; // Start der nummerierten Liste für Antworten
+  antwortOutput += '<ol>';
 
   for (let i = 1; i <= anzahl; i++) {
-    const [zufaelligerSatz, antwort_1, wert_1, USTWert, antwort_2, wert_2] = erstelleZufallssatz();
+    const [zufaelligerSatz, antwort_1, wert_1, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, antwort_2, wert_2] = erstelleZufallssatz();
     const formattedSatz = zufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
 
     // Generierte Sätze hinzufügen
@@ -249,7 +318,15 @@ function zeigeZufaelligenSatz() {
     antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
     antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1"></td>`;
     antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1"></td>`;
-   
+    if (inputWerkstoffe.checked && mitBezugskosten.checked) {
+      antwortOutput += `</tr>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${antwort_bezugskosten} </td>`;
+      antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${antwort_bezugskostenWert}</td>`;
+      antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1"></td>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1"></td>`;
+    }
     antwortOutput += `</tr>`;
     antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">2600 VORST</td>`;
     antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${USTWert}</td>`;
