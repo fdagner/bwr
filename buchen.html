@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T-Konto-Generator</title>
+  <title>Buchführung</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/kontenplan.js"></script>
@@ -22,7 +22,7 @@
         <button class="tablinks" id="defaultOpen" onclick="openCity(event, 't-konto')">T-Konto</button>
         <button class="tablinks" onclick="openCity(event, 'buchungssatz')">Buchungssatz</button>
         <button class="tablinks" onclick="openCity(event, 'vorkontierung')">Vorkontierung</button>
-        <button class="tablinks" onclick="openCity(event, 'geschaeftsfaelle')">Geschäftsfälle</button>
+        <button class="tablinks" onclick="openCity(event, 'einkauf')">Einkauf</button>
         <button class="tablinks" onclick="openCity(event, 'inventar')">Inventar</button>
         <button class="tablinks" onclick="openCity(event, 'bilanz7')">Bilanz 7</button>
       </nav>
@@ -34,7 +34,7 @@
         <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <video style="width:100%;margin: 0 auto;" poster="media/pic/screenshot1.png" controls>
             <source src="media/video/t-konto.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Your browser does not support the video tag!
           </video>
         </div>
       </details>
@@ -154,7 +154,7 @@
 
     <section id="vorkontierung" class="tabcontent">
       <h2>Vorkontierung</h2>
-        <form id="vorkontierungForm" class="box">
+      <form id="vorkontierungForm" class="box">
         <label for="anzahlZeilen">Anzahl der Zeilen (1-20):</label>
         <input type="number" id="anzahlZeilenVorkontierung" name="anzahlZeilen" value="2" min="1" max="20" required>
         <br><br>
@@ -199,44 +199,64 @@
       </div>
     </section>
 
-    <section id="geschaeftsfaelle" class="tabcontent">
-      <h2>Geschäftsfälle</h2>
-      <details>
-        <summary>Anleitung</summary>
-        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
-          <video style="width:100%;margin: 0 auto;" poster="media/pic/screenshot1.png" controls>
-            <source src="media/video/t-konto.mp4" type="video/mp4">
-            Your bser does not support the video tag.
-          </video>
-        </div>
-      </details><br>
+    <section id="einkauf" class="tabcontent">
+      <h2>Einkauf</h2>
+      <br>
 
       <div id="generator-container">
         <div class="box">
           <p>Sie können hier zufällige Geschäftsfälle generieren. Passen Sie ggf. Beträge und Bezeichnungen an Ihr
             Modellunternehmen an. </p>
-          <label>
-            <input type="checkbox" id="rabattCheckbox"> Rabatt
-          </label>
-          <h3>Einkauf</h3>
-          <label>
-            <input type="radio" name="category" value="werkstoffe" checked> Werkstoffe
+          <input type="radio" name="einkauf" id="inputWerkstoffe" value="werkstoffe" checked> Werkstoffe
           </label>
           <label>
-            <input type="radio" name="category" value="sachanlagen"> Aktivierung von Sachanlagen
+            <input type="radio" name="einkauf" id="inputSachanlagen" value="sachanlagen"> Aktivierung von Sachanlagen
           </label>
-          <h3>Verkauf</h3>
-          <label>
-            <input type="radio" name="category" value="fertigerzeugnisse" disabled> Fertigerzeugnisse
-          </label>
-          <br><br>
-          <button onclick="generateText()"><svg xmlns="http://www.w3.org/2000/svg" fill="white" height="16" width="16"
+          <br><label for="mitRabatt">Rabatt:</label>
+          <input type="checkbox" id="mitRabatt"> | <label for="mitBezuguskosten">Bezugskosten:</label><input
+            type="checkbox" id="mitBezugskosten" disabled><br>
+          <label for="anzahlDropdown">Anzahl der Geschäftsfälle:</label>
+          <select id="anzahlDropdown">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select><br>
+          <button onclick="zeigeZufaelligenSatz()">Aufgaben erstellen</button>
+        </div>
+        <div id="einkaufContainer" contenteditable="true"></div>
+        <div class="exportButtons">
+          <button class="icon" type="button" onclick="einkaufHerunterladenAlsPNG()"><svg
+              xmlns="http://www.w3.org/2000/svg" height="16" width="16"
               viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
               <path
-                d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H352c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V80c0-17.7-14.3-32-32-32s-32 14.3-32 32v35.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V432c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H160c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z" />
-            </svg> Geschäftsfälle erstellen</button>
-        </div>
-        <div id="output" style="min-height: 300px" contenteditable="true"></div>
+                d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg></button>
+          <button class="icon" type="button" id="officeButton" data-clipboard-target="#einkaufContainer"><svg
+              xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+              viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
+            </svg></button>
+          <button class="icon" type="button" onclick="einkaufHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
+              height="16" width="12"
+              viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg></button>
+          <button class="icon" type="button" onclick="einkaufKopiereInZwischenablage()"><svg
+              xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+              viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg></button>
+        </div><br>
       </div>
     </section>
 
@@ -488,21 +508,24 @@
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Betriebs- und Verwaltungsgebäude</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-BVG"></td>
-              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Langfristige Bankverbindlichkeiten</td>
+              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Langfristige Bankverbindlichkeiten
+              </td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-LBKV"></td>
             </tr>
 
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Maschinen und Anlagen</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-MA"></td>
-              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Kurzfristige Bankverbindlichkeiten</td>
+              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Kurzfristige Bankverbindlichkeiten
+              </td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-KBKV"></td>
             </tr>
-            
+
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Fuhrpark</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-FP"></td>
-              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Verbindlichkeiten bei Lieferern</td>
+              <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;">Verbindlichkeiten bei Lieferern
+              </td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-VE"></td>
             </tr>
 
@@ -512,7 +535,7 @@
               <td style="width:30%;border-left: 1px solid #AAAAAA;padding-left: 6px;"></td>
               <td style="width:20%;text-align:right;padding-right: 4px;"></td>
             </tr>
-            
+
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Büromöbel- und Geschäftsausst.</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-BGA"></td>
@@ -520,7 +543,7 @@
               <td style="width:20%;text-align:right;padding-right: 4px;"></td>
             </tr>
 
-            
+
             <tr style="border-top: 1px solid #AAAAAA;">
               <td style="width:30%">Vorräte</td>
               <td style="width:20%;text-align:right;padding-right: 4px;" id="value-VORR"></td>
@@ -560,8 +583,8 @@
 
       </div>
       <div class="exportButtons">
-        <button class="icon" type="button" onclick="bilanz7HerunterladenAlsPNG()"><svg xmlns="http://www.w3.org/2000/svg"
-            height="16" width="16"
+        <button class="icon" type="button" onclick="bilanz7HerunterladenAlsPNG()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
             viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
@@ -615,7 +638,7 @@
         <script src="js/t-konto.js"></script>
         <script src="js/buchungssatz.js"></script>
         <script src="js/vorkontierung.js"></script>
-        <script src="js/geschaeftsfaelle.js"></script>
+        <script src="js/einkauf.js"></script>
         <script src="js/inventar.js"></script>
         <script src="js/bilanz7.js"></script>
         <script src="js/moodle.js"></script>
@@ -635,7 +658,8 @@
           href="https://creativecommons.org/publicdomain/mark/1.0/deed.de">CC0 1.0 Deed</a>.
         Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a
           href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen.<br>
-        <a href="https://github.com/fdagner">fdagner</a> · BwR-Helfer
+        <a href="https://github.com/fdagner">fdagner</a> · BwR<br><br>
+        <img src="media/pic/oer.svg" style="min-width: 100px;width:10%;">
       </small>
     </p>
   </footer>
