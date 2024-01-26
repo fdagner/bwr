@@ -163,6 +163,18 @@ function loadSupplierData() {
     document.getElementById('ibanLieferer').textContent = 'IBAN: ' + selectedSupplier.unternehmen.iban;
     document.getElementById('bicLieferer').textContent = 'BIC: ' + selectedSupplier.unternehmen.bic;
     document.getElementById('nummerKunde').textContent = nummerKunde * selectedSupplier.unternehmen.id * 3;
+    const colorSVGElements = document.querySelectorAll('.colorSVG');
+    colorSVGElements.forEach(element => {
+        // Check if selectedSupplier.unternehmen.akzent is undefined
+        const akzentColor = selectedSupplier.unternehmen.akzent !== undefined ? selectedSupplier.unternehmen.akzent : "#7db9f5";
+        
+        element.setAttribute('fill', akzentColor);
+        let colorPicker = document.getElementById("colorPicker");
+        // Setze die Standardfarbe
+        colorPicker.value = akzentColor;
+    });
+    adjustTextColor();
+
 
     let handelsregister = null;
 
@@ -184,7 +196,6 @@ function loadSupplierData() {
 
     const logoUrl = selectedSupplier.unternehmen.logo;
     const svgContainer = document.getElementById('rechnungSVG');
-    const existingImage = document.getElementById('uploaded-image');
     const rectElement = document.getElementById('logo-placeholder');
 
     const existingImages = svgContainer.querySelectorAll('#uploaded-image');
@@ -242,6 +253,11 @@ function loadSupplierData() {
 
 // Funktion zum Laden eines Logos
 function loadLogo(event) {
+    const svgContainer = document.getElementById('rechnungSVG');
+    const existingImages = svgContainer.querySelectorAll('#uploaded-image');
+    existingImages.forEach(existingImage => {
+        svgContainer.removeChild(existingImage);
+    });
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
@@ -506,6 +522,7 @@ function formatCurrency(amount) {
 
 // Funktion zum Aktualisieren der Farben
 function updateColors() {
+    
     let colorPicker = document.getElementById("colorPicker");
     let colorElements = document.querySelectorAll(".colorSVG");
     let textColorliefererInformationen2 = document.getElementById('liefererInformationen2')
@@ -527,14 +544,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let colorPicker = document.getElementById("colorPicker");
     colorPicker.addEventListener("input", updateColors);
 
-    let observer = new MutationObserver(updateColors);
-
-    let body = document.body;
-    // Konfiguration für den Observer
-    let config = { childList: true, subtree: true };
-
-    // Starten des Observers
-    observer.observe(body, config);
+   
 
 });
 
@@ -615,22 +625,24 @@ async function applySVG() {
     }
 }
 
-function loadSVGTemplate(templateName) {
-    let templatePath = "templates/" + templateName + ".svg";
-
-    return fetch(templatePath)
-        .then(response => response.text())
-        .then(svgData => {
-            return svgData;
-        })
-        .catch(error => {
-            console.error("Fehler beim Laden der SVG-Vorlage:", error);
-        });
+async function loadSVGTemplate(templateName) {
+    try {
+        let templatePath = "templates/" + templateName + ".svg";
+        let response = await fetch(templatePath);
+        let svgData = await response.text();
+        return svgData;
+    } catch (error) {
+        console.error("Fehler beim Laden der SVG-Vorlage:", error);
+    }
 }
-document.addEventListener('DOMContentLoaded', (event) => {
-    setTimeout(() => {
+
+document.addEventListener('DOMContentLoaded', async (event) => {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
         applySVGholen();
-    }, 1000);
+    } catch (error) {
+        console.error("Fehler beim Laden der SVG:", error);
+    }
 });
 
 
@@ -840,7 +852,7 @@ function isValidNumberInput(value, minValue, maxValue) {
     }
 
     // Überprüfung auf gültige Zahl im angegebenen Bereich
-    const numericValue = parseFloat(value);
+    const numericValue = parseFloat(value);     
     return !isNaN(numericValue) && numericValue >= minValue && numericValue <= maxValue;
 }
 

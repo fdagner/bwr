@@ -196,18 +196,17 @@
                         </div>
                     </div>
                 </div> <h3>Allgemeine Daten</h3>
-                <div class="flex-row">
-                    <div>
+                 <div class="flex-row">
+                      <div>
                         <label for="datenLieferer">Lieferer: </label>
                         <select id="datenLieferer" onchange="loadSupplierData()">
-                        </select>
+                        </select><small><a href="#" class="tablinks" id="defaultOpen" onclick="openCity(event, 'modellunternehmen')"> Eigenes Modellunternehmen?</a></small>
                     </div>
-                    <div><label for="datenKunde">Rechnungsempfänger:</label>
+                    <div><label for="datenKunde">Empfänger:</label>
                         <select id="datenKunde" onchange="loadCompanyData()">
                         </select>
-                    </div>
-                    <div>
-                        Eigenes Logo hochladen: <input type="file" accept="image/*" onchange="loadLogo(event)">
+                   </div>
+                    <div>Eigenes Logo hochladen: <input type="file" accept="image/*" onchange="loadLogo(event)">
                     </div>
                     <div><label for="colorPicker">Akzentfarbe:</label>
                         <input type="color" id="colorPicker" value="#7db9f5">

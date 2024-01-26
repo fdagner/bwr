@@ -18,6 +18,7 @@
     iban: "DE89370400440532013000"
     bic: "COBADEFFXXX"
     inhaber: "Erna Kistner"
+    akzent: "#7db9f5"
 
 - unternehmen:
     id: "2"
@@ -39,6 +40,7 @@
     iban: "DE89370400440532013001"
     bic: "COBADEFFXXX"
     inhaber: "Max Merlin"
+    akzent: "#FF00FF"
 
 - unternehmen:
     id: "3"
@@ -60,6 +62,7 @@
     iban: "DE89370400440532013002"
     bic: "COBADEFFXXX"
     inhaber: "Markus Schatt"
+    akzent: "#000080"
 
 - unternehmen:
     id: "4"
@@ -81,6 +84,7 @@
     iban: "DE89370400440532013003"
     bic: "COBADEFFXXX"
     inhaber: "Martin Eichler"
+    akzent: "#808000"
 
 - unternehmen:
     id: "5"
@@ -101,6 +105,7 @@
     iban: "DE89370400440532013004"
     bic: "COBADEFFXXX"
     inhaber: "Nicole Mustermann"
+    akzent: "#008000"
 
 - unternehmen:
     id: "6"
@@ -143,6 +148,7 @@
     iban: "DE89370400440532013006"
     bic: "COBADEFFXXX"
     inhaber: "Maria Eisemann"
+    akzent: "#808080"
 
 - unternehmen:
     id: "8"
@@ -164,6 +170,7 @@
     iban: "DE89370400440532013007"
     bic: "COBADEFFXXX"
     inhaber: "Tobias Kasch"
+    akzent: "#FF00FF"
 
 - unternehmen:
     id: "9"
@@ -185,6 +192,7 @@
     iban: "DE89370400440532013008"
     bic: "COBADEFFXXX"
     inhaber: "Katharina Blass"
+    akzent: "#FFFFFF"
 
 - unternehmen:
     id: "10"
@@ -206,6 +214,7 @@
     iban: "DE89370400440532013010"
     bic: "COBADEFFXXX"
     inhaber: "Karl Schlächter"
+    akzent: "#d2691e"
 
 - unternehmen:
     id: "11"
@@ -228,6 +237,7 @@
     iban: "DE89370400440532013011"
     bic: "COBADEFFXXX"
     inhaber: "Karolina Messner"
+    akzent: "#556b2f"
 
 - unternehmen:
     id: "12"
@@ -250,6 +260,7 @@
     iban: "DE89370400440532013012"
     bic: "COBADEFFXXX"
     inhaber: "Robert Huber"
+    akzent: "#2f4f4f"
 
 - unternehmen:
     id: "13"
@@ -272,6 +283,7 @@
     iban: "DE89370400440532013013"
     bic: "COBADEFFXXX"
     inhaber: "Barbara Tollmann"
+    akzent: "#00bfff"
 
 - unternehmen:
     id: "14"
@@ -294,6 +306,7 @@
     iban: "DE89370400440532013014"
     bic: "COBADEFFXXX"
     inhaber: "Aleya Mintal"
+    akzent: "#daa520"
 
 - unternehmen:
     id: "15"
@@ -316,6 +329,7 @@
     iban: "DE89370400000532000077"
     bic: "COBADEFFXXX"
     inhaber: "Thorsten Fiedler"
+    akzent: "#ffb6c1"
 
 - unternehmen:
     id: "16"
@@ -338,6 +352,7 @@
     iban: "DE89370400000532000077"
     bic: "COBADEFFXXX"
     inhaber: "Thorsten Fiedler"
+    akzent: "#778899"
 
 - unternehmen:
     id: "17"
@@ -360,3 +375,4 @@
     iban: "DE89370400000876000077"
     bic: "COBADFGHXXX"
     inhaber: "Petra Meininger"
+    akzent: "#faf0e6"

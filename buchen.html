@@ -208,10 +208,11 @@
             Modellunternehmen an. </p>
           <label for="mitRabatt">Rabatt:</label>
           <input type="checkbox" id="mitRabatt"> | <label for="mitBezuguskosten">Bezugskosten:</label><input
-            type="checkbox" id="mitBezugskosten"><br><label for="mitEinkaufskalkulation">Einkaufskalkulation und Buchungssatz:</label>
+            type="checkbox" id="mitBezugskosten"><br>
+            <label for="mitBuchungssatz">Nur Buchungssatz:</label>
+            <input type="radio" id="mitBuchungssatz" name="buchungsoption" category="buchungssatz" checked> | <label for="mitEinkaufskalkulation">Einkaufskalkulation und Buchungssatz:</label>
             <input type="radio" id="mitEinkaufskalkulation" name="buchungsoption" category="buchungssatz">
-           | <label for="mitBuchungssatz">Nur Buchungssatz:</label>
-            <input type="radio" id="mitBuchungssatz" name="buchungsoption" category="buchungssatz">
+           
             <br>
             
           <label for="anzahlDropdown">Anzahl der Geschäftsfälle:</label>
@@ -614,8 +615,8 @@
       <details id="moodleDropdown">
         <summary>Kontenplan für Moodle eintragen: Multichoice-Fragetyp Lückentext_(Cloze)</summary>
         <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
-          <p><small>Markieren Sie das Konto, das mit 100% bewertet werden soll und ziehen Sie anschließend das nun grüne
-              Icon an die gewünschte Stelle. Es sollte dort anschließend "{1:MULTICHOICE:~..." erscheinen.</small></p>
+          <p><small>Markieren Sie das Konto, das mit 100% bewertet werden soll und ziehen Sie das nun grüne
+              Icon an die gewünschte Stelle (bei Mobilgeräten lang gedrückt halten). Es sollte dort anschließend "{1:MULTICHOICE:~..." erscheinen.</small></p>
           <div id="kontenplan" draggable="true" ondragstart="handleDragStart(event)"
             style="text-align: center;cursor: pointer;background-color: #f5f5f5; border: 1px dashed #c32e04;margin: 0 auto;width: 100px;padding: 4px">
             <svg id="svgKonto" xmlns="http://www.w3.org/2000/svg" height="32" width="24" viewBox="0 0 384 512"
@@ -641,11 +642,10 @@
         <script src="js/inventar.js"></script>
         <script src="js/bilanz7.js"></script>
         <script src="js/moodle.js"></script>
+  
         <script>
 
 
-        </script>
-        <script>
           // Get the element with id="defaultOpen" and click on it
           document.getElementById("defaultOpen").click();
         </script>

@@ -81,3 +81,5 @@ window.onload = function () {
   generateRandomInventar()
   generateRandomBilanz7()
 };
+
+
