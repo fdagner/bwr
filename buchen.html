@@ -206,14 +206,14 @@
         <div class="box">
           <p>Sie können hier zufällige Geschäftsfälle generieren. Passen Sie ggf. Beträge und Bezeichnungen an Ihr
             Modellunternehmen an. </p>
-          <input type="radio" name="einkauf" id="inputWerkstoffe" value="werkstoffe" checked> Werkstoffe
-          </label>
-          <label>
-            <input type="radio" name="einkauf" id="inputSachanlagen" value="sachanlagen"> Aktivierung von Sachanlagen
-          </label>
-          <br><label for="mitRabatt">Rabatt:</label>
+          <label for="mitRabatt">Rabatt:</label>
           <input type="checkbox" id="mitRabatt"> | <label for="mitBezuguskosten">Bezugskosten:</label><input
-            type="checkbox" id="mitBezugskosten" disabled><br>
+            type="checkbox" id="mitBezugskosten"><br><label for="mitEinkaufskalkulation">Einkaufskalkulation und Buchungssatz:</label>
+            <input type="radio" id="mitEinkaufskalkulation" name="buchungsoption" category="buchungssatz">
+           | <label for="mitBuchungssatz">Nur Buchungssatz:</label>
+            <input type="radio" id="mitBuchungssatz" name="buchungsoption" category="buchungssatz">
+            <br>
+            
           <label for="anzahlDropdown">Anzahl der Geschäftsfälle:</label>
           <select id="anzahlDropdown">
             <option value="1">1</option>
