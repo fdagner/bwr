@@ -69,9 +69,15 @@ const kontenWerkstoffe_2 = {
   },
 };
 
-
 let kontenZahlung;
 function inputChangeCategory() {
+  if (inputEinkaufskalkulation.checked) {
+    kontenZahlung = {
+      "gegen Rechnung": "4400 VE",
+      "mit Erhalt einer Eingangsrechnung": "4400 VE",
+      "auf Rechnung": "4400 VE",
+      "auf Ziel": "4400 VE",
+    } } else {
   kontenZahlung = {
     "in bar": "2880 KA",
     "per Barzahlung": "2880 KA",
@@ -82,6 +88,9 @@ function inputChangeCategory() {
     "auf Ziel": "4400 VE",
   }
 }
+}
+
+
 
 
 function erstelleZufallssatz() {
@@ -190,8 +199,6 @@ function erstelleZufallssatz() {
   let bezugskostenWert = formatCurrency(random_Bezugskosten);
   let berechnung_rabattWert = parseFloat(nettoWert.replace(/[^\d,-]/g, '')) * random_Rabatt / 100;
   let rabattWert = formatCurrency(berechnung_rabattWert);
-  console.log(random_Rabatt);
-  console.log(nettoWert);
   let berechnung_einstandspreis = berechnung_bareinkaufspreis + parseFloat(random_Bezugskosten);
   let einstandspreis = formatCurrency(berechnung_einstandspreis);
   let USTWert = formatCurrency(berechnung_USTWert);
