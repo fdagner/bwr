@@ -1,19 +1,19 @@
-  // Select the drop-down menu
-  const kontoAuswahlRadio = document.getElementById('kontoAuswahl');
-  const svgKonto = document.getElementById('svgKonto');
-  
-  // Select the container for the Kontenplan
-  const dragContainer = document.getElementById('dragContainer');
-  
-  // Select the container for radio options
-  const radioOptionsContainer = document.getElementById('radioOptionsContainer');
-  
-  // Fill the drop-down menu with the accounts from the YAML file and create radio options
-  parsedData.konten.forEach(konto => {
-    const option = document.createElement('option');
-    option.value = konto.value_number + " " + konto.value_account;
-    option.text = konto.label;
-    kontoAuswahlSelect.appendChild(option);
+// Select the container for the Kontenplan
+const dragContainer = document.getElementById('dragContainer');
+
+// Select the container for radio options
+const radioOptionsContainer = document.getElementById('radioOptionsContainer');
+
+// Fill the container with checkboxes for the accounts from the YAML file
+parsedData.konten.forEach(konto => {
+  // Checkbox
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.value = konto.value_number + ' ' + konto.value_account;
+  checkbox.id = 'konto_' + konto.value_number; // Assign a unique ID for each checkbox
+  const label = document.createElement('label');
+  label.htmlFor = 'konto_' + konto.value_number;
+  label.appendChild(document.createTextNode(konto.label));
   
     // Create radio options for the chart of accounts
     const radioOptionContainer = document.createElement('div');

@@ -131,7 +131,7 @@ function erstelleZufallssatz() {
   const array_Subjekt_2 = ['Kauf ', 'Einkauf ', 'Erwerb ', 'Beschaffung ', 'Bezug '];
   const array_Subjekt_3 = ['Berechne den Einstandspreis: Wir erhalten ein Angebot für ', 'Berechne den Einstandspreis, wenn wir ein Angebot erhalten für '];
   const array_Subjekt_4 = ['Berechne den Einstandspreis: Unser Lieferant sendet ein Angebot für den Bezug', 'Berechne den Einstandspreis eines Angebots für den Kauf '];
-  const array_Subjekt_5 = ['Wir bezahlen die Rechnung per Banküberweisung innerhalb der Skontofrist'];
+  const array_Subjekt_5 = [`Wir bezahlen die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${random_Skonto} % Skonto`, `Die Rechnung wird mit ${random_Skonto} % Skonto per Banküberweisugn ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${random_Skonto} % Skonto per Bank`,  ];
   const array_Werkstoffe = Object.keys(kontenWerkstoffe);
   const array_Werkstoffe_2 = Object.keys(kontenWerkstoffe_2);
   const array_Supply_Wert = ['mit einem Aufwand in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'mit einem finanziellen Einsatz von', 'im Umfang von'];
@@ -141,8 +141,8 @@ function erstelleZufallssatz() {
     `. Ausgehandelt wurden zusätzlich ${random_Rabatt} % Treuerabatt`,
     `. ${random_Rabatt} % Sonderrabatt können abgezogen werden`,
     `. ${random_Rabatt} % Rabatt können abgezogen werden`,
-    `. Wir erhalten ${random_Rabatt} % Kundenrabatt`,
-    `. Wir erhalten ${random_Rabatt} % Rabatt`,
+    `. Der Lieferer gewährt uns ${random_Rabatt} % Kundenrabatt`,
+    `. Wir haben zudem ${random_Rabatt} % Rabatt ausgehandelt`,
   ];
   const array_Supply_Skonto = [
     `. Wir können zudem ${random_Skonto} % Skonto abziehen`,
@@ -329,7 +329,7 @@ function zeigeZufaelligenSatz() {
     // Generierte Antworten hinzufügen
     antwortOutput += `<li><br>`;
     if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
-      antwortOutput += `<table style="white-space:nowrap;width:350px;margin: 0 0">`;
+      antwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       antwortOutput += `<tbody>`;
       antwortOutput += `<tr>`;
       antwortOutput += `<td>Listeneinkaufspreis</td><td style="padding-left:16px;text-align:right;">${listeneinkaufspreis}</td>`;
@@ -339,9 +339,9 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `<td>- Liefererrabatt</td><td style="padding-left:16px;text-align:right;">${antwort_rabattWert}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">${antwort_rabattSatz} %</td>`;
       antwortOutput += `</tr>`;
-      antwortOutput += `<tr style="border-top: solid 1px #ccc">`;
-      antwortOutput += `<td>= Zieleinkaufspreis</td>`;
-      antwortOutput += `<td style="padding-left:16px;text-align:right;">${zieleinkaufspreis}</td>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td style="border-top: solid 1px #ccc">= Zieleinkaufspreis</td>`;
+      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc"">${zieleinkaufspreis}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `<tr>`;
@@ -349,24 +349,24 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `<td style="padding-left:16px;text-align:right;">${antwort_skontoBetrag}<br></td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">${antwort_skontoSatz} %</td>`;
       antwortOutput += ` </tr>`;
-      antwortOutput += `<tr style="border-top: solid 1px #ccc">`;
-      antwortOutput += `<td>= Bareinkaufspreis</td>`;
-      antwortOutput += `<td style="padding-left:16px;text-align:right;">${antwort_bareinkaufspreis}</td>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td style="border-top: solid 1px #ccc">= Bareinkaufspreis</td>`;
+      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc">${antwort_bareinkaufspreis}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `<tr>`;
       antwortOutput += `<td>+ Bezugskosten</td><td style="padding-left:16px;text-align:right;">${antwort_bezugskostenWert}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
       antwortOutput += `</tr>`;
-      antwortOutput += `<tr style="border-top: solid 1px #ccc">`;
-      antwortOutput += `<td>= Einstandspreis</td>`;
-      antwortOutput += `<td style="padding-left:16px;text-align:right;">${antwort_einstandspreis}<br></td>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td style="border-top: solid 1px #ccc">= Einstandspreis</td>`;
+      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc">${antwort_einstandspreis}<br></td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `</tbody>`;
       antwortOutput += `</table><br>`;
     }
-    antwortOutput += `<table style="border: 1px solid #000;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+    antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
     antwortOutput += `<tbody>`;
     antwortOutput += `<tr>`;
     antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${konto_1}</td>`;
@@ -404,9 +404,9 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `<td>- Skonto (brutto)</td><td style="padding-left:16px;text-align:right;">${antwort_skontoBetrag_brutto}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">${antwort_skontoSatz} %</td>`;
       antwortOutput += `</tr>`;
-      antwortOutput += `<tr border-top: solid 1px #000>`;
-      antwortOutput += `<td style="border-top: solid 1px #000">= Überweisungsbetrag</td>`;
-      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #000">${antwort_ueberweisungsbetrag}</td>`;
+      antwortOutput += `<tr border-top: solid 1px #ccc>`;
+      antwortOutput += `<td style="border-top: solid 1px #ccc">= Überweisungsbetrag</td>`;
+      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc">${antwort_ueberweisungsbetrag}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `</table>`;
@@ -421,14 +421,14 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `<td>- Umsatzsteuer</td><td style="padding-left:16px;text-align:right;">${antwort_vorsteuer_berichtigung}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">19 %</td>`;
       antwortOutput += `</tr>`;
-      antwortOutput += `<tr border-top: solid 1px #000>`;
-      antwortOutput += `<td style="border-top: solid 1px #000">= Skonto (netto)</td>`;
-      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #000">${antwort_skontoBetrag}</td>`;
+      antwortOutput += `<tr border-top: solid 1px #ccc>`;
+      antwortOutput += `<td style="border-top: solid 1px #ccc">= Skonto (netto)</td>`;
+      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc">${antwort_skontoBetrag}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">100 %</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `</table>`;
       antwortOutput += `<br>`;
-      antwortOutput += `<table style="border: 1px solid #000;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+      antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
       antwortOutput += `<tbody>`;
       antwortOutput += `<tr>`;
       antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">4400 VE</td>`;
