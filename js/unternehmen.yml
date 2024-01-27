@@ -1,6 +1,7 @@
 - unternehmen:
     id: "1"
-    name: "EK-Bikes"
+    name: "ABC-Bikes"
+    motto: "Fahrräder von A bis Z!"
     bank: "BavarianBank"
     rechtsform: "e. Kfr."
     logo: "media/pic/ak-bikes.svg"
@@ -11,8 +12,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "0841 0802020"
-      email: "info@ek-bikes.bayern"
-      internet: "ek-bikes.bayern"
+      email: "info@abc-bikes.bayern"
+      internet: "abc-bikes.bayern"
     ust_id: "DE123456789"
     steuernummer: "181/001/11111"
     iban: "DE89370400440532013000"
@@ -40,7 +41,7 @@
     iban: "DE89370400440532013001"
     bic: "COBADEFFXXX"
     inhaber: "Max Merlin"
-    akzent: "#FF00FF"
+    akzent: "#FFE4E1"
 
 - unternehmen:
     id: "3"
@@ -62,7 +63,7 @@
     iban: "DE89370400440532013002"
     bic: "COBADEFFXXX"
     inhaber: "Markus Schatt"
-    akzent: "#000080"
+    akzent: "#F5F5F5"
 
 - unternehmen:
     id: "4"
@@ -84,7 +85,7 @@
     iban: "DE89370400440532013003"
     bic: "COBADEFFXXX"
     inhaber: "Martin Eichler"
-    akzent: "#808000"
+    akzent: "#f5f5f5"
 
 - unternehmen:
     id: "5"
@@ -148,7 +149,7 @@
     iban: "DE89370400440532013006"
     bic: "COBADEFFXXX"
     inhaber: "Maria Eisemann"
-    akzent: "#808080"
+    akzent: "#D3D3D3"
 
 - unternehmen:
     id: "8"
@@ -170,11 +171,12 @@
     iban: "DE89370400440532013007"
     bic: "COBADEFFXXX"
     inhaber: "Tobias Kasch"
-    akzent: "#FF00FF"
+    akzent: "#98fb98"
 
 - unternehmen:
     id: "9"
     name: "Farbenpracht"
+    motto: "Mut zu Farbe!"
     bank: "Bayernkasse"
     rechtsform: "e. Kfr."
     logo: "media/pic/farbe.svg"
@@ -197,6 +199,7 @@
 - unternehmen:
     id: "10"
     name: "AlpenHolz"
+    motto: "Nachhaltige Qualität"
     bank: "Bavaria Bank"
     rechtsform: "KG"
     logo: "media/pic/holz2.svg"
@@ -214,7 +217,7 @@
     iban: "DE89370400440532013010"
     bic: "COBADEFFXXX"
     inhaber: "Karl Schlächter"
-    akzent: "#d2691e"
+    akzent: "#f4a460"
 
 - unternehmen:
     id: "11"
@@ -237,7 +240,7 @@
     iban: "DE89370400440532013011"
     bic: "COBADEFFXXX"
     inhaber: "Karolina Messner"
-    akzent: "#556b2f"
+    akzent: "#ffc0cb"
 
 - unternehmen:
     id: "12"
@@ -260,7 +263,7 @@
     iban: "DE89370400440532013012"
     bic: "COBADEFFXXX"
     inhaber: "Robert Huber"
-    akzent: "#2f4f4f"
+    akzent: "#eee8aa"
 
 - unternehmen:
     id: "13"
@@ -291,7 +294,7 @@
     motto: "Chemische Werke"
     bank: "Stadtbank"
     rechtsform: "AG"
-    logo: ""
+    logo: "media/pic/chemie.svg"
     adresse:
       strasse: "Gewerbestraße 77"
       plz: "86368"
@@ -306,7 +309,7 @@
     iban: "DE89370400440532013014"
     bic: "COBADEFFXXX"
     inhaber: "Aleya Mintal"
-    akzent: "#daa520"
+    akzent: "#DC143C"
 
 - unternehmen:
     id: "15"
@@ -314,7 +317,7 @@
     motto: "Mit Sicherheit schnell!"
     bank: "Sparbank"
     rechtsform: "e. K."
-    logo: ""
+    logo: "media/pic/storch.svg"
     adresse:
       strasse: "Brauerstraße 85"
       plz: "87600"
@@ -329,7 +332,7 @@
     iban: "DE89370400000532000077"
     bic: "COBADEFFXXX"
     inhaber: "Thorsten Fiedler"
-    akzent: "#ffb6c1"
+    akzent: "#CCCCCC"
 
 - unternehmen:
     id: "16"
@@ -337,7 +340,7 @@
     motto: "Auf uns können Sie bauen!"
     bank: "Sparbank"
     rechtsform: "GmbH"
-    logo: ""
+    logo: "media/pic/bau.svg"
     adresse:
       strasse: "Unionstraße 85"
       plz: "90431"

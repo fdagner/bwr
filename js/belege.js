@@ -18,6 +18,7 @@ function handleFileUpload() {
 
                     // Reload dropdown and random companies based on the uploaded data
                     reloadDropdownOptions();
+                    loadSupplierData()
                     alert("Datei erfolgreich hochgeladen!");
                 } else {
                     console.error("Invalid YAML format in the uploaded file.");
@@ -119,7 +120,8 @@ fetch('js/unternehmen.yml')
             optionSupplier.text = company.unternehmen.name+ ' ' + company.unternehmen.rechtsform;
             dropdownSupplier.appendChild(optionSupplier);
         });
-
+        
+ 
     });
 
 let selectedSupplier;

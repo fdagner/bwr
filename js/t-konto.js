@@ -139,13 +139,12 @@ function kopiereInZwischenablage() {
 }
 
 function herunterladenAlsPNG() {
-  const kontoAuswahl = document.getElementById('kontoAuswahl').value;
   const tkontoContainer = document.getElementById('tkontoContainer');
   html2canvas(tkontoContainer).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
-    a.download = kontoAuswahl + '.png';
+    a.download = 'T-Konten' + '.png';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

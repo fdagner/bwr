@@ -16,14 +16,10 @@
         <a href="index.html">Zurück zur Übersicht</a>
         <h1>Belege erstellen</h1>
         <nav class="tab">
-            <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'modellunternehmen')">Belege
-                erstellen</button>
+            <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'modellunternehmen')">Modellunternehmen</button>
             <button class="tablinks" onclick="openCity(event, 'rechnung')">Rechnung</button>
         </nav>
         <section id="modellunternehmen" class="tabcontent">
-
-            <p><b>Hier haben Sie die Möglichkeit, Belege zu erstellen.</b></p>
-
             <h2>Modellunternehmen</h2>
             <p> Es steht eine umfangreiche Liste von Modellunternehmen zur Verfügung. Sie können auch Daten eigener Modellunternehmen verwenden.
                 Laden Sie hierzu die <a href="js/unternehmen.yml">Standarddaten</a> herunter und bearbeiten Sie diese
@@ -33,21 +29,6 @@
             Eigene Datei hochladen: <input type="file" id="fileInput" accept=".yml"
                 onchange="handleFileUpload()"><br><br><button onclick="deleteAndLoadDefaultData()">Daten
                 zurücksetzen</button>
-
-            <h2>Dateiformate</h2>
-            <ul>
-                <li><strong>PNG:</strong> Optimal für schnelle Verarbeitung in Office-Anwendungen und im Internet.</li>
-                <li><strong>SVG:</strong> Eine Vektordatei, die nachträglich bearbeitet werden kann, beispielsweise mit
-                    dem kostenlosen Programm Inkscape.</li>
-                <li><strong>HTML (für Profis):</strong> Geeignet für direktes Einbinden in HTML-Code, beispielsweise
-                    inline in einem mebis/Moodlekurs mit der Möglichkeit zum Skripting.
-                    Ein praktisches Beispiel dafür ist die Verwendung des aktuellen Jahres im Rechnungsdatum, ohne dass
-                    Sie sich um die Aktualisierung der Belege kümmern müssen.
-                    Hinweis: Von manchen Plattformen könnte Scripting in einer SVG nicht zugelassen sein oder in Zukunft
-                    deaktiviert werden.</p>
-                </li>
-            </ul>
-
         </section>
         <section id="rechnung" class="tabcontent">
             <h2>Rechnung (beta)</h2>
@@ -190,6 +171,7 @@
                                 <option value="template1">Klassisch</option>
                                 <option value="template2">Modern</option>
                                 <option value="template3">Mutig</option>
+                                <option value="template4">Elegant</option>
                             </select>
                         </div><div><br>
                             <button onclick="applySVGholen()">Daten übernehmen</button><br><br>
@@ -200,7 +182,7 @@
                       <div>
                         <label for="datenLieferer">Lieferer: </label>
                         <select id="datenLieferer" onchange="loadSupplierData()">
-                        </select><small><a href="#" class="tablinks" id="defaultOpen" onclick="openCity(event, 'modellunternehmen')"> Eigenes Modellunternehmen?</a></small>
+                        </select><small><a href="#" class="tablinks" id="defaultOpen" onclick="openCity(event, 'modellunternehmen')"><br>Eigenes Modellunternehmen verwenden?</a></small>
                     </div>
                     <div><label for="datenKunde">Empfänger:</label>
                         <select id="datenKunde" onchange="loadCompanyData()">
