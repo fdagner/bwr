@@ -1,8 +1,8 @@
 const anzahlDropdown = document.getElementById('anzahlDropdown');
 const mitRabatt = document.getElementById('mitRabatt');
 const mitBezugskosten = document.getElementById('mitBezugskosten');
-const inputEinkaufskalkulation = document.getElementById('mitEinkaufskalkulation');
-
+const mitEinkaufskalkulation = document.getElementById('mitEinkaufskalkulation');
+const mitSkontobuchungssatz = document.getElementById('mitSkontobuchungssatz');
 
 // Funktion für zufällige Zahlen Rabatt und Bezugskosten
 function getRandomIntegerWithSteps(min, max, step) {
@@ -35,18 +35,22 @@ const kontenWerkstoffe = {
   "Rohstoffe": {
     "Hauptkonto": "6000 AWR",
     "Unterkonto": "6001 BZKR",
+    "Nachlasskonto": "6002 NR"
   },
   "Fremdbauteile": {
     "Hauptkonto": "6010 AWF",
-    "Unterkonto": "6011 BZKF"
+    "Unterkonto": "6011 BZKF",
+    "Nachlasskonto": "6012 NF"
   },
   "Hilfsstoffe": {
     "Hauptkonto": "6020 AWH",
     "Unterkonto": "6021 BZKH",
+    "Nachlasskonto": "6022 NH"
   },
   "Betriebsstoffe": {
     "Hauptkonto": "6030 AWB",
-    "Unterkonto": "6031 BZKB"
+    "Unterkonto": "6031 BZKB",
+    "Nachlasskonto": "6032 AWB"
   },
 };
 
@@ -54,24 +58,28 @@ const kontenWerkstoffe_2 = {
   "von Rohstoffen": {
     "Hauptkonto": "6000 AWR",
     "Unterkonto": "6001 BZKR",
+    "Nachlasskonto": "6012 NF"
   },
   "von Fremdbauteilen": {
     "Hauptkonto": "6010 AWF",
-    "Unterkonto": "6011 BZKF"
+    "Unterkonto": "6011 BZKF",
+    "Nachlasskonto": "6022 NH"
   },
   "von Hilfsstoffen": {
     "Hauptkonto": "6020 AWH",
     "Unterkonto": "6021 BZKH",
+    "Nachlasskonto": "6022 NH"
   },
   "von Betriebsstoffen": {
     "Hauptkonto": "6030 AWB",
-    "Unterkonto": "6031 BZKB"
+    "Unterkonto": "6031 BZKB",
+    "Nachlasskonto": "6032 AWB"
   },
 };
 
 let kontenZahlung;
 function inputChangeCategory() {
-  if (inputEinkaufskalkulation.checked) {
+  if (mitEinkaufskalkulation.checked) {
     kontenZahlung = {
       " und kaufen auf Ziel": "4400 VE",
       " und erhalten eine Eingangsrechnung": "4400 VE",
@@ -104,6 +112,7 @@ function erstelleZufallssatz() {
   const array_Subjekt_2 = ['Kauf ', 'Einkauf ', 'Erwerb ', 'Beschaffung ', 'Bezug '];
   const array_Subjekt_3 = ['Berechne den Einstandspreis: Wir erhalten ein Angebot für ', 'Berechne den Einstandspreis, wenn wir ein Angebot erhalten für '];
   const array_Subjekt_4 = ['Berechne den Einstandspreis: Unser Lieferant sendet ein Angebot für den Bezug', 'Berechne den Einstandspreis eines Angebots für den Kauf '];
+  const array_Subjekt_5 = ['Wir bezahlen die Rechnung per Banküberweisung innerhalb der Skontofrist'];
   const array_Werkstoffe = Object.keys(kontenWerkstoffe);
   const array_Werkstoffe_2 = Object.keys(kontenWerkstoffe_2);
   const array_Supply_Wert = ['mit einem Aufwand in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'mit einem finanziellen Einsatz von', 'im Umfang von'];
@@ -145,6 +154,8 @@ function erstelleZufallssatz() {
   const randomSupply_Wert = array_Supply_Wert[Math.floor(Math.random() * array_Supply_Wert.length)];
   const antwortWerkstoff = kontenWerkstoffe[randomWerkstoff]?.Hauptkonto || kontenWerkstoffe_2[randomWerkstoff]?.Hauptkonto;
   const antwortBezugskosten = kontenWerkstoffe[randomWerkstoff]?.Unterkonto || kontenWerkstoffe_2[randomWerkstoff]?.Unterkonto;
+  const antwortSkontobuchungssatz = kontenWerkstoffe[randomWerkstoff]?.Nachlasskonto || kontenWerkstoffe_2[randomWerkstoff]?.Nachlasskonto;
+  const randomSkontobuchungssatz = array_Subjekt_5[Math.floor(Math.random() * array_Subjekt_5.length)];
   const nettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
   const Wert = generateRandomNettoWert();
   const nettoWert = formatCurrency(Wert);
@@ -214,8 +225,9 @@ function erstelleZufallssatz() {
     angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Wir nehmen das Angebot an ${randomZahlung}. Bilde den Buchungssatz!</li>`;
   }
   angebotSatz += `</ol>`;
-  let zufaelligerSatz;
 
+
+  let zufaelligerSatz;
   const randomValue = Math.random();
   if (randomValue < 0.33) {
     zufaelligerSatz = `${randomSubjekt} ${randomWerkstoff} ${randomZahlung} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt} ${randomSupply_Bezugskosten}.`;
@@ -224,6 +236,17 @@ function erstelleZufallssatz() {
   } else {
     zufaelligerSatz = `${randomSubjekt} ${randomWerkstoff} ${randomZahlung} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Bezugskosten}.`;
   }
+
+  const randomSkontoSatz = Math.random();
+  skontoSatz = `<ol style="list-style-type: lower-latin;">`;
+  if (randomSkontoSatz < 0.33) {
+    angebotSatz += `<li>${randomSkontobuchungssatz}  ${randomZahlung}.</li><li>Bilde den Buchungssatz.</li>`;
+  } else if (randomSkontoSatz < 0.66) {
+    angebotSatz += `<li>${randomSkontobuchungssatz}  ${randomZahlung}.</li><li>Bilde den Buchungssatz.</li>`;
+  } else {
+    angebotSatz += `<li>${randomSkontobuchungssatz}  ${randomZahlung}.</li><li>Bilde den Buchungssatz.</li>`;
+  }
+  angebotSatz += `</ol>`;
 
 
   const listeneinkaufspreis = `${nettoWert}`;
@@ -237,10 +260,11 @@ function erstelleZufallssatz() {
   const zieleinkaufspreis = `${antwortNettowert}`;
   const konto_2 = `${antwortZahlung}`;
   const antwort_bezugskosten = `${antwortBezugskosten}`;
+  const konto_Skontobuchungssatz = `${antwortSkontobuchungssatz}`;
   const antwort_bezugskostenWert = `${bezugskostenWert}`;
   const betrag_2 = `${antwortBruttowert}`;
 
-  return [zufaelligerSatz, angebotSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2];
+  return [zufaelligerSatz, angebotSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz];
 
 }
 
@@ -255,23 +279,27 @@ function zeigeZufaelligenSatz() {
   antwortOutput += '<ol>';
 
   for (let i = 1; i <= anzahl; i++) {
-    const [zufaelligerSatz, angebotSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2] = erstelleZufallssatz();
+    const [zufaelligerSatz, angebotSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz] = erstelleZufallssatz();
     const formattedSatz = zufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const formattedAngebot = angebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
+    const formattedSkonto = skontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
 
     // Generierte Sätze hinzufügen
 
     satzOutput += `<li>`;
-    if (inputEinkaufskalkulation.checked) {
+    if (mitEinkaufskalkulation.checked) {
       satzOutput += `<div>${formattedAngebot}</div><br>`;
     } else {
       satzOutput += `${formattedSatz}<br><br>`;
+      if (mitSkontobuchungssatz.checked) {
+        satzOutput += `${skontoSatz}<br><br>`;
+      }
     }
     satzOutput += `</li>`;
 
     // Generierte Antworten hinzufügen
     antwortOutput += `<li><br>`;
-    if (inputEinkaufskalkulation.checked) {
+    if (mitEinkaufskalkulation.checked) {
       antwortOutput += `<table style="white-space:nowrap;width:350px;margin: 0 0">`;
       antwortOutput += `<tbody>`;
       antwortOutput += `<tr>`;
@@ -336,7 +364,12 @@ function zeigeZufaelligenSatz() {
     antwortOutput += `</tbody>`;
     antwortOutput += `</table>`;
     antwortOutput += `</li>`;
+    if (mitSkontobuchungssatz.checked) {
+      antwortOutput += `${konto_Skontobuchungssatz}`;
+    }
   }
+    
+  
 
   satzOutput += '</ol>'; // Ende der nummerierten Liste für Sätze
   antwortOutput += '</ol>'; // Ende der nummerierten Liste für Antworten

@@ -218,10 +218,12 @@
           <label for="mitRabatt">Rabatt:</label>
           <input type="checkbox" id="mitRabatt"> | <label for="mitBezuguskosten">Bezugskosten:</label><input
             type="checkbox" id="mitBezugskosten"><br>
-            <label for="mitBuchungssatz">Nur Buchungssatz:</label>
-            <input type="radio" id="mitBuchungssatz" name="buchungsoption" category="buchungssatz" checked> | <label for="mitEinkaufskalkulation">Einkaufskalkulation und Buchungssatz:</label>
-            <input type="radio" id="mitEinkaufskalkulation" name="buchungsoption" category="buchungssatz">
-           
+            <label for="buchungsoption">Geschäftsfall:</label>
+            <select id="buchungsoptionDropdown">
+              <option value="buchungssatz">Aufwand buchen</option>
+              <option value="einkaufskalkulation">Einkaufskalkulation mit Buchungssatz</option>
+              <option value="skontobuchungssatz">Skontobuchungssatz</option>
+            </select>
             <br>
             
           <label for="anzahlDropdown">Anzahl der Geschäftsfälle:</label>
