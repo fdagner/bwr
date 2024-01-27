@@ -71,3 +71,51 @@
     const dragContainer = document.getElementById('dragContainer');
     event.dataTransfer.setData('text/plain', dragContainer.innerText);
   }
+
+
+  // Select the drop-down menu for UST
+const svgKontoUST = document.getElementById('svgKontoUST');
+
+// Select the container for the Kontenplan UST
+const dragContainerUST = document.getElementById('dragContainerUST');
+
+// Select the container for radio options UST
+const radioOptionsContainerUST = document.getElementById('radioOptionsContainerUST');
+
+// Loop through UST radio options
+document.querySelectorAll('input[name="USTOption"]').forEach(ustOption => {
+  ustOption.addEventListener('change', function () {
+    const selectedUSTOption = this.value;
+    const existingTextUST = dragContainerUST.innerText;
+
+    // Check whether the radio button is selected
+    if (this.checked) {
+      // Change the fill property of the SVG for UST
+      svgKontoUST.setAttribute('fill', 'green');
+    } else {
+      // Handle case when the radio button is unchecked (if needed)
+    }
+
+    if (!existingTextUST.includes(selectedUSTOption)) {
+      console.error(`UST Option ${selectedUSTOption} wurde nicht gefunden.`);
+      return;
+    }
+
+    // Remove all existing %100%
+    const newTextWithout100UST = existingTextUST.replace(/%100%/g, '');
+
+    if (this.checked) {
+      // Add %100% in front of the selected UST option
+      const newTextUST = newTextWithout100UST.replace(new RegExp(selectedUSTOption, 'g'), `%100%${selectedUSTOption}`);
+      dragContainerUST.innerText = newTextUST;
+    } else {
+      // Remove %100% from the selected UST option
+      dragContainerUST.innerText = newTextWithout100UST;
+    }
+  });
+});
+
+function handleDragStartUST(event) {
+  const dragContainerUST = document.getElementById('dragContainerUST');
+  event.dataTransfer.setData('text/plain', dragContainerUST.innerText);
+}

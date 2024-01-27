@@ -3,7 +3,7 @@ function generiereVorkontierung() {
   const vorkontierungContainer = document.getElementById('vorkontierungContainer');
   const vorkontierungButtonContainer = document.getElementById('vorkontierungButtonContainer');
 
-  let vorkontierungHTML = '<table style="font-family:courier;min-width:750px;border-collapse:collapse"><caption>Vorkontierung</caption><tbody>'
+  let vorkontierungHTML = '<table style="font-family:courier;min-width:775px;border-collapse:collapse"><caption>Vorkontierung</caption><tbody>'
                         + '<tr style="background-color:#ededed;font-weight: bold;white-space:nowrap;">'
                         + '<th>BA</th>'
                         + '<th>Datum</th>'
@@ -19,14 +19,14 @@ function generiereVorkontierung() {
   for (let i = 0; i < anzahlZeilenVorkontierung; i++) {
     vorkontierungHTML += '<tr style="background-color:#fff;">'
     vorkontierungHTML += '<td style="width:15px;max-width:15px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;">B</td>'
+                      + '<td style="width:80px;max-width:100px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
+                      + '<td style="width:110px;max-width:140px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
+                      + '<td style="width:110px;max-width:140px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
+                      + '<td style="width:15px;max-width:15px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
+                      + '<td style="width:160px;max-width:180px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
                       + '<td style="width:50px;max-width:50px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:100px;max-width:100px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:100px;max-width:100px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:25px;max-width:25px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:200px;max-width:200px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:50px;max-width:50px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:150px;max-width:150px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:25px;max-width:50px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
+                      + '<td style="width:110px;max-width:130px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
+                      + '<td style="width:80px;max-width:110px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
     vorkontierungHTML += '</tr>';
   }
 

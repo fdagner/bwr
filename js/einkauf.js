@@ -73,10 +73,9 @@ let kontenZahlung;
 function inputChangeCategory() {
   if (inputEinkaufskalkulation.checked) {
     kontenZahlung = {
-      "gegen Rechnung": "4400 VE",
-      "mit Erhalt einer Eingangsrechnung": "4400 VE",
-      "auf Rechnung": "4400 VE",
-      "auf Ziel": "4400 VE",
+      " und kaufen auf Ziel": "4400 VE",
+      " und erhalten eine Eingangsrechnung": "4400 VE",
+      " und bekommen eine Rechnung": "4400 VE",
     } } else {
   kontenZahlung = {
     "in bar": "2880 KA",
@@ -208,11 +207,11 @@ function erstelleZufallssatz() {
   const randomAngebotSatz = Math.random();
   angebotSatz = `<ol style="list-style-type: lower-latin;">`;
   if (randomAngebotSatz < 0.33) {
-    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz, wenn wir das Angebot akzeptieren. Die Bezahlung erfolgt ${randomZahlung}.</li>`;
+    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz: wir akzeptieren das Angebot ${randomZahlung}.</li>`;
   } else if (randomAngebotSatz < 0.66) {
-    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz, wenn wir das Angebot annehmen. Die Abrechnung erfolgt ${randomZahlung}.</li>`;
+    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz: Wir geben die Bestellung in Auftrag ${randomZahlung}.</li>`;
   } else {
-    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Wir nehmen das Angebot annehmen an und die Bezahlung wird ${randomZahlung} vorgenommen. Bilde den Buchungssatz!</li>`;
+    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Wir nehmen das Angebot an ${randomZahlung}. Bilde den Buchungssatz!</li>`;
   }
   angebotSatz += `</ol>`;
   let zufaelligerSatz;

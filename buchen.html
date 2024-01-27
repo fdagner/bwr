@@ -153,6 +153,15 @@
 
     <section id="vorkontierung" class="tabcontent">
       <h2>Vorkontierung</h2>
+      <details>
+        <summary>Anleitung</summary>
+        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
+          <video style="width:100%;margin: 0 auto;" controls>
+            <source src="media/video/vorkontierung.mp4" type="video/mp4">
+            Your bser does not support the video tag.
+          </video>
+        </div>
+      </details><br>
       <form id="vorkontierungForm" class="box">
         <label for="anzahlZeilen">Anzahl der Zeilen (1-20):</label>
         <input type="number" id="anzahlZeilenVorkontierung" name="anzahlZeilen" value="2" min="1" max="20" required>
@@ -165,7 +174,7 @@
           </svg> Vorlage für Vorkontierung erstellen</button>
       </form><br>
       <div id="vorkontierungButtonContainer" style="margin:0 auto;">
-        <div style="width:750px" contenteditable="true">
+        <div style="width:775px" contenteditable="true">
           <div id="vorkontierungContainer" style="min-height: 50px;margin: 0 auto"></div>
         </div>
         <div class="exportButtons">
@@ -610,9 +619,9 @@
       </div>
     </section>
 
-    <aside>
+    <aside id="moodleDropdown">
       <h2>Tools</h2>
-      <details id="moodleDropdown">
+      <details>
         <summary>Kontenplan für Moodle eintragen: Multichoice-Fragetyp Lückentext_(Cloze)</summary>
         <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <p><small>Markieren Sie das Konto, das mit 100% bewertet werden soll und ziehen Sie das nun grüne
@@ -628,9 +637,33 @@
           </div><br>
           <div id="radioOptionsContainer" style="text-align:left"></div>
         </div>
-        <div id="dragContainer" ondragstart="handleDragStart(event)"
-          style="min-width:400px;word-wrap: break-word;display: none;">{1:MULTICHOICE:~0500&nbsp;GR&nbsp;&nbsp;&nbsp;~0530&nbsp;BVG&nbsp;&nbsp;&nbsp;~0700&nbsp;MA&nbsp;&nbsp;&nbsp;~0840&nbsp;FP&nbsp;&nbsp;&nbsp;~0860&nbsp;BM&nbsp;&nbsp;&nbsp;~0870&nbsp;BGA&nbsp;&nbsp;&nbsp;~0890&nbsp;GWG&nbsp;&nbsp;&nbsp;~1500&nbsp;WP&nbsp;&nbsp;&nbsp;~2000&nbsp;R&nbsp;&nbsp;&nbsp;~2010&nbsp;F&nbsp;&nbsp;&nbsp;~2020&nbsp;H&nbsp;&nbsp;&nbsp;~2030&nbsp;B&nbsp;&nbsp;&nbsp;~2400&nbsp;FO&nbsp;&nbsp;&nbsp;~2470&nbsp;ZWFO&nbsp;&nbsp;&nbsp;~2600&nbsp;VORST&nbsp;&nbsp;&nbsp;~2800&nbsp;BK&nbsp;&nbsp;&nbsp;~2880&nbsp;KA&nbsp;&nbsp;&nbsp;~2900&nbsp;ARA&nbsp;&nbsp;&nbsp;~3000&nbsp;EK&nbsp;&nbsp;&nbsp;~3001&nbsp;P&nbsp;&nbsp;&nbsp;~3670&nbsp;EWB&nbsp;&nbsp;&nbsp;~3680&nbsp;PWB&nbsp;&nbsp;&nbsp;~3900&nbsp;RST&nbsp;&nbsp;&nbsp;~4200&nbsp;KBKV&nbsp;&nbsp;&nbsp;~4250&nbsp;LBKV&nbsp;&nbsp;&nbsp;~4400&nbsp;VE&nbsp;&nbsp;&nbsp;~4800&nbsp;UST&nbsp;&nbsp;&nbsp;~4830&nbsp;VFA&nbsp;&nbsp;&nbsp;~4840&nbsp;VSV&nbsp;&nbsp;&nbsp;~4900&nbsp;PRA&nbsp;&nbsp;&nbsp;~5000&nbsp;UEFE&nbsp;&nbsp;&nbsp;~5001&nbsp;EBFE&nbsp;&nbsp;&nbsp;~5400&nbsp;EMP&nbsp;&nbsp;&nbsp;~5430&nbsp;ASBE&nbsp;&nbsp;&nbsp;~5490&nbsp;PFE&nbsp;&nbsp;&nbsp;~5495&nbsp;EFO&nbsp;&nbsp;&nbsp;~5650&nbsp;EAWP&nbsp;&nbsp;&nbsp;~5710&nbsp;ZE&nbsp;&nbsp;&nbsp;~5780&nbsp;DDE&nbsp;&nbsp;&nbsp;~6000&nbsp;AWR&nbsp;&nbsp;&nbsp;~6001&nbsp;BZKR&nbsp;&nbsp;&nbsp;~6002&nbsp;NR&nbsp;&nbsp;&nbsp;~6010&nbsp;AWF&nbsp;&nbsp;&nbsp;~6011&nbsp;BZKF&nbsp;&nbsp;&nbsp;~6012&nbsp;NF&nbsp;&nbsp;&nbsp;~6020&nbsp;AWH&nbsp;&nbsp;&nbsp;~6021&nbsp;BZKH&nbsp;&nbsp;&nbsp;~6022&nbsp;NH&nbsp;&nbsp;&nbsp;~6030&nbsp;AWB&nbsp;&nbsp;&nbsp;~6031&nbsp;BZKB&nbsp;&nbsp;&nbsp;~6032&nbsp;NB&nbsp;&nbsp;&nbsp;~6040&nbsp;AWVM&nbsp;&nbsp;&nbsp;~6140&nbsp;AFR&nbsp;&nbsp;&nbsp;~6160&nbsp;FRI&nbsp;&nbsp;&nbsp;~6200&nbsp;LG&nbsp;&nbsp;&nbsp;~6400&nbsp;AGASV&nbsp;&nbsp;&nbsp;~6520&nbsp;ABSA&nbsp;&nbsp;&nbsp;~6540&nbsp;ABGWG&nbsp;&nbsp;&nbsp;~6700&nbsp;AWMP&nbsp;&nbsp;&nbsp;~6730&nbsp;GEB&nbsp;&nbsp;&nbsp;~6750&nbsp;KGV&nbsp;&nbsp;&nbsp;~6760&nbsp;PROV&nbsp;&nbsp;&nbsp;~6770&nbsp;RBK&nbsp;&nbsp;&nbsp;~6800&nbsp;BMK&nbsp;&nbsp;&nbsp;~6820&nbsp;KOM&nbsp;&nbsp;&nbsp;~6850&nbsp;REK&nbsp;&nbsp;&nbsp;~6870&nbsp;WER&nbsp;&nbsp;&nbsp;~6900&nbsp;VBEI&nbsp;&nbsp;&nbsp;~6950&nbsp;ABFO&nbsp;&nbsp;&nbsp;~6990&nbsp;PFAW&nbsp;&nbsp;&nbsp;~7000&nbsp;GWST&nbsp;&nbsp;&nbsp;~7020&nbsp;GRST&nbsp;&nbsp;&nbsp;~7030&nbsp;KFZST&nbsp;&nbsp;&nbsp;~7460&nbsp;VAWP&nbsp;&nbsp;&nbsp;~7510&nbsp;ZAW&nbsp;&nbsp;&nbsp;~8010&nbsp;SKB&nbsp;&nbsp;&nbsp;~8020&nbsp;GUV}</div>
+        <div id="dragContainer" ondragstart="handleDragStart(event)" style="min-width:400px;word-wrap: break-word;display: none;">{1:MULTICHOICE:~0500&nbsp;GR&nbsp;&nbsp;&nbsp;~0530&nbsp;BVG&nbsp;&nbsp;&nbsp;~0700&nbsp;MA&nbsp;&nbsp;&nbsp;~0840&nbsp;FP&nbsp;&nbsp;&nbsp;~0860&nbsp;BM&nbsp;&nbsp;&nbsp;~0870&nbsp;BGA&nbsp;&nbsp;&nbsp;~0890&nbsp;GWG&nbsp;&nbsp;&nbsp;~1500&nbsp;WP&nbsp;&nbsp;&nbsp;~2000&nbsp;R&nbsp;&nbsp;&nbsp;~2010&nbsp;F&nbsp;&nbsp;&nbsp;~2020&nbsp;H&nbsp;&nbsp;&nbsp;~2030&nbsp;B&nbsp;&nbsp;&nbsp;~2400&nbsp;FO&nbsp;&nbsp;&nbsp;~2470&nbsp;ZWFO&nbsp;&nbsp;&nbsp;~2600&nbsp;VORST&nbsp;&nbsp;&nbsp;~2800&nbsp;BK&nbsp;&nbsp;&nbsp;~2880&nbsp;KA&nbsp;&nbsp;&nbsp;~2900&nbsp;ARA&nbsp;&nbsp;&nbsp;~3000&nbsp;EK&nbsp;&nbsp;&nbsp;~3001&nbsp;P&nbsp;&nbsp;&nbsp;~3670&nbsp;EWB&nbsp;&nbsp;&nbsp;~3680&nbsp;PWB&nbsp;&nbsp;&nbsp;~3900&nbsp;RST&nbsp;&nbsp;&nbsp;~4200&nbsp;KBKV&nbsp;&nbsp;&nbsp;~4250&nbsp;LBKV&nbsp;&nbsp;&nbsp;~4400&nbsp;VE&nbsp;&nbsp;&nbsp;~4800&nbsp;UST&nbsp;&nbsp;&nbsp;~4830&nbsp;VFA&nbsp;&nbsp;&nbsp;~4840&nbsp;VSV&nbsp;&nbsp;&nbsp;~4900&nbsp;PRA&nbsp;&nbsp;&nbsp;~5000&nbsp;UEFE&nbsp;&nbsp;&nbsp;~5001&nbsp;EBFE&nbsp;&nbsp;&nbsp;~5400&nbsp;EMP&nbsp;&nbsp;&nbsp;~5430&nbsp;ASBE&nbsp;&nbsp;&nbsp;~5490&nbsp;PFE&nbsp;&nbsp;&nbsp;~5495&nbsp;EFO&nbsp;&nbsp;&nbsp;~5650&nbsp;EAWP&nbsp;&nbsp;&nbsp;~5710&nbsp;ZE&nbsp;&nbsp;&nbsp;~5780&nbsp;DDE&nbsp;&nbsp;&nbsp;~6000&nbsp;AWR&nbsp;&nbsp;&nbsp;~6001&nbsp;BZKR&nbsp;&nbsp;&nbsp;~6002&nbsp;NR&nbsp;&nbsp;&nbsp;~6010&nbsp;AWF&nbsp;&nbsp;&nbsp;~6011&nbsp;BZKF&nbsp;&nbsp;&nbsp;~6012&nbsp;NF&nbsp;&nbsp;&nbsp;~6020&nbsp;AWH&nbsp;&nbsp;&nbsp;~6021&nbsp;BZKH&nbsp;&nbsp;&nbsp;~6022&nbsp;NH&nbsp;&nbsp;&nbsp;~6030&nbsp;AWB&nbsp;&nbsp;&nbsp;~6031&nbsp;BZKB&nbsp;&nbsp;&nbsp;~6032&nbsp;NB&nbsp;&nbsp;&nbsp;~6040&nbsp;AWVM&nbsp;&nbsp;&nbsp;~6140&nbsp;AFR&nbsp;&nbsp;&nbsp;~6160&nbsp;FRI&nbsp;&nbsp;&nbsp;~6200&nbsp;LG&nbsp;&nbsp;&nbsp;~6400&nbsp;AGASV&nbsp;&nbsp;&nbsp;~6520&nbsp;ABSA&nbsp;&nbsp;&nbsp;~6540&nbsp;ABGWG&nbsp;&nbsp;&nbsp;~6700&nbsp;AWMP&nbsp;&nbsp;&nbsp;~6730&nbsp;GEB&nbsp;&nbsp;&nbsp;~6750&nbsp;KGV&nbsp;&nbsp;&nbsp;~6760&nbsp;PROV&nbsp;&nbsp;&nbsp;~6770&nbsp;RBK&nbsp;&nbsp;&nbsp;~6800&nbsp;BMK&nbsp;&nbsp;&nbsp;~6820&nbsp;KOM&nbsp;&nbsp;&nbsp;~6850&nbsp;REK&nbsp;&nbsp;&nbsp;~6870&nbsp;WER&nbsp;&nbsp;&nbsp;~6900&nbsp;VBEI&nbsp;&nbsp;&nbsp;~6950&nbsp;ABFO&nbsp;&nbsp;&nbsp;~6990&nbsp;PFAW&nbsp;&nbsp;&nbsp;~7000&nbsp;GWST&nbsp;&nbsp;&nbsp;~7020&nbsp;GRST&nbsp;&nbsp;&nbsp;~7030&nbsp;KFZST&nbsp;&nbsp;&nbsp;~7460&nbsp;VAWP&nbsp;&nbsp;&nbsp;~7510&nbsp;ZAW&nbsp;&nbsp;&nbsp;~8010&nbsp;SKB&nbsp;&nbsp;&nbsp;~8020&nbsp;GUV}</div>
       </details>
+      <details>
+        <summary>Umsatzsteuer in  Vorkontierung: Multichoice-Fragetyp Lückentext_(Cloze)</summary>
+        <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
+          <p><small>Markieren Sie die Steuer, die mit 100% bewertet werden soll und ziehen Sie das nun grüne
+              Icon an die gewünschte Stelle (bei Mobilgeräten lang gedrückt halten). Es sollte dort anschließend "{1:MULTICHOICE:~..." erscheinen.</small></p>
+          <div id="steuervorkontierung" draggable="true" ondragstart="handleDragStartUST(event)"
+            style="text-align: center;cursor: pointer;background-color: #f5f5f5; border: 1px dashed #c32e04;margin: 0 auto;width: 100px;padding: 4px">
+            <svg id="svgKontoUST" xmlns="http://www.w3.org/2000/svg" height="32" width="24" viewBox="0 0 384 512"
+              fill="red">
+              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z" />
+            </svg> Umsatzsteuer
+          </div><br>
+          <div id="radioOptionsContainerUST" class="flex-row" style="text-align:left;">
+            <div class="radioUST"><input type="radio" name="USTOption" value="V7"><label>V7</label></div>
+            <div class="radioUST"><input type="radio" name="USTOption" value="V19"><label>V19</label></div>
+            <div class="radioUST"><input type="radio" name="USTOption" value="U7"><label>U7</label></div>
+            <div class="radioUST"><input type="radio" name="USTOption" value="U19"><label>U19</label></div>
+          </div>
+        </div>
+        <div id="dragContainerUST" ondragstart="handleDragStartUST(event)" style="min-width:400px;word-wrap: break-word;display: none;">{1:MULTICHOICE:~V19~V7~U19~U7~-}</details>
+
+
+
       <aside>
 
         </div>
