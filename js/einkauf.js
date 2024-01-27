@@ -2,7 +2,28 @@ const anzahlDropdown = document.getElementById('anzahlDropdown');
 const mitRabatt = document.getElementById('mitRabatt');
 const mitBezugskosten = document.getElementById('mitBezugskosten');
 const mitEinkaufskalkulation = document.getElementById('mitEinkaufskalkulation');
-const mitSkontobuchungssatz = document.getElementById('mitSkontobuchungssatz');
+const Skontobuchungssatz = document.getElementById('mitSkontobuchungssatz');
+
+document.addEventListener('DOMContentLoaded', function() {
+  const mitSkontobuchungssatz = document.getElementById('mitSkontobuchungssatz');
+  const mitBezugskosten = document.getElementById('mitBezugskosten');
+  const buchungsoptionDropdown = document.getElementById('buchungsoptionDropdown');
+
+  function updateMitBezugskostenState() {
+    if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
+      mitBezugskosten.disabled = true;
+      mitBezugskosten.checked = false;
+    } else {
+      mitBezugskosten.disabled = false;
+    }
+  }
+
+  buchungsoptionDropdown.addEventListener('change', updateMitBezugskostenState);
+
+  // Initialisiere den Zustand der "mitBezugskosten"-Checkbox beim Laden der Seite
+  updateMitBezugskostenState();
+});
+
 
 // Funktion für zufällige Zahlen Rabatt und Bezugskosten
 function getRandomIntegerWithSteps(min, max, step) {
@@ -50,7 +71,7 @@ const kontenWerkstoffe = {
   "Betriebsstoffe": {
     "Hauptkonto": "6030 AWB",
     "Unterkonto": "6031 BZKB",
-    "Nachlasskonto": "6032 AWB"
+    "Nachlasskonto": "6032 NB"
   },
 };
 
@@ -58,12 +79,12 @@ const kontenWerkstoffe_2 = {
   "von Rohstoffen": {
     "Hauptkonto": "6000 AWR",
     "Unterkonto": "6001 BZKR",
-    "Nachlasskonto": "6012 NF"
+    "Nachlasskonto": "6002 NR"
   },
   "von Fremdbauteilen": {
     "Hauptkonto": "6010 AWF",
     "Unterkonto": "6011 BZKF",
-    "Nachlasskonto": "6022 NH"
+    "Nachlasskonto": "6012 NF"
   },
   "von Hilfsstoffen": {
     "Hauptkonto": "6020 AWH",
@@ -73,13 +94,13 @@ const kontenWerkstoffe_2 = {
   "von Betriebsstoffen": {
     "Hauptkonto": "6030 AWB",
     "Unterkonto": "6031 BZKB",
-    "Nachlasskonto": "6032 AWB"
+    "Nachlasskonto": "6032 NB"
   },
 };
 
 let kontenZahlung;
 function inputChangeCategory() {
-  if (mitEinkaufskalkulation.checked) {
+  if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
     kontenZahlung = {
       " und kaufen auf Ziel": "4400 VE",
       " und erhalten eine Eingangsrechnung": "4400 VE",
@@ -96,8 +117,6 @@ function inputChangeCategory() {
   }
 }
 }
-
-
 
 
 function erstelleZufallssatz() {
@@ -188,6 +207,11 @@ function erstelleZufallssatz() {
   let randomSupply_Skonto = array_Supply_Skonto[Math.floor(Math.random() * array_Supply_Skonto.length)];
   let antwortNettowert = formatCurrency(berechnung_nettoWert);
   let berechnung_skontoBetrag = random_Skonto / 100 * berechnung_nettoWert;
+  let berechnung_skontoBetrag_brutto = (berechnung_skontoBetrag) + (berechnung_skontoBetrag*0.19);
+  let berechnung_vorsteuer_berichtigung = berechnung_skontoBetrag_brutto-berechnung_skontoBetrag;
+  let vorsteuer_berichtigung = formatCurrency(berechnung_vorsteuer_berichtigung);
+  let skontoBetrag_brutto = formatCurrency(berechnung_skontoBetrag_brutto);
+
   let skontoBetrag = formatCurrency(berechnung_skontoBetrag);
   let berechnung_bareinkaufspreis = berechnung_nettoWert - berechnung_skontoBetrag;
   let bareinkaufspreis = formatCurrency(berechnung_bareinkaufspreis);
@@ -212,6 +236,8 @@ function erstelleZufallssatz() {
   let berechnung_einstandspreis = berechnung_bareinkaufspreis + parseFloat(random_Bezugskosten);
   let einstandspreis = formatCurrency(berechnung_einstandspreis);
   let USTWert = formatCurrency(berechnung_USTWert);
+  let ueberweisungsbetrag_berechnung = berechnung_bruttoWert-berechnung_skontoBetrag_brutto;
+  let ueberweisungsbetrag = formatCurrency(ueberweisungsbetrag_berechnung);
   let antwortBruttowert = formatCurrency(berechnung_bruttoWert);
 
   // Zusammenfügen der ausgewählten Elemente zu einem Satz
@@ -240,13 +266,13 @@ function erstelleZufallssatz() {
   const randomSkontoSatz = Math.random();
   skontoSatz = `<ol style="list-style-type: lower-latin;">`;
   if (randomSkontoSatz < 0.33) {
-    angebotSatz += `<li>${randomSkontobuchungssatz}  ${randomZahlung}.</li><li>Bilde den Buchungssatz.</li>`;
+    skontoSatz += `<li>Bilde den Buchungssatz zum Geschäftsfall.</li><li>Bilde den Buchungssatz: ${randomSkontobuchungssatz}.</li>`;
   } else if (randomSkontoSatz < 0.66) {
-    angebotSatz += `<li>${randomSkontobuchungssatz}  ${randomZahlung}.</li><li>Bilde den Buchungssatz.</li>`;
+    skontoSatz += `<li>Bilde den Buchungssatz zum Geschäftsfall.</li><li>${randomSkontobuchungssatz}. Bilde den Buchungssatz.</li>`;
   } else {
-    angebotSatz += `<li>${randomSkontobuchungssatz}  ${randomZahlung}.</li><li>Bilde den Buchungssatz.</li>`;
+    skontoSatz += `<li>Bilde den Buchungssatz zum Geschäftsfall.</li><li>Bilde den Buchungssatz: ${randomSkontobuchungssatz}.</li>`;
   }
-  angebotSatz += `</ol>`;
+  skontoSatz += `</ol>`;
 
 
   const listeneinkaufspreis = `${nettoWert}`;
@@ -254,6 +280,9 @@ function erstelleZufallssatz() {
   const antwort_rabattSatz = `${random_Rabatt}`;
   const antwort_skontoSatz = `${random_Skonto}`;
   const antwort_skontoBetrag = `${skontoBetrag}`;
+  const antwort_skontoBetrag_brutto = `${skontoBetrag_brutto}`;
+  const antwort_vorsteuer_berichtigung = `${vorsteuer_berichtigung}`;
+  const antwort_ueberweisungsbetrag = `${ueberweisungsbetrag}`;
   const antwort_bareinkaufspreis = `${bareinkaufspreis}`;
   const antwort_einstandspreis = `${einstandspreis}`;
   const konto_1 = `${antwortWerkstoff}`;
@@ -264,7 +293,7 @@ function erstelleZufallssatz() {
   const antwort_bezugskostenWert = `${bezugskostenWert}`;
   const betrag_2 = `${antwortBruttowert}`;
 
-  return [zufaelligerSatz, angebotSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz];
+  return [zufaelligerSatz, angebotSatz, skontoSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_skontoBetrag_brutto, antwort_vorsteuer_berichtigung, antwort_ueberweisungsbetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz];
 
 }
 
@@ -279,7 +308,7 @@ function zeigeZufaelligenSatz() {
   antwortOutput += '<ol>';
 
   for (let i = 1; i <= anzahl; i++) {
-    const [zufaelligerSatz, angebotSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz] = erstelleZufallssatz();
+    const [zufaelligerSatz, angebotSatz, skontoSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_skontoBetrag_brutto, antwort_vorsteuer_berichtigung, antwort_ueberweisungsbetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz] = erstelleZufallssatz();
     const formattedSatz = zufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const formattedAngebot = angebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const formattedSkonto = skontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
@@ -287,19 +316,19 @@ function zeigeZufaelligenSatz() {
     // Generierte Sätze hinzufügen
 
     satzOutput += `<li>`;
-    if (mitEinkaufskalkulation.checked) {
+    if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
       satzOutput += `<div>${formattedAngebot}</div><br>`;
     } else {
       satzOutput += `${formattedSatz}<br><br>`;
-      if (mitSkontobuchungssatz.checked) {
-        satzOutput += `${skontoSatz}<br><br>`;
+      if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
+        satzOutput += `${formattedSkonto}<br><br>`;
       }
     }
     satzOutput += `</li>`;
 
     // Generierte Antworten hinzufügen
     antwortOutput += `<li><br>`;
-    if (mitEinkaufskalkulation.checked) {
+    if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
       antwortOutput += `<table style="white-space:nowrap;width:350px;margin: 0 0">`;
       antwortOutput += `<tbody>`;
       antwortOutput += `<tr>`;
@@ -363,10 +392,70 @@ function zeigeZufaelligenSatz() {
     antwortOutput += `</tr>`;
     antwortOutput += `</tbody>`;
     antwortOutput += `</table>`;
-    antwortOutput += `</li>`;
-    if (mitSkontobuchungssatz.checked) {
-      antwortOutput += `${konto_Skontobuchungssatz}`;
+    if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
+      antwortOutput += `<br><b>Nebenrechnung:</b><br>`;
+      antwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
+      antwortOutput += `<tbody>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td>Rechnungsbetrag</td><td style="padding-left:16px;text-align:right;">${betrag_2}</td>`;
+      antwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td>- Skonto (brutto)</td><td style="padding-left:16px;text-align:right;">${antwort_skontoBetrag_brutto}</td>`;
+      antwortOutput += `<td style="padding-left:6px;text-align:right;">${antwort_skontoSatz} %</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `<tr border-top: solid 1px #000>`;
+      antwortOutput += `<td style="border-top: solid 1px #000">= Überweisungsbetrag</td>`;
+      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #000">${antwort_ueberweisungsbetrag}</td>`;
+      antwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `</table>`;
+      antwortOutput += `<br>`;
+      antwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
+      antwortOutput += `<tbody>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td>Skonto (brutto)</td><td style="padding-left:16px;text-align:right;">${antwort_skontoBetrag_brutto}</td>`;
+      antwortOutput += `<td style="padding-left:6px;text-align:right;">119 %</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td>- Umsatzsteuer</td><td style="padding-left:16px;text-align:right;">${antwort_vorsteuer_berichtigung}</td>`;
+      antwortOutput += `<td style="padding-left:6px;text-align:right;">19 %</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `<tr border-top: solid 1px #000>`;
+      antwortOutput += `<td style="border-top: solid 1px #000">= Skonto (netto)</td>`;
+      antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #000">${antwort_skontoBetrag}</td>`;
+      antwortOutput += `<td style="padding-left:6px;text-align:right;">100 %</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `</table>`;
+      antwortOutput += `<br>`;
+      antwortOutput += `<table style="border: 1px solid #000;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+      antwortOutput += `<tbody>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">4400 VE</td>`;
+      antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${betrag_2}</td>`;
+      antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">2800 BK</td>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${antwort_ueberweisungsbetrag}</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `<tr>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
+      antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+      antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+      antwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${konto_Skontobuchungssatz}</td>`;
+      antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${antwort_skontoBetrag}</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
+      antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"</td>`;
+      antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+      antwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">2600 VORST</td>`;
+      antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${antwort_vorsteuer_berichtigung}</td>`;
+      antwortOutput += `</tr>`;
+      antwortOutput += `</tbody>`;
+      antwortOutput += `</table>`;      
+      antwortOutput += `<br><br>`;
     }
+    antwortOutput += `</li>`;
   }
     
   
