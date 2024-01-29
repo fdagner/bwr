@@ -386,6 +386,7 @@ function applyOrderData() {
     const skontofristInput = getNumericValue('skontofristInput');
     let gesamtpreis1 = menge * einzelpreis;
     let gesamtpreis2 = menge2 * einzelpreis2;
+    const bezugskostenArtInput = document.getElementById('bezugskostenArtInput').value;
 
     // Setze die gelesenen Daten in die SVG-Textelemente
 
@@ -451,6 +452,7 @@ function applyOrderData() {
     // Setze die Zwischensumme in das SVG-Textelement
     document.getElementById('zwischensumme').textContent = formatCurrency(zwischensumme);
     document.getElementById('bezugskostenSumme').textContent = formatCurrency(bezugskostenInput);
+    document.getElementById('bezugskosten').textContent = bezugskostenArtInput;
     if (rabattInput > 0) {
         document.getElementById('rabatt').textContent = '- ' + rabattInput + ' % Rabatt'
         document.getElementById('rabattsumme').textContent = formatCurrency(rabattsumme);
