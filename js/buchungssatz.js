@@ -30,15 +30,9 @@ function generiereBuchungssatz() {
 
 
 function buchungssatzHerunterladen() {
-  const buchungssatzHTML = document.getElementById('buchungssatzContainer').innerHTML;
-  const blob = new Blob([buchungssatzHTML], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'buchungssatz.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  herunterladen('buchungssatzContainer', 'buchungssatz');
 }
+
 
 function buchungssatzKopiereInZwischenablage() {
   const buchungssatzHTML = document.getElementById('buchungssatzContainer').innerHTML;

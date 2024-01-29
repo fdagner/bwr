@@ -138,7 +138,7 @@
     adresse:
       strasse: "Metallallee 23"
       plz: "60313"
-      ort: "Frankfurt am Main"
+      ort: "Frankfurt"
       land: "Deutschland"
     kontakt:
       telefon: "+49 69 987654"
