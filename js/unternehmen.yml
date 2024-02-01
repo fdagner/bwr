@@ -96,7 +96,7 @@
     adresse:
       strasse: "Forstweg 78"
       plz: "60594"
-      ort: "Frankfurt am Main"
+      ort: "Frankfurt"
       land: "Deutschland"
     kontakt:
       telefon: "+49 69 987654"
@@ -359,7 +359,7 @@
 
 - unternehmen:
     id: "17"
-    name: "Petra Meininger"
+    name: "Meininger und Partner"
     motto: "Rechtsanwältin"
     bank: "Sparbank"
     rechtsform: ""

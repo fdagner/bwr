@@ -26,10 +26,10 @@
   </g>
 <!--Liefererdaten rechts-->
   <g id="liefererDaten">
-    <text x="500" y="200" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Rechnungsnummer: <tspan id="rechnungsNummer"/></text>
-    <text id="lieferdatum" x="500" y="220" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Lieferdatum: <tspan id="bezugskostenBedingung"></tspan> <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
-    <text x="500" y="240" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Kundennummer: K<tspan id="nummerKunde"/></text>
-    <text id="internetLieferer" x="500" y="260"  font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start"/>
+    <text x="480" y="200" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Rechnungsnummer: <tspan id="rechnungsNummer"/></text>
+    <text id="lieferdatum" x="480" y="220" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Lieferdatum: <tspan id="bezugskostenBedingung"></tspan> <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+    <text x="480" y="240" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Kundennummer: K<tspan id="nummerKunde"/></text>
+    <text id="internetLieferer" x="480" y="260"  font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start"/>
   </g>
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
@@ -94,8 +94,8 @@
     <text id="bankLieferer" x="330" y="1000" font-family="Calibri" font-size="14" font-weight="bold" />
     <text id="ibanLieferer" x="330" y="1020" font-family="Calibri" font-size="12" />
     <text id="bicLieferer" x="330" y="1040" font-family="Calibri" font-size="12" />
-    <text id="amtsgerichtLieferer" x="540" y="1000" font-family="Calibri" font-size="14" font-weight="bold" text-anchor="start"/>
-    <text id="ustidLieferer" x="540" y="1020" font-family="Calibri" font-size="12" text-anchor="start"/>
-    <text id="steuernummerLieferer" x="540" y="1040" font-family="Calibri" font-size="12" text-anchor="start"/>
+    <text id="amtsgerichtLieferer" x="520" y="1000" font-family="Calibri" font-size="14" font-weight="bold" text-anchor="start"/>
+    <text id="ustidLieferer" x="520" y="1020" font-family="Calibri" font-size="12" text-anchor="start"/>
+    <text id="steuernummerLieferer" x="520" y="1040" font-family="Calibri" font-size="12" text-anchor="start"/>
   </g>
 </svg>

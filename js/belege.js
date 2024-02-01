@@ -18,7 +18,7 @@ function handleFileUpload() {
 
                     // Reload dropdown and random companies based on the uploaded data
                     reloadDropdownOptions();
-                    loadSupplierData()
+                    loadSupplierData();
                     alert("Datei erfolgreich hochgeladen!");
                 } else {
                     console.error("Invalid YAML format in the uploaded file.");
@@ -41,21 +41,28 @@ function handleFileUpload() {
 function reloadDropdownOptions() {
     const dropdownCustomer = document.getElementById('datenKunde');
     const dropdownSupplier = document.getElementById('datenLieferer');
+    const dropdownKontenauszug = document.getElementById('datenKontoauszug');
 
     // Clear existing options
     dropdownCustomer.innerHTML = '';
     dropdownSupplier.innerHTML = '';
+    dropdownKontenauszug.innerHTML = '';
 
     yamlData.forEach(company => {
         const optionCustomer = document.createElement('option');
         optionCustomer.value = company.unternehmen.name;
-        optionCustomer.text = company.unternehmen.name+ ' ' +company.unternehmen.rechtsform;;
+        optionCustomer.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;;
         dropdownCustomer.appendChild(optionCustomer);
 
         const optionSupplier = document.createElement('option');
         optionSupplier.value = company.unternehmen.name;
-        optionSupplier.text = company.unternehmen.name+ ' ' +company.unternehmen.rechtsform;;
+        optionSupplier.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;;
         dropdownSupplier.appendChild(optionSupplier);
+
+        const optionKontoauszug = document.createElement('option');
+        optionKontoauszug.value = company.unternehmen.name;
+        optionKontoauszug.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownKontenauszug.appendChild(optionKontoauszug);
     });
 }
 
@@ -108,23 +115,41 @@ fetch('js/unternehmen.yml')
         yamlData = jsyaml.load(data); // Assign data to yamlData variable
         const dropdownCustomer = document.getElementById('datenKunde');
         const dropdownSupplier = document.getElementById('datenLieferer');
+        const dropdownKontoauszug = document.getElementById('datenKontoauszug');
 
         yamlData.forEach(company => {
             const optionCustomer = document.createElement('option');
             optionCustomer.value = company.unternehmen.name;
-            optionCustomer.text = company.unternehmen.name+ ' ' +company.unternehmen.rechtsform;
+            optionCustomer.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownCustomer.appendChild(optionCustomer);
 
             const optionSupplier = document.createElement('option');
             optionSupplier.value = company.unternehmen.name;
-            optionSupplier.text = company.unternehmen.name+ ' ' + company.unternehmen.rechtsform;
+            optionSupplier.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownSupplier.appendChild(optionSupplier);
+
+            const optionKontoauszug = document.createElement('option');
+            optionKontoauszug.value = company.unternehmen.name;
+            optionKontoauszug.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            dropdownKontoauszug.appendChild(optionKontoauszug);
         });
-        
- 
+
+
     });
 
 let selectedSupplier;
+
+function loadKontoauszugData() {
+    const selectedKontoauszugName = document.getElementById('datenKontoauszug').value;
+    const selectedKontoauszug = yamlData.find(quittung => quittung.unternehmen.name === selectedKontoauszugName);
+
+    document.getElementById('kontoauszugBank').textContent = selectedKontoauszug.unternehmen.bank;
+    document.getElementById('kontoauszugIban').textContent = selectedKontoauszug.unternehmen.iban;
+    document.getElementById('kontoauszugBic').textContent = selectedKontoauszug.unternehmen.bic;
+    document.getElementById('kontoauszugName').textContent = selectedKontoauszug.unternehmen.inhaber + ', ' + selectedKontoauszug.unternehmen.name + ' ' + selectedKontoauszug.unternehmen.rechtsform;
+    document.getElementById('kontoauszugAdresse').textContent = selectedKontoauszug.unternehmen.adresse.strasse;
+    document.getElementById('kontoauszugOrt').textContent = selectedKontoauszug.unternehmen.adresse.plz + ' ' + selectedKontoauszug.unternehmen.adresse.ort;
+}
 
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
 function loadCompanyData() {
@@ -169,7 +194,7 @@ function loadSupplierData() {
     colorSVGElements.forEach(element => {
         // Check if selectedSupplier.unternehmen.akzent is undefined
         const akzentColor = selectedSupplier.unternehmen.akzent !== undefined ? selectedSupplier.unternehmen.akzent : "#7db9f5";
-        
+
         element.setAttribute('fill', akzentColor);
         let colorPicker = document.getElementById("colorPicker");
         // Setze die Standardfarbe
@@ -182,7 +207,7 @@ function loadSupplierData() {
 
     const erlaubteRechtsformen = ["e. K.", "e. Kfr.", "OHG", "KG", "GmbH & Co. KG", "GmbH & Co. OHG"];
     handelsregister;
-    
+
     if (erlaubteRechtsformen.includes(selectedSupplier.unternehmen.rechtsform)) {
         handelsregister = "HRA";
     } else if (selectedSupplier.unternehmen.rechtsform === "") {
@@ -300,15 +325,40 @@ function applyOrderData() {
 
     const selectedTag = document.getElementById('tag').value;
     const selectedMonat = document.getElementById('monat').value;
+    const selectedTagKontoauszug = document.getElementById('tagKontoauszug').value;
+    const selectedMonatKontoauszug = document.getElementById('monatKontoauszug').value;
 
     // Formatieren von Tag und Monat
     const formattedDatum = `${selectedTag}.${selectedMonat}.`;
+    const formattedDatumKontoauszug = `${selectedTagKontoauszug}.${selectedMonatKontoauszug}.`;
 
-    // Annahme: Alle Elemente mit der Klasse 'rechnungsDatum' sollen aktualisiert werden
+    // Annahme: Alle Elemente mit der Klasse 'rechnungsDatum' und kontoauszugDatum sollen aktualisiert werden
     const elementsWithClass = document.getElementsByClassName('rechnungsDatum');
     // Iteriere durch alle Elemente und setze das formatierte Datum
     for (const element of elementsWithClass) {
         element.textContent = formattedDatum;
+    }
+
+    const elementsWithClassKontoauszug = document.getElementsByClassName('kontoauszugDatum');
+    for (const element of elementsWithClassKontoauszug) {
+        element.textContent = formattedDatumKontoauszug;
+    }
+
+    const currentYear = new Date().getFullYear();
+    const selectedDatumKontoauszug = new Date(`${selectedMonatKontoauszug}/${selectedTagKontoauszug}/${currentYear}`);
+    // 7 Tage abziehen
+    const sevenDaysAgoKontoauszug = new Date(selectedDatumKontoauszug);
+    sevenDaysAgoKontoauszug.setDate(selectedDatumKontoauszug.getDate() - 7);
+
+    // Formatieren des Datums in Format DD.MM.)
+    const formattedSevenDaysAgoKontoauszug = `${sevenDaysAgoKontoauszug.getDate().toString().padStart(2, '0')}.${(sevenDaysAgoKontoauszug.getMonth() + 1).toString().padStart(2, '0')}.`;
+
+    // Finde alle Elemente mit der Klasse 'kontoauszugDatum'
+    const elementsWithClassKontoauszug7 = document.getElementsByClassName('kontoauszugDatum-7');
+
+    // Iteriere durch alle Elemente und setze das formatierte Datum für Kontoauszug minus 7 Tage
+    for (const element of elementsWithClassKontoauszug7) {
+        element.textContent = formattedSevenDaysAgoKontoauszug;
     }
 
     const useScript = document.getElementById('scriptJahr').checked;
@@ -354,6 +404,57 @@ function applyOrderData() {
 
         }
         SVGonLoad(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
+
+    }
+
+
+    const useScriptKontoauszug = document.getElementById('scriptJahrKontoauszug').checked;
+    if (!useScriptKontoauszug) {
+        // Verwende das Jahr aus dem Textfeld
+        const selectedJahr = document.getElementById('jahrKontoauszug');
+        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrKontoauszug');
+        for (const yearelement of yearelementsWithClass) {
+            yearelement.textContent = selectedJahr.value;
+        }
+
+    } else {
+
+        const customDefs = document.getElementById('customDefsKontoauszug');
+        const customJsScript = document.getElementById('customJsKontoauszug');
+        const useScriptKontoauszug = document.getElementById('scriptJahrKontoauszug').checked;
+
+        if (customJsScript) {
+            customJsScript.remove();
+        }
+
+        if (useScriptKontoauszug) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJsKontoauszug';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoadKontoauszug() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahrKontoauszug');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoadKontoauszug(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
     }
 
 
@@ -440,7 +541,7 @@ function applyOrderData() {
         document.getElementById('skontofrist').textContent = skontofristInput;
 
     }
-    
+
     // Berechne und setze den Gesamtbetrag der Rechnung
     // Berechne die Zwischensumme
     const zwischensumme = gesamtpreis1 + gesamtpreis2;
@@ -509,9 +610,69 @@ function applyOrderData() {
     }
 
 
+    // Laden der Daten für den Kontoauszug
+    const kontoauszugNummer = document.getElementById('kontoauszugNummerInput').value;
+    document.getElementById('kontoauszugNummer').textContent = kontoauszugNummer;
+
+    const kontoauszugVorgang1 = document.getElementById('kontoauszugVorgang1Input').value;
+    document.getElementById('kontoauszugVorgang1').textContent = kontoauszugVorgang1;
+
+    const kontoauszugWertstellung1Input = document.getElementById('kontoauszugWertstellung1Input').value;
+    const kontoauszugWertstellung1 = kontoauszugWertstellung1Input ? parseFloat(kontoauszugWertstellung1Input) : 0;
+    document.getElementById('kontoauszugWertstellung1').textContent = kontoauszugWertstellung1 !== 0 ? formatCurrencyWithSign(kontoauszugWertstellung1) : "";
+
+    const kontoauszugVorgang2 = document.getElementById('kontoauszugVorgang2Input').value;
+    document.getElementById('kontoauszugVorgang2').textContent = kontoauszugVorgang2;
+
+    const kontoauszugWertstellung2Input = document.getElementById('kontoauszugWertstellung2Input').value;
+    const kontoauszugWertstellung2 = kontoauszugWertstellung2Input !== "" ? parseFloat(kontoauszugWertstellung2Input) : 0;
+    document.getElementById('kontoauszugWertstellung2').textContent = kontoauszugWertstellung2 !== 0 ? formatCurrencyWithSign(kontoauszugWertstellung2) : "";
+
+    const kontoauszugVorgang3 = document.getElementById('kontoauszugVorgang3Input').value;
+    document.getElementById('kontoauszugVorgang3').textContent = kontoauszugVorgang3;
+
+    const kontoauszugWertstellung3Input = document.getElementById('kontoauszugWertstellung3Input').value;
+    const kontoauszugWertstellung3 = kontoauszugWertstellung3Input ? parseFloat(kontoauszugWertstellung3Input) : 0;
+    document.getElementById('kontoauszugWertstellung3').textContent = kontoauszugWertstellung3 !== 0 ? formatCurrencyWithSign(kontoauszugWertstellung3) : "";
+
+    const kontoauszugKontostand_altInput = document.getElementById('kontoauszugKontostand_altInput').value;
+    const kontoauszugKontostand_alt = kontoauszugKontostand_altInput ? parseFloat(kontoauszugKontostand_altInput) : 0;
+    document.getElementById('kontoauszugKontostand_alt').textContent = kontoauszugKontostand_alt !== 0 ? formatCurrencyWithSign(kontoauszugKontostand_alt) : "";
+
+    let kontoauszugKontostand_neu = kontoauszugKontostand_alt + kontoauszugWertstellung1 + kontoauszugWertstellung2 + kontoauszugWertstellung3;
+
+    document.getElementById('kontoauszugKontostand_neu').textContent = formatCurrencyWithSign(kontoauszugKontostand_neu);
+
+    // Check if both kontoauszugWertstellung1 and kontoauszugVorgang1 are empty
+    if (kontoauszugWertstellung1 === 0 && kontoauszugVorgang1.trim() === "") {
+        // If both are empty, remove the element with id 'kontoauszugDatum1'
+        const kontoauszugDatum1Element = document.getElementById('kontoauszugDatum1');
+        if (kontoauszugDatum1Element) {
+            kontoauszugDatum1Element.parentNode.removeChild(kontoauszugDatum1Element);
+        }
+    }
+
+    // Check if both kontoauszugWertstellung1 and kontoauszugVorgang1 are empty
+    if (kontoauszugWertstellung2 === 0 && kontoauszugVorgang2.trim() === "") {
+        // If both are empty, remove the element with id 'kontoauszugDatum1'
+        const kontoauszugDatum2Element = document.getElementById('kontoauszugDatum2');
+        if (kontoauszugDatum2Element) {
+            kontoauszugDatum2Element.parentNode.removeChild(kontoauszugDatum2Element);
+        }
+    }
+
+    // Check if both kontoauszugWertstellung1 and kontoauszugVorgang1 are empty
+    if (kontoauszugWertstellung3 === 0 && kontoauszugVorgang3.trim() === "") {
+        // If both are empty, remove the element with id 'kontoauszugDatum1'
+        const kontoauszugDatum3Element = document.getElementById('kontoauszugDatum3');
+        if (kontoauszugDatum3Element) {
+            kontoauszugDatum3Element.parentNode.removeChild(kontoauszugDatum3Element);
+        }
+    }
 
     loadCompanyData(); // Laden der Kundeninformationen
     loadSupplierData(); // Laden der Lieferanteninformationen
+    loadKontoauszugData() // Laden der Quittungsdaten
 }
 // Formatieren der Zahl mit Tausenderpunkt und Dezimalkomma
 function formatNumber(number) {
@@ -523,10 +684,22 @@ function formatCurrency(amount) {
     return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);
 }
 
+// Funktion zum Formatieren des Betrags
+function formatCurrencyWithSign(amount) {
+    // Verwende die Intl.NumberFormat-API, um den Betrag zu formatieren
+    let formattedAmount = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(Math.abs(amount));
+
+    // Füge das Vorzeichen hinzu
+    let sign = amount >= 0 ? '+' : '–';
+    formattedAmount = formattedAmount + ' ' + sign;
+
+    return formattedAmount;
+}
+
 
 // Funktion zum Aktualisieren der Farben
 function updateColors() {
-    
+
     let colorPicker = document.getElementById("colorPicker");
     let colorElements = document.querySelectorAll(".colorSVG");
     let textColorliefererInformationen2 = document.getElementById('liefererInformationen2')
@@ -548,7 +721,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let colorPicker = document.getElementById("colorPicker");
     colorPicker.addEventListener("input", updateColors);
 
-   
+
 
 });
 
@@ -627,6 +800,18 @@ async function applySVG() {
     } catch (error) {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
+
+    let selectedKontoauszug = document.getElementById("svgDropdownKontoauszug").value;
+    let svgContainerKontoauszug = document.getElementById("kontoauszugContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedKontoauszug);
+        svgContainerKontoauszug.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+
 }
 
 async function loadSVGTemplate(templateName) {
@@ -693,6 +878,17 @@ function toggleInput() {
     }
 }
 
+function toggleInputKontoauszug() {
+    let inputElement = document.getElementById("jahrKontoauszug");
+    let checkboxElement = document.getElementById("scriptJahrKontoauszug");
+
+    if (checkboxElement.checked) {
+        inputElement.disabled = true;
+    } else {
+        inputElement.disabled = false;
+    }
+}
+
 
 
 function rechnungHerunterladen() {
@@ -726,6 +922,39 @@ function rechnungHerunterladenAlsPNG() {
         document.body.removeChild(a);
     });
 }
+
+function kontoauszugHerunterladen() {
+    const rechnungHTML = document.getElementById('kontoauszugContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+    const blob = new Blob([rechnungHTML], { type: 'svg' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'rechnung.svg';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function kontoauszugKopiereInZwischenablage() {
+    const rechnungHTML = document.getElementById('kontoauszugContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+    navigator.clipboard.writeText(rechnungHTML)
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
+
+function kontoauszugHerunterladenAlsPNG() {
+    const rechnungContainer = document.getElementById('kontoauszugContainer');
+
+    html2canvas(rechnungContainer).then(canvas => {
+        const dataURL = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'rechnung.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+}
+
 
 function validateInputs() {
     // Validierung für Artikelbezeichnung Pos. 1
@@ -810,7 +1039,7 @@ function validateInputs() {
     // Validierung für Bezugskosten
     let bezugskostenInput = document.getElementById("bezugskostenInput");
     if (!isValidNumberInput(bezugskostenInput.value, 0, 9999999)) {
-        alert("Bitte geben Sie bei Bezugsoksten gültige Werte zwischen 0 und 9999 ein");
+        alert("Bitte geben Sie bei Bezugskosten gültige Werte zwischen 0 und 9999 ein");
         return false;
     }
 
@@ -821,6 +1050,51 @@ function validateInputs() {
         alert("Bitte geben Sie gültige Zahlungsziele und Skontofristen zwischen 0 und 365 Tagen ein.");
         return false;
     }
+
+    // Validierung für Jahr in der Rechnung
+    let jahr = document.getElementById("jahr");
+    if (!isValidNumberInput(jahr.value, 0, 9999)) {
+        alert("Bitte geben Sie bei Jahr (Rechnung) gültige Werte zwischen 0 und 9999 ein");
+        return false;
+    }
+
+    // Validierung für Jahr im KOntoauszug
+    let jahrKontoauszug = document.getElementById("jahrKontoauszug");
+    if (!isValidNumberInput(jahrKontoauszug.value, 0, 9999)) {
+        alert("Bitte geben Sie bei Jahr (Kontoauszug) gültige Werte zwischen 0 und 9999 ein");
+        return false;
+    }
+
+
+    // Validierung für Kontoauszug Vorgang
+    let kontoauszugVorgang1Input = document.getElementById("kontoauszugVorgang1Input");
+    if (!isValidInput(kontoauszugVorgang1Input.value, 35)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 35 Zeichen!");
+        return false;
+    }
+
+    // Validierung für Kontoauszug Vorgang
+    let kontoauszugVorgang2Input = document.getElementById("kontoauszugVorgang1Input");
+    if (!isValidInput(kontoauszugVorgang2Input.value, 35)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 35 Zeichen!");
+        return false;
+    }
+
+
+    // Validierung für Kontoauszug Vorgang
+    let kontoauszugVorgang3Input = document.getElementById("kontoauszugVorgang3Input");
+    if (!isValidInput(kontoauszugVorgang3Input.value, 35)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 35 Zeichen!");
+        return false;
+    }
+
+    // Validierung für Jahr in der Rechnung
+    let kontoauszugKontostand_altInput = document.getElementById("kontoauszugKontostand_altInput");
+    if (!isValidNumberInput(kontoauszugKontostand_altInput.value, -999999999, 999999999)) {
+        alert("Bitte geben Sie bei Jahr (Rechnung) gültige Werte zwischen -999999999 und 999999999 ein");
+        return false;
+    }
+
 
     return true; // Rückgabe true, wenn alle Validierungen erfolgreich sind
 }
@@ -856,7 +1130,7 @@ function isValidNumberInput(value, minValue, maxValue) {
     }
 
     // Überprüfung auf gültige Zahl im angegebenen Bereich
-    const numericValue = parseFloat(value);     
+    const numericValue = parseFloat(value);
     return !isNaN(numericValue) && numericValue >= minValue && numericValue <= maxValue;
 }
 
