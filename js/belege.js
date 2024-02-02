@@ -583,16 +583,37 @@ function applyOrderData() {
 
     // Platz machen wenn keine Bezugskosten
     const warenwertUstRechnungsbetrag = document.getElementById('warenwertUstRechnungsbetrag');
+    const warenwertUstRechnungsbetrag_quer = document.getElementById('warenwertUstRechnungsbetrag_quer');
     const gBezugskosten = document.getElementById('gBezugskosten');
 
-    // Hier überprüfen wir, ob bezugskostenInput gleich 0 ist
-    if (bezugskostenInput > 0) {
-        // Ändere den Transform-Wert, um die Y-Position um 20 zu verringern
-        warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, 0)');
+    // Überprüfe, ob das Element vorhanden ist
+    if (warenwertUstRechnungsbetrag) {
+        // Hier überprüfen wir, ob bezugskostenInput gleich 0 ist
+        if (bezugskostenInput > 0) {
+            // Ändere den Transform-Wert, um die Y-Position um 20 zu verringern
+            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, 0)');
+        } else {
+            // Setze den Transform-Wert auf den ursprünglichen Wert oder einen anderen Wert nach Bedarf
+            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -30)');
+            gBezugskosten.remove();
+        }
     } else {
-        // Setze den Transform-Wert auf den ursprünglichen Wert oder einen anderen Wert nach Bedarf
-        warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -30)');
-        gBezugskosten.remove()
+
+    }
+
+    // Überprüfe, ob das Element vorhanden ist
+    if (warenwertUstRechnungsbetrag_quer) {
+        // Hier überprüfen wir, ob bezugskostenInput gleich 0 ist
+        if (bezugskostenInput > 0) {
+            // Ändere den Transform-Wert, um die Y-Position um 20 zu verringern
+            warenwertUstRechnungsbetrag_quer.setAttribute('transform', 'translate(0, 0)');
+        } else {
+            // Setze den Transform-Wert auf den ursprünglichen Wert oder einen anderen Wert nach Bedarf
+            warenwertUstRechnungsbetrag_quer.setAttribute('transform', 'translate(200, 0)');
+            gBezugskosten.remove();
+        }
+    } else {
+
     }
 
     const inputLieferbedingung = document.getElementById("lieferbedingungInput");
