@@ -72,6 +72,12 @@ parsedData.konten.forEach(konto => {
     event.dataTransfer.setData('text/plain', dragContainer.innerText);
   }
 
+  function handleCopyClick() {
+      const kontoClipboard = document.getElementById('dragContainer').innerText;
+      navigator.clipboard.writeText(kontoClipboard)
+          .then(() => alert('Text wurde in die Zwischenablage kopiert'))
+          .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+  }
 
   // Select the drop-down menu for UST
 const svgKontoUST = document.getElementById('svgKontoUST');
@@ -118,4 +124,11 @@ document.querySelectorAll('input[name="USTOption"]').forEach(ustOption => {
 function handleDragStartUST(event) {
   const dragContainerUST = document.getElementById('dragContainerUST');
   event.dataTransfer.setData('text/plain', dragContainerUST.innerText);
+}
+
+function handleUSTCopyClick() {
+  const USTClipboard = document.getElementById('dragContainerUST').innerText;
+  navigator.clipboard.writeText(USTClipboard)
+      .then(() => alert('Text wurde in die Zwischenablage kopiert'))
+      .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }

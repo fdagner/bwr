@@ -627,8 +627,8 @@
         <summary>Kontenplan für Moodle eintragen: Multichoice-Fragetyp Lückentext_(Cloze)</summary>
         <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <p><small>Markieren Sie das Konto, das mit 100% bewertet werden soll und ziehen Sie das nun grüne
-              Icon an die gewünschte Stelle (bei Mobilgeräten lang gedrückt halten). Es sollte dort anschließend "{1:MULTICHOICE:~..." erscheinen.</small></p>
-          <div id="kontenplan" draggable="true" ondragstart="handleDragStart(event)"
+              Icon an die gewünschte Stelle (bei Mobilgeräten lang gedrückt halten). Es sollte dort anschließend "{1:MULTICHOICE:~..." erscheinen. Alternativ können Sie auch auf das Icon klicken, um den Text in die Zwischenablage zu kopieren.</small></p>
+          <div id="kontenplan" draggable="true" ondragstart="handleDragStart(event)" onclick="handleCopyClick()"
             style="text-align: center;cursor: pointer;background-color: #f5f5f5; border: 1px dashed #c32e04;margin: 0 auto;width: 100px;padding: 4px">
             <svg id="svgKonto" xmlns="http://www.w3.org/2000/svg" height="32" width="24" viewBox="0 0 384 512"
               fill="red">
@@ -645,8 +645,8 @@
         <summary>Umsatzsteuer in  Vorkontierung: Multichoice-Fragetyp Lückentext_(Cloze)</summary>
         <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
           <p><small>Markieren Sie die Steuer, die mit 100% bewertet werden soll und ziehen Sie das nun grüne
-              Icon an die gewünschte Stelle (bei Mobilgeräten lang gedrückt halten). Es sollte dort anschließend "{1:MULTICHOICE:~..." erscheinen.</small></p>
-          <div id="steuervorkontierung" draggable="true" ondragstart="handleDragStartUST(event)"
+              Icon an die gewünschte Stelle (bei Mobilgeräten lang gedrückt halten). Es sollte dort anschließend "{1:MULTICHOICE:~..." erscheinen. Alternativ können Sie auch auf das Icon klicken, um den Text in die Zwischenablage zu kopieren.</small></p>
+          <div id="steuervorkontierung" draggable="true" ondragstart="handleDragStartUST(event)" onclick="handleUSTCopyClick()"
             style="text-align: center;cursor: pointer;background-color: #f5f5f5; border: 1px dashed #c32e04;margin: 0 auto;width: 100px;padding: 4px">
             <svg id="svgKontoUST" xmlns="http://www.w3.org/2000/svg" height="32" width="24" viewBox="0 0 384 512"
               fill="red">
