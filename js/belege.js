@@ -387,6 +387,7 @@ function loadSupplierData() {
 function loadLogo(event) {
     const svgContainer = document.getElementById('rechnungSVG');
     const existingImages = svgContainer.querySelectorAll('#uploaded-image');
+
     existingImages.forEach(existingImage => {
         svgContainer.removeChild(existingImage);
     });
@@ -398,11 +399,7 @@ function loadLogo(event) {
             const existingImage = document.getElementById('uploaded-image');
             const rectElement = document.getElementById('logo-placeholder');
 
-            // Entferne das vorhandene Bild, falls vorhanden
-            if (existingImage) {
-                svgContainer.removeChild(existingImage);
-            }
-
+   
             // Erstelle ein <image>-Element und füge es zur SVG hinzu
             const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
             image.setAttribute('id', 'uploaded-image');
