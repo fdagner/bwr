@@ -42,11 +42,14 @@ function reloadDropdownOptions() {
     const dropdownCustomer = document.getElementById('datenKunde');
     const dropdownSupplier = document.getElementById('datenLieferer');
     const dropdownKontenauszug = document.getElementById('datenKontoauszug');
+    const dropdownEmail = document.getElementById('datenEmail');
+    const dropdownEmailKunde = document.getElementById('datenEmailKunde');
 
     // Clear existing options
     dropdownCustomer.innerHTML = '';
     dropdownSupplier.innerHTML = '';
     dropdownKontenauszug.innerHTML = '';
+
 
     yamlData.forEach(company => {
         const optionCustomer = document.createElement('option');
@@ -63,6 +66,18 @@ function reloadDropdownOptions() {
         optionKontoauszug.value = company.unternehmen.name;
         optionKontoauszug.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownKontenauszug.appendChild(optionKontoauszug);
+
+        const optionEmail = document.createElement('option');
+        optionEmail.value = company.unternehmen.name;
+        optionEmail.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownEmail.appendChild(optionEmail);
+
+        const optionEmailKunde = document.createElement('option');
+        optionEmailKunde.value = company.unternehmen.name;
+        optionEmailKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownEmailKunde.appendChild(optionEmailKunde);
+
+
     });
 }
 
@@ -116,6 +131,8 @@ fetch('js/unternehmen.yml')
         const dropdownCustomer = document.getElementById('datenKunde');
         const dropdownSupplier = document.getElementById('datenLieferer');
         const dropdownKontoauszug = document.getElementById('datenKontoauszug');
+        const dropdownEmail = document.getElementById('datenEmail');
+        const dropdownEmailKunde = document.getElementById('datenEmailKunde');
 
         yamlData.forEach(company => {
             const optionCustomer = document.createElement('option');
@@ -132,6 +149,17 @@ fetch('js/unternehmen.yml')
             optionKontoauszug.value = company.unternehmen.name;
             optionKontoauszug.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownKontoauszug.appendChild(optionKontoauszug);
+
+            const optionEmail = document.createElement('option');
+            optionEmail.value = company.unternehmen.name;
+            optionEmail.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            dropdownEmail.appendChild(optionEmail);
+
+            const optionEmailKunde = document.createElement('option');
+            optionEmailKunde.value = company.unternehmen.name;
+            optionEmailKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            dropdownEmailKunde.appendChild(optionEmailKunde);
+
         });
 
 
@@ -146,10 +174,87 @@ function loadKontoauszugData() {
     document.getElementById('kontoauszugBank').textContent = selectedKontoauszug.unternehmen.bank;
     document.getElementById('kontoauszugIban').textContent = selectedKontoauszug.unternehmen.iban;
     document.getElementById('kontoauszugBic').textContent = selectedKontoauszug.unternehmen.bic;
-    document.getElementById('kontoauszugName').textContent = selectedKontoauszug.unternehmen.inhaber + ', ' + selectedKontoauszug.unternehmen.name + ' ' + selectedKontoauszug.unternehmen.rechtsform;
+    document.getElementById('kontoauszugName').textContent = selectedKontoauszug.unternehmen.inhaber + ', ' + selectedKontoauszug.unternehmen.name;
     document.getElementById('kontoauszugAdresse').textContent = selectedKontoauszug.unternehmen.adresse.strasse;
     document.getElementById('kontoauszugOrt').textContent = selectedKontoauszug.unternehmen.adresse.plz + ' ' + selectedKontoauszug.unternehmen.adresse.ort;
 }
+
+function loadEmailData() {
+    const selectedEmailName = document.getElementById('datenEmail').value;
+    const selectedEmail = yamlData.find(email => email.unternehmen.name === selectedEmailName);
+    document.getElementById('emailName').textContent = selectedEmail.unternehmen.name + ' ' + selectedEmail.unternehmen.rechtsform ;
+    const elementsWithClassemailInhaber = document.getElementsByClassName('emailInhaber');
+    for (const element of elementsWithClassemailInhaber) {
+        element.textContent = selectedEmail.unternehmen.inhaber;
+    }
+    const logoUrl = selectedEmail.unternehmen.logo;
+    const svgContainer = document.getElementById('emailSVG');
+    const rectElement = document.getElementById('logo-placeholderEmail');
+
+    const existingImages = svgContainer.querySelectorAll('#uploaded-image');
+    existingImages.forEach(existingImage => {
+        svgContainer.removeChild(existingImage);
+    });
+    // Erstelle ein <image>-Element und füge es zur SVG hinzu
+    const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+    image.setAttribute('id', 'uploaded-image');
+    image.setAttribute('x', rectElement.getAttribute('x'));
+    image.setAttribute('y', rectElement.getAttribute('y'));
+    image.setAttribute('width', rectElement.getAttribute('width'));
+    image.setAttribute('height', rectElement.getAttribute('height'));
+
+    // Setze den href-Attribut basierend auf logoUrl oder den Standardwert
+    if (logoUrl && logoUrl.trim() !== '') {
+        // Überprüfe, ob logoUrl eine externe URL oder ein Pfad zu einer lokalen Datei ist
+        if (logoUrl.startsWith('http') || logoUrl.startsWith('data:image')) {
+            // Wenn logoUrl bereits eine externe URL oder eine Data-URL ist, setze sie direkt
+            image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', logoUrl);
+            svgContainer.appendChild(image);
+        } else {
+            // Lade das Bild, konvertiere es in Base64 und setze es als Data-URL
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
+                    svgContainer.appendChild(image);
+                };
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', logoUrl);
+            xhr.responseType = 'blob';
+            xhr.send();
+        }
+    } else {
+        // Wenn der Eintrag in YAML leer ist, lade den Standard-SVG als Base64
+        const standardImageURL = 'media/pic/standard.svg';
+
+        const xhrStandard = new XMLHttpRequest();
+        xhrStandard.onload = function () {
+            const reader = new FileReader();
+            reader.onloadend = function () {
+                image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
+                svgContainer.appendChild(image);
+            };
+            reader.readAsDataURL(xhrStandard.response);
+        };
+        xhrStandard.open('GET', standardImageURL);
+        xhrStandard.responseType = 'blob';
+        xhrStandard.send();
+    }
+
+
+
+}
+
+// Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
+function loadCompanyDataforEmail() {
+    const selectedCompanyName = document.getElementById('datenEmailKunde').value;
+    const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
+    document.getElementById('emailNameKunde').textContent = selectedCompany.unternehmen.inhaber
+    document.getElementById('emailAdresseKunde').textContent = selectedCompany.unternehmen.kontakt.email
+}
+
 
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
 function loadCompanyData() {
@@ -176,7 +281,7 @@ function loadSupplierData() {
     // Update the SVG text elements with the selected supplier data
     document.getElementById('nameLieferer').textContent = selectedSupplier.unternehmen.name + ' ' + selectedSupplier.unternehmen.rechtsform;
     document.getElementById('mottoLieferer').textContent = selectedSupplier.unternehmen.motto;
-    document.getElementById('nameLangLieferer').textContent = selectedSupplier.unternehmen.name + ' ' + selectedSupplier.unternehmen.rechtsform;
+    document.getElementById('nameLangLieferer').textContent = selectedSupplier.unternehmen.name;
     document.getElementById('strasseLieferer').textContent = selectedSupplier.unternehmen.adresse.strasse;
     document.getElementById('plzLieferer').textContent = selectedSupplier.unternehmen.adresse.plz + ' ' + selectedSupplier.unternehmen.adresse.ort;
     document.getElementById('adresseLieferer').textContent = selectedSupplier.unternehmen.name + ' ' + selectedSupplier.unternehmen.rechtsform + ' - ' + selectedSupplier.unternehmen.adresse.strasse +
@@ -691,9 +796,19 @@ function applyOrderData() {
         }
     }
 
+    // Laden der Daten für die Mail
+    const emailTextMessage = document.getElementById('emailInputText').value;
+    document.getElementById('emailTextMessage').textContent = emailTextMessage;
+
+    const emailSubject = document.getElementById('emailSubjectInput').value;
+    document.getElementById('emailSubject').textContent = emailSubject;
+    
+
     loadCompanyData(); // Laden der Kundeninformationen
     loadSupplierData(); // Laden der Lieferanteninformationen
     loadKontoauszugData() // Laden der Quittungsdaten
+    loadEmailData() // Laden der E-Mail-Daten
+    loadCompanyDataforEmail(); // Laden der E-Mail-Daten (Kunde)
 }
 // Formatieren der Zahl mit Tausenderpunkt und Dezimalkomma
 function formatNumber(number) {
@@ -833,11 +948,24 @@ async function applySVG() {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
 
+    
+    let selectedEmail = document.getElementById("svgDropdownEmail").value;
+    let svgContainerEmail = document.getElementById("emailContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedEmail);
+        svgContainerEmail.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+
+
 }
 
 async function loadSVGTemplate(templateName) {
     try {
-        let templatePath = "templates/" + templateName + ".svg";
+        let templatePath = "templates/" + templateName;
         let response = await fetch(templatePath);
         let svgData = await response.text();
         return svgData;
@@ -976,6 +1104,39 @@ function kontoauszugHerunterladenAlsPNG() {
     });
 }
 
+function emailHerunterladen() {
+    const emailHTML = document.getElementById('emailContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+    const blob = new Blob([emailHTML], { type: 'html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'email.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function emailKopiereInZwischenablage() {
+    const emailHTML = document.getElementById('emailContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+    navigator.clipboard.writeText(emailHTML)
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
+
+function emailHerunterladenAlsPNG() {
+    const emailContainer = document.getElementById('mailHtml');
+
+    html2canvas(emailContainer).then(canvas => {
+        const dataURL = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'rechnung.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+}
+
+
 
 function validateInputs() {
     // Validierung für Artikelbezeichnung Pos. 1
@@ -1108,11 +1269,26 @@ function validateInputs() {
         alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 35 Zeichen!");
         return false;
     }
+    
 
     // Validierung für Jahr in der Rechnung
     let kontoauszugKontostand_altInput = document.getElementById("kontoauszugKontostand_altInput");
     if (!isValidNumberInput(kontoauszugKontostand_altInput.value, -999999999, 999999999)) {
         alert("Bitte geben Sie bei Jahr (Rechnung) gültige Werte zwischen -999999999 und 999999999 ein");
+        return false;
+    }
+
+        // Validierung für Kontoauszug Vorgang
+        let emailSubjectInput = document.getElementById("emailSubjectInput");
+        if (!isValidInput(emailSubjectInput.value, 100)) {
+            alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 100 Zeichen!");
+            return false;
+        }
+
+            // Validierung für Kontoauszug Vorgang
+    let emailInputText = document.getElementById("emailInputText");
+    if (!isValidInput(emailInputText.value, 5000)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 5000 Zeichen!");
         return false;
     }
 

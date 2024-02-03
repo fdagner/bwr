@@ -158,13 +158,6 @@ main {
   transform: rotate(45deg);
 }
 
-textarea {
-  width: 800px;
-  height: 500px;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
-
 .flex-row {
   display:flex;
   flex-direction: row;
