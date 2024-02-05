@@ -44,6 +44,22 @@
         </li>
       </ul>
     </section>
+    <aside>
+      <button id="openPopupStashMC">Gift for Stash</button>
+<script>
+    // JavaScript, um das Popup-Fenster zu öffnen
+    document.getElementById('openPopupStashMC').addEventListener('click', function() {
+        // Öffne ein Popup-Fenster
+        const popupWindow = window.open('giftforstash.html', '_blank', 'width=600,height=800');
+
+        // Optional: Setze den Fokus auf das Popup-Fenster
+        if (popupWindow) {
+            popupWindow.focus();
+        }
+    });
+</script>
+
+    </aside>
   </main>
   <footer>
     <p>

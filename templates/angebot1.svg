@@ -26,21 +26,21 @@
     <text id="strasseLieferer" x="535" y="215" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
     <text x="530" y="230" font-family="Arial" text-anchor="end" font-size="14" fill="#808080">Ort:</text>
     <text id="plzLieferer" x="535" y="230" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
-    <text x="530" y="245" font-family="Arial" font-size="14" fill="#808080" text-anchor="end">Ansprechpartner:</text>
-    <text id="ansprechpartnerLieferer" x="535" y="245" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
-    <text x="530" y="260" font-family="Arial" font-size="14" fill="#808080" text-anchor="end">Tel.:</text>
-    <text id="telefonLieferer" x="535" y="260" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
-    <text x="530" y="275" font-family="Arial" font-size="14" fill="#808080" text-anchor="end">Mail:</text>
-    <text id="emailLieferer" x="535" y="275" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
-    <text x="530" y="290" font-family="Arial" font-size="14" fill="#808080" text-anchor="end">Internet:</text>
-    <text id="internetLieferer" x="535" y="290" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
+    <text x="530" y="245" font-family="Arial" font-size="14" fill="#808080" text-anchor="end">Tel.:</text>
+    <text id="telefonLieferer" x="535" y="245" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
+    <text x="530" y="260" font-family="Arial" font-size="14" fill="#808080" text-anchor="end">Mail:</text>
+    <text id="emailLieferer" x="535" y="260" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
+    <text x="530" y="275" font-family="Arial" font-size="14" fill="#808080" text-anchor="end">Internet:</text>
+    <text id="internetLieferer" x="535" y="275" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
   </g>
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
-    <text x="20" y="340" font-family="Calibri" font-weight="bold" font-size="30" fill="#333">RECHNUNG NR-<tspan id="rechnungsNummer"/></tspan></text>
-    <text id="lieferdatum" x="20" y="380" font-family="Arial" font-size="18" fill="#333">Lieferung <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
-    <text x="20" y="410" font-family="Arial" font-size="18" fill="#333">Kundennummer: K<tspan id="nummerKunde"/></text>
-    <text id="datum" x="690" y="380" font-family="Arial" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+    <text x="20" y="340" font-family="Calibri" font-weight="bold" font-size="30" fill="#333">A N G E B O T</text>
+    <text id="lieferdatum" x="-120" y="380" font-family="Arial" font-size="0" fill="#333"><tspan id="rechnungsNummer"/></tspan><tspan class="rechnungsDatum"></tspan><tspan class="aktuellesJahr"/></text>
+    <text x="-120" y="410" font-family="Arial" font-size="0" fill="#333"><tspan id="nummerKunde"/></text>
+    <text id="datum" x="690" y="340" font-family="Arial" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+    <text id="datum" x="20" y="410" font-family="Arial" font-size="15" fill="#333" text-anchor="start">Sehr geehrte Damen und Herren,</text>
+    <text id="datum" x="20" y="430" font-family="Arial" font-size="15" fill="#333" text-anchor="start">Wir beziehen uns auf Ihre telefonische Anfrage und unterbreiten Ihnen das folgende Angebot:</text>
   </g>
 <!--Gruppe für Bestelldaten-->
   <g id="bestellDaten">
@@ -83,16 +83,18 @@
     <text x="390" y="740" font-family="Arial" font-size="18" fill="#000" font-weight="bold"><tspan id="ust"> </tspan> % UST </text>
     <text id="ustsumme" x="690" y="740" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
     <rect x="390" y="750" width="300" height="1" fill="#000"/>
-    <text x="390" y="770" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Rechnungsbetrag</text>
+    <text x="390" y="770" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Gesamtbetrag</text>
     <text id="rechnungsbetrag" x="690" y="770" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
     </g>
   </g>
 <!--Gruppe für Zahlungsbedingungen-->
-  <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Arial" font-size="18" fill="#333">
-    <text x="350" y="830">Vielen Dank für Ihre Bestellung!</text>
-    <text x="350" y="860">Zahlung fällig in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
-    <text id="skontotext" x="350" y="890">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto</text>
-    <text x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
+  <g id="Zahlungsbedingungen" text-anchor="start" font-family="Arial" font-size="15" fill="#333">
+    <text x="20" y="800">Zahlbar innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen rein netto.</text>
+    <text id="skontotext" x="20" y="820">Mit Abzug von <tspan id="skonto"> </tspan> % Skonto innerhalb von <tspan id="skontofrist"> </tspan> Tagen.</text>
+    <text x="20" y="840">Wir liefern <tspan id="bezugskostenBedingung"></tspan> unter Eigentumsvorbehalt.</text>
+
+    <text x="20" y="900">Mit freundlichen Grüßen,</text>
+    <text id="ansprechpartnerLieferer" x="20" y="920" font-family="Arial" font-size="17"/>
   </g>
   <g id="footerText" transform="translate(0,-20)" fill="#fff">
     <text id="bankLieferer" x="20" y="1000" font-family="Arial" font-size="15" />

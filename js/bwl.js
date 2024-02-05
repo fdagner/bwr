@@ -32,9 +32,9 @@ function berechneOptimaleBestellmengeUndHaeufigkeit() {
   }
 
   if (
-    optimaleBestellhaeufigkeit < 1 || optimaleBestellhaeufigkeit > 365
+    optimaleBestellhaeufigkeit < 1 || optimaleBestellhaeufigkeit > 100
   ) {
-    alert("Bitte eine gültige Zahl eingeben: Optimale Bestellhäufigkeit (1 - 365).");
+    alert("Bitte eine gültige Zahl eingeben: Optimale Bestellhäufigkeit (1 - 100).");
     return;
   }
 
@@ -46,9 +46,9 @@ function berechneOptimaleBestellmengeUndHaeufigkeit() {
   }
 
   if (
-    schrittweite < 1 || schrittweite > 365
+    schrittweite < 1 || schrittweite > 100
   ) {
-    alert("Bitte eine gültige Zahl eingeben: Schrittweite (1 - 365).");
+    alert("Bitte eine gültige Zahl eingeben: Schrittweite (1 - 100).");
     return;
   }
 
