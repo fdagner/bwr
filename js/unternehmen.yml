@@ -520,8 +520,8 @@
 
 - unternehmen:
     id: "24"
-    name: "Klangmeister Instrumente"
-    motto: "Traumhafte Klänge aus Meisterhand"
+    name: "Klangmeister"
+    motto: "Instrumente und traumhafte Klänge aus Meisterhand"
     bank: "Münchener Bank"
     rechtsform: "e. Kfr."
     logo: "media/pic/gitarre.svg"
@@ -612,8 +612,8 @@
 
 - unternehmen:
     id: "28"
-    name: "Radelglück Fahrradhandel"
-    motto: "Allzeit gute Fahrt!"
+    name: "Radelglück"
+    motto: "Dein Farradhandel. Allzeit gute Fahrt!"
     bank: "Sparbank"
     rechtsform: "e. K"
     logo: "media/pic/fahrrad.svg"

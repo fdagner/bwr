@@ -9,46 +9,34 @@ function formatNumberWithSpace(number) {
   return formattedNumber.replace(/(\d)(?=(\d{3})+$)/g, '$1 ');
 }
 
-
-
-let optimaleBestellhaeufigkeit;
-let optimaleBestellmenge;
 let lagerkosten;
 let bedarf;
 function berechneOptimaleBestellmengeUndHaeufigkeit() {
-  let optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value);
-  let optimaleBestellhaeufigkeit = parseInt(document.getElementById("optimaleBestellhaeufigkeit").value);
-  let bestellkosten = parseInt(document.getElementById("bestellkosten").value);
-  let schrittweite = parseInt(document.getElementById("schrittweite").value);
+  let optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value, 10);
+  let optimaleBestellhaeufigkeit = parseInt(document.getElementById("optimaleBestellhaeufigkeit").value, 10);
+  let bestellkosten = parseInt(document.getElementById("bestellkosten").value, 10);
+  let schrittweite = parseInt(document.getElementById("schrittweite").value, 10);
 
-  // Validate inputs
-  if (
-    isNaN(optimaleBestellmenge) || isNaN(optimaleBestellhaeufigkeit) ||
-    isNaN(bestellkosten) || isNaN(schrittweite) ||
-    optimaleBestellmenge < 1 || optimaleBestellmenge > 999999999
-  ) {
-    alert("Bitte eine gültige Zahl eingeben: Optimale Bestellmenge (1 - 999999999).");
-    return;
+  function validateInputs(optimaleBestellmenge, optimaleBestellhaeufigkeit, bestellkosten, schrittweite) {
+    const inputs = [
+      { value: optimaleBestellmenge, min: 1, max: 999999999, message: "Optimale Bestellmenge (1 - 999999999)" },
+      { value: optimaleBestellhaeufigkeit, min: 1, max: 100, message: "Optimale Bestellhäufigkeit (1 - 100)" },
+      { value: bestellkosten, min: 0, max: 999999999, message: "Bestellkosten (0 - 999999999)" },
+      { value: schrittweite, min: 1, max: 100, message: "Schrittweite (1 - 100)" }
+    ];
+  
+    for (const input of inputs) {
+      if (isNaN(input.value) || input.value < input.min || input.value > input.max) {
+        alert(`Bitte eine gültige Zahl eingeben: ${input.message}.`);
+        return false;
+      }
+    }
+  
+    return true;
   }
-
-  if (
-    optimaleBestellhaeufigkeit < 1 || optimaleBestellhaeufigkeit > 100
-  ) {
-    alert("Bitte eine gültige Zahl eingeben: Optimale Bestellhäufigkeit (1 - 100).");
-    return;
-  }
-
-  if (
-    bestellkosten < 0 || bestellkosten > 999999999
-  ) {
-    alert("Bitte eine gültige Zahl eingeben: Bestellkosten (0 - 999999999).");
-    return;
-  }
-
-  if (
-    schrittweite < 1 || schrittweite > 100
-  ) {
-    alert("Bitte eine gültige Zahl eingeben: Schrittweite (1 - 100).");
+  
+  // Verwendung:
+  if (!validateInputs(optimaleBestellmenge, optimaleBestellhaeufigkeit, bestellkosten, schrittweite)) {
     return;
   }
 
@@ -66,116 +54,91 @@ function berechneOptimaleBestellmengeUndHaeufigkeit() {
 
 function generiereWertetabelle() {
   // Tabelle leeren
-  document.getElementById('lagerkosten').innerText = formatCurrency(lagerkosten);
-  document.getElementById('bedarf').innerText = formatNumberWithSpace(bedarf);
-  document.getElementById('wertetabelle').innerHTML = '';
+  const lagerkostenElement = document.getElementById('lagerkosten');
+  const bedarfElement = document.getElementById('bedarf');
+  const wertetabelleElement = document.getElementById('wertetabelle');
+  
+  lagerkostenElement.innerText = formatCurrency(lagerkosten);
+  bedarfElement.innerText = formatNumberWithSpace(bedarf);
+  wertetabelleElement.innerHTML = '';
 
   // Input-Feldwerte abrufen
-  let bestellkosten = parseInt(document.getElementById('bestellkosten').value);
-  let optimaleBestellhaeufigkeit = parseInt(document.getElementById('optimaleBestellhaeufigkeit').value);
-  let schrittweite = parseInt(document.getElementById('schrittweite').value);
-  // Array für die Werte erstellen
-  let werteArray = [];
-  // Werte zur Tabelle hinzufügen
+  const bestellkosten = parseInt(document.getElementById('bestellkosten').value, 10);
+  const optimaleBestellhaeufigkeit = parseInt(document.getElementById('optimaleBestellhaeufigkeit').value, 10);
+  const schrittweite = parseInt(document.getElementById('schrittweite').value, 10);
+  
+  const werteArray = [];
+
+  // Berechnungen außerhalb der Schleife
+  const durchschnittlicherBestand = (bedarf / (2 * optimaleBestellhaeufigkeit)).toFixed(2);
+  const bestellkostenGesamt = (bestellkosten * optimaleBestellhaeufigkeit).toFixed(2);
+  const lagerhaltungskosten = (durchschnittlicherBestand * lagerkosten).toFixed(2);
+  const gesamtkosten = (parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten)).toFixed(2);
+
   werteArray.push({
     bestellmenge: Math.round(bedarf / optimaleBestellhaeufigkeit),
     haeufigkeit: optimaleBestellhaeufigkeit,
-    durchschnittlicherBestand: (bedarf / (2 * optimaleBestellhaeufigkeit)).toFixed(2),
-    bestellkostenGesamt: (bestellkosten * optimaleBestellhaeufigkeit).toFixed(2),
-    lagerhaltungskosten: ((bedarf / (2 * optimaleBestellhaeufigkeit)) * lagerkosten).toFixed(2),
-    gesamtkosten: (bestellkosten * optimaleBestellhaeufigkeit + (bedarf / (2 * optimaleBestellhaeufigkeit)) * lagerkosten).toFixed(2)
+    durchschnittlicherBestand: durchschnittlicherBestand,
+    bestellkostenGesamt: bestellkostenGesamt,
+    lagerhaltungskosten: lagerhaltungskosten,
+    gesamtkosten: gesamtkosten
   });
+
   let schritte = schrittweite;
   for (let haeufigkeit = Math.max(0); haeufigkeit <= Math.min(100); haeufigkeit += schritte) {
-    if (haeufigkeit < 1 || haeufigkeit > 100 || haeufigkeit === optimaleBestellhaeufigkeit) continue; // Überspringe die optimale Häufigkeit
+    if (haeufigkeit < 1 || haeufigkeit > 100 || haeufigkeit === optimaleBestellhaeufigkeit) continue;
+
+    // Werte berechnen
+    const durchschnittlicherBestand = (bedarf / (2 * haeufigkeit)).toFixed(2);
+    const bestellkostenGesamt = (bestellkosten * haeufigkeit).toFixed(2);
+    const lagerhaltungskosten = (durchschnittlicherBestand * lagerkosten).toFixed(2);
+    const gesamtkosten = (parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten)).toFixed(2);
 
     // Werte zum Array hinzufügen
     werteArray.push({
       bestellmenge: Math.round(bedarf / haeufigkeit),
       haeufigkeit: haeufigkeit,
-      durchschnittlicherBestand: (bedarf / (2 * haeufigkeit)).toFixed(2),
-      bestellkostenGesamt: (bestellkosten * haeufigkeit).toFixed(2),
-      lagerhaltungskosten: ((bedarf / (2 * haeufigkeit)) * lagerkosten).toFixed(2),
-      gesamtkosten: (bestellkosten * haeufigkeit + (bedarf / (2 * haeufigkeit)) * lagerkosten).toFixed(2)
+      durchschnittlicherBestand: durchschnittlicherBestand,
+      bestellkostenGesamt: bestellkostenGesamt,
+      lagerhaltungskosten: lagerhaltungskosten,
+      gesamtkosten: gesamtkosten
     });
   }
+
   // Tabelle nach Bestellmenge absteigend sortieren
   werteArray.sort((a, b) => b.haeufigkeit - a.haeufigkeit);
+
   // Tabelle erstellen
-  let table = document.createElement('table');
-  table.style.width = '680px';  // Setzt die Breite der Tabelle
-  table.style.borderCollapse = 'collapse';  // Setzt den border-collapse-Stil
+  const table = document.createElement('table');
+  table.style.width = '680px';
+  table.style.borderCollapse = 'collapse';
 
-  let headerRow = table.insertRow(0);
-  let bestellmengeHeader = document.createElement('th');
-  let haeufigkeitHeader = document.createElement('th');
-  let durchschnittlicherBestandHeader = document.createElement('th');
-  let bestellkostenHeader = document.createElement('th');
-  let lagerhaltungskostenHeader = document.createElement('th');
-  let gesamtkostenHeader = document.createElement('th');
+  const thTitles = ['Bestellmenge', 'Bestellhäufigkeit', 'Durchschn. Lagerbestand', 'Bestellkosten', 'Lagerkosten', 'Gesamtkosten'];
+  const headerRow = table.insertRow(0);
 
-  // Füge die Überschriften als <th> mit Hintergrundfarbe und Border hinzu
-  bestellmengeHeader.textContent = 'Bestellmenge';
-  haeufigkeitHeader.textContent = 'Bestellhäufigkeit';
-  durchschnittlicherBestandHeader.textContent = 'Durchschn. Lagerbestand';
-  bestellkostenHeader.textContent = 'Bestellkosten';
-  lagerhaltungskostenHeader.textContent = 'Lagerkosten';
-  gesamtkostenHeader.textContent = 'Gesamtkosten';
-
-  headerRow.appendChild(bestellmengeHeader);
-  headerRow.appendChild(haeufigkeitHeader);
-  headerRow.appendChild(durchschnittlicherBestandHeader);
-  headerRow.appendChild(bestellkostenHeader);
-  headerRow.appendChild(lagerhaltungskostenHeader);
-  headerRow.appendChild(gesamtkostenHeader);
-
-  // Füge Hintergrundfarbe und Border für <th> hinzu
-  const thElements = [bestellmengeHeader, haeufigkeitHeader, durchschnittlicherBestandHeader, bestellkostenHeader, lagerhaltungskostenHeader, gesamtkostenHeader];
-  thElements.forEach(th => {
-    th.style.backgroundColor = '#f5f5f5';  // Setzt die Hintergrundfarbe
-    th.style.border = '1px solid #000';  // Setzt die Border
-    th.style.padding = '4px';  // Setzt die Border
+  thTitles.forEach(title => {
+    const th = document.createElement('th');
+    th.textContent = title;
+    th.style.backgroundColor = '#f5f5f5';
+    th.style.border = '1px solid #000';
+    th.style.padding = '4px';
+    headerRow.appendChild(th);
   });
 
-  // Werte zur sortierten Tabelle hinzufügen
-  for (let i = 0; i < werteArray.length; i++) {
-    let row = table.insertRow(-1);
-    let cell1 = row.insertCell(0);
-    let cell2 = row.insertCell(1);
-    let cell3 = row.insertCell(2);
-    let cell4 = row.insertCell(3);
-    let cell5 = row.insertCell(4);
-    let cell6 = row.insertCell(5);
+  werteArray.forEach(wert => {
+    const row = table.insertRow(-1);
+    ['bestellmenge', 'haeufigkeit', 'durchschnittlicherBestand', 'bestellkostenGesamt', 'lagerhaltungskosten', 'gesamtkosten'].forEach(key => {
+      const cell = row.insertCell();
+      cell.textContent = formatNumberWithSpace(wert[key]);
+      cell.style.border = '1px solid #000';
+      cell.style.textAlign = ['Bestellkosten', 'Lagerkosten', 'Gesamtkosten'].includes(key) ? 'right' : 'center';
+      cell.style.padding = '4px';
+    });
+  });
 
-    cell1.innerHTML = formatNumberWithSpace(werteArray[i].bestellmenge);
-    cell2.innerHTML = formatNumberWithSpace(werteArray[i].haeufigkeit);
-    cell3.innerHTML = formatNumberWithSpace(werteArray[i].durchschnittlicherBestand);
-    cell4.innerHTML = formatCurrency(werteArray[i].bestellkostenGesamt);
-    cell5.innerHTML = formatCurrency(werteArray[i].lagerhaltungskosten);
-    cell6.innerHTML = formatCurrency(werteArray[i].gesamtkosten);
-
-    // Stile für jedes TD (table data) hinzufügen
-    cell1.style.border = '1px solid #000';
-    cell1.style.textAlign = 'center';
-    cell2.style.border = '1px solid #000';
-    cell2.style.textAlign = 'center';
-    cell3.style.border = '1px solid #000';
-    cell3.style.textAlign = 'center';
-    cell4.style.border = '1px solid #000';
-    cell4.style.textAlign = 'right';
-    cell4.style.padding = '4px';
-    cell5.style.border = '1px solid #000';
-    cell5.style.textAlign = 'right';
-    cell5.style.padding = '4px';
-    cell6.style.border = '1px solid #000';
-    cell6.style.textAlign = 'right';
-    cell6.style.padding = '4px';
-  }
-
-  // Tabelle zum Dokument hinzufügen
-  document.getElementById('wertetabelle').appendChild(table);
+  // Tabelle in DOM einfügen
+  wertetabelleElement.appendChild(table);
 }
-
 
 
 
@@ -387,7 +350,6 @@ function bestellmengeHerunterladen() {
   a.click();
   document.body.removeChild(a);
 }
-
 
 
 function bestellmengeHerunterladenAlsPNG() {
