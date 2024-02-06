@@ -9,6 +9,20 @@ function formatNumberWithSpace(number) {
   return formattedNumber.replace(/(\d)(?=(\d{3})+$)/g, '$1 ');
 }
 
+function roundUpToNearest(number) {
+  const digits = Math.floor(Math.log10(number));
+  const factor = Math.pow(10, digits);
+  
+  if (factor < 10) {
+    return Math.ceil(number / 10) * 10;
+  } else if (factor < 100) {
+    return Math.ceil(number / 100) * 100;
+  } else {
+    return Math.ceil(number / 1000) * 1000;
+  }
+}
+
+
 let lagerkosten;
 let bedarf;
 function berechneOptimaleBestellmengeUndHaeufigkeit() {
@@ -129,7 +143,11 @@ function generiereWertetabelle() {
     const row = table.insertRow(-1);
     ['bestellmenge', 'haeufigkeit', 'durchschnittlicherBestand', 'bestellkostenGesamt', 'lagerhaltungskosten', 'gesamtkosten'].forEach(key => {
       const cell = row.insertCell();
-      cell.textContent = formatNumberWithSpace(wert[key]);
+      if (['bestellkostenGesamt', 'lagerhaltungskosten', 'gesamtkosten'].includes(key)) {
+        cell.textContent = formatCurrency(wert[key]);
+      } else {
+        cell.textContent = formatNumberWithSpace(wert[key]);
+      }
       cell.style.border = '1px solid #000';
       cell.style.textAlign = ['Bestellkosten', 'Lagerkosten', 'Gesamtkosten'].includes(key) ? 'right' : 'center';
       cell.style.padding = '4px';
@@ -138,8 +156,81 @@ function generiereWertetabelle() {
 
   // Tabelle in DOM einfügen
   wertetabelleElement.appendChild(table);
+
+drawChart(werteArray);
 }
 
+function drawChart(werteArray) {
+  const optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value, 10);
+  const bestellkosten = parseInt(document.getElementById("bestellkosten").value, 10);
+  const optimaleBestellhaeufigkeit = parseInt(document.getElementById('optimaleBestellhaeufigkeit').value, 10);
+  const bedarf = optimaleBestellmenge * optimaleBestellhaeufigkeit;
+  const lagerkosten = (2 * bedarf * bestellkosten) / (optimaleBestellmenge * optimaleBestellmenge);
+  const labels = [];
+  const lagerhaltungskostenData = [];
+  const bestellkostenData = [];
+  const gesamtkostenData = [];
+ let schrittebestellmenge = roundUpToNearest(optimaleBestellmenge/100)
+  // Daten für das Diagramm berechnen
+  for (let i = 0; i <= optimaleBestellmenge * 2; i+=schrittebestellmenge) {
+    const durchschnittlicherBestand = (i/2).toFixed(2);
+    const bestellkostenGesamt = (bestellkosten * bedarf/i).toFixed(2);
+    const lagerhaltungskosten = (durchschnittlicherBestand * lagerkosten).toFixed(2);
+    const gesamtkosten = (parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten)).toFixed(2);
+
+    labels.push(i);
+    lagerhaltungskostenData.push(parseFloat(lagerhaltungskosten));
+    bestellkostenData.push(parseFloat(bestellkostenGesamt));
+    gesamtkostenData.push(parseFloat(gesamtkosten));
+  }
+  if(window.myChart instanceof Chart)
+    {
+        window.myChart.destroy();
+    }
+  let ychartmax = roundUpToNearest((optimaleBestellhaeufigkeit*bestellkosten+optimaleBestellmenge/2*lagerkosten)*3);
+  const ctx = document.getElementById('myChart').getContext('2d');
+  window.myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Lagerhaltungskosten',
+        data: lagerhaltungskostenData,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }, {
+        label: 'Bestellkosten',
+        data: bestellkostenData,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      },
+      {
+        label: 'Gesamtkosten',
+        data: gesamtkostenData,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: ychartmax,
+          ticks: {
+            callback: function(value, index, values) {
+              return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
+            }
+          },
+        }
+      }
+    }
+  });
+
+ 
+}
 
 
 // Begin Marketing
