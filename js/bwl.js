@@ -103,7 +103,7 @@ function generiereWertetabelle() {
   werteArray.sort((a, b) => b.haeufigkeit - a.haeufigkeit);
   // Tabelle erstellen
   let table = document.createElement('table');
-  table.style.width = '100%';  // Setzt die Breite der Tabelle
+  table.style.width = '680px';  // Setzt die Breite der Tabelle
   table.style.borderCollapse = 'collapse';  // Setzt den border-collapse-Stil
 
   let headerRow = table.insertRow(0);
