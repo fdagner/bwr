@@ -24,3 +24,4 @@ function openCity(evt, cityName) {
 
     }
 }
+

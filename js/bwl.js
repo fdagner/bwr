@@ -12,7 +12,7 @@ function formatNumberWithSpace(number) {
 function roundUpToNearest(number) {
   const digits = Math.floor(Math.log10(number));
   const factor = Math.pow(10, digits);
-  
+
   if (factor < 10) {
     return Math.ceil(number / 10) * 10;
   } else if (factor < 100) {
@@ -33,22 +33,22 @@ function berechneOptimaleBestellmengeUndHaeufigkeit() {
 
   function validateInputs(optimaleBestellmenge, optimaleBestellhaeufigkeit, bestellkosten, schrittweite) {
     const inputs = [
-      { value: optimaleBestellmenge, min: 1, max: 999999999, message: "Optimale Bestellmenge (1 - 999999999)" },
+      { value: optimaleBestellmenge, min: 1, max: 999999999, message: "Optimale Bestellmenge (1 - 99999)" },
       { value: optimaleBestellhaeufigkeit, min: 1, max: 100, message: "Optimale Bestellhäufigkeit (1 - 100)" },
-      { value: bestellkosten, min: 0, max: 999999999, message: "Bestellkosten (0 - 999999999)" },
+      { value: bestellkosten, min: 0, max: 999999999, message: "Bestellkosten (1 - 999)" },
       { value: schrittweite, min: 1, max: 100, message: "Schrittweite (1 - 100)" }
     ];
-  
+
     for (const input of inputs) {
       if (isNaN(input.value) || input.value < input.min || input.value > input.max) {
         alert(`Bitte eine gültige Zahl eingeben: ${input.message}.`);
         return false;
       }
     }
-  
+
     return true;
   }
-  
+
   // Verwendung:
   if (!validateInputs(optimaleBestellmenge, optimaleBestellhaeufigkeit, bestellkosten, schrittweite)) {
     return;
@@ -62,7 +62,7 @@ function berechneOptimaleBestellmengeUndHaeufigkeit() {
   // Andler-Formel anwenden
   lagerkosten = (2 * bedarf * bestellkosten) / (optimaleBestellmenge * optimaleBestellmenge);
 
- // Wertetabelle erstellen
+  // Wertetabelle erstellen
   generiereWertetabelle();
 }
 
@@ -71,7 +71,7 @@ function generiereWertetabelle() {
   const lagerkostenElement = document.getElementById('lagerkosten');
   const bedarfElement = document.getElementById('bedarf');
   const wertetabelleElement = document.getElementById('wertetabelle');
-  
+
   lagerkostenElement.innerText = formatCurrency(lagerkosten);
   bedarfElement.innerText = formatNumberWithSpace(bedarf);
   wertetabelleElement.innerHTML = '';
@@ -80,7 +80,7 @@ function generiereWertetabelle() {
   const bestellkosten = parseInt(document.getElementById('bestellkosten').value, 10);
   const optimaleBestellhaeufigkeit = parseInt(document.getElementById('optimaleBestellhaeufigkeit').value, 10);
   const schrittweite = parseInt(document.getElementById('schrittweite').value, 10);
-  
+
   const werteArray = [];
 
   // Berechnungen außerhalb der Schleife
@@ -157,7 +157,7 @@ function generiereWertetabelle() {
   // Tabelle in DOM einfügen
   wertetabelleElement.appendChild(table);
 
-drawChart(werteArray);
+  drawChart(werteArray);
 }
 
 function drawChart(werteArray) {
@@ -170,11 +170,11 @@ function drawChart(werteArray) {
   const lagerhaltungskostenData = [];
   const bestellkostenData = [];
   const gesamtkostenData = [];
- let schrittebestellmenge = roundUpToNearest(optimaleBestellmenge/100)
+  let schrittebestellmenge = roundUpToNearest(optimaleBestellmenge / 100)
   // Daten für das Diagramm berechnen
-  for (let i = 0; i <= optimaleBestellmenge * 2; i+=schrittebestellmenge) {
-    const durchschnittlicherBestand = (i/2).toFixed(2);
-    const bestellkostenGesamt = (bestellkosten * bedarf/i).toFixed(2);
+  for (let i = 0; i <= optimaleBestellmenge * 2; i += schrittebestellmenge) {
+    const durchschnittlicherBestand = (i / 2).toFixed(2);
+    const bestellkostenGesamt = (bestellkosten * bedarf / i).toFixed(2);
     const lagerhaltungskosten = (durchschnittlicherBestand * lagerkosten).toFixed(2);
     const gesamtkosten = (parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten)).toFixed(2);
 
@@ -183,12 +183,12 @@ function drawChart(werteArray) {
     bestellkostenData.push(parseFloat(bestellkostenGesamt));
     gesamtkostenData.push(parseFloat(gesamtkosten));
   }
-  if(window.myChart instanceof Chart)
-    {
-        window.myChart.destroy();
-    }
-  let ychartmax = roundUpToNearest((optimaleBestellhaeufigkeit*bestellkosten+optimaleBestellmenge/2*lagerkosten)*3);
+  if (window.myChart instanceof Chart) {
+    window.myChart.destroy();
+  }
+  let ychartmax = roundUpToNearest((optimaleBestellhaeufigkeit * bestellkosten + optimaleBestellmenge / 2 * lagerkosten) * 3);
   const ctx = document.getElementById('myChart').getContext('2d');
+
   window.myChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -216,11 +216,21 @@ function drawChart(werteArray) {
     },
     options: {
       scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Bestellmenge'
+          }
+        },
         y: {
+          title: {
+            display: true,
+            text: 'Kosten'
+          },
           beginAtZero: true,
           max: ychartmax,
           ticks: {
-            callback: function(value, index, values) {
+            callback: function (value, index, values) {
               return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
             }
           },
@@ -229,8 +239,10 @@ function drawChart(werteArray) {
     }
   });
 
- 
+
 }
+
+
 
 
 // Begin Marketing
@@ -427,8 +439,8 @@ function portfolioHerunterladenAlsPNG() {
 function bestellmengeKopiereInZwischenablage() {
   const bestellmengeHTML = document.getElementById('wertetabelle').innerHTML.replace(/&nbsp;/g, ' ');;
   navigator.clipboard.writeText(bestellmengeHTML)
-      .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-      .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
 function bestellmengeHerunterladen() {
@@ -447,12 +459,18 @@ function bestellmengeHerunterladenAlsPNG() {
   const wertetabelle = document.getElementById('wertetabelle');
 
   html2canvas(wertetabelle).then(canvas => {
-      const dataURL = canvas.toDataURL('image/png');
-      const a = document.createElement('a');
-      a.href = dataURL;
-      a.download = 'bestellmenge.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    const dataURL = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'bestellmenge.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   });
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Hier wird generiereWertetabelle() beim Laden der Seite ausgeführt
+  berechneOptimaleBestellmengeUndHaeufigkeit();
+});
