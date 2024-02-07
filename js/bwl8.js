@@ -161,7 +161,22 @@ function generiereWertetabelle() {
 }
 
 function drawChart(werteArray) {
-  const optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value, 10);
+// Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
+const plugin = {
+  id: 'customCanvasBackgroundColor',
+  options: {
+    color: 'white', // Set the default color
+  },
+  beforeDraw: (myChart) => {
+    const { ctx } = myChart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = plugin.options.color || '#ffffff';
+    ctx.fillRect(0, 0, myChart.width, myChart.height);
+    ctx.restore();
+  }
+};
+   const optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value, 10);
   const bestellkosten = parseInt(document.getElementById("bestellkosten").value, 10);
   const optimaleBestellhaeufigkeit = parseInt(document.getElementById('optimaleBestellhaeufigkeit').value, 10);
   const bedarf = optimaleBestellmenge * optimaleBestellhaeufigkeit;
@@ -215,6 +230,12 @@ function drawChart(werteArray) {
       }]
     },
     options: {
+      responsive: true,
+      plugins: {
+        customCanvasBackgroundColor: {
+          color: 'white',
+        }
+      },
       scales: {
         x: {
           title: {
@@ -232,11 +253,12 @@ function drawChart(werteArray) {
           ticks: {
             callback: function (value, index, values) {
               return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
-            }
-          },
+            },
+          }
         }
       }
-    }
+    },
+    plugins: [plugin],
   });
 
 
@@ -474,3 +496,5 @@ document.addEventListener('DOMContentLoaded', function () {
   // Hier wird generiereWertetabelle() beim Laden der Seite ausgeführt
   berechneOptimaleBestellmengeUndHaeufigkeit();
 });
+
+ 
