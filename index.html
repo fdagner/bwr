@@ -20,15 +20,45 @@
     <section>
       <p style="text-align: justify;">
         <br>
-        <b>Erstellen Sie für den BwR-Unterricht mit wenigen Handgriffen Belege, T-Konten, Schemata und Geschäftsfälle, die
-        Sie jederzeit weiterverarbeiten können:</b>
+        <b>Erstellen Sie für den BwR-Unterricht mit wenigen Handgriffen Belege, T-Konten, Schemata und Geschäftsfälle,
+          die
+          Sie jederzeit weiterverarbeiten können:</b>
       </p>
-      <img src="media/pic/belege.png" style="width:100%;">
+      <!-- Slideshow container -->
+      <div class="slideshow-container">
+
+        <!-- Full-width images with number and caption text -->
+        <div class="mySlides fade">
+          <div class="numbertext">1 / 3</div>
+          <img src="media/pic/Folie1.PNG" style="width:100%">
+          <div class="text">Belege</div>
+        </div>
+
+        <div class="mySlides fade">
+          <div class="numbertext">2 / 3</div>
+          <img src="media/pic/Folie2.PNG" style="width:100%">
+          <div class="text">BWL-Vorlagen</div>
+        </div>
+
+        <div class="mySlides fade">
+          <div class="numbertext">3 / 3</div>
+          <img src="media/pic/Folie3.PNG" style="width:100%">
+          <div class="text">Geschäftsfälle und Schemata</div>
+        </div>
+
+        <!-- Next and previous buttons -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+      </div>
+      <br>
+
+
+      <script src="js/menu.js"></script>
     </section>
     <section>
       <h2>Exportformate</h2>
       <p><b>Exportieren Sie nach PNG, Office, SVG, HTML und speziell für die Verwendung auf der mebis
-        Lernplattform:</b></p>
+          Lernplattform:</b></p>
       <ul>
         <li><strong>PNG:</strong> Optimal für schnelle Verarbeitung in Office-Anwendungen und im Internet.</li>
         <li><strong>Office:</strong> Kopie in der Zwischenablage zur Weiterverarbeitung in einer Textverarbeitung oder
@@ -47,30 +77,53 @@
     <aside>
       <button id="openPopupStashMC">Gift for Stash</button>
       <button id="openPopupKontle">Kontle</button>
-      
+
       <script>
-          // Funktion zum Öffnen des Popup-Fensters
-          function openPopup(url) {
-              // Öffne ein Popup-Fenster
-              const popupWindow = window.open(url, '_blank', 'width=600,height=800');
-      
-              // Optional: Setze den Fokus auf das Popup-Fenster
-              if (popupWindow) {
-                  popupWindow.focus();
-              }
+        // Funktion zum Öffnen des Popup-Fensters
+        function openPopup(url) {
+          // Öffne ein Popup-Fenster
+          const popupWindow = window.open(url, '_blank', 'width=600,height=800');
+
+          // Optional: Setze den Fokus auf das Popup-Fenster
+          if (popupWindow) {
+            popupWindow.focus();
           }
-      
-          // Event Listener für den Klick auf den Button "Gift for Stash"
-          document.getElementById('openPopupStashMC').addEventListener('click', function() {
-              openPopup('giftforstash.html');
-          });
-      
-          // Event Listener für den Klick auf den Button "Kontle"
-          document.getElementById('openPopupKontle').addEventListener('click', function() {
-              openPopup('kontle.html');
-          });
+        }
+
+        // Event Listener für den Klick auf den Button "Gift for Stash"
+        document.getElementById('openPopupStashMC').addEventListener('click', function () {
+          openPopup('giftforstash.html');
+        });
+
+        // Event Listener für den Klick auf den Button "Kontle"
+        document.getElementById('openPopupKontle').addEventListener('click', function () {
+          openPopup('kontle.html');
+        });
+
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+          showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+          showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+          let i;
+          let slides = document.getElementsByClassName("mySlides");
+          if (n > slides.length) { slideIndex = 1 }
+          if (n < 1) { slideIndex = slides.length }
+          for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+          }
+          slides[slideIndex - 1].style.display = "block";
+        }
+
       </script>
-      
+
 
     </aside>
   </main>
@@ -80,7 +133,8 @@
         Soweit nicht anders gekennzeichnet unterliegen alle per Button exportierbaren Inhalte der Lizenz <a
           href="https://creativecommons.org/publicdomain/mark/1.0/deed.de">CC0 1.0 Deed</a>.
         Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a
-          href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen: <a href="https://github.com/fdagner/bwr/issues">Fehler oder Vorschlag melden</a><br>
+          href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen: <a
+          href="https://github.com/fdagner/bwr/issues">Fehler oder Vorschlag melden</a><br>
         <a href="https://github.com/fdagner">fdagner</a> · BwR<br><br>
         <img src="media/pic/oer.svg" style="min-width: 100px;width:10%;">
       </small>

@@ -5,7 +5,6 @@ const mitEinkaufskalkulation = document.getElementById('mitEinkaufskalkulation')
 const Skontobuchungssatz = document.getElementById('mitSkontobuchungssatz');
 
 document.addEventListener('DOMContentLoaded', function() {
-  const mitSkontobuchungssatz = document.getElementById('mitSkontobuchungssatz');
   const mitBezugskosten = document.getElementById('mitBezugskosten');
   const buchungsoptionDropdown = document.getElementById('buchungsoptionDropdown');
 
@@ -242,6 +241,7 @@ function erstelleZufallssatz() {
 
   // Zusammenfügen der ausgewählten Elemente zu einem Satz
   const randomAngebotSatz = Math.random();
+  let angebotSatz;
   angebotSatz = `<ol style="list-style-type: lower-latin;">`;
   if (randomAngebotSatz < 0.33) {
     angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz: wir akzeptieren das Angebot ${randomZahlung}.</li>`;
