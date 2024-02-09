@@ -39,13 +39,13 @@ function getRandomGewinn() {
 }
 
 function getRandomBezugskosten() {
-  return getRandomIntegerWithSteps(10, 50, 5);
+  return getRandomIntegerWithSteps(50, 250, 5);
 }
 
 
 // Funktion zur Generierung einer Zufallsganzzahl für den Nettowert
 function generateRandomNettoWert() {
-  return Math.round(Math.random() * 49 + 2) * 100;
+  return Math.round(Math.random() * 29 + 5) * 1000;
 
 }
 
@@ -71,10 +71,9 @@ const kontenUmsatzerloese_2 = {
 
 let kontenVerkaufZahlung;
 function inputSellChangeCategory() {
-  if (verkaufBuchungsoptionDropdown.value === 'everkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
+  if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
     verkaufKontenZahlung = {
-      " auf Ziel": "2400 FO",
-      " mit der Versendung einer Ausgangssrechnung": "2400 FO",
+      " gegen Rechnung": "2400 FO",
       " auf Rechnung": "2400 FO",
     }
   } else {
@@ -101,9 +100,9 @@ function verkaufErstelleZufallssatz() {
   verkaufRandom_Bezugskosten = formatCurrency(verkaufRandom_Bezugskosten);
   // Arrays mit verschiedenen Teilen des Satzes
   const verkaufArray_Subjekt = ['Wir verkaufen ', 'Wir liefern ', 'Unsere Firma verkauft ', 'Wir veräußern ', 'Wir haben verkauft: '];
-  const verkaufArray_Subjekt_2 = ['Verkauf ', 'Absatz '];
+  const verkaufArray_Subjekt_2 = ['Verkauf '];
   const verkaufArray_Subjekt_3 = ['Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: ', 'Wir erhalten eine Anfrage für ein Angebot per E-Mail. Berechne den Listenverkaufspreis, wenn wir mit den folgenden Werten kalkulieren: '];
-  const verkaufArray_Subjekt_4 = ['Uns erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei', 'Berechne den Listenverkaufspreis bei '];
+  const verkaufArray_Subjekt_4 = ['Uns erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei', 'Wir erhalten eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis bei '];
   const verkaufArray_Subjekt_5 = [`Unser Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
   const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
   const verkaufArray_Fertigerzeugnisse_2 = Object.keys(kontenUmsatzerloese_2);
@@ -112,9 +111,11 @@ function verkaufErstelleZufallssatz() {
   const verkaufArray_Supply_Rabatt = [`, ${verkaufRandom_Rabatt} % Rabatt`];
   const verkaufArray_Supply_Rabatt_2 = [
     `. Wir bieten ${verkaufRandom_Rabatt} % Treuerabatt`,
+    `. Wir bieten ${verkaufRandom_Rabatt} % Mengenrabatt`,
     `. ${verkaufRandom_Rabatt} % Sonderrabatt werden von uns angeboten`,
     `. ${verkaufRandom_Rabatt} % Rabatt können vom Kunden abgezogen werden`,
     `. Wir gewähren zudem ${verkaufRandom_Rabatt} % Kundenrabatt`,
+    `. Wir gewähren zudem ${verkaufRandom_Rabatt} % Mengenrabatt`,
   ];
   const verkaufArray_Supply_Skonto = [
     `. Der Kunde kann ${verkaufRandom_Skonto} % Skonto abziehen`,
@@ -124,22 +125,19 @@ function verkaufErstelleZufallssatz() {
   const verkaufArray_Supply_Skonto_2 = [
     ` und ${verkaufRandom_Skonto} % Skonto`,
     ` sowie ${verkaufRandom_Skonto} % Skonto`,
+    `, ${verkaufRandom_Skonto} % Skonto`,
   ];
   const verkaufArray_Supply_Bezugskosten = [
-    `. Versandkosten mit netto ${verkaufRandom_Bezugskosten} fallen obendrein an`,
-    `. Wir zahlen zudem zusätzlich Verpackungskosten in Höhe von ${verkaufRandom_Bezugskosten} netto`,
-    `. Transportversicherung und Rollgeld betragen darüber hinaus netto ${verkaufRandom_Bezugskosten}`,
-    `. Die Leihverpackung in Höhe von ${verkaufRandom_Bezugskosten} netto wird zusätzlich berechnet`,
-    `. Netto ${verkaufRandom_Bezugskosten} an Tansportkosten werden zusätzlich berechnet`,
-    `. Versandkosten in Höhe von netto ${verkaufRandom_Bezugskosten} fallen darüber hinaus an`,
-    `. Es fallen des Weiteren Frachtgebühren in Höhe von netto ${verkaufRandom_Bezugskosten} an`,
-    `. Es werden noch netto ${verkaufRandom_Bezugskosten} an Versandkosten berechnet`,
+    `. Zusätzlich belasten wir den Kunden mit Versandkosten von netto ${verkaufRandom_Bezugskosten}`,
+    `. Zusätzlich berrechnen wir Verpackungskosten in Höhe von ${verkaufRandom_Bezugskosten} netto`,
+    `. Transportversicherung und Rollgeld betragen darüber hinaus netto ${verkaufRandom_Bezugskosten} und werden dem Kunden zusätzlich berechnet`,
+    `. Die Leihverpackung in Höhe von ${verkaufRandom_Bezugskosten} netto wird dem Kunden zusätzlich berechnet`,
+    `. Es werden darüber hinaus netto ${verkaufRandom_Bezugskosten} an Versandkosten dem Kunden berechnet`,
   ];
   const verkaufArray_Supply_Gewinn = [
     ` ${verkaufRandom_Gewinn} % Gewinnzuschlag `,
     ` ${verkaufRandom_Gewinn} % Gewinn `,
   ];
-
 
 
   // Zufällige Auswahl der Elemente und der alternativen Arrays
@@ -233,11 +231,11 @@ function verkaufErstelleZufallssatz() {
   const verkaufRandomAngebotSatz = Math.random();
   verkaufAngebotSatz = `<ol style="list-style-type: lower-latin;">`;
   if (verkaufRandomAngebotSatz < 0.33) {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Bilde den Buchungssatz: wir akzeptieren das Angebot ${verkaufRandomZahlung}.</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Bilde den Buchungssatz: der Kunde akzeptiert das Angebot. Die Bezahlung erfolgt ${verkaufRandomZahlung}.</li>`;
   } else if (verkaufRandomAngebotSatz < 0.66) {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Bilde den Buchungssatz: Wir geben die Bestellung in Auftrag ${verkaufRandomZahlung}.</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Der Kunde akzeptiert das Angebot und gibt die Bestellung in Auftrag. Wir liefern ${verkaufRandomZahlung}.</li>`;
   } else {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn}${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} .</li><li>Wir nehmen das Angebot an ${verkaufRandomZahlung}. Bilde den Buchungssatz!</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn}${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} .</li><li>Der Kunde nimmt das Angebot ${verkaufRandomZahlung} an. Bilde den Buchungssatz!</li>`;
   }
   verkaufAngebotSatz += `</ol>`;
 
@@ -346,7 +344,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td>+ Kundenrabatt</td><td style="padding-left:16px;text-align:right;">${verkaufAntwort_rabattWert}</td>`;
-      verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">${verkaufAntwort_rabattSatz}</td>`;
+      verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">${verkaufAntwort_rabattSatz} %</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td style="border-top: solid 1px #ccc">= Listenverkaufspreis</td>`;
