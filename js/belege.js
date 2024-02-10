@@ -1335,6 +1335,39 @@ function kontoauszugHerunterladenAlsPNG() {
     });
 }
 
+
+function quittungHerunterladen() {
+    const rechnungHTML = document.getElementById('quittungContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+    const blob = new Blob([rechnungHTML], { type: 'svg' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'quittung.svg';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function quittungKopiereInZwischenablage() {
+    const rechnungHTML = document.getElementById('quittungContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+    navigator.clipboard.writeText(rechnungHTML)
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
+
+function quittungHerunterladenAlsPNG() {
+    const quittungContainer = document.getElementById('quittungContainer');
+
+    html2canvas(quittungContainer).then(canvas => {
+        const dataURL = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'quittung.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+}
+
 function emailHerunterladen() {
     const emailHTML = document.getElementById('emailContainer').innerHTML.replace(/&nbsp;/g, ' ');;
     const blob = new Blob([emailHTML], { type: 'html' });
