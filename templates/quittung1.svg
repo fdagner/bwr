@@ -20,7 +20,6 @@
 <rect x="496" y="30" width="5" height="25" fill="#fff"/>
 <text x="5" y="45" font-family="Verdana" font-size="20" font-weight="bold" fill="red">Quittung</text>
 <text x="195" y="50" font-family="Verdana" font-size="12">netto</text>
-<text x="5" y="75" font-family="Verdana" font-size="14">Nr. 89</text>
 <text x="195" y="80" font-family="Verdana" font-size="12">+ <tspan id="quittungUST" font-family="Calli" font-size="16" fill="darkblue"></tspan> % USt.</text>
 <rect x="280" y="60" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="282" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungUSTBetrag" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
