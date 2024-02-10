@@ -19,7 +19,8 @@
             <button class="tablinks" id="defaultOpen"
                 onclick="openCity(event, 'modellunternehmen')">Modellunternehmen</button>
             <button class="tablinks" onclick="openCity(event, 'rechnung')">Rechnung/Angebot</button>
-            <button class="tablinks" onclick="openCity(event, 'quittung')">Kontoauszug</button>
+            <button class="tablinks" onclick="openCity(event, 'kontoauszug')">Kontoauszug</button>
+            <button class="tablinks" onclick="openCity(event, 'quittung')">Quittung</button>
             <button class="tablinks" onclick="openCity(event, 'email')">Mail</button>
         </nav>
         <section id="modellunternehmen" class="tabcontent">
@@ -240,7 +241,7 @@
         </section>
 
 
-        <section id="quittung" class="tabcontent">
+        <section id="kontoauszug" class="tabcontent">
             <h2>Kontoauszug</h2>
             <div class="box">
                 <div class="grid3">
@@ -382,12 +383,112 @@
                     </svg></button>
             </div>
         </section>
+        <section id="quittung" class="tabcontent">
+            <div class="box">
+                <h3>Quittung</h3>
+                <div class="grid3">
+                    <div>
+                        <h4>Beträge</h4><label for="quittungNettoInput">Nettobetrag: </label><br>
+                        <input type="number" id="quittungNettoInput" placeholder="netto" />
+                        <br><br>
+                        <label for="quittungUSTInput">Umsatzsteuersatz</label><br>
+                        <input type="number" id="quittungUSTInput" value="19" />
+                    </div>
+                    <div>
+                        <h4>Weitere Daten</h4><label for="quittungUSTInput">Für: </label><br>
+                        <input type="text" id="quittungZweckInput" placeholder="Zweck" /><br>
+                        <br><label for="svgDropdownQuittung">Vorlage: </label><br>
+                        <select id="svgDropdownQuittung">
+                            <option value="quittung1.svg">Klassisch</option>
+                        </select>
+                    </div>
+                    <div>
+                        <h4>Datum</h4>
+                        <label for="tagQuittung">Tag:</label>
+                        <select id="tagQuittung">
+                            <!-- Füge Optionen für die Tage hinzu -->
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                        </select>
+                        <br>
+                        <label for="monatQuittung">Monat:</label>
+                        <select id="monatQuittung">
+                            <!-- Füge Optionen für die Monate hinzu -->
+                            <option value="01">Januar</option>
+                            <option value="02">Februar</option>
+                            <option value="03">März</option>
+                            <option value="04">April</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Dezember</option>
+                            <label for="jahr">Jahr:</label>
+                            <input type="text" id="jahrQuittung" value="" min="0" placeholder="Jahr" /><br>
+                            Skript verwenden: <input type="checkbox" id="scriptJahrQuittung"
+                                onchange="toggleInputQuittung()">
+
+                    </div>
+
+                </div>
+                <br><button onclick="applySVGholen()">Daten übernehmen</button><br>
+                <h3>Allgemeine Daten</h3>
+
+                <div class="flex-row">
+                    <div>
+                        <label for="datenQuittung">Geldempfänger: </label>
+                        <select id="datenQuittung" onchange="loadQuittungData()">
+                        </select><br><small><a href="#" class="tablinks" id="defaultOpen"
+                                onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
+                                verwenden?</a></small>
+                    </div>
+                    <div><label for="datenQuittungKunde">Kunde:</label>
+                        <select id="datenQuittungKunde" onchange="loadCompanyDataforQuittung()">
+                        </select><br>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div id="quittungContainer"
+                style="border:1px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;">
+        </section>
+
 
         <section id="email" class="tabcontent">
-
-
-
-
             <div>
 
                 <div class="box">
@@ -405,7 +506,7 @@
                     <h3>Allgemeine Daten</h3>
                     <div class="flex-row">
                         <div>
-                            <label for="datenEmail">Kontoinhaber: </label>
+                            <label for="datenEmail">Absender: </label>
                             <select id="datenEmail" onchange="loadEmailData()">
                             </select>
                             <br><small><a href="#" class="tablinks" id="defaultOpen"
@@ -420,7 +521,8 @@
 
                     </div>
                 </div>
-                <div id="emailContainer" style="border:1px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;"
+                <div id="emailContainer"
+                    style="border:1px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;"
                     contenteditable="true">
                 </div><br>
                 <div class="exportButtons">
@@ -452,12 +554,13 @@
         <p>
             <small>
                 Soweit nicht anders gekennzeichnet unterliegen alle per Button exportierbaren Inhalte der Lizenz <a
-                  href="https://creativecommons.org/publicdomain/mark/1.0/deed.de">CC0 1.0 Deed</a>.
+                    href="https://creativecommons.org/publicdomain/mark/1.0/deed.de">CC0 1.0 Deed</a>.
                 Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a
-                  href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen: <a href="https://github.com/fdagner/bwr/issues">Fehler oder Vorschlag melden</a><br>
+                    href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen: <a
+                    href="https://github.com/fdagner/bwr/issues">Fehler oder Vorschlag melden</a><br>
                 <a href="https://github.com/fdagner">fdagner</a> · BwR<br><br>
                 <img src="media/pic/oer.svg" style="min-width: 100px;width:10%;">
-              </small>
+            </small>
     </footer>
     <script src="js/belege.js"></script>
 

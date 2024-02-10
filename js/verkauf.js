@@ -101,7 +101,7 @@ function verkaufErstelleZufallssatz() {
   // Arrays mit verschiedenen Teilen des Satzes
   const verkaufArray_Subjekt = ['Wir verkaufen ', 'Wir liefern ', 'Unsere Firma verkauft ', 'Wir veräußern ', 'Wir haben verkauft: '];
   const verkaufArray_Subjekt_2 = ['Verkauf '];
-  const verkaufArray_Subjekt_3 = ['Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: ', 'Wir erhalten eine Anfrage für ein Angebot per E-Mail. Berechne den Listenverkaufspreis, wenn wir mit den folgenden Werten kalkulieren: '];
+  const verkaufArray_Subjekt_3 = ['Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: ', 'Wir erhalten eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis berechnen, wenn wir mit den folgenden Werten kalkulieren: '];
   const verkaufArray_Subjekt_4 = ['Uns erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei', 'Wir erhalten eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis bei '];
   const verkaufArray_Subjekt_5 = [`Unser Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
   const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
@@ -225,17 +225,37 @@ function verkaufErstelleZufallssatz() {
   let verkaufUeberweisungsbetrag_berechnung = verkaufBerechnung_bruttoWert - verkaufBerechnung_skontoBetrag_brutto;
   let verkaufUeberweisungsbetrag = formatCurrency(verkaufUeberweisungsbetrag_berechnung);
   let verkaufAntwortBruttowert = formatCurrency(verkaufBerechnung_bruttoWert);
+  const verkaufAntwort_Selbstkostenpreis = `${verkaufSelbstkostenpreis}`;
+
+  const listenverkaufspreis = `${verkaufNettoWert}`;
+  const verkaufAntwort_rabattWert = `${verkaufRabattWert}`;
+  const verkaufAntwort_rabattSatz = `${verkaufRandom_Rabatt}`;
+  const verkaufAntwort_GewinnWert = `${verkaufGewinnWert}`;
+  const verkaufAntwort_GewinnSatz = `${verkaufRandom_Gewinn}`;
+  const verkaufAntwort_skontoSatz = `${verkaufRandom_Skonto}`;
+  const verkaufAntwort_skontoBetrag = `${verkaufSkontoBetrag}`;
+  const verkaufAntwort_skontoBetrag_brutto = `${verkaufSkontoBetrag_brutto}`;
+  const verkaufAntwort_vorsteuer_berichtigung = `${verkaufVorsteuer_berichtigung}`;
+  const verkaufAntwort_ueberweisungsbetrag = `${verkaufUeberweisungsbetrag}`;
+  const verkaufAntwort_barverkaufspreis = `${verkaufBarverkaufspreis}`;
+  const verkaufKonto_1 = `${verkaufAntwortFertigerzeugnis}`;
+  const Zielverkaufspreis = `${verkaufAntwortNettowert}`;
+  const verkaufAntwort_bezugskosten = `${verkaufAntwortBezugskosten}`;
+  const verkaufKonto_2 = `${verkaufAntwortZahlung}`;
+  const verkaufKonto_Skontobuchungssatz = `${verkaufAntwortSkontobuchungssatz}`;
+  const verkaufAntwort_bezugskostenWert = `${verkaufBezugskostenWert}`;
+  const verkaufBetrag_2 = `${verkaufAntwortBruttowert}`;
 
   // Zusammenfügen der ausgewählten Elemente zu einem Satz
   let verkaufAngebotSatz;
   const verkaufRandomAngebotSatz = Math.random();
   verkaufAngebotSatz = `<ol style="list-style-type: lower-latin;">`;
   if (verkaufRandomAngebotSatz < 0.33) {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Bilde den Buchungssatz: der Kunde akzeptiert das Angebot. Die Bezahlung erfolgt ${verkaufRandomZahlung}.</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis}, ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Bilde den Buchungssatz: der Kunde akzeptiert das Angebot. Die Bezahlung erfolgt ${verkaufRandomZahlung}.</li>`;
   } else if (verkaufRandomAngebotSatz < 0.66) {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Der Kunde akzeptiert das Angebot und gibt die Bestellung in Auftrag. Wir liefern ${verkaufRandomZahlung}.</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis}, ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Der Kunde akzeptiert das Angebot und gibt die Bestellung in Auftrag. Wir liefern ${verkaufRandomZahlung}.</li>`;
   } else {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn}${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} .</li><li>Der Kunde nimmt das Angebot ${verkaufRandomZahlung} an. Bilde den Buchungssatz!</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn}${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} . Die Selbstkosten betragen ${verkaufAntwort_Selbstkostenpreis}.</li><li>Der Kunde nimmt das Angebot ${verkaufRandomZahlung} an. Bilde den Buchungssatz!</li>`;
   }
   verkaufAngebotSatz += `</ol>`;
 
@@ -261,25 +281,6 @@ function verkaufErstelleZufallssatz() {
   verkaufSkontoSatz += `</ol>`;
 
 
-  const listenverkaufspreis = `${verkaufNettoWert}`;
-  const verkaufAntwort_rabattWert = `${verkaufRabattWert}`;
-  const verkaufAntwort_rabattSatz = `${verkaufRandom_Rabatt}`;
-  const verkaufAntwort_Selbstkostenpreis = `${verkaufSelbstkostenpreis}`;
-  const verkaufAntwort_GewinnWert = `${verkaufGewinnWert}`;
-  const verkaufAntwort_GewinnSatz = `${verkaufRandom_Gewinn}`;
-  const verkaufAntwort_skontoSatz = `${verkaufRandom_Skonto}`;
-  const verkaufAntwort_skontoBetrag = `${verkaufSkontoBetrag}`;
-  const verkaufAntwort_skontoBetrag_brutto = `${verkaufSkontoBetrag_brutto}`;
-  const verkaufAntwort_vorsteuer_berichtigung = `${verkaufVorsteuer_berichtigung}`;
-  const verkaufAntwort_ueberweisungsbetrag = `${verkaufUeberweisungsbetrag}`;
-  const verkaufAntwort_barverkaufspreis = `${verkaufBarverkaufspreis}`;
-  const verkaufKonto_1 = `${verkaufAntwortFertigerzeugnis}`;
-  const Zielverkaufspreis = `${verkaufAntwortNettowert}`;
-  const verkaufAntwort_bezugskosten = `${verkaufAntwortBezugskosten}`;
-  const verkaufKonto_2 = `${verkaufAntwortZahlung}`;
-  const verkaufKonto_Skontobuchungssatz = `${verkaufAntwortSkontobuchungssatz}`;
-  const verkaufAntwort_bezugskostenWert = `${verkaufBezugskostenWert}`;
-  const verkaufBetrag_2 = `${verkaufAntwortBruttowert}`;
 
   return [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufSkontoSatz, listenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz];
 

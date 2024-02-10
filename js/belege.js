@@ -44,6 +44,8 @@ function reloadDropdownOptions() {
     const dropdownKontenauszug = document.getElementById('datenKontoauszug');
     const dropdownEmail = document.getElementById('datenEmail');
     const dropdownEmailKunde = document.getElementById('datenEmailKunde');
+    const dropdownQuittung = document.getElementById('datenQuittung');
+    const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
 
     // Clear existing options
     dropdownCustomer.innerHTML = '';
@@ -76,6 +78,17 @@ function reloadDropdownOptions() {
         optionEmailKunde.value = company.unternehmen.name;
         optionEmailKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownEmailKunde.appendChild(optionEmailKunde);
+
+
+        const optionQuittung = document.createElement('option');
+        optionQuittung.value = company.unternehmen.name;
+        optionQuittung.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownQuittung.appendChild(optionQuittung);
+
+        const optionQuittungKunde = document.createElement('option');
+        optionQuittungKunde.value = company.unternehmen.name;
+        optionQuittungKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownQuittungKunde.appendChild(optionQuittungKunde);
 
 
     });
@@ -133,6 +146,8 @@ fetch('js/unternehmen.yml')
         const dropdownKontoauszug = document.getElementById('datenKontoauszug');
         const dropdownEmail = document.getElementById('datenEmail');
         const dropdownEmailKunde = document.getElementById('datenEmailKunde');
+        const dropdownQuittung = document.getElementById('datenQuittung');
+        const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
 
         yamlData.forEach(company => {
             const optionCustomer = document.createElement('option');
@@ -160,6 +175,16 @@ fetch('js/unternehmen.yml')
             optionEmailKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownEmailKunde.appendChild(optionEmailKunde);
 
+            const optionQuittung = document.createElement('option');
+            optionQuittung.value = company.unternehmen.name;
+            optionQuittung.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            dropdownQuittung.appendChild(optionQuittung);
+
+            const optionQuittungKunde = document.createElement('option');
+            optionQuittungKunde.value = company.unternehmen.name;
+            optionQuittungKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            dropdownQuittungKunde.appendChild(optionQuittungKunde);
+
         });
 
 
@@ -182,7 +207,7 @@ function loadKontoauszugData() {
 function loadEmailData() {
     const selectedEmailName = document.getElementById('datenEmail').value;
     const selectedEmail = yamlData.find(email => email.unternehmen.name === selectedEmailName);
-    document.getElementById('emailName').textContent = selectedEmail.unternehmen.name + ' ' + selectedEmail.unternehmen.rechtsform ;
+    document.getElementById('emailName').textContent = selectedEmail.unternehmen.name + ' ' + selectedEmail.unternehmen.rechtsform;
     const elementsWithClassemailInhaber = document.getElementsByClassName('emailInhaber');
     for (const element of elementsWithClassemailInhaber) {
         element.textContent = selectedEmail.unternehmen.inhaber;
@@ -243,8 +268,6 @@ function loadEmailData() {
         xhrStandard.send();
     }
 
-
-
 }
 
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
@@ -253,6 +276,25 @@ function loadCompanyDataforEmail() {
     const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
     document.getElementById('emailNameKunde').textContent = selectedCompany.unternehmen.inhaber
     document.getElementById('emailAdresseKunde').textContent = selectedCompany.unternehmen.kontakt.email
+}
+
+
+function loadQuittungData() {
+    const selectedQuittungName = document.getElementById('datenQuittung').value;
+    const selectedQuittung = yamlData.find(quittung => quittung.unternehmen.name === selectedQuittungName);
+    document.getElementById('quittungName').textContent = selectedQuittung.unternehmen.name + " " + selectedQuittung.unternehmen.rechtsform;
+    document.getElementById('quittungStrasse').textContent = selectedQuittung.unternehmen.adresse.strasse;
+    document.getElementById('quittungOrt').textContent = selectedQuittung.unternehmen.adresse.plz + " " + selectedQuittung.unternehmen.adresse.ort;
+    document.getElementById('quittungInhaber').textContent = selectedQuittung.unternehmen.inhaber;
+    document.getElementById('quittungOrtDatum').textContent = selectedQuittung.unternehmen.adresse.ort;
+
+}
+
+// Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
+function loadCompanyDataforQuittung() {
+    const selectedCompanyName = document.getElementById('datenQuittungKunde').value;
+    const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
+    document.getElementById('quittungNameKunde').textContent = selectedCompany.unternehmen.inhaber + ", " + selectedCompany.unternehmen.name;
 }
 
 
@@ -399,7 +441,7 @@ function loadLogo(event) {
             const existingImage = document.getElementById('uploaded-image');
             const rectElement = document.getElementById('logo-placeholder');
 
-   
+
             // Erstelle ein <image>-Element und füge es zur SVG hinzu
             const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
             image.setAttribute('id', 'uploaded-image');
@@ -559,6 +601,54 @@ function applyOrderData() {
 
     }
 
+
+    
+    const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
+    if (!useScriptQuittung) {
+        // Verwende das Jahr aus dem Textfeld
+        const selectedJahr = document.getElementById('jahrQuittung');
+        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrQuittung');
+        for (const yearelement of yearelementsWithClass) {
+            yearelement.textContent = selectedJahr.value;
+        }
+
+    } else {
+
+        const customDefs = document.getElementById('customDefsQuittung');
+        const customJsScript = document.getElementById('customJsQuittung');
+        const useScriptKontoauszug = document.getElementById('scriptJahrQuittung').checked;
+
+        if (customJsScript) {
+            customJsScript.remove();
+        }
+
+        if (useScriptQuittung) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJsQuittung';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoadQuittung() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahrQuittung');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoadQuittung(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
+    }
 
     // Hilfsfunktion, um den numerischen Wert eines Eingabefelds zu erhalten
     function getNumericValue(inputId) {
@@ -799,13 +889,57 @@ function applyOrderData() {
 
     const emailSubject = document.getElementById('emailSubjectInput').value;
     document.getElementById('emailSubject').textContent = emailSubject;
-    
+
+
+    // Laden der Daten für die Quittung
+    let quittungZweck = document.getElementById('quittungZweckInput').value;
+    document.getElementById('quittungZweck').textContent = quittungZweck;
+    const selectedquittungTag = document.getElementById('tagQuittung').value;
+    const selectedquittungMonat = document.getElementById('monatQuittung').value;
+    document.getElementById('quittungTag').textContent = selectedquittungTag;
+    document.getElementById('quittungMonat').textContent = selectedquittungMonat;
+
+    let quittungNetto = document.getElementById('quittungNettoInput').value;
+    // Überprüfen, ob das Eingabefeld leer ist
+    if (quittungNetto === "") {
+        // Wenn das Eingabefeld leer ist, setze quittungUST auf 0
+        quittungNetto = 0;
+    }
+    quittungNetto = parseFloat(quittungNetto).toFixed(2);
+    let [nettoVorKomma, nettoNachKomma] = quittungNetto.split('.');
+    document.getElementById('quittungNetto').textContent = nettoVorKomma;
+    document.getElementById('quittungNettoCent').textContent = nettoNachKomma;
+
+    quittungUST = document.getElementById('quittungUSTInput').value;
+
+    // Überprüfen, ob das Eingabefeld leer ist
+    if (quittungUST === "") {
+        // Wenn das Eingabefeld leer ist, setze quittungUST auf 0
+        quittungUST = 0;
+    }
+    document.getElementById('quittungUST').textContent = quittungUST;
+    let quittungUSTBetrag = quittungNetto * quittungUST / 100;
+    document.getElementById('quittungUSTBetrag').textContent = quittungUSTBetrag;
+    quittungUSTBetrag = parseFloat(quittungUSTBetrag).toFixed(2);
+    let [USTVorKomma, USTNachKomma] = quittungUSTBetrag.split('.');
+    document.getElementById('quittungUSTBetrag').textContent = USTVorKomma;
+    document.getElementById('quittungUSTBetragCent').textContent = USTNachKomma;
+    let quittungSumme = parseFloat(quittungUSTBetrag) + parseFloat(quittungNetto);
+    quittungSumme = quittungSumme.toFixed(2);
+    let [summeVorKomma, summeNachKomma] = quittungSumme.split('.');
+    document.getElementById('quittungSumme').textContent = summeVorKomma;
+    document.getElementById('quittungSummeCent').textContent = summeNachKomma;
+    summeVorKomma = parseFloat(summeVorKomma)
+    const quittungInWorten = zahlwort(summeVorKomma);
+    document.getElementById('quittungInWorten').textContent = quittungInWorten;
 
     loadCompanyData(); // Laden der Kundeninformationen
     loadSupplierData(); // Laden der Lieferanteninformationen
     loadKontoauszugData() // Laden der Quittungsdaten
     loadEmailData() // Laden der E-Mail-Daten
     loadCompanyDataforEmail(); // Laden der E-Mail-Daten (Kunde)
+    loadQuittungData() // Laden der Quittung-Daten
+    loadCompanyDataforQuittung(); // Laden der Quittung-Daten (Kunde)
 }
 // Formatieren der Zahl mit Tausenderpunkt und Dezimalkomma
 function formatNumber(number) {
@@ -828,6 +962,83 @@ function formatCurrencyWithSign(amount) {
 
     return formattedAmount;
 }
+
+function zahlwort(zahl) {
+    var sonderzahlen = [];
+    sonderzahlen[11] = "elf";
+    sonderzahlen[12] = "zwölf";
+    sonderzahlen[16] = "sechzehn";
+    sonderzahlen[17] = "siebzehn";
+
+    var zahlen = [];
+    zahlen[1] = "ein";
+    zahlen[2] = "zwei";
+    zahlen[3] = "drei";
+    zahlen[4] = "vier";
+    zahlen[5] = "fünf";
+    zahlen[6] = "sechs";
+    zahlen[7] = "sieben";
+    zahlen[8] = "acht";
+    zahlen[9] = "neun";
+    zahlen[10] = "zehn";
+    zahlen[20] = "zwanzig";
+    zahlen[30] = "dreißig";
+    zahlen[40] = "vierzig";
+    zahlen[50] = "fünfzig";
+    zahlen[60] = "sechzig";
+    zahlen[70] = "siebzig";
+    zahlen[80] = "achtzig";
+    zahlen[90] = "neunzig";
+
+    var einheiten = ["", "tausend", "Million", "Milliarde", "Billion"];
+    var trennschritte = 1000;
+    var zahlinworten = "";
+
+    if (zahl == 0) zahlinworten = "null";
+    for (var i = 0; i < Math.ceil(zahl.toString().length / 3); i++) {
+        if (i > einheiten.length - 1) return "Zahl nicht unterstützt";
+        if (i == 0) zahlenblock = zahl % trennschritte;
+        else
+            zahlenblock =
+                ((zahl % trennschritte) - (zahl % (trennschritte / 1000))) /
+                (trennschritte / 1000);
+        einer = zahlenblock % 10;
+        zehn = zahlenblock % 100;
+        hunderter = (zahlenblock - (zahlenblock % 100)) / 100;
+        einheitenendung = einheiten[i].substr(einheiten[i].length - 1, 1);
+
+        if (zahlenblock > 0) {
+            if (zahlenblock > 1 && einheitenendung == "n")
+                zahlinworten = " " + einheiten[i] + "en " + zahlinworten;
+            else if (zahlenblock > 1 && einheitenendung == "e")
+                zahlinworten = " " + einheiten[i] + "n " + zahlinworten;
+            else if (zahlenblock > 0 && i == 1)
+                zahlinworten = einheiten[i] + zahlinworten;
+            else zahlinworten = " " + einheiten[i] + " " + zahlinworten;
+        }
+
+        if (zehn > 0) {
+            if (zehn == 1 && i == 0) zahlinworten = "eins" + zahlinworten;
+            else if (zehn == 1 && i == 1) zahlinworten = "ein" + zahlinworten;
+            else if (zehn == 1 && i > 1) zahlinworten = "eine" + zahlinworten;
+            else if (sonderzahlen[zehn])
+                zahlinworten = sonderzahlen[zehn] + zahlinworten;
+            else {
+                if (zehn > 9) zahlinworten = zahlen[zehn - einer] + zahlinworten;
+                if (zehn > 20 && einer > 0) zahlinworten = "und" + zahlinworten;
+                if (einer > 0) zahlinworten = zahlen[einer] + zahlinworten;
+            }
+        }
+
+        if (hunderter > 0)
+            zahlinworten = zahlen[hunderter] + "hundert" + zahlinworten;
+
+        trennschritte *= 1000;
+    }
+    return zahlinworten.trim();
+}
+
+
 
 
 // Funktion zum Aktualisieren der Farben
@@ -945,7 +1156,7 @@ async function applySVG() {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
 
-    
+
     let selectedEmail = document.getElementById("svgDropdownEmail").value;
     let svgContainerEmail = document.getElementById("emailContainer");
 
@@ -956,6 +1167,18 @@ async function applySVG() {
     } catch (error) {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
+
+    let selectedQuittung = document.getElementById("svgDropdownQuittung").value;
+    let svgContainerQuittung = document.getElementById("quittungContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedQuittung);
+        svgContainerQuittung.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+
 
 
 }
@@ -1027,6 +1250,17 @@ function toggleInput() {
 function toggleInputKontoauszug() {
     let inputElement = document.getElementById("jahrKontoauszug");
     let checkboxElement = document.getElementById("scriptJahrKontoauszug");
+
+    if (checkboxElement.checked) {
+        inputElement.disabled = true;
+    } else {
+        inputElement.disabled = false;
+    }
+}
+
+function toggleInputQuittung() {
+    let inputElement = document.getElementById("jahrQuittung");
+    let checkboxElement = document.getElementById("scriptJahrQuittung");
 
     if (checkboxElement.checked) {
         inputElement.disabled = true;
@@ -1237,7 +1471,7 @@ function validateInputs() {
         return false;
     }
 
-    // Validierung für Jahr im KOntoauszug
+    // Validierung für Jahr im Kontoauszug
     let jahrKontoauszug = document.getElementById("jahrKontoauszug");
     if (!isValidNumberInput(jahrKontoauszug.value, 0, 9999)) {
         alert("Bitte geben Sie bei Jahr (Kontoauszug) gültige Werte zwischen 0 und 9999 ein");
@@ -1266,7 +1500,7 @@ function validateInputs() {
         alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 35 Zeichen!");
         return false;
     }
-    
+
 
     // Validierung für Jahr in der Rechnung
     let kontoauszugKontostand_altInput = document.getElementById("kontoauszugKontostand_altInput");
@@ -1275,19 +1509,41 @@ function validateInputs() {
         return false;
     }
 
-        // Validierung für Kontoauszug Vorgang
-        let emailSubjectInput = document.getElementById("emailSubjectInput");
-        if (!isValidInput(emailSubjectInput.value, 100)) {
-            alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 100 Zeichen!");
-            return false;
-        }
+    // Validierung für Kontoauszug Vorgang
+    let emailSubjectInput = document.getElementById("emailSubjectInput");
+    if (!isValidInput(emailSubjectInput.value, 100)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 100 Zeichen!");
+        return false;
+    }
 
-            // Validierung für Kontoauszug Vorgang
+    // Validierung für Kontoauszug Vorgang
     let emailInputText = document.getElementById("emailInputText");
     if (!isValidInput(emailInputText.value, 5000)) {
         alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 5000 Zeichen!");
         return false;
     }
+
+    // Validierung für Quittung
+    let quittungNettoInput = document.getElementById("quittungNettoInput");
+    if (!isValidNumberInput(quittungNettoInput.value, 0, 9999)) {
+        alert("Bitte geben Sie beim Nettonbetrag gültige Werte zwischen 0 und 9999 ein");
+        return false;
+    }
+
+    // Validierung für Quittung UST
+    let quittungUSTInput = document.getElementById("quittungUSTInput");
+    if (!isValidNumberInput(quittungUSTInput.value, 0, 99)) {
+        alert("Bitte geben Sie bei UST gültige Werte zwischen 0 und 99 ein");
+        return false;
+    }
+
+    // Validierung für Kontoauszug Vorgang
+    let quittungZweckInput = document.getElementById("quittungZweckInput");
+    if (!isValidInput(quittungZweckInput.value, 50)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Für ein. Maximal 50 Zeichen!");
+        return false;
+    }
+
 
 
     return true; // Rückgabe true, wenn alle Validierungen erfolgreich sind
