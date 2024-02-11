@@ -11,24 +11,24 @@
     }
     </style>
 <rect x="0" y="0" width="499" height="350" fill="#fff" />
-<text x="280" y="20" font-family="Verdana" font-size="12">EUR</text>
-<text x="430" y="20" font-family="Verdana" font-size="12">ct.</text>
-<rect x="280" y="30" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
-<text x="282" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNetto" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
+<text x="300" y="20" font-family="Verdana" font-size="12">EUR</text>
+<text x="450" y="20" font-family="Verdana" font-size="12">ct.</text>
+<rect x="300" y="30" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
+<text x="302" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNetto" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="30" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNettoCent" text-anchor="start"></tspan><tspan>--------</tspan></text>
 <rect x="496" y="30" width="5" height="25" fill="#fff"/>
-<text x="5" y="45" font-family="Verdana" font-size="20" font-weight="bold" fill="red">Quittung</text>
-<text x="195" y="50" font-family="Verdana" font-size="12">netto</text>
-<text x="195" y="80" font-family="Verdana" font-size="12">+ <tspan id="quittungUST" font-family="Calli" font-size="16" fill="darkblue"></tspan> % USt.</text>
-<rect x="280" y="60" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
-<text x="282" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungUSTBetrag" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
+<text x="15" y="45" font-family="Verdana" font-size="22" font-weight="bold" fill="red">Quittung</text>
+<text x="215" y="50" font-family="Verdana" font-size="12">netto</text>
+<text x="215" y="80" font-family="Verdana" font-size="12">+ <tspan id="quittungUST" font-family="Calli" font-size="16" fill="darkblue"></tspan> % USt.</text>
+<rect x="300" y="60" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
+<text x="302" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungUSTBetrag" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="60" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan text-anchor="start" id="quittungUSTBetragCent"></tspan><tspan>--------</tspan></text>
 <rect x="496" y="60" width="5" height="25" fill="#fff"/>
-<text x="195" y="110" font-family="Verdana" font-size="12">gesamt</text>
-<rect x="280" y="90" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
-<text x="282" y="110" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungSumme" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
+<text x="215" y="110" font-family="Verdana" font-size="12">gesamt</text>
+<rect x="300" y="90" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
+<text x="302" y="110" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungSumme" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="90" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="110" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungSummeCent" text-anchor="start"></tspan><tspan>--------</tspan></text>
 <rect x="496" y="90" width="5" height="25" fill="#fff"/>
@@ -45,7 +45,7 @@
 <text id="quittungZweck" x="45" y="230" font-family="Calli" font-size="18" fill="darkblue"></text>
 <text x="5" y="255" font-family="Verdana" font-size="12">Ort/Datum:</text>
 <rect x="5" y="260" width="485" height="30" stroke="#000" font-size="10" stroke-width="1" fill="#eee"/>
-<text x="5" y="280" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungOrtDatum"></tspan>, <tspan id="quittungTag"></tspan>.<tspan id="quittungMonat"></tspan>.<tspan class="aktuellesJahrQuittung"></tspan></tspan></text>
+<text x="10" y="280" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungOrtDatum"></tspan>, <tspan id="quittungTag"></tspan>.<tspan id="quittungMonat"></tspan>.<tspan class="aktuellesJahrQuittung"></tspan></tspan></text>
 <text x="5" y="305" font-family="Verdana" font-size="12">Buchungsvermerke</text>
 <text x="490" y="305" font-family="Verdana" font-size="12" text-anchor="end">Stempel/Unterschrift des Empfängers</text>
 <g transform="rotate(5)">
