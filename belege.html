@@ -170,14 +170,14 @@
                                     <option value="11">November</option>
                                     <option value="12">Dezember</option>
                                 </select><br><label for="jahr">Jahr:</label>
-                                <input type="text" id="jahr" value="" min="0" placeholder="Jahr" /><br>
+                                <input type="text" id="jahr" value="" placeholder="Jahr" /><br>
                                 Skript verwenden: <input type="checkbox" id="scriptJahr" onchange="toggleInput()">
                             </div>
                         </div>
                         <div>
                             <label for="svgDropdown">
-                                <h4>Vorlage</h4>
-                            </label>
+                                Vorlage
+                            </label><br>
                             <select id="svgDropdown">
                                 <option value="template1.svg">Klassisch</option>
                                 <option value="template2.svg">Modern</option>
@@ -198,7 +198,7 @@
                     <div>
                         <label for="datenLieferer">Lieferer: </label>
                         <select id="datenLieferer" onchange="loadSupplierData()">
-                        </select><small><br><a href="#" class="tablinks" id="defaultOpen"
+                        </select><small><br><a href="#" class="tablinks"
                                 onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
                                 verwenden?</a></small>
                     </div>
@@ -321,7 +321,7 @@
                             <option value="12">Dezember</option>
                             </select>
                             <label for="jahrKontoauszug">Jahr:</label>
-                            <input type="text" id="jahrKontoauszug" value="" min="0" placeholder="Jahr" /><br>
+                            <input type="text" id="jahrKontoauszug" value="" placeholder="Jahr" /><br>
                             Skript verwenden: <input type="checkbox" id="scriptJahrKontoauszug"
                                 onchange="toggleInputKontoauszug()">
 
@@ -350,8 +350,7 @@
                         <h3>Allgemeine Daten</h3>
                         <label for="datenKontoauszug">Kontoinhaber: </label>
                         <select id="datenKontoauszug" onchange="loadKontoauszugData()">
-                        </select><small><br><a href="#" class="tablinks" id="defaultOpen"
-                                onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
+                        </select><small><br><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
                                 verwenden?</a></small>
                     </div>
                 </div>
@@ -458,7 +457,7 @@
                             <option value="12">Dezember</option>
                             </select>
                             <label for="jahrQuittung">Jahr:</label>
-                            <input type="text" id="jahrQuittung" value="" min="0" placeholder="Jahr" /><br>
+                            <input type="text" id="jahrQuittung" value="" placeholder="Jahr" /><br>
                             Skript verwenden: <input type="checkbox" id="scriptJahrQuittung"
                                 onchange="toggleInputQuittung()">
 
@@ -472,8 +471,7 @@
                     <div>
                         <label for="datenQuittung">Geldempfänger: </label>
                         <select id="datenQuittung" onchange="loadQuittungData()">
-                        </select><br><small><a href="#" class="tablinks" id="defaultOpen"
-                                onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
+                        </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
                                 verwenden?</a></small>
                     </div>
                     <div><label for="datenQuittungKunde">Kunde:</label>
@@ -531,8 +529,7 @@
                             <label for="datenEmail">Absender: </label>
                             <select id="datenEmail" onchange="loadEmailData()">
                             </select>
-                            <br><small><a href="#" class="tablinks" id="defaultOpen"
-                                    onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
+                            <br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
                                     verwenden?</a></small>
                         </div>
                         <div><label for="datenEmailKunde">Empfänger:</label>
@@ -542,6 +539,7 @@
                         </div>
 
                     </div>
+                </div>
                 </div>
                 <div id="emailContainer" 
                     style="border:1px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;"
@@ -581,7 +579,7 @@
                     href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen: <a
                     href="https://github.com/fdagner/bwr/issues">Fehler oder Vorschlag melden</a>.<br>
                 <a href="https://github.com/fdagner">fdagner</a> · BwR · <a href="https://oer.fdagner.de">Startseite</a> · <a href="https://fdagner.github.io/impressum.html">Impressum</a><br><br>
-                <img src="media/pic/oer.svg" style="min-width: 100px;width:10%;">
+                <img src="media/pic/oer.svg" alt="OER-Content" style="min-width: 100px;width:10%;">
             </small>
     </footer>
     <script src="js/belege.js"></script>
