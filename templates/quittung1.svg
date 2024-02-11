@@ -13,22 +13,22 @@
 <rect x="0" y="0" width="499" height="350" fill="#fff" />
 <text x="300" y="20" font-family="Verdana" font-size="12">EUR</text>
 <text x="450" y="20" font-family="Verdana" font-size="12">ct.</text>
-<rect x="300" y="30" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
-<text x="302" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNetto" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
+<rect x="320" y="30" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
+<text x="322" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNetto" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="30" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNettoCent" text-anchor="start"></tspan><tspan>--------</tspan></text>
 <rect x="496" y="30" width="5" height="25" fill="#fff"/>
-<text x="15" y="45" font-family="Verdana" font-size="22" font-weight="bold" fill="red">Quittung</text>
-<text x="215" y="50" font-family="Verdana" font-size="12">netto</text>
-<text x="215" y="80" font-family="Verdana" font-size="12">+ <tspan id="quittungUST" font-family="Calli" font-size="16" fill="darkblue"></tspan> % USt.</text>
-<rect x="300" y="60" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
-<text x="302" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungUSTBetrag" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
+<text x="25" y="45" font-family="Verdana" font-size="22" font-weight="bold" fill="red">Quittung</text>
+<text x="235" y="50" font-family="Verdana" font-size="12">netto</text>
+<text x="235" y="80" font-family="Verdana" font-size="12">+ <tspan id="quittungUST" font-family="Calli" font-size="16" fill="darkblue"></tspan> % USt.</text>
+<rect x="320" y="60" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
+<text x="322" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungUSTBetrag" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="60" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan text-anchor="start" id="quittungUSTBetragCent"></tspan><tspan>--------</tspan></text>
 <rect x="496" y="60" width="5" height="25" fill="#fff"/>
-<text x="215" y="110" font-family="Verdana" font-size="12">gesamt</text>
-<rect x="300" y="90" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
-<text x="302" y="110" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungSumme" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
+<text x="235" y="110" font-family="Verdana" font-size="12">gesamt</text>
+<rect x="320" y="90" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
+<text x="322" y="110" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungSumme" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="90" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="110" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungSummeCent" text-anchor="start"></tspan><tspan>--------</tspan></text>
 <rect x="496" y="90" width="5" height="25" fill="#fff"/>
