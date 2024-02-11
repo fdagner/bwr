@@ -152,7 +152,7 @@ function herunterladenAlsPNG() {
 }
 
 
-let clipboard = new ClipboardJS('#officeButton');
+let clipboard = new ClipboardJS('#tkontoOfficeButton');
 
 clipboard.on('success', function (e) {
   console.log("Die Tabelle wurde in die Zwischenablage kopiert.");

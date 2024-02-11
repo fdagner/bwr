@@ -481,7 +481,7 @@ function verkaufHerunterladenAlsPNG() {
   });
 }
 
-let clipboardverkauf = new ClipboardJS('#officeButtonverkauf');
+let clipboardverkauf = new ClipboardJS('#verkaufOfficeButton');
 
 clipboardverkauf.on('success', function (e) {
   console.log("Die Tabelle wurde in die Zwischenablage kopiert.");

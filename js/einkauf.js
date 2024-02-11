@@ -501,7 +501,7 @@ function einkaufHerunterladenAlsPNG() {
   });
 }
 
-let clipboardeinkauf = new ClipboardJS('#officeButtoneinkauf');
+let clipboardeinkauf = new ClipboardJS('#einkaufOfficeButton');
 
 clipboardeinkauf.on('success', function (e) {
   console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
