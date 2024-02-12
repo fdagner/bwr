@@ -106,7 +106,7 @@ function verkaufErstelleZufallssatz() {
   const verkaufArray_Subjekt_5 = [`Unser Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
   const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
   const verkaufArray_Fertigerzeugnisse_2 = Object.keys(kontenUmsatzerloese_2);
-  const verkaufArray_Supply_Wert = ['mit einem Erlös in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
+  const verkaufArray_Supply_Wert = ['mit einem Verkaufspreis in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
   const verkaufArray_Zahlung = Object.keys(verkaufKontenZahlung);
   const verkaufArray_Supply_Rabatt = [`, ${verkaufRandom_Rabatt} % Rabatt`];
   const verkaufArray_Supply_Rabatt_2 = [
@@ -151,7 +151,7 @@ function verkaufErstelleZufallssatz() {
   const verkaufRandomSupply_Wert = verkaufArray_Supply_Wert[Math.floor(Math.random() * verkaufArray_Supply_Wert.length)];
   const verkaufAntwortFertigerzeugnis = kontenUmsatzserloese[verkaufRandomFertigerzeugnis]?.Hauptkonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Hauptkonto;
   const verkaufAntwortBezugskosten = kontenUmsatzserloese[verkaufRandomFertigerzeugnis]?.Unterkonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Unterkonto;
-  const verkaufAntwortSkontobuchungssatz = kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Nachlasskonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Nachlasskonto;
+  const verkaufAntwortSkontobuchungssatz = kontenUmsatzserloese[verkaufRandomFertigerzeugnis]?.Nachlasskonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Nachlasskonto;
   const verkaufRandomSkontobuchungssatz = verkaufArray_Subjekt_5[Math.floor(Math.random() * verkaufArray_Subjekt_5.length)];
   const verkaufNettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
   const verkaufWert = generateRandomNettoWert();
@@ -309,7 +309,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufSatzOutput += `<div>${verkaufFormattedAngebot}</div><br>`;
     } else {
       verkaufSatzOutput += `${verkaufFormattedSatz}<br><br>`;
-      if (verkaufBuchungsoptionDropdown.value === 'skontobuchungssatz') {
+      if (verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
         verkaufSatzOutput += `${verkaufFormattedSkonto}<br><br>`;
       }
     }
@@ -372,7 +372,7 @@ function verkaufZeigeZufaelligenSatz() {
     verkaufAntwortOutput += `</tr>`;
     verkaufAntwortOutput += `</tbody>`;
     verkaufAntwortOutput += `</table>`;
-    if (verkaufBuchungsoptionDropdown.value === 'skontobuchungssatz') {
+    if (verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
       verkaufAntwortOutput += `<br><b>Nebenrechnung:</b><br>`;
       verkaufAntwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       verkaufAntwortOutput += `<tbody>`;
@@ -411,25 +411,25 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
-      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
-      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufBetrag_2}</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">2800 BK</td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufAntwort_ueberweisungsbetrag}</td>`;
       verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
-      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">2800 BK</td>`;
-      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${verkaufAntwort_ueberweisungsbetrag}</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">2400 FO</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${verkaufBetrag_2}</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr>`;
-      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
-      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
-      verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
-      verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufKonto_Skontobuchungssatz}</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${verkaufKonto_Skontobuchungssatz}</td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufAntwort_skontoBetrag}</td>`;
-      verkaufAntwortOutput += `</tr>`;
-      verkaufAntwortOutput += `</tr>`;
-      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
-      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"</td>`;
       verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
-      verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">2600 VORST</td>`;
+      verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `</tr>`;
+      verkaufAntwortOutput += `</tr>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">2600 VORST</td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufAntwort_vorsteuer_berichtigung}</td>`;
+      verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</tbody>`;
       verkaufAntwortOutput += `</table>`;

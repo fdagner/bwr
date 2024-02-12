@@ -15,7 +15,7 @@ function openCity(evt, cityName) {
     let moodleDropdown = document.getElementById("moodleDropdown");
 
     if (moodleDropdown) {
-        if (cityName === "t-konto" || cityName === "buchungssatz" || cityName === "vorkontierung" || cityName === "einkauf") {
+        if (cityName === "t-konto" || cityName === "buchungssatz" || cityName === "vorkontierung" || cityName === "einkauf" || cityName === "verkauf") {
             moodleDropdown.style.display = "block";
         } else {
             moodleDropdown.style.display = "none";
