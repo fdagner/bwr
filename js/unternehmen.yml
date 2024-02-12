@@ -724,3 +724,26 @@
     bic: "GENODEF1WEI"
     inhaber: "Dr. jur. Werner Weidner"
     akzent: "#800000"
+
+- unternehmen:
+    id: "33"
+    name: "Post & Shop"
+    motto: "Wir verbinden Menschen."
+    bank: "Sparbank"
+    rechtsform: "AG"
+    logo: "media/pic/mail.svg"
+    adresse:
+      strasse: "Schnellstraße 10"
+      plz: "90441"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "0961 7654325"
+      email: "info@postagshop.de"
+      internet: "postagshop.de"
+    ust_id: "DE987654321"
+    steuernummer: "181/066/47373"
+    iban: "DE89370400449432013034"
+    bic: "GENODEF1NBG"
+    inhaber: "Gustl Wirtz"
+    akzent: "#ffff00"

@@ -46,6 +46,9 @@ function reloadDropdownOptions() {
     const dropdownEmailKunde = document.getElementById('datenEmailKunde');
     const dropdownQuittung = document.getElementById('datenQuittung');
     const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
+    const dropdownKassenbon = document.getElementById('datenKassenbonKunde');
+    const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
+
 
     // Clear existing options
     dropdownCustomer.innerHTML = '';
@@ -89,6 +92,16 @@ function reloadDropdownOptions() {
         optionQuittungKunde.value = company.unternehmen.name;
         optionQuittungKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownQuittungKunde.appendChild(optionQuittungKunde);
+
+        const optionKassenbon = document.createElement('option');
+        optionKassenbon.value = company.unternehmen.name;
+        optionKassenbon.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownKassenbon.appendChild(optionKassenbon);
+
+        const optionKassenbonKunde = document.createElement('option');
+        optionKassenbonKunde.value = company.unternehmen.name;
+        optionKassenbonKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownKassenbonKunde.appendChild(optionKassenbonKunde);
 
 
     });
@@ -148,6 +161,8 @@ fetch('js/unternehmen.yml')
         const dropdownEmailKunde = document.getElementById('datenEmailKunde');
         const dropdownQuittung = document.getElementById('datenQuittung');
         const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
+        const dropdownKassenbon = document.getElementById('datenKassenbon');
+        const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
 
         yamlData.forEach(company => {
             const optionCustomer = document.createElement('option');
@@ -184,6 +199,16 @@ fetch('js/unternehmen.yml')
             optionQuittungKunde.value = company.unternehmen.name;
             optionQuittungKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownQuittungKunde.appendChild(optionQuittungKunde);
+
+            const optionKassenbon = document.createElement('option');
+            optionKassenbon.value = company.unternehmen.name;
+            optionKassenbon.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            dropdownKassenbon.appendChild(optionKassenbon);
+
+            const optionKassenbonKunde = document.createElement('option');
+            optionKassenbonKunde.value = company.unternehmen.name;
+            optionKassenbonKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            dropdownKassenbonKunde.appendChild(optionKassenbonKunde);
 
         });
 
@@ -297,6 +322,23 @@ function loadCompanyDataforQuittung() {
     document.getElementById('quittungNameKunde').textContent = selectedCompany.unternehmen.inhaber + ", " + selectedCompany.unternehmen.name;
 }
 
+function loadKassenbonData() {
+    const selectedKassenbonName = document.getElementById('datenKassenbon').value;
+    const selectedKassenbon = yamlData.find(kassenbon => kassenbon.unternehmen.name === selectedKassenbonName);
+    document.getElementById('kassenbonName').textContent = selectedKassenbon.unternehmen.name + " " + selectedKassenbon.unternehmen.rechtsform;
+    document.getElementById('kassenbonStrasse').textContent = selectedKassenbon.unternehmen.adresse.strasse;
+    document.getElementById('kassenbonUSTID').textContent = selectedKassenbon.unternehmen.ust_id;
+    document.getElementById('kassenbonSteuernummer').textContent = selectedKassenbon.unternehmen.steuernummer;
+    document.getElementById('kassenbonOrt').textContent = selectedKassenbon.unternehmen.adresse.plz + " " + selectedKassenbon.unternehmen.adresse.ort;
+
+}
+
+// Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
+function loadCompanyDataforKassenbon() {
+    const selectedCompanyName = document.getElementById('datenKassenbonKunde').value;
+    const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
+    document.getElementById('kassenbonNameKunde').textContent = selectedCompany.unternehmen.inhaber + ", " + selectedCompany.unternehmen.name;
+}
 
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
 function loadCompanyData() {
@@ -602,7 +644,7 @@ function applyOrderData() {
     }
 
 
-    
+
     const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
     if (!useScriptQuittung) {
         // Verwende das Jahr aus dem Textfeld
@@ -616,7 +658,7 @@ function applyOrderData() {
 
         const customDefs = document.getElementById('customDefsQuittung');
         const customJsScript = document.getElementById('customJsQuittung');
-        const useScriptKontoauszug = document.getElementById('scriptJahrQuittung').checked;
+        const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
 
         if (customJsScript) {
             customJsScript.remove();
@@ -649,6 +691,54 @@ function applyOrderData() {
 
 
     }
+
+    const useScriptKassenbon = document.getElementById('scriptJahrKassenbon').checked;
+    if (!useScriptKassenbon) {
+        // Verwende das Jahr aus dem Textfeld
+        const selectedJahr = document.getElementById('jahrKassenbon');
+        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrKassenbon');
+        for (const yearelement of yearelementsWithClass) {
+            yearelement.textContent = selectedJahr.value;
+        }
+
+    } else {
+
+        const customDefs = document.getElementById('customDefsKassenbon');
+        const customJsScript = document.getElementById('customJsKassenbon');
+        const useScriptQuittung = document.getElementById('scriptJahrKassenbon').checked;
+
+        if (customJsScript) {
+            customJsScript.remove();
+        }
+
+        if (useScriptKassenbon) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJsKassenbon';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoadKassenbon() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahrKassenbon');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoadKassenbon(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
+    }
+
 
     // Hilfsfunktion, um den numerischen Wert eines Eingabefelds zu erhalten
     function getNumericValue(inputId) {
@@ -886,7 +976,6 @@ function applyOrderData() {
     // Laden der Daten für die Mail
     const emailTextMessage = document.getElementById('emailInputText').value;
     document.getElementById('emailTextMessage').textContent = emailTextMessage;
-
     const emailSubject = document.getElementById('emailSubjectInput').value;
     document.getElementById('emailSubject').textContent = emailSubject;
 
@@ -898,7 +987,6 @@ function applyOrderData() {
     const selectedquittungMonat = document.getElementById('monatQuittung').value;
     document.getElementById('quittungTag').textContent = selectedquittungTag;
     document.getElementById('quittungMonat').textContent = selectedquittungMonat;
-
     let quittungNetto = document.getElementById('quittungNettoInput').value;
     // Überprüfen, ob das Eingabefeld leer ist
     if (quittungNetto === "") {
@@ -933,14 +1021,67 @@ function applyOrderData() {
     const quittungInWorten = zahlwort(summeVorKomma);
     document.getElementById('quittungInWorten').textContent = quittungInWorten;
 
+
+    // Laden der Daten für den Kassenbon
+    let kassenbonZweck = document.getElementById('kassenbonZweckInput').value;
+    document.getElementById('kassenbonZweck').textContent = kassenbonZweck;
+    const selectedkassenbonTag = document.getElementById('tagKassenbon').value;
+    const selectedkassenbonMonat = document.getElementById('monatKassenbon').value;
+    document.getElementById('kassenbonTag').textContent = selectedkassenbonTag;
+    document.getElementById('kassenbonMonat').textContent = selectedkassenbonMonat;
+    let kassenbonRandomTime = generateRandomTime();
+    document.getElementById('kassenbonUhrzeit').textContent = kassenbonRandomTime + ' Uhr';
+    const kassenbonRandomNumber = generateRandomNumber();
+    document.getElementById('kassenbonTransaktionsnummer').textContent = kassenbonRandomNumber;
+    let kassenbonNetto = document.getElementById('kassenbonNettoInput').value;
+    // Überprüfen, ob das Eingabefeld leer ist
+    if (kassenbonNetto === "") {
+        // Wenn das Eingabefeld leer ist, setze quittungUST auf 0
+        kassenbonNetto = 0;
+    }
+
+    document.getElementById('kassenbonNetto').textContent = formatCurrency(kassenbonNetto);
+    kassenbonUST = document.getElementById('kassenbonUSTInput').value;
+    // Überprüfen, ob das Eingabefeld leer ist
+    if (quittungUST === "") {
+        // Wenn das Eingabefeld leer ist, setze quittungUST auf 0
+        quittungUST = 0;
+    }
+
+    document.getElementById('kassenbonUST').textContent = kassenbonUST;
+    let kassenbonUSTBetrag = (kassenbonNetto * kassenbonUST / 100).toFixed(2);
+    document.getElementById('kassenbonUSTBetrag').textContent = formatCurrency(kassenbonUSTBetrag);
+    let kassenbonBrutto = parseFloat(kassenbonNetto) + parseFloat(kassenbonUSTBetrag);
+    let kassenbonBruttoElements = Array.from(document.getElementsByClassName('kassenbonBrutto'));
+
+    // Iteriere über jedes Element und setze den berechneten Bruttobetrag als Textinhalt
+    kassenbonBruttoElements.forEach(function (element) {
+        // Formatieren des Bruttobetrags
+        var formattedKassenbonBrutto = formatCurrency(kassenbonBrutto);
+
+        // Setze den formatierten Bruttobetrag als Textinhalt ins Element
+        element.textContent = formattedKassenbonBrutto;
+    });
+    let kassenbonZahlungsart = document.getElementById('kassenbonDropdownZahlungsart').value;
+    document.getElementById('kassenbonZahlungsart').textContent = kassenbonZahlungsart;
+
     loadCompanyData(); // Laden der Kundeninformationen
     loadSupplierData(); // Laden der Lieferanteninformationen
     loadKontoauszugData() // Laden der Quittungsdaten
     loadEmailData() // Laden der E-Mail-Daten
     loadCompanyDataforEmail(); // Laden der E-Mail-Daten (Kunde)
     loadQuittungData() // Laden der Quittung-Daten
+    loadKassenbonData() // Laden der Kassenbon-Daten
     loadCompanyDataforQuittung(); // Laden der Quittung-Daten (Kunde)
 }
+
+// Funktion zur Generierung einer zufälligen 7-stelligen Nummer
+function generateRandomNumber() {
+    const min = 1000000; // Kleinste 7-stellige Nummer
+    const max = 9999999; // Größte 7-stellige Nummer
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // Formatieren der Zahl mit Tausenderpunkt und Dezimalkomma
 function formatNumber(number) {
     return new Intl.NumberFormat('de-DE').format(number);
@@ -1038,7 +1179,12 @@ function zahlwort(zahl) {
     return zahlinworten.trim();
 }
 
-
+// Funktion zur Generierung einer zufälligen Uhrzeit zwischen 10:00 und 10:59
+function generateRandomTime() {
+    let hour = Math.floor(Math.random() * 7) + 10; // Zufällige Stunde zwischen 10 und 17
+    let minute = Math.floor(Math.random() * 60); // Zufällige Minute zwischen 0 und 59
+    return hour + ':' + (minute < 10 ? '0' + minute : minute);
+}
 
 
 // Funktion zum Aktualisieren der Farben
@@ -1180,6 +1326,18 @@ async function applySVG() {
     }
 
 
+    let selectedKassenbon = document.getElementById("svgDropdownKassenbon").value;
+    let svgContainerKassenbon = document.getElementById("kassenbonContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedKassenbon);
+        svgContainerKassenbon.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+
+
 
 }
 
@@ -1204,169 +1362,116 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 });
 
 
-function rechnungHerunterladen() {
-    const rechnungHTML = document.getElementById('rechnung1Container').innerHTML.replace(/&nbsp;/g, ' ');;
-    const blob = new Blob([rechnungHTML], { type: 'svg' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'rechnung.svg';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+function toggleInput(inputId, checkboxId) {
+    let inputElement = document.getElementById(inputId);
+    let checkboxElement = document.getElementById(checkboxId);
+
+    inputElement.disabled = checkboxElement.checked;
 }
 
-function rechnungKopiereInZwischenablage() {
-    const rechnungHTML = document.getElementById('rechnung1Container').innerHTML.replace(/&nbsp;/g, ' ');;
-    navigator.clipboard.writeText(rechnungHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
+// Export to PNG
 
-function rechnungHerunterladenAlsPNG() {
-    const rechnungContainer = document.getElementById('rechnung1Container');
+function herunterladenAlsPNG(containerId, dateiname) {
+    const container = document.getElementById(containerId);
 
-    html2canvas(rechnungContainer).then(canvas => {
+    html2canvas(container).then(canvas => {
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;
-        a.download = 'rechnung.png';
+        a.download = dateiname;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
     });
-}
-
-function toggleInput() {
-    let inputElement = document.getElementById("jahr");
-    let checkboxElement = document.getElementById("scriptJahr");
-
-    if (checkboxElement.checked) {
-        inputElement.disabled = true;
-    } else {
-        inputElement.disabled = false;
-    }
-}
-
-function toggleInputKontoauszug() {
-    let inputElement = document.getElementById("jahrKontoauszug");
-    let checkboxElement = document.getElementById("scriptJahrKontoauszug");
-
-    if (checkboxElement.checked) {
-        inputElement.disabled = true;
-    } else {
-        inputElement.disabled = false;
-    }
-}
-
-function toggleInputQuittung() {
-    let inputElement = document.getElementById("jahrQuittung");
-    let checkboxElement = document.getElementById("scriptJahrQuittung");
-
-    if (checkboxElement.checked) {
-        inputElement.disabled = true;
-    } else {
-        inputElement.disabled = false;
-    }
-}
-
-
-
-function rechnungHerunterladen() {
-    const rechnungHTML = document.getElementById('rechnung1Container').innerHTML.replace(/&nbsp;/g, ' ');;
-    const blob = new Blob([rechnungHTML], { type: 'svg' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'rechnung.svg';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-function rechnungKopiereInZwischenablage() {
-    const rechnungHTML = document.getElementById('rechnung1Container').innerHTML.replace(/&nbsp;/g, ' ');;
-    navigator.clipboard.writeText(rechnungHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function rechnungHerunterladenAlsPNG() {
-    const rechnungContainer = document.getElementById('rechnung1Container');
-
-    html2canvas(rechnungContainer).then(canvas => {
-        const dataURL = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'rechnung.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
-}
-
-function kontoauszugHerunterladen() {
-    const rechnungHTML = document.getElementById('kontoauszugContainer').innerHTML.replace(/&nbsp;/g, ' ');;
-    const blob = new Blob([rechnungHTML], { type: 'svg' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'rechnung.svg';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-function kontoauszugKopiereInZwischenablage() {
-    const rechnungHTML = document.getElementById('kontoauszugContainer').innerHTML.replace(/&nbsp;/g, ' ');;
-    navigator.clipboard.writeText(rechnungHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
 function kontoauszugHerunterladenAlsPNG() {
-    const rechnungContainer = document.getElementById('kontoauszugContainer');
+    herunterladenAlsPNG('kontoauszugContainer', 'kontoauszug.png');
+}
 
-    html2canvas(rechnungContainer).then(canvas => {
-        const dataURL = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'rechnung.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
+function rechnungHerunterladenAlsPNG() {
+    herunterladenAlsPNG('rechnung1Container', 'rechnung.png');
 }
 
 
-function quittungHerunterladen() {
-    const rechnungHTML = document.getElementById('quittungContainer').innerHTML.replace(/&nbsp;/g, ' ');;
-    const blob = new Blob([rechnungHTML], { type: 'svg' });
+function quittungHerunterladenAlsPNG() {
+    herunterladenAlsPNG('quittungContainer', 'quittung.png');
+}
+
+function kassenbonHerunterladenAlsPNG() {
+    herunterladenAlsPNG('kassenbonContainer', 'kassenbon.png');
+}
+
+function emailHerunterladenAlsPNG() {
+    herunterladenAlsPNG('emailContainer', 'email.png');
+}
+
+// Export to SVG
+
+function herunterladen(containerId, dateiname) {
+    const containerHTML = document.getElementById(containerId).innerHTML.replace(/&nbsp;/g, ' ');
+    const blob = new Blob([containerHTML], { type: 'svg' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'quittung.svg';
+    a.download = dateiname;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 }
 
-function quittungKopiereInZwischenablage() {
-    const rechnungHTML = document.getElementById('quittungContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+function rechnungHerunterladen() {
+    herunterladen('rechnung1Container', 'rechnung.svg');
+}
+
+function kontoauszugHerunterladen() {
+    herunterladen('kontoauszugContainer', 'kontoauszug.svg');
+}
+
+function quittungHerunterladen() {
+    herunterladen('quittungContainer', 'quittung.svg');
+}
+
+function kassenbonHerunterladen() {
+    herunterladen('kassenbonContainer', 'kassenbon.svg');
+}
+
+
+
+function rechnungKopiereInZwischenablage() {
+    const rechnungHTML = document.getElementById('rechnung1Container').innerHTML.replace(/&nbsp;/g, ' ');;
     navigator.clipboard.writeText(rechnungHTML)
         .then(() => alert('Code wurde in die Zwischenablage kopiert'))
         .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
-function quittungHerunterladenAlsPNG() {
-    const quittungContainer = document.getElementById('quittungContainer');
 
-    html2canvas(quittungContainer).then(canvas => {
-        const dataURL = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'quittung.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
+function kopiereInZwischenablage(containerId) {
+    const containerHTML = document.getElementById(containerId).innerHTML.replace(/&nbsp;/g, ' ');
+    navigator.clipboard.writeText(containerHTML)
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
+
+function rechnungKopiereInZwischenablage() {
+    kopiereInZwischenablage('rechnung1Container');
+}
+
+function kontoauszugKopiereInZwischenablage() {
+    kopiereInZwischenablage('kontoauszugContainer');
+}
+
+function quittungKopiereInZwischenablage() {
+    kopiereInZwischenablage('quittungContainer');
+}
+
+function kassenbonKopiereInZwischenablage() {
+    kopiereInZwischenablage('kassenbonContainer');
+}
+
+function emailKopiereInZwischenablage() {
+    kopiereInZwischenablage('emailContainer');
+}
+
 
 function emailHerunterladen() {
     const emailHTML = document.getElementById('emailContainer').innerHTML.replace(/&nbsp;/g, ' ');;
@@ -1378,28 +1483,6 @@ function emailHerunterladen() {
     a.click();
     document.body.removeChild(a);
 }
-
-function emailKopiereInZwischenablage() {
-    const emailHTML = document.getElementById('emailContainer').innerHTML.replace(/&nbsp;/g, ' ');;
-    navigator.clipboard.writeText(emailHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function emailHerunterladenAlsPNG() {
-    const emailContainer = document.getElementById('mailHtml');
-
-    html2canvas(emailContainer).then(canvas => {
-        const dataURL = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'rechnung.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
-}
-
 
 
 function validateInputs() {
@@ -1499,8 +1582,8 @@ function validateInputs() {
 
     // Validierung für Jahr in der Rechnung
     let jahr = document.getElementById("jahr");
-    if (!isValidNumberInput(jahr.value, 0, 9999)) {
-        alert("Bitte geben Sie bei Jahr (Rechnung) gültige Werte zwischen 0 und 9999 ein");
+    if (!isValidInput(jahr.value, 4)) {
+        alert("Bitte geben Sie bei Jahr (Rechnung) gültige Werte ein");
         return false;
     }
 
@@ -1570,10 +1653,33 @@ function validateInputs() {
         return false;
     }
 
-    // Validierung für Kontoauszug Vorgang
+
+    // Validierung für Quittung Vorgang
     let quittungZweckInput = document.getElementById("quittungZweckInput");
     if (!isValidInput(quittungZweckInput.value, 50)) {
         alert("Bitte geben Sie eine gültige Bezeichnung bei Für ein. Maximal 50 Zeichen!");
+        return false;
+    }
+
+    // Validierung für Kassenbon
+    let kassenbonNettoInput = document.getElementById("kassenbonNettoInput");
+    if (!isValidNumberInput(kassenbonNettoInput.value, 0, 9999)) {
+        alert("Bitte geben Sie beim Nettonbetrag gültige Werte zwischen 0 und 9999 ein");
+        return false;
+    }
+
+    // Validierung für Kassenbon UST
+    let kassenbonUSTInput = document.getElementById("kassenbonUSTInput");
+    if (!isValidNumberInput(kassenbonUSTInput.value, 0, 99)) {
+        alert("Bitte geben Sie bei UST gültige Werte zwischen 0 und 99 ein");
+        return false;
+    }
+
+
+    // Validierung für Kassenbon Vorgang
+    let kassenbonZweckInput = document.getElementById("kassenbonZweckInput");
+    if (!isValidInput(kassenbonZweckInput.value, 50)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Kassenbon Artikel ein. Maximal 50 Zeichen!");
         return false;
     }
 

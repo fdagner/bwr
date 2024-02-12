@@ -11,8 +11,8 @@
     }
     </style>
 <rect x="0" y="0" width="499" height="350" fill="#fff" />
-<text x="300" y="20" font-family="Verdana" font-size="12">EUR</text>
-<text x="450" y="20" font-family="Verdana" font-size="12">ct.</text>
+<text x="320" y="20" font-family="Verdana" font-size="12">EUR</text>
+<text x="430" y="20" font-family="Verdana" font-size="12">ct.</text>
 <rect x="320" y="30" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="322" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNetto" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="30" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>

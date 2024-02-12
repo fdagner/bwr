@@ -9,6 +9,7 @@
     <text id="nameLieferer" x="20" y="75" font-family="Calibri" font-size="38" font-weight="bold"/>
     <text id="mottoLieferer" x="25" y="110" font-family="Calibri" font-size="18" font-weight="bold"/>
     <text id="adresseLieferer" x="20" y="150" font-family="Arial" font-style="italic" font-size="14" fill="#333"/>
+    
   </g>
 <!--Gruppe für Kunden- und Liefererdaten-->
   <g id="kundenDaten">
