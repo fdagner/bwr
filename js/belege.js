@@ -46,7 +46,7 @@ function reloadDropdownOptions() {
     const dropdownEmailKunde = document.getElementById('datenEmailKunde');
     const dropdownQuittung = document.getElementById('datenQuittung');
     const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
-    const dropdownKassenbon = document.getElementById('datenKassenbonKunde');
+    const dropdownKassenbon = document.getElementById('datenKassenbon');
     const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
 
 
@@ -54,6 +54,12 @@ function reloadDropdownOptions() {
     dropdownCustomer.innerHTML = '';
     dropdownSupplier.innerHTML = '';
     dropdownKontenauszug.innerHTML = '';
+    dropdownEmail.innerHTML = '';
+    dropdownEmailKunde.innerHTML = '';
+    dropdownQuittung.innerHTML = '';
+    dropdownQuittungKunde.innerHTML = '';
+    dropdownKassenbon.innerHTML = '';
+    dropdownKassenbonKunde.innerHTML = '';
 
 
     yamlData.forEach(company => {
@@ -81,7 +87,6 @@ function reloadDropdownOptions() {
         optionEmailKunde.value = company.unternehmen.name;
         optionEmailKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownEmailKunde.appendChild(optionEmailKunde);
-
 
         const optionQuittung = document.createElement('option');
         optionQuittung.value = company.unternehmen.name;
