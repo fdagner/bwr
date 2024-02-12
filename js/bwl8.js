@@ -176,7 +176,7 @@ const plugin = {
     ctx.restore();
   }
 };
-   const optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value, 10);
+  const optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value, 10);
   const bestellkosten = parseInt(document.getElementById("bestellkosten").value, 10);
   const optimaleBestellhaeufigkeit = parseInt(document.getElementById('optimaleBestellhaeufigkeit').value, 10);
   const bedarf = optimaleBestellmenge * optimaleBestellhaeufigkeit;
