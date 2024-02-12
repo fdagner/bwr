@@ -1442,16 +1442,23 @@ function kassenbonHerunterladen() {
 
 
 
-function rechnungKopiereInZwischenablage() {
-    const rechnungHTML = document.getElementById('rechnung1Container').innerHTML.replace(/&nbsp;/g, ' ');;
-    navigator.clipboard.writeText(rechnungHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
 
 
 function kopiereInZwischenablage(containerId) {
-    const containerHTML = document.getElementById(containerId).innerHTML.replace(/&nbsp;/g, ' ');
+    // SVG-Element aus dem Container abrufen
+    const containerSVG = document.getElementById(containerId).querySelector('svg');
+    
+    // Kopie des SVG-Elements erstellen, um das Original nicht zu ändern
+    const clonedSVG = containerSVG.cloneNode(true);
+
+    // width und height Attribute entfernen
+    clonedSVG.removeAttribute('width');
+    clonedSVG.removeAttribute('height');
+
+    // HTML des modifizierten SVGs erhalten
+    const containerHTML = clonedSVG.outerHTML.replace(/&nbsp;/g, ' ');
+
+    // Text in die Zwischenablage kopieren
     navigator.clipboard.writeText(containerHTML)
         .then(() => alert('Code wurde in die Zwischenablage kopiert'))
         .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
