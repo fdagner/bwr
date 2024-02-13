@@ -115,7 +115,7 @@ function reloadDropdownOptions() {
 // Function to load default YAML data
 function loadDefaultYamlData() {
     // Load default YAML data (replace 'defaultData.yml' with your actual default YAML file)
-    fetch('../js/unternehmen.yml')
+    fetch('js/unternehmen.yml')
         .then(response => response.text())
         .then(data => {
             defaultYamlData = jsyaml.load(data);
@@ -155,7 +155,7 @@ function deleteAndLoadDefaultData() {
 
 
 // Lade die YAML-Datei und fülle das Dropdown-Feld
-fetch('../js/unternehmen.yml')
+fetch('js/unternehmen.yml')
     .then(response => response.text())
     .then(data => {
         yamlData = jsyaml.load(data); // Assign data to yamlData variable
@@ -282,7 +282,7 @@ function loadEmailData() {
         }
     } else {
         // Wenn der Eintrag in YAML leer ist, lade den Standard-SVG als Base64
-        const standardImageURL = '../media/pic/standard.svg';
+        const standardImageURL = 'media/pic/standard.svg';
 
         const xhrStandard = new XMLHttpRequest();
         xhrStandard.onload = function () {
@@ -455,7 +455,7 @@ function loadSupplierData() {
         }
     } else {
         // Wenn der Eintrag in YAML leer ist, lade den Standard-SVG als Base64
-        const standardImageURL = '../media/pic/standard.svg';
+        const standardImageURL = 'media/pic/standard.svg';
 
         const xhrStandard = new XMLHttpRequest();
         xhrStandard.onload = function () {
