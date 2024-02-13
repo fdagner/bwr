@@ -1,0 +1,101 @@
+<svg id="rechnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 1050" width="720" height="1050" style="background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc" onload="SVGonLoad()">
+  <defs id="customDefs"/>
+  <!--Gruppe für Firmeninformationen-->
+    <rect class="colorSVG" x="0" y="0" width="720" height="130" fill="#7db9f5"/>
+    <rect class="colorSVG" x="0" y="950" width="720" height="100" fill="#7db9f5"/>
+  <g id="liefererInformationen" fill="#000">
+    <rect id="logo-placeholder" x="580" y="20" width="100" Opacity="0" height="100"/>
+    <text id="nameLieferer" text-anchor="middle" x="350" y="75" font-family="Calibri" font-size="38" font-weight="bold"/>
+    <text id="mottoLieferer" x="350" y="110" text-anchor="middle" font-family="Calibri" font-size="18" font-weight="bold"/>
+    <text id="adresseLieferer" x="20" y="150" font-family="Calibri" font-style="italic" font-size="14" fill="#333"/>
+    <rect id="bgdaten" x="20" y="470" width="680" height="50" class="colorSVG"/>
+    <text id="pos" x="40" y="500" font-family="Calibri" font-size="18" font-weight="bold">Pos</text>
+    <text id="artikel" x="100" y="500" font-family="Calibri" font-size="18" font-weight="bold">Leistung</text>
+    <text id="menge" x="400" y="500" font-family="Calibri" font-size="18" font-weight="bold" text-anchor="end">Menge</text>
+    <text id="einzelpreis" x="530" y="500" font-family="Calibri" font-size="18"  font-weight="bold" text-anchor="end">Preis</text>
+    <text id="gesamtpreis" x="690" y="500" font-family="Calibri" font-size="18"  font-weight="bold" text-anchor="end">Summe</text>
+   
+  </g>
+<!--Gruppe für Kunden- und Liefererdaten-->
+  <g id="kundenDaten">
+<!--Kundenanschrift links-->
+    <text id="nameKunde" x="20" y="200" font-family="Calibri" font-size="17" fill="#333"/>
+    <text id="inhaberKunde" x="20" y="220" font-family="Calibri" font-size="17" fill="#333"/>
+    <text id="strasseKunde" x="20" y="240" font-family="Calibri" font-size="17" fill="#333"/>
+    <text id="plzKunde" x="20" y="260" font-family="Calibri" font-size="17" fill="#333"/>
+  </g>
+<!--Liefererdaten rechts-->
+  <g id="liefererDaten">
+    <text x="480" y="200" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Rechnungsnummer: <tspan id="rechnungsNummer"/></text>
+    <text id="lieferdatum" x="480" y="220" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Lieferdatum: <tspan id="bezugskostenBedingung"></tspan> <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+    <text x="480" y="240" font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start">Kundennummer: K<tspan id="nummerKunde"/></text>
+    <text id="internetLieferer" x="480" y="260"  font-family="Calibri" font-weight="bold" font-size="16" fill="#333" text-anchor="start"/>
+  </g>
+<!--Gruppe für Rechnungsinformationen-->
+  <g id="rechnungsInformationen">
+    <text x="20" y="340" font-family="Calibri" font-weight="bold" font-size="30" fill="#333">RECHNUNG</text>
+     <text id="datum" x="690" y="380" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+  </g>
+<!--Gruppe für Bestelldaten-->
+  <g id="bestellDaten">
+
+    <text id="pos1" x="40" y="540" font-family="Calibri" font-size="18" fill="#333"/>
+    <text id="artikel1" x="100" y="540" font-family="Calibri" font-size="18" fill="#333"/>
+    <text id="menge1" x="400" y="540" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="einzelpreis1" x="530" y="540" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="gesamtpreis1" x="690" y="540" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="pos2" x="40" y="570" font-family="Calibri" font-size="18" fill="#333"/>
+    <text id="artikel2" x="100" y="570" font-family="Calibri" font-size="18" fill="#333"/>
+    <text id="menge2" x="400" y="570" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="einzelpreis2" x="530" y="570" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="gesamtpreis2" x="690" y="570" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+  </g>
+  <rect x="20" y="590" width="680" height="1" fill="#000"/>
+<!--Gruppe für Abrechnungsdetails-->
+  <g id="abrechnungsDetails">
+    <g id="zwischensummeRabattVersand">
+    <text x="390" y="620" font-family="Calibri" font-size="18" fill="#000" font-weight="bold">Warenwert</text>
+    <text id="zwischensumme" x="690" y="620" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"></text>
+    <g id="gRabatt">
+    <text id="rabatt" x="390" y="650" font-family="Calibri" font-size="18" fill="#000" font-weight="bold"></text>
+    <text id="rabattsumme" x="690" y="650" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"></text>
+    </g>
+    <g id="gBezugskosten">
+    <text id="bezugskosten" x="390" y="680" font-family="Calibri" font-size="18" fill="#000" font-weight="bold">Bezugskosten</text>
+    <text id="bezugskostenSumme" x="690" y="680" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"></text>
+    </g>
+    </g>
+    <g id="warenwertUstRechnungsbetrag">
+    <rect x="390" y="690" width="300" height="1" fill="#000"/>
+    <text x="390" y="710" font-family="Calibri" font-size="18" fill="#000" font-weight="bold">Nettowert</text>
+    <text id="nettowert" x="690" y="710" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+    <text x="390" y="740" font-family="Calibri" font-size="18" fill="#000" font-weight="bold"><tspan id="ust"> </tspan> % UST </text>
+    <text id="ustsumme" x="690" y="740" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+    <rect x="390" y="750" width="300" height="1" fill="#000"/>
+    <text x="390" y="770" font-family="Calibri" font-size="18" fill="#000" font-weight="bold">Rechnungsbetrag</text>
+    <text id="rechnungsbetrag" x="690" y="770" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"/>
+    </g>
+  </g>
+<!--Gruppe für Zahlungsbedingungen-->
+  <g id="Zahlungsbedingungen" text-anchor="start" font-family="Calibri" font-size="16" fill="#333">
+    <text x="20" y="860">Bitte überweisen Sie den Betrag rein netto innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen.</text>
+    <text id="skontotext" x="20" y="890">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto.</text>
+    <text x="20" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum.</text>
+  </g>
+
+
+  <g id="footerText" transform="translate(0,-20)" fill="#fff">
+   <text id="nameLangLieferer" x="20" y="1000" font-family="Calibri" font-weight="bold" font-size="14" text-anchor="start"/>
+    <text id="strasseLieferer" x="20" y="1020" font-family="Calibri" font-size="12" text-anchor="start"/>
+  <text id="plzLieferer" x="20" y="1040" font-family="Calibri" font-size="12" text-anchor="start"/>
+    <text id="ansprechpartnerLieferer" x="180" y="1000" font-family="Calibri" text-anchor="start" font-weight="bold" font-size="14"/>
+    <text id="telefonLieferer" x="180" y="1020" font-family="Calibri" text-anchor="start" font-size="12"/>
+     <text id="emailLieferer" x="180" y="1040" font-family="Calibri" text-anchor="start" font-size="12"/>
+    <text id="bankLieferer" x="330" y="1000" font-family="Calibri" font-size="14" font-weight="bold" />
+    <text id="ibanLieferer" x="330" y="1020" font-family="Calibri" font-size="12" />
+    <text id="bicLieferer" x="330" y="1040" font-family="Calibri" font-size="12" />
+    <text id="amtsgerichtLieferer" x="520" y="1000" font-family="Calibri" font-size="14" font-weight="bold" text-anchor="start"/>
+    <text id="ustidLieferer" x="520" y="1020" font-family="Calibri" font-size="12" text-anchor="start"/>
+    <text id="steuernummerLieferer" x="520" y="1040" font-family="Calibri" font-size="12" text-anchor="start"/>
+  </g>
+</svg>

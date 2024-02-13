@@ -1,0 +1,101 @@
+<svg id="rechnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 1050" width="720" height="1050" style="background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc" onload="SVGonLoad()">
+  <defs id="customDefs"/>
+  <!--Gruppe für Firmeninformationen-->
+    <ellipse class="colorSVG" rx="550" ry="130" cx="0" cy="0" fill="#7db9f5"/>
+    <rect x="0" y="-420" width="720" height="420" fill="#fff"/>
+    <rect class="colorSVG" x="0" y="950" width="720" height="100" fill="#7db9f5"/>
+    <rect x="0" y="130" width="720" height="1" fill="#000"/>
+  <g id="liefererInformationen" fill="#000">
+    <rect id="logo-placeholder" x="580" y="20" width="100" Opacity="0" height="100"/>
+    <text id="nameLieferer" x="20" y="75" font-family="Calibri" font-size="38" font-weight="bold"/>
+    <text id="mottoLieferer" x="20" y="110" font-family="Calibri" font-size="24" font-weight="bold"/>
+    <text id="adresseLieferer" x="20" y="150" font-family="Arial" font-style="italic" font-size="14" fill="#333"/>
+  </g>
+<!--Gruppe für Kunden- und Liefererdaten-->
+  <g id="kundenDaten">
+<!--Kundenanschrift links-->
+    <text id="nameKunde" x="20" y="200" font-family="Arial" font-size="17" fill="#333"/>
+    <text id="inhaberKunde" x="20" y="220" font-family="Arial" font-size="17" fill="#333"/>
+    <text id="strasseKunde" x="20" y="240" font-family="Arial" font-size="17" fill="#333"/>
+    <text id="plzKunde" x="20" y="260" font-family="Arial" font-size="17" fill="#333"/>
+  </g>
+<!--Liefererdaten rechts-->
+  <g id="liefererDaten">
+    <text id="nameLangLieferer" x="555" y="200" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
+    <text id="strasseLieferer" x="555" y="215" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
+    <text id="plzLieferer" x="555" y="230" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
+    <text id="ansprechpartnerLieferer" x="555" y="245" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
+    <text id="telefonLieferer" x="555" y="260" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
+    <text id="emailLieferer" x="555" y="275" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
+    <text x="550" y="290" font-family="Arial" font-size="14" fill="#808080" text-anchor="end"></text>
+    <text id="internetLieferer" x="555" y="290" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
+  </g>
+<!--Gruppe für Rechnungsinformationen-->
+  <g id="rechnungsInformationen">
+    <text class="colorSVG" x="20" y="340" font-family="Calibri" font-weight="bold" fill="#7db9f5" font-size="30">RECHNUNG NR-<tspan id="rechnungsNummer"/></text>
+    <text id="lieferdatum" x="20" y="380" font-family="Arial" font-size="18" fill="#333">Die Ware haben Sie <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/><tspan> erhalten</tspan></text>
+    <text x="20" y="410" font-family="Arial" font-size="18" fill="#333">Kundennummer: K<tspan id="nummerKunde"/></text>
+    <text id="datum" x="690" y="380" font-family="Arial" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+    <text x="20" y="460" font-family="Arial" font-size="14" fill="#333">Wir bedanken uns für Ihren Auftrag und erlauben uns, die folgenden Leistungen in Rechnung zu stellen:<tspan id="nummerKunde"/></text>
+  </g>
+<!--Gruppe für Bestelldaten-->
+  <g id="bestellDaten">
+    <rect class="colorSVG" x="20" y="510" width="680" height="2" fill="#7db9f5" />
+    <text id="pos" x="40" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Pos</text>
+    <text id="artikel" x="100" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Artikelbezeichnung</text>
+    <text id="menge" x="400" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Menge</text>
+    <text id="einzelpreis" x="530" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Einzelpreis</text>
+    <text id="gesamtpreis" x="690" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Gesamtpreis</text>
+    <text id="pos1" x="40" y="540" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="artikel1" x="100" y="540" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="menge1" x="400" y="540" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="einzelpreis1" x="530" y="540" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="gesamtpreis1" x="690" y="540" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="pos2" x="40" y="570" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="artikel2" x="100" y="570" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="menge2" x="400" y="570" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="einzelpreis2" x="530" y="570" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="gesamtpreis2" x="690" y="570" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+  </g>
+  <rect class="colorSVG" x="20" y="590" width="680" height="1" fill="#7db9f5"/>
+<!--Gruppe für Abrechnungsdetails-->
+  <g id="abrechnungsDetails">
+    <g id="zwischensummeRabattVersand">
+    <text x="390" y="620" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Warenwert</text>
+    <text id="zwischensumme" x="690" y="620" font-family="Arial" font-size="18" fill="#333" text-anchor="end"></text>
+    <g id="gRabatt">
+    <text id="rabatt" x="390" y="650" font-family="Arial" font-size="18" fill="#000" font-weight="bold"></text>
+    <text id="rabattsumme" x="690" y="650" font-family="Arial" font-size="18" fill="#333" text-anchor="end"></text>
+    </g>
+    <g id="gBezugskosten">
+    <text id="bezugskosten" x="390" y="680" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Bezugskosten</text>
+    <text id="bezugskostenSumme" x="690" y="680" font-family="Arial" font-size="18" fill="#333" text-anchor="end"></text>
+    </g>
+    </g>
+    <g id="warenwertUstRechnungsbetrag">
+    <rect class="colorSVG" x="390" y="690" width="300" height="1" fill="#7db9f5"/>
+    <text x="390" y="710" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Nettowert</text>
+    <text id="nettowert" x="690" y="710" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text x="390" y="740" font-family="Arial" font-size="18" fill="#000" font-weight="bold"><tspan id="ust"> </tspan> % UST </text>
+    <text id="ustsumme" x="690" y="740" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <rect class="colorSVG" x="390" y="750" width="300" height="1" fill="#7db9f5" />
+    <text x="390" y="770" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Rechnungsbetrag</text>
+    <text id="rechnungsbetrag" x="690" y="770" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    </g>
+  </g>
+<!--Gruppe für Zahlungsbedingungen-->
+   <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Arial" font-size="18" fill="#333">
+    <text x="350" y="830">☘️ Toll, dass Sie bei uns Kunde sind! ☘️</text>
+    <text x="350" y="860">Den Rechnungsbetrag bezahlen Sie bitte in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
+    <text id="skontotext" x="350" y="890">Falls Sie innerhalb von <tspan id="skontofrist"> </tspan> Tagen zahlen, gewähren wir Ihnen <tspan id="skonto"> </tspan> % Skonto</text>
+    <text x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
+  </g>
+  <g id="footerText" transform="translate(0,-20)" fill="#fff">
+    <text id="bankLieferer" x="20" y="1000" font-family="Arial" font-size="15" />
+    <text id="ibanLieferer" x="20" y="1020" font-family="Arial" font-size="15" />
+    <text id="bicLieferer" x="20" y="1040" font-family="Arial" font-size="15" />
+    <text id="amtsgerichtLieferer" x="700" y="1000" font-family="Arial" font-size="15" text-anchor="end"/>
+    <text id="ustidLieferer" x="700" y="1020" font-family="Arial" font-size="15" text-anchor="end"/>
+    <text id="steuernummerLieferer" x="700" y="1040" font-family="Arial" font-size="15" text-anchor="end"/>
+  </g>
+</svg>

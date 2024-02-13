@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/menu.js"></script>
+  <script src="../js/html2canvas.min.js"></script>
+  <script src="../js/clipboard.min.js"></script>
+  <script src="../js/chart.umd.min.js"></script>
+  <title>BWL</title>
+</head>
+
+<body>
+  <main>
+    <div w3-include-html="navigation.html"></div>
+      <h2>Portfolioanalyse</h2>
+      <div class="box">
+        <div class="grid">
+          <label for="portfolioA">Question Mark:</label>
+          <input type="text" id="portfolioA" value="❓Question Mark">
+          <label for="portfolioB">Stars:</label>
+          <input type="text" id="portfolioB" value="⭐ Stars">
+          <label for="portfolioC">Cash Cows:</label>
+          <input type="text" id="portfolioC" value="🐮Cash Cows">
+          <label for="portfolioD">Poor Dogs:</label>
+          <input type="text" id="portfolioD" value="🐶 Poor Dogs">
+        </div>
+        <div class="flex-row"><button onclick="portfolioToggleText()"><svg xmlns="http://www.w3.org/2000/svg"
+              height="14" width="12" fill="#ff4800"
+              viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
+            </svg> Text</button>
+          <button onclick="portfolioToggleCircle()"><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
+              fill="#ff4800"
+              viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
+            </svg> Farbe</button>
+        </div>
+        <button onclick="randomizePortfolios()">Neues Portfolio</button>
+      </div>
+      <div id="portfolioContainer">
+        <svg id="portfolioSVG" style="width:100%;background-color:#fff;" xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="-20 -20 720 440">
+          <!-- Achsen -->
+          <line x1="50" y1="380" x2="600" y2="380" stroke="#333" stroke-width="2" />
+          <line x1="50" y1="0" x2="50" y2="380" stroke="#333" stroke-width="2" />
+          <!-- Unterteilung -->
+          <line x1="50" y1="190" x2="600" y2="190" stroke="#333" stroke-dasharray="2,2" stroke-width="2" />
+          <line x1="325" y1="380" x2="325" y2="0" stroke="#333" stroke-dasharray="2,2" stroke-width="2" />
+          <!-- X-Achse Unterteilung und Beschriftung -->
+          <line x1="187.5" y1="370" x2="187.5" y2="380" stroke="#333" stroke-width="1" />
+          <line x1="462.5" y1="370" x2="462.5" y2="380" stroke="#333" stroke-width="1" />
+          <line x1="600" y1="370" x2="600" y2="380" stroke="#333" stroke-width="1" />
+
+          <text x="60" y="395" font-size="12" fill="#333" text-anchor="middle">0 %</text>
+          <text x="187.5" y="395" font-size="12" fill="#333" text-anchor="middle">50 %</text>
+          <text x="325" y="395" font-size="12" fill="#333" text-anchor="middle">100 %</text>
+          <text x="462.5" y="395" font-size="12" fill="#333" text-anchor="middle">125 %</text>
+          <text x="600" y="395" font-size="12" fill="#333" text-anchor="middle">150 %</text>
+          <!-- Y-Achse Unterteilung und Beschriftung -->
+          <line x1="50" y1="0" x2="60" y2="0" stroke="#333" stroke-width="1" />
+          <text x="30" y="5" font-size="12" fill="#333" text-anchor="middle">40 %</text>
+          <text x="30" y="195" font-size="12" fill="#333" text-anchor="middle">20 %</text>
+          <text x="30" y="380" font-size="12" fill="#333" text-anchor="middle">0 %</text>
+          <!-- Datenpunkte -->
+          <!-- Portfolio D -->
+          <circle class="item circle" cx="160" cy="260" r="10" fill="#e4e" />
+          <text class="item text" x="160" y="260" font-size="18" fill="#333" transform="translate(15,5)">🐶 Poor
+            Dogs</text>
+          <!-- Portfolio B -->
+          <circle class="item circle" cx="430" cy="140" r="10" fill="#e74c3c" />
+          <text class="item text" x="430" y="140" font-size="18" fill="#333" transform="translate(15,5)">⭐ Stars</text>
+          <!-- Portfolio C -->
+          <circle class="item circle" cx="460" cy="260" r="10" fill="#5f5f5f" />
+          <text class="item text" x="460" y="260" font-size="18" fill="#333" transform="translate(15,5)">🐮Cash
+            Cows</text>
+          <!-- Portfolio A -->
+          <circle class="item circle" cx="130" cy="140" r="10" fill="#000" />
+          <text class="item text" x="130" y="140" font-size="18" fill="#333" transform="translate(15,5)">❓Question
+            Mark</text>
+
+          <!-- Beschriftungen -->
+          <text x="-30" y="30" font-size="14" fill="#333" transform="rotate(-90, 20, 40)">Marktwachstum</text>
+          <text x="550" y="410" font-size="14" fill="#333">Relativer Marktanteil</text>
+        </svg>
+      </div>
+
+      <div class="exportButtons">
+        <button class="icon" type="button" onclick="portfolioHerunterladenAlsPNG()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+          </svg></button>
+        <button class="icon" type="button" onclick="portfolioHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
+            height="16" width="12"
+            viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M368 80h32v32H368V80zM352 32c-17.7 0-32 14.3-32 32H128c0-17.7-14.3-32-32-32H32C14.3 32 0 46.3 0 64v64c0 17.7 14.3 32 32 32V352c-17.7 0-32 14.3-32 32v64c0 17.7 14.3 32 32 32H96c17.7 0 32-14.3 32-32H320c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V384c0-17.7-14.3-32-32-32V160c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32H352zM96 160c17.7 0 32-14.3 32-32H320c0 17.7 14.3 32 32 32V352c-17.7 0-32 14.3-32 32H128c0-17.7-14.3-32-32-32V160zM48 400H80v32H48V400zm320 32V400h32v32H368zM48 112V80H80v32H48z" />
+          </svg></button>
+        <button class="icon" type="button" onclick="portfolioKopiereInZwischenablage()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+          </svg></button>
+      </div>
+
+  </main>
+    <script src="../js/portfolioanalyse.js"></script>
+    <div w3-include-html="footer.html"></div> 
+    <script>
+    includeHTML();
+    </script>
+
+</body>
+</html>
