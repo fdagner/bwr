@@ -65,7 +65,7 @@
           Tabellenkalkulation.</li>
         <li><strong>SVG:</strong> Eine Vektordatei, die nachträglich bearbeitet werden kann, beispielsweise mit
           dem kostenlosen Programm Inkscape.</li>
-        <li><strong>HTML (für Profis):</strong> Geeignet für direktes Einbinden in HTML-Code, beispielsweise
+        <li><strong>HTML/Inline SVG (für Profis):</strong> Geeignet für direktes Einbinden in HTML-Code, beispielsweise
           inline in einem mebis/Moodlekurs mit der Möglichkeit zum Skripting.
           Ein praktisches Beispiel dafür ist die Verwendung des aktuellen Jahres im Rechnungsdatum, ohne dass
           Sie sich um die Aktualisierung der Belege kümmern müssen.
@@ -127,19 +127,10 @@
 
     </aside>
   </main>
-  <footer>
-    <p>
-      <small>
-        Soweit nicht anders gekennzeichnet unterliegen alle per Button exportierbaren Inhalte der Lizenz <a
-          href="https://creativecommons.org/publicdomain/mark/1.0/deed.de">CC0 1.0 Deed</a>.
-        Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a
-          href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen: <a
-          href="https://github.com/fdagner/bwr/issues">Fehler oder Vorschlag melden</a>.<br>
-        <a href="https://github.com/fdagner">fdagner</a> · BwR · <a href="https://oer.fdagner.de">Startseite</a> · <a
-          href="https://fdagner.github.io/impressum.html">Impressum</a><br><br>
-        <img src="media/pic/oer.svg" alt="OER-Content" style="min-width: 100px;width:10%;">
-      </small>
-  </footer>
+  <div w3-include-html="footer.html"></div> 
+  <script>
+  includeHTML();
+  </script>
 </body>
 
 </html>
