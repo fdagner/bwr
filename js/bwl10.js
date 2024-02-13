@@ -143,6 +143,7 @@ function generateChart() {
         },
         options: {
             responsive: true,
+            aspectRatio: 1.5,
             plugins: {
                 title: { display: true, text: 'Gewinnschwelle', font: { size: 20 } },
                 legend: { position: 'bottom', labels: { font: { size: 16 } } },

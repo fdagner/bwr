@@ -101,7 +101,7 @@ let kontenZahlung;
 function inputChangeCategory() {
   if (buchungsoptionDropdown.value === 'einkaufskalkulation' || buchungsoptionDropdown.value === 'skontobuchungssatz' ) {
     kontenZahlung = {
-      " auf Ziel": "4400 VE",
+      " und erhalten eine Rechnung": "4400 VE",
       " mit Erhalt einer Eingangsrechnung": "4400 VE",
       " auf Rechnung": "4400 VE",
     } } else {
@@ -144,8 +144,8 @@ function erstelleZufallssatz() {
     `. Wir haben zudem ${random_Rabatt} % Rabatt ausgehandelt`,
   ];
   const array_Supply_Skonto = [
-    `. Wir können ${random_Skonto} % Skonto abziehen`,
-    `. Wir können ${random_Skonto} % Skonto abziehen`,
+    `. Wir können zudem ${random_Skonto} % Skonto abziehen`,
+    `. Wir können außerdem ${random_Skonto} % Skonto abziehen`,
     `. Der Skonto beträgt ${random_Skonto} %`,
     `. Als nachträglichen Preisnachlass können wir ${random_Skonto} % Skonto ansetzen`,
   ];

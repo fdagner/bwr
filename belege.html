@@ -8,6 +8,7 @@
     <script src="js/menu.js"></script>
     <script src="js/html2canvas.min.js"></script>
     <script src="js/js-yaml.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
     <title>Belege</title>
 </head>
 
@@ -23,6 +24,7 @@
             <button class="tablinks" onclick="openCity(event, 'quittung')">Quittung</button>
             <button class="tablinks" onclick="openCity(event, 'kassenbon')">Kassenbon</button>
             <button class="tablinks" onclick="openCity(event, 'email')">Mail</button>
+            <button class="tablinks" onclick="openCity(event, 'newspaper')">Zeitungsartikel</button>
         </nav>
         <section id="modellunternehmen" class="tabcontent">
             <h2>Modellunternehmen</h2>
@@ -40,13 +42,14 @@
             Eigene Datei verwenden: <input type="file" id="fileInput" accept=".yml"
                 onchange="handleFileUpload()"><br><br><button onclick="deleteAndLoadDefaultData()">Daten
                 zurücksetzen</button>
-                <h2>Belege exportieren</h2>
+            <h2>Belege exportieren</h2>
             <details>
                 <summary>Anleitung</summary><video style="width:100%" controls>
                     <source src="media/video/belege.mp4" type="video/mp4">
                 </video>
             </details>
-            <p>Benutzen Sie - wenn möglich - SVG-Dateien. Sie haben einige Vorteile gegenüber Pixelgrafiken, vor allem im Online-Bereich.</p>
+            <p>Benutzen Sie - wenn möglich - SVG-Dateien. Sie haben einige Vorteile gegenüber Pixelgrafiken, vor allem
+                im Online-Bereich.</p>
         </section>
         <section id="rechnung" class="tabcontent">
             <h2>Rechnung/Angebot</h2>
@@ -179,7 +182,8 @@
                                     <option value="12">Dezember</option>
                                 </select><br><label for="jahr">Jahr:</label>
                                 <input type="text" id="jahr" value="" placeholder="Jahr" /><br>
-                                Skript verwenden: <input type="checkbox" id="scriptJahr" onchange="toggleInput('jahr', 'scriptJahr')">
+                                Skript verwenden: <input type="checkbox" id="scriptJahr"
+                                    onchange="toggleInput('jahr', 'scriptJahr')">
                             </div>
                         </div>
                         <div>
@@ -327,11 +331,11 @@
                             <option value="10">Oktober</option>
                             <option value="11">November</option>
                             <option value="12">Dezember</option>
-                            </select>
-                            <label for="jahrKontoauszug">Jahr:</label>
-                            <input type="text" id="jahrKontoauszug" value="" placeholder="Jahr" /><br>
-                            Skript verwenden: <input type="checkbox" id="scriptJahrKontoauszug"
-                                onchange="toggleInput('jahrKontoauszug', 'scriptJahrKontoauszug');">
+                        </select>
+                        <label for="jahrKontoauszug">Jahr:</label>
+                        <input type="text" id="jahrKontoauszug" value="" placeholder="Jahr" /><br>
+                        Skript verwenden: <input type="checkbox" id="scriptJahrKontoauszug"
+                            onchange="toggleInput('jahrKontoauszug', 'scriptJahrKontoauszug');">
 
                     </div>
                     <div>
@@ -358,7 +362,8 @@
                         <h3>Allgemeine Daten</h3>
                         <label for="datenKontoauszug">Kontoinhaber: </label>
                         <select id="datenKontoauszug" onchange="loadKontoauszugData()">
-                        </select><small><br><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
+                        </select><small><br><a href="#" class="tablinks"
+                                onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
                                 verwenden?</a></small>
                     </div>
                 </div>
@@ -391,8 +396,9 @@
             </div>
         </section>
         <section id="quittung" class="tabcontent">
+            <h2>Quittung</h2>
             <div class="box">
-                <h3>Quittung</h3>
+
                 <div class="grid3">
                     <div>
                         <h4>Beträge</h4><label for="quittungNettoInput">Nettobetrag: </label><br>
@@ -462,11 +468,11 @@
                             <option value="10">Oktober</option>
                             <option value="11">November</option>
                             <option value="12">Dezember</option>
-                            </select>
-                            <label for="jahrQuittung">Jahr:</label>
-                            <input type="text" id="jahrQuittung" value="" placeholder="Jahr" /><br>
-                            Skript verwenden: <input type="checkbox" id="scriptJahrQuittung"
-                                onchange="toggleInput('jahrQuittung', 'scriptJahrQuittung');">
+                        </select>
+                        <label for="jahrQuittung">Jahr:</label>
+                        <input type="text" id="jahrQuittung" value="" placeholder="Jahr" /><br>
+                        Skript verwenden: <input type="checkbox" id="scriptJahrQuittung"
+                            onchange="toggleInput('jahrQuittung', 'scriptJahrQuittung');">
 
                     </div>
 
@@ -478,7 +484,8 @@
                     <div>
                         <label for="datenQuittung">Geldempfänger: </label>
                         <select id="datenQuittung" onchange="loadQuittungData()">
-                        </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
+                        </select><br><small><a href="#" class="tablinks"
+                                onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
                                 verwenden?</a></small>
                     </div>
                     <div><label for="datenQuittungKunde">Kunde:</label>
@@ -489,33 +496,34 @@
 
 
             </div>
-<br>
+            <br>
             <div id="quittungContainer" style="text-align:center;margin:0 auto;width:726px"></div><br>
-                <div class="exportButtons">
-                    <button class="icon" type="button" onclick="quittungHerunterladenAlsPNG()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                        </svg></button>
-                    <button class="icon" type="button" onclick="quittungHerunterladen()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                        </svg></button>
-                    <button class="icon" type="button" onclick="quittungKopiereInZwischenablage()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                        </svg></button>
-                </div>
+            <div class="exportButtons">
+                <button class="icon" type="button" onclick="quittungHerunterladenAlsPNG()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="quittungHerunterladen()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="quittungKopiereInZwischenablage()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+                    </svg></button>
+            </div>
         </section>
 
         <section id="kassenbon" class="tabcontent">
+            <h2>Kassenbon (Auszug)</h2>
             <div class="box">
-                <h3>Kassenbon (Auszug)</h3>
+
                 <div class="grid3">
                     <div>
                         <h4>Beträge</h4><label for="kassenbonNettoInput">Nettobetrag: </label><br>
@@ -532,7 +540,7 @@
                             <option value="Barzahlung">Barzahlung</option>
                             <option value="Girocard">Girocard</option>
                             <option value="Kreditkarte">Kreditkarte</option>
-                        </select>                        
+                        </select>
                         <br><label for="svgDropdownKassenbon">Vorlage: </label><br>
                         <select id="svgDropdownKassenbon">
                             <option value="kassenbon.svg">Klassisch</option>
@@ -591,11 +599,11 @@
                             <option value="10">Oktober</option>
                             <option value="11">November</option>
                             <option value="12">Dezember</option>
-                            </select>
-                            <label for="jahrKassenbon">Jahr:</label>
-                            <input type="text" id="jahrKassenbon" value="" placeholder="Jahr" /><br>
-                            Skript verwenden: <input type="checkbox" id="scriptJahrKassenbon"
-                                onchange="toggleInput('jahrKassenbon', 'scriptJahrKassenbon');">
+                        </select>
+                        <label for="jahrKassenbon">Jahr:</label>
+                        <input type="text" id="jahrKassenbon" value="" placeholder="Jahr" /><br>
+                        Skript verwenden: <input type="checkbox" id="scriptJahrKassenbon"
+                            onchange="toggleInput('jahrKassenbon', 'scriptJahrKassenbon');">
                     </div>
 
                 </div>
@@ -606,7 +614,8 @@
                     <div>
                         <label for="datenKassenbon">Geldempfänger: </label>
                         <select id="datenKassenbon" onchange="loadKassenbonData()">
-                        </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
+                        </select><br><small><a href="#" class="tablinks"
+                                onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
                                 verwenden?</a></small>
                     </div>
                     <div><label for="datenKassenbonKunde">Kunde:</label>
@@ -617,90 +626,179 @@
 
 
             </div>
-<br>
+            <br>
             <div id="kassenbonContainer" style="text-align: center;margin:0 auto;width:415px"></div><br>
-                <div class="exportButtons">
-                    <button class="icon" type="button" onclick="kassenbonHerunterladenAlsPNG()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                        </svg></button>
-                    <button class="icon" type="button" onclick="kassenbonHerunterladen()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                        </svg></button>
-                    <button class="icon" type="button" onclick="kassenbonKopiereInZwischenablage()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                        </svg></button>
-                </div>
+            <div class="exportButtons">
+                <button class="icon" type="button" onclick="kassenbonHerunterladenAlsPNG()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="kassenbonHerunterladen()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="kassenbonKopiereInZwischenablage()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+                    </svg></button>
+            </div>
         </section>
 
         <section id="email" class="tabcontent">
-            <div>
+            <h2>Mail</h2>
 
-                <div class="box">
-                    <h3>E-Mail-Daten</h3>
-                    <label for="emailSubjectInput">E-Mail-Betreff:<br></label>
-                    <input type="text" id="emailSubjectInput" placeholder="Betreff" /><br><label
-                        for="emailInputText">
-                        E-Mail-Text<br></label>
-                    <textarea id="emailInputText" name="emailInputText" rows="4" cols="50"></textarea><br> Vorlage<br>
-                    <select id="svgDropdownEmail">
+            <div class="box">
 
-                        <option value="mail1.html">Klassisch</option>
-                        <option value="mail2.html">Modern</option>
-                    </select> <br><button onclick="applySVGholen()">Daten übernehmen</button><br><br>
-                    <h3>Allgemeine Daten</h3>
-                    <div class="flex-row">
-                        <div>
-                            <label for="datenEmail">Absender: </label>
-                            <select id="datenEmail" onchange="loadEmailData()">
-                            </select>
-                            <br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
-                                    verwenden?</a></small>
-                        </div>
-                        <div><label for="datenEmailKunde">Empfänger:</label>
-                            <select id="datenEmailKunde" onchange="loadCompanyDataforEmail()">
-                            </select>
+                <label for="emailSubjectInput">E-Mail-Betreff:<br></label>
+                <input type="text" id="emailSubjectInput" placeholder="Betreff" /><br><label for="emailInputText">
+                    E-Mail-Text<br></label>
+                <textarea id="emailInputText" name="emailInputText" rows="4" cols="50"></textarea><br> Vorlage<br>
+                <select id="svgDropdownEmail">
 
-                        </div>
+                    <option value="mail1.html">Klassisch</option>
+                    <option value="mail2.html">Modern</option>
+                </select> <br><button onclick="applySVGholen()">Daten übernehmen</button><br><br>
+                <h3>Allgemeine Daten</h3>
+                <div class="flex-row">
+                    <div>
+                        <label for="datenEmail">Absender: </label>
+                        <select id="datenEmail" onchange="loadEmailData()">
+                        </select>
+                        <br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
+                                Modellunternehmen
+                                verwenden?</a></small>
+                    </div>
+                    <div><label for="datenEmailKunde">Empfänger:</label>
+                        <select id="datenEmailKunde" onchange="loadCompanyDataforEmail()">
+                        </select>
 
                     </div>
+
                 </div>
-                </div>
-                <div id="emailContainer" 
-                    style="border:1px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;"
-                    contenteditable="true">
-                </div><br>
-                <div class="exportButtons">
-                    <button class="icon" type="button" onclick="emailHerunterladenAlsPNG()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                        </svg></button>
-                    <button class="icon" type="button" onclick="emailHerunterladen()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                        </svg></button>
-                    <button class="icon" type="button" onclick="emailKopiereInZwischenablage()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                        </svg></button>
-                </div>
+            </div>
+            </div>
+            <div id="emailContainer"
+                style="border:1px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;"
+                contenteditable="true">
+            </div><br>
+            <div class="exportButtons">
+                <button class="icon" type="button" onclick="emailHerunterladenAlsPNG()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="emailHerunterladen()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="emailKopiereInZwischenablage()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+                    </svg></button>
+            </div>
         </section>
 
+        <section id="newspaper" class="tabcontent">
+            <h2>Zeitungsartikel</h2>
+            <div class="box">
+                <p>Kurze Sachtexte oder Zeitungsartikel sind Teil der kompetenzorientierten Abschlussprüfung. Zum Üben
+                    eignen sich auch KI generierte Texte.
+                <blockquote>Beispiel-Prompt: "Erstelle einen kurzen Zeitungstext (ca. 10 Zeilen) zum Thema Geldanlage in
+                    Aktien".</blockquote>
+                Sie können hier ein Zeitungslayout erstellen. Die Spalten verhalten sich responsive, das heißt bei
+                kleinen Bildschirmen wird auf eine Spalte gewechselt.
+                </p>
+                <div>
+                    <label for="newspaperHeadlineInput">Überschrift:</label><br>
+                    <input type="text" id="newspaperHeadlineInput" size="40" placeholder="Überschrift eingeben"
+                        value="Aktien als attraktive Geldanlage: Chancen und Risiken im Fokus">
+                </div>
+                <div>
+                    <label for="newspaperTextInput">Text:</label><br>
+                    <textarea id="newspaperTextInput" rows="8"
+                        cols="50">Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsender Beliebtheit. Die Aussicht auf attraktive Renditen lockt viele Anleger an, doch ist Vorsicht geboten: Mit den potenziellen Gewinnen gehen auch Risiken einher. Experten betonen die Bedeutung einer gründlichen Recherche und einer diversifizierten Portfoliostrategie, um das Risiko zu streuen. Eine solide Kenntnis des Aktienmarktes sowie ein langfristiger Anlagehorizont sind entscheidend für eine erfolgreiche Geldanlage in Aktien. Trotz möglicher Schwankungen bieten Aktien langfristig oft eine bessere Rendite als klassische Sparformen. Anleger sollten jedoch stets ihre individuelle Risikobereitschaft im Blick behalten und gegebenenfalls professionelle Beratung in Anspruch nehmen. Insgesamt bleibt die Geldanlage in Aktien eine vielversprechende Option für Anleger, die bereit sind, sich mit den Chancen und Risiken des Aktienmarktes auseinanderzusetzen.</textarea>
+                </div>
+                <div>
+                    <label for="newspaperSourceInput">Quelle:</label><br>
+                    <input type="text" id="newspaperSourceInput" placeholder="Quelle eingeben" value="GPT-News">
+                </div><br>
+                <button id="newspaperApplyChangesButton">Änderungen übernehmen</button><br><br>
+                <div class="flex-row">
+                    <div>
+                        <label for="newspaperColorInput">Hintergrundfarbe:</label><br>
+                        <input type="color" id="newspaperColorInput" value="#f5f5f5">
+                    </div>
+                    <div>
+                        <label for="newspaperColumnRange">Anzahl der Spalten:</label><br>
+                        <input type="range" id="newspaperColumnRange" min="1" max="3" value="2">
+                        <span id="newspaperColumnValue">2</span>
+                    </div>
 
+                </div>
+            </div>
+            </div>
+            <br>
+            <div id="newspaperContainer" style="max-width: 655px;margin:0 auto">
+                <div id="newspaperDiv" style="max-width: 650px;background-color: #f5f5f5;padding:4px;margin: 0 auto;">
+                    <h1 id="newspaperHeadline">Aktien als attraktive Geldanlage: Chancen und Risiken im Fokus</h1>
+                    <div id="newspaperContent"
+                        style="text-align: justify;column-count: 2; column-width: 150px;column-gap: 30px;">
+                        Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsender Beliebtheit.
+                        Die Aussicht auf attraktive Renditen lockt viele Anleger an, doch ist Vorsicht geboten: Mit den
+                        potenziellen Gewinnen gehen auch Risiken einher. Experten betonen die Bedeutung einer
+                        gründlichen Recherche und einer diversifizierten Portfoliostrategie, um das Risiko zu streuen.
+                        Eine solide Kenntnis des Aktienmarktes sowie ein langfristiger Anlagehorizont sind entscheidend
+                        für eine erfolgreiche Geldanlage in Aktien.
+                        Trotz möglicher Schwankungen bieten Aktien langfristig oft eine bessere Rendite als klassische
+                        Sparformen. Anleger sollten jedoch stets ihre individuelle Risikobereitschaft im Blick behalten
+                        und gegebenenfalls professionelle Beratung in Anspruch nehmen. Insgesamt bleibt die Geldanlage
+                        in Aktien eine vielversprechende Option für Anleger, die bereit sind, sich mit den Chancen und
+                        Risiken des Aktienmarktes auseinanderzusetzen.</div>
+                    <blockquote id="newspaperSource">Quelle: GPT-News</blockquote>
+                </div>
+            </div><br>
+            <div class="exportButtons">
+                <button class="icon" type="button" onclick="newspaperHerunterladenAlsPNG()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                    </svg></button>
+                <button class="icon" type="button" id="officeButtonNewspaper"
+                    data-clipboard-target="#newspaperContainer"><svg xmlns="http://www.w3.org/2000/svg" height="16"
+                        width="12"
+                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
+                    </svg></button> <button class="icon" type="button" onclick="newspaperHerunterladen()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="newspaperKopiereInZwischenablage()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+                    </svg></button>
+            </div>
+
+            </div>
+
+
+        </section>
 
     </main>
     <footer>
@@ -711,7 +809,8 @@
                 Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a
                     href="https://github.com/fdagner/bwr">Repository auf Github</a> zu erreichen: <a
                     href="https://github.com/fdagner/bwr/issues">Fehler oder Vorschlag melden</a>.<br>
-                <a href="https://github.com/fdagner">fdagner</a> · BwR · <a href="https://oer.fdagner.de">Startseite</a> · <a href="https://fdagner.github.io/impressum.html">Impressum</a><br><br>
+                <a href="https://github.com/fdagner">fdagner</a> · BwR · <a href="https://oer.fdagner.de">Startseite</a>
+                · <a href="https://fdagner.github.io/impressum.html">Impressum</a><br><br>
                 <img src="media/pic/oer.svg" alt="OER-Content" style="min-width: 100px;width:10%;">
             </small>
     </footer>

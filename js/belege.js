@@ -1269,7 +1269,6 @@ function adjustTextColor() {
                 if (rgbText && rgbText.length === 3) {
                     const contrast = calculateContrast(rgbBackground, rgbText);
 
-                    // Hier kannst du den Schwellenwert für den Kontrast anpassen
                     const contrastThreshold = 100;
                     const newTextColor = contrast > contrastThreshold ? '#000' : '#fff';
 
@@ -1282,7 +1281,36 @@ function adjustTextColor() {
     }
 }
 
+// newspaper
 
+const applyChangesButton = document.getElementById('newspaperApplyChangesButton');
+
+applyChangesButton.addEventListener('click', () => {
+    const newspaperHeadlineInput = document.getElementById('newspaperHeadlineInput');
+    const newspaperTextInput = document.getElementById('newspaperTextInput');
+    const newspaperSourceInput = document.getElementById('newspaperSourceInput');
+
+
+
+    document.getElementById('newspaperHeadline').innerText = newspaperHeadlineInput.value;
+    document.getElementById('newspaperContent').innerText = newspaperTextInput.value;
+    document.getElementById('newspaperSource').innerText = newspaperSourceInput.value;
+
+});
+
+const newspaperColumnRange = document.getElementById('newspaperColumnRange');
+const newspaperColumnValue = document.getElementById('newspaperColumnValue');
+
+newspaperColumnRange.addEventListener('input', () => {
+    newspaperColumnValue.innerText = newspaperColumnRange.value;
+    newspaperContent.style.columnCount = newspaperColumnRange.value;
+});
+
+const newspaperColorInput = document.getElementById('newspaperColorInput');
+const newspaperDiv = document.getElementById('newspaperDiv');
+newspaperColorInput.addEventListener('input', () => {
+    newspaperDiv.style.backgroundColor = newspaperColorInput.value;
+});
 
 async function applySVG() {
     let selectedTemplate = document.getElementById("svgDropdown").value;
@@ -1411,6 +1439,10 @@ function emailHerunterladenAlsPNG() {
     herunterladenAlsPNG('emailContainer', 'email.png');
 }
 
+function newspaperHerunterladenAlsPNG() {
+    herunterladenAlsPNG('newspaperContainer', 'newspaper.png');
+}
+
 // Export to SVG
 
 function herunterladen(containerId, dateiname) {
@@ -1442,12 +1474,10 @@ function kassenbonHerunterladen() {
 
 
 
-
-
 function kopiereInZwischenablage(containerId) {
     // SVG-Element aus dem Container abrufen
     const containerSVG = document.getElementById(containerId).querySelector('svg');
-    
+
     // Kopie des SVG-Elements erstellen, um das Original nicht zu ändern
     const clonedSVG = containerSVG.cloneNode(true);
 
@@ -1480,10 +1510,21 @@ function kassenbonKopiereInZwischenablage() {
     kopiereInZwischenablage('kassenbonContainer');
 }
 
-function emailKopiereInZwischenablage() {
-    kopiereInZwischenablage('emailContainer');
-}
 
+function emailKopiereInZwischenablage() {
+    const emailHTML = document.getElementById('emailContainer').innerHTML;
+    navigator.clipboard.writeText(emailHTML)
+      .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+      .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+  }
+
+  function newspaperKopiereInZwischenablage() {
+    const newspaperHTML = document.getElementById('newspaperContainer').innerHTML;
+    navigator.clipboard.writeText(newspaperHTML)
+      .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+      .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+  }
+  
 
 function emailHerunterladen() {
     const emailHTML = document.getElementById('emailContainer').innerHTML.replace(/&nbsp;/g, ' ');;
@@ -1495,6 +1536,29 @@ function emailHerunterladen() {
     a.click();
     document.body.removeChild(a);
 }
+
+function newspaperHerunterladen() {
+    const emailHTML = document.getElementById('newspaperContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+    const blob = new Blob([emailHTML], { type: 'html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'newspaper.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+let clipboardNewspaper = new ClipboardJS('#officeButtonNewspaper');
+
+clipboardNewspaper.on('success', function (e) {
+  console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
+  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+});
+
+clipboardNewspaper.on('error', function (e) {
+  console.error("Fehler beim Kopieren der Tabelle: ", e.action);
+  alert("Fehler beim Kopieren der Tabelle.");
+});
 
 
 function validateInputs() {
@@ -1695,6 +1759,26 @@ function validateInputs() {
         return false;
     }
 
+    // Validierung für Kassenbon Vorgang
+    let newspaperHeadlineInput = document.getElementById("newspaperHeadlineInput");
+    if (!isValidInput(newspaperHeadlineInput.value, 150)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Überschrift ein. Maximal 50 Zeichen!");
+        return false;
+    }
+
+    // Validierung für Kassenbon Vorgang
+    let newspaperTextInput = document.getElementById("newspaperTextInput");
+    if (!isValidInput(newspaperTextInput.value, 5000)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Überschrift ein. Maximal 5000 Zeichen!");
+        return false;
+    }
+
+    // Validierung für Kassenbon Vorgang
+    let newspaperSourceInput = document.getElementById("newspaperSourceInput");
+    if (!isValidInput(newspaperSourceInput.value, 150)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Überschrift ein. Maximal 50 Zeichen!");
+        return false;
+    }
 
 
     return true; // Rückgabe true, wenn alle Validierungen erfolgreich sind
