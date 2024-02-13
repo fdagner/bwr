@@ -36,8 +36,16 @@ function generiereBuchungssatz() {
 
 
 function buchungssatzHerunterladen() {
-  herunterladen('buchungssatzContainer', 'buchungssatz');
+  const emailHTML = document.getElementById('buchungssatzContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+  const blob = new Blob([emailHTML], { type: 'html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'buchungssatz.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
+
 
 
 function buchungssatzKopiereInZwischenablage() {
