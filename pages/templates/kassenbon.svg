@@ -1,0 +1,71 @@
+<svg id="kassenbonSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 400 650" width="400" height="650"  style="background-color:#fff;padding:2px;width:100%;max-width:400px;border:1px dashed #000" onload="SVGonLoadKassenbon()">
+     <defs id="customDefsKassenbon">
+
+     </defs>
+<rect x="0" y="0" width="400" height="650" fill="#fff"/>
+<text id="kassenbonName" x="200" y="50" font-family="Arial" fill="#000" font-size="26" text-anchor="middle"></text>
+<text id="kassenbonName" x="200" y="80" font-family="Arial" fill="#000" font-size="16" text-anchor="middle"><tspan id="kassenbonStrasse"></tspan>, <tspan id="kassenbonplz"></tspan> <tspan id="kassenbonOrt"></tspan></text>
+<text id="kassenbonName" x="200" y="100" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">Öffnungszeiten: Mo-Sa 10-20 Uhr, So geschlossen</text>
+<text x="20" y="140" font-family="Arial" fill="#000" font-size="16"><tspan id="kassenbonTag"></tspan>.<tspan id="kassenbonMonat"></tspan>.<tspan class="aktuellesJahrKassenbon"></tspan></text>
+<text id="kassenbonUhrzeit" x="390" y="140" font-family="Arial" fill="#000" font-size="16" text-anchor="end"></text>
+<text x="20" y="200" font-family="Arial" fill="#000" font-size="20"></text>
+<text id="kassenbonZweck" x="20" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="start"></text>
+<text id="kassenbonBetrag1" x="200" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
+<rect x="150" y="225" width="240" height="1" fill="#000" />
+<text class="kassenbonBrutto" x="390" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
+<rect x="150" y="258" width="240" height="1" fill="#000" />
+<rect x="150" y="262" width="240" height="1" fill="#000" />
+<text x="20" y="250" font-family="Arial" fill="#000" font-size="20"><tspan x="200" text-anchor="middle">Summe</tspan><tspan class="kassenbonBrutto" x="390" text-anchor="end"></tspan></text>
+<text x="20" y="340" font-family="Arial" fill="#000" font-size="20"><tspan x="60" text-anchor="middle">Netto</tspan><tspan id="kassenbonUST" x="175" text-anchor="middle"></tspan> % <tspan x="225" text-anchor="middle">UST</tspan><tspan x="340" text-anchor="middle">Brutto</tspan></text>
+<text x="20" y="380" font-family="Arial" fill="#000" font-size="20" font-weight="bold"><tspan  id="kassenbonNetto" x="60" text-anchor="middle"></tspan><tspan id="kassenbonUSTBetrag" x="200" text-anchor="middle"></tspan><tspan class="kassenbonBrutto" x="340" text-anchor="middle"></tspan></text>
+<line x1="10" y1="400" x2="390" y2="400" style="stroke:#000; stroke-width:2; stroke-dasharray: 5,5;" />
+<text id="kassenbonZahlungsart" x="200" y="440" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
+<text id="kassenbonTransaktionsnummer" x="200" y="460" font-family="Arial" fill="#000" font-size="16" text-anchor="middle"></text>
+<text x="200" y="490" font-family="Arial" fill="#000" font-size="24" text-anchor="middle">***</text>
+<text x="200" y="520" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">UID: <tspan  id="kassenbonUSTID"></tspan></text>
+<text x="200" y="540" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">Steuer-Nr: <tspan  id="kassenbonSteuernummer"></tspan></text>
+<text x="200" y="590" font-family="Arial" fill="#000" font-size="18" text-anchor="middle">Vielen Dank für Ihren Einkauf!</text>
+<g transform="translate(100,0)">
+  <!-- Strichcode-Linien -->
+  <rect x="5" y="600" width="1" height="80" fill="#000000" />
+  <rect x="10" y="600" width="2" height="80" fill="#000000" />
+  <rect x="15" y="600" width="2" height="80" fill="#000000" />
+  <rect x="20" y="600" width="3" height="80" fill="#000000" />
+  <rect x="25" y="600" width="1" height="80" fill="#000000" />
+  <rect x="30" y="600" width="3" height="80" fill="#000000" />
+  <rect x="35" y="600" width="3" height="80" fill="#000000" />
+  <rect x="40" y="600" width="2" height="80" fill="#000000" />
+  <rect x="45" y="600" width="4" height="80" fill="#000000" />
+  <rect x="50" y="600" width="2" height="80" fill="#000000" />
+  <rect x="55" y="600" width="2" height="80" fill="#000000" />
+  <rect x="60" y="600" width="3" height="80" fill="#000000" />
+  <rect x="65" y="600" width="2" height="80" fill="#000000" />
+  <rect x="70" y="600" width="1" height="80" fill="#000000" />
+  <rect x="75" y="600" width="1" height="80" fill="#000000" />
+  <rect x="80" y="600" width="1" height="80" fill="#000000" />
+  <rect x="85" y="600" width="1" height="80" fill="#000000" />
+  <rect x="90" y="600" width="2" height="80" fill="#000000" />
+  <rect x="95" y="600" width="2" height="80" fill="#000000" />
+  <rect x="100" y="600" width="1" height="80" fill="#000000" />
+  <rect x="105" y="600" width="2" height="80" fill="#000000" />
+  <rect x="110" y="600" width="3" height="80" fill="#000000" />
+  <rect x="115" y="600" width="3" height="80" fill="#000000" />
+  <rect x="120" y="600" width="3" height="80" fill="#000000" />
+  <rect x="125" y="600" width="1" height="80" fill="#000000" />
+  <rect x="130" y="600" width="3" height="80" fill="#000000" />
+  <rect x="135" y="600" width="3" height="80" fill="#000000" />
+  <rect x="140" y="600" width="2" height="80" fill="#000000" />
+  <rect x="145" y="600" width="5" height="80" fill="#000000" />
+  <rect x="150" y="600" width="2" height="80" fill="#000000" />
+  <rect x="155" y="600" width="2" height="80" fill="#000000" />
+  <rect x="160" y="600" width="6" height="80" fill="#000000" />
+  <rect x="165" y="600" width="2" height="80" fill="#000000" />
+  <rect x="170" y="600" width="2" height="80" fill="#000000" />
+  <rect x="175" y="600" width="3" height="80" fill="#000000" />
+  <rect x="180" y="600" width="2" height="80" fill="#000000" />
+  <rect x="185" y="600" width="4" height="80" fill="#000000" />
+  <rect x="190" y="600" width="4" height="80" fill="#000000" />
+  <rect x="195" y="600" width="2" height="80" fill="#000000" />
+  </g>
+
+</svg>

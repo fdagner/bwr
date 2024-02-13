@@ -1,3 +1,6 @@
+// Convert the YAML string into a JavaScript object
+const parsedData = jsyaml.load(kontoAuswahlYAML);
+
 function generiereVorkontierung() {
   const anzahlZeilenVorkontierung = document.getElementById('anzahlZeilenVorkontierung').value;
   const vorkontierungContainer = document.getElementById('vorkontierungContainer');

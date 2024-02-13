@@ -1,3 +1,9 @@
+
+// Convert the YAML string into a JavaScript object
+const parsedData = jsyaml.load(kontoAuswahlYAML);
+
+
+
 function generiereBuchungssatz() {
   const anzahlZeilenBuchungssatz = document.getElementById('anzahlZeilenBuchungssatz').value;
   const buchungssatzContainer = document.getElementById('buchungssatzContainer');

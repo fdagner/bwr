@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/menu.js"></script>
-    <script src="js/html2canvas.min.js"></script>
-    <script src="js/js-yaml.min.js"></script>
-    <script src="js/clipboard.min.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/menu.js"></script>
+    <script src="../js/html2canvas.min.js"></script>
+    <script src="../js/js-yaml.min.js"></script>
+    <script src="../js/clipboard.min.js"></script>
     <title>Belege</title>
 </head>
 
 <body>
-    <main>
-        <a href="index.html">Zurück zur Übersicht</a>
-        <h1>Belege erstellen</h1>
+     <main>
+        <div w3-include-html="navigation.html"></div>
+        <h2>Belege</h2>
         <nav class="tab">
             <button class="tablinks" id="defaultOpen"
                 onclick="openCity(event, 'modellunternehmen')">Modellunternehmen</button>
@@ -27,32 +27,32 @@
             <button class="tablinks" onclick="openCity(event, 'newspaper')">Zeitungsartikel</button>
         </nav>
         <section id="modellunternehmen" class="tabcontent">
-            <h2>Modellunternehmen</h2>
+            <h3>Modellunternehmen</h3>
             <details>
                 <summary>Anleitung</summary><video style="width:100%" controls>
-                    <source src="media/video/modellunternehmen.mp4" type="video/mp4">
+                    <source src="../media/video/modellunternehmen.mp4" type="video/mp4">
                 </video>
             </details>
             <p> Es steht eine umfangreiche Liste von Modellunternehmen zur Verfügung. Sie können auch Daten eigener
                 Modellunternehmen verwenden.
-                Laden Sie hierzu die <a href="js/unternehmen.yml">Standarddaten</a> herunter und bearbeiten Sie diese
+                Laden Sie hierzu die <a href="../js/unternehmen.yml">Standarddaten</a> herunter und bearbeiten Sie diese
                 mit einem einfachen Texteditor. Achten Sie darauf, die Yaml-Struktur nicht zu verändern.
                 Anschließend können Sie ihre Datei lokal im Browser hochladen und Ihre eigenen Unternehmen auswählen.
                 Sie können dann einfach bei jedem Seitenbesuch ihre Daten einspielen.</p>
             Eigene Datei verwenden: <input type="file" id="fileInput" accept=".yml"
                 onchange="handleFileUpload()"><br><br><button onclick="deleteAndLoadDefaultData()">Daten
                 zurücksetzen</button>
-            <h2>Belege exportieren</h2>
+            <h3>Belege exportieren</h3>
             <details>
                 <summary>Anleitung</summary><video style="width:100%" controls>
-                    <source src="media/video/belege.mp4" type="video/mp4">
+                    <source src="../media/video/belege.mp4" type="video/mp4">
                 </video>
             </details>
             <p>Benutzen Sie - wenn möglich - SVG-Dateien. Sie haben einige Vorteile gegenüber Pixelgrafiken, vor allem
                 im Online-Bereich.</p>
         </section>
         <section id="rechnung" class="tabcontent">
-            <h2>Rechnung/Angebot</h2>
+            <h3>Rechnung/Angebot</h3>
             <div class="box">
 
                 <div>
@@ -254,7 +254,7 @@
 
 
         <section id="kontoauszug" class="tabcontent">
-            <h2>Kontoauszug</h2>
+            <h3>Kontoauszug</h3>
             <div class="box">
                 <div class="grid3">
                     <div>
@@ -396,7 +396,7 @@
             </div>
         </section>
         <section id="quittung" class="tabcontent">
-            <h2>Quittung</h2>
+            <h3>Quittung</h3>
             <div class="box">
 
                 <div class="grid3">
@@ -521,7 +521,7 @@
         </section>
 
         <section id="kassenbon" class="tabcontent">
-            <h2>Kassenbon (Auszug)</h2>
+            <h3>Kassenbon (Auszug)</h3>
             <div class="box">
 
                 <div class="grid3">
@@ -651,7 +651,7 @@
         </section>
 
         <section id="email" class="tabcontent">
-            <h2>Mail</h2>
+            <h3>Mail</h3>
 
             <div class="box">
 
@@ -710,7 +710,7 @@
         </section>
 
         <section id="newspaper" class="tabcontent">
-            <h2>Zeitungsartikel</h2>
+            <h3>Zeitungsartikel</h3>
             <div class="box">
                 <p>Kurze Sachtexte oder Zeitungsartikel sind Teil der kompetenzorientierten Abschlussprüfung. Zum Üben
                     eignen sich auch KI generierte Texte.
@@ -805,7 +805,7 @@
 <script>
 includeHTML();
 </script>
-    <script src="js/belege.js"></script>
+    <script src="../js/belege.js"></script>
 
     <script>
         // Get the element with id="defaultOpen" and click on it
