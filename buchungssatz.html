@@ -5,81 +5,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buchführung</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/html2canvas.min.js"></script>
-  <script src="../js/js-yaml.min.js"></script>
-  <script src="../js/kontenplan.js"></script>
-  <script src="../js/clipboard.min.js"></script>
-  <script src="../js/menu.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/kontenplan.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
 </head>
 <main>
   <div w3-include-html="navigation.html"></div> 
-    <h2>T-Konten</h2>
+    <h2>Buchungssatz</h2>
     <details>
       <summary>Anleitung</summary>
       <div style="padding-left:6px;border: 1px solid #ddd;padding: 4px;">
-        <video style="width:100%;margin: 0 auto;" poster="../media/pic/screenshot1.png" controls>
-          <source src="../media/video/t-konto.mp4" type="video/mp4">
-          Your browser does not support the video tag!
+        <video style="width:100%;margin: 0 auto;" poster="media/pic/screenshot2.png" controls>
+          <source src="media/video/buchungssatz.mp4" type="video/mp4">
+          Your bser does not support the video tag.
         </video>
       </div>
-    </details>
-    <br>
-
-    <form id="tkontoForm" class="box">
-      <p>Konten auswählen:</p>
-<div id="kontoAuswahlContainer" class="flex-row"></div>
-
-      <br>
-      <div style="display:flex;flex-wrap: wrap;gap:4px">
-        <label for="anzahlZeilen">Anzahl der Zeilen (1-10):</label>
-        <input type="number" id="anzahlZeilen" name="anzahlZeilen" value="4" min="1" max="10" required>
-        <label>  <input type="checkbox" id="summenzeileCheckbox" name="summenzeileCheckbox">Summenzeile
-        </label><label for="abKonten"><input type="checkbox" id="abKonten" name="abKonten"> Anfangsbestand</label>
-        
-      </div>
-      <button style="margin-top:10px" type="button" onclick="generiereTKonto()"><svg
-          xmlns="http://www.w3.org/2000/svg" fill="#ff4800" height="16" width="16"
+    </details><br>
+    <form id="buchungssatzForm" class="box">
+      <label for="anzahlZeilen">Anzahl der Zeilen (1-8):</label>
+      <input type="number" id="anzahlZeilenBuchungssatz" name="anzahlZeilen" value="2" min="1" max="8" required>
+      <br><br>
+      <button type="button" onclick="generiereBuchungssatz()"><svg xmlns="http://www.w3.org/2000/svg" fill="#ff4800"
+          height="16" width="16"
           viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
           <path
             d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H352c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V80c0-17.7-14.3-32-32-32s-32 14.3-32 32v35.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V432c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H160c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z" />
-        </svg> T-Konten zeichnen</button>
-    </form>
-    <br>
-    <div id="buttonContainer" style="margin:0 auto;">
-      <div style="min-width:650px" contenteditable="true">
-        <div id="tkontoContainer" style="min-height: 100px;max-width:800px;margin: 0 auto;" tabindex="0"></div>
+        </svg> Vorlage für Buchungssatz erstellen</button>
+    </form><br>
+    <div id="buchungssatzButtonContainer" style="margin:0 auto;">
+      <div style="min-width:750px" contenteditable="true">
+        <div id="buchungssatzContainer" style="min-height: 50px;margin: 0 auto"></div>
       </div>
-      <br>
       <div class="exportButtons">
-        <button class="icon" type="button" onclick="herunterladenAlsPNG()"><svg xmlns="http://www.w3.org/2000/svg"
-            height="16" width="16"
+        <button class="icon" type="button" onclick="buchungssatzHerunterladenAlsPNG()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
             viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
           </svg></button>
-        <button class="icon" type="button" id="tkontoOfficeButton" data-clipboard-target="#tkontoContainer"><svg
-            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+        <button class="icon" type="button" id="officeButtonBuchungssatz"
+          data-clipboard-target="#buchungssatzContainer"><svg xmlns="http://www.w3.org/2000/svg" height="16"
+            width="12"
             viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
           </svg></button>
-        <button class="icon" type="button" onclick="herunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
-            height="16" width="12"
+        <button class="icon" type="button" onclick="buchungssatzHerunterladen()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
             viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
           </svg></button>
-        <button class="icon" type="button" onclick="kopiereInZwischenablage()"><svg xmlns="http://www.w3.org/2000/svg"
-            height="16" width="20"
+        <button class="icon" type="button" onclick="buchungssatzKopiereInZwischenablage()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
             viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
             <path
               d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
           </svg></button>
       </div><br>
     </div>
-
-
     <aside id="moodleDropdown">
       <h2>Tools</h2>
       <details>
@@ -125,12 +112,11 @@
         </details>
 </aside>
 
-
   </main>
 
   <div w3-include-html="footer.html"></div> 
-  <script src="../js/t-konto.js"></script>
-  <script src="../js/moodle.js"></script>
+  <script src="js/buchungssatz.js"></script>
+  <script src="js/moodle.js"></script>
 
   <script>
   includeHTML();

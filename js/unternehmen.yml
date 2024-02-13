@@ -4,7 +4,7 @@
     motto: "Fahrräder von A bis Z!"
     bank: "BavarianBank"
     rechtsform: "e. Kfr."
-    logo: "../media/pic/ak-bikes.svg"
+    logo: "media/pic/ak-bikes.svg"
     adresse:
       strasse: "Schwabacher Weg 50"
       plz: "85049"
@@ -26,7 +26,7 @@
     name: "Lack Art"
     bank: "Bayern Bank"
     rechtsform: "GmbH"
-    logo:  "../media/pic/lackart.svg"
+    logo:  "media/pic/lackart.svg"
     adresse:
       strasse: "Farbenstraße 12"
       plz: "10115"
@@ -48,7 +48,7 @@
     name: "MS-Metall"
     bank: "Hypa Bank"
     rechtsform: "e. K."
-    logo: "../media/pic/metall.svg"
+    logo: "media/pic/metall.svg"
     adresse:
       strasse: "Schlossweg 34"
       plz: "40213"
@@ -70,7 +70,7 @@
     name: "Holz Design"
     bank: "Kreditbank"
     rechtsform: "AG"
-    logo: "../media/pic/holzdesign3.svg"
+    logo: "media/pic/holzdesign3.svg"
     adresse:
       strasse: "Tischlerallee 56"
       plz: "80331"
@@ -92,7 +92,7 @@
     name: "NaturForst"
     bank: "Bavaria Bank"
     rechtsform: "e. K."
-    logo: "../media/pic/holzdesign.svg"
+    logo: "media/pic/holzdesign.svg"
     adresse:
       strasse: "Forstweg 78"
       plz: "60594"
@@ -113,7 +113,7 @@
     name: "Schnell Logistik"
     bank: "Kölner Bank"
     rechtsform: "GmbH"
-    logo: "../media/pic/logistic.svg"
+    logo: "media/pic/logistic.svg"
     adresse:
       strasse: "Logistikstraße 90"
       plz: "50667"
@@ -134,7 +134,7 @@
     name: "Maria Metall Profi"
     bank: "Main Bank"
     rechtsform: "e. Kfr."
-    logo: "../media/pic/metall2.svg"
+    logo: "media/pic/metall2.svg"
     adresse:
       strasse: "Metallallee 23"
       plz: "60313"
@@ -156,7 +156,7 @@
     name: "Textil Style"
     bank: "BavarianBank"
     rechtsform: "AG"
-    logo: "../media/pic/garn.svg"
+    logo: "media/pic/garn.svg"
     adresse:
       strasse: "Stoffweg 45"
       plz: "20095"
@@ -179,7 +179,7 @@
     motto: "Mut zu Farbe!"
     bank: "Bayernkasse"
     rechtsform: "e. Kfr."
-    logo: "../media/pic/farbe.svg"
+    logo: "media/pic/farbe.svg"
     adresse:
       strasse: "Künstlerweg 15"
       plz: "80331"
@@ -202,7 +202,7 @@
     motto: "Nachhaltige Qualität"
     bank: "Bavaria Bank"
     rechtsform: "KG"
-    logo: "../media/pic/holz2.svg"
+    logo: "media/pic/holz2.svg"
     adresse:
       strasse: "Bergstraße 33"
       plz: "80333"
@@ -225,7 +225,7 @@
     motto: "Holz aus guten Händen"
     bank: "Waldbank"
     rechtsform: "KG"
-    logo: "../media/pic/forst.svg"
+    logo: "media/pic/forst.svg"
     adresse:
       strasse: "Waldrand 44"
       plz: "94315"
@@ -248,7 +248,7 @@
     motto: "Spezialist für Auto und LKW"
     bank: "Mobilbank"
     rechtsform: "OHG"
-    logo: "../media/pic/huber.svg"
+    logo: "media/pic/huber.svg"
     adresse:
       strasse: "Expressweg 55"
       plz: "85077"
@@ -294,7 +294,7 @@
     motto: "Chemische Werke"
     bank: "Stadtbank"
     rechtsform: "AG"
-    logo: "../media/pic/chemie.svg"
+    logo: "media/pic/chemie.svg"
     adresse:
       strasse: "Gewerbestraße 77"
       plz: "86368"
@@ -317,7 +317,7 @@
     motto: "Mit Sicherheit schnell!"
     bank: "Sparbank"
     rechtsform: "e. K."
-    logo: "../media/pic/storch.svg"
+    logo: "media/pic/storch.svg"
     adresse:
       strasse: "Brauerstraße 85"
       plz: "87600"
@@ -340,7 +340,7 @@
     motto: "Auf uns können Sie bauen!"
     bank: "Sparbank"
     rechtsform: "GmbH"
-    logo: "../media/pic/bau.svg"
+    logo: "media/pic/bau.svg"
     adresse:
       strasse: "Unionstraße 85"
       plz: "90431"
@@ -363,7 +363,7 @@
     motto: "Rechtsanwältin"
     bank: "Sparbank"
     rechtsform: ""
-    logo: "../media/pic/frau.svg"
+    logo: "media/pic/frau.svg"
     adresse:
       strasse: "Platz der Einheit 85"
       plz: "90431"
@@ -386,7 +386,7 @@
     motto: "Powering the Future"
     bank: "Eco Bank"
     rechtsform: "e. Kfr."
-    logo: "../media/pic/solar.svg"
+    logo: "media/pic/solar.svg"
     adresse:
       strasse: "Neulandstraße 30"
       plz: "90441"
@@ -409,7 +409,7 @@
     motto: "Natürliches Holz für Ihre Projekte"
     bank: "Bayern Bank"
     rechtsform: "GmbH"
-    logo: "../media/pic/saw2.svg"
+    logo: "media/pic/saw2.svg"
     adresse:
       strasse: "Holzstraße 7"
       plz: "80331"
@@ -432,7 +432,7 @@
     motto: "Fachhandel für Kunststoffe"
     bank: "Eco Bank"
     rechtsform: "GmbH"
-    logo: "../media/pic/plastic.svg"
+    logo: "media/pic/plastic.svg"
     adresse:
       strasse: "Kunstweg 15"
       plz: "90402"
@@ -455,7 +455,7 @@
     motto: "Piste perfektioniert, Abenteuer garantiert"
     bank: "SnowBank"
     rechtsform: "AG"
-    logo: "../media/pic/ski.svg"
+    logo: "media/pic/ski.svg"
     adresse:
       strasse: "Skithal 22"
       plz: "87654"
@@ -478,7 +478,7 @@
     motto: "Nachhaltige Energie für eine gute Zukunft"
     bank: "GreenBank"
     rechtsform: "GmbH"
-    logo: "../media/pic/energy.svg"
+    logo: "media/pic/energy.svg"
     adresse:
       strasse: "Energieallee 10"
       plz: "80335"
@@ -501,7 +501,7 @@
     motto: "Innovation in jeder Steckdose"
     bank: "Nürnberger Bank"
     rechtsform: "GmbH"
-    logo: "../media/pic/elektro.svg"
+    logo: "media/pic/elektro.svg"
     adresse:
       strasse: "Gewerbeplatz 5"
       plz: "90411"
@@ -524,7 +524,7 @@
     motto: "Instrumente und traumhafte Klänge aus Meisterhand"
     bank: "Münchener Bank"
     rechtsform: "e. Kfr."
-    logo: "../media/pic/gitarre.svg"
+    logo: "media/pic/gitarre.svg"
     adresse:
       strasse: "Mozartstraße 8"
       plz: "80333"
@@ -547,7 +547,7 @@
     motto: "Innovation in jeder Bewegung"
     bank: "TechBank"
     rechtsform: "GmbH"
-    logo: "../media/pic/maschine.svg"
+    logo: "media/pic/maschine.svg"
     adresse:
       strasse: "Marderweg 12"
       plz: "90402"
@@ -570,7 +570,7 @@
     motto: "Öl- und Brennstoffhandel"
     bank: "Direktbank"
     rechtsform: "e. Kfr."
-    logo: "../media/pic/oil.svg"
+    logo: "media/pic/oil.svg"
     adresse:
       strasse: "Tannenllee 20"
       plz: "80336"
@@ -593,7 +593,7 @@
     motto: "Einfach, Schnell, Online!"
     bank: "Digital Bank"
     rechtsform: "e. Kfr."
-    logo: "../media/pic/onlineshop.svg"
+    logo: "media/pic/onlineshop.svg"
     adresse:
       strasse: "Parkstraße 5"
       plz: "83022"
@@ -616,7 +616,7 @@
     motto: "Dein Farradhandel. Allzeit gute Fahrt!"
     bank: "Sparbank"
     rechtsform: "e. K"
-    logo: "../media/pic/fahrrad.svg"
+    logo: "media/pic/fahrrad.svg"
     adresse:
       strasse: "Fahrradstraße 12"
       plz: "83026"
@@ -639,7 +639,7 @@
     motto: "Maßgeschneiderte Verpackungslösungen"
     bank: "Meisterbank"
     rechtsform: "GmbH"
-    logo: "../media/pic/box.svg"
+    logo: "media/pic/box.svg"
     adresse:
       strasse: "Gewerbestraße 8"
       plz: "86150"
@@ -662,7 +662,7 @@
     motto: "Qualität mit Format"
     bank: "Bayreuther Bank"
     rechtsform: "KG"
-    logo: "../media/pic/grosshandel.svg"
+    logo: "media/pic/grosshandel.svg"
     adresse:
       strasse: "Großhandelsweg 15"
       plz: "95444"
@@ -685,7 +685,7 @@
     motto: "Radeln mit Leidenschaft"
     bank: "Weidener Volksbank"
     rechtsform: "e. K."
-    logo: "../media/pic/bike.svg"
+    logo: "media/pic/bike.svg"
     adresse:
       strasse: "Fahrradallee 7"
       plz: "92637"
@@ -708,7 +708,7 @@
     motto: "Rechtssicherheit mit Vertrauen"
     bank: "Rechtsbank"
     rechtsform: ""
-    logo: "../media/pic/book.svg"
+    logo: "media/pic/book.svg"
     adresse:
       strasse: "Notarstraße 10"
       plz: "92639"
@@ -731,7 +731,7 @@
     motto: "Wir verbinden Menschen."
     bank: "Sparbank"
     rechtsform: "AG"
-    logo: "../media/pic/mail.svg"
+    logo: "media/pic/mail.svg"
     adresse:
       strasse: "Schnellstraße 10"
       plz: "90441"
