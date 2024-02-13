@@ -299,6 +299,8 @@ footer {
 .navbar {
   overflow: hidden;
   background-color: #ff4800;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .navbar a {
