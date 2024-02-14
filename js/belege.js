@@ -1157,7 +1157,7 @@ function applyOrderData() {
     }
 
     function generiereZufallsBruttogehalt() {
-        return Math.round((Math.random() * 3000) + 2000) / 100 * 100; // Zwischen 2000 und 5000 gerundet auf Hunderter
+        return Math.round((Math.random() * 4000) + 2000) / 100 * 100; // Zwischen 2000 und 5000 gerundet auf Hunderter
     }
 
     // Funktion zur Berechnung der Steuern basierend auf der Steuerklasse
@@ -1234,8 +1234,15 @@ function applyOrderData() {
         return summe;
     }
 
-    // Berechnen der Summe der Bruttogehälter
-    const summeBrutto = berechneSummeBrutto(20); // Annahme: Etwa 20 Mitarbeiter
+    // Funktion zur Generierung einer zufälligen Ganzzahl zwischen min (inklusive) und max (exklusive)
+function zufallszahlMitarbeiter(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  
+
+// Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
+const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
+const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
 
     // Eintragen der Summe der Bruttogehälter ins Lohnjournal
     const lohnjournalBruttoSumme = document.getElementById('lohnjournalBrutto4');
