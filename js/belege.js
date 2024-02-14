@@ -764,6 +764,7 @@ function applyOrderData() {
     const menge2 = parseFloat(document.getElementById('mengeInput2').value);
     const einheit2 = document.getElementById('einheitInput2').value;
     const einzelpreis2 = parseFloat(document.getElementById('einzelpreisInput2').value);
+    const angebotLieferzeit = document.getElementById('angebotLieferzeitInput').value;
 
     // Verwendung der Hilfsfunktion für verschiedene Eingabefelder
     const rabattInput = getNumericValue('rabattInput');
@@ -814,6 +815,13 @@ function applyOrderData() {
 
     document.getElementById('zahlungsziel').textContent = zahlungszielInput;
     document.getElementById('skonto').textContent = skontoInput;
+
+    let angebotLieferzeitSVG = document.getElementById('angebotLieferzeit');
+    if (angebotLieferzeitSVG) {
+        // Die ID wurde gefunden, also füge den Text ein
+        angebotLieferzeitSVG.textContent = angebotLieferzeit;
+    }
+
 
     // Überprüfen, ob skontoInput 0 oder leer ist
     if (skontoInput === "" || parseFloat(skontoInput) === 0) {
@@ -1514,17 +1522,17 @@ function kassenbonKopiereInZwischenablage() {
 function emailKopiereInZwischenablage() {
     const emailHTML = document.getElementById('emailContainer').innerHTML;
     navigator.clipboard.writeText(emailHTML)
-      .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-      .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-  }
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
 
-  function newspaperKopiereInZwischenablage() {
+function newspaperKopiereInZwischenablage() {
     const newspaperHTML = document.getElementById('newspaperContainer').innerHTML;
     navigator.clipboard.writeText(newspaperHTML)
-      .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-      .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-  }
-  
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
+
 
 function emailHerunterladen() {
     const emailHTML = document.getElementById('emailContainer').innerHTML.replace(/&nbsp;/g, ' ');;
@@ -1551,13 +1559,13 @@ function newspaperHerunterladen() {
 let clipboardNewspaper = new ClipboardJS('#officeButtonNewspaper');
 
 clipboardNewspaper.on('success', function (e) {
-  console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+    console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
+    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardNewspaper.on('error', function (e) {
-  console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-  alert("Fehler beim Kopieren der Tabelle.");
+    console.error("Fehler beim Kopieren der Tabelle: ", e.action);
+    alert("Fehler beim Kopieren der Tabelle.");
 });
 
 
@@ -1573,6 +1581,13 @@ function validateInputs() {
     let artikelInput2 = document.getElementById("artikelInput2");
     if (!isValidInput(artikelInput2.value, 25)) {
         alert("Bitte geben Sie eine gültige Artikelbezeichnung Pos. 2 ein. Maximal 25 Zeichen!");
+        return false;
+    }
+
+    // Validierung für Lieferzeit
+    let angebotLieferzeit = document.getElementById("angebotLieferzeitInput");
+    if (!isValidInput(angebotLieferzeit.value, 25)) {
+        alert("Bitte geben Sie eine gültige Lieferzeit ein. Maximal 25 Zeichen!");
         return false;
     }
 

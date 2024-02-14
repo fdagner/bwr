@@ -103,6 +103,9 @@
                                 <input type="text" id="bezugskostenArtInput" value="Versand">
                             </div>
                             <div>Lieferbedingung: <input type="checkbox" id="lieferbedingungInput"></div>
+                            <div><label for="angebotLieferzeitInput">Lieferzeit in Tagen:</label><br><input
+                                type="text" id="angebotLieferzeitInput" value="1-3"><br></div>
+
                         </div>
                         <div>
                             <div>
@@ -186,9 +189,9 @@
                                     onchange="toggleInput('jahr', 'scriptJahr')">
                             </div>
                         </div>
-                        <div>
+                        <div><h4>Vorlage</h4>
                             <label for="svgDropdown">
-                                Vorlage
+                                Auswählen:
                             </label><br>
                             <select id="svgDropdown">
                                 <option value="template1.svg">Klassisch</option>
