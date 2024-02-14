@@ -91,7 +91,7 @@
   <g id="Zahlungsbedingungen" text-anchor="start" font-family="Arial" font-size="15" fill="#333">
     <text x="20" y="800">Zahlbar innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen rein netto.</text>
     <text id="skontotext" x="20" y="820">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto.</text>
-    <text x="20" y="840">Wir liefern <tspan id="bezugskostenBedingung"></tspan> unter Eigentumsvorbehalt.</text>
+    <text x="20" y="840">Wir liefern in <tspan id="angebotLieferzeit"></tspan> Tagen <tspan id="bezugskostenBedingung"></tspan> unter Eigentumsvorbehalt.</text>
 
     <text x="20" y="900">Mit freundlichen Grüßen</text>
     <text id="ansprechpartnerLieferer" x="20" y="920" font-family="Arial" font-size="17"/>

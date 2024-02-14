@@ -49,7 +49,7 @@
     <rect x="20" y="370" width="1010" height="1" fill="#000"/>
     <rect x="20" y="470" width="1010" height="1" fill="#000"/>
     <text id="pos" x="40" y="350" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Pos</text>
-    <text id="artikel" x="100" y="350" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Artikel</text>
+    <text id="artikel" x="100" y="350" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Bezeichnung</text>
     <text id="menge" x="600" y="350" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Menge</text>
     <text id="einzelpreis" x="800" y="350" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Einzelpreis</text>
     <text id="gesamtpreis" x="1000" y="350" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Gesamtpreis</text>

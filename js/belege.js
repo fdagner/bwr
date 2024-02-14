@@ -48,7 +48,7 @@ function reloadDropdownOptions() {
     const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
     const dropdownKassenbon = document.getElementById('datenKassenbon');
     const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
-
+    const dropdownLohnjournal = document.getElementById('datenLohnjournal');
 
     // Clear existing options
     dropdownCustomer.innerHTML = '';
@@ -60,6 +60,7 @@ function reloadDropdownOptions() {
     dropdownQuittungKunde.innerHTML = '';
     dropdownKassenbon.innerHTML = '';
     dropdownKassenbonKunde.innerHTML = '';
+    dropdownLohnjournal.innerHTML = '';
 
 
     yamlData.forEach(company => {
@@ -108,7 +109,10 @@ function reloadDropdownOptions() {
         optionKassenbonKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownKassenbonKunde.appendChild(optionKassenbonKunde);
 
-
+        const optionLohnjournal = document.createElement('option');
+        optionLohnjournal.value = company.unternehmen.name;
+        optionLohnjournal.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownLohnjournal.appendChild(optionLohnjournal);
     });
 }
 
@@ -168,6 +172,7 @@ fetch('js/unternehmen.yml')
         const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
         const dropdownKassenbon = document.getElementById('datenKassenbon');
         const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
+        const dropdownLohnjournal = document.getElementById('datenLohnjournal');
 
         yamlData.forEach(company => {
             const optionCustomer = document.createElement('option');
@@ -214,6 +219,11 @@ fetch('js/unternehmen.yml')
             optionKassenbonKunde.value = company.unternehmen.name;
             optionKassenbonKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownKassenbonKunde.appendChild(optionKassenbonKunde);
+
+            const optionLohnjournal = document.createElement('option');
+            optionLohnjournal.value = company.unternehmen.name;
+            optionLohnjournal.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            dropdownLohnjournal.appendChild(optionLohnjournal);
 
         });
 
@@ -327,6 +337,16 @@ function loadCompanyDataforQuittung() {
     document.getElementById('quittungNameKunde').textContent = selectedCompany.unternehmen.inhaber + ", " + selectedCompany.unternehmen.name;
 }
 
+function loadLohnjournalData() {
+    const selectedLohnjournalName = document.getElementById('datenLohnjournal').value;
+    const selectedLohnjournal = yamlData.find(lohnjournal => lohnjournal.unternehmen.name === selectedLohnjournalName);
+    document.getElementById('lohnjournalName').textContent = selectedLohnjournal.unternehmen.name + " " + selectedLohnjournal.unternehmen.rechtsform;
+    document.getElementById('lohnjournalStrasse').textContent = selectedLohnjournal.unternehmen.adresse.strasse;
+    document.getElementById('lohnjournalOrt').textContent = selectedLohnjournal.unternehmen.adresse.plz + " " + selectedLohnjournal.unternehmen.adresse.ort;
+    document.getElementById('lohnjournalDatum').textContent = selectedLohnjournal.unternehmen.adresse.ort;
+
+}
+
 function loadKassenbonData() {
     const selectedKassenbonName = document.getElementById('datenKassenbon').value;
     const selectedKassenbon = yamlData.find(kassenbon => kassenbon.unternehmen.name === selectedKassenbonName);
@@ -343,6 +363,15 @@ function loadCompanyDataforKassenbon() {
     const selectedCompanyName = document.getElementById('datenKassenbonKunde').value;
     const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
     document.getElementById('kassenbonNameKunde').textContent = selectedCompany.unternehmen.inhaber + ", " + selectedCompany.unternehmen.name;
+}
+
+function loadLohnjournalData() {
+    const selectedLohnjournalName = document.getElementById('datenLohnjournal').value;
+    const selectedLohnjournal = yamlData.find(lohnjournal => lohnjournal.unternehmen.name === selectedLohnjournalName);
+    document.getElementById('lohnjournalName').textContent = selectedLohnjournal.unternehmen.name + " " + selectedLohnjournal.unternehmen.rechtsform;
+    document.getElementById('lohnjournalStrasse').textContent = selectedLohnjournal.unternehmen.adresse.strasse;
+    document.getElementById('lohnjournalOrt').textContent = selectedLohnjournal.unternehmen.adresse.plz + " " + selectedLohnjournal.unternehmen.adresse.ort;
+
 }
 
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
@@ -764,6 +793,7 @@ function applyOrderData() {
     const menge2 = parseFloat(document.getElementById('mengeInput2').value);
     const einheit2 = document.getElementById('einheitInput2').value;
     const einzelpreis2 = parseFloat(document.getElementById('einzelpreisInput2').value);
+    const angebotLieferzeit = document.getElementById('angebotLieferzeitInput').value;
 
     // Verwendung der Hilfsfunktion für verschiedene Eingabefelder
     const rabattInput = getNumericValue('rabattInput');
@@ -814,6 +844,13 @@ function applyOrderData() {
 
     document.getElementById('zahlungsziel').textContent = zahlungszielInput;
     document.getElementById('skonto').textContent = skontoInput;
+
+    let angebotLieferzeitSVG = document.getElementById('angebotLieferzeit');
+    if (angebotLieferzeitSVG) {
+        // Die ID wurde gefunden, also füge den Text ein
+        angebotLieferzeitSVG.textContent = angebotLieferzeit;
+    }
+
 
     // Überprüfen, ob skontoInput 0 oder leer ist
     if (skontoInput === "" || parseFloat(skontoInput) === 0) {
@@ -1070,6 +1107,234 @@ function applyOrderData() {
     let kassenbonZahlungsart = document.getElementById('kassenbonDropdownZahlungsart').value;
     document.getElementById('kassenbonZahlungsart').textContent = kassenbonZahlungsart;
 
+    // Laden der Daten des Lohnjournals
+
+    // Funktion zum Zufälligen Auswählen von Mitarbeitern
+
+    const mitarbeiter = [
+        { name: "Smith, John", geschlecht: "männlich", steuerklasse: "I" },
+        { name: "Garcia, Maria", geschlecht: "weiblich", steuerklasse: "IV" },
+        { name: "Müller, Hans", geschlecht: "männlich", steuerklasse: "I" },
+        { name: "Nguyen, Linh", geschlecht: "weiblich", steuerklasse: "III" },
+        { name: "Andersen, Erik", geschlecht: "männlich", steuerklasse: "I" },
+        { name: "Choi, Hye-jin", geschlecht: "weiblich", steuerklasse: "IV" },
+        { name: "Gomez, Juan", geschlecht: "männlich", steuerklasse: "I" },
+        { name: "Abdullah, Fatima", geschlecht: "weiblich", steuerklasse: "III" },
+        { name: "Kovács, István", geschlecht: "männlich", steuerklasse: "I" },
+        { name: "Santos, Sofia", geschlecht: "weiblich", steuerklasse: "IV" },
+        { name: "Ali, Ahmed", geschlecht: "männlich", steuerklasse: "I" },
+        { name: "Hernandez, Carla", geschlecht: "weiblich", steuerklasse: "III" },
+        { name: "Novák, Katarina", geschlecht: "weiblich", steuerklasse: "IV" },
+        { name: "Fischer, Tobias", geschlecht: "männlich", steuerklasse: "I" },
+        { name: "Silva, Pedro", geschlecht: "männlich", steuerklasse: "III" },
+        { name: "Park, Min-woo", geschlecht: "männlich", steuerklasse: "IV" },
+        { name: "Zhang, Wei", geschlecht: "männlich", steuerklasse: "I" },
+        { name: "Molina, Ana", geschlecht: "weiblich", steuerklasse: "III" },
+        { name: "Schneider, Maria", geschlecht: "weiblich", steuerklasse: "IV" },
+        { name: "Mikhailova, Elena", geschlecht: "weiblich", steuerklasse: "I" }
+    ];
+
+    function chooseRandomMitarbeiter(mitarbeiterListe, anzahl) {
+        const zufälligeMitarbeiter = [];
+        const kopieDerMitarbeiterListe = [...mitarbeiterListe];
+        for (let i = 0; i < anzahl; i++) {
+            const index = Math.floor(Math.random() * kopieDerMitarbeiterListe.length);
+            zufälligeMitarbeiter.push(kopieDerMitarbeiterListe.splice(index, 1)[0]);
+        }
+        return zufälligeMitarbeiter;
+    }
+
+
+    // Auswahl von drei zufälligen Mitarbeitern aus dem Array
+    const ausgewählteMitarbeiter = chooseRandomMitarbeiter(mitarbeiter, 3);
+
+    // Eintragen der ausgewählten Mitarbeiter ins Lohnjournal
+    for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
+        let lohnjournalEintrag = document.getElementById(`lohnjournalArbeitnehmer${i + 1}`);
+        if (lohnjournalEintrag) {
+            lohnjournalEintrag.textContent = `${ausgewählteMitarbeiter[i].name} (${ausgewählteMitarbeiter[i].steuerklasse})`;
+        }
+    }
+
+    function generiereZufallsBruttogehalt() {
+        return Math.round((Math.random() * 4000) + 2000) / 100 * 100; // Zwischen 2000 und 5000 gerundet auf Hunderter
+    }
+
+    // Funktion zur Berechnung der Steuern basierend auf der Steuerklasse
+    function berechneSteuern(brutto, steuerklasse) {
+        let steuersatz = 0;
+        switch (steuerklasse) {
+            case "I":
+                steuersatz = 0.19; // 9% Steuern für Steuerklasse I
+                break;
+            case "III":
+                steuersatz = 0.11; // 5,5% Steuern für Steuerklasse III
+                break;
+            case "IV":
+                steuersatz = 0.14; // 8% Steuern für Steuerklasse IV
+                break;
+            default:
+                steuersatz = 0;
+        }
+        return brutto * steuersatz;
+    }
+
+    // Funktion zur Berechnung der Sozialversicherungsbeiträge
+    function berechneSozialversicherung(brutto) {
+        const sozialversicherungssatz = 0.389; // 16,6% Sozialversicherungssatz (Arbeitnehmer und Arbeitgeber je 10%)
+        return brutto * sozialversicherungssatz;
+    }
+
+    // Eintragen der zufälligen Bruttogehälter, Steuern, Sozialversicherungsbeiträge und Nettogehälter ins Lohnjournal
+    for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
+        // Generiere zufälliges Bruttogehalt für diesen Mitarbeiter
+        const zufallsBruttogehalt = generiereZufallsBruttogehalt();
+
+        // Eintragen des Bruttogehalts ins Lohnjournal
+        const lohnjournalBrutto = document.getElementById(`lohnjournalBrutto${i + 1}`);
+        if (lohnjournalBrutto) {
+            lohnjournalBrutto.textContent = `${formatCurrency(zufallsBruttogehalt.toFixed(2))}`;
+        }
+
+        // Berechnen der Steuern basierend auf der Steuerklasse und Eintragen ins Lohnjournal
+        const lohnjournalSteuern = document.getElementById(`lohnjournalSteuern${i + 1}`);
+        if (lohnjournalSteuern) {
+            const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
+            lohnjournalSteuern.textContent = `${formatCurrency(steuern.toFixed(2))}`;
+        }
+
+        // Berechnen der Sozialversicherungsbeiträge und Eintragen ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
+        const lohnjournalAN = document.getElementById(`lohnjournalAN${i + 1}`);
+        const lohnjournalAG = document.getElementById(`lohnjournalAG${i + 1}`);
+        if (lohnjournalAN && lohnjournalAG) {
+            const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
+            const anBeitrag = sozialversicherung * 0.5; // 50% für Arbeitnehmer
+            const agBeitrag = sozialversicherung * 0.5; // 50% für Arbeitgeber
+
+            lohnjournalAN.textContent = `${formatCurrency(anBeitrag.toFixed(2))}`;
+            lohnjournalAG.textContent = `${formatCurrency(agBeitrag.toFixed(2))}`;
+        }
+
+        // Berechnen und Eintragen des Nettogehalts ins Lohnjournal
+        const lohnjournalNetto = document.getElementById(`lohnjournalNetto${i + 1}`);
+        if (lohnjournalNetto) {
+            const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
+            const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
+
+            const netto = zufallsBruttogehalt - steuern - (sozialversicherung * 0.5); // Abzug der Hälfte der Sozialversicherung für Arbeitnehmer
+            lohnjournalNetto.textContent = `${formatCurrency(netto.toFixed(2))}`;
+        }
+    }
+
+    function berechneSummeBrutto(anzahlMitarbeiter) {
+        let summe = 0;
+        for (let i = 0; i < anzahlMitarbeiter; i++) {
+            summe += generiereZufallsBruttogehalt();
+        }
+        return summe;
+    }
+
+    // Funktion zur Generierung einer zufälligen Ganzzahl zwischen min (inklusive) und max (exklusive)
+function zufallszahlMitarbeiter(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  
+
+// Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
+const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
+const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
+
+    // Eintragen der Summe der Bruttogehälter ins Lohnjournal
+    const lohnjournalBruttoSumme = document.getElementById('lohnjournalBrutto4');
+    if (lohnjournalBruttoSumme) {
+        lohnjournalBruttoSumme.textContent = `${formatCurrency(summeBrutto.toFixed(2))}`;
+    }
+
+    // Annahme: Steuerklasse 4 für alle Mitarbeiter
+    const steuerklasse = "IV";
+
+    // Berechnen der Steuern für die Summe
+    const summeSteuern = berechneSteuern(summeBrutto, steuerklasse);
+
+    // Eintragen der berechneten Steuern ins Lohnjournal
+    const lohnjournalSteuernSumme = document.getElementById('lohnjournalSteuern4');
+    if (lohnjournalSteuernSumme) {
+        lohnjournalSteuernSumme.textContent = `${formatCurrency(summeSteuern.toFixed(2))}`;
+    }
+
+    // Berechnen der Sozialversicherungsbeiträge für die Summe (Arbeitnehmer und Arbeitgeber)
+    const summeSozialversicherung = berechneSozialversicherung(summeBrutto);
+    const summeAnBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitnehmer
+    const summeAgBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitgeber
+
+    // Eintragen der berechneten Sozialversicherungsbeiträge ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
+    const lohnjournalANSumme = document.getElementById('lohnjournalAN4');
+    const lohnjournalAGSumme = document.getElementById('lohnjournalAG4');
+    if (lohnjournalANSumme && lohnjournalAGSumme) {
+        lohnjournalANSumme.textContent = `${formatCurrency(summeAnBeitrag.toFixed(2))}`;
+        lohnjournalAGSumme.textContent = `${formatCurrency(summeAgBeitrag.toFixed(2))}`;
+    }
+
+    // Berechnen des Nettogehalts für die Summe
+    const summeNetto = summeBrutto - summeSteuern - summeAnBeitrag;
+
+    // Eintragen des Nettogehalts ins Lohnjournal
+    const lohnjournalNettoSumme = document.getElementById('lohnjournalNetto4');
+    if (lohnjournalNettoSumme) {
+        lohnjournalNettoSumme.textContent = `${formatCurrency(summeNetto.toFixed(2))}`;
+    }
+
+    // Array mit den Monatsnamen
+    const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+
+    // Zufällige Auswahl eines Monats
+    const zufälligerMonatIndex = Math.floor(Math.random() * monate.length);
+    const zufälligerMonat = monate[zufälligerMonatIndex];
+
+    // Eintragen des zufälligen Monats ins Lohnjournal
+    const lohnjournalMonat = document.getElementById('lohnjournalMonat');
+    if (lohnjournalMonat) {
+        lohnjournalMonat.textContent = zufälligerMonat;
+    }
+
+    let lohnjournalSatzOutput = "<h3>Buchungssätze</h3>";
+    lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+    lohnjournalSatzOutput += `<tbody>`;
+    lohnjournalSatzOutput += `<tr>`;
+    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">6200 LG</td>`;
+    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${formatCurrency(summeBrutto.toFixed(2))}</td>`;
+    lohnjournalSatzOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
+    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">2800 BK</td>`;
+    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${formatCurrency(summeNetto.toFixed(2))}</td>`;
+    lohnjournalSatzOutput += `</tr>`;
+    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
+    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+    lohnjournalSatzOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+    lohnjournalSatzOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">4830 VFA</td>`;
+    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${formatCurrency(summeSteuern.toFixed(2))}</td>`;
+    lohnjournalSatzOutput += `</tr>`;
+    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
+    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+    lohnjournalSatzOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+    lohnjournalSatzOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">4840 VSV</td>`;
+    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${formatCurrency(summeAnBeitrag.toFixed(2))}</td>`;
+    lohnjournalSatzOutput += `</tr>`;
+    lohnjournalSatzOutput += `</tbody>`;
+    lohnjournalSatzOutput += `</table>`;
+    lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+    lohnjournalSatzOutput += `<tbody>`;
+    lohnjournalSatzOutput += `<tr>`;
+    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">6400 AGASV</td>`;
+    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+    lohnjournalSatzOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
+    lohnjournalSatzOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">4840 VSV</td>`;
+    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${formatCurrency(summeAgBeitrag.toFixed(2))}</td>`;
+    lohnjournalSatzOutput += `</tr>`;
+    lohnjournalSatzOutput += `</tbody>`;
+    lohnjournalSatzOutput += `</table>`;
+
+    document.getElementById('lohnjournalBuchungssatzContainer').innerHTML = lohnjournalSatzOutput;
+
     loadCompanyData(); // Laden der Kundeninformationen
     loadSupplierData(); // Laden der Lieferanteninformationen
     loadKontoauszugData() // Laden der Quittungsdaten
@@ -1077,7 +1342,9 @@ function applyOrderData() {
     loadCompanyDataforEmail(); // Laden der E-Mail-Daten (Kunde)
     loadQuittungData() // Laden der Quittung-Daten
     loadKassenbonData() // Laden der Kassenbon-Daten
+    loadLohnjournalData() // Laden der Kassenbon-Daten
     loadCompanyDataforQuittung(); // Laden der Quittung-Daten (Kunde)
+    loadLohnjournalData() // Laden des Lohnjournals
 }
 
 // Funktion zur Generierung einer zufälligen 7-stelligen Nummer
@@ -1335,6 +1602,17 @@ async function applySVG() {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
 
+    let selectedLohnjournal = document.getElementById("svgDropdownLohnjournal").value;
+    let svgContainerLohnjournal = document.getElementById("lohnjournalContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedLohnjournal);
+        svgContainerLohnjournal.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+
 
     let selectedEmail = document.getElementById("svgDropdownEmail").value;
     let svgContainerEmail = document.getElementById("emailContainer");
@@ -1435,12 +1713,20 @@ function kassenbonHerunterladenAlsPNG() {
     herunterladenAlsPNG('kassenbonContainer', 'kassenbon.png');
 }
 
+function lohnjournalHerunterladenAlsPNG() {
+    herunterladenAlsPNG('lohnjournalContainer', 'lohnjournal.png');
+}
+
 function emailHerunterladenAlsPNG() {
     herunterladenAlsPNG('emailContainer', 'email.png');
 }
 
 function newspaperHerunterladenAlsPNG() {
     herunterladenAlsPNG('newspaperContainer', 'newspaper.png');
+}
+
+function lohnjournalBuchungssatzHerunterladenAlsPNG() {
+    herunterladenAlsPNG('lohnjournalBuchungssatzContainer', 'lohnjournalbuchungssatz.png');
 }
 
 // Export to SVG
@@ -1471,6 +1757,11 @@ function quittungHerunterladen() {
 function kassenbonHerunterladen() {
     herunterladen('kassenbonContainer', 'kassenbon.svg');
 }
+
+function lohnjournalHerunterladen() {
+    herunterladen('lohnjournalContainer', 'lohnjournal.svg');
+}
+
 
 
 
@@ -1510,21 +1801,33 @@ function kassenbonKopiereInZwischenablage() {
     kopiereInZwischenablage('kassenbonContainer');
 }
 
+function lohnjournalKopiereInZwischenablage() {
+    kopiereInZwischenablage('lohnjournalContainer');
+}
+
+
 
 function emailKopiereInZwischenablage() {
     const emailHTML = document.getElementById('emailContainer').innerHTML;
     navigator.clipboard.writeText(emailHTML)
-      .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-      .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-  }
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
 
-  function newspaperKopiereInZwischenablage() {
+function newspaperKopiereInZwischenablage() {
     const newspaperHTML = document.getElementById('newspaperContainer').innerHTML;
     navigator.clipboard.writeText(newspaperHTML)
-      .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-      .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-  }
-  
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
+
+function lohnjournalBuchungssatzKopiereInZwischenablage() {
+    const lohnjournalHTML = document.getElementById('lohnjournalBuchungssatzContainer').innerHTML;
+    navigator.clipboard.writeText(lohnjournalHTML)
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
+
 
 function emailHerunterladen() {
     const emailHTML = document.getElementById('emailContainer').innerHTML.replace(/&nbsp;/g, ' ');;
@@ -1548,16 +1851,39 @@ function newspaperHerunterladen() {
     document.body.removeChild(a);
 }
 
+function lohnjournalBuchungssatzHerunterladen() {
+    const emailHTML = document.getElementById('lohnjournalBuchungssatzContainer').innerHTML.replace(/&nbsp;/g, ' ');;
+    const blob = new Blob([emailHTML], { type: 'html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'lohnjournalbuchungssatz.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+let clipboardLohnjournal = new ClipboardJS('#officeButtonLohnjournalBuchungssatz');
+
+clipboardLohnjournal.on('success', function (e) {
+    console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
+    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+});
+
+clipboardLohnjournal.on('error', function (e) {
+    console.error("Fehler beim Kopieren der Tabelle: ", e.action);
+    alert("Fehler beim Kopieren der Tabelle.");
+});
+
 let clipboardNewspaper = new ClipboardJS('#officeButtonNewspaper');
 
 clipboardNewspaper.on('success', function (e) {
-  console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+    console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
+    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardNewspaper.on('error', function (e) {
-  console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-  alert("Fehler beim Kopieren der Tabelle.");
+    console.error("Fehler beim Kopieren der Tabelle: ", e.action);
+    alert("Fehler beim Kopieren der Tabelle.");
 });
 
 
@@ -1573,6 +1899,13 @@ function validateInputs() {
     let artikelInput2 = document.getElementById("artikelInput2");
     if (!isValidInput(artikelInput2.value, 25)) {
         alert("Bitte geben Sie eine gültige Artikelbezeichnung Pos. 2 ein. Maximal 25 Zeichen!");
+        return false;
+    }
+
+    // Validierung für Lieferzeit
+    let angebotLieferzeit = document.getElementById("angebotLieferzeitInput");
+    if (!isValidInput(angebotLieferzeit.value, 25)) {
+        alert("Bitte geben Sie eine gültige Lieferzeit ein. Maximal 25 Zeichen!");
         return false;
     }
 

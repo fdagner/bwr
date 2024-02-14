@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const verkaufBuchungsoptionDropdown = document.getElementById('verkaufBuchungsoptionDropdown');
 
   function verkaufUpdateMitBezugskostenState() {
-    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation') {
+    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
       verkaufMitBezugskosten.disabled = true;
       verkaufMitBezugskosten.checked = false;
     } else {
@@ -36,6 +36,11 @@ function getRandomRabatt() {
 
 function getRandomGewinn() {
   return getRandomIntegerWithSteps(20, 50, 5);
+}
+
+function getRandomWunschGewinn() {
+  // Generiere eine zufällige Ganzzahl zwischen -10 und 5
+  return Math.floor(Math.random() * 4) * 5 - 10;
 }
 
 function getRandomBezugskosten() {
@@ -104,7 +109,8 @@ function verkaufErstelleZufallssatz() {
   const verkaufArray_Subjekt_3 = ['Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: ', 'Wir erhalten eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis berechnen, wenn wir mit den folgenden Werten kalkulieren: '];
   const verkaufArray_Subjekt_4 = ['Uns erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei', 'Wir erhalten eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis bei '];
   const verkaufArray_Subjekt_5 = [`Unser Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
-  const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
+  const verkaufArray_Subjekt_6 = [`Ein Kunde verhandelt mit uns über den Kauf von Fertigerzeugnissen`,'Wir erhalten von einem Kunden eine Anfrage für Fertigerzeugnisse', 'Ein Kunde sendet uns per E-Mail eine Anfrage für den Bezug von Fertigerzeugnissen', 'Ein Stammkunde möchte bei uns Fertigerzeugnisse kaufen und sendet eine Anfrage'];
+   const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
   const verkaufArray_Fertigerzeugnisse_2 = Object.keys(kontenUmsatzerloese_2);
   const verkaufArray_Supply_Wert = ['mit einem Verkaufspreis in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
   const verkaufArray_Zahlung = Object.keys(verkaufKontenZahlung);
@@ -125,7 +131,6 @@ function verkaufErstelleZufallssatz() {
   const verkaufArray_Supply_Skonto_2 = [
     ` und ${verkaufRandom_Skonto} % Skonto`,
     ` sowie ${verkaufRandom_Skonto} % Skonto`,
-    `, ${verkaufRandom_Skonto} % Skonto`,
   ];
   const verkaufArray_Supply_Bezugskosten = [
     `. Zusätzlich belasten wir den Kunden mit Versandkosten von netto ${verkaufRandom_Bezugskosten}`,
@@ -153,6 +158,7 @@ function verkaufErstelleZufallssatz() {
   const verkaufAntwortBezugskosten = kontenUmsatzserloese[verkaufRandomFertigerzeugnis]?.Unterkonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Unterkonto;
   const verkaufAntwortSkontobuchungssatz = kontenUmsatzserloese[verkaufRandomFertigerzeugnis]?.Nachlasskonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Nachlasskonto;
   const verkaufRandomSkontobuchungssatz = verkaufArray_Subjekt_5[Math.floor(Math.random() * verkaufArray_Subjekt_5.length)];
+  const verkaufRandomDifferenzkalkulation = verkaufArray_Subjekt_6[Math.floor(Math.random() * verkaufArray_Subjekt_6.length)];
   const verkaufNettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
   const verkaufWert = generateRandomNettoWert();
   const verkaufNettoWert = formatCurrency(verkaufWert);
@@ -219,7 +225,17 @@ function verkaufErstelleZufallssatz() {
   let verkaufGewinnWert = formatCurrency(verkaufBerechnungGewinnWert);
   let verkaufBerechnungSelbstkostenpreis = parseFloat(verkaufBerechnung_barverkaufspreis) - parseFloat(verkaufBerechnungGewinnWert);
   let verkaufSelbstkostenpreis = formatCurrency(verkaufBerechnungSelbstkostenpreis);
+  let verkaufWunschRandom_Gewinn = getRandomWunschGewinn();
+  console.log(verkaufWunschRandom_Gewinn);
+  let verkaufWunschGewinn = parseFloat(verkaufRandom_Gewinn)+parseFloat(verkaufWunschRandom_Gewinn);
+  console.log(verkaufWunschGewinn);
 
+  let verkaufKundenanfrage;
+  if(verkaufWunschGewinn > verkaufRandom_Gewinn ) {
+  verkaufKundenanfrage = " nicht";
+  } else {
+  verkaufKundenanfrage = "";
+}
 
   let verkaufUSTWert = formatCurrency(verkaufBerechnung_USTWert);
   let verkaufUeberweisungsbetrag_berechnung = verkaufBerechnung_bruttoWert - verkaufBerechnung_skontoBetrag_brutto;
@@ -232,6 +248,8 @@ function verkaufErstelleZufallssatz() {
   const verkaufAntwort_rabattSatz = `${verkaufRandom_Rabatt}`;
   const verkaufAntwort_GewinnWert = `${verkaufGewinnWert}`;
   const verkaufAntwort_GewinnSatz = `${verkaufRandom_Gewinn}`;
+  const verkaufAntwort_wunschGewinn = `${verkaufWunschGewinn}`;
+  const verkaufAntwort_Kundenanfrage = `${verkaufKundenanfrage}`;
   const verkaufAntwort_skontoSatz = `${verkaufRandom_Skonto}`;
   const verkaufAntwort_skontoBetrag = `${verkaufSkontoBetrag}`;
   const verkaufAntwort_skontoBetrag_brutto = `${verkaufSkontoBetrag_brutto}`;
@@ -255,9 +273,19 @@ function verkaufErstelleZufallssatz() {
   } else if (verkaufRandomAngebotSatz < 0.66) {
     verkaufAngebotSatz += `<li>${verkaufRandomAngebot} Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis}, ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Der Kunde akzeptiert das Angebot und gibt die Bestellung in Auftrag. Wir liefern ${verkaufRandomZahlung}.</li>`;
   } else {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn}${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} . Die Selbstkosten betragen ${verkaufAntwort_Selbstkostenpreis}.</li><li>Der Kunde nimmt das Angebot ${verkaufRandomZahlung} an. Bilde den Buchungssatz!</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Die Selbstkosten betragen ${verkaufAntwort_Selbstkostenpreis}.</li><li>Der Kunde nimmt das Angebot ${verkaufRandomZahlung} an. Bilde den Buchungssatz!</li>`;
   }
   verkaufAngebotSatz += `</ol>`;
+
+  let verkaufDifferenzSatz;
+  const verkaufRandomDifferenzkalkulationSatz = Math.random();
+  if (verkaufRandomDifferenzkalkulationSatz < 0.33) {
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation} zum Listenpreis von ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Berrechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können, wenn der Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis} beträgt und wir mindestens ${verkaufWunschGewinn} % Gewinn erzielen wollen.`;
+  } else if (verkaufRandomDifferenzkalkulationSatz < 0.66) {
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er schlägt einen Listenpreis von ${verkaufRandomNettowert} vor ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Der Selbstkostenpreis beträgt dabei ${verkaufAntwort_Selbstkostenpreis} und wir wollen mindestens ${verkaufWunschGewinn} % Gewinn erzielen. Berrechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können.`;
+  } else {
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er möchte einen Listenpreis von ${verkaufRandomNettowert} bezahlen ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} erhalten. Berrechne, ob wir die Anfrage akzeptieren können. Wir möchten mindestens ${verkaufWunschGewinn} % Gewinn erzielen, die Selbstkosten betragen ${verkaufAntwort_Selbstkostenpreis}.`;
+  }
 
   let verkaufZufaelligerSatz;
   const verkaufRandomValue = Math.random();
@@ -282,7 +310,7 @@ function verkaufErstelleZufallssatz() {
 
 
 
-  return [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufSkontoSatz, listenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz];
+  return [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, listenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz];
 
 }
 
@@ -297,27 +325,35 @@ function verkaufZeigeZufaelligenSatz() {
   verkaufAntwortOutput += '<ol>';
 
   for (let i = 1; i <= verkaufAnzahl; i++) {
-    const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz] = verkaufErstelleZufallssatz();
+    const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz] = verkaufErstelleZufallssatz();
     const verkaufFormattedSatz = verkaufZufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedAngebot = verkaufAngebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedSkonto = verkaufSkontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
-
+    const verkaufFormattedDifferenz = verkaufDifferenzSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     // Generierte Sätze hinzufügen
 
     verkaufSatzOutput += `<li>`;
-    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation') {
-      verkaufSatzOutput += `<div>${verkaufFormattedAngebot}</div><br>`;
-    } else {
-      verkaufSatzOutput += `${verkaufFormattedSatz}<br><br>`;
-      if (verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
+
+    switch (verkaufBuchungsoptionDropdown.value) {
+      case 'verkaufskalkulation':
+          verkaufSatzOutput += `<div>${verkaufFormattedAngebot}</div><br>`;
+          break;
+      case 'verkaufSkontobuchungssatz':
+        verkaufSatzOutput += `${verkaufFormattedSatz}<br><br>`;
         verkaufSatzOutput += `${verkaufFormattedSkonto}<br><br>`;
+          break;
+      case 'verkaufDifferenzkalkulation':
+        verkaufSatzOutput += `${verkaufFormattedDifferenz}<br><br>`;
+          break;
+      default:
+        verkaufSatzOutput += `${verkaufFormattedSatz}<br><br>`;
       }
-    }
-    verkaufSatzOutput += `</li>`;
+
+   verkaufSatzOutput += `</li>`;
 
     // Generierte Antworten hinzufügen
     verkaufAntwortOutput += `<li><br>`;
-    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation') {
+    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
       verkaufAntwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
@@ -355,6 +391,10 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</tbody>`;
       verkaufAntwortOutput += `</table><br>`;
     }
+    if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+      verkaufAntwortOutput += `<p>Wir können die Kundenanfrage${verkaufAntwort_Kundenanfrage} akzeptieren, da wir den gewünschten Mindestgewinn${verkaufAntwort_Kundenanfrage} erzielen.`;
+    }
+    if (verkaufBuchungsoptionDropdown.value != 'verkaufDifferenzkalkulation') {
     verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
     verkaufAntwortOutput += `<tbody>`;
     verkaufAntwortOutput += `<tr>`;
@@ -372,6 +412,7 @@ function verkaufZeigeZufaelligenSatz() {
     verkaufAntwortOutput += `</tr>`;
     verkaufAntwortOutput += `</tbody>`;
     verkaufAntwortOutput += `</table>`;
+    }
     if (verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
       verkaufAntwortOutput += `<br><b>Nebenrechnung:</b><br>`;
       verkaufAntwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
