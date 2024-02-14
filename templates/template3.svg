@@ -42,7 +42,7 @@
   <g id="bestellDaten">
     <rect class="colorSVG" x="20" y="510" width="680" height="2" fill="#7db9f5" />
     <text id="pos" x="40" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Pos</text>
-    <text id="artikel" x="100" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Artikelbezeichnung</text>
+    <text id="artikel" x="100" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Leistung</text>
     <text id="menge" x="400" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Menge</text>
     <text id="einzelpreis" x="530" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Einzelpreis</text>
     <text id="gesamtpreis" x="690" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Gesamtpreis</text>

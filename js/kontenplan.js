@@ -225,4 +225,10 @@ konten:
   - value_number: "7510"
     value_account: "ZAW"
     label: "7510 ZAW"
+  - value_number: "8010"
+    value_account: "SBK"
+    label: "8010 SBK"
+  - value_number: "8020"
+    value_account: "GUV"
+    label: "8020 GUV"    
     `;

@@ -101,16 +101,15 @@ let kontenZahlung;
 function inputChangeCategory() {
   if (buchungsoptionDropdown.value === 'einkaufskalkulation' || buchungsoptionDropdown.value === 'skontobuchungssatz' ) {
     kontenZahlung = {
-      " und erhalten eine Rechnung": "4400 VE",
-      " mit Erhalt einer Eingangsrechnung": "4400 VE",
-      " auf Rechnung": "4400 VE",
+      "und erhalten die Eingangsrechnung": "4400 VE",
+      ". Die Werkstoffe werden geliefert und der Lieferer sendet uns eine Eingangsrechnung": "4400 VE",
+      " und erhalten die Rechnung des Lieferers": "4400 VE",
     } } else {
   kontenZahlung = {
     "in bar": "2880 KA",
     "per Barzahlung": "2880 KA",
     "per Banküberweisung": "2800 BK",
     "gegen Rechnung": "4400 VE",
-    "mit Erhalt einer Eingangsrechnung": "4400 VE",
     "auf Rechnung": "4400 VE",
     "auf Ziel": "4400 VE",
   }
@@ -126,7 +125,7 @@ function erstelleZufallssatz() {
   let random_Skonto = (randomSk < 0.5) ? 2 : 3;
   random_Bezugskosten = formatCurrency(random_Bezugskosten);
   // Arrays mit verschiedenen Teilen des Satzes
-  const array_Subjekt = ['Wir kaufen ', 'Wir beziehen ', 'Unsere Firma kauft ', 'Wir erwerben ', 'Wir haben bezogen: ', 'Wir haben gekauft: '];
+  const array_Subjekt = ['Wir kaufen ', 'Wir beziehen ', 'Unsere Firma kauft ', 'Wir erwerben ', 'Ein Lieferant sendet ', 'Wir haben gekauft: '];
   const array_Subjekt_2 = ['Kauf ', 'Einkauf ', 'Erwerb ', 'Beschaffung ', 'Bezug '];
   const array_Subjekt_3 = ['Berechne den Einstandspreis: Wir erhalten ein Angebot für ', 'Berechne den Einstandspreis, wenn wir ein Angebot erhalten für '];
   const array_Subjekt_4 = ['Berechne den Einstandspreis: Unser Lieferant sendet ein Angebot für den Bezug', 'Berechne den Einstandspreis eines Angebots für den Kauf '];
