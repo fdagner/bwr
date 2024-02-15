@@ -534,13 +534,18 @@ function loadLogo(event) {
     }
 }
 
+function validateInputs() {
+
+    if (!validateInputs()) {
+    // Wenn die Validierung fehlschlägt, stoppe die Funktion
+    return;
+}
+}
+
 
 function applyOrderData() {
-    if (!validateInputs()) {
-        // Wenn die Validierung fehlschlägt, stoppe die Funktion
-        return;
-    }
 
+    validateInputs();
     // Hole die ausgewählten Werte von Tag und Monat
 
     const selectedTag = document.getElementById('tag').value;
@@ -677,101 +682,6 @@ function applyOrderData() {
 
     }
 
-
-
-    const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
-    if (!useScriptQuittung) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahrQuittung');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrQuittung');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
-
-    } else {
-
-        const customDefs = document.getElementById('customDefsQuittung');
-        const customJsScript = document.getElementById('customJsQuittung');
-        const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScriptQuittung) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJsQuittung';
-            dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoadQuittung() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahrQuittung');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-            customDefs.appendChild(dynamicScript);
-
-        }
-        SVGonLoadQuittung(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-
-    }
-
-    const useScriptKassenbon = document.getElementById('scriptJahrKassenbon').checked;
-    if (!useScriptKassenbon) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahrKassenbon');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrKassenbon');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
-
-    } else {
-
-        const customDefs = document.getElementById('customDefsKassenbon');
-        const customJsScript = document.getElementById('customJsKassenbon');
-        const useScriptQuittung = document.getElementById('scriptJahrKassenbon').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScriptKassenbon) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJsKassenbon';
-            dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoadKassenbon() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahrKassenbon');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-            customDefs.appendChild(dynamicScript);
-
-        }
-        SVGonLoadKassenbon(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-
-    }
 
 
     // Hilfsfunktion, um den numerischen Wert eines Eingabefelds zu erhalten
@@ -1021,7 +931,15 @@ function applyOrderData() {
     const emailSubject = document.getElementById('emailSubjectInput').value;
     document.getElementById('emailSubject').textContent = emailSubject;
 
+    loadCompanyData(); // Laden der Kundeninformationen
+    loadSupplierData(); // Laden der Lieferanteninformationen
+    loadKontoauszugData() // Laden der Quittungsdaten
+    loadEmailData() // Laden der E-Mail-Daten
+    loadCompanyDataforEmail(); // Laden der E-Mail-Daten (Kunde)
+}
 
+function quittungApplySVGholen() {
+    validateInputs();
     // Laden der Daten für die Quittung
     let quittungZweck = document.getElementById('quittungZweckInput').value;
     document.getElementById('quittungZweck').textContent = quittungZweck;
@@ -1064,6 +982,61 @@ function applyOrderData() {
     document.getElementById('quittungInWorten').textContent = quittungInWorten;
 
 
+
+    const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
+    if (!useScriptQuittung) {
+        // Verwende das Jahr aus dem Textfeld
+        const selectedJahr = document.getElementById('jahrQuittung');
+        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrQuittung');
+        for (const yearelement of yearelementsWithClass) {
+            yearelement.textContent = selectedJahr.value;
+        }
+
+    } else {
+
+        const customDefs = document.getElementById('customDefsQuittung');
+        const customJsScript = document.getElementById('customJsQuittung');
+        const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
+
+        if (customJsScript) {
+            customJsScript.remove();
+        }
+
+        if (useScriptQuittung) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJsQuittung';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoadQuittung() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahrQuittung');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoadQuittung(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
+    }
+
+
+    loadQuittungData() // Laden der Quittung-Daten
+    loadCompanyDataforQuittung(); // Laden der Quittung-Daten (Kunde) 
+}
+
+function kassenbonApplySVGholen() {
+    validateInputs();
     // Laden der Daten für den Kassenbon
     let kassenbonZweck = document.getElementById('kassenbonZweckInput').value;
     document.getElementById('kassenbonZweck').textContent = kassenbonZweck;
@@ -1107,6 +1080,60 @@ function applyOrderData() {
     let kassenbonZahlungsart = document.getElementById('kassenbonDropdownZahlungsart').value;
     document.getElementById('kassenbonZahlungsart').textContent = kassenbonZahlungsart;
 
+    
+    const useScriptKassenbon = document.getElementById('scriptJahrKassenbon').checked;
+    if (!useScriptKassenbon) {
+        // Verwende das Jahr aus dem Textfeld
+        const selectedJahr = document.getElementById('jahrKassenbon');
+        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrKassenbon');
+        for (const yearelement of yearelementsWithClass) {
+            yearelement.textContent = selectedJahr.value;
+        }
+
+    } else {
+
+        const customDefs = document.getElementById('customDefsKassenbon');
+        const customJsScript = document.getElementById('customJsKassenbon');
+        const useScriptQuittung = document.getElementById('scriptJahrKassenbon').checked;
+
+        if (customJsScript) {
+            customJsScript.remove();
+        }
+
+        if (useScriptKassenbon) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJsKassenbon';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoadKassenbon() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahrKassenbon');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoadKassenbon(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
+    }
+
+
+    loadKassenbonData() // Laden der Kassenbon-Daten
+}
+
+    function journalApplySVGholen() {
+ 
     // Laden der Daten des Lohnjournals
 
     // Funktion zum Zufälligen Auswählen von Mitarbeitern
@@ -1297,7 +1324,7 @@ const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
         lohnjournalMonat.textContent = zufälligerMonat;
     }
 
-    let lohnjournalSatzOutput = "<h3>Buchungssätze</h3>";
+    let lohnjournalSatzOutput = "";
     lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
     lohnjournalSatzOutput += `<tbody>`;
     lohnjournalSatzOutput += `<tr>`;
@@ -1334,17 +1361,8 @@ const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
     lohnjournalSatzOutput += `</table>`;
 
     document.getElementById('lohnjournalBuchungssatzContainer').innerHTML = lohnjournalSatzOutput;
-
-    loadCompanyData(); // Laden der Kundeninformationen
-    loadSupplierData(); // Laden der Lieferanteninformationen
-    loadKontoauszugData() // Laden der Quittungsdaten
-    loadEmailData() // Laden der E-Mail-Daten
-    loadCompanyDataforEmail(); // Laden der E-Mail-Daten (Kunde)
-    loadQuittungData() // Laden der Quittung-Daten
-    loadKassenbonData() // Laden der Kassenbon-Daten
-    loadLohnjournalData() // Laden der Kassenbon-Daten
-    loadCompanyDataforQuittung(); // Laden der Quittung-Daten (Kunde)
     loadLohnjournalData() // Laden des Lohnjournals
+
 }
 
 // Funktion zur Generierung einer zufälligen 7-stelligen Nummer
@@ -1451,7 +1469,7 @@ function zahlwort(zahl) {
     return zahlinworten.trim();
 }
 
-// Funktion zur Generierung einer zufälligen Uhrzeit zwischen 10:00 und 10:59
+// Funktion zur Generierung einer zufälligen Uhrzeit zwischen 10:00 und 16:59
 function generateRandomTime() {
     let hour = Math.floor(Math.random() * 7) + 10; // Zufällige Stunde zwischen 10 und 17
     let minute = Math.floor(Math.random() * 60); // Zufällige Minute zwischen 0 und 59
@@ -1732,8 +1750,24 @@ function lohnjournalBuchungssatzHerunterladenAlsPNG() {
 // Export to SVG
 
 function herunterladen(containerId, dateiname) {
-    const containerHTML = document.getElementById(containerId).innerHTML.replace(/&nbsp;/g, ' ');
-    const blob = new Blob([containerHTML], { type: 'svg' });
+    const container = document.getElementById(containerId);
+    const containerHTML = container.innerHTML.replace(/&nbsp;/g, ' ');
+
+    // Erzeuge ein temporäres div-Element, um die SVG zu rendern
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = containerHTML;
+    const svgElement = tempDiv.querySelector('svg');
+
+    const viewBox = svgElement.getAttribute('viewBox').split(' ');
+    const viewBoxWidth = parseFloat(viewBox[2]);
+    const viewBoxHeight = parseFloat(viewBox[3]);
+
+    // Setze width und height basierend auf den Werten von viewBox
+    svgElement.setAttribute('width', viewBoxWidth);
+    svgElement.setAttribute('height', viewBoxHeight);
+
+    // Erstelle Blob und lade die SVG-Datei herunter
+    const blob = new Blob([tempDiv.innerHTML], { type: 'image/svg+xml' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = dateiname;
