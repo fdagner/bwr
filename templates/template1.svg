@@ -93,7 +93,7 @@
     <text x="350" y="830">Vielen Dank für Ihre Bestellung!</text>
     <text x="350" y="860">Zahlung fällig in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
     <text id="skontotext" x="350" y="890">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto</text>
-    <text x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
+    <text id="Eigentumsvorbehalt" x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
   </g>
   <g id="footerText" transform="translate(0,-20)" fill="#fff">
     <text id="bankLieferer" x="20" y="1000" font-family="Arial" font-size="15" />
