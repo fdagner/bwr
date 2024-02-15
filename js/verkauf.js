@@ -35,14 +35,13 @@ function getRandomRabatt() {
 }
 
 function getRandomGewinn() {
-  return getRandomIntegerWithSteps(20, 50, 5);
+  return getRandomIntegerWithSteps(5, 30, 5);
 }
 
 function getRandomWunschGewinn() {
-  // Generiere eine zufällige Ganzzahl zwischen -10 und 5
-  return Math.floor(Math.random() * 4) * 5 - 10;
+  // Generiere eine zufällige Ganzzahl zwischen 0 und 20 in 5er-Schritten
+  return Math.floor(Math.random() * 5) * 5;
 }
-
 function getRandomBezugskosten() {
   return getRandomIntegerWithSteps(50, 250, 5);
 }
@@ -109,8 +108,8 @@ function verkaufErstelleZufallssatz() {
   const verkaufArray_Subjekt_3 = ['Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: ', 'Wir erhalten eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis berechnen, wenn wir mit den folgenden Werten kalkulieren: '];
   const verkaufArray_Subjekt_4 = ['Uns erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei', 'Wir erhalten eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis bei '];
   const verkaufArray_Subjekt_5 = [`Unser Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
-  const verkaufArray_Subjekt_6 = [`Ein Kunde verhandelt mit uns über den Kauf von Fertigerzeugnissen`,'Wir erhalten von einem Kunden eine Anfrage für Fertigerzeugnisse', 'Ein Kunde sendet uns per E-Mail eine Anfrage für den Bezug von Fertigerzeugnissen', 'Ein Stammkunde möchte bei uns Fertigerzeugnisse kaufen und sendet eine Anfrage'];
-   const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
+  const verkaufArray_Subjekt_6 = [`Ein Kunde verhandelt mit uns über den Kauf von Fertigerzeugnissen`, 'Wir erhalten von einem Kunden eine Anfrage für Fertigerzeugnisse', 'Ein Kunde sendet uns per E-Mail eine Anfrage für den Bezug von Fertigerzeugnissen', 'Ein Stammkunde möchte bei uns Fertigerzeugnisse kaufen und sendet eine Anfrage'];
+  const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
   const verkaufArray_Fertigerzeugnisse_2 = Object.keys(kontenUmsatzerloese_2);
   const verkaufArray_Supply_Wert = ['mit einem Verkaufspreis in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
   const verkaufArray_Zahlung = Object.keys(verkaufKontenZahlung);
@@ -221,21 +220,36 @@ function verkaufErstelleZufallssatz() {
   let verkaufBerechnung_barverkaufspreis = parseFloat(verkaufBerechnung_nettoWert) - parseFloat(verkaufBerechnung_skontoBetrag);
   let verkaufBarverkaufspreis = formatCurrency(verkaufBerechnung_barverkaufspreis);
   let verkaufRandomSupply_Gewinn = verkaufArray_Supply_Gewinn[Math.floor(Math.random() * verkaufArray_Supply_Gewinn.length)];
+  // Diferenzkalkualtion Gewinn
+  let verkaufWunschRandom_Gewinn = getRandomWunschGewinn();
+  let verkaufWunschGewinn;
+  if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+    verkaufWunschGewinn = parseFloat(verkaufRandom_Gewinn);
+    verkaufRandom_Gewinn = parseFloat(verkaufRandom_Gewinn) - parseFloat(verkaufWunschRandom_Gewinn);
+  } else {
+    verkaufRandom_Gewinn = verkaufRandom_Gewinn;
+  }
   let verkaufBerechnungGewinnWert = parseFloat(verkaufBerechnung_barverkaufspreis) * parseFloat(verkaufRandom_Gewinn) / (100 + parseFloat(verkaufRandom_Gewinn))
   let verkaufGewinnWert = formatCurrency(verkaufBerechnungGewinnWert);
   let verkaufBerechnungSelbstkostenpreis = parseFloat(verkaufBerechnung_barverkaufspreis) - parseFloat(verkaufBerechnungGewinnWert);
   let verkaufSelbstkostenpreis = formatCurrency(verkaufBerechnungSelbstkostenpreis);
-  let verkaufWunschRandom_Gewinn = getRandomWunschGewinn();
-  console.log(verkaufWunschRandom_Gewinn);
-  let verkaufWunschGewinn = parseFloat(verkaufRandom_Gewinn)+parseFloat(verkaufWunschRandom_Gewinn);
-  console.log(verkaufWunschGewinn);
 
   let verkaufKundenanfrage;
-  if(verkaufWunschGewinn > verkaufRandom_Gewinn ) {
-  verkaufKundenanfrage = " nicht";
-  } else {
-  verkaufKundenanfrage = "";
+  if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+
+    if (verkaufRandom_Gewinn < 0) {
+      verkaufKundenanfrage = "Wir können die Kundenanfrage nicht akzeptieren, da wir Verlust machen würden.";
+    } else if (verkaufRandom_Gewinn === 0) {
+      verkaufKundenanfrage = "Wir würden unter den angegebenen Konditionen keinen Gewinn erzielen. Unter gewissen Umständen sollte der Auftrag dennoch angenommen werden, falls damit zum Beispiel eine neuer Kunde gewonnen werden kann.";
+    } else if (verkaufRandom_Gewinn > 0) {
+      if (verkaufRandom_Gewinn < verkaufWunschGewinn) {
+      verkaufKundenanfrage = "Der Mindestgewinn wird zu den angegebenen Konditionen nicht erreicht. Unter gewissen Umständen sollte der Auftrag dennoch angenommen werden, falls damit zum Beispiel ein neuer Kunde gewonnen werden kann.";
+    } else if (verkaufRandom_Gewinn >= verkaufWunschGewinn) {
+      verkaufKundenanfrage = "Wir können die Kundenanfrage akzeptieren, da wir den Mindestgewinn erzielen.";
+    }
+  } 
 }
+
 
   let verkaufUSTWert = formatCurrency(verkaufBerechnung_USTWert);
   let verkaufUeberweisungsbetrag_berechnung = verkaufBerechnung_bruttoWert - verkaufBerechnung_skontoBetrag_brutto;
@@ -336,20 +350,20 @@ function verkaufZeigeZufaelligenSatz() {
 
     switch (verkaufBuchungsoptionDropdown.value) {
       case 'verkaufskalkulation':
-          verkaufSatzOutput += `<div>${verkaufFormattedAngebot}</div><br>`;
-          break;
+        verkaufSatzOutput += `<div>${verkaufFormattedAngebot}</div><br>`;
+        break;
       case 'verkaufSkontobuchungssatz':
         verkaufSatzOutput += `${verkaufFormattedSatz}<br><br>`;
         verkaufSatzOutput += `${verkaufFormattedSkonto}<br><br>`;
-          break;
+        break;
       case 'verkaufDifferenzkalkulation':
         verkaufSatzOutput += `${verkaufFormattedDifferenz}<br><br>`;
-          break;
+        break;
       default:
         verkaufSatzOutput += `${verkaufFormattedSatz}<br><br>`;
-      }
+    }
 
-   verkaufSatzOutput += `</li>`;
+    verkaufSatzOutput += `</li>`;
 
     // Generierte Antworten hinzufügen
     verkaufAntwortOutput += `<li><br>`;
@@ -392,26 +406,26 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</table><br>`;
     }
     if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
-      verkaufAntwortOutput += `<p>Wir können die Kundenanfrage${verkaufAntwort_Kundenanfrage} akzeptieren, da wir den gewünschten Mindestgewinn${verkaufAntwort_Kundenanfrage} erzielen.`;
+      verkaufAntwortOutput += `<p>${verkaufAntwort_Kundenanfrage}</p>.`;
     }
     if (verkaufBuchungsoptionDropdown.value != 'verkaufDifferenzkalkulation') {
-    verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
-    verkaufAntwortOutput += `<tbody>`;
-    verkaufAntwortOutput += `<tr>`;
-    verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${verkaufKonto_2}</td>`;
-    verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufBetrag_2}</td>`;
-    verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
-    verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">${verkaufKonto_1}</td>`;
-    verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${Zielverkaufspreis}</td>`;
-    verkaufAntwortOutput += `</tr>`;
-    verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
-    verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
-    verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
-    verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">4800 UST</td>`;
-    verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufUSTWert}</td>`;
-    verkaufAntwortOutput += `</tr>`;
-    verkaufAntwortOutput += `</tbody>`;
-    verkaufAntwortOutput += `</table>`;
+      verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+      verkaufAntwortOutput += `<tbody>`;
+      verkaufAntwortOutput += `<tr>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${verkaufKonto_2}</td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufBetrag_2}</td>`;
+      verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">${verkaufKonto_1}</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${Zielverkaufspreis}</td>`;
+      verkaufAntwortOutput += `</tr>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">4800 UST</td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufUSTWert}</td>`;
+      verkaufAntwortOutput += `</tr>`;
+      verkaufAntwortOutput += `</tbody>`;
+      verkaufAntwortOutput += `</table>`;
     }
     if (verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
       verkaufAntwortOutput += `<br><b>Nebenrechnung:</b><br>`;
