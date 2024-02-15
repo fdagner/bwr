@@ -35,13 +35,20 @@ function getRandomRabatt() {
 }
 
 function getRandomGewinn() {
-  return getRandomIntegerWithSteps(5, 30, 5);
+  // Generiere eine zufällige Ganzzahl zwischen 0 und 25 in 1er-Schritten
+  let randomNumber = Math.floor(Math.random() * 26);
+  // Stelle sicher, dass die Zahl zwischen 6 und 25 liegt
+  while (randomNumber < 5) {
+    randomNumber = Math.floor(Math.random() * 26);
+  }
+  return randomNumber;
 }
 
 function getRandomWunschGewinn() {
-  // Generiere eine zufällige Ganzzahl zwischen 0 und 20 in 5er-Schritten
-  return Math.floor(Math.random() * 5) * 5;
+  // Generiere eine zufällige Ganzzahl zwischen 0 und 20 in 1er-Schritten
+  return Math.floor(Math.random() * 21);
 }
+
 function getRandomBezugskosten() {
   return getRandomIntegerWithSteps(50, 250, 5);
 }
@@ -49,8 +56,9 @@ function getRandomBezugskosten() {
 
 // Funktion zur Generierung einer Zufallsganzzahl für den Nettowert
 function generateRandomNettoWert() {
-  return Math.round(Math.random() * 29 + 5) * 1000;
-
+  let randomNumber = Math.round(Math.random() * (30000 - 500)) + 500; // Zufallszahl zwischen 2500 und 50000
+  randomNumber = Math.round(randomNumber / 100) * 100; // Auf Hundert gerundet
+  return randomNumber;
 }
 
 // Währung nach DIN 5008
@@ -133,7 +141,7 @@ function verkaufErstelleZufallssatz() {
   ];
   const verkaufArray_Supply_Bezugskosten = [
     `. Zusätzlich belasten wir den Kunden mit Versandkosten von netto ${verkaufRandom_Bezugskosten}`,
-    `. Zusätzlich berrechnen wir Verpackungskosten in Höhe von ${verkaufRandom_Bezugskosten} netto`,
+    `. Zusätzlich berechnen wir Verpackungskosten in Höhe von ${verkaufRandom_Bezugskosten} netto`,
     `. Transportversicherung und Rollgeld betragen darüber hinaus netto ${verkaufRandom_Bezugskosten} und werden dem Kunden zusätzlich berechnet`,
     `. Die Leihverpackung in Höhe von ${verkaufRandom_Bezugskosten} netto wird dem Kunden zusätzlich berechnet`,
     `. Es werden darüber hinaus netto ${verkaufRandom_Bezugskosten} an Versandkosten dem Kunden berechnet`,
@@ -240,15 +248,15 @@ function verkaufErstelleZufallssatz() {
     if (verkaufRandom_Gewinn < 0) {
       verkaufKundenanfrage = "Wir können die Kundenanfrage nicht akzeptieren, da wir Verlust machen würden.";
     } else if (verkaufRandom_Gewinn === 0) {
-      verkaufKundenanfrage = "Wir würden unter den angegebenen Konditionen keinen Gewinn erzielen. Unter gewissen Umständen sollte der Auftrag dennoch angenommen werden, falls damit zum Beispiel eine neuer Kunde gewonnen werden kann.";
+      verkaufKundenanfrage = "Wir würden unter den angegebenen Konditionen keinen Gewinn erzielen. Unter gewissen Umständen sollte der Auftrag dennoch angenommen werden, falls damit zum Beispiel ein neuer Kunde gewonnen werden kann.";
     } else if (verkaufRandom_Gewinn > 0) {
       if (verkaufRandom_Gewinn < verkaufWunschGewinn) {
-      verkaufKundenanfrage = "Der Mindestgewinn wird zu den angegebenen Konditionen nicht erreicht. Unter gewissen Umständen sollte der Auftrag dennoch angenommen werden, falls damit zum Beispiel ein neuer Kunde gewonnen werden kann.";
-    } else if (verkaufRandom_Gewinn >= verkaufWunschGewinn) {
-      verkaufKundenanfrage = "Wir können die Kundenanfrage akzeptieren, da wir den Mindestgewinn erzielen.";
+        verkaufKundenanfrage = "Der Mindestgewinn wird zu den angegebenen Konditionen nicht erreicht. Unter gewissen Umständen sollte der Auftrag dennoch angenommen werden, falls damit zum Beispiel ein neuer Kunde gewonnen werden kann.";
+      } else if (verkaufRandom_Gewinn >= verkaufWunschGewinn) {
+        verkaufKundenanfrage = "Wir können die Kundenanfrage akzeptieren, da wir den Mindestgewinn erzielen.";
+      }
     }
-  } 
-}
+  }
 
 
   let verkaufUSTWert = formatCurrency(verkaufBerechnung_USTWert);
@@ -294,7 +302,7 @@ function verkaufErstelleZufallssatz() {
   let verkaufDifferenzSatz;
   const verkaufRandomDifferenzkalkulationSatz = Math.random();
   if (verkaufRandomDifferenzkalkulationSatz < 0.33) {
-    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation} zum Listenpreis von ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Berrechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können, wenn der Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis} beträgt und wir mindestens ${verkaufWunschGewinn} % Gewinn erzielen wollen.`;
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation} zum Listenpreis von ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Berechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können, wenn der Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis} beträgt und wir mindestens ${verkaufWunschGewinn} % Gewinn erzielen wollen.`;
   } else if (verkaufRandomDifferenzkalkulationSatz < 0.66) {
     verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er schlägt einen Listenpreis von ${verkaufRandomNettowert} vor ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Der Selbstkostenpreis beträgt dabei ${verkaufAntwort_Selbstkostenpreis} und wir wollen mindestens ${verkaufWunschGewinn} % Gewinn erzielen. Berrechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können.`;
   } else {
@@ -336,7 +344,6 @@ function verkaufZeigeZufaelligenSatz() {
   let verkaufSatzOutput = '<h2>Aufgaben</h2>';
   verkaufSatzOutput += '<ol>';
   let verkaufAntwortOutput = `<h2>Lösung</h2>`;
-  verkaufAntwortOutput += '<ol>';
 
   for (let i = 1; i <= verkaufAnzahl; i++) {
     const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz] = verkaufErstelleZufallssatz();
@@ -366,7 +373,7 @@ function verkaufZeigeZufaelligenSatz() {
     verkaufSatzOutput += `</li>`;
 
     // Generierte Antworten hinzufügen
-    verkaufAntwortOutput += `<li><br>`;
+    verkaufAntwortOutput += `${parseInt(i)}.<br><br>`;
     if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
       verkaufAntwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       verkaufAntwortOutput += `<tbody>`;
@@ -403,10 +410,10 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</tbody>`;
-      verkaufAntwortOutput += `</table><br>`;
+      verkaufAntwortOutput += `</table>`;
     }
     if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
-      verkaufAntwortOutput += `<p>${verkaufAntwort_Kundenanfrage}</p>.`;
+      verkaufAntwortOutput += `<p>${verkaufAntwort_Kundenanfrage}</p>`;
     }
     if (verkaufBuchungsoptionDropdown.value != 'verkaufDifferenzkalkulation') {
       verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
@@ -428,7 +435,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</table>`;
     }
     if (verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
-      verkaufAntwortOutput += `<br><b>Nebenrechnung:</b><br>`;
+      verkaufAntwortOutput += `<h4>Nebenrechnung:</h4>`;
       verkaufAntwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
@@ -462,7 +469,6 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">100 %</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</table>`;
-      verkaufAntwortOutput += `<br>`;
       verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
@@ -488,15 +494,13 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</tbody>`;
       verkaufAntwortOutput += `</table>`;
-      verkaufAntwortOutput += `<br><br>`;
     }
-    verkaufAntwortOutput += `</li>`;
+    verkaufAntwortOutput += `<br>`;
   }
 
 
-
   verkaufSatzOutput += '</ol>'; // Ende der nummerierten Liste für Sätze
-  verkaufAntwortOutput += '</ol>'; // Ende der nummerierten Liste für Antworten
+
 
   // Sätze und Antworten auf der Seite anzeigen
   document.getElementById('verkaufContainer').innerHTML = verkaufSatzOutput + verkaufAntwortOutput;
@@ -509,7 +513,7 @@ function verkaufHerunterladen() {
   const blob = new Blob([einkaufHTML], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'einkauf.html';
+  a.download = 'verkauf.html';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
