@@ -412,7 +412,7 @@ function loadSupplierData() {
     document.getElementById('bankLieferer').textContent = selectedSupplier.unternehmen.bank;
     document.getElementById('ibanLieferer').textContent = 'IBAN: ' + selectedSupplier.unternehmen.iban;
     document.getElementById('bicLieferer').textContent = 'BIC: ' + selectedSupplier.unternehmen.bic;
-    document.getElementById('nummerKunde').textContent = nummerKunde * selectedSupplier.unternehmen.id * 3;
+    document.getElementById('nummerKunde').textContent = (nummerKunde * selectedSupplier.unternehmen.id * 9)+133;
     const colorSVGElements = document.querySelectorAll('.colorSVG');
     colorSVGElements.forEach(element => {
         // Check if selectedSupplier.unternehmen.akzent is undefined
@@ -534,18 +534,16 @@ function loadLogo(event) {
     }
 }
 
-function validateInputs() {
 
-    if (!validateInputs()) {
-    // Wenn die Validierung fehlschlägt, stoppe die Funktion
-    return;
-}
-}
 
 
 function applyOrderData() {
 
-    validateInputs();
+    if (!validateInputs()) {
+        // Wenn die Validierung fehlschlägt, stoppe die Funktion
+        return;
+    }
+
     // Hole die ausgewählten Werte von Tag und Monat
 
     const selectedTag = document.getElementById('tag').value;
@@ -864,6 +862,15 @@ function applyOrderData() {
         bezugskostenBedingung.textContent = "";
     }
 
+    const inputEigentumsvorbehalt = document.getElementById("eigentumsvorbehaltInput");
+    const eigentumsvorbehalt = document.getElementById('Eigentumsvorbehalt');
+    
+if(inputEigentumsvorbehalt.checked) {
+    
+ } else {;
+    eigentumsvorbehalt.remove();
+ }
+
 
     // Laden der Daten für den Kontoauszug
     const kontoauszugNummer = document.getElementById('kontoauszugNummerInput').value;
@@ -939,7 +946,10 @@ function applyOrderData() {
 }
 
 function quittungApplySVGholen() {
-    validateInputs();
+    if (!validateInputs()) {
+        // Wenn die Validierung fehlschlägt, stoppe die Funktion
+        return;
+    }
     // Laden der Daten für die Quittung
     let quittungZweck = document.getElementById('quittungZweckInput').value;
     document.getElementById('quittungZweck').textContent = quittungZweck;
@@ -1036,7 +1046,10 @@ function quittungApplySVGholen() {
 }
 
 function kassenbonApplySVGholen() {
-    validateInputs();
+    if (!validateInputs()) {
+        // Wenn die Validierung fehlschlägt, stoppe die Funktion
+        return;
+    }
     // Laden der Daten für den Kassenbon
     let kassenbonZweck = document.getElementById('kassenbonZweckInput').value;
     document.getElementById('kassenbonZweck').textContent = kassenbonZweck;
