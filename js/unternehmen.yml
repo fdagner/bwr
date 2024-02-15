@@ -1,5 +1,6 @@
 - unternehmen:
     id: "1"
+    branche: "Modellunternehmen"
     name: "ABC-Bikes"
     motto: "Fahrräder von A bis Z!"
     bank: "BavarianBank"
@@ -23,6 +24,7 @@
 
 - unternehmen:
     id: "2"
+    branche: "Lieferant"
     name: "Lack Art"
     bank: "Bayern Bank"
     rechtsform: "GmbH"
@@ -45,6 +47,7 @@
 
 - unternehmen:
     id: "3"
+    branche: "Lieferant"
     name: "MS-Metall"
     bank: "Hypa Bank"
     rechtsform: "e. K."
@@ -67,6 +70,7 @@
 
 - unternehmen:
     id: "4"
+    branche: "Modellunternehmen"
     name: "Holz Design"
     bank: "Kreditbank"
     rechtsform: "AG"
@@ -89,6 +93,7 @@
 
 - unternehmen:
     id: "5"
+    branche: "Lieferant"
     name: "NaturForst"
     bank: "Bavaria Bank"
     rechtsform: "e. K."
@@ -110,6 +115,7 @@
 
 - unternehmen:
     id: "6"
+    branche: "Logistik"
     name: "Schnell Logistik"
     bank: "Kölner Bank"
     rechtsform: "GmbH"
@@ -131,6 +137,7 @@
 
 - unternehmen:
     id: "7"
+    branche: "Lieferant"
     name: "Maria Metall Profi"
     bank: "Main Bank"
     rechtsform: "e. Kfr."
@@ -153,6 +160,7 @@
 
 - unternehmen:
     id: "8"
+    branche: "Lieferant"
     name: "Textil Style"
     bank: "BavarianBank"
     rechtsform: "AG"
@@ -175,6 +183,7 @@
 
 - unternehmen:
     id: "9"
+    branche: "Lieferant"
     name: "Farbenpracht"
     motto: "Mut zu Farbe!"
     bank: "Bayernkasse"
@@ -198,6 +207,7 @@
 
 - unternehmen:
     id: "10"
+    branche: "Lieferant"
     name: "AlpenHolz"
     motto: "Nachhaltige Qualität"
     bank: "Bavaria Bank"
@@ -221,6 +231,7 @@
 
 - unternehmen:
     id: "11"
+    branche: "Lieferant"
     name: "Bayerischer Forst"
     motto: "Holz aus guten Händen"
     bank: "Waldbank"
@@ -244,6 +255,7 @@
 
 - unternehmen:
     id: "12"
+    branche: "Lieferant"
     name: "Fahrzeuge Huber"
     motto: "Spezialist für Auto und LKW"
     bank: "Mobilbank"
@@ -267,6 +279,7 @@
 
 - unternehmen:
     id: "13"
+    branche: "Lieferant"
     name: "E.T.U."
     motto: "Elektro Teile Tollmann"
     bank: "Kindlbank"
@@ -290,6 +303,7 @@
 
 - unternehmen:
     id: "14"
+    branche: "Lieferant"
     name: "Bayerchem"
     motto: "Chemische Werke"
     bank: "Stadtbank"
@@ -313,6 +327,7 @@
 
 - unternehmen:
     id: "15"
+    branche: "Logistik"
     name: "Spedition Fiedler"
     motto: "Mit Sicherheit schnell!"
     bank: "Sparbank"
@@ -336,6 +351,7 @@
 
 - unternehmen:
     id: "16"
+    branche: "Lieferant"
     name: "Werkstoffunion"
     motto: "Auf uns können Sie bauen!"
     bank: "Sparbank"
@@ -359,6 +375,7 @@
 
 - unternehmen:
     id: "17"
+    branche: "Recht und Ordnung"
     name: "Meininger und Partner"
     motto: "Rechtsanwältin"
     bank: "Sparbank"
@@ -382,6 +399,7 @@
 
 - unternehmen:
     id: "18"
+    branche: "Modellunternehmen"
     name: "Solar Solutions"
     motto: "Powering the Future"
     bank: "Eco Bank"
@@ -405,6 +423,7 @@
 
 - unternehmen:
     id: "19"
+    branche: "Lieferant"
     name: "Bayerisches Sägewerk"
     motto: "Natürliches Holz für Ihre Projekte"
     bank: "Bayern Bank"
@@ -428,6 +447,7 @@
 
 - unternehmen:
     id: "20"
+    branche: "Lieferant"
     name: "Plastöko"
     motto: "Fachhandel für Kunststoffe"
     bank: "Eco Bank"
@@ -451,6 +471,7 @@
 
 - unternehmen:
     id: "21"
+    branche: "Modellunternehmen"
     name: "AlpinSkis"
     motto: "Piste perfektioniert, Abenteuer garantiert"
     bank: "SnowBank"
@@ -474,6 +495,7 @@
 
 - unternehmen:
     id: "22"
+    branche: "Lieferant"
     name: "EcoEnergie"
     motto: "Nachhaltige Energie für eine gute Zukunft"
     bank: "GreenBank"
@@ -497,6 +519,7 @@
 
 - unternehmen:
     id: "23"
+    branche: "Einzelhandel"
     name: "Elektro World"
     motto: "Innovation in jeder Steckdose"
     bank: "Nürnberger Bank"
@@ -520,6 +543,7 @@
 
 - unternehmen:
     id: "24"
+    branche: "Modellunternehmen"
     name: "Klangmeister"
     motto: "Instrumente und traumhafte Klänge aus Meisterhand"
     bank: "Münchener Bank"
@@ -543,6 +567,7 @@
 
 - unternehmen:
     id: "25"
+    branche: "Lieferant"
     name: "Präzisions-Maschinen"
     motto: "Innovation in jeder Bewegung"
     bank: "TechBank"
@@ -566,6 +591,7 @@
 
 - unternehmen:
     id: "26"
+    branche: "Lieferant"
     name: "EcoFuel"
     motto: "Öl- und Brennstoffhandel"
     bank: "Direktbank"
@@ -589,6 +615,7 @@
 
 - unternehmen:
     id: "27"
+    branche: "Einzehandel"
     name: "SmartTrade"
     motto: "Einfach, Schnell, Online!"
     bank: "Digital Bank"
@@ -612,6 +639,7 @@
 
 - unternehmen:
     id: "28"
+    branche: "Einzelhandel"
     name: "Radelglück"
     motto: "Dein Farradhandel. Allzeit gute Fahrt!"
     bank: "Sparbank"
@@ -635,6 +663,7 @@
 
 - unternehmen:
     id: "29"
+    branche: "Lieferant"
     name: "Karton-Meister"
     motto: "Maßgeschneiderte Verpackungslösungen"
     bank: "Meisterbank"
@@ -658,6 +687,7 @@
 
 - unternehmen:
     id: "30"
+    branche: "Großhandel"
     name: "Großhandel Bayreuth"
     motto: "Qualität mit Format"
     bank: "Bayreuther Bank"
@@ -681,6 +711,7 @@
 
 - unternehmen:
     id: "31"
+    branche: "Einzelhandel"
     name: "Bike Paradies"
     motto: "Radeln mit Leidenschaft"
     bank: "Weidener Volksbank"
@@ -704,6 +735,7 @@
 
 - unternehmen:
     id: "32"
+    branche: "Recht und Ordnung"
     name: "Notariat Weidner"
     motto: "Rechtssicherheit mit Vertrauen"
     bank: "Rechtsbank"
@@ -727,6 +759,7 @@
 
 - unternehmen:
     id: "33"
+    branche: "Logistik"
     name: "Post & Shop"
     motto: "Wir verbinden Menschen."
     bank: "Sparbank"
@@ -750,6 +783,7 @@
 
 - unternehmen:
     id: "34"
+    branche: "Modellunternehmen"
     name: "Schreinerei Zachhuber"
     motto: "Holz ist unsere Leidenschaft."
     bank: "Herzobank"
@@ -773,6 +807,7 @@
 
 - unternehmen:
     id: "35"
+    branche: "Modellunternehmen"
     name: "FOM"
     motto: "Funktionale Outdoor Mode"
     bank: "Herzobank"
@@ -796,6 +831,7 @@
 
 - unternehmen:
     id: "36"
+    branche: "Modellunternehmen"
     name: "Rund und platt"
     motto: "Bälle für alle Sportarten"
     bank: "Herzobank"
@@ -819,6 +855,7 @@
 
 - unternehmen:
     id: "37"
+    branche: "Lieferant"
     name: "Werbeagentur Mandic"
     motto: "Wir machen bekannt."
     bank: "Grafbank"

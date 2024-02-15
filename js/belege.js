@@ -15,6 +15,12 @@ function handleFileUpload() {
 
                 if (uploadedYamlData && Array.isArray(uploadedYamlData)) {
                     yamlData = uploadedYamlData;
+                    uploadedYamlData.sort((a, b) => {
+                        if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
+                        if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
+                        if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
+                        return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
+                    });
 
                     // Reload dropdown and random companies based on the uploaded data
                     reloadDropdownOptions();
@@ -31,6 +37,7 @@ function handleFileUpload() {
         };
 
         reader.readAsText(uploadedFile);
+
     } else {
         alert("No file selected. Please choose a YAML file to upload.");
     }
@@ -38,6 +45,7 @@ function handleFileUpload() {
 
 
 // Function to reload dropdown options based on yamlData
+
 function reloadDropdownOptions() {
     const dropdownCustomer = document.getElementById('datenKunde');
     const dropdownSupplier = document.getElementById('datenLieferer');
@@ -66,52 +74,52 @@ function reloadDropdownOptions() {
     yamlData.forEach(company => {
         const optionCustomer = document.createElement('option');
         optionCustomer.value = company.unternehmen.name;
-        optionCustomer.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;;
+        optionCustomer.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;;
         dropdownCustomer.appendChild(optionCustomer);
 
         const optionSupplier = document.createElement('option');
         optionSupplier.value = company.unternehmen.name;
-        optionSupplier.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;;
+        optionSupplier.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;;
         dropdownSupplier.appendChild(optionSupplier);
 
         const optionKontoauszug = document.createElement('option');
         optionKontoauszug.value = company.unternehmen.name;
-        optionKontoauszug.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        optionKontoauszug.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownKontenauszug.appendChild(optionKontoauszug);
 
         const optionEmail = document.createElement('option');
         optionEmail.value = company.unternehmen.name;
-        optionEmail.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        optionEmail.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownEmail.appendChild(optionEmail);
 
         const optionEmailKunde = document.createElement('option');
         optionEmailKunde.value = company.unternehmen.name;
-        optionEmailKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        optionEmailKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownEmailKunde.appendChild(optionEmailKunde);
 
         const optionQuittung = document.createElement('option');
         optionQuittung.value = company.unternehmen.name;
-        optionQuittung.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        optionQuittung.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownQuittung.appendChild(optionQuittung);
 
         const optionQuittungKunde = document.createElement('option');
         optionQuittungKunde.value = company.unternehmen.name;
-        optionQuittungKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        optionQuittungKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownQuittungKunde.appendChild(optionQuittungKunde);
 
         const optionKassenbon = document.createElement('option');
         optionKassenbon.value = company.unternehmen.name;
-        optionKassenbon.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        optionKassenbon.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownKassenbon.appendChild(optionKassenbon);
 
         const optionKassenbonKunde = document.createElement('option');
         optionKassenbonKunde.value = company.unternehmen.name;
-        optionKassenbonKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        optionKassenbonKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownKassenbonKunde.appendChild(optionKassenbonKunde);
 
         const optionLohnjournal = document.createElement('option');
         optionLohnjournal.value = company.unternehmen.name;
-        optionLohnjournal.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        optionLohnjournal.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownLohnjournal.appendChild(optionLohnjournal);
     });
 }
@@ -163,6 +171,12 @@ fetch('js/unternehmen.yml')
     .then(response => response.text())
     .then(data => {
         yamlData = jsyaml.load(data); // Assign data to yamlData variable
+     yamlData.sort((a, b) => {
+        if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
+        if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
+        if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
+        return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
+    });
         const dropdownCustomer = document.getElementById('datenKunde');
         const dropdownSupplier = document.getElementById('datenLieferer');
         const dropdownKontoauszug = document.getElementById('datenKontoauszug');
@@ -173,56 +187,57 @@ fetch('js/unternehmen.yml')
         const dropdownKassenbon = document.getElementById('datenKassenbon');
         const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
         const dropdownLohnjournal = document.getElementById('datenLohnjournal');
+          
 
         yamlData.forEach(company => {
             const optionCustomer = document.createElement('option');
             optionCustomer.value = company.unternehmen.name;
-            optionCustomer.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionCustomer.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownCustomer.appendChild(optionCustomer);
 
             const optionSupplier = document.createElement('option');
             optionSupplier.value = company.unternehmen.name;
-            optionSupplier.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionSupplier.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownSupplier.appendChild(optionSupplier);
 
             const optionKontoauszug = document.createElement('option');
             optionKontoauszug.value = company.unternehmen.name;
-            optionKontoauszug.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionKontoauszug.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownKontoauszug.appendChild(optionKontoauszug);
 
             const optionEmail = document.createElement('option');
             optionEmail.value = company.unternehmen.name;
-            optionEmail.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionEmail.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownEmail.appendChild(optionEmail);
 
             const optionEmailKunde = document.createElement('option');
             optionEmailKunde.value = company.unternehmen.name;
-            optionEmailKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionEmailKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownEmailKunde.appendChild(optionEmailKunde);
 
             const optionQuittung = document.createElement('option');
             optionQuittung.value = company.unternehmen.name;
-            optionQuittung.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionQuittung.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownQuittung.appendChild(optionQuittung);
 
             const optionQuittungKunde = document.createElement('option');
             optionQuittungKunde.value = company.unternehmen.name;
-            optionQuittungKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionQuittungKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownQuittungKunde.appendChild(optionQuittungKunde);
 
             const optionKassenbon = document.createElement('option');
             optionKassenbon.value = company.unternehmen.name;
-            optionKassenbon.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionKassenbon.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownKassenbon.appendChild(optionKassenbon);
 
             const optionKassenbonKunde = document.createElement('option');
             optionKassenbonKunde.value = company.unternehmen.name;
-            optionKassenbonKunde.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionKassenbonKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownKassenbonKunde.appendChild(optionKassenbonKunde);
 
             const optionLohnjournal = document.createElement('option');
             optionLohnjournal.value = company.unternehmen.name;
-            optionLohnjournal.text = company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+            optionLohnjournal.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
             dropdownLohnjournal.appendChild(optionLohnjournal);
 
         });
