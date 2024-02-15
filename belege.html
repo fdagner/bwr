@@ -232,7 +232,7 @@
 
 
             </div><br>
-            <div id="rechnung1Container" style="margin:0 auto;width:728px;text-align: center">
+            <div id="rechnung1Container" style="margin:0 auto;width:100%;min-width:350px;text-align: center">
             </div>
             <br>
             <div class="exportButtons">
@@ -378,7 +378,7 @@
 
             </div>
             <br>
-            <div id="kontoauszugContainer" style="text-align:center;margin:0 auto;width:765px"></div><br>
+            <div id="kontoauszugContainer" style="text-align:center;margin:0 auto;width:100%;min-width:350px;"></div><br>
             <div class="exportButtons">
                 <button class="icon" type="button" onclick="kontoauszugHerunterladenAlsPNG()"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
@@ -482,7 +482,7 @@
                     </div>
 
                 </div>
-                <br><button onclick="applySVGholen()">Daten übernehmen</button><br>
+                <br><button onclick="quittungApplySVGholen()">Daten übernehmen</button><br>
                 <h3>Allgemeine Daten</h3>
 
                 <div class="flex-row">
@@ -502,7 +502,7 @@
 
             </div>
             <br>
-            <div id="quittungContainer" style="text-align:center;margin:0 auto;width:726px"></div><br>
+            <div id="quittungContainer" style="text-align:center;margin:0 auto;width:100%;min-width:350px;"></div><br>
             <div class="exportButtons">
                 <button class="icon" type="button" onclick="quittungHerunterladenAlsPNG()"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
@@ -612,7 +612,7 @@
                     </div>
 
                 </div>
-                <br><button onclick="applySVGholen()">Daten übernehmen</button><br>
+                <br><button onclick="kassenbonApplySVGholen()">Daten übernehmen</button><br>
                 <h3>Allgemeine Daten</h3>
 
                 <div class="flex-row">
@@ -632,7 +632,7 @@
 
             </div>
             <br>
-            <div id="kassenbonContainer" style="text-align: center;margin:0 auto;width:415px"></div><br>
+            <div id="kassenbonContainer" style="text-align: center;margin:0 auto;width:100%;min-width:350px;"></div><br>
             <div class="exportButtons">
                 <button class="icon" type="button" onclick="kassenbonHerunterladenAlsPNG()"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
@@ -813,7 +813,7 @@
                 <select id="svgDropdownLohnjournal">
                     <option value="lohnjournal.svg">Klassisch</option>
                 </select>
-                <br><button onclick="applySVGholen()">Daten aktualisieren</button><br><br>
+                <br><button onclick="journalApplySVGholen()">Daten aktualisieren</button><br><br>
                 <label for="datenLohnjournal">Unternehmen: </label><br>
                 <select id="datenLohnjournal" onchange="loadLohnjournalData()">
                 </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
@@ -822,7 +822,7 @@
             </div>
             </div>
             <br>
-            <div id="lohnjournalContainer" style="width: 760px;margin:0 auto">
+            <div id="lohnjournalContainer" style="min-width: 350px;width: 100%;margin:0 auto">
             </div>
             <div class="exportButtons">
                 <button class="icon" type="button" onclick="lohnjournalHerunterladenAlsPNG()"><svg
@@ -843,8 +843,8 @@
                         <path
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
-            </div>
-            <div id="lohnjournalBuchungssatzContainer" style="max-width: 760px;margin:0 auto"></div>
+            </div><h3>Buchungssätze</h3>
+            <div id="lohnjournalBuchungssatzContainer" style="max-width: 760px;margin:0 auto;"></div>
             <div class="exportButtons">
                 <button class="icon" type="button" onclick="lohnjournalBuchungssatzHerunterladenAlsPNG()"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
