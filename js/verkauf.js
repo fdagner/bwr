@@ -411,6 +411,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</tbody>`;
       verkaufAntwortOutput += `</table>`;
+      verkaufAntwortOutput += `<br><br>`;
     }
     if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
       verkaufAntwortOutput += `<p>${verkaufAntwort_Kundenanfrage}</p>`;
@@ -433,6 +434,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</tbody>`;
       verkaufAntwortOutput += `</table>`;
+      verkaufAntwortOutput += `<br>`;
     }
     if (verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
       verkaufAntwortOutput += `<h4>Nebenrechnung:</h4>`;
@@ -469,6 +471,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">100 %</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</table>`;
+      verkaufAntwortOutput += `<br>`;
       verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
@@ -494,6 +497,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</tbody>`;
       verkaufAntwortOutput += `</table>`;
+      verkaufAntwortOutput += `<br>`;
     }
     verkaufAntwortOutput += `<br>`;
   }
