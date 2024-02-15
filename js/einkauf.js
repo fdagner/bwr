@@ -316,17 +316,17 @@ function zeigeZufaelligenSatz() {
 
     satzOutput += `<li>`;
     if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
-      satzOutput += `<div>${formattedAngebot}</div><br>`;
+      satzOutput += `<div>${formattedAngebot}</div>`;
     } else {
-      satzOutput += `${formattedSatz}<br><br>`;
+      satzOutput += `<div>${formattedSatz}</div>`;
       if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
-        satzOutput += `${formattedSkonto}<br><br>`;
+        satzOutput += `<div style="margin-bottom:20px">${formattedSkonto}</div><br>`;
       }
     }
     satzOutput += `</li>`;
 
     // Generierte Antworten hinzufügen
-    antwortOutput += `<li><br>`;
+      antwortOutput += `${parseInt(i)}.<br><br>`;
     if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
       antwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       antwortOutput += `<tbody>`;
@@ -445,22 +445,20 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `</tr>`;
       antwortOutput += `</tr>`;
       antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
-      antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"</td>`;
+      antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
       antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
       antwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">2600 VORST</td>`;
       antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${antwort_vorsteuer_berichtigung}</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `</tbody>`;
       antwortOutput += `</table>`;      
-      antwortOutput += `<br><br>`;
     }
-    antwortOutput += `</li>`;
+    antwortOutput += `<br>`;
   }
     
   
 
   satzOutput += '</ol>'; // Ende der nummerierten Liste für Sätze
-  antwortOutput += '</ol>'; // Ende der nummerierten Liste für Antworten
 
   // Sätze und Antworten auf der Seite anzeigen
   document.getElementById('einkaufContainer').innerHTML = satzOutput + antwortOutput;
