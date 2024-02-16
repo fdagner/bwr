@@ -2379,7 +2379,20 @@ function validateInputs() {
         alert("Bitte geben Sie eine gültige Bezeichnung bei Überschrift ein. Maximal 50 Zeichen!");
         return false;
     }
+    
+      // Validierung für Kassenbon
+      let bescheidMessbetragInput = document.getElementById("bescheidMessbetragInput");
+      if (!isValidNumberInput(bescheidMessbetragInput.value, 0, 9999)) {
+          alert("Bitte geben Sie bei Messbetrag gültige Werte zwischen 0 und 9999 ein");
+          return false;
+      }
 
+        // Validierung für Kassenbon
+    let bescheidHebesatzInput = document.getElementById("bescheidHebesatzInput");
+    if (!isValidNumberInput(bescheidHebesatzInput.value, 0, 999)) {
+        alert("Bitte geben Sie beim Hebesatz gültige Werte zwischen 0 und 999 ein");
+        return false;
+    }
 
     return true; // Rückgabe true, wenn alle Validierungen erfolgreich sind
 }
