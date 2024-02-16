@@ -40,9 +40,39 @@
                 mit einem einfachen Texteditor. Achten Sie darauf, die Yaml-Struktur nicht zu verändern.
                 Anschließend können Sie ihre Datei lokal im Browser hochladen und Ihre eigenen Unternehmen auswählen.
                 Sie können dann einfach bei jedem Seitenbesuch ihre Daten einspielen.</p>
-            Eigene Datei verwenden: <input type="file" id="fileInput" accept=".yml"
+                Eigene Datei verwenden und im Browser speichern: <input type="file" id="fileInput" accept=".yml"
                 onchange="handleFileUpload()"><br><br><button onclick="deleteAndLoadDefaultData()">Daten
-                zurücksetzen</button>
+                zurücksetzen und aus dem Browser löschen</button><br><br>
+
+                Ihr Status: <div id="localStorageStatus" style="font-style: italic;">Daten werden aus dem Local Storage geladen...</div>
+
+                <!-- Ihr vorhandener HTML-Inhalt -->
+            
+                <script>
+                    // Ihre JavaScript-Logik hier
+            
+                    function updateLocalStorageStatus(status) {
+                        document.getElementById('localStorageStatus').textContent = status;
+                    }
+            
+                    function loadUploadedDataFromLocalStorage() {
+                        const uploadedDataJSON = localStorage.getItem('uploadedYamlCompanyData');
+                        if (uploadedDataJSON) {
+                            updateLocalStorageStatus('Daten werden aus dem Local Storage verwendet.');
+                            try {
+                                const uploadedData = JSON.parse(uploadedDataJSON);
+                                // Verarbeiten Sie die geladenen Daten
+                            } catch (error) {
+                                console.error("Error parsing uploaded data from Local Storage:", error);
+                            }
+                        } else {
+                            updateLocalStorageStatus('Standdarddaten geladen.');
+                        }
+                    }
+            
+                    // Rufen Sie die Funktion zum Laden der Daten aus dem Local Storage auf
+                    loadUploadedDataFromLocalStorage();
+                </script>
             <h3>Belege exportieren</h3>
             <details>
                 <summary>Anleitung</summary><video style="width:100%" controls>
@@ -51,6 +81,7 @@
             </details>
             <p>Benutzen Sie - wenn möglich - SVG-Dateien. Sie haben einige Vorteile gegenüber Pixelgrafiken, vor allem
                 im Online-Bereich.</p>
+              
         </section>
         <section id="rechnung" class="tabcontent">
             <h3>Rechnung/Angebot</h3>

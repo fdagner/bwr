@@ -11,16 +11,19 @@ function handleFileUpload() {
 
         reader.onload = function (e) {
             try {
-                const uploadedYamlData = jsyaml.load(e.target.result);
+                const uploadedYamlCompanyData = jsyaml.load(e.target.result);
 
-                if (uploadedYamlData && Array.isArray(uploadedYamlData)) {
-                    yamlData = uploadedYamlData;
-                    uploadedYamlData.sort((a, b) => {
+                if (uploadedYamlCompanyData && Array.isArray(uploadedYamlCompanyData)) {
+                    // Speichern der hochgeladenen Daten im Local Storage
+                    localStorage.setItem('uploadedYamlCompanyData', JSON.stringify(uploadedYamlCompanyData));
+                    yamlData = uploadedYamlCompanyData;
+                    uploadedYamlCompanyData.sort((a, b) => {
                         if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
                         if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
                         if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
                         return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
                     });
+                    updateLocalStorageStatus('Daten wurden erfolgreich hochgeladen.');
 
                     // Reload dropdown and random companies based on the uploaded data
                     reloadDropdownOptions();
@@ -43,10 +46,38 @@ function handleFileUpload() {
     }
 }
 
+function loadUploadedDataFromLocalStorage() {
+    const uploadedDataJSON = localStorage.getItem('uploadedYamlCompanyData');
+    if (uploadedDataJSON) {
+        try {
+            const uploadedData = JSON.parse(uploadedDataJSON);
+            // Verarbeite die geladenen Daten wie gewünscht, z.B. Sortieren und Dropdowns aktualisieren
+            yamlData = uploadedData;
+            uploadedData.sort((a, b) => {
+                if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
+                if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
+                if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
+                return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
+            });
+            reloadDropdownOptions();
+        } catch (error) {
+            console.error("Error parsing uploaded data from Local Storage:", error);
+        }
+    }
+}
+// Rufe die Funktion zum Laden der hochgeladenen Daten aus dem Local Storage auf
+loadUploadedDataFromLocalStorage();
+
 
 // Function to reload dropdown options based on yamlData
 
 function reloadDropdownOptions() {
+    yamlData.sort((a, b) => {
+        if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
+        if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
+        if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
+        return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
+    });
     const dropdownCustomer = document.getElementById('datenKunde');
     const dropdownSupplier = document.getElementById('datenLieferer');
     const dropdownKontenauszug = document.getElementById('datenKontoauszug');
@@ -126,24 +157,27 @@ function reloadDropdownOptions() {
 
 // Function to load default YAML data
 function loadDefaultYamlData() {
-    // Load default YAML data (replace 'defaultData.yml' with your actual default YAML file)
-    fetch('js/unternehmen.yml')
-        .then(response => response.text())
-        .then(data => {
-            defaultYamlData = jsyaml.load(data);
+    if (!localStorage.getItem('uploadedYamlCompanyData')) {
+        // Laden der Standard-YAML-Daten nur, wenn keine hochgeladenen Daten im Local Storage vorhanden sind
+        fetch('js/unternehmen.yml')
+            .then(response => response.text())
+            .then(data => {
+                defaultYamlData = jsyaml.load(data);
 
-            // Use defaultYamlData to reload dropdown and random companies
-            yamlData = [...defaultYamlData]; // Use spread operator to create a copy
-            reloadDropdownOptions();
-        })
-        .catch(error => {
-            console.error("Error loading default YAML data:", error);
-        });
+                // Verwende defaultYamlData zum Aktualisieren der Dropdown-Liste und zufälliger Unternehmen
+                yamlData = [...defaultYamlData]; // Verwende den Spread-Operator, um eine Kopie zu erstellen
+                reloadDropdownOptions();
+            })
+            .catch(error => {
+                console.error("Error loading default YAML data:", error);
+            });
+    }
 }
 
 // Function to delete uploaded data and load default data
 function deleteAndLoadDefaultData() {
-
+    // Löschen des Local Storage-Eintrags für die hochgeladenen YAML-Daten
+    localStorage.removeItem('uploadedYamlCompanyData');
     // Zurücksetzen von yamlData auf ein leeres Array
     yamlData = [];
 
@@ -159,13 +193,13 @@ function deleteAndLoadDefaultData() {
     // Verwenden von defaultYamlData zum Aktualisieren der Dropdown-Liste und zufälliger Unternehmen
     yamlData = [...defaultYamlData]; // Verwende den Spread-Operator, um eine Kopie zu erstellen
     reloadDropdownOptions();
-
+    updateLocalStorageStatus('Daten wurden erfolgreich zurückgesetzt.');
     // Erfolgsmeldung
     alert('Daten erfolgreich zurückgesetzt.');
 
 }
 
-
+if (!localStorage.getItem('uploadedYamlCompanyData')) {
 // Lade die YAML-Datei und fülle das Dropdown-Feld
 fetch('js/unternehmen.yml')
     .then(response => response.text())
@@ -244,6 +278,7 @@ fetch('js/unternehmen.yml')
 
 
     });
+}
 
 let selectedSupplier;
 
