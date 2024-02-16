@@ -111,7 +111,7 @@ function generiereTKonto() {
         '</tr>';
     }
 
-    tkontoHTML += '</tbody></table>';
+    tkontoHTML += '</tbody></table><br>';
   });
   tkontoHTML += '<div>';
   tkontoContainer.innerHTML = tkontoHTML;
