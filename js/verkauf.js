@@ -56,7 +56,7 @@ function getRandomBezugskosten() {
 
 // Funktion zur Generierung einer Zufallsganzzahl für den Nettowert
 function generateRandomNettoWert() {
-  let randomNumber = Math.round(Math.random() * (30000 - 500)) + 500; // Zufallszahl zwischen 2500 und 50000
+  let randomNumber = Math.round(Math.random() * (20000 - 500)) + 500; // Zufallszahl zwischen 2500 und 50000
   randomNumber = Math.round(randomNumber / 100) * 100; // Auf Hundert gerundet
   return randomNumber;
 }
@@ -167,15 +167,20 @@ function verkaufErstelleZufallssatz() {
   const verkaufRandomSkontobuchungssatz = verkaufArray_Subjekt_5[Math.floor(Math.random() * verkaufArray_Subjekt_5.length)];
   const verkaufRandomDifferenzkalkulation = verkaufArray_Subjekt_6[Math.floor(Math.random() * verkaufArray_Subjekt_6.length)];
   const verkaufNettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
-  const verkaufWert = generateRandomNettoWert();
-  const verkaufNettoWert = formatCurrency(verkaufWert);
+  let verkaufWert = generateRandomNettoWert();
+  const verkaufRandomZahlung = verkaufArray_Zahlung[Math.floor(Math.random() * verkaufArray_Zahlung.length)];
+  const verkaufAntwortZahlung = verkaufKontenZahlung[verkaufRandomZahlung]
+  if (verkaufAntwortZahlung === "2880 KA") {
+    verkaufWert = parseFloat(verkaufWert)/10;
+  }
+  console.log(verkaufWert)
+  console.log(verkaufAntwortZahlung)
+    const verkaufNettoWert = formatCurrency(verkaufWert);
   let verkaufBruttoWert = formatCurrency(Math.round(verkaufWert * 0.19 + verkaufWert));
   let verkaufRandomNettowert;
 
   // Anzeige wenn Brutto oder Netto
   verkaufRandomNettowert = verkaufNettoOderBrutto === 'Netto' ? `${verkaufNettoWert} netto` : `brutto ${verkaufBruttoWert}`;
-  const verkaufRandomZahlung = verkaufArray_Zahlung[Math.floor(Math.random() * verkaufArray_Zahlung.length)];
-  const verkaufAntwortZahlung = verkaufKontenZahlung[verkaufRandomZahlung]
   let verkaufRandomSupply_Rabatt;
   let verkaufRandomSupply_Rabatt_2;
   let verkaufBerechnung_nettoWert;

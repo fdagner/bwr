@@ -11,16 +11,19 @@ function handleFileUpload() {
 
         reader.onload = function (e) {
             try {
-                const uploadedYamlData = jsyaml.load(e.target.result);
+                const uploadedYamlCompanyData = jsyaml.load(e.target.result);
 
-                if (uploadedYamlData && Array.isArray(uploadedYamlData)) {
-                    yamlData = uploadedYamlData;
-                    uploadedYamlData.sort((a, b) => {
+                if (uploadedYamlCompanyData && Array.isArray(uploadedYamlCompanyData)) {
+                    // Speichern der hochgeladenen Daten im Local Storage
+                    localStorage.setItem('uploadedYamlCompanyData', JSON.stringify(uploadedYamlCompanyData));
+                    yamlData = uploadedYamlCompanyData;
+                    uploadedYamlCompanyData.sort((a, b) => {
                         if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
                         if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
                         if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
                         return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
                     });
+                    updateLocalStorageStatus('Daten wurden erfolgreich hochgeladen.');
 
                     // Reload dropdown and random companies based on the uploaded data
                     reloadDropdownOptions();
@@ -43,10 +46,38 @@ function handleFileUpload() {
     }
 }
 
+function loadUploadedDataFromLocalStorage() {
+    const uploadedDataJSON = localStorage.getItem('uploadedYamlCompanyData');
+    if (uploadedDataJSON) {
+        try {
+            const uploadedData = JSON.parse(uploadedDataJSON);
+            // Verarbeite die geladenen Daten wie gewünscht, z.B. Sortieren und Dropdowns aktualisieren
+            yamlData = uploadedData;
+            uploadedData.sort((a, b) => {
+                if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
+                if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
+                if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
+                return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
+            });
+            reloadDropdownOptions();
+        } catch (error) {
+            console.error("Error parsing uploaded data from Local Storage:", error);
+        }
+    }
+}
+// Rufe die Funktion zum Laden der hochgeladenen Daten aus dem Local Storage auf
+loadUploadedDataFromLocalStorage();
+
 
 // Function to reload dropdown options based on yamlData
 
 function reloadDropdownOptions() {
+    yamlData.sort((a, b) => {
+        if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
+        if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
+        if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
+        return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
+    });
     const dropdownCustomer = document.getElementById('datenKunde');
     const dropdownSupplier = document.getElementById('datenLieferer');
     const dropdownKontenauszug = document.getElementById('datenKontoauszug');
@@ -57,6 +88,7 @@ function reloadDropdownOptions() {
     const dropdownKassenbon = document.getElementById('datenKassenbon');
     const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
     const dropdownLohnjournal = document.getElementById('datenLohnjournal');
+    const dropdownBescheid = document.getElementById('datenBescheid');
 
     // Clear existing options
     dropdownCustomer.innerHTML = '';
@@ -69,6 +101,7 @@ function reloadDropdownOptions() {
     dropdownKassenbon.innerHTML = '';
     dropdownKassenbonKunde.innerHTML = '';
     dropdownLohnjournal.innerHTML = '';
+    dropdownBescheid.innerHTML = '';
 
 
     yamlData.forEach(company => {
@@ -121,29 +154,37 @@ function reloadDropdownOptions() {
         optionLohnjournal.value = company.unternehmen.name;
         optionLohnjournal.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownLohnjournal.appendChild(optionLohnjournal);
+
+        const optionBescheid = document.createElement('option');
+        optionBescheid.value = company.unternehmen.name;
+        optionBescheid.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownBescheid.appendChild(optionBescheid);
     });
 }
 
 // Function to load default YAML data
 function loadDefaultYamlData() {
-    // Load default YAML data (replace 'defaultData.yml' with your actual default YAML file)
-    fetch('js/unternehmen.yml')
-        .then(response => response.text())
-        .then(data => {
-            defaultYamlData = jsyaml.load(data);
+    if (!localStorage.getItem('uploadedYamlCompanyData')) {
+        // Laden der Standard-YAML-Daten nur, wenn keine hochgeladenen Daten im Local Storage vorhanden sind
+        fetch('js/unternehmen.yml')
+            .then(response => response.text())
+            .then(data => {
+                defaultYamlData = jsyaml.load(data);
 
-            // Use defaultYamlData to reload dropdown and random companies
-            yamlData = [...defaultYamlData]; // Use spread operator to create a copy
-            reloadDropdownOptions();
-        })
-        .catch(error => {
-            console.error("Error loading default YAML data:", error);
-        });
+                // Verwende defaultYamlData zum Aktualisieren der Dropdown-Liste und zufälliger Unternehmen
+                yamlData = [...defaultYamlData]; // Verwende den Spread-Operator, um eine Kopie zu erstellen
+                reloadDropdownOptions();
+            })
+            .catch(error => {
+                console.error("Error loading default YAML data:", error);
+            });
+    }
 }
 
 // Function to delete uploaded data and load default data
 function deleteAndLoadDefaultData() {
-
+    // Löschen des Local Storage-Eintrags für die hochgeladenen YAML-Daten
+    localStorage.removeItem('uploadedYamlCompanyData');
     // Zurücksetzen von yamlData auf ein leeres Array
     yamlData = [];
 
@@ -159,91 +200,98 @@ function deleteAndLoadDefaultData() {
     // Verwenden von defaultYamlData zum Aktualisieren der Dropdown-Liste und zufälliger Unternehmen
     yamlData = [...defaultYamlData]; // Verwende den Spread-Operator, um eine Kopie zu erstellen
     reloadDropdownOptions();
-
+    updateLocalStorageStatus('Daten wurden erfolgreich zurückgesetzt.');
     // Erfolgsmeldung
     alert('Daten erfolgreich zurückgesetzt.');
 
 }
 
+if (!localStorage.getItem('uploadedYamlCompanyData')) {
+    // Lade die YAML-Datei und fülle das Dropdown-Feld
+    fetch('js/unternehmen.yml')
+        .then(response => response.text())
+        .then(data => {
+            yamlData = jsyaml.load(data); // Assign data to yamlData variable
+            yamlData.sort((a, b) => {
+                if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
+                if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
+                if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
+                return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
+            });
+            const dropdownCustomer = document.getElementById('datenKunde');
+            const dropdownSupplier = document.getElementById('datenLieferer');
+            const dropdownKontoauszug = document.getElementById('datenKontoauszug');
+            const dropdownEmail = document.getElementById('datenEmail');
+            const dropdownEmailKunde = document.getElementById('datenEmailKunde');
+            const dropdownQuittung = document.getElementById('datenQuittung');
+            const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
+            const dropdownKassenbon = document.getElementById('datenKassenbon');
+            const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
+            const dropdownLohnjournal = document.getElementById('datenLohnjournal');
+            const dropdownBescheid = document.getElementById('datenBescheid');
 
-// Lade die YAML-Datei und fülle das Dropdown-Feld
-fetch('js/unternehmen.yml')
-    .then(response => response.text())
-    .then(data => {
-        yamlData = jsyaml.load(data); // Assign data to yamlData variable
-     yamlData.sort((a, b) => {
-        if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
-        if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
-        if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
-        return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
-    });
-        const dropdownCustomer = document.getElementById('datenKunde');
-        const dropdownSupplier = document.getElementById('datenLieferer');
-        const dropdownKontoauszug = document.getElementById('datenKontoauszug');
-        const dropdownEmail = document.getElementById('datenEmail');
-        const dropdownEmailKunde = document.getElementById('datenEmailKunde');
-        const dropdownQuittung = document.getElementById('datenQuittung');
-        const dropdownQuittungKunde = document.getElementById('datenQuittungKunde');
-        const dropdownKassenbon = document.getElementById('datenKassenbon');
-        const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
-        const dropdownLohnjournal = document.getElementById('datenLohnjournal');
-          
 
-        yamlData.forEach(company => {
-            const optionCustomer = document.createElement('option');
-            optionCustomer.value = company.unternehmen.name;
-            optionCustomer.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownCustomer.appendChild(optionCustomer);
+            yamlData.forEach(company => {
+                const optionCustomer = document.createElement('option');
+                optionCustomer.value = company.unternehmen.name;
+                optionCustomer.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownCustomer.appendChild(optionCustomer);
 
-            const optionSupplier = document.createElement('option');
-            optionSupplier.value = company.unternehmen.name;
-            optionSupplier.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownSupplier.appendChild(optionSupplier);
+                const optionSupplier = document.createElement('option');
+                optionSupplier.value = company.unternehmen.name;
+                optionSupplier.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownSupplier.appendChild(optionSupplier);
 
-            const optionKontoauszug = document.createElement('option');
-            optionKontoauszug.value = company.unternehmen.name;
-            optionKontoauszug.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownKontoauszug.appendChild(optionKontoauszug);
+                const optionKontoauszug = document.createElement('option');
+                optionKontoauszug.value = company.unternehmen.name;
+                optionKontoauszug.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownKontoauszug.appendChild(optionKontoauszug);
 
-            const optionEmail = document.createElement('option');
-            optionEmail.value = company.unternehmen.name;
-            optionEmail.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownEmail.appendChild(optionEmail);
+                const optionEmail = document.createElement('option');
+                optionEmail.value = company.unternehmen.name;
+                optionEmail.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownEmail.appendChild(optionEmail);
 
-            const optionEmailKunde = document.createElement('option');
-            optionEmailKunde.value = company.unternehmen.name;
-            optionEmailKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownEmailKunde.appendChild(optionEmailKunde);
+                const optionEmailKunde = document.createElement('option');
+                optionEmailKunde.value = company.unternehmen.name;
+                optionEmailKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownEmailKunde.appendChild(optionEmailKunde);
 
-            const optionQuittung = document.createElement('option');
-            optionQuittung.value = company.unternehmen.name;
-            optionQuittung.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownQuittung.appendChild(optionQuittung);
+                const optionQuittung = document.createElement('option');
+                optionQuittung.value = company.unternehmen.name;
+                optionQuittung.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownQuittung.appendChild(optionQuittung);
 
-            const optionQuittungKunde = document.createElement('option');
-            optionQuittungKunde.value = company.unternehmen.name;
-            optionQuittungKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownQuittungKunde.appendChild(optionQuittungKunde);
+                const optionQuittungKunde = document.createElement('option');
+                optionQuittungKunde.value = company.unternehmen.name;
+                optionQuittungKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownQuittungKunde.appendChild(optionQuittungKunde);
 
-            const optionKassenbon = document.createElement('option');
-            optionKassenbon.value = company.unternehmen.name;
-            optionKassenbon.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownKassenbon.appendChild(optionKassenbon);
+                const optionKassenbon = document.createElement('option');
+                optionKassenbon.value = company.unternehmen.name;
+                optionKassenbon.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownKassenbon.appendChild(optionKassenbon);
 
-            const optionKassenbonKunde = document.createElement('option');
-            optionKassenbonKunde.value = company.unternehmen.name;
-            optionKassenbonKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownKassenbonKunde.appendChild(optionKassenbonKunde);
+                const optionKassenbonKunde = document.createElement('option');
+                optionKassenbonKunde.value = company.unternehmen.name;
+                optionKassenbonKunde.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownKassenbonKunde.appendChild(optionKassenbonKunde);
 
-            const optionLohnjournal = document.createElement('option');
-            optionLohnjournal.value = company.unternehmen.name;
-            optionLohnjournal.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
-            dropdownLohnjournal.appendChild(optionLohnjournal);
+                const optionLohnjournal = document.createElement('option');
+                optionLohnjournal.value = company.unternehmen.name;
+                optionLohnjournal.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownLohnjournal.appendChild(optionLohnjournal);
+
+                const optionBescheid = document.createElement('option');
+                optionBescheid.value = company.unternehmen.name;
+                optionBescheid.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownBescheid.appendChild(optionBescheid);
+
+            });
+
 
         });
-
-
-    });
+}
 
 let selectedSupplier;
 
@@ -362,6 +410,44 @@ function loadLohnjournalData() {
 
 }
 
+function loadBescheidData() {
+    const selectedBescheidName = document.getElementById('datenBescheid').value;
+    const selectedBescheid = yamlData.find(bescheid => bescheid.unternehmen.name === selectedBescheidName);
+    document.getElementById('bescheidName').textContent = selectedBescheid.unternehmen.name + " " + selectedBescheid.unternehmen.rechtsform;
+    document.getElementById('bescheidInhaber').textContent = selectedBescheid.unternehmen.inhaber;
+
+    // Annahme: Alle Elemente sollen aktualisiert werden
+    const elementsWithClass = document.getElementsByClassName('bescheidOrtInhaber');
+    // Iteriere durch alle Elemente und setze das formatierte Datum
+    for (const element of elementsWithClass) {
+        element.textContent = selectedBescheid.unternehmen.adresse.plz + " " + selectedBescheid.unternehmen.adresse.ort;
+    }
+
+    const elementsWithClassbescheidOrt = document.getElementsByClassName('bescheidOrt');
+    // Iteriere durch alle Elemente und setze das formatierte Datum
+    for (const element of elementsWithClassbescheidOrt) {
+        element.textContent = selectedBescheid.unternehmen.adresse.ort;
+    }
+
+    const elementsWithClassStrasse = document.getElementsByClassName('bescheidStrasse');
+    // Iteriere durch alle Elemente und setze das formatierte Datum
+    for (const element of elementsWithClassStrasse) {
+        element.textContent = selectedBescheid.unternehmen.adresse.strasse;
+    }
+
+    // Funktion zufällige 7-stellige Nummer
+    function generateRandomBescheidNumber() {
+        // Erzeuge eine zufällige Zahl zwischen 1000000 und 9999999
+        let randomNumber = Math.floor(Math.random() * 9000000) + 1000000;
+        return randomNumber;
+    }
+
+    // Aufruf der Funktion und Ausgabe der generierten Nummer
+    document.getElementById('bescheidAktenzeichen1').textContent = "K" + generateRandomBescheidNumber();
+    document.getElementById('bescheidNummer').textContent = (generateRandomBescheidNumber()/3).toFixed(0);
+}
+
+
 function loadKassenbonData() {
     const selectedKassenbonName = document.getElementById('datenKassenbon').value;
     const selectedKassenbon = yamlData.find(kassenbon => kassenbon.unternehmen.name === selectedKassenbonName);
@@ -427,7 +513,7 @@ function loadSupplierData() {
     document.getElementById('bankLieferer').textContent = selectedSupplier.unternehmen.bank;
     document.getElementById('ibanLieferer').textContent = 'IBAN: ' + selectedSupplier.unternehmen.iban;
     document.getElementById('bicLieferer').textContent = 'BIC: ' + selectedSupplier.unternehmen.bic;
-    document.getElementById('nummerKunde').textContent = (nummerKunde * selectedSupplier.unternehmen.id * 9)+133;
+    document.getElementById('nummerKunde').textContent = (nummerKunde * selectedSupplier.unternehmen.id * 9) + 133;
     const colorSVGElements = document.querySelectorAll('.colorSVG');
     colorSVGElements.forEach(element => {
         // Check if selectedSupplier.unternehmen.akzent is undefined
@@ -879,12 +965,13 @@ function applyOrderData() {
 
     const inputEigentumsvorbehalt = document.getElementById("eigentumsvorbehaltInput");
     const eigentumsvorbehalt = document.getElementById('Eigentumsvorbehalt');
-    
-if(inputEigentumsvorbehalt.checked) {
-    
- } else {;
-    eigentumsvorbehalt.remove();
- }
+
+    if (inputEigentumsvorbehalt.checked) {
+
+    } else {
+        ;
+        eigentumsvorbehalt.remove();
+    }
 
 
     // Laden der Daten für den Kontoauszug
@@ -1108,7 +1195,7 @@ function kassenbonApplySVGholen() {
     let kassenbonZahlungsart = document.getElementById('kassenbonDropdownZahlungsart').value;
     document.getElementById('kassenbonZahlungsart').textContent = kassenbonZahlungsart;
 
-    
+
     const useScriptKassenbon = document.getElementById('scriptJahrKassenbon').checked;
     if (!useScriptKassenbon) {
         // Verwende das Jahr aus dem Textfeld
@@ -1160,8 +1247,8 @@ function kassenbonApplySVGholen() {
     loadKassenbonData() // Laden der Kassenbon-Daten
 }
 
-    function journalApplySVGholen() {
- 
+function journalApplySVGholen() {
+
     // Laden der Daten des Lohnjournals
 
     // Funktion zum Zufälligen Auswählen von Mitarbeitern
@@ -1290,14 +1377,14 @@ function kassenbonApplySVGholen() {
     }
 
     // Funktion zur Generierung einer zufälligen Ganzzahl zwischen min (inklusive) und max (exklusive)
-function zufallszahlMitarbeiter(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-  }
-  
+    function zufallszahlMitarbeiter(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
+    }
 
-// Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
-const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
-const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
+
+    // Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
+    const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
+    const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
 
     // Eintragen der Summe der Bruttogehälter ins Lohnjournal
     const lohnjournalBruttoSumme = document.getElementById('lohnjournalBrutto4');
@@ -1391,6 +1478,98 @@ const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
     document.getElementById('lohnjournalBuchungssatzContainer').innerHTML = lohnjournalSatzOutput;
     loadLohnjournalData() // Laden des Lohnjournals
 
+}
+
+function bescheidApplySVGholen() {
+    if (!validateInputs()) {
+        // Wenn die Validierung fehlschlägt, stoppe die Funktion
+        return;
+    }
+
+    const selectedBescheidTag = document.getElementById('tagBescheid').value;
+    const selectedBescheidMonat = document.getElementById('monatBescheid').value;
+    document.getElementById('bescheidTag').textContent = selectedBescheidTag;
+    document.getElementById('bescheidMonat').textContent = selectedBescheidMonat;
+
+    // Grundsteuer
+    const bescheidMessbetragInput = document.getElementById('bescheidMessbetragInput').value;
+    const bescheidMessbetrag =  document.getElementById('bescheidMessbetrag');
+    const bescheidHebesatzInput = document.getElementById('bescheidHebesatzInput').value;
+    const bescheidHebesatz =  document.getElementById('bescheidHebesatz');
+
+    if (bescheidMessbetrag) {
+        bescheidMessbetrag.textContent = formatCurrency(bescheidMessbetragInput);
+    }
+
+    if (bescheidHebesatz) {
+        bescheidHebesatz.textContent = bescheidHebesatzInput + " %";
+    }
+    
+    let bescheidJahressteuer =  document.getElementById('bescheidJahressteuer');
+    if (bescheidJahressteuer) {
+        let bescheidMessbetragInput = parseFloat(document.getElementById('bescheidMessbetragInput').value);
+        let bescheidHebesatzInput = parseFloat(document.getElementById('bescheidHebesatzInput').value);
+        let bescheidBerechnungJahressteuer = bescheidMessbetragInput * (bescheidHebesatzInput / 100);
+        bescheidJahressteuer.textContent = formatCurrency(bescheidBerechnungJahressteuer);
+        bescheidRate = formatCurrency((bescheidBerechnungJahressteuer/4));
+        const elementsWithClassbescheidRate = document.getElementsByClassName('bescheidRate');
+        // Iteriere durch alle Elemente und setze das formatierte Datum
+        for (const element of elementsWithClassbescheidRate) {
+            element.textContent = bescheidRate;
+        }
+    
+    }
+    
+    
+    const useScriptBescheid = document.getElementById('scriptJahrBescheid').checked;
+    if (!useScriptBescheid) {
+        // Verwende das Jahr aus dem Textfeld
+        const selectedJahr = document.getElementById('jahrBescheid');
+        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrBescheid');
+        for (const yearelement of yearelementsWithClass) {
+            yearelement.textContent = selectedJahr.value;
+        }
+
+    } else {
+
+        const customDefs = document.getElementById('customDefsBescheid');
+        const customJsScript = document.getElementById('customJsBescheid');
+        const useScriptQuittung = document.getElementById('scriptJahrBescheid').checked;
+
+        if (customJsScript) {
+            customJsScript.remove();
+        }
+
+        if (useScriptBescheid) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJsBescheid';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoadBescheid() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahrBescheid');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoadBescheid(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
+    }
+
+
+    loadBescheidData() // Laden der Bescheid-Daten
 }
 
 // Funktion zur Generierung einer zufälligen 7-stelligen Nummer
@@ -1694,6 +1873,18 @@ async function applySVG() {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
 
+    let selectedBescheid = document.getElementById("svgDropdownBescheid").value;
+    let svgContainerBescheid = document.getElementById("bescheidContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedBescheid);
+        svgContainerBescheid.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+
+
 
 
 }
@@ -1775,6 +1966,10 @@ function lohnjournalBuchungssatzHerunterladenAlsPNG() {
     herunterladenAlsPNG('lohnjournalBuchungssatzContainer', 'lohnjournalbuchungssatz.png');
 }
 
+function bescheidHerunterladenAlsPNG() {
+    herunterladenAlsPNG('bescheidContainer', 'bescheid.png');
+}
+
 // Export to SVG
 
 function herunterladen(containerId, dateiname) {
@@ -1824,6 +2019,11 @@ function lohnjournalHerunterladen() {
     herunterladen('lohnjournalContainer', 'lohnjournal.svg');
 }
 
+function bescheidHerunterladen() {
+    herunterladen('bescheidContainer', 'bescheid.svg');
+}
+
+
 
 
 
@@ -1865,6 +2065,10 @@ function kassenbonKopiereInZwischenablage() {
 
 function lohnjournalKopiereInZwischenablage() {
     kopiereInZwischenablage('lohnjournalContainer');
+}
+
+function bescheidKopiereInZwischenablage() {
+    kopiereInZwischenablage('bescheidContainer');
 }
 
 
@@ -1923,6 +2127,7 @@ function lohnjournalBuchungssatzHerunterladen() {
     a.click();
     document.body.removeChild(a);
 }
+
 
 let clipboardLohnjournal = new ClipboardJS('#officeButtonLohnjournalBuchungssatz');
 
