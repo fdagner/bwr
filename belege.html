@@ -36,13 +36,15 @@
                 </video>
             </details>
             <p> Es steht eine umfangreiche Liste von Modellunternehmen zur Verfügung. Sie können auch Daten eigener
-                Modellunternehmen verwenden. Laden Sie hierzu die <a href="js/unternehmen.yml">Standarddaten</a> herunter und bearbeiten Sie diese
+                Modellunternehmen verwenden. Laden Sie hierzu die <a href="js/unternehmen.yml">Standarddaten</a>
+                herunter und bearbeiten Sie diese
                 mit einem einfachen Texteditor. Achten Sie darauf, die Yaml-Struktur nicht zu verändern.
                 Anschließend können Sie ihre Datei lokal im Browser hochladen und Ihre eigenen Unternehmen auswählen.
                 Die Daten werden im Browser gespeichert.</p>
-                <p>Eigene Datei verwenden und im Browser speichern: <input type="file" id="fileInput" accept=".yml"
-                onchange="handleFileUpload()"></p>
-                <p>Status: <span id="localStorageStatus" style="font-style: italic;background-color: #f5f5f5;">Daten werden aus dem Local Storage geladen...</span></p>
+            <p>Eigene Datei verwenden und im Browser speichern: <input type="file" id="fileInput" accept=".yml"
+                    onchange="handleFileUpload()"></p>
+            <p>Status: <span id="localStorageStatus" style="font-style: italic;background-color: #f5f5f5;">Daten werden
+                    aus dem Local Storage geladen...</span></p>
             <button onclick="deleteAndLoadDefaultData()">Daten zurücksetzen</button>
             <!-- Ihr vorhandener HTML-Inhalt -->
 
@@ -235,9 +237,6 @@
                                 <option value="angebot2.svg">Angebot 2</option>
                             </select>
                         </div>
-                        <div><br>
-                            <button onclick="applySVGholen()">Daten übernehmen</button><br><br>
-                        </div>
                     </div>
                 </div>
                 <h3>Allgemeine Daten</h3>
@@ -259,8 +258,9 @@
                         <input type="color" id="colorPicker" value="#7db9f5">
                     </div>
                 </div>
-
-
+                <div><br>
+                    <button onclick="applySVGholen()">Alle Daten übernehmen</button><br>
+                </div>
             </div><br>
             <div id="rechnung1Container" style="margin:0 auto;width:100%;min-width:350px;text-align: center">
             </div>
@@ -390,7 +390,6 @@
                     <div>
                     </div>
                 </div>
-                <br><button onclick="applySVGholen()">Daten übernehmen</button>
                 <div class="flex-row">
 
                     <div>
@@ -402,9 +401,7 @@
                                 verwenden?</a></small>
                     </div>
                 </div>
-
-
-
+                <div><br><button onclick="applySVGholen()">Alle Daten übernehmen</button><br></div>
 
             </div>
             <br>
@@ -513,7 +510,6 @@
                     </div>
 
                 </div>
-                <br><button onclick="quittungApplySVGholen()">Daten übernehmen</button><br>
                 <h3>Allgemeine Daten</h3>
 
                 <div class="flex-row">
@@ -529,7 +525,7 @@
                         </select><br>
                     </div>
                 </div>
-
+                <br><button onclick="quittungApplySVGholen()">Alle Daten übernehmen</button><br>
 
             </div>
             <br>
@@ -643,7 +639,6 @@
                     </div>
 
                 </div>
-                <br><button onclick="kassenbonApplySVGholen()">Daten übernehmen</button><br>
                 <h3>Allgemeine Daten</h3>
 
                 <div class="flex-row">
@@ -656,10 +651,10 @@
                     </div>
                     <div><label for="datenKassenbonKunde">Kunde:</label>
                         <select id="datenKassenbonKunde" onchange="loadCompanyDataforKassenbon()">
-                        </select><br>
+                        </select>
                     </div>
                 </div>
-
+                <br><button onclick="kassenbonApplySVGholen()">Alle Daten übernehmen</button><br>
 
             </div>
             <br>
@@ -699,7 +694,7 @@
 
                     <option value="mail1.html">Klassisch</option>
                     <option value="mail2.html">Modern</option>
-                </select> <br><button onclick="applySVGholen()">Daten übernehmen</button><br><br>
+                </select>
                 <h3>Allgemeine Daten</h3>
                 <div class="flex-row">
                     <div>
@@ -717,8 +712,10 @@
                     </div>
 
                 </div>
+                <br><button onclick="applySVGholen()">Daten übernehmen</button><br>
             </div>
-            </div>
+
+            </div><br>
             <div id="emailContainer"
                 style="border:1px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;"
                 contenteditable="true">
@@ -769,7 +766,6 @@
                     <label for="newspaperSourceInput">Quelle:</label><br>
                     <input type="text" id="newspaperSourceInput" placeholder="Quelle eingeben" value="GPT-News">
                 </div><br>
-                <button id="newspaperApplyChangesButton">Änderungen übernehmen</button><br><br>
                 <div class="flex-row">
                     <div>
                         <label for="newspaperColorInput">Hintergrundfarbe:</label><br>
@@ -781,7 +777,8 @@
                         <span id="newspaperColumnValue">2</span>
                     </div>
 
-                </div>
+                </div><br>
+                <button id="newspaperApplyChangesButton">Alle Änderungen übernehmen</button><br>
             </div>
             </div>
             <br>
@@ -844,13 +841,15 @@
                 <select id="svgDropdownLohnjournal">
                     <option value="lohnjournal.svg">Klassisch</option>
                 </select>
-                <br><button onclick="journalApplySVGholen()">Daten aktualisieren</button><br><br>
+
                 <label for="datenLohnjournal">Unternehmen: </label><br>
                 <select id="datenLohnjournal" onchange="loadLohnjournalData()">
                 </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
                         Modellunternehmen
                         verwenden?</a></small>
+                <br><br><button onclick="journalApplySVGholen()">Daten aktualisieren</button><br>
             </div>
+
             </div>
             <br>
             <div id="lohnjournalContainer" style="min-width: 350px;width: 100%;margin:0 auto;text-align:center">
@@ -914,86 +913,91 @@
             <h3>Bescheid</h3>
             <div class="box">
                 <p></p>
-              
+
                 <div class="grid3">
-              <div><h4>Art des Bescheids</h4>
-                    <label for="svgDropdownBescheid">Auswählen: </label>
-                    <select id="svgDropdownBescheid">
-                        <option value="bescheid1.svg">Grundsteuer</option>
-                    </select>
-              </div>
                     <div>
-                    <h4>Datum</h4>
-                    <label for="tagBescheid">Tag:</label>
-                    <select id="tagBescheid">
-                        <!-- Füge Optionen für die Tage hinzu -->
-                        <option value="01">01</option>
-                        <option value="02">02</option>
-                        <option value="03">03</option>
-                        <option value="04">04</option>
-                        <option value="05">05</option>
-                        <option value="06">06</option>
-                        <option value="07">07</option>
-                        <option value="08">08</option>
-                        <option value="09">09</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
-                        <option value="31">31</option>
-                    </select>
-                    <br>
-                    <label for="monatBescheid">Monat:</label>
-                    <select id="monatBescheid">
-                        <!-- Füge Optionen für die Monate hinzu -->
-                        <option value="01">Januar</option>
-                        <option value="02">Februar</option>
-                        <option value="03">März</option>
-                        <option value="04">April</option>
-                        <option value="05">Mai</option>
-                        <option value="06">Juni</option>
-                        <option value="07">Juli</option>
-                        <option value="08">August</option>
-                        <option value="09">September</option>
-                        <option value="10">Oktober</option>
-                        <option value="11">November</option>
-                        <option value="12">Dezember</option>
-                    </select><br>
-                    <label for="jahrBescheid">Jahr:</label>
-                    <input type="text" id="jahrBescheid" value="" placeholder="Jahr" /><br>
-                    Skript verwenden: <input type="checkbox" id="scriptJahrBescheid"
-                        onchange="toggleInput('jahrBescheid', 'scriptJahrBescheid');">
-                </div> <div><h4>Daten</h4>
-                    <label for="bescheidMessbetragInput">Messbetrag:</label><br>
-                    <input type="number" id="bescheidMessbetragInput" value="300" /><br><br>
-                    <label for="bescheidHebesatzInput">Hebesatz in Prozent:</label><br>
-                    <input type="number" id="bescheidHebesatzInput" value="200" />
-          
-                </div>   
+                        <h4>Art des Bescheids</h4>
+                        <label for="svgDropdownBescheid">Auswählen: </label>
+                        <select id="svgDropdownBescheid">
+                            <option value="bescheid1.svg">Grundsteuer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <h4>Datum</h4>
+                        <label for="tagBescheid">Tag:</label>
+                        <select id="tagBescheid">
+                            <!-- Füge Optionen für die Tage hinzu -->
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                        </select>
+                        <br>
+                        <label for="monatBescheid">Monat:</label>
+                        <select id="monatBescheid">
+                            <!-- Füge Optionen für die Monate hinzu -->
+                            <option value="01">Januar</option>
+                            <option value="02">Februar</option>
+                            <option value="03">März</option>
+                            <option value="04">April</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Dezember</option>
+                        </select><br>
+                        <label for="jahrBescheid">Jahr:</label>
+                        <input type="text" id="jahrBescheid" value="" placeholder="Jahr" /><br>
+                        Skript verwenden: <input type="checkbox" id="scriptJahrBescheid"
+                            onchange="toggleInput('jahrBescheid', 'scriptJahrBescheid');">
+                    </div>
+                    <div>
+                        <h4>Daten</h4>
+                        <label for="bescheidMessbetragInput">Messbetrag:</label><br>
+                        <input type="number" id="bescheidMessbetragInput" value="300" /><br><br>
+                        <label for="bescheidHebesatzInput">Hebesatz in Prozent:</label><br>
+                        <input type="number" id="bescheidHebesatzInput" value="200" />
+
+                    </div>
 
                 </div>
-                <br><button onclick="bescheidApplySVGholen()">Daten aktualisieren</button><br><br>
                 <label for="datenBescheid">Unternehmen: </label><br>
                 <select id="datenBescheid" onchange="loadBescheidData()">
-                </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen verwenden?</a></small>
+                </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
+                        Modellunternehmen verwenden?</a></small>
+                <br><br><button onclick="bescheidApplySVGholen()">Daten aktualisieren</button><br>
             </div>
+
             </div>
             <br>
             <div id="bescheidContainer" style="min-width: 350px;max-width: 100%;margin:0 auto;text-align:center">
@@ -1018,7 +1022,7 @@
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
             </div>
-           
+
 
 
             </div>
