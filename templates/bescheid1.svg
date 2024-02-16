@@ -1,0 +1,125 @@
+<svg id="bescheidSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 860" font-family="Arial" style="background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px" onload="SVGonLoad()">
+ <defs id="customDefsBescheid"/>
+ <!--Gruppe für Firmeninformationen-->
+ <rect x="0" y="120" width="720" height="5" fill="red" />
+ <g id="liefererInformationen2" fill="#000">
+ <text x="700" y="75" font-size="34" font-weight="bold" text-anchor="end">Stadt <tspan class="bescheidOrt"></tspan></text>
+ <text id="mottoStadt" x="700" y="110" font-size="22" font-weight="bold" text-anchor="end">Verwaltung</text>
+ <text id="adresseStadt" x="20" y="150" font-style="italic" font-size="14" fill="#333">Stadtverwaltung, Rathausplatz 1, <tspan class="bescheidOrtInhaber"></tspan></text>
+ </g>
+<!--Gruppe für Kunden- und Liefererdaten-->
+ <g id="kundenDaten">
+<!--Kundenanschrift links-->
+ <text id="bescheidName" x="20" y="200" font-size="16" fill="#333"/>
+ <text id="bescheidInhaber" x="20" y="220" font-size="16" fill="#333"/>
+ <text class="bescheidStrasse" x="20" y="240" font-size="16" fill="#333"/>
+ <text class="bescheidOrtInhaber" x="20" y="260" font-size="16" fill="#333"/>
+
+ </g>
+<!--Liefererdaten rechts-->
+ <g id="liefererDaten">
+ <text x="620" y="200" text-anchor="end" font-size="14" fill="#808080" text-anchor="end">Unser Zeichen:</text>
+ <text x="630" y="200" font-size="14" text-anchor="start" fill="#333">GU</text>
+ <text x="620" y="215" text-anchor="end" font-size="14" fill="#808080" text-anchor="end">Zimmer:</text>
+ <text x="630" y="215" font-size="14" text-anchor="start" fill="#333">A138</text>
+ <text x="620" y="230" text-anchor="end" font-size="14" fill="#808080" text-anchor="end">Tel. Durchwahl:</text>
+ <text x="630" y="230" font-size="14" text-anchor="start" fill="#333">11502</text>
+ </g>
+<!--Gruppe für Rechnungsinformationen-->
+ <g id="rechnungsInformationen">
+ <text x="20" y="350" font-weight="bold" font-size="22" fill="#333">Grundsteuerbescheid</text>
+ <text x="710" y="380" font-size="16" fill="#333" font-weight="bold" text-anchor="end">Kassenzeichen: <tspan id="bescheidNummer">.001</tspan></text>
+ <text x="710" y="400" font-size="14" fill="#333" text-anchor="end">(Bei Schreiben und Zahlung stets angeben!)</text>
+ <text id="datum" x="710" y="350" font-size="16" fill="#333" text-anchor="end"><tspan id="bescheidTag">01</tspan>.<tspan id="bescheidMonat">01</tspan>.</tspan><tspan class="aktuellesJahrBescheid"/></text>
+ </g>
+<!--Gruppe für Objekt-->
+
+ <text x="20" y="450" fill="#000" font-size="16" font-weight="bold" text-anchor="start">Objekt</text>
+ <g font-size="14">
+ <rect x="20" y="490" width="680" height="2" fill="#000"/>
+ <text id="bescheidObjekt" x="20" y="480" fill="#000" font-weight="bold">Nr.</text>
+ <text id="bescheidBezeichnung" x="100" y="480" fill="#000" font-weight="bold">Bezeichnung</text>
+ <text id="bescheidOrtAngabe" x="300" y="480" fill="#000" font-weight="bold" text-anchor="start">Ort</text>
+ <text id="Aktenzeichen" x="550" y="480" fill="#000" font-weight="bold" text-anchor="start">Aktenzeichen</text>
+ <text id="bescheidObjekt1" x="25" y="510" fill="#333">001</text>
+ <text class="bescheidStrasse" x="100" y="510" fill="#333"/>
+ <text class="bescheidOrtInhaber" x="300" y="510" fill="#333" text-anchor="start"/>
+ <text id="bescheidAktenzeichen1" x="550" y="510" fill="#333" text-anchor="start">
+ </g>
+
+ <!--Gruppe für Messbetrag-->
+ <g id="bestellDaten" font-size="14">
+ <rect x="20" y="600" width="680" height="2" fill="#000"/>
+ <text x="20" y="560" fill="#000" font-size="16" font-weight="bold">Festsetzung Grundsteuer B</text>
+ <text x="20" y="590" fill="#000" font-weight="bold">Jahr</text>
+ <text x="100" y="590" fill="#000" font-weight="bold" >Zeitraum</text>
+ <text x="340" y="590" fill="#000" font-weight="bold" text-anchor="end">Messbetrag</text>
+ <text x="500" y="590" fill="#000" font-weight="bold" text-anchor="end">Hebesatz</text>
+ <text x="660" y="590" fill="#000" font-weight="bold" text-anchor="end">Jahressteuer</text>
+ <text class="aktuellesJahrBescheid" x="20" y="620" fill="#000"></text>
+ <text id="bescheidZeitraum" x="100" y="620" fill="#000">01.01. - 31.12.</text>
+ <text id="bescheidMessbetrag" x="340" y="620" fill="#000" text-anchor="end"></text>
+ <text id="bescheidHebesatz" x="500" y="620" fill="#000" text-anchor="end"></text>
+ <text id="bescheidJahressteuer" x="660" y="620" fill="#000" text-anchor="end"></text>
+ </g>
+
+ <text x="20" y="670" fill="#000" font-size="14" text-anchor="start">Erteilen Sie uns bitte ein SEPA-Lastschriftmandat oder überweisen Sie den jeweils fälligen Betrag</text>
+ <text x="20" y="690" fill="#000" font-size="14" text-anchor="start">unter Angabe des Kassenzeichens auf unser Bankkonto.</text>
+ 
+ <text x="20" y="740" fill="#000" font-size="16" font-weight="bold" text-anchor="start">Fälligkeitstermine zum Veranlagungsjahr</text>
+ 
+  <!--Gruppe für Fälligkeit-->
+ <g font-size="15"> 
+ <rect x="10" y="750" width="700" height="75" fill="#ccc"/>
+ <text x="20" y="770" fill="#000" font-weight="bold">Fälligkeit</text>
+ <text x="200" y="770" fill="#000" font-weight="bold" text-anchor="middle">15.02.</text>
+ <text x="350" y="770" fill="#000" font-weight="bold" text-anchor="middle">15.05.</text>
+ <text x="500" y="770" fill="#000" font-weight="bold" text-anchor="middle">15.07.</text>
+ <text x="650" y="770" fill="#000" font-weight="bold" text-anchor="middle">15.11.</text>
+ <text x="20" y="790" fill="#000">Grundsteuer B</text>
+ <text class="bescheidRate" x="200" y="790" fill="#000" text-anchor="middle"></text>
+ <text class="bescheidRate" x="350" y="790" fill="#000" text-anchor="middle"></text>
+ <text class="bescheidRate" x="500" y="790" fill="#000" text-anchor="middle"></text>
+ <text class="bescheidRate" x="650" y="790" fill="#000" text-anchor="middle"></text>
+</g>
+
+
+<circle cx="10" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="30" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="50" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="70" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="90" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="110" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="130" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="150" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="170" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="190" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="210" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="230" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="250" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="270" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="290" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="310" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="330" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="350" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="370" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="390" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="410" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="430" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="450" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="470" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="490" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="510" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="530" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="550" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="570" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="590" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="610" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="630" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="650" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="670" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="690" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="710" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="730" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="750" cy="860" r="10" stroke-width="1" stroke="gray" fill="none" />
+</svg>
