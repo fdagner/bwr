@@ -174,7 +174,7 @@ function loadDefaultYamlData() {
                 // Verwende defaultYamlData zum Aktualisieren der Dropdown-Liste und zufälliger Unternehmen
                 yamlData = [...defaultYamlData]; // Verwende den Spread-Operator, um eine Kopie zu erstellen
                 reloadDropdownOptions();
-                 })
+            })
             .catch(error => {
                 console.error("Error loading default YAML data:", error);
             });
@@ -1257,8 +1257,18 @@ function kassenbonApplySVGholen() {
     loadKassenbonData() // Laden der Kassenbon-Daten
 }
 
-function journalApplySVGholen() {
+async function journalApplySVGholen() {
 
+    let selectedLohnjournal = document.getElementById("svgDropdownLohnjournal").value;
+    let svgContainerLohnjournal = document.getElementById("lohnjournalContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedLohnjournal);
+        svgContainerLohnjournal.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
     // Laden der Daten des Lohnjournals
 
     // Funktion zum Zufälligen Auswählen von Mitarbeitern
@@ -1490,10 +1500,21 @@ function journalApplySVGholen() {
 
 }
 
-function bescheidApplySVGholen() {
+async function bescheidApplySVGholen() {
     if (!validateInputs()) {
         // Wenn die Validierung fehlschlägt, stoppe die Funktion
         return;
+    }
+
+    let selectedBescheid = document.getElementById("svgDropdownBescheid").value;
+    let svgContainerBescheid = document.getElementById("bescheidContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedBescheid);
+        svgContainerBescheid.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
     }
 
     const selectedBescheidTag = document.getElementById('tagBescheid').value;
@@ -1528,6 +1549,19 @@ function bescheidApplySVGholen() {
             element.textContent = bescheidRate;
         }
 
+    }
+
+    // Abfallentsorgung
+    const bescheidAbfallgebuehrInput = document.getElementById('bescheidAbfallgebuehrInput').value;
+    const bescheidAbfallgebuehr = document.getElementById('bescheidAbfallgebuehr');
+    if (bescheidAbfallgebuehr) {
+        bescheidAbfallgebuehr.textContent = formatCurrency(bescheidAbfallgebuehrInput);
+    }
+
+    const bescheidAbfallbezeichnungInput = document.getElementById('bescheidAbfallbezeichnungInput').value;
+    const bescheidAbfallbezeichnung = document.getElementById('bescheidAbfallbezeichnung');
+    if (bescheidAbfallbezeichnung) {
+        bescheidAbfallbezeichnung.textContent = bescheidAbfallbezeichnungInput;
     }
 
 
@@ -1837,16 +1871,6 @@ async function applySVG() {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
 
-    let selectedLohnjournal = document.getElementById("svgDropdownLohnjournal").value;
-    let svgContainerLohnjournal = document.getElementById("lohnjournalContainer");
-
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedLohnjournal);
-        svgContainerLohnjournal.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
 
 
     let selectedEmail = document.getElementById("svgDropdownEmail").value;
@@ -1883,16 +1907,7 @@ async function applySVG() {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
 
-    let selectedBescheid = document.getElementById("svgDropdownBescheid").value;
-    let svgContainerBescheid = document.getElementById("bescheidContainer");
 
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedBescheid);
-        svgContainerBescheid.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
 
 
 

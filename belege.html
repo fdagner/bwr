@@ -836,7 +836,7 @@
         <section id="lohnjournal" class="tabcontent">
             <h3>Lohn-/Gehaltsjournal</h3>
             <div class="box">
-                <p>Bei "Daten aktualisieren" wird ein zufälliges Lohn-/Gehaltsjournal erstellt.</p>
+                <p>Ein zufälliges Lohn-/Gehaltsjournal wird erstellt.</p>
                 <label for="svgDropdownLohnjournal">Vorlage: </label><br>
                 <select id="svgDropdownLohnjournal">
                     <option value="lohnjournal.svg">Klassisch</option>
@@ -847,7 +847,7 @@
                 </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
                         Modellunternehmen
                         verwenden?</a></small>
-                <br><br><button onclick="journalApplySVGholen()">Daten aktualisieren</button><br>
+                <br><br><button onclick="journalApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
             </div>
 
             </div>
@@ -919,7 +919,8 @@
                         <h4>Art des Bescheids</h4>
                         <label for="svgDropdownBescheid">Auswählen: </label>
                         <select id="svgDropdownBescheid">
-                            <option value="bescheid1.svg">Grundsteuer</option>
+                            <option value="bescheid1.svg" checked>Grundsteuer</option>
+                            <option value="bescheid2.svg">Abfallentsorgung</option>
                         </select>
                     </div>
                     <div>
@@ -983,19 +984,44 @@
                     </div>
                     <div>
                         <h4>Daten</h4>
+                        <div id="bescheidAbfall">
+                        <label for="bescheidAbfallgebuehrInput">Abfallgebühr:</label><br>
+                        <input type="number" id="bescheidAbfallgebuehrInput" value="1450" /><br>
+                        <label for="bescheidAbfallbezeichnungInput">Abfallbezeichnung:</label><br>
+                        <input type="text" id="bescheidAbfallbezeichnungInput" value="Restmülltonne 240 l" /><br>
+                        </div>
+                        <div id="bescheidGrundsteuer">
                         <label for="bescheidMessbetragInput">Messbetrag:</label><br>
-                        <input type="number" id="bescheidMessbetragInput" value="300" /><br><br>
+                        <input type="number" id="bescheidMessbetragInput" value="300" /><br>
                         <label for="bescheidHebesatzInput">Hebesatz in Prozent:</label><br>
                         <input type="number" id="bescheidHebesatzInput" value="200" />
-
+                            </div>
                     </div>
+                    <script>
+       function updateFields() {
+        var selectedOption = document.getElementById("svgDropdownBescheid").value;
 
+    // Zeige die entsprechenden Eingabefelder basierend auf der Auswahl an
+    if (selectedOption === "bescheid1.svg") {
+            document.getElementById("bescheidGrundsteuer").style.display = "block";
+            document.getElementById("bescheidAbfall").style.display = "none";
+        } else if (selectedOption === "bescheid2.svg") {
+            document.getElementById("bescheidGrundsteuer").style.display = "none";
+            document.getElementById("bescheidAbfall").style.display = "block";
+        }
+    }
+     // Füge einen Event-Listener hinzu, um die Anzeige zu aktualisieren, wenn die Option geändert wird
+     document.getElementById("svgDropdownBescheid").addEventListener("change", updateFields);
+
+// Aktualisiere die Anzeige beim Laden der Seite
+window.onload = updateFields;
+                    </script>
                 </div>
                 <label for="datenBescheid">Unternehmen: </label><br>
                 <select id="datenBescheid" onchange="loadBescheidData()">
                 </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
                         Modellunternehmen verwenden?</a></small>
-                <br><br><button onclick="bescheidApplySVGholen()">Daten aktualisieren</button><br>
+                <br><br><button onclick="bescheidApplySVGholen()">Bescheid erstellen / aktualisieren</button><br>
             </div>
 
             </div>
