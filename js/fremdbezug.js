@@ -120,7 +120,7 @@ function erstelleZufallssatz() {
             responsive: true,
             aspectRatio: 1.5,
             plugins: {
-                title: { display: true, text: 'Fremd- und Eigenbezug', font: { size: 20 } },
+                title: { display: true, text: 'Fremdbezug und Eigenfertigung', font: { size: 20 } },
                 legend: { position: 'bottom', labels: { font: { size: 16 } } },
                 tooltip: { mode: 'index', intersect: false }
             },
