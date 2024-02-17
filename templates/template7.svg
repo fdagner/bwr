@@ -39,18 +39,22 @@
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
     <text x="20" y="340" font-family="Calibri" font-weight="bold" font-size="30" fill="#333">RECHNUNG NR-<tspan id="rechnungsNummer"/></tspan></text>
-    <text id="lieferdatum" x="20" y="380" font-family="Arial" font-size="18" fill="#333">Lieferung <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
     <text x="20" y="410" font-family="Arial" font-size="18" fill="#333">Kundennummer: K<tspan id="nummerKunde"/></text>
-    <text id="datum" x="690" y="380" font-family="Arial" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+    <text id="datum" x="690" y="380" font-family="Arial" font-size="18" fill="#333" text-anchor="end"> <tspan class="rechnungsDatum">01.01.</tspan> <tspan class="aktuellesJahr"/></text>
   </g>
+
+<!--Handwerker Info-->
+<text x="20" y="450" font-family="Arial" font-size="18" fill="#333">Am <tspan id="rechnungDatum-7"/> haben wir <tspan id="bezugskostenBedingung"></tspan> die folgenden Leistungen durchgeführt:</text>
+    
+
 <!--Gruppe für Bestelldaten-->
   <g id="bestellDaten">
     <rect x="20" y="510" width="680" height="2" fill="#000"/>
     <text id="pos" x="40" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Pos</text>
-    <text id="artikel" x="100" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Artikelbezeichnung</text>
-    <text id="menge" x="430" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Menge</text>
-    <text id="einzelpreis" x="560" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Einzelpreis</text>
-    <text id="gesamtpreis" x="690" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Gesamtpreis</text>
+    <text id="artikel" x="100" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold"></text>
+    <text id="menge" x="430" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Einh.</text>
+    <text id="einzelpreis" x="560" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">E-Preis</text>
+    <text id="gesamtpreis" x="690" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">G-Preis</text>
     <text id="pos1" x="40" y="540" font-family="Arial" font-size="18" fill="#333"/>
     <text id="artikel1" x="100" y="540" font-family="Arial" font-size="18" fill="#333"/>
     <text id="menge1" x="430" y="540" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
@@ -66,7 +70,7 @@
 <!--Gruppe für Abrechnungsdetails-->
   <g id="abrechnungsDetails">
     <g id="zwischensummeRabattVersand">
-    <text x="390" y="620" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Warenwert</text>
+    <text x="390" y="620" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Gesamtbetrag</text>
     <text id="zwischensumme" x="690" y="620" font-family="Arial" font-size="18" fill="#333" text-anchor="end"></text>
     <g id="gRabatt">
     <text id="rabatt" x="390" y="650" font-family="Arial" font-size="18" fill="#000" font-weight="bold"></text>
@@ -90,7 +94,7 @@
   </g>
 <!--Gruppe für Zahlungsbedingungen-->
   <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Arial" font-size="18" fill="#333">
-    <text x="350" y="830">Vielen Dank für Ihre Bestellung!</text>
+    <text x="350" y="830">Vielen Dank für Ihren Auftrag!</text>
     <text x="350" y="860">Zahlung fällig in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
     <text id="skontotext" x="350" y="890">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto</text>
     <text id="Eigentumsvorbehalt" x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>

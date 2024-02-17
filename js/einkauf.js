@@ -365,7 +365,7 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `</tbody>`;
       antwortOutput += `</table><br>`;
     }
-    antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+    antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:500px;margin:0 0;margin-bottom:6px;">`;
     antwortOutput += `<tbody>`;
     antwortOutput += `<tr>`;
     antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${konto_1}</td>`;
@@ -427,7 +427,7 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `</tr>`;
       antwortOutput += `</table>`;
       antwortOutput += `<br>`;
-      antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+      antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:500px;margin:0 0;margin-bottom:6px;">`;
       antwortOutput += `<tbody>`;
       antwortOutput += `<tr>`;
       antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">4400 VE</td>`;

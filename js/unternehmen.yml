@@ -876,3 +876,27 @@
     bic: "GENODEF1NDB"
     inhaber: "Velican Mandic"
     akzent: "#000"
+
+- unternehmen:
+    id: "37"
+    branche: "Handwerk"
+    name: "Lisa Kehrer"
+    motto: "Schornsteinfegermeisterin"
+    bank: "Hausbank"
+    rechtsform: "e. Kfr."
+    logo: "media/pic/kleeblatt.svg"
+    adresse:
+      strasse: "Neue Straße 124"
+      plz: "91710"
+      ort: "Gunzenhausen"
+      land: "Deutschland"
+    kontakt:
+      telefon: "09831 1333560"
+      email: "info@lisa-kehrer.de"
+      internet: "lisa-kehrer.de"
+    ust_id: "DE983452231"
+    steuernummer: "181/106/11653"
+    iban: "DE89300000445300013034"
+    bic: "GENODEF1NGH"
+    inhaber: "Lisa Kehrer"
+    akzent: "#f4f8f4"

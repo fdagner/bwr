@@ -174,7 +174,7 @@ function loadDefaultYamlData() {
                 // Verwende defaultYamlData zum Aktualisieren der Dropdown-Liste und zufälliger Unternehmen
                 yamlData = [...defaultYamlData]; // Verwende den Spread-Operator, um eine Kopie zu erstellen
                 reloadDropdownOptions();
-            })
+                 })
             .catch(error => {
                 console.error("Error loading default YAML data:", error);
             });
@@ -196,7 +196,6 @@ function deleteAndLoadDefaultData() {
 
     // Laden der Standard-YAML-Daten
     loadDefaultYamlData();
-
     // Verwenden von defaultYamlData zum Aktualisieren der Dropdown-Liste und zufälliger Unternehmen
     yamlData = [...defaultYamlData]; // Verwende den Spread-Operator, um eine Kopie zu erstellen
     reloadDropdownOptions();
@@ -444,7 +443,7 @@ function loadBescheidData() {
 
     // Aufruf der Funktion und Ausgabe der generierten Nummer
     document.getElementById('bescheidAktenzeichen1').textContent = "K" + generateRandomBescheidNumber();
-    document.getElementById('bescheidNummer').textContent = (generateRandomBescheidNumber()/3).toFixed(0);
+    document.getElementById('bescheidNummer').textContent = (generateRandomBescheidNumber() / 3).toFixed(0);
 }
 
 
@@ -655,6 +654,17 @@ function applyOrderData() {
     // Formatieren von Tag und Monat
     const formattedDatum = `${selectedTag}.${selectedMonat}.`;
     const formattedDatumKontoauszug = `${selectedTagKontoauszug}.${selectedMonatKontoauszug}.`;
+
+    // 7 Tage abziehen
+    const elementsWithClassRechnung7 = document.getElementById('rechnungDatum-7');
+    if (elementsWithClassRechnung7) {
+        const currentYear = new Date().getFullYear();
+        const selectedDatumRechnung = new Date(`${selectedMonat}/${selectedTag}/${currentYear}`);
+        const sevenDaysAgoRechnung = new Date(selectedDatumRechnung);
+        sevenDaysAgoRechnung.setDate(selectedDatumRechnung.getDate() - 7);
+        const formattedSevenDaysAgoRechnung = `${sevenDaysAgoRechnung.getDate().toString().padStart(2, '0')}.${(sevenDaysAgoRechnung.getMonth() + 1).toString().padStart(2, '0')}.`;
+        elementsWithClassRechnung7.textContent = formattedSevenDaysAgoRechnung;
+    }
 
     // Annahme: Alle Elemente mit der Klasse 'rechnungsDatum' und kontoauszugDatum sollen aktualisiert werden
     const elementsWithClass = document.getElementsByClassName('rechnungsDatum');
@@ -1493,9 +1503,9 @@ function bescheidApplySVGholen() {
 
     // Grundsteuer
     const bescheidMessbetragInput = document.getElementById('bescheidMessbetragInput').value;
-    const bescheidMessbetrag =  document.getElementById('bescheidMessbetrag');
+    const bescheidMessbetrag = document.getElementById('bescheidMessbetrag');
     const bescheidHebesatzInput = document.getElementById('bescheidHebesatzInput').value;
-    const bescheidHebesatz =  document.getElementById('bescheidHebesatz');
+    const bescheidHebesatz = document.getElementById('bescheidHebesatz');
 
     if (bescheidMessbetrag) {
         bescheidMessbetrag.textContent = formatCurrency(bescheidMessbetragInput);
@@ -1504,23 +1514,23 @@ function bescheidApplySVGholen() {
     if (bescheidHebesatz) {
         bescheidHebesatz.textContent = bescheidHebesatzInput + " %";
     }
-    
-    let bescheidJahressteuer =  document.getElementById('bescheidJahressteuer');
+
+    let bescheidJahressteuer = document.getElementById('bescheidJahressteuer');
     if (bescheidJahressteuer) {
         let bescheidMessbetragInput = parseFloat(document.getElementById('bescheidMessbetragInput').value);
         let bescheidHebesatzInput = parseFloat(document.getElementById('bescheidHebesatzInput').value);
         let bescheidBerechnungJahressteuer = bescheidMessbetragInput * (bescheidHebesatzInput / 100);
         bescheidJahressteuer.textContent = formatCurrency(bescheidBerechnungJahressteuer);
-        bescheidRate = formatCurrency((bescheidBerechnungJahressteuer/4));
+        bescheidRate = formatCurrency((bescheidBerechnungJahressteuer / 4));
         const elementsWithClassbescheidRate = document.getElementsByClassName('bescheidRate');
         // Iteriere durch alle Elemente und setze das formatierte Datum
         for (const element of elementsWithClassbescheidRate) {
             element.textContent = bescheidRate;
         }
-    
+
     }
-    
-    
+
+
     const useScriptBescheid = document.getElementById('scriptJahrBescheid').checked;
     if (!useScriptBescheid) {
         // Verwende das Jahr aus dem Textfeld
@@ -2157,14 +2167,14 @@ clipboardNewspaper.on('error', function (e) {
 function validateInputs() {
     // Validierung für Artikelbezeichnung Pos. 1
     let artikelInput = document.getElementById("artikelInput");
-    if (!isValidInput(artikelInput.value, 25)) {
+    if (!isValidInput(artikelInput.value, 32)) {
         alert("Bitte geben Sie eine gültige Artikelbezeichnung Pos. 1 ein. Maximal 25 Zeichen!");
         return false;
     }
 
     // Validierung für Artikelbezeichnung Pos. 2
     let artikelInput2 = document.getElementById("artikelInput2");
-    if (!isValidInput(artikelInput2.value, 25)) {
+    if (!isValidInput(artikelInput2.value, 32)) {
         alert("Bitte geben Sie eine gültige Artikelbezeichnung Pos. 2 ein. Maximal 25 Zeichen!");
         return false;
     }
@@ -2379,15 +2389,15 @@ function validateInputs() {
         alert("Bitte geben Sie eine gültige Bezeichnung bei Überschrift ein. Maximal 50 Zeichen!");
         return false;
     }
-    
-      // Validierung für Kassenbon
-      let bescheidMessbetragInput = document.getElementById("bescheidMessbetragInput");
-      if (!isValidNumberInput(bescheidMessbetragInput.value, 0, 9999)) {
-          alert("Bitte geben Sie bei Messbetrag gültige Werte zwischen 0 und 9999 ein");
-          return false;
-      }
 
-        // Validierung für Kassenbon
+    // Validierung für Kassenbon
+    let bescheidMessbetragInput = document.getElementById("bescheidMessbetragInput");
+    if (!isValidNumberInput(bescheidMessbetragInput.value, 0, 9999)) {
+        alert("Bitte geben Sie bei Messbetrag gültige Werte zwischen 0 und 9999 ein");
+        return false;
+    }
+
+    // Validierung für Kassenbon
     let bescheidHebesatzInput = document.getElementById("bescheidHebesatzInput");
     if (!isValidNumberInput(bescheidHebesatzInput.value, 0, 999)) {
         alert("Bitte geben Sie beim Hebesatz gültige Werte zwischen 0 und 999 ein");
