@@ -8,7 +8,7 @@
   <script src="js/menu.js"></script>
   <script src="js/html2canvas.min.js"></script>
   <script src="js/clipboard.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="js/filesaver.min.js"></script>
   <title>Gift for stash</title>
 </head>
 
@@ -17,12 +17,15 @@
     input[name="code_weight[]"] {
       width: 50px;
     }
-  </style>
-  <h1>Generator für MC-Fragen</h1>
-  <p>Dieses Script generiert für den Block Stash in Moodle Multiple-Choice-Fragen.
-    Diese können zum Beispiel in eine Lektion eingebunden werden. So kann man ein ganzes Pack an Stash-Objekten
-    verteilen:
-    Die Schüler wählen und öffnen eines davon. Die Lektion darf nicht wiederholbar sein.</p>
+  </style><main>
+  <div w3-include-html="navigation.html"></div> 
+<h2>Generator für Stash-Packs</h2>
+  <div class="box">
+      <img src="media/pic/stash.png" style="min-width:200px;width:50%">
+  <p>Dieses Script generiert für den Block Stash in mebis Multiple-Choice-Fragen. Anstatt einzelne Stash-Objekte im Kurs zu platzieren, 
+    können ganze Packs mit der Aktivität Lektion verteilt werden.</p>
+
+    
   <script>
 
     function randnum(length) {
@@ -183,6 +186,7 @@
     <!-- Container für die generierten Fragen -->
     <div id="fragen-container"></div>
   </div>
+  </div>
 
   <script>
     function addInput() {
@@ -322,6 +326,7 @@
       existingInputs[i].classList.add("existing-weight");
     }
   </script>
+  </main>
     <div w3-include-html="footer.html"></div> 
     <script>
     includeHTML();

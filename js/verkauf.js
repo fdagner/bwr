@@ -422,7 +422,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `<p>${verkaufAntwort_Kundenanfrage}</p>`;
     }
     if (verkaufBuchungsoptionDropdown.value != 'verkaufDifferenzkalkulation') {
-      verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+      verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:500px;margin:0 0;margin-bottom:6px;">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${verkaufKonto_2}</td>`;
@@ -477,7 +477,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</table>`;
       verkaufAntwortOutput += `<br>`;
-      verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+      verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:500px;margin:0 0;margin-bottom:6px;">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">2800 BK</td>`;
