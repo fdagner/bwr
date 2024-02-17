@@ -1,7 +1,8 @@
 <svg id="bescheidSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 720" font-family="Arial" style="background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px" onload="SVGonLoad()">
  <defs id="customDefsBescheid"/>
  <!--Gruppe für Firmeninformationen-->
- <rect x="0" y="120" width="720" height="5" fill="#FF4D00" />
+<rect x="0" y="0" width="720" height="715" stroke="#ccc" stroke-width="1" fill="white" />
+<rect x="0" y="120" width="720" height="5" fill="#FF4D00" />
  <g id="liefererInformationen2" fill="#000">
  <text x="700" y="75" font-size="34" font-weight="bold" text-anchor="end">Abfallwirtschaft <tspan class="bescheidOrt"></tspan></text>
  <text id="mottoStadt" x="700" y="110" font-size="22" font-weight="bold" text-anchor="end">Entsorgungsbetrieb</text>
@@ -64,40 +65,40 @@
  <text x="20" y="670" fill="#000" font-size="14" text-anchor="start">Überweisen Sie den Betrag unter Angabe des Kassenzeichens auf unser Bankkonto.</text>
  
 
-<circle cx="10" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="30" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="50" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="70" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="90" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="110" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="130" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="150" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="170" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="190" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="210" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="230" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="250" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="270" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="290" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="310" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="330" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="350" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="370" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="390" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="410" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="430" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="450" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="470" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="490" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="510" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="530" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="550" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="570" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="590" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="610" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="630" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="650" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="670" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="690" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
-<circle cx="710" cy="720" r="10" stroke-width="1" stroke="gray" fill="none" />
+<circle cx="10" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="30" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="50" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="70" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="90" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="110" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="130" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="150" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="170" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="190" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="210" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="230" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="250" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="270" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="290" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="310" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="330" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="350" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="370" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="390" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="410" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="430" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="450" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="470" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="490" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="510" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="530" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="550" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="570" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="590" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="610" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="630" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="650" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="670" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="690" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="710" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
 </svg>
