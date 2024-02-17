@@ -44,7 +44,7 @@
   </g>
 
 <!--Handwerker Info-->
-<text x="20" y="450" font-family="Arial" font-size="18" fill="#333">Am <tspan id="rechnungDatum-7"/> haben wir <tspan id="bezugskostenBedingung"></tspan> die folgenden Leistungen durchgeführt:</text>
+<text x="20" y="450" font-family="Arial" font-size="18" fill="#333">Am <tspan id="rechnungDatum-7"></tspan> haben wir <tspan id="bezugskostenBedingung"></tspan> die folgenden Leistungen durchgeführt:</text>
     
 
 <!--Gruppe für Bestelldaten-->

@@ -1274,26 +1274,27 @@ async function journalApplySVGholen() {
     // Funktion zum Zufälligen Auswählen von Mitarbeitern
 
     const mitarbeiter = [
-        { name: "Smith, John", geschlecht: "männlich", steuerklasse: "I" },
-        { name: "Garcia, Maria", geschlecht: "weiblich", steuerklasse: "IV" },
-        { name: "Müller, Hans", geschlecht: "männlich", steuerklasse: "I" },
-        { name: "Nguyen, Linh", geschlecht: "weiblich", steuerklasse: "III" },
-        { name: "Andersen, Erik", geschlecht: "männlich", steuerklasse: "I" },
-        { name: "Choi, Hye-jin", geschlecht: "weiblich", steuerklasse: "IV" },
-        { name: "Gomez, Juan", geschlecht: "männlich", steuerklasse: "I" },
-        { name: "Abdullah, Fatima", geschlecht: "weiblich", steuerklasse: "III" },
-        { name: "Kovács, István", geschlecht: "männlich", steuerklasse: "I" },
-        { name: "Santos, Sofia", geschlecht: "weiblich", steuerklasse: "IV" },
-        { name: "Ali, Ahmed", geschlecht: "männlich", steuerklasse: "I" },
-        { name: "Hernandez, Carla", geschlecht: "weiblich", steuerklasse: "III" },
-        { name: "Novák, Katarina", geschlecht: "weiblich", steuerklasse: "IV" },
-        { name: "Fischer, Tobias", geschlecht: "männlich", steuerklasse: "I" },
-        { name: "Silva, Pedro", geschlecht: "männlich", steuerklasse: "III" },
-        { name: "Park, Min-woo", geschlecht: "männlich", steuerklasse: "IV" },
-        { name: "Zhang, Wei", geschlecht: "männlich", steuerklasse: "I" },
-        { name: "Molina, Ana", geschlecht: "weiblich", steuerklasse: "III" },
-        { name: "Schneider, Maria", geschlecht: "weiblich", steuerklasse: "IV" },
-        { name: "Mikhailova, Elena", geschlecht: "weiblich", steuerklasse: "I" }
+        { name: "Smith, John", freibetrag: "0", steuerklasse: "I" },
+        { name: "Garcia, Maria", freibetrag: "0", steuerklasse: "IV" },
+        { name: "Müller, Hans", freibetrag: "0", steuerklasse: "I" },
+        { name: "Nguyen, Linh", freibetrag: "0", steuerklasse: "III" },
+        { name: "Andersen, Erik", freibetrag: "0", steuerklasse: "I" },
+        { name: "Choi, Hye-jin", freibetrag: "0", steuerklasse: "IV" },
+        { name: "Gomez, Juan", freibetrag: "0", steuerklasse: "I" },
+        { name: "Abdullah, Fatima", freibetrag: "0", steuerklasse: "III" },
+        { name: "Bauer, Stephan", freibetrag: "0", steuerklasse: "III" },
+        { name: "Kovács, István", freibetrag: "0", steuerklasse: "I" },
+        { name: "Santos, Sofia", freibetrag: "0", steuerklasse: "IV" },
+        { name: "Ali, Ahmed", freibetrag: "0,5", steuerklasse: "I" },
+        { name: "Hernandez, Carla", freibetrag: "0,5", steuerklasse: "III" },
+        { name: "Novák, Katarina", freibetrag: "0,5", steuerklasse: "IV" },
+        { name: "Fischer, Tobias", freibetrag: "0,5", steuerklasse: "I" },
+        { name: "Silva, Pedro", freibetrag: "0,5", steuerklasse: "III" },
+        { name: "Park, Min-woo", freibetrag: "2,0", steuerklasse: "IV" },
+        { name: "Zhang, Wei", freibetrag: "2,0", steuerklasse: "I" },
+        { name: "Molina, Ana", freibetrag: "2,0", steuerklasse: "III" },
+        { name: "Schneider, Maria", freibetrag: "2,0", steuerklasse: "IV" },
+        { name: "Mikhailova, Elena", freibetrag: "2,0", steuerklasse: "I" }
     ];
 
     function chooseRandomMitarbeiter(mitarbeiterListe, anzahl) {
@@ -1314,7 +1315,7 @@ async function journalApplySVGholen() {
     for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
         let lohnjournalEintrag = document.getElementById(`lohnjournalArbeitnehmer${i + 1}`);
         if (lohnjournalEintrag) {
-            lohnjournalEintrag.textContent = `${ausgewählteMitarbeiter[i].name} (${ausgewählteMitarbeiter[i].steuerklasse})`;
+            lohnjournalEintrag.textContent = `${ausgewählteMitarbeiter[i].name} (${ausgewählteMitarbeiter[i].steuerklasse}/${ausgewählteMitarbeiter[i].freibetrag})`;
         }
     }
 

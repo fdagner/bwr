@@ -36,25 +36,26 @@
     <text id="datum" x="690" y="380" font-family="Calibri" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
   </g>
 
-  <text id="datum" x="20" y="440" font-family="Calibri" font-size="18" fill="#333" text-anchor="start">Die Belieferung Ihres Kundens am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/> stellen wir Ihnen wie folgt in Rechnung:</text>
+  <text id="datum" x="20" y="440" font-family="Calibri" font-size="18" fill="#333" text-anchor="start">Die Belieferung Ihres Kundens am <tspan id="rechnungDatum-7"></tspan><tspan class="aktuellesJahr"/> stellen wir Ihnen wie folgt in Rechnung:</text>
   
 <!--Gruppe für Bestelldaten-->
-  <g id="bestellDaten" font-size="18">
-    <text id="pos" x="20" y="500" font-family="Calibri" fill="#000" font-weight="bold" font-size="0"></text>
-    <text id="artikel" x="20" y="500" font-family="Calibri" fill="#000" font-weight="bold"></text>
-    <text id="menge" x="400" y="500" font-family="Calibri" fill="#000" font-weight="bold" text-anchor="end" font-size="0"></text>
-    <text id="einzelpreis" x="530" y="500" font-family="Calibri" fill="#000" font-weight="bold" text-anchor="end" font-size="0"></text>
-    <text id="gesamtpreis" x="690" y="500" font-family="Calibri" fill="#000" font-weight="bold" text-anchor="end"></text>
-    <text id="pos1" x="40" y="540" font-family="Calibri" fill="#333" font-size="0"/>
-    <text id="artikel1" x="20" y="540" font-family="Calibri" fill="#333"/>
-    <text id="menge1" x="400" y="540" font-family="Calibri" fill="#333" text-anchor="end" font-size="0"/>
-    <text id="einzelpreis1" x="530" y="540" font-family="Calibri" fill="#333" text-anchor="end" font-size="0"/>
-    <text id="gesamtpreis1" x="690" y="540" font-family="Calibri" fill="#333" text-anchor="end"/>
-    <text id="pos2" x="40" y="570" font-family="Calibri" fill="#333"font-size="0" />
-    <text id="artikel2" x="20" y="570" font-family="Calibri" fill="#333"/>
-    <text id="menge2" x="400" y="570" font-family="Calibri" fill="#333" text-anchor="end" font-size="0"/>
-    <text id="einzelpreis2" x="530" y="570" font-family="Calibri" fill="#333" text-anchor="end" font-size="0"/>
-    <text id="gesamtpreis2" x="690" y="570" font-family="Calibri" fill="#333" text-anchor="end"/>
+ <g id="bestellDaten">
+    <rect x="20" y="510" width="680" height="2" fill="#000"/>
+    <text id="pos" x="40" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Pos</text>
+    <text id="artikel" x="100" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Leistung</text>
+    <text id="menge" x="430" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Menge</text>
+    <text id="einzelpreis" x="560" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Einzelpreis</text>
+    <text id="gesamtpreis" x="690" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Gesamtpreis</text>
+    <text id="pos1" x="40" y="540" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="artikel1" x="100" y="540" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="menge1" x="430" y="540" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="einzelpreis1" x="560" y="540" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="gesamtpreis1" x="690" y="540" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="pos2" x="40" y="570" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="artikel2" x="100" y="570" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="menge2" x="430" y="570" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="einzelpreis2" x="560" y="570" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="gesamtpreis2" x="690" y="570" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
   </g>
   <rect x="20" y="590" width="680" height="1" fill="#000"/>
 <!--Gruppe für Abrechnungsdetails-->
