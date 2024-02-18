@@ -213,26 +213,31 @@ const plugin = {
         data: lagerhaltungskostenData,
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
+        borderWidth: 3,
+        pointRadius: 0,
+        borderDash: [4,2],
       }, {
         label: 'Bestellkosten',
         data: bestellkostenData,
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
+        borderWidth: 3,
+        pointRadius: 0,
       },
       {
         label: 'Gesamtkosten',
         data: gesamtkostenData,
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
+        borderWidth: 3,
+        pointRadius: 0,
+        borderDash: [10,5],
       }]
     },
     options: {
       responsive: true,
       plugins: {
-        customCanvasBackgroundColor: {
+          customCanvasBackgroundColor: {
           color: 'white',
         }
       },
@@ -456,6 +461,19 @@ function portfolioHerunterladenAlsPNG() {
   });
 }
 
+function bestellmengeDiagrammHerunterladenAlsPNG() {
+  const portfolioContainer = document.getElementById('myChart');
+
+  html2canvas(portfolioContainer).then(canvas => {
+    const dataURL = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'bestellmengeDiagramm.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+}
 
 
 function bestellmengeKopiereInZwischenablage() {
