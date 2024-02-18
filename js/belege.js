@@ -1,6 +1,11 @@
 let yamlData = []; // Initialize yamlData as an empty array
 let defaultYamlData = []; // Initialize variable for default YAML data
 
+// Auf 2 Dezimalstellen runden
+function roundToTwoDecimals(num) {
+    return Math.round(num * 100) / 100;
+  }
+
 // Function to handle file upload
 function handleFileUpload() {
     const fileInput = document.getElementById('fileInput');
@@ -443,7 +448,7 @@ function loadBescheidData() {
 
     // Aufruf der Funktion und Ausgabe der generierten Nummer
     document.getElementById('bescheidAktenzeichen1').textContent = "K" + generateRandomBescheidNumber();
-    document.getElementById('bescheidNummer').textContent = (generateRandomBescheidNumber() / 3).toFixed(0);
+    document.getElementById('bescheidNummer').textContent = roundToTwoDecimals(generateRandomBescheidNumber() / 3);
 }
 
 
@@ -1090,6 +1095,7 @@ function quittungApplySVGholen() {
     document.getElementById('quittungUST').textContent = quittungUST;
     let quittungUSTBetrag = quittungNetto * quittungUST / 100;
     document.getElementById('quittungUSTBetrag').textContent = quittungUSTBetrag;
+    quittungUSTBetrag = roundToTwoDecimals(quittungUSTBetrag);
     quittungUSTBetrag = parseFloat(quittungUSTBetrag).toFixed(2);
     let [USTVorKomma, USTNachKomma] = quittungUSTBetrag.split('.');
     document.getElementById('quittungUSTBetrag').textContent = USTVorKomma;
@@ -1189,7 +1195,8 @@ function kassenbonApplySVGholen() {
     }
 
     document.getElementById('kassenbonUST').textContent = kassenbonUST;
-    let kassenbonUSTBetrag = (kassenbonNetto * kassenbonUST / 100).toFixed(2);
+    let kassenbonUSTBetrag = (kassenbonNetto * kassenbonUST / 100);
+    kassenbonUSTBetrag = roundToTwoDecimals(kassenbonUSTBetrag);
     document.getElementById('kassenbonUSTBetrag').textContent = formatCurrency(kassenbonUSTBetrag);
     let kassenbonBrutto = parseFloat(kassenbonNetto) + parseFloat(kassenbonUSTBetrag);
     let kassenbonBruttoElements = Array.from(document.getElementsByClassName('kassenbonBrutto'));
@@ -1342,123 +1349,123 @@ async function journalApplySVGholen() {
         return brutto * steuersatz;
     }
 
-    // Funktion zur Berechnung der Sozialversicherungsbeiträge
-    function berechneSozialversicherung(brutto) {
-        const sozialversicherungssatz = 0.389; // 16,6% Sozialversicherungssatz (Arbeitnehmer und Arbeitgeber je 10%)
-        return brutto * sozialversicherungssatz;
+  // Funktion zur Berechnung der Sozialversicherungsbeiträge
+  function berechneSozialversicherung(brutto) {
+    const sozialversicherungssatz = 0.389; // 16,6% Sozialversicherungssatz (Arbeitnehmer und Arbeitgeber je 10%)
+    return brutto * sozialversicherungssatz;
+}
+
+// Eintragen der zufälligen Bruttogehälter, Steuern, Sozialversicherungsbeiträge und Nettogehälter ins Lohnjournal
+for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
+    // Generiere zufälliges Bruttogehalt für diesen Mitarbeiter
+    const zufallsBruttogehalt = generiereZufallsBruttogehalt();
+
+    // Eintragen des Bruttogehalts ins Lohnjournal
+    const lohnjournalBrutto = document.getElementById(`lohnjournalBrutto${i + 1}`);
+    if (lohnjournalBrutto) {
+        lohnjournalBrutto.textContent = `${formatCurrency(zufallsBruttogehalt.toFixed(2))}`;
     }
 
-    // Eintragen der zufälligen Bruttogehälter, Steuern, Sozialversicherungsbeiträge und Nettogehälter ins Lohnjournal
-    for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
-        // Generiere zufälliges Bruttogehalt für diesen Mitarbeiter
-        const zufallsBruttogehalt = generiereZufallsBruttogehalt();
-
-        // Eintragen des Bruttogehalts ins Lohnjournal
-        const lohnjournalBrutto = document.getElementById(`lohnjournalBrutto${i + 1}`);
-        if (lohnjournalBrutto) {
-            lohnjournalBrutto.textContent = `${formatCurrency(zufallsBruttogehalt.toFixed(2))}`;
-        }
-
-        // Berechnen der Steuern basierend auf der Steuerklasse und Eintragen ins Lohnjournal
-        const lohnjournalSteuern = document.getElementById(`lohnjournalSteuern${i + 1}`);
-        if (lohnjournalSteuern) {
-            const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
-            lohnjournalSteuern.textContent = `${formatCurrency(steuern.toFixed(2))}`;
-        }
-
-        // Berechnen der Sozialversicherungsbeiträge und Eintragen ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
-        const lohnjournalAN = document.getElementById(`lohnjournalAN${i + 1}`);
-        const lohnjournalAG = document.getElementById(`lohnjournalAG${i + 1}`);
-        if (lohnjournalAN && lohnjournalAG) {
-            const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
-            const anBeitrag = sozialversicherung * 0.5; // 50% für Arbeitnehmer
-            const agBeitrag = sozialversicherung * 0.5; // 50% für Arbeitgeber
-
-            lohnjournalAN.textContent = `${formatCurrency(anBeitrag.toFixed(2))}`;
-            lohnjournalAG.textContent = `${formatCurrency(agBeitrag.toFixed(2))}`;
-        }
-
-        // Berechnen und Eintragen des Nettogehalts ins Lohnjournal
-        const lohnjournalNetto = document.getElementById(`lohnjournalNetto${i + 1}`);
-        if (lohnjournalNetto) {
-            const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
-            const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
-
-            const netto = zufallsBruttogehalt - steuern - (sozialversicherung * 0.5); // Abzug der Hälfte der Sozialversicherung für Arbeitnehmer
-            lohnjournalNetto.textContent = `${formatCurrency(netto.toFixed(2))}`;
-        }
+    // Berechnen der Steuern basierend auf der Steuerklasse und Eintragen ins Lohnjournal
+    const lohnjournalSteuern = document.getElementById(`lohnjournalSteuern${i + 1}`);
+    if (lohnjournalSteuern) {
+        const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
+        lohnjournalSteuern.textContent = `${formatCurrency(steuern.toFixed(2))}`;
     }
 
-    function berechneSummeBrutto(anzahlMitarbeiter) {
-        let summe = 0;
-        for (let i = 0; i < anzahlMitarbeiter; i++) {
-            summe += generiereZufallsBruttogehalt();
-        }
-        return summe;
+    // Berechnen der Sozialversicherungsbeiträge und Eintragen ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
+    const lohnjournalAN = document.getElementById(`lohnjournalAN${i + 1}`);
+    const lohnjournalAG = document.getElementById(`lohnjournalAG${i + 1}`);
+    if (lohnjournalAN && lohnjournalAG) {
+        const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
+        const anBeitrag = sozialversicherung * 0.5; // 50% für Arbeitnehmer
+        const agBeitrag = sozialversicherung * 0.5; // 50% für Arbeitgeber
+
+        lohnjournalAN.textContent = `${formatCurrency(anBeitrag.toFixed(2))}`;
+        lohnjournalAG.textContent = `${formatCurrency(agBeitrag.toFixed(2))}`;
     }
 
-    // Funktion zur Generierung einer zufälligen Ganzzahl zwischen min (inklusive) und max (exklusive)
-    function zufallszahlMitarbeiter(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
+    // Berechnen und Eintragen des Nettogehalts ins Lohnjournal
+    const lohnjournalNetto = document.getElementById(`lohnjournalNetto${i + 1}`);
+    if (lohnjournalNetto) {
+        const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
+        const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
+
+        const netto = zufallsBruttogehalt - steuern - (sozialversicherung * 0.5); // Abzug der Hälfte der Sozialversicherung für Arbeitnehmer
+        lohnjournalNetto.textContent = `${formatCurrency(netto.toFixed(2))}`;
     }
-
-
-    // Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
-    const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
-    const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
-
-    // Eintragen der Summe der Bruttogehälter ins Lohnjournal
-    const lohnjournalBruttoSumme = document.getElementById('lohnjournalBrutto4');
-    if (lohnjournalBruttoSumme) {
-        lohnjournalBruttoSumme.textContent = `${formatCurrency(summeBrutto.toFixed(2))}`;
+}
+function berechneSummeBrutto(anzahlMitarbeiter) {
+    let summe = 0;
+    for (let i = 0; i < anzahlMitarbeiter; i++) {
+        summe += generiereZufallsBruttogehalt();
     }
+    return summe;
+}
 
-    // Annahme: Steuerklasse 4 für alle Mitarbeiter
-    const steuerklasse = "IV";
+// Funktion zur Generierung einer zufälligen Ganzzahl zwischen min (inklusive) und max (exklusive)
+function zufallszahlMitarbeiter(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
 
-    // Berechnen der Steuern für die Summe
-    const summeSteuern = berechneSteuern(summeBrutto, steuerklasse);
 
-    // Eintragen der berechneten Steuern ins Lohnjournal
-    const lohnjournalSteuernSumme = document.getElementById('lohnjournalSteuern4');
-    if (lohnjournalSteuernSumme) {
-        lohnjournalSteuernSumme.textContent = `${formatCurrency(summeSteuern.toFixed(2))}`;
-    }
+// Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
+const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
+const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
 
-    // Berechnen der Sozialversicherungsbeiträge für die Summe (Arbeitnehmer und Arbeitgeber)
-    const summeSozialversicherung = berechneSozialversicherung(summeBrutto);
-    const summeAnBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitnehmer
-    const summeAgBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitgeber
+// Eintragen der Summe der Bruttogehälter ins Lohnjournal
+const lohnjournalBruttoSumme = document.getElementById('lohnjournalBrutto4');
+if (lohnjournalBruttoSumme) {
+    lohnjournalBruttoSumme.textContent = `${formatCurrency(summeBrutto.toFixed(2))}`;
+}
 
-    // Eintragen der berechneten Sozialversicherungsbeiträge ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
-    const lohnjournalANSumme = document.getElementById('lohnjournalAN4');
-    const lohnjournalAGSumme = document.getElementById('lohnjournalAG4');
-    if (lohnjournalANSumme && lohnjournalAGSumme) {
-        lohnjournalANSumme.textContent = `${formatCurrency(summeAnBeitrag.toFixed(2))}`;
-        lohnjournalAGSumme.textContent = `${formatCurrency(summeAgBeitrag.toFixed(2))}`;
-    }
+// Annahme: Steuerklasse 4 für alle Mitarbeiter
+const steuerklasse = "IV";
 
-    // Berechnen des Nettogehalts für die Summe
-    const summeNetto = summeBrutto - summeSteuern - summeAnBeitrag;
+// Berechnen der Steuern für die Summe
+const summeSteuern = berechneSteuern(summeBrutto, steuerklasse);
 
-    // Eintragen des Nettogehalts ins Lohnjournal
-    const lohnjournalNettoSumme = document.getElementById('lohnjournalNetto4');
-    if (lohnjournalNettoSumme) {
-        lohnjournalNettoSumme.textContent = `${formatCurrency(summeNetto.toFixed(2))}`;
-    }
+// Eintragen der berechneten Steuern ins Lohnjournal
+const lohnjournalSteuernSumme = document.getElementById('lohnjournalSteuern4');
+if (lohnjournalSteuernSumme) {
+    lohnjournalSteuernSumme.textContent = `${formatCurrency(summeSteuern.toFixed(2))}`;
+}
 
-    // Array mit den Monatsnamen
-    const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+// Berechnen der Sozialversicherungsbeiträge für die Summe (Arbeitnehmer und Arbeitgeber)
+const summeSozialversicherung = berechneSozialversicherung(summeBrutto);
+const summeAnBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitnehmer
+const summeAgBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitgeber
 
-    // Zufällige Auswahl eines Monats
-    const zufälligerMonatIndex = Math.floor(Math.random() * monate.length);
-    const zufälligerMonat = monate[zufälligerMonatIndex];
+// Eintragen der berechneten Sozialversicherungsbeiträge ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
+const lohnjournalANSumme = document.getElementById('lohnjournalAN4');
+const lohnjournalAGSumme = document.getElementById('lohnjournalAG4');
+if (lohnjournalANSumme && lohnjournalAGSumme) {
+    lohnjournalANSumme.textContent = `${formatCurrency(summeAnBeitrag.toFixed(2))}`;
+    lohnjournalAGSumme.textContent = `${formatCurrency(summeAgBeitrag.toFixed(2))}`;
+}
 
-    // Eintragen des zufälligen Monats ins Lohnjournal
-    const lohnjournalMonat = document.getElementById('lohnjournalMonat');
-    if (lohnjournalMonat) {
-        lohnjournalMonat.textContent = zufälligerMonat;
-    }
+// Berechnen des Nettogehalts für die Summe
+const summeNetto = summeBrutto - summeSteuern - summeAnBeitrag;
+
+// Eintragen des Nettogehalts ins Lohnjournal
+const lohnjournalNettoSumme = document.getElementById('lohnjournalNetto4');
+if (lohnjournalNettoSumme) {
+    lohnjournalNettoSumme.textContent = `${formatCurrency(summeNetto.toFixed(2))}`;
+}
+
+// Array mit den Monatsnamen
+const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+
+// Zufällige Auswahl eines Monats
+const zufälligerMonatIndex = Math.floor(Math.random() * monate.length);
+const zufälligerMonat = monate[zufälligerMonatIndex];
+
+// Eintragen des zufälligen Monats ins Lohnjournal
+const lohnjournalMonat = document.getElementById('lohnjournalMonat');
+if (lohnjournalMonat) {
+    lohnjournalMonat.textContent = zufälligerMonat;
+}
+
 
     let lohnjournalSatzOutput = "";
     lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;

@@ -23,6 +23,11 @@ document.addEventListener('DOMContentLoaded', function () {
   verkaufUpdateMitBezugskostenState();
 });
 
+// Auf 2 Dezimalstellen runden
+function roundToTwoDecimals(num) {
+  return Math.round(num * 100) / 100;
+}
+
 
 // Funktion für zufällige Zahlen Rabatt, Gewinn und Bezugskosten
 function getRandomIntegerWithSteps(min, max, step) {
@@ -171,11 +176,9 @@ function verkaufErstelleZufallssatz() {
   const verkaufRandomZahlung = verkaufArray_Zahlung[Math.floor(Math.random() * verkaufArray_Zahlung.length)];
   const verkaufAntwortZahlung = verkaufKontenZahlung[verkaufRandomZahlung]
   if (verkaufAntwortZahlung === "2880 KA") {
-    verkaufWert = parseFloat(verkaufWert)/10;
+    verkaufWert = parseFloat(verkaufWert) / 10;
   }
-  console.log(verkaufWert)
-  console.log(verkaufAntwortZahlung)
-    const verkaufNettoWert = formatCurrency(verkaufWert);
+  const verkaufNettoWert = formatCurrency(verkaufWert);
   let verkaufBruttoWert = formatCurrency(Math.round(verkaufWert * 0.19 + verkaufWert));
   let verkaufRandomNettowert;
 
@@ -197,9 +200,13 @@ function verkaufErstelleZufallssatz() {
     verkaufRandomSupply_Rabatt_2 = "";
     verkaufBerechnung_nettoWert = parseFloat(verkaufNettoWert.replace(/[^\d,-]/g, ''));
   }
+
   let verkaufRandomSupply_Skonto = verkaufArray_Supply_Skonto[Math.floor(Math.random() * verkaufArray_Supply_Skonto.length)];
   let verkaufRandomSupply_Skonto_2 = verkaufArray_Supply_Skonto_2[Math.floor(Math.random() * verkaufArray_Supply_Skonto_2.length)];
   let verkaufBerechnung_skontoBetrag = verkaufRandom_Skonto / 100 * verkaufBerechnung_nettoWert;
+  verkaufBerechnung_skontoBetrag = roundToTwoDecimals(verkaufBerechnung_skontoBetrag);
+  verkaufBerechnung_skontoBetrag = roundToTwoDecimals(verkaufBerechnung_skontoBetrag);
+  verkaufBerechnung_skontoBetrag = parseFloat(verkaufBerechnung_skontoBetrag);
   let verkaufBerechnung_skontoBetrag_brutto = (verkaufBerechnung_skontoBetrag) + (verkaufBerechnung_skontoBetrag * 0.19);
   let verkaufBerechnung_vorsteuer_berichtigung = verkaufBerechnung_skontoBetrag_brutto - verkaufBerechnung_skontoBetrag;
   let verkaufVorsteuer_berichtigung = formatCurrency(verkaufBerechnung_vorsteuer_berichtigung);
@@ -208,6 +215,7 @@ function verkaufErstelleZufallssatz() {
 
   let verkaufSkontoBetrag = formatCurrency(verkaufBerechnung_skontoBetrag);
   let verkaufBerechnung_USTWert = verkaufBerechnung_nettoWert * 0.19;
+  verkaufBerechnung_USTWert = roundToTwoDecimals(verkaufBerechnung_USTWert);
   let verkaufBerechnung_bruttoWert = verkaufBerechnung_nettoWert + (verkaufBerechnung_USTWert);
   let verkaufRandomSupply_Bezugskosten;
 
@@ -215,22 +223,30 @@ function verkaufErstelleZufallssatz() {
   if (verkaufMitBezugskosten.checked) {
     verkaufRandomSupply_Bezugskosten = verkaufArray_Supply_Bezugskosten[Math.floor(Math.random() * verkaufArray_Supply_Bezugskosten.length)];
     verkaufBerechnung_USTWert = (verkaufBerechnung_nettoWert + parseFloat(verkaufRandom_Bezugskosten)) * 0.19;
+    verkaufBerechnung_USTWert = roundToTwoDecimals(verkaufBerechnung_USTWert);
     verkaufBerechnung_bruttoWert = verkaufBerechnung_nettoWert + (verkaufBerechnung_USTWert) + parseFloat(verkaufRandom_Bezugskosten);
-    verkaufBruttoWert = formatCurrency(Math.round(verkaufWert * 0.19 + verkaufWert) + parseFloat(verkaufRandom_Bezugskosten) * 0.19 + parseFloat(verkaufRandom_Bezugskosten));
+    verkaufBerechnung_bruttoWert = roundToTwoDecimals(verkaufBerechnung_bruttoWert);
+    verkaufBruttoWert = roundToTwoDecimals((verkaufWert * 0.19 + verkaufWert) + parseFloat(verkaufRandom_Bezugskosten) * 0.19 + parseFloat(verkaufRandom_Bezugskosten));
+    verkaufBruttoWert = formatCurrency(verkaufBruttoWert);
   } else {
     verkaufRandom_Bezugskosten = 0;
     verkaufRandomSupply_Bezugskosten = "";
     verkaufBerechnung_USTWert = verkaufBerechnung_USTWert;
   }
   verkaufBerechnung_nettoWert = parseFloat(verkaufBerechnung_nettoWert) + parseFloat(verkaufRandom_Bezugskosten);
+  verkaufBerechnung_nettoWert = roundToTwoDecimals(verkaufBerechnung_nettoWert);
+  verkaufBerechnung_nettoWert = parseFloat(verkaufBerechnung_nettoWert);
   let verkaufBezugskostenWert = formatCurrency(verkaufRandom_Bezugskosten);
 
   let verkaufAntwortNettowert = formatCurrency(verkaufBerechnung_nettoWert);
   let verkaufBerechnung_rabattWert = parseFloat(verkaufNettoWert.replace(/[^\d,-]/g, '')) * verkaufRandom_Rabatt / 100;
+  verkaufBerechnung_rabattWert = roundToTwoDecimals(verkaufBerechnung_rabattWert);
   let verkaufRabattWert = formatCurrency(verkaufBerechnung_rabattWert);
 
   // Gewinn Berechnen
   let verkaufBerechnung_barverkaufspreis = parseFloat(verkaufBerechnung_nettoWert) - parseFloat(verkaufBerechnung_skontoBetrag);
+  verkaufBerechnung_barverkaufspreis = roundToTwoDecimals(verkaufBerechnung_barverkaufspreis);
+  verkaufBerechnung_barverkaufspreis = parseFloat(verkaufBerechnung_barverkaufspreis);
   let verkaufBarverkaufspreis = formatCurrency(verkaufBerechnung_barverkaufspreis);
   let verkaufRandomSupply_Gewinn = verkaufArray_Supply_Gewinn[Math.floor(Math.random() * verkaufArray_Supply_Gewinn.length)];
   // Diferenzkalkualtion Gewinn
@@ -244,9 +260,11 @@ function verkaufErstelleZufallssatz() {
     verkaufRandom_Gewinn = verkaufRandom_Gewinn;
   }
   let verkaufBerechnungGewinnWert = parseFloat(verkaufBerechnung_barverkaufspreis) * parseFloat(verkaufRandom_Gewinn) / (100 + parseFloat(verkaufRandom_Gewinn))
+  verkaufBerechnungGewinnWert = roundToTwoDecimals(verkaufBerechnungGewinnWert);
   let verkaufGewinnWert = formatCurrency(verkaufBerechnungGewinnWert);
   let verkaufBerechnungSelbstkostenpreis = parseFloat(verkaufBerechnung_barverkaufspreis) - parseFloat(verkaufBerechnungGewinnWert);
-  verkauf_Random_Gewinn_Berechnet = (verkaufBerechnungGewinnWert.toFixed(2)*100/verkaufBerechnungSelbstkostenpreis.toFixed(2)).toLocaleString('de-DE', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  verkaufBerechnungSelbstkostenpreis = roundToTwoDecimals(verkaufBerechnungSelbstkostenpreis);
+  verkauf_Random_Gewinn_Berechnet = (verkaufBerechnungGewinnWert * 100 / verkaufBerechnungSelbstkostenpreis).toLocaleString('de-DE', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
   let verkaufSelbstkostenpreis = formatCurrency(verkaufBerechnungSelbstkostenpreis);
 
   let verkaufKundenanfrage;
@@ -277,7 +295,7 @@ function verkaufErstelleZufallssatz() {
   const verkaufAntwort_rabattSatz = `${verkaufRandom_Rabatt}`;
   const verkaufAntwort_GewinnWert = `${verkaufGewinnWert}`;
   const verkaufAntwort_GewinnSatz = `${verkaufRandom_Gewinn}`;
-  const verkaufAntwort_Gewinn_berechnet= `${verkauf_Random_Gewinn_Berechnet}`;
+  const verkaufAntwort_Gewinn_berechnet = `${verkauf_Random_Gewinn_Berechnet}`;
   const verkaufAntwort_wunschGewinn = `${verkaufWunschGewinn}`;
   const verkaufAntwort_Kundenanfrage = `${verkaufKundenanfrage}`;
   const verkaufAntwort_skontoSatz = `${verkaufRandom_Skonto}`;
@@ -393,7 +411,7 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `<td>+ Gewinn</td><td style="padding-left:16px;text-align:right;">${verkaufAntwort_GewinnWert}</td>`;
       verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">${verkaufAntwort_GewinnSatz} %`;
       if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
-      verkaufAntwortOutput += ` (${verkaufAntwort_Gewinn_berechnet} %);`;
+        verkaufAntwortOutput += ` (${verkaufAntwort_Gewinn_berechnet} %);`;
       }
       verkaufAntwortOutput += `</td>`;
       verkaufAntwortOutput += `</tr>`;

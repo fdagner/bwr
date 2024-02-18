@@ -1,4 +1,9 @@
 
+// Auf 2 Dezimalstellen runden
+function roundToTwoDecimals(num) {
+    return Math.round(num * 100) / 100;
+  }
+
 document.getElementById('hideLEgend').addEventListener('click', function () {
     gewinnschwelleChart.options.plugins.legend.display = !gewinnschwelleChart.options.plugins.legend.display;
     gewinnschwelleChart.update();
@@ -30,6 +35,7 @@ function calculateData(fixkosten, variablestückkosten, nettoverkaufserlösestü
     let gewinnschwelle;
     let gewinnschwellenmenge;
     gewinnschwelle = fixkosten / (nettoverkaufserlösestück - variablestückkosten);
+    gewinnschwelle = roundToTwoDecimals(gewinnschwelle);
     gewinnschwellenmenge = gewinnschwelle * nettoverkaufserlösestück;
 
 

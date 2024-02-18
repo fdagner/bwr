@@ -1,3 +1,8 @@
+// Auf 2 Dezimalstellen runden
+function roundToTwoDecimals(num) {
+    return Math.round(num * 100) / 100;
+  }
+
 // Funktion für zufällige Zahlen
 function getRandomIntegerWithSteps(min, max, step) {
     const range = (max - min) / step;
@@ -56,15 +61,18 @@ function erstelleZufallssatz() {
     // Berechnung für Aufgabe
     let random_menge = roundToNearest50(kritischeMenge + kritischeMenge * getrandom_abweichung());
     let random_fixeKostenGesamt_aufgabe = kritischeMenge * (random_einstandspreis - random_variableKosten);
+    random_fixeKostenGesamt_aufgabe = roundToTwoDecimals(random_fixeKostenGesamt_aufgabe);
     let random_Kosten_Max_aufgabe = random_menge * random_einstandspreis;
     let random_gesamtkosten_aufgabe = random_menge * random_variableKosten + parseFloat(random_fixeKostenGesamt_aufgabe);
     let random_einstandspreis_gesamt_aufgabe = random_menge * random_einstandspreis;
     let random_rabatt_wert = random_listeneinkaufspreis * random_rabatt / 100;
+    random_rabatt_wert = roundToTwoDecimals(random_rabatt_wert);
     let random_variableKosten_gesamt_aufgabe = random_menge * random_variableKosten;
 
 
     // Berechnung für Diagramm
     let random_fixeKostenGesamt_chart = kritischeMenge * (random_einstandspreis - random_variableKosten)
+    random_fixeKostenGesamt_chart = roundToTwoDecimals(random_fixeKostenGesamt_chart);
     let random_Kosten_Max_chart = kritischeMenge * 2 * random_einstandspreis;
     let random_gesamtkosten_chart = kritischeMenge * 2 * random_variableKosten + parseFloat(random_fixeKostenGesamt_chart);
     let random_einstandspreis_gesamt_chart = kritischeMenge * 2 * random_einstandspreis;
