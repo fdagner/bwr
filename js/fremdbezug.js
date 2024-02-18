@@ -100,8 +100,8 @@ function erstelleZufallssatz() {
                 {
                     label: 'Fremdbezug',
                     data: [{ x: 0, y: 0 }, { x: maxMenge, y: random_einstandspreis_gesamt_chart }],
-                    backgroundColor: 'rgba(39, 245, 112, 0.8)',
-                    borderColor: 'rgba(39, 245, 112, 0.8)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 4,
                     borderDash: [10,5],
                     showLine: true
@@ -109,8 +109,8 @@ function erstelleZufallssatz() {
                 {
                     label: 'Eigenfertigung',
                     data: [{ x: 0, y: random_fixeKostenGesamt_chart }, { x: maxMenge, y: random_gesamtkosten_chart }],
-                    backgroundColor: 'rgba(255, 99, 132, 1)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 4,
                     showLine: true
                 },
@@ -122,7 +122,7 @@ function erstelleZufallssatz() {
             aspectRatio: 1.5,
             plugins: {
                 title: { display: true, text: 'Fremdbezug und Eigenfertigung', font: { size: 20 } },
-                legend: { position: 'bottom', labels: { font: { size: 16 } } },
+                legend: { position: 'bottom', labels: { font: { size: 16 },  useLineStyle: true, } },
                 tooltip: { mode: 'index', intersect: false }
             },
             hover: { mode: 'x-axis', intersect: false },
