@@ -103,6 +103,7 @@ function erstelleZufallssatz() {
                     backgroundColor: 'rgba(39, 245, 112, 0.8)',
                     borderColor: 'rgba(39, 245, 112, 0.8)',
                     borderWidth: 4,
+                    borderDash: [10,5],
                     showLine: true
                 },
                 {
@@ -315,3 +316,4 @@ clipboardFremdbezug.on('error', function (e) {
     console.error("Fehler beim Kopieren der Tabelle: ", e.action);
     alert("Fehler beim Kopieren der Tabelle.");
 });
+
