@@ -23,6 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
   updateMitBezugskostenState();
 });
 
+// Auf 2 Dezimalstellen runden
+function roundToTwoDecimals(num) {
+  return Math.round(num * 100) / 100;
+}
+
 
 // Funktion für zufällige Zahlen Rabatt und Bezugskosten
 function getRandomIntegerWithSteps(min, max, step) {
@@ -195,17 +200,21 @@ function erstelleZufallssatz() {
   if (mitRabatt.checked) {
     randomSupply_Rabatt = array_Supply_Rabatt[Math.floor(Math.random() * array_Supply_Rabatt.length)];
     randomSupply_Rabatt_2 = array_Supply_Rabatt_2[Math.floor(Math.random() * array_Supply_Rabatt_2.length)];
-    berechnung_nettoWert = parseFloat(nettoWert.replace(/[^\d,-]/g, '')) * (100 - parseFloat(random_Rabatt)) / 100;
+    berechnung_nettoWert = Wert * (100 - parseFloat(random_Rabatt)) / 100;
+    berechnung_nettoWert = roundToTwoDecimals(berechnung_nettoWert);
   } else {
     random_Rabatt = 0;
     randomSupply_Rabatt = "";
     randomSupply_Rabatt_2 = "";
-    berechnung_nettoWert = parseFloat(nettoWert.replace(/[^\d,-]/g, ''));
+    berechnung_nettoWert = Wert;
+    berechnung_nettoWert = roundToTwoDecimals(berechnung_nettoWert);
   }
   let randomSupply_Skonto = array_Supply_Skonto[Math.floor(Math.random() * array_Supply_Skonto.length)];
   let antwortNettowert = formatCurrency(berechnung_nettoWert);
   let berechnung_skontoBetrag = random_Skonto / 100 * berechnung_nettoWert;
+  berechnung_skontoBetrag = roundToTwoDecimals(berechnung_skontoBetrag);
   let berechnung_skontoBetrag_brutto = (berechnung_skontoBetrag) + (berechnung_skontoBetrag*0.19);
+  berechnung_skontoBetrag_brutto = roundToTwoDecimals(berechnung_skontoBetrag_brutto);
   let berechnung_vorsteuer_berichtigung = berechnung_skontoBetrag_brutto-berechnung_skontoBetrag;
   let vorsteuer_berichtigung = formatCurrency(berechnung_vorsteuer_berichtigung);
   let skontoBetrag_brutto = formatCurrency(berechnung_skontoBetrag_brutto);
@@ -214,6 +223,7 @@ function erstelleZufallssatz() {
   let berechnung_bareinkaufspreis = berechnung_nettoWert - berechnung_skontoBetrag;
   let bareinkaufspreis = formatCurrency(berechnung_bareinkaufspreis);
   let berechnung_USTWert = berechnung_nettoWert * 0.19;
+  berechnung_USTWert = roundToTwoDecimals(berechnung_USTWert);
   let berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert);
   let randomSupply_Bezugskosten;
 
@@ -221,8 +231,10 @@ function erstelleZufallssatz() {
   if (mitBezugskosten.checked) {
     randomSupply_Bezugskosten = array_Supply_Bezugskosten[Math.floor(Math.random() * array_Supply_Bezugskosten.length)];
     berechnung_USTWert = (berechnung_nettoWert + parseFloat(random_Bezugskosten)) * 0.19;
+    berechnung_USTWert = roundToTwoDecimals(berechnung_USTWert);
     berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert) + parseFloat(random_Bezugskosten);
-    bruttoWert = formatCurrency(Math.round(Wert * 0.19 + Wert) + parseFloat(random_Bezugskosten) * 0.19 + parseFloat(random_Bezugskosten));
+    bruttoWert = roundToTwoDecimals(Math.round(Wert * 0.19 + Wert) + parseFloat(random_Bezugskosten) * 0.19 + parseFloat(random_Bezugskosten));
+    bruttoWert = formatCurrency(bruttoWert);
   } else {
     random_Bezugskosten = 0;
     randomSupply_Bezugskosten = "";

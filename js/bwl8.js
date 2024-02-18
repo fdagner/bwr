@@ -3,6 +3,12 @@ function formatCurrency(amount) {
   return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);
 }
 
+// Auf 2 Dezimalstellen runden
+function roundToTwoDecimals(num) {
+  return Math.round(num * 100) / 100;
+}
+
+
 // Formatieren der Zahl mit Leerzeichen als Tausendertrennzeichen, ohne Dezimalkomma
 function formatNumberWithSpace(number) {
   const formattedNumber = new Intl.NumberFormat('de-DE', { useGrouping: false }).format(number);
@@ -61,7 +67,7 @@ function berechneOptimaleBestellmengeUndHaeufigkeit() {
   bedarf = optimaleBestellmenge * optimaleBestellhaeufigkeit;
   // Andler-Formel anwenden
   lagerkosten = (2 * bedarf * bestellkosten) / (optimaleBestellmenge * optimaleBestellmenge);
-
+  lagerkosten = roundToTwoDecimals(lagerkosten);
   // Wertetabelle erstellen
   generiereWertetabelle();
 }
@@ -84,10 +90,10 @@ function generiereWertetabelle() {
   const werteArray = [];
 
   // Berechnungen außerhalb der Schleife
-  const durchschnittlicherBestand = (bedarf / (2 * optimaleBestellhaeufigkeit)).toFixed(2);
-  const bestellkostenGesamt = (bestellkosten * optimaleBestellhaeufigkeit).toFixed(2);
-  const lagerhaltungskosten = (durchschnittlicherBestand * lagerkosten).toFixed(2);
-  const gesamtkosten = (parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten)).toFixed(2);
+  const durchschnittlicherBestand = roundToTwoDecimals(bedarf / (2 * optimaleBestellhaeufigkeit));
+  const bestellkostenGesamt = roundToTwoDecimals(bestellkosten * optimaleBestellhaeufigkeit);
+  const lagerhaltungskosten = roundToTwoDecimals(durchschnittlicherBestand * lagerkosten);
+  const gesamtkosten = roundToTwoDecimals(parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten));
 
   werteArray.push({
     bestellmenge: Math.round(bedarf / optimaleBestellhaeufigkeit),
@@ -103,10 +109,10 @@ function generiereWertetabelle() {
     if (haeufigkeit < 1 || haeufigkeit > 100 || haeufigkeit === optimaleBestellhaeufigkeit) continue;
 
     // Werte berechnen
-    const durchschnittlicherBestand = (bedarf / (2 * haeufigkeit)).toFixed(2);
-    const bestellkostenGesamt = (bestellkosten * haeufigkeit).toFixed(2);
-    const lagerhaltungskosten = (durchschnittlicherBestand * lagerkosten).toFixed(2);
-    const gesamtkosten = (parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten)).toFixed(2);
+    const durchschnittlicherBestand = roundToTwoDecimals(bedarf / (2 * haeufigkeit));
+    const bestellkostenGesamt = roundToTwoDecimals(bestellkosten * haeufigkeit);
+    const lagerhaltungskosten = roundToTwoDecimals(durchschnittlicherBestand * lagerkosten);
+    const gesamtkosten = roundToTwoDecimals(parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten));
 
     // Werte zum Array hinzufügen
     werteArray.push({
@@ -188,10 +194,10 @@ const plugin = {
   let schrittebestellmenge = roundUpToNearest(optimaleBestellmenge / 100)
   // Daten für das Diagramm berechnen
   for (let i = 0; i <= optimaleBestellmenge * 2; i += schrittebestellmenge) {
-    const durchschnittlicherBestand = (i / 2).toFixed(2);
-    const bestellkostenGesamt = (bestellkosten * bedarf / i).toFixed(2);
-    const lagerhaltungskosten = (durchschnittlicherBestand * lagerkosten).toFixed(2);
-    const gesamtkosten = (parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten)).toFixed(2);
+    const durchschnittlicherBestand = roundToTwoDecimals(i / 2);
+    const bestellkostenGesamt = roundToTwoDecimals(bestellkosten * bedarf / i);
+    const lagerhaltungskosten = roundToTwoDecimals(durchschnittlicherBestand * lagerkosten);
+    const gesamtkosten = roundToTwoDecimals(parseFloat(bestellkostenGesamt) + parseFloat(lagerhaltungskosten));
 
     labels.push(i);
     lagerhaltungskostenData.push(parseFloat(lagerhaltungskosten));
