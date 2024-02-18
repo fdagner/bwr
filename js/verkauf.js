@@ -236,6 +236,7 @@ function verkaufErstelleZufallssatz() {
   // Diferenzkalkualtion Gewinn
   let verkaufWunschRandom_Gewinn = getRandomWunschGewinn();
   let verkaufWunschGewinn;
+  let verkauf_Random_Gewinn_Berechnet = 0;
   if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
     verkaufWunschGewinn = parseFloat(verkaufRandom_Gewinn);
     verkaufRandom_Gewinn = parseFloat(verkaufRandom_Gewinn) - parseFloat(verkaufWunschRandom_Gewinn);
@@ -245,6 +246,7 @@ function verkaufErstelleZufallssatz() {
   let verkaufBerechnungGewinnWert = parseFloat(verkaufBerechnung_barverkaufspreis) * parseFloat(verkaufRandom_Gewinn) / (100 + parseFloat(verkaufRandom_Gewinn))
   let verkaufGewinnWert = formatCurrency(verkaufBerechnungGewinnWert);
   let verkaufBerechnungSelbstkostenpreis = parseFloat(verkaufBerechnung_barverkaufspreis) - parseFloat(verkaufBerechnungGewinnWert);
+  verkauf_Random_Gewinn_Berechnet = (verkaufBerechnungGewinnWert.toFixed(2)*100/verkaufBerechnungSelbstkostenpreis.toFixed(2)).toLocaleString('de-DE', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
   let verkaufSelbstkostenpreis = formatCurrency(verkaufBerechnungSelbstkostenpreis);
 
   let verkaufKundenanfrage;
@@ -275,6 +277,7 @@ function verkaufErstelleZufallssatz() {
   const verkaufAntwort_rabattSatz = `${verkaufRandom_Rabatt}`;
   const verkaufAntwort_GewinnWert = `${verkaufGewinnWert}`;
   const verkaufAntwort_GewinnSatz = `${verkaufRandom_Gewinn}`;
+  const verkaufAntwort_Gewinn_berechnet= `${verkauf_Random_Gewinn_Berechnet}`;
   const verkaufAntwort_wunschGewinn = `${verkaufWunschGewinn}`;
   const verkaufAntwort_Kundenanfrage = `${verkaufKundenanfrage}`;
   const verkaufAntwort_skontoSatz = `${verkaufRandom_Skonto}`;
@@ -309,9 +312,9 @@ function verkaufErstelleZufallssatz() {
   if (verkaufRandomDifferenzkalkulationSatz < 0.33) {
     verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation} zum Listenpreis von ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Berechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können, wenn der Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis} beträgt und wir mindestens ${verkaufWunschGewinn} % Gewinn erzielen wollen.`;
   } else if (verkaufRandomDifferenzkalkulationSatz < 0.66) {
-    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er schlägt einen Listenpreis von ${verkaufRandomNettowert} vor ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Der Selbstkostenpreis beträgt dabei ${verkaufAntwort_Selbstkostenpreis} und wir wollen mindestens ${verkaufWunschGewinn} % Gewinn erzielen. Berrechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können.`;
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er schlägt einen Listenpreis von ${verkaufRandomNettowert} vor ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Der Selbstkostenpreis beträgt dabei ${verkaufAntwort_Selbstkostenpreis} und wir wollen mindestens ${verkaufWunschGewinn} % Gewinn erzielen. Berechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können.`;
   } else {
-    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er möchte einen Listenpreis von ${verkaufRandomNettowert} bezahlen ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} erhalten. Berrechne, ob wir die Anfrage akzeptieren können. Wir möchten mindestens ${verkaufWunschGewinn} % Gewinn erzielen, die Selbstkosten betragen ${verkaufAntwort_Selbstkostenpreis}.`;
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er möchte einen Listenpreis von ${verkaufRandomNettowert} bezahlen ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} erhalten. Berechne, ob wir die Anfrage akzeptieren können. Wir möchten mindestens ${verkaufWunschGewinn} % Gewinn erzielen, die Selbstkosten betragen ${verkaufAntwort_Selbstkostenpreis}.`;
   }
 
   let verkaufZufaelligerSatz;
@@ -337,7 +340,7 @@ function verkaufErstelleZufallssatz() {
 
 
 
-  return [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, listenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz];
+  return [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, listenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_Gewinn_berechnet, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz];
 
 }
 
@@ -351,7 +354,7 @@ function verkaufZeigeZufaelligenSatz() {
   let verkaufAntwortOutput = `<h2>Lösung</h2>`;
 
   for (let i = 1; i <= verkaufAnzahl; i++) {
-    const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz] = verkaufErstelleZufallssatz();
+    const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_Gewinn_berechnet, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz] = verkaufErstelleZufallssatz();
     const verkaufFormattedSatz = verkaufZufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedAngebot = verkaufAngebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedSkonto = verkaufSkontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
@@ -388,7 +391,11 @@ function verkaufZeigeZufaelligenSatz() {
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td>+ Gewinn</td><td style="padding-left:16px;text-align:right;">${verkaufAntwort_GewinnWert}</td>`;
-      verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">${verkaufAntwort_GewinnSatz} %</td>`;
+      verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">${verkaufAntwort_GewinnSatz} %`;
+      if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+      verkaufAntwortOutput += ` (${verkaufAntwort_Gewinn_berechnet} %);`;
+      }
+      verkaufAntwortOutput += `</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td style="border-top: solid 1px #ccc">= Barverkaufspreis</td>`;
