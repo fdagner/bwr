@@ -921,6 +921,7 @@
                         <select id="svgDropdownBescheid">
                             <option value="bescheid1.svg" checked>Grundsteuer</option>
                             <option value="bescheid2.svg">Abfallentsorgung</option>
+                            <option value="bescheid3.svg">Abwasser</option>
                         </select>
                     </div>
                     <div>
@@ -985,10 +986,10 @@
                     <div>
                         <h4>Daten</h4>
                         <div id="bescheidAbfall">
-                        <label for="bescheidAbfallgebuehrInput">Abfallgebühr:</label><br>
-                        <input type="number" id="bescheidAbfallgebuehrInput" value="1450" /><br>
-                        <label for="bescheidAbfallbezeichnungInput">Abfallbezeichnung:</label><br>
-                        <input type="text" id="bescheidAbfallbezeichnungInput" value="Restmülltonne 240 l" /><br>
+                        <label for="bescheidAbfallgebuehrInput">Gebühr:</label><br>
+                        <input type="number" id="bescheidAbfallgebuehrInput" value="950" /><br>
+                        <label for="bescheidAbfallbezeichnungInput">Bezeichnung:</label><br>
+                        <input type="text" id="bescheidAbfallbezeichnungInput" value="" /><br>
                         </div>
                         <div id="bescheidGrundsteuer">
                         <label for="bescheidMessbetragInput">Messbetrag:</label><br>
@@ -1005,7 +1006,7 @@
     if (selectedOption === "bescheid1.svg") {
             document.getElementById("bescheidGrundsteuer").style.display = "block";
             document.getElementById("bescheidAbfall").style.display = "none";
-        } else if (selectedOption === "bescheid2.svg") {
+        } else if (selectedOption === "bescheid2.svg" || selectedOption === "bescheid3.svg") {
             document.getElementById("bescheidGrundsteuer").style.display = "none";
             document.getElementById("bescheidAbfall").style.display = "block";
         }
