@@ -1,0 +1,58 @@
+<svg id="anlagenkarteSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 760 380" style="background-color:#fff;padding:0px;width:100%;max-width:760px" font-family="Helvetica" onload="SVGonLoadLohnjournal()">
+ <defs id="customDefsAnlagenkarte">
+  </defs>
+
+  <!-- Kontoauszug-Rahmen -->
+<rect x="0" y="0" width="760" height="380" fill="#fff" stroke="#000" stroke-width="1" />
+ <!-- Überschrift -->
+<rect x="1" y="1" width="279" height="100" fill="#fff"/>
+<rect x="280" y="1" width="200" height="100" fill="#fff"/>
+<rect x="480" y="1" width="279" height="100" fill="#fff"/>
+<text x="30" y="60" font-family="Verdana" font-size="32" text-anchor="start" fill="#000">Anlagenkarte</text>
+<text id="anlagenkarteName" x="750" y="35" font-family="Verdana" font-size="18" text-anchor="end" fill="#000"></text>
+<text id="anlagenkarteStrasse" x="750" y="55" font-family="Verdana" font-size="18" text-anchor="end" fill="#000"></text>
+<text id="anlagenkarteOrt" x="750" y="75" font-family="Verdana" font-size="18" text-anchor="end" fill="#000"></text>
+<rect x="0" y="100" width="760" height="1" fill="red"/>
+<rect x="0" y="250" width="760" height="1" fill="red"/>
+
+<text x="20" y="140" font-family="Verdana" font-weight="bold" font-size="16" text-anchor="start" fill="#000">Bezeichnung</text>
+<text x="20" y="170" font-family="Verdana" font-weight="bold" font-size="16" text-anchor="start" fill="#000">Anlagenkonto</text>
+<text x="20" y="200" font-family="Verdana" font-weight="bold" font-size="16" text-anchor="start" fill="#000">Anschaffungskosten</text>
+<text x="20" y="230" font-family="Verdana" font-weight="bold" font-size="16" text-anchor="start" fill="#000">Nutzungsdauer</text>
+
+<text id="anlagenkarteBezeichnung" x="220" y="140" font-family="Verdana" font-size="16" text-anchor="start" fill="#000"></text>
+<text id="anlagenkarteAnlagenkonto" x="220" y="170" font-family="Verdana" font-size="16" text-anchor="start" fill="#000"></text>
+<text id="anlagenkarteAnschaffungskosten" x="220" y="200" font-family="Verdana" font-size="16" text-anchor="start" fill="#000"></text>
+<text x="220" y="230" font-family="Verdana" font-size="16" text-anchor="start" fill="#000"><tspan id="anlagenkarteNutzungsdauer"></tspan> Jahre</text>
+
+<text x="420" y="140" font-family="Verdana" font-weight="bold" font-size="16" text-anchor="start" fill="#000">Gewährleistung</text>
+<text x="620" y="140" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">2 Jahre</text>
+
+<text x="420" y="170" font-family="Verdana" font-weight="bold" font-size="16" text-anchor="start" fill="#000">Anschaffungsdatum</text>
+<text id="anlagenkarteDatum" x="620" y="170" font-family="Verdana" font-size="16" text-anchor="start" fill="#000"><tspan id="anlagenkarteTag">01</tspan>.<tspan id="anlagenkarteMonat">01</tspan>.</tspan><tspan class="aktuellesJahrAnlagenkarte"/></text>
+<text x="600" y="210" font-family="Verdana" font-size="20" text-anchor="middle" fill="#000">Inventarnummer</text>
+<text id="anlagenkarteInventarnummer" x="600" y="230" font-family="Verdana" font-size="20" text-anchor="middle" fill="#000"></text>
+
+
+
+<text x="20" y="290" font-family="Verdana" font-size="16" font-weight="bold" text-anchor="start" fill="#000">Jahr</text>
+<text x="200" y="290" font-family="Verdana" font-size="16" font-weight="bold" text-anchor="start" fill="#000">Wertminderung/Abschreibung</text>
+<text x="520" y="290" font-family="Verdana" font-size="16" font-weight="bold" text-anchor="start" fill="#000">Restbuchwert 31.12</text>
+
+<text x="20" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+<text x="200" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+<text x="520" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+
+<text x="20" y="330" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+<text x="200" y="330" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+<text x="520" y="330" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+
+
+
+
+
+
+
+
+
+</svg>
