@@ -423,7 +423,6 @@ function loadLohnjournalData() {
     document.getElementById('lohnjournalName').textContent = selectedLohnjournal.unternehmen.name + " " + selectedLohnjournal.unternehmen.rechtsform;
     document.getElementById('lohnjournalStrasse').textContent = selectedLohnjournal.unternehmen.adresse.strasse;
     document.getElementById('lohnjournalOrt').textContent = selectedLohnjournal.unternehmen.adresse.plz + " " + selectedLohnjournal.unternehmen.adresse.ort;
-    document.getElementById('lohnjournalDatum').textContent = selectedLohnjournal.unternehmen.adresse.ort;
 
 }
 

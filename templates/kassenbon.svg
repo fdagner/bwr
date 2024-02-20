@@ -15,7 +15,7 @@
 <text class="kassenbonBrutto" x="390" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
 <rect x="150" y="258" width="240" height="1" fill="#000" />
 <rect x="150" y="262" width="240" height="1" fill="#000" />
-<text x="20" y="250" font-family="Arial" fill="#000" font-size="20"><tspan x="200" text-anchor="middle">Summe</tspan><tspan class="kassenbonBrutto" x="390" text-anchor="end"></tspan></text>
+<text x="200" y="250" font-family="Arial" fill="#000" font-size="20" text-anchor="middle">Summe</text><text class="kassenbonBrutto" x="390" y="250" font-size="20" text-anchor="end"></text>
 <text x="20" y="340" font-family="Arial" fill="#000" font-size="20"><tspan x="60" text-anchor="middle">Netto</tspan><tspan id="kassenbonUST" x="175" text-anchor="middle"></tspan> % <tspan x="225" text-anchor="middle">UST</tspan><tspan x="340" text-anchor="middle">Brutto</tspan></text>
 <text x="20" y="380" font-family="Arial" fill="#000" font-size="20" font-weight="bold"><tspan  id="kassenbonNetto" x="60" text-anchor="middle"></tspan><tspan id="kassenbonUSTBetrag" x="200" text-anchor="middle"></tspan><tspan class="kassenbonBrutto" x="340" text-anchor="middle"></tspan></text>
 <line x1="10" y1="400" x2="390" y2="400" style="stroke:#000; stroke-width:2; stroke-dasharray: 5,5;" />

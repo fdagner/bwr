@@ -10,15 +10,49 @@
 <text id="lohnjournalName" x="10" y="70" font-family="Verdana" font-size="18" text-anchor="start" fill="#000"></text>
 <text id="lohnjournalStrasse" x="10" y="90" font-family="Verdana" font-size="18" text-anchor="start" fill="#000"></text>
 <text id="lohnjournalOrt" x="10" y="110" font-family="Verdana" font-size="18" text-anchor="start" fill="#000"></text>
-<text id="lohnjournalDatum" x="740" y="70" font-family="Verdana" font-size="22" text-anchor="end" fill="darkblue">Monat <tspan id="lohnjournalMonat"></tspan></text>
+<text x="740" y="70" font-family="Verdana" font-size="22" text-anchor="end" fill="darkblue">Monat <tspan id="lohnjournalMonat"></tspan></text>
 <rect x="0" y="120" width="760" height="1" fill="#000"/>
-<text x="0" y="160" width="750" font-size="18" font-weight="bold" text-anchor="middle"><tspan x="90">Name</tspan><tspan x="265">Brutto</tspan><tspan x="375">Steuern</tspan><tspan x="485">Soz.Vers.</tspan><tspan x="595">Soz.Vers.</tspan><tspan x="705">Netto</tspan></text>
-<text x="0" y="180" width="750" font-size="18" font-weight="bold" text-anchor="middle"><tspan x="90"></tspan><tspan x="265"></tspan><tspan x="375"></tspan><tspan x="485">AN</tspan><tspan x="595">AG</tspan><tspan x="705"></tspan></text>
-<text x="0" y="210" width="750" font-size="18" text-anchor="end"><tspan id="lohnjournalArbeitnehmer1" x="10" text-anchor="start"></tspan><tspan id="lohnjournalBrutto1" x="315"></tspan><tspan id="lohnjournalSteuern1" x="420"></tspan><tspan id="lohnjournalAN1" x="530"></tspan><tspan id="lohnjournalAG1" x="640"></tspan><tspan id="lohnjournalNetto1" x="750"></tspan></text>
-<text x="0" y="230" width="750" font-size="18" text-anchor="end"><tspan id="lohnjournalArbeitnehmer2" x="10" text-anchor="start"></tspan><tspan id="lohnjournalBrutto2" x="315"></tspan><tspan id="lohnjournalSteuern2" x="420"></tspan><tspan id="lohnjournalAN2" x="530"></tspan><tspan id="lohnjournalAG2" x="640"></tspan><tspan id="lohnjournalNetto2" x="750"></tspan></text>
-<text x="0" y="250" width="750" font-size="18" text-anchor="end"><tspan id="lohnjournalArbeitnehmer3" x="10" text-anchor="start"></tspan><tspan id="lohnjournalBrutto3" x="315"></tspan><tspan id="lohnjournalSteuern3" x="420"></tspan><tspan id="lohnjournalAN3" x="530"></tspan><tspan id="lohnjournalAG3" x="640"></tspan><tspan id="lohnjournalNetto3" x="750"></tspan></text>
-<text x="0" y="270" width="750" font-size="18" text-anchor="end"><tspan x="10" text-anchor="start">...</tspan><tspan x="315">...</tspan><tspan x="420">...</tspan><tspan x="530">...</tspan><tspan x="640">...</tspan><tspan x="750">...</tspan></text>
-<rect x="5" y="280" width="750" height="1" fill="darkblue"/>
-<text x="0" y="300" width="750" font-size="18" text-anchor="end" font-weight="bold"><tspan x="10" text-anchor="start">SUMME</tspan><tspan id="lohnjournalBrutto4" x="315"></tspan><tspan id="lohnjournalSteuern4" x="420"></tspan><tspan id="lohnjournalAN4" x="530"></tspan><tspan id="lohnjournalAG4" x="640"></tspan><tspan id="lohnjournalNetto4" x="750"></tspan></text>
+<g font-size="18">
+<text x="10" y="160" font-weight="bold" text-anchor="start">Name</text>
+<text x="250" y="160" font-weight="bold" text-anchor="start">Brutto</text>
+<text x="350" y="160" font-weight="bold" text-anchor="start">Steuern</text>
+<text x="450" y="160" font-weight="bold" text-anchor="start">Soz.Vers.</text>
+<text x="560" y="160" font-weight="bold" text-anchor="start">Soz.Vers.</text>
+<text x="685" y="160" font-weight="bold" text-anchor="start">Netto</text>
+<text x="10" y="300" font-weight="bold" text-anchor="start">Summe</text>
+
+<text x="475" y="180" font-weight="bold" text-anchor="start">AN</text>
+<text x="590" y="180" font-weight="bold" text-anchor="start">AG</text>
+
+<text id="lohnjournalArbeitnehmer1" x="10" y="210" text-anchor="start"></text>
+<text id="lohnjournalArbeitnehmer2" x="10" y="230" text-anchor="start"></text>
+<text id="lohnjournalArbeitnehmer3" x="10" y="250" text-anchor="start"></text>
+
+<text id="lohnjournalBrutto1" x="315" y="210" text-anchor="end"></text>
+<text id="lohnjournalBrutto2" x="315" y="230" text-anchor="end"></text>
+<text id="lohnjournalBrutto3" x="315" y="250" text-anchor="end"></text>
+<text id="lohnjournalBrutto4" font-weight="bold" x="315" y="300" text-anchor="end"></text>
+
+<text id="lohnjournalSteuern1" x="420" y="210" text-anchor="end"></text>
+<text id="lohnjournalSteuern2" x="420" y="230" text-anchor="end"></text>
+<text id="lohnjournalSteuern3" x="420" y="250" text-anchor="end"></text>
+<text id="lohnjournalSteuern4" font-weight="bold" x="420" y="300" text-anchor="end"></text>
+
+<text id="lohnjournalAN1" x="530" y="210" text-anchor="end"></text>
+<text id="lohnjournalAN2" x="530" y="230" text-anchor="end"></text>
+<text id="lohnjournalAN3" x="530" y="250" text-anchor="end"></text>
+<text id="lohnjournalAN4" font-weight="bold" x="530" y="300" text-anchor="end"></text>
+
+<text id="lohnjournalAG1" x="640" y="210" text-anchor="end"></text>
+<text id="lohnjournalAG2" x="640" y="230" text-anchor="end"></text>
+<text id="lohnjournalAG3" x="640" y="250" text-anchor="end"></text>
+<text id="lohnjournalAG4" font-weight="bold" x="640" y="300" text-anchor="end"></text>
+
+<text id="lohnjournalNetto1" x="750" y="210" text-anchor="end"></text>
+<text id="lohnjournalNetto2" x="750" y="230" text-anchor="end"></text>
+<text id="lohnjournalNetto3" x="750" y="250" text-anchor="end"></text>
+<text id="lohnjournalNetto4" font-weight="bold" x="750" y="300" text-anchor="end"></text>
+<rect x="5" y="270" width="740" height="1" fill="darkblue"/>
+</g>
 
 </svg>
