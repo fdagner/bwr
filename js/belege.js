@@ -94,6 +94,7 @@ function reloadDropdownOptions() {
     const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
     const dropdownLohnjournal = document.getElementById('datenLohnjournal');
     const dropdownBescheid = document.getElementById('datenBescheid');
+    const dropdownAnlagenkarte = document.getElementById('datenAnlagenkarte');
 
     // Clear existing options
     dropdownCustomer.innerHTML = '';
@@ -107,6 +108,7 @@ function reloadDropdownOptions() {
     dropdownKassenbonKunde.innerHTML = '';
     dropdownLohnjournal.innerHTML = '';
     dropdownBescheid.innerHTML = '';
+    dropdownAnlagenkarte.innerHTML = '';
 
 
     yamlData.forEach(company => {
@@ -164,6 +166,12 @@ function reloadDropdownOptions() {
         optionBescheid.value = company.unternehmen.name;
         optionBescheid.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownBescheid.appendChild(optionBescheid);
+
+        const optionAnlagenkarte = document.createElement('option');
+        optionAnlagenkarte.value = company.unternehmen.name;
+        optionAnlagenkarte.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownAnlagenkarte.appendChild(optionAnlagenkarte);
+
     });
 }
 
@@ -233,7 +241,7 @@ if (!localStorage.getItem('uploadedYamlCompanyData')) {
             const dropdownKassenbonKunde = document.getElementById('datenKassenbonKunde');
             const dropdownLohnjournal = document.getElementById('datenLohnjournal');
             const dropdownBescheid = document.getElementById('datenBescheid');
-
+            const dropdownAnlagenkarte = document.getElementById('datenAnlagenkarte');
 
             yamlData.forEach(company => {
                 const optionCustomer = document.createElement('option');
@@ -290,6 +298,11 @@ if (!localStorage.getItem('uploadedYamlCompanyData')) {
                 optionBescheid.value = company.unternehmen.name;
                 optionBescheid.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
                 dropdownBescheid.appendChild(optionBescheid);
+               
+                const optionAnlagenkarte = document.createElement('option');
+                optionAnlagenkarte.value = company.unternehmen.name;
+                optionAnlagenkarte.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownAnlagenkarte.appendChild(optionAnlagenkarte);
 
             });
 
@@ -470,13 +483,22 @@ function loadCompanyDataforKassenbon() {
     document.getElementById('kassenbonNameKunde').textContent = selectedCompany.unternehmen.inhaber + ", " + selectedCompany.unternehmen.name;
 }
 
-function loadLohnjournalData() {
-    const selectedLohnjournalName = document.getElementById('datenLohnjournal').value;
-    const selectedLohnjournal = yamlData.find(lohnjournal => lohnjournal.unternehmen.name === selectedLohnjournalName);
-    document.getElementById('lohnjournalName').textContent = selectedLohnjournal.unternehmen.name + " " + selectedLohnjournal.unternehmen.rechtsform;
-    document.getElementById('lohnjournalStrasse').textContent = selectedLohnjournal.unternehmen.adresse.strasse;
-    document.getElementById('lohnjournalOrt').textContent = selectedLohnjournal.unternehmen.adresse.plz + " " + selectedLohnjournal.unternehmen.adresse.ort;
+function loadAnlagenkarteData() {
+    const selectedAnlagenkarteName = document.getElementById('datenAnlagenkarte').value;
+    const selectedAnlagenkarte = yamlData.find(anlagenkarte => anlagenkarte.unternehmen.name === selectedAnlagenkarteName);
+    document.getElementById('anlagenkarteName').textContent = selectedAnlagenkarte.unternehmen.name + " " + selectedAnlagenkarte.unternehmen.rechtsform;
+    document.getElementById('anlagenkarteStrasse').textContent = selectedAnlagenkarte.unternehmen.adresse.strasse;
+    document.getElementById('anlagenkarteOrt').textContent = selectedAnlagenkarte.unternehmen.adresse.plz + " " + selectedAnlagenkarte.unternehmen.adresse.ort;
+   
+    // Funktion zufällige 7-stellige Nummer
+    function generateRandomAnlagenkarteNumber() {
+        // Erzeuge eine zufällige Zahl zwischen 1000000 und 9999999
+        let randomNumber = Math.floor(Math.random() * 9000000) + 1000000;
+        return randomNumber;
+    }
 
+    // Aufruf der Funktion und Ausgabe der generierten Nummer
+    document.getElementById('anlagenkarteInventarnummer').textContent = "K" + generateRandomAnlagenkarteNumber();
 }
 
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
@@ -1465,8 +1487,6 @@ const lohnjournalMonat = document.getElementById('lohnjournalMonat');
 if (lohnjournalMonat) {
     lohnjournalMonat.textContent = zufälligerMonat;
 }
-
-
     let lohnjournalSatzOutput = "";
     lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
     lohnjournalSatzOutput += `<tbody>`;
@@ -1506,6 +1526,92 @@ if (lohnjournalMonat) {
     document.getElementById('lohnjournalBuchungssatzContainer').innerHTML = lohnjournalSatzOutput;
     loadLohnjournalData() // Laden des Lohnjournals
 
+}
+
+async function anlagenkarteApplySVGholen() {
+    if (!validateInputs()) {
+        // Wenn die Validierung fehlschlägt, stoppe die Funktion
+        return;
+    }
+
+    let selectedAnlagenkarte = document.getElementById("svgDropdownAnlagenkarte").value;
+    let svgContainerAnlagenkarte = document.getElementById("anlagenkarteContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedAnlagenkarte);
+        svgContainerAnlagenkarte.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+    // Laden der Daten
+
+    let anlagenkarteBezeichnung = document.getElementById('anlagenkarteBezeichnungInput').value;
+    document.getElementById('anlagenkarteBezeichnung').textContent = anlagenkarteBezeichnung;
+
+    let anlagenkarteAnlagekonto = document.getElementById('anlagenkarteAnlagenkontoInput').value;
+    document.getElementById('anlagenkarteAnlagenkonto').textContent = anlagenkarteAnlagekonto;
+
+    let anlagenkarteAnschaffungskosten = document.getElementById('anlagenkarteAnschaffungskostenInput').value;
+    document.getElementById('anlagenkarteAnschaffungskosten').textContent = formatCurrency(anlagenkarteAnschaffungskosten);
+
+    let anlagenkarteNutzungsdauer = document.getElementById('anlagenkarteNutzungsdauerInput').value;
+    document.getElementById('anlagenkarteNutzungsdauer').textContent = anlagenkarteNutzungsdauer;
+
+    const selectedAnlagenkarteTag = document.getElementById('tagAnlagenkarte').value;
+    const selectedAnlagenkarteMonat = document.getElementById('monatAnlagenkarte').value;
+    document.getElementById('anlagenkarteTag').textContent = selectedAnlagenkarteTag;
+    document.getElementById('anlagenkarteMonat').textContent = selectedAnlagenkarteMonat;
+    
+    const useScriptAnlagenkarte = document.getElementById('scriptJahrAnlagenkarte').checked;
+    if (!useScriptAnlagenkarte) {
+        // Verwende das Jahr aus dem Textfeld
+        const selectedJahr = document.getElementById('jahrAnlagenkarte');
+        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrAnlagenkarte');
+        for (const yearelement of yearelementsWithClass) {
+            yearelement.textContent = selectedJahr.value;
+        }
+
+    } else {
+
+        const customDefs = document.getElementById('customDefsAnlagenkarte');
+        const customJsScript = document.getElementById('customJsAnlagenkarte');
+        const useScriptAnlagenkarte = document.getElementById('scriptJahrAnlagenkarte').checked;
+
+        if (customJsScript) {
+            customJsScript.remove();
+        }
+
+        if (useScriptAnlagenkarte) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJsAnlagenkarte';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoadAnlagenkarte() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahrAnlagenkarte');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoadAnlagenkarte(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
+    }
+
+
+    loadAnlagenkarteData() // Laden der Kassenbon-Daten
 }
 
 async function bescheidApplySVGholen() {
@@ -2003,6 +2109,10 @@ function bescheidHerunterladenAlsPNG() {
     herunterladenAlsPNG('bescheidContainer', 'bescheid.png');
 }
 
+function anlagenkarteHerunterladenAlsPNG() {
+    herunterladenAlsPNG('anlagenkarteContainer', 'anlagenkarte.png');
+}
+
 // Export to SVG
 
 function herunterladen(containerId, dateiname) {
@@ -2056,6 +2166,12 @@ function bescheidHerunterladen() {
     herunterladen('bescheidContainer', 'bescheid.svg');
 }
 
+function anlagenkarteHerunterladen() {
+    herunterladen('anlagenkarteContainer', 'anlagenkarte.svg');
+}
+
+
+
 
 
 
@@ -2102,6 +2218,10 @@ function lohnjournalKopiereInZwischenablage() {
 
 function bescheidKopiereInZwischenablage() {
     kopiereInZwischenablage('bescheidContainer');
+}
+
+function anlagenkarteKopiereInZwischenablage() {
+    kopiereInZwischenablage('anlagenkarteContainer');
 }
 
 
