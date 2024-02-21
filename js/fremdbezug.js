@@ -325,3 +325,8 @@ clipboardFremdbezug.on('error', function (e) {
     alert("Fehler beim Kopieren der Tabelle.");
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Hier wird generiereWertetabelle() beim Laden der Seite ausgeführt
+    erstelleZufallssatz();
+  });
+  

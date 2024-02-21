@@ -368,7 +368,7 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `<td style="border-top: solid 1px #ccc">= Bareinkaufspreis</td>`;
       antwortOutput += `<td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc">${antwort_bareinkaufspreis}</td>`;
       antwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;</td>`;
-      antwortOutput += `<td style="padding-left:6px;text-align:right;">${100-random_Skonto} %</td>`;
+      antwortOutput += `<td style="padding-left:6px;text-align:right;">${100-parseFloat(antwort_skontoSatz)} %</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `<tr>`;
       antwortOutput += `<td>+ Bezugskosten</td><td style="padding-left:16px;text-align:right;">${antwort_bezugskostenWert}</td>`;
