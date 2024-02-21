@@ -2532,6 +2532,25 @@ function validateInputs() {
         return false;
     }
 
+    // Validierung für Anlagenkarte
+    let anlagenkarteBezeichnungInput = document.getElementById("anlagenkarteBezeichnungInput");
+    if (!isValidInput(anlagenkarteBezeichnungInput.value, 20)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Bezeichnung ein. Maximal 20 Zeichen!");
+        return false;
+    }
+
+    let anlagenkarteAnschaffungskostenInput = document.getElementById("anlagenkarteAnschaffungskostenInput");
+    if (!isValidNumberInput(anlagenkarteAnschaffungskostenInput.value, 0, 999999)) {
+        alert("Bitte geben Sie bei Anschaffungskosten gültige Werte zwischen 0 und 999999 ein");
+        return false;
+    }
+
+    let anlagenkarteNutzungsdauerInput = document.getElementById("anlagenkarteNutzungsdauerInput");
+    if (!isValidNumberInput(anlagenkarteNutzungsdauerInput.value, 0, 99)) {
+        alert("Bitte geben Sie bei Nutzungsdauer gültige Werte zwischen 0 und 99 ein");
+        return false;
+    }
+
     // Validierung für Kassenbon
     let bescheidMessbetragInput = document.getElementById("bescheidMessbetragInput");
     if (!isValidNumberInput(bescheidMessbetragInput.value, 0, 9999)) {
