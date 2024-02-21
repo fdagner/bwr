@@ -2306,6 +2306,19 @@ clipboardNewspaper.on('error', function (e) {
 });
 
 
+let clipboardEmail = new ClipboardJS('#officeButtonEmail');
+
+clipboardEmail.on('success', function (e) {
+    console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
+    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+});
+
+clipboardEmail.on('error', function (e) {
+    console.error("Fehler beim Kopieren der Tabelle: ", e.action);
+    alert("Fehler beim Kopieren der Tabelle.");
+});
+
+
 function validateInputs() {
     // Validierung für Artikelbezeichnung Pos. 1
     let artikelInput = document.getElementById("artikelInput");
