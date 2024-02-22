@@ -1487,7 +1487,12 @@ if (lohnjournalMonat) {
     lohnjournalMonat.textContent = zufälligerMonat;
 }
     let lohnjournalSatzOutput = "";
-    lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+    lohnjournalSatzOutput += ` <h3>Aufgabe</h3>`;
+    lohnjournalSatzOutput += `<p>Von der Personalabteilung liegt der folgende Belegauszug vor. Bilde die Buchungssätze für die Erfassung
+    des gesamten Personalaufwands, wenn die Auszahlung per Banküberweisung erfolgt.</p>
+`;         
+lohnjournalSatzOutput += `<h3>Lösung</h3>`;    
+lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
     lohnjournalSatzOutput += `<tbody>`;
     lohnjournalSatzOutput += `<tr>`;
     lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">6200 LG</td>`;
