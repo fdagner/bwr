@@ -9,9 +9,9 @@ function generateRandomBilanz7() {
         "value-VORR": { min: 20000, max: 100000 },
         "value-FO": { min: 2000, max: 300000 },
         "value-BK": { min: 40000, max: 400000 },
-        "value-KA": { min: 5000, max: 15000 },
+        "value-KA": { min: 1000, max: 15000 },
         "value-LBKV": { min: 50000, max: 200000 },
-        "value-KBKV": { min: 5000, max: 50000 },
+        "value-KBKV": { min: 1000, max: 50000 },
         "value-VE": { min: 5000, max: 50000 },
     };
 
