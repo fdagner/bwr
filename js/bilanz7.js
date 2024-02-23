@@ -107,3 +107,10 @@ clipboardbilanz7.on('error', function (e) {
     console.error("Fehler beim Kopieren der Tabelle: ", e.action);
     alert("Fehler beim Kopieren der Tabelle.");
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Hier wird generiereWertetabelle() beim Laden der Seite ausgeführt
+    generateRandomBilanz7();
+  });
+  

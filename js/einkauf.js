@@ -1,20 +1,34 @@
 const anzahlDropdown = document.getElementById('anzahlDropdown');
 const mitRabatt = document.getElementById('mitRabatt');
 const mitBezugskosten = document.getElementById('mitBezugskosten');
+const mitRuecksendung = document.getElementById('mitRuecksendung');
 const mitEinkaufskalkulation = document.getElementById('mitEinkaufskalkulation');
 const Skontobuchungssatz = document.getElementById('mitSkontobuchungssatz');
 
 document.addEventListener('DOMContentLoaded', function() {
   const mitBezugskosten = document.getElementById('mitBezugskosten');
+  const mitRuecksendung = document.getElementById('mitRuecksendung');
   const buchungsoptionDropdown = document.getElementById('buchungsoptionDropdown');
 
   function updateMitBezugskostenState() {
+    
+    if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
+      mitRuecksendung.disabled = true;
+      mitRuecksendung.checked = false;
+      mitBezugskosten.disabled = false;
+    };
+
     if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
       mitBezugskosten.disabled = true;
       mitBezugskosten.checked = false;
-    } else {
+      mitRuecksendung.disabled = true;
+      mitRuecksendung.checked = false;
+    };
+
+    if (buchungsoptionDropdown.value === 'buchungssatz') {
       mitBezugskosten.disabled = false;
-    }
+      mitRuecksendung.disabled = false;
+    };
   }
 
   buchungsoptionDropdown.addEventListener('change', updateMitBezugskostenState);
@@ -43,6 +57,9 @@ function getRandomBezugskosten() {
   return getRandomIntegerWithSteps(10, 50, 5);
 }
 
+function getRandomRuecksendung() {
+  return getRandomIntegerWithSteps(10, 75, 5);
+}
 
 // Funktion zur Generierung einer Zufallsganzzahl für den Nettowert
 function generateRandomNettoWert() {
@@ -53,6 +70,11 @@ function generateRandomNettoWert() {
 // Währung nach DIN 5008
 function formatCurrency(value) {
   return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+}
+
+// Auf 2 Dezimalstellen runden
+function roundToTwoDecimals(num) {
+  return Math.round(num * 100) / 100;
 }
 
 // Kontenplan
@@ -250,8 +272,11 @@ function erstelleZufallssatz() {
   let ueberweisungsbetrag = formatCurrency(ueberweisungsbetrag_berechnung);
   let antwortBruttowert = formatCurrency(berechnung_bruttoWert);
 
+  let randomRuecksendungProzent = getRandomRuecksendung();
+
   // Zusammenfügen der ausgewählten Elemente zu einem Satz
   const randomAngebotSatz = Math.random();
+  
   let angebotSatz;
   angebotSatz = `<ol style="list-style-type: lower-latin;">`;
   if (randomAngebotSatz < 0.33) {
@@ -272,6 +297,34 @@ function erstelleZufallssatz() {
     zufaelligerSatz = `${randomSubjekt} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomZahlung} ${randomSupply_Rabatt_2} ${randomSupply_Bezugskosten}.`;
   } else {
     zufaelligerSatz = `${randomSubjekt} ${randomWerkstoff} ${randomZahlung} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Bezugskosten}.`;
+  }
+
+  let ruecksendungSatz;
+  const randomRuecksendung = Math.random();
+  let USTWertRuecksendung = berechnung_USTWert;
+  let zieleinkaufspreis_Ruecksendung = berechnung_nettoWert;
+  let berechnung_bruttoWertRuecksendung= berechnung_bruttoWert;
+  if (randomRuecksendung < 0.33) {
+    ruecksendungSatz = `Aufgrund einer Falschlieferung senden wir alle Werkstoffe aus dem Geschäftsfall`;
+    USTWertRuecksendung = formatCurrency(USTWertRuecksendung);
+    zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
+    berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
+  } else if (randomRuecksendung < 0.66) {
+    ruecksendungSatz = `Aufgrund eines Sachmangels senden wir ${randomRuecksendungProzent} % der Werkstoffe aus Geschäftsfall`;
+    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*randomRuecksendungProzent/100);
+    USTWertRuecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*19/100);
+    berechnung_bruttoWertRuecksendung = USTWertRuecksendung+zieleinkaufspreis_Ruecksendung;
+    USTWertRuecksendung = formatCurrency(USTWertRuecksendung);
+    zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
+    berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
+  } else {
+    ruecksendungSatz = `Wir senden ${randomRuecksendungProzent} % der Werkstoffe aus dem Geschäftsfall`;
+    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*randomRuecksendungProzent/100);
+    USTWertRuecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*19/100);
+    berechnung_bruttoWertRuecksendung = USTWertRuecksendung+zieleinkaufspreis_Ruecksendung;
+    USTWertRuecksendung = formatCurrency(USTWertRuecksendung);
+    zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
+    berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
   }
 
   const randomSkontoSatz = Math.random();
@@ -304,33 +357,38 @@ function erstelleZufallssatz() {
   const antwort_bezugskostenWert = `${bezugskostenWert}`;
   const betrag_2 = `${antwortBruttowert}`;
 
-  return [zufaelligerSatz, angebotSatz, skontoSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_skontoBetrag_brutto, antwort_vorsteuer_berichtigung, antwort_ueberweisungsbetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz];
+  return [zufaelligerSatz, angebotSatz, ruecksendungSatz, skontoSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_skontoBetrag_brutto, antwort_vorsteuer_berichtigung, antwort_ueberweisungsbetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz, USTWertRuecksendung, zieleinkaufspreis_Ruecksendung, berechnung_bruttoWertRuecksendung];
 
 }
 
 
-function zeigeZufaelligenSatz() {
+function zeigeZufaelligenSatz(i) {
 
   const anzahl = parseInt(anzahlDropdown.value);
 
   let satzOutput = '<h2>Aufgaben</h2>';
   satzOutput += '<ol>';
   let antwortOutput = `<h2>Lösung</h2>`;
-  antwortOutput += '<ol>';
+  antwortOutput += '';
 
   for (let i = 1; i <= anzahl; i++) {
-    const [zufaelligerSatz, angebotSatz, skontoSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_skontoBetrag_brutto, antwort_vorsteuer_berichtigung, antwort_ueberweisungsbetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz] = erstelleZufallssatz();
+    const currentI = i;
+    const [zufaelligerSatz, angebotSatz, ruecksendungSatz, skontoSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_skontoBetrag_brutto, antwort_vorsteuer_berichtigung, antwort_ueberweisungsbetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz, USTWertRuecksendung, zieleinkaufspreis_Ruecksendung, berechnung_bruttoWertRuecksendung] = erstelleZufallssatz();
     const formattedSatz = zufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const formattedAngebot = angebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const formattedSkonto = skontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
+    const formattedRuecksendung = ruecksendungSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
 
-    // Generierte Sätze hinzufügen
+       // Generierte Sätze hinzufügen
 
     satzOutput += `<li>`;
     if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
       satzOutput += `<div>${formattedAngebot}</div>`;
     } else {
-      satzOutput += `<div>${formattedSatz}</div>`;
+      satzOutput += `<div>${formattedSatz}</div></li>`;
+      if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && buchungsoptionDropdown.value === 'buchungssatz') {
+      satzOutput += `<li><div>${formattedRuecksendung}  ${currentI} zurück und erhalten dafür eine Gutschrift.</div></li>`;
+      }
       if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
         satzOutput += `<div style="margin-bottom:20px">${formattedSkonto}</div><br>`;
       }
@@ -338,7 +396,7 @@ function zeigeZufaelligenSatz() {
     satzOutput += `</li>`;
 
     // Generierte Antworten hinzufügen
-      antwortOutput += `${parseInt(i)}.<br><br>`;
+    antwortOutput += `${parseInt(i)}.<br>`;
     if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
       antwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       antwortOutput += `<tbody>`;
@@ -384,7 +442,7 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `</tbody>`;
       antwortOutput += `</table><br>`;
     }
-    antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:500px;margin:0 0;margin-bottom:6px;">`;
+    antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:500px;margin:0 0;margin-bottom:6px;margin-top: 10px;">`;
     antwortOutput += `<tbody>`;
     antwortOutput += `<tr>`;
     antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${konto_1}</td>`;
@@ -409,7 +467,7 @@ function zeigeZufaelligenSatz() {
     antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${betrag_2}</td>`;
     antwortOutput += `</tr>`;
     antwortOutput += `</tbody>`;
-    antwortOutput += `</table>`;
+    antwortOutput += `</table><br>`;
     if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
       antwortOutput += `<br><b>Nebenrechnung:</b><br>`;
       antwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
@@ -470,13 +528,32 @@ function zeigeZufaelligenSatz() {
       antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${antwort_vorsteuer_berichtigung}</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `</tbody>`;
-      antwortOutput += `</table>`;      
+      antwortOutput += `</table><br>`;      
     }
-    antwortOutput += `<br>`;
-  }
-    
-  
-
+    antwortOutput += `</li></div>`;
+  if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && buchungsoptionDropdown.value === 'buchungssatz') {
+    i++;
+    antwortOutput += `${parseInt(i)}.`;
+    antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:500px;margin:0 0;margin-bottom:6px;">`;
+    antwortOutput += `<tbody>`;
+    antwortOutput += `<tr>`;
+    antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${konto_2}</td>`;
+    antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${berechnung_bruttoWertRuecksendung}</td>`;
+    antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
+    antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">2600 VORST</td>`;
+    antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${USTWertRuecksendung}</td>`;
+     antwortOutput += `</tr>`;
+    antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
+    antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+    antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+    antwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${konto_1}</td>`;
+    antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${zieleinkaufspreis_Ruecksendung}</td>`;
+    antwortOutput += `</tr>`;
+    antwortOutput += `</tbody>`;
+    antwortOutput += `</table><br>`;
+   } else {
+   }    
+  }  
   satzOutput += '</ol>'; // Ende der nummerierten Liste für Sätze
 
   // Sätze und Antworten auf der Seite anzeigen

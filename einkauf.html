@@ -27,11 +27,12 @@
             <option value="einkaufskalkulation">Einkaufskalkulation mit Buchungssatz</option>
      <option value="skontobuchungssatz">Skontobuchungssatz</option>
           </select>
-          <br>
-        <label for="mitRabatt">Rabatt:</label><input type="checkbox" id="mitRabatt">
-        <label for="mitBezugskosten">Bezugskosten:</label><input
-          type="checkbox" id="mitBezugskosten"><br>
-                     
+          <br><div class="flex-row">
+        <div><label for="mitRabatt">Rabatt:</label><input type="checkbox" id="mitRabatt">
+        </div><div><label for="mitBezugskosten">Bezugskosten:</label><input
+          type="checkbox" id="mitBezugskosten">
+          </div><div><label for="mitRabatt">Rücksendungen (bei VE):</label><input type="checkbox" id="mitRuecksendung"></div>
+         </div>            
         <label for="anzahlDropdown">Anzahl der Geschäftsfälle:</label>
         <select id="anzahlDropdown">
           <option value="1" selected>1</option>
