@@ -1,7 +1,7 @@
 function generateRandomInventar() {
     const valueRanges = {
-        "GR-value": { min: 1500000, max: 1000000 },
-        "BVG-value": { min: 2500000, max: 5000000 },
+        "GR-value": { min: 500000, max: 1000000 },
+        "BVG-value": { min: 800000, max: 1500000 },
         "MA-value": { min: 10000, max: 200000 },
         "FP1-value": { min: 10000, max: 80000 },
         "FP2-value": { min: 50000, max: 150000 },
@@ -11,16 +11,18 @@ function generateRandomInventar() {
         "FO-value": { min: 2000, max: 500000 },
         "BK1-value": { min: 20000, max: 200000 },
         "BK2-value": { min: 20000, max: 200000 },
-        "KA-value": { min: 500, max: 5000 },
-        "LBKV-value": { min: 50000, max: 4500000 },
+        "KA-value": { min: 1000, max: 15000 },
+        "LBKV-value": { min: 50000, max: 500000 },
         "KBKV-value": { min: 5000, max: 50000 },
         "VE-value": { min: 5000, max: 50000 },
     };
 
 
     function getRandomValueInRange(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        const randomValue = Math.ceil(Math.random() * (max - min + 1)) + min;
+    return Math.ceil(randomValue / 5000) * 5000;
     }
+
 
     function formatCurrency(value) {
         return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
