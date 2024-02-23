@@ -1,24 +1,26 @@
 function generateRandomBilanz7() {
     const valueRanges = {
-        "value-GR": { min: 1500000, max: 1000000 },
-        "value-BVG": { min: 2500000, max: 5000000 },
+        "value-GR": { min: 200000, max: 550000 },
+        "value-BVG": { min: 500000, max: 2000000 },
         "value-MA": { min: 10000, max: 200000 },
-        "value-FP": { min: 10000, max: 80000 },
+        "value-FP": { min: 10000, max: 100000 },
         "value-BM": { min: 5000, max: 20000 },
-        "value-BGA": { min: 20000, max: 200000 },
+        "value-BGA": { min: 10000, max: 50000 },
         "value-VORR": { min: 20000, max: 100000 },
-        "value-FO": { min: 2000, max: 500000 },
+        "value-FO": { min: 2000, max: 300000 },
         "value-BK": { min: 40000, max: 400000 },
-        "value-KA": { min: 500, max: 5000 },
-        "value-LBKV": { min: 50000, max: 4500000 },
+        "value-KA": { min: 5000, max: 15000 },
+        "value-LBKV": { min: 50000, max: 200000 },
         "value-KBKV": { min: 5000, max: 50000 },
         "value-VE": { min: 5000, max: 50000 },
     };
 
 
     function getRandomValueInRange(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        const randomValue = Math.ceil(Math.random() * (max - min + 1)) + min;
+    return Math.ceil(randomValue / 5000) * 5000;
     }
+
 
     function formatCurrency(value) {
         return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
