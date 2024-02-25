@@ -8,7 +8,7 @@ function generateRandomInventar() {
         "BM-value": { min: 5000, max: 20000 },
         "BGA-value": { min: 20000, max: 200000 },
         "VORR-value": { min: 20000, max: 100000 },
-        "FO-value": { min: 2000, max: 500000 },
+        "FO-value": { min: 2000, max: 20000 },
         "BK1-value": { min: 20000, max: 200000 },
         "BK2-value": { min: 20000, max: 200000 },
         "KA-value": { min: 1000, max: 15000 },
