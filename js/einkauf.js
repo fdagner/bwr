@@ -301,14 +301,19 @@ function erstelleZufallssatz() {
 
   let ruecksendungSatz;
   const randomRuecksendung = Math.random();
-  let USTWertRuecksendung = berechnung_USTWert;
+  let USTWertRuecksendung;
   let zieleinkaufspreis_Ruecksendung = berechnung_nettoWert;
   let berechnung_bruttoWertRuecksendung= berechnung_bruttoWert;
   if (randomRuecksendung < 0.33) {
     ruecksendungSatz = `Aufgrund einer Falschlieferung senden wir alle Werkstoffe aus dem Geschäftsfall`;
+    randomRuecksendungProzent = 100;
+    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*randomRuecksendungProzent/100);
+    USTWertRuecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*19/100);
+    berechnung_bruttoWertRuecksendung = USTWertRuecksendung+zieleinkaufspreis_Ruecksendung;
     USTWertRuecksendung = formatCurrency(USTWertRuecksendung);
     zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
     berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
+    console.log(zieleinkaufspreis_Ruecksendung);
   } else if (randomRuecksendung < 0.66) {
     ruecksendungSatz = `Aufgrund eines Sachmangels senden wir ${randomRuecksendungProzent} % der Werkstoffe aus Geschäftsfall`;
     zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*randomRuecksendungProzent/100);
@@ -326,6 +331,7 @@ function erstelleZufallssatz() {
     zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
     berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
   }
+
 
   const randomSkontoSatz = Math.random();
   skontoSatz = `<ol style="list-style-type: lower-latin;">`;
