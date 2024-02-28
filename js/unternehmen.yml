@@ -900,3 +900,27 @@
     bic: "GENODEF1NGH"
     inhaber: "Lisa Kehrer"
     akzent: "#f4f8f4"
+
+- unternehmen:
+    id: "38"
+    branche: "Modellunternehmen"
+    name: "Sprezzatura Lederkunst"
+    motto: "Handwerkskunst und Design"
+    bank: "Hausbank"
+    rechtsform: "e. Kfr."
+    logo: "media/pic/handtasche.svg"
+    adresse:
+      strasse: "Kleinreuther Straße 14"
+      plz: "90431"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "0911 44770"
+      email: "info@lsprezzatura.de"
+      internet: "lsprezzatura.de"
+    ust_id: "DE983426151"
+    steuernummer: "181/106/13323"
+    iban: "DE89300000445322213034"
+    bic: "GENODEF1NGB"
+    inhaber: "Isabella Sprezzatura"
+    akzent: "#6b14b8"
