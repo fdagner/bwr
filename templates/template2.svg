@@ -1,8 +1,9 @@
 <svg id="rechnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 1050" style="background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc" onload="SVGonLoad()">
   <defs id="customDefs"/>
   <!--Gruppe für Firmeninformationen-->
-    <rect class="colorSVG" x="0" y="120" width="720" height="5" />
-    <rect class="colorSVG" x="0" y="960" width="720" height="2" />
+    <rect x="1" y="1" width="718" height="1048" stroke="#000" stroke-width="1" fill="#fff"/>
+    <rect class="colorSVG" x="2" y="120" width="716" height="5" />
+    <rect class="colorSVG" x="2" y="960" width="716" height="2" />
     <rect x="0" y="130" width="720" height="0" fill="#000"/>
   <g id="liefererInformationen2" fill="#000">
     <rect id="logo-placeholder" x="50" y="20" width="100" Opacity="0" height="100"/>
