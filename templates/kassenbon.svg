@@ -4,8 +4,8 @@
      </defs>
 <rect x="0" y="0" width="400" height="650" fill="#fff"/>
 <text id="kassenbonName" x="200" y="50" font-family="Arial" fill="#000" font-size="26" text-anchor="middle"></text>
-<text id="kassenbonName" x="200" y="80" font-family="Arial" fill="#000" font-size="16" text-anchor="middle"><tspan id="kassenbonStrasse"></tspan>, <tspan id="kassenbonplz"></tspan> <tspan id="kassenbonOrt"></tspan></text>
-<text id="kassenbonName" x="200" y="100" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">Öffnungszeiten: Mo-Sa 10-20 Uhr, So geschlossen</text>
+<text x="200" y="80" font-family="Arial" fill="#000" font-size="16" text-anchor="middle"><tspan id="kassenbonStrasse"></tspan>, <tspan id="kassenbonplz"></tspan> <tspan id="kassenbonOrt"></tspan></text>
+<text x="200" y="100" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">Öffnungszeiten: Mo-Sa 10-20 Uhr, So geschlossen</text>
 <text x="20" y="140" font-family="Arial" fill="#000" font-size="16"><tspan id="kassenbonTag"></tspan>.<tspan id="kassenbonMonat"></tspan>.<tspan class="aktuellesJahrKassenbon"></tspan></text>
 <text id="kassenbonUhrzeit" x="390" y="140" font-family="Arial" fill="#000" font-size="16" text-anchor="end"></text>
 <text x="20" y="200" font-family="Arial" fill="#000" font-size="20"></text>

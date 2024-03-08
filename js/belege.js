@@ -472,6 +472,10 @@ function loadKassenbonData() {
     document.getElementById('kassenbonUSTID').textContent = selectedKassenbon.unternehmen.ust_id;
     document.getElementById('kassenbonSteuernummer').textContent = selectedKassenbon.unternehmen.steuernummer;
     document.getElementById('kassenbonOrt').textContent = selectedKassenbon.unternehmen.adresse.plz + " " + selectedKassenbon.unternehmen.adresse.ort;
+    let kassenbonInhaber = document.getElementById('kassenbonInhaber');
+    if (kassenbonInhaber) {
+        kassenbonInhaber.textContent = selectedKassenbon.unternehmen.inhaber;} else {
+    }
 
 }
 
@@ -479,7 +483,16 @@ function loadKassenbonData() {
 function loadCompanyDataforKassenbon() {
     const selectedCompanyName = document.getElementById('datenKassenbonKunde').value;
     const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
-    document.getElementById('kassenbonNameKunde').textContent = selectedCompany.unternehmen.inhaber + ", " + selectedCompany.unternehmen.name;
+
+    let kassenbonStrasseKunde = document.getElementById('kassenbonStrasseKunde');
+if (kassenbonStrasseKunde) {
+    kassenbonStrasseKunde.textContent = selectedCompany.unternehmen.adresse.strasse;} else {
+}
+
+let kassenbonOrtKunde = document.getElementById('kassenbonOrtKunde');
+if (kassenbonOrtKunde) {
+    kassenbonOrtKunde.textContent = selectedCompany.unternehmen.adresse.plz + " " + selectedCompany.unternehmen.adresse.ort;} else {
+}
 }
 
 function loadAnlagenkarteData() {
@@ -1184,12 +1197,25 @@ function quittungApplySVGholen() {
     loadCompanyDataforQuittung(); // Laden der Quittung-Daten (Kunde) 
 }
 
-function kassenbonApplySVGholen() {
+async function kassenbonApplySVGholen() {
     if (!validateInputs()) {
         // Wenn die Validierung fehlschlägt, stoppe die Funktion
         return;
     }
     // Laden der Daten für den Kassenbon
+
+    let selectedKassenbon = document.getElementById("svgDropdownKassenbon").value;
+    let svgContainerKassenbon = document.getElementById("kassenbonContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedKassenbon);
+        svgContainerKassenbon.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+
+
     let kassenbonZweck = document.getElementById('kassenbonZweckInput').value;
     document.getElementById('kassenbonZweck').textContent = kassenbonZweck;
     const selectedkassenbonTag = document.getElementById('tagKassenbon').value;
@@ -1247,7 +1273,7 @@ function kassenbonApplySVGholen() {
 
         const customDefs = document.getElementById('customDefsKassenbon');
         const customJsScript = document.getElementById('customJsKassenbon');
-        const useScriptQuittung = document.getElementById('scriptJahrKassenbon').checked;
+        const useScriptKassenbon = document.getElementById('scriptJahrKassenbon').checked;
 
         if (customJsScript) {
             customJsScript.remove();
@@ -1283,6 +1309,7 @@ function kassenbonApplySVGholen() {
 
 
     loadKassenbonData() // Laden der Kassenbon-Daten
+    loadCompanyDataforKassenbon()
 }
 
 async function journalApplySVGholen() {
@@ -1624,6 +1651,7 @@ async function bescheidApplySVGholen() {
         return;
     }
 
+    
     let selectedBescheid = document.getElementById("svgDropdownBescheid").value;
     let svgContainerBescheid = document.getElementById("bescheidContainer");
 
@@ -1696,7 +1724,7 @@ async function bescheidApplySVGholen() {
 
         const customDefs = document.getElementById('customDefsBescheid');
         const customJsScript = document.getElementById('customJsBescheid');
-        const useScriptQuittung = document.getElementById('scriptJahrBescheid').checked;
+        const useScriptBescheid = document.getElementById('scriptJahrBescheid').checked;
 
         if (customJsScript) {
             customJsScript.remove();
@@ -2012,22 +2040,6 @@ async function applySVG() {
     } catch (error) {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
-
-
-    let selectedKassenbon = document.getElementById("svgDropdownKassenbon").value;
-    let svgContainerKassenbon = document.getElementById("kassenbonContainer");
-
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedKassenbon);
-        svgContainerKassenbon.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
-
-
-
-
 
 
 }
