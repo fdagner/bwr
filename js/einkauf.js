@@ -128,9 +128,9 @@ let kontenZahlung;
 function inputChangeCategory() {
   if (buchungsoptionDropdown.value === 'einkaufskalkulation' || buchungsoptionDropdown.value === 'skontobuchungssatz' ) {
     kontenZahlung = {
-      "und erhalten die Eingangsrechnung": "4400 VE",
+      ", wobei wir eine Eingangsrechnung erhalten": "4400 VE",
       ". Die Werkstoffe werden geliefert und der Lieferer sendet uns eine Eingangsrechnung": "4400 VE",
-      " und erhalten die Rechnung des Lieferers": "4400 VE",
+      ", wobei wir die Rechnung des Lieferers erhalten": "4400 VE",
     } } else {
   kontenZahlung = {
     "in bar": "2880 KA",
