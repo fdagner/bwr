@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buchführung</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/html2canvas.min.js"></script>
+    <script src="js/js-yaml.min.js"></script>
+    <script src="js/kontenplan.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/menu.js"></script>
+</head>
+<style>
+    h3 {
+        counter-increment: section;
+    }
+
+    h3::before {
+        content: counter(section) ". ";
+    }
+</style>
+<main>
+    <div w3-include-html="navigation.html"></div>
+    <h2>Promptsammlung zum Marketing (Lernbereich 3)</h2>
+
+    <div class="box">
+        <p>Dank KI sind viele Vorlagen und Texte schneller und variantenreicher erstellt als mit recht statischen
+            Vorlagen.
+            Nach 1-2 Verbesserungen und kleinen manuellen Änderungen sind die Vorlage meist schnell einsatzbereit.
+        </p>
+    </div>
+    <details>
+        <summary><b>Preisdifferenzierung</b>
+        </summary>
+        <div class="box"><b>Prompt:</b> <i>Erstelle eine typische Preistafel für den Eintritt in einen Vergnügungspark.
+                Achte
+                auf verschiedene Preisdifferenzierungen: z. B. differenziert nach Gruppengröße, Personen, Alter,
+                Jahreszeit.
+                Gib dem Park einen Namen und ein Motto.
+                Erstelle die Preistafel farbig in HTML mit Inline-CSS, das heißt ohne style-Block sondern innerhalb HTML
+                mit
+                style=""</i></div>
+
+        <h1 style="color: #ff6347; text-align: center;">Willkommen im Fantasia Park!</h1>
+        <p style="color: #4682b4; text-align: center; font-style: italic;">Wo Abenteuer und Magie auf Sie warten...</p>
+        <h2 style="color: #4682b4; text-align: center;">Preistafel Fantasia Park</h2>
+        <table style="border-collapse: collapse; margin: 0 auto;">
+            <tr style="background-color: #ffcccb;">
+                <th>Eintrittskategorie</th>
+                <th>Preis</th>
+            </tr>
+            <tr>
+                <td>Erwachsene</td>
+                <td style="text-align: center;">€ 50</td>
+            </tr>
+            <tr>
+                <td>Kinder (3-12 Jahre)</td>
+                <td style="text-align: center;">€ 30</td>
+            </tr>
+            <tr>
+                <td>Senioren (ab 65 Jahre)</td>
+                <td style="text-align: center;">€ 40</td>
+            </tr>
+            <tr style="background-color: #ffcccb;">
+                <td>Gruppen ab 10 Personen</td>
+                <td style="text-align: center;">€ 45 pro Person</td>
+            </tr>
+            <tr>
+                <td>Familienticket (2 Erwachsene + 2 Kinder)</td>
+                <td style="text-align: center;">€ 150</td>
+            </tr>
+            <tr>
+                <td>Winter-Special (Wintermonate)</td>
+                <td style="text-align: center;">10 % Rabatt</td>
+            </tr>
+        </table>
+    </details>
+    <details>
+        <summary><b>Produktpolitik</b>
+        </summary>
+        <div class="box"><b>Prompt:</b> <i>Erstelle zu einem E-Bike 3 Kunden-Rezensionen. Eine ausführliche, freundliche
+                und
+                sachlich formulierte, die das E-Bike als sehr gut bewertet und auf viele Aspekte eingeht. Eine die das
+                Fahrrad als durchschnittlich bewertet und den Schwerpunkt auf einen einzigen Aspekt legt. Und eine kurze
+                und
+                agressive, die das Bike unsachlich als sehr schlecht bewertet.</i></div>
+
+
+        <h4>Ausführliche und freundliche Bewertung (sehr gut):</h4>
+        <p>"Ich kann gar nicht genug lobende Worte für dieses fantastische E-Bike finden! Seitdem ich es besitze, hat
+            sich
+            mein
+            Fahrerlebnis komplett verändert. Die Qualität und Verarbeitung sind erstklassig - jedes Detail wurde
+            sorgfältig
+            durchdacht. Der leistungsstarke Motor unterstützt mich zuverlässig, sowohl auf flachen Strecken als auch bei
+            anspruchsvollen Anstiegen. Die Akkulaufzeit ist beeindruckend lang, und die Ladezeit ist erfreulich kurz.
+            Das
+            Fahrgefühl ist einfach nur großartig - geschmeidig, stabil und komfortabel. Sogar bei höheren
+            Geschwindigkeiten
+            bleibt das E-Bike ruhig und sicher. Das moderne Design und die hochwertige Ausstattung machen dieses E-Bike
+            zu
+            einem
+            echten Blickfang. Ich bin rundum zufrieden und kann es jedem nur empfehlen, der nach einem zuverlässigen und
+            leistungsstarken E-Bike sucht!"</p>
+
+        <h4>Durchschnittliche Bewertung (Schwerpunkt auf einen Aspekt):</h4>
+
+        <p>"Das E-Bike ist solide, aber ich finde den Sattel nicht besonders bequem. Nach längeren Fahrten bekomme ich
+            Rückenschmerzen. Die restlichen Komponenten des Fahrrads sind in Ordnung, und die Unterstützung des Motors
+            ist
+            ausreichend. Wenn der Hersteller den Sattel verbessern würde, wäre das Fahrrad für mich perfekt."</p>
+
+        <h4>Kurze und aggressive Bewertung (sehr schlecht):</h4>
+
+        <p>"Schlechtestes E-Bike aller Zeiten! Der Motor ist eine Katastrophe, und die Batterie hält überhaupt nicht.
+            Das
+            Design ist hässlich, und die Farbe ist einfach nur grässlich. Absolute Geldverschwendung! Finger weg von
+            diesem
+            Schrott!"</p>
+
+    </details>
+    <details>
+        <summary><b>Zielkonflikte</b>
+        </summary>
+
+        <div class="box"><b>Prompt:</b> <i>Es gibt die Problematik, mehrere Marketingziele gleichzeitig in Einklang zu
+                bringen. Erstelle drei Beispiele mit jeweils 2 ökonomischen oder psychologischen Marketingzielen, bei
+                denen
+                ein Zielkonflikt vorliegt. Erstelle smarte Ziele. SMART ist die Abkürzung für ein Kriterienraster, das
+                an
+                definierte Ziele angelegt wird: Ziele müssen, um erreichbar und überprüfbar zu sein, spezifisch,
+                messbar,
+                attraktiv, realistisch und terminiert sein. Erläutere im Anschluss den Zielkonflikt.</i></div>
+
+
+        <h4> Beispiel 1: Umsatzsteigerung vs. Kundenzufriedenheit</h4>
+
+        <p>SMART-Ziel für Umsatzsteigerung: Bis zum Ende des nächsten Quartals soll der Umsatz um 10 % im Vergleich zum
+            Vorquartal gesteigert werden, indem gezielte Marketingkampagnen und Cross-Selling-Strategien implementiert
+            werden.</p>
+
+        <p>SMART-Ziel für Kundenzufriedenheit: Innerhalb der nächsten sechs Monate soll der Kundenservice verbessert
+            werden,
+            indem die durchschnittliche Reaktionszeit auf Kundenanfragen um 20 % reduziert wird und ein
+            Kundenfeedback-System
+            implementiert wird, um kontinuierliches Feedback zu erhalten und Verbesserungen vorzunehmen.</p>
+
+        <p>Möglicher Zielkonflikt: Ein Zielkonflikt könnte auftreten, wenn die Implementierung von
+            Cross-Selling-Strategien
+            die Kundenerfahrung negativ beeinflusst, da Kunden möglicherweise das Gefühl haben, zu stark zum Kauf
+            gedrängt
+            zu werden.</p>
+
+        <h4> Beispiel 2: Markenbekanntheit vs. Markenimage</h4>
+
+        <p>SMART-Ziel für Markenbekanntheit: Innerhalb der nächsten neun Monate soll die Markenbekanntheit um 15 %
+            gesteigert
+            werden, indem gezielte Social-Media-Kampagnen und Influencer-Marketing-Strategien umgesetzt werden.</p>
+
+        <p>SMART-Ziel für Markenimage: Bis zum Ende des Jahres soll das Markenimage gestärkt werden, indem 90 % der
+            Kunden
+            in
+            einer Umfrage angeben, dass sie die Marke als vertrauenswürdig und authentisch empfinden.</p>
+
+        <p>Möglicher Zielkonflikt: Ein Zielkonflikt könnte entstehen, wenn die Steigerung der Markenbekanntheit durch
+            aggressive Marketingtaktiken das Markenimage negativ beeinflusst und zu einem Verlust an Glaubwürdigkeit
+            führt.
+        </p>
+
+        <h4> Beispiel 3: Preiswettbewerbsfähigkeit vs. Produktqualität</h4>
+
+        <p>SMART-Ziel für Preiswettbewerbsfähigkeit: Innerhalb der nächsten sechs Monate soll die Preispositionierung
+            überprüft und optimiert werden, um wettbewerbsfähige Preise anzubieten, die gleichzeitig eine angemessene
+            Marge
+            ermöglichen.</p>
+
+        <p>SMART-Ziel für Produktqualität: Bis zum Ende des nächsten Quartals soll die Produktqualität verbessert
+            werden,
+            indem die Rücklaufquote aufgrund von Qualitätsmängeln um 15 % reduziert wird und mindestens 80 % der Kunden
+            in
+            einer Umfrage angeben, mit der Produktqualität zufrieden zu sein.</p>
+
+        <p>Möglicher Zielkonflikt: Ein Zielkonflikt könnte auftreten, wenn die Optimierung der Preiswettbewerbsfähigkeit
+            dazu führt, dass Kompromisse bei der Produktqualität gemacht werden müssen, was langfristig das Markenimage
+            und
+            die Kundenzufriedenheit beeinträchtigen könnte.</p>
+
+    </details>
+    <details>
+        <summary><b>Portfolio-Analyse</b>
+        </summary>
+
+        <div class="box"><b>Prompt:</b> <i>Erstelle mit Hilfe der Portfolio-Analyse (Stars, arme Hunde, Fragezeichen,
+                Melkühe) bei einem Jeanshersteller 4 Produkte die jeweils in eine Kategorie fallen. Beschreibe die
+                Produkte mit Name, Martkanteil und Chancen im Marktwachstum mit konkreten Beispielen. </i></div>
+                <h2>Star (Star):</h2>
+                <p>
+                    <strong>Produkt:</strong> "FlexFit Performance Jeans" <br>
+                    <strong>Marktanteil:</strong> Relativ hoher Marktanteil aufgrund von innovativem Design und Komfort. <br>
+                    <strong>Chancen im Marktwachstum:</strong> Die FlexFit Performance Jeans sind ein aufstrebendes Produkt mit großem Potenzial, da sie den aktuellen Trend zu bequemer und flexibler Kleidung ansprechen. Das Marktwachstum für diese Art von Jeans ist hoch, da viele Verbraucher nach Komfort und Funktionalität suchen.
+                </p>
+            
+                <h2>Poor Dog (Armer Hund):</h2>
+                <p>
+                    <strong>Produkt:</strong> "Basic Denim Jeans" <br>
+                    <strong>Marktanteil:</strong> Niedriger Marktanteil aufgrund der Sättigung des Marktes mit ähnlichen Produkten. <br>
+                    <strong>Chancen im Marktwachstum:</strong> Die Basic Denim Jeans haben aufgrund des hohen Wettbewerbs und der gesättigten Marktlage begrenzte Wachstumsmöglichkeiten. Es könnte schwierig sein, Marktanteile zu gewinnen, es sei denn, es gibt eine signifikante Innovation oder Marketingstrategie, um sich von der Konkurrenz abzuheben.
+                </p>
+            
+                <h2>Question Mark (Fragezeichen):</h2>
+                <p>
+                    <strong>Produkt:</strong> "Vintage Patchwork Jeans" <br>
+                    <strong>Marktanteil:</strong> Niedriger Marktanteil aufgrund der Neuheit und Unsicherheit über die Akzeptanz durch die Zielgruppe. <br>
+                    <strong>Chancen im Marktwachstum:</strong> Die Vintage Patchwork Jeans sind ein Produkt mit Potenzial, aber auch mit Unsicherheiten. Die Fragezeichen-Kategorie erfordert Investitionen, um das Produkt bekannt zu machen und die Akzeptanz bei den Verbrauchern zu steigern. Wenn die Nachfrage steigt und das Produkt erfolgreich positioniert wird, kann es zu einem Star-Produkt werden.
+                </p>
+            
+                <h2>Cash Cow (Melkkuh):</h2>
+                <p>
+                    <strong>Produkt:</strong> "Slim Fit Classic Jeans" <br>
+                    <strong>Marktanteil:</strong> Hoher Marktanteil aufgrund der langjährigen Beliebtheit und etablierten Positionierung. <br>
+                    <strong>Chancen im Marktwachstum:</strong> Die Slim Fit Classic Jeans sind ein etabliertes Produkt mit einem stabilen Marktanteil. Obwohl das Wachstumspotenzial begrenzt sein könnte, generiert dieses Produkt weiterhin stabile Einnahmen und Gewinne für das Unternehmen. Es ist wichtig, die Marke zu pflegen und gegebenenfalls Innovationen oder Marketingstrategien einzuführen, um die Positionierung aufrechtzuerhalten.
+                </p>
+    </details>
+    <script src="js/moodle.js"></script>
+    </div>
+</main>
+<div w3-include-html="footer.html"></div>
+<script>
+    includeHTML();
+</script>
+
+</body>
+
+</html>
