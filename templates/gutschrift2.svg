@@ -84,10 +84,7 @@
   </g>
 <!--Gruppe für Zahlungsbedingungen-->
   <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Verdana" font-size="15" fill="#333">
-    <text x="350" y="810">Das Zahlungsziel beträgt <tspan id="zahlungsziel"> </tspan> Tagen rein netto. </text>
-    <text id="skontotext" x="350" y="830">Der Abzug von <tspan id="skonto"> </tspan> % Skonto ist möglich bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen.</text>
-    <text x="350" y="850">Wir liefern in <tspan id="angebotLieferzeit"></tspan> Tagen <tspan id="bezugskostenBedingung"></tspan> <tspan id="Eigentumsvorbehalt">unter Eigentumsvorbehalt.</tspan></text>
-      <text x="350" y="870">Für Rückfragen stehen wir Ihnen jederzeit zur Verfügung!</text>
+  <text x="350" y="870">Für Rückfragen stehen wir Ihnen jederzeit zur Verfügung!</text>
 
     <text x="20" y="910"  text-anchor="start">Freundliche Grüße</text>
     <text id="ansprechpartnerLieferer" x="20" y="930" font-family="Verdana"  text-anchor="start" font-size="17"/>
