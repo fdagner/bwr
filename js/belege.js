@@ -4,7 +4,7 @@ let defaultYamlData = []; // Initialize variable for default YAML data
 // Auf 2 Dezimalstellen runden
 function roundToTwoDecimals(num) {
     return Math.round(num * 100) / 100;
-  }
+}
 
 // Function to handle file upload
 function handleFileUpload() {
@@ -298,7 +298,7 @@ if (!localStorage.getItem('uploadedYamlCompanyData')) {
                 optionBescheid.value = company.unternehmen.name;
                 optionBescheid.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
                 dropdownBescheid.appendChild(optionBescheid);
-               
+
                 const optionAnlagenkarte = document.createElement('option');
                 optionAnlagenkarte.value = company.unternehmen.name;
                 optionAnlagenkarte.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
@@ -474,7 +474,8 @@ function loadKassenbonData() {
     document.getElementById('kassenbonOrt').textContent = selectedKassenbon.unternehmen.adresse.plz + " " + selectedKassenbon.unternehmen.adresse.ort;
     let kassenbonInhaber = document.getElementById('kassenbonInhaber');
     if (kassenbonInhaber) {
-        kassenbonInhaber.textContent = selectedKassenbon.unternehmen.inhaber;} else {
+        kassenbonInhaber.textContent = selectedKassenbon.unternehmen.inhaber;
+    } else {
     }
 
 }
@@ -485,14 +486,16 @@ function loadCompanyDataforKassenbon() {
     const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
 
     let kassenbonStrasseKunde = document.getElementById('kassenbonStrasseKunde');
-if (kassenbonStrasseKunde) {
-    kassenbonStrasseKunde.textContent = selectedCompany.unternehmen.adresse.strasse;} else {
-}
+    if (kassenbonStrasseKunde) {
+        kassenbonStrasseKunde.textContent = selectedCompany.unternehmen.adresse.strasse;
+    } else {
+    }
 
-let kassenbonOrtKunde = document.getElementById('kassenbonOrtKunde');
-if (kassenbonOrtKunde) {
-    kassenbonOrtKunde.textContent = selectedCompany.unternehmen.adresse.plz + " " + selectedCompany.unternehmen.adresse.ort;} else {
-}
+    let kassenbonOrtKunde = document.getElementById('kassenbonOrtKunde');
+    if (kassenbonOrtKunde) {
+        kassenbonOrtKunde.textContent = selectedCompany.unternehmen.adresse.plz + " " + selectedCompany.unternehmen.adresse.ort;
+    } else {
+    }
 }
 
 function loadAnlagenkarteData() {
@@ -501,7 +504,7 @@ function loadAnlagenkarteData() {
     document.getElementById('anlagenkarteName').textContent = selectedAnlagenkarte.unternehmen.name + " " + selectedAnlagenkarte.unternehmen.rechtsform;
     document.getElementById('anlagenkarteStrasse').textContent = selectedAnlagenkarte.unternehmen.adresse.strasse;
     document.getElementById('anlagenkarteOrt').textContent = selectedAnlagenkarte.unternehmen.adresse.plz + " " + selectedAnlagenkarte.unternehmen.adresse.ort;
-   
+
     // Funktion zufällige 7-stellige Nummer
     function generateRandomAnlagenkarteNumber() {
         // Erzeuge eine zufällige Zahl zwischen 1000000 und 9999999
@@ -900,8 +903,6 @@ function applyOrderData() {
         document.getElementById('gesamtpreis2').textContent = '';
     }
 
-    document.getElementById('zahlungsziel').textContent = zahlungszielInput;
-    document.getElementById('skonto').textContent = skontoInput;
 
     let angebotLieferzeitSVG = document.getElementById('angebotLieferzeit');
     if (angebotLieferzeitSVG) {
@@ -909,20 +910,28 @@ function applyOrderData() {
         angebotLieferzeitSVG.textContent = angebotLieferzeit;
     }
 
+    const elemZahlungsziel = document.getElementById('zahlungsziel');
+    if (elemZahlungsziel) {
+        document.getElementById('zahlungsziel').textContent = zahlungszielInput;
+    } else { }
 
-    // Überprüfen, ob skontoInput 0 oder leer ist
-    if (skontoInput === "" || parseFloat(skontoInput) === 0) {
-        // Falls 0 oder leer, das Element mit der ID "skontotext" entfernen
-        const skontotextElement = document.getElementById('skontotext');
-        if (skontotextElement) {
-            skontotextElement.remove();
-        }
-    } else {
-        // Falls nicht 0 oder leer, den Text des Elements mit der ID "skonto" setzen
+    const elemSkonto = document.getElementById('skonto');
+    if (elemSkonto) {
         document.getElementById('skonto').textContent = skontoInput;
-        document.getElementById('skontofrist').textContent = skontofristInput;
+        // Überprüfen, ob skontoInput 0 oder leer ist
+        if (skontoInput === "" || parseFloat(skontoInput) === 0) {
+            // Falls 0 oder leer, das Element mit der ID "skontotext" entfernen
+            const skontotextElement = document.getElementById('skontotext');
+            if (skontotextElement) {
+                skontotextElement.remove();
+            }
+        } else {
+            // Falls nicht 0 oder leer, den Text des Elements mit der ID "skonto" setzen
+            document.getElementById('skonto').textContent = skontoInput;
+            document.getElementById('skontofrist').textContent = skontofristInput;
 
-    }
+        }
+    } else { }
 
     // Berechne und setze den Gesamtbetrag der Rechnung
     // Berechne die Zwischensumme
@@ -963,29 +972,41 @@ function applyOrderData() {
 
     document.getElementById('rechnungsbetrag').textContent = formatCurrency(gesamtRechnungsbetrag);
 
-    // Platz machen wenn keine Bezugskosten
+    // Platz machen wenn keine Bezugskosten oder Rabatt
     const warenwertUstRechnungsbetrag = document.getElementById('warenwertUstRechnungsbetrag');
     const warenwertUstRechnungsbetrag_quer = document.getElementById('warenwertUstRechnungsbetrag_quer');
     const gBezugskosten = document.getElementById('gBezugskosten');
 
-    // Überprüfe, ob das Element vorhanden ist
-    if (warenwertUstRechnungsbetrag) {
-        // Hier überprüfen wir, ob bezugskostenInput gleich 0 ist
+     if (warenwertUstRechnungsbetrag) {
         if (bezugskostenInput > 0) {
-            // Ändere den Transform-Wert, um die Y-Position um 20 zu verringern
-            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, 0)');
         } else {
-            // Setze den Transform-Wert auf den ursprünglichen Wert oder einen anderen Wert nach Bedarf
             warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -30)');
             gBezugskosten.remove();
-        }
+        };
+
+        if (rabattInput > 0) {
+        } else {
+            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -30)');
+            gBezugskosten.setAttribute('transform', 'translate(0, -30)');
+        };
+
     } else {
 
     }
 
-    // Überprüfe, ob das Element vorhanden ist
+    const elemWarenwert = document.getElementById('warenwert');
+    const elemZwischensumme = document.getElementById('zwischensumme');
+    if (elemWarenwert && warenwertUstRechnungsbetrag) {
+        if (bezugskostenInput > 0 || rabattInput > 0) {
+        } else {
+            elemWarenwert.remove();
+            elemZwischensumme.remove();
+            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -60)');       
+        }
+    }
+
+
     if (warenwertUstRechnungsbetrag_quer) {
-        // Hier überprüfen wir, ob bezugskostenInput gleich 0 ist
         if (bezugskostenInput > 0) {
             // Ändere den Transform-Wert, um die Y-Position um 20 zu verringern
             warenwertUstRechnungsbetrag_quer.setAttribute('transform', 'translate(0, 0)');
@@ -999,28 +1020,31 @@ function applyOrderData() {
     }
 
     const inputLieferbedingung = document.getElementById("lieferbedingungInput");
-    const bezugskostenBedingung = document.getElementById('bezugskostenBedingung');
 
-    if (inputLieferbedingung.checked) {
-        if (bezugskostenInput > 0) {
-            bezugskostenBedingung.textContent = "ab Werk";
+
+    const elemBezugskostenBedingung = document.getElementById('bezugskostenBedingung');
+    if (elemBezugskostenBedingung) {
+        const bezugskostenBedingung = document.getElementById('bezugskostenBedingung');
+        if (inputLieferbedingung.checked) {
+            if (bezugskostenInput > 0) {
+                bezugskostenBedingung.textContent = "ab Werk";
+            } else {
+                bezugskostenBedingung.textContent = "frei Haus";
+            }
+
         } else {
-            bezugskostenBedingung.textContent = "frei Haus";
+            bezugskostenBedingung.textContent = "";
         }
-
-    } else {
-        bezugskostenBedingung.textContent = "";
-    }
+    } else { }
 
     const inputEigentumsvorbehalt = document.getElementById("eigentumsvorbehaltInput");
     const eigentumsvorbehalt = document.getElementById('Eigentumsvorbehalt');
-
-    if (inputEigentumsvorbehalt.checked) {
-
-    } else {
-        ;
-        eigentumsvorbehalt.remove();
-    }
+    if (eigentumsvorbehalt) {
+        if (inputEigentumsvorbehalt.checked) {
+        } else {
+            eigentumsvorbehalt.remove();
+        }
+    } else { }
 
 
     // Laden der Daten für den Kontoauszug
@@ -1397,129 +1421,129 @@ async function journalApplySVGholen() {
         return brutto * steuersatz;
     }
 
-  // Funktion zur Berechnung der Sozialversicherungsbeiträge
-  function berechneSozialversicherung(brutto) {
-    const sozialversicherungssatz = 0.389; // 16,6% Sozialversicherungssatz (Arbeitnehmer und Arbeitgeber je 10%)
-    return brutto * sozialversicherungssatz;
-}
-
-// Eintragen der zufälligen Bruttogehälter, Steuern, Sozialversicherungsbeiträge und Nettogehälter ins Lohnjournal
-for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
-    // Generiere zufälliges Bruttogehalt für diesen Mitarbeiter
-    const zufallsBruttogehalt = generiereZufallsBruttogehalt();
-
-    // Eintragen des Bruttogehalts ins Lohnjournal
-    const lohnjournalBrutto = document.getElementById(`lohnjournalBrutto${i + 1}`);
-    if (lohnjournalBrutto) {
-        lohnjournalBrutto.textContent = `${formatCurrency(zufallsBruttogehalt.toFixed(2))}`;
+    // Funktion zur Berechnung der Sozialversicherungsbeiträge
+    function berechneSozialversicherung(brutto) {
+        const sozialversicherungssatz = 0.389; // 16,6% Sozialversicherungssatz (Arbeitnehmer und Arbeitgeber je 10%)
+        return brutto * sozialversicherungssatz;
     }
 
-    // Berechnen der Steuern basierend auf der Steuerklasse und Eintragen ins Lohnjournal
-    const lohnjournalSteuern = document.getElementById(`lohnjournalSteuern${i + 1}`);
-    if (lohnjournalSteuern) {
-        const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
-        lohnjournalSteuern.textContent = `${formatCurrency(steuern.toFixed(2))}`;
+    // Eintragen der zufälligen Bruttogehälter, Steuern, Sozialversicherungsbeiträge und Nettogehälter ins Lohnjournal
+    for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
+        // Generiere zufälliges Bruttogehalt für diesen Mitarbeiter
+        const zufallsBruttogehalt = generiereZufallsBruttogehalt();
+
+        // Eintragen des Bruttogehalts ins Lohnjournal
+        const lohnjournalBrutto = document.getElementById(`lohnjournalBrutto${i + 1}`);
+        if (lohnjournalBrutto) {
+            lohnjournalBrutto.textContent = `${formatCurrency(zufallsBruttogehalt.toFixed(2))}`;
+        }
+
+        // Berechnen der Steuern basierend auf der Steuerklasse und Eintragen ins Lohnjournal
+        const lohnjournalSteuern = document.getElementById(`lohnjournalSteuern${i + 1}`);
+        if (lohnjournalSteuern) {
+            const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
+            lohnjournalSteuern.textContent = `${formatCurrency(steuern.toFixed(2))}`;
+        }
+
+        // Berechnen der Sozialversicherungsbeiträge und Eintragen ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
+        const lohnjournalAN = document.getElementById(`lohnjournalAN${i + 1}`);
+        const lohnjournalAG = document.getElementById(`lohnjournalAG${i + 1}`);
+        if (lohnjournalAN && lohnjournalAG) {
+            const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
+            const anBeitrag = sozialversicherung * 0.5; // 50% für Arbeitnehmer
+            const agBeitrag = sozialversicherung * 0.5; // 50% für Arbeitgeber
+
+            lohnjournalAN.textContent = `${formatCurrency(anBeitrag.toFixed(2))}`;
+            lohnjournalAG.textContent = `${formatCurrency(agBeitrag.toFixed(2))}`;
+        }
+
+        // Berechnen und Eintragen des Nettogehalts ins Lohnjournal
+        const lohnjournalNetto = document.getElementById(`lohnjournalNetto${i + 1}`);
+        if (lohnjournalNetto) {
+            const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
+            const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
+
+            const netto = zufallsBruttogehalt - steuern - (sozialversicherung * 0.5); // Abzug der Hälfte der Sozialversicherung für Arbeitnehmer
+            lohnjournalNetto.textContent = `${formatCurrency(netto.toFixed(2))}`;
+        }
+    }
+    function berechneSummeBrutto(anzahlMitarbeiter) {
+        let summe = 0;
+        for (let i = 0; i < anzahlMitarbeiter; i++) {
+            summe += generiereZufallsBruttogehalt();
+        }
+        return summe;
     }
 
-    // Berechnen der Sozialversicherungsbeiträge und Eintragen ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
-    const lohnjournalAN = document.getElementById(`lohnjournalAN${i + 1}`);
-    const lohnjournalAG = document.getElementById(`lohnjournalAG${i + 1}`);
-    if (lohnjournalAN && lohnjournalAG) {
-        const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
-        const anBeitrag = sozialversicherung * 0.5; // 50% für Arbeitnehmer
-        const agBeitrag = sozialversicherung * 0.5; // 50% für Arbeitgeber
-
-        lohnjournalAN.textContent = `${formatCurrency(anBeitrag.toFixed(2))}`;
-        lohnjournalAG.textContent = `${formatCurrency(agBeitrag.toFixed(2))}`;
+    // Funktion zur Generierung einer zufälligen Ganzzahl zwischen min (inklusive) und max (exklusive)
+    function zufallszahlMitarbeiter(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
     }
 
-    // Berechnen und Eintragen des Nettogehalts ins Lohnjournal
-    const lohnjournalNetto = document.getElementById(`lohnjournalNetto${i + 1}`);
-    if (lohnjournalNetto) {
-        const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
-        const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
 
-        const netto = zufallsBruttogehalt - steuern - (sozialversicherung * 0.5); // Abzug der Hälfte der Sozialversicherung für Arbeitnehmer
-        lohnjournalNetto.textContent = `${formatCurrency(netto.toFixed(2))}`;
+    // Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
+    const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
+    const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
+
+    // Eintragen der Summe der Bruttogehälter ins Lohnjournal
+    const lohnjournalBruttoSumme = document.getElementById('lohnjournalBrutto4');
+    if (lohnjournalBruttoSumme) {
+        lohnjournalBruttoSumme.textContent = `${formatCurrency(summeBrutto.toFixed(2))}`;
     }
-}
-function berechneSummeBrutto(anzahlMitarbeiter) {
-    let summe = 0;
-    for (let i = 0; i < anzahlMitarbeiter; i++) {
-        summe += generiereZufallsBruttogehalt();
+
+    // Annahme: Steuerklasse 4 für alle Mitarbeiter
+    const steuerklasse = "IV";
+
+    // Berechnen der Steuern für die Summe
+    const summeSteuern = berechneSteuern(summeBrutto, steuerklasse);
+
+    // Eintragen der berechneten Steuern ins Lohnjournal
+    const lohnjournalSteuernSumme = document.getElementById('lohnjournalSteuern4');
+    if (lohnjournalSteuernSumme) {
+        lohnjournalSteuernSumme.textContent = `${formatCurrency(summeSteuern.toFixed(2))}`;
     }
-    return summe;
-}
 
-// Funktion zur Generierung einer zufälligen Ganzzahl zwischen min (inklusive) und max (exklusive)
-function zufallszahlMitarbeiter(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-}
+    // Berechnen der Sozialversicherungsbeiträge für die Summe (Arbeitnehmer und Arbeitgeber)
+    const summeSozialversicherung = berechneSozialversicherung(summeBrutto);
+    const summeAnBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitnehmer
+    const summeAgBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitgeber
 
+    // Eintragen der berechneten Sozialversicherungsbeiträge ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
+    const lohnjournalANSumme = document.getElementById('lohnjournalAN4');
+    const lohnjournalAGSumme = document.getElementById('lohnjournalAG4');
+    if (lohnjournalANSumme && lohnjournalAGSumme) {
+        lohnjournalANSumme.textContent = `${formatCurrency(summeAnBeitrag.toFixed(2))}`;
+        lohnjournalAGSumme.textContent = `${formatCurrency(summeAgBeitrag.toFixed(2))}`;
+    }
 
-// Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
-const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
-const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
+    // Berechnen des Nettogehalts für die Summe
+    const summeNetto = summeBrutto - summeSteuern - summeAnBeitrag;
 
-// Eintragen der Summe der Bruttogehälter ins Lohnjournal
-const lohnjournalBruttoSumme = document.getElementById('lohnjournalBrutto4');
-if (lohnjournalBruttoSumme) {
-    lohnjournalBruttoSumme.textContent = `${formatCurrency(summeBrutto.toFixed(2))}`;
-}
+    // Eintragen des Nettogehalts ins Lohnjournal
+    const lohnjournalNettoSumme = document.getElementById('lohnjournalNetto4');
+    if (lohnjournalNettoSumme) {
+        lohnjournalNettoSumme.textContent = `${formatCurrency(summeNetto.toFixed(2))}`;
+    }
 
-// Annahme: Steuerklasse 4 für alle Mitarbeiter
-const steuerklasse = "IV";
+    // Array mit den Monatsnamen
+    const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 
-// Berechnen der Steuern für die Summe
-const summeSteuern = berechneSteuern(summeBrutto, steuerklasse);
+    // Zufällige Auswahl eines Monats
+    const zufälligerMonatIndex = Math.floor(Math.random() * monate.length);
+    const zufälligerMonat = monate[zufälligerMonatIndex];
 
-// Eintragen der berechneten Steuern ins Lohnjournal
-const lohnjournalSteuernSumme = document.getElementById('lohnjournalSteuern4');
-if (lohnjournalSteuernSumme) {
-    lohnjournalSteuernSumme.textContent = `${formatCurrency(summeSteuern.toFixed(2))}`;
-}
-
-// Berechnen der Sozialversicherungsbeiträge für die Summe (Arbeitnehmer und Arbeitgeber)
-const summeSozialversicherung = berechneSozialversicherung(summeBrutto);
-const summeAnBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitnehmer
-const summeAgBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitgeber
-
-// Eintragen der berechneten Sozialversicherungsbeiträge ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
-const lohnjournalANSumme = document.getElementById('lohnjournalAN4');
-const lohnjournalAGSumme = document.getElementById('lohnjournalAG4');
-if (lohnjournalANSumme && lohnjournalAGSumme) {
-    lohnjournalANSumme.textContent = `${formatCurrency(summeAnBeitrag.toFixed(2))}`;
-    lohnjournalAGSumme.textContent = `${formatCurrency(summeAgBeitrag.toFixed(2))}`;
-}
-
-// Berechnen des Nettogehalts für die Summe
-const summeNetto = summeBrutto - summeSteuern - summeAnBeitrag;
-
-// Eintragen des Nettogehalts ins Lohnjournal
-const lohnjournalNettoSumme = document.getElementById('lohnjournalNetto4');
-if (lohnjournalNettoSumme) {
-    lohnjournalNettoSumme.textContent = `${formatCurrency(summeNetto.toFixed(2))}`;
-}
-
-// Array mit den Monatsnamen
-const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-
-// Zufällige Auswahl eines Monats
-const zufälligerMonatIndex = Math.floor(Math.random() * monate.length);
-const zufälligerMonat = monate[zufälligerMonatIndex];
-
-// Eintragen des zufälligen Monats ins Lohnjournal
-const lohnjournalMonat = document.getElementById('lohnjournalMonat');
-if (lohnjournalMonat) {
-    lohnjournalMonat.textContent = zufälligerMonat;
-}
+    // Eintragen des zufälligen Monats ins Lohnjournal
+    const lohnjournalMonat = document.getElementById('lohnjournalMonat');
+    if (lohnjournalMonat) {
+        lohnjournalMonat.textContent = zufälligerMonat;
+    }
     let lohnjournalSatzOutput = "";
     lohnjournalSatzOutput += ` <h3>Aufgabe</h3>`;
     lohnjournalSatzOutput += `<p>Von der Personalabteilung liegt der folgende Belegauszug vor. Bilde die Buchungssätze für die Erfassung
     des gesamten Personalaufwands, wenn die Auszahlung per Banküberweisung erfolgt.</p>
-`;         
-lohnjournalSatzOutput += `<h3>Lösung</h3>`;    
-lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
+`;
+    lohnjournalSatzOutput += `<h3>Lösung</h3>`;
+    lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
     lohnjournalSatzOutput += `<tbody>`;
     lohnjournalSatzOutput += `<tr>`;
     lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">6200 LG</td>`;
@@ -1593,7 +1617,7 @@ async function anlagenkarteApplySVGholen() {
     const selectedAnlagenkarteMonat = document.getElementById('monatAnlagenkarte').value;
     document.getElementById('anlagenkarteTag').textContent = selectedAnlagenkarteTag;
     document.getElementById('anlagenkarteMonat').textContent = selectedAnlagenkarteMonat;
-    
+
     const useScriptAnlagenkarte = document.getElementById('scriptJahrAnlagenkarte').checked;
     if (!useScriptAnlagenkarte) {
         // Verwende das Jahr aus dem Textfeld
@@ -1651,7 +1675,7 @@ async function bescheidApplySVGholen() {
         return;
     }
 
-    
+
     let selectedBescheid = document.getElementById("svgDropdownBescheid").value;
     let svgContainerBescheid = document.getElementById("bescheidContainer");
 

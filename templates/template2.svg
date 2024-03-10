@@ -67,7 +67,7 @@
 <!--Gruppe für Abrechnungsdetails-->
   <g id="abrechnungsDetails" font-size="22">
     <g id="zwischensummeRabattVersand">
-    <text x="380" y="620" font-family="Calibri" fill="#000" font-weight="bold">Summe</text>
+    <text id="warenwert" x="380" y="620" font-family="Calibri" fill="#000" font-weight="bold">Summe</text>
     <text id="zwischensumme" x="690" y="620" font-family="Calibri" fill="#333" text-anchor="end"></text>
     <g id="gRabatt">
     <text id="rabatt" x="380" y="650" font-family="Calibri" fill="#000" font-weight="bold"></text>
