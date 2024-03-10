@@ -67,7 +67,7 @@
  
 <!--Gruppe für Abrechnungsdetails-->
   <g id="abrechnungsDetails">
-     <text x="800" y="470" font-family="Arial" font-size="22" fill="#000" font-weight="bold" text-anchor="end">Warenwert</text>
+    <text id="warenwert" x="800" y="470" font-family="Arial" font-size="22" fill="#000" font-weight="bold" text-anchor="end">Warenwert</text>
     <text id="zwischensumme" x="1000" y="470" font-family="Arial" font-size="22" fill="#333" text-anchor="end"></text>
     <g id="zwischensummeRabattVersand">
     <g id="warenwertUstRechnungsbetrag_quer">
