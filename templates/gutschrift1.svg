@@ -7,7 +7,7 @@
     <rect x="0" y="130" width="720" height="0" fill="#000"/>
   <g id="liefererInformationen2" fill="#000">
     <rect id="logo-placeholder" x="50" y="20" width="100" Opacity="0" height="100"/>
-    <text id="nameLieferer" x="700" y="75" font-family="Courier New" font-size="34" font-weight="bold" text-anchor="end"/>
+    <text id="nameLieferer" x="700" y="75" font-family="Courier New" font-size="26" font-weight="bold" text-anchor="end"/>
     <text id="mottoLieferer" x="700" y="110" font-family="Calibri" font-size="18" font-weight="bold" text-anchor="end"/>
     <text id="adresseLieferer" x="20" y="150" font-family="Calibri" font-style="italic" font-size="14" fill="#333"/>
   </g>
@@ -31,7 +31,7 @@
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
     <text x="20" y="340" font-family="Verdana" font-weight="bold" font-size="28" fill="#333">Gutschrift</text>
-    <text id="lieferdatum" x="-120" y="380" font-family="Verdana" font-size="0" fill="#333"><tspan id="rechnungsNummer"/></tspan><tspan class="rechnungsDatum"></tspan><tspan class="aktuellesJahr"/></text>
+    <text id="lieferdatum" x="-120" y="380" font-family="Verdana" font-size="0" fill="#333"><tspan id="rechnungsNummer"/><tspan class="rechnungsDatum"></tspan><tspan class="aktuellesJahr"/></text>
     <text x="-120" y="410" font-family="Verdana" font-size="0" fill="#333"><tspan id="nummerKunde"/></text>
     <text id="datum" x="690" y="340" font-family="Verdana" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
     <text id="datum" x="20" y="450" font-family="Verdana" font-size="15" fill="#333" text-anchor="start">Aufgrund Ihrer Reklamation erteilen wir Ihnen folgende Gutschrift:</text>
