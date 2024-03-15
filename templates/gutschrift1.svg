@@ -31,7 +31,7 @@
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
     <text x="20" y="340" font-family="Verdana" font-weight="bold" font-size="28" fill="#333">Gutschrift</text>
-    <text id="lieferdatum" x="-120" y="380" font-family="Verdana" font-size="0" fill="#333"><tspan id="rechnungsNummer"/></tspan><tspan class="rechnungsDatum"></tspan><tspan class="aktuellesJahr"/></text>
+    <text id="lieferdatum" x="-120" y="380" font-family="Verdana" font-size="0" fill="#333"><tspan id="rechnungsNummer"/><tspan class="rechnungsDatum"></tspan><tspan class="aktuellesJahr"/></text>
     <text x="-120" y="410" font-family="Verdana" font-size="0" fill="#333"><tspan id="nummerKunde"/></text>
     <text id="datum" x="690" y="340" font-family="Verdana" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
     <text id="datum" x="20" y="450" font-family="Verdana" font-size="15" fill="#333" text-anchor="start">Aufgrund Ihrer Reklamation erteilen wir Ihnen folgende Gutschrift:</text>
