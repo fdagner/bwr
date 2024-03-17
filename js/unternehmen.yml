@@ -989,11 +989,35 @@
     kontakt:
       telefon: "0841 112233"
       email: "info@uwbpartner.de"
-      internet: "uwbpartner.de"
+      internet: "www.uwbpartner.de"
     ust_id: "DE983453321"
     steuernummer: "451/3226/11221"
     iban: "DE89300000487653837034"
     bic: "GENODEF1ING"
     inhaber: "Klaus Walter"
     akzent: "#f5f5f5"
+
+- unternehmen:
+    id: "42"
+    branche: "Recht und Ordnung"
+    name: "Mona Klingenbeil"
+    motto: "Ihre kompetente Steuerberaterin!"
+    bank: "Bank"
+    rechtsform: "e. Kfr."
+    logo: "media/pic/dokument.svg"
+    adresse:
+      strasse: "Marillenweg 2"
+      plz: "85049"
+      ort: "Ingolstadt"
+      land: "Deutschland"
+    kontakt:
+      telefon: "0841 97653"
+      email: "info@steuerklingenbeil.de"
+      internet: "www.steuerklingelbeil.de"
+    ust_id: "DE983434521"
+    steuernummer: "181/1226/11331"
+    iban: "DE78311000487653834564"
+    bic: "GENODEF1ING"
+    inhaber: "Mona Klingenbeil"
+    akzent: "#6b14b8"
     
