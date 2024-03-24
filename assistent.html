@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buchführung</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/html2canvas.min.js"></script>
+    <script src="js/js-yaml.min.js"></script>
+    <script src="js/kontenplan.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/menu.js"></script>
+</head>
+
+<main>
+    <div w3-include-html="navigation.html"></div>
+    <h2>Buchungssatz-Assistent für Beschaffung und Absatz</h2>
+
+    <div class="box">
+      
+    </div>
+        <p><b>Welche Rechnung liegt vor, bei der du den Buchungssatz bilden sollst?</b></p>
+        <button id="eingangsrechnungBtn">Eingangsrechnung mit Werkstoffen</button>
+        <button id="ausgangsrechnungBtn">Ausgangsrechnung mit Fertigerzeugnissen</button>
+    
+        <div id="eingangsrechnungForm" style="display:none;">
+            <label for="konto"><b>Welcher Werkstoff wird eingekauft?</b> </label>
+            <select id="konto">
+                <option value="AWR">Rohstoffe</option>
+                <option value="AWF">Fremdbauteile</option>
+                <option value="AWH">Hilfsstoffe</option>
+                <option value="AWB">Betriebsstoffe</option>
+            </select><br>
+            <small>Welcher Werkstoff eingekauft wird, weißt du aus der Übersicht des Modellunternehmens oder aus dem Hefteintrag zu den Werkstoffen.</small><br><br>
+            <label for="netto"><b>Wie lautet der Nettobetrag?</b>:</label> <input type="number" id="netto"><br>
+            <small>Trage den Nettobetrag ein, der auf der Rechnung verzeichnet ist. Falls Rabatt angeboten wird, muss dieser bereits abgezogen sein.</small><br><br>
+        </div>
+    
+        <div id="ausgangsrechnungForm" style="display:none;">
+            <label for="netto">Betrag:</label>
+            <input type="number" id="netto"><br>
+            <label for="konto">Konto:</label>
+            <input type="text" id="konto"><br>
+        </div>
+    
+        <button id="generateBtn" style="display:none;">Lösungsvorschlag</button>
+    
+        <div id="result" style="display:none;">
+            <p id="buchungssatz"></p>
+        </div>
+    
+        <script>
+
+// Währung nach DIN 5008
+function formatCurrency(value) {
+  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+}
+const UST = 19;
+
+            document.getElementById('eingangsrechnungBtn').addEventListener('click', function() {
+                document.getElementById('eingangsrechnungForm').style.display = 'block';
+                document.getElementById('ausgangsrechnungBtn').style.display = 'none';
+                document.getElementById('ausgangsrechnungForm').style.display = 'none';
+                document.getElementById('generateBtn').style.display = 'block';
+            });
+    
+            document.getElementById('ausgangsrechnungBtn').addEventListener('click', function() {
+                document.getElementById('ausgangsrechnungForm').style.display = 'block';
+                document.getElementById('eingangsrechnungForm').style.display = 'none';
+                document.getElementById('generateBtn').style.display = 'block';
+            });
+    
+            document.getElementById('generateBtn').addEventListener('click', function() {
+                let netto = parseFloat(document.getElementById('netto').value);
+                let steuer = netto*UST/100;
+                let brutto = netto+steuer
+                netto = formatCurrency(netto);
+                steuer = formatCurrency(steuer);
+                brutto = formatCurrency(brutto);
+                let konto = document.getElementById('konto').value;
+                let kontoElement = document.getElementById('konto');
+                let ware = kontoElement.options[kontoElement.selectedIndex].text; // Den ausgewählten Kontonamen abrufen
+                let rechnungstyp = document.getElementById('eingangsrechnungForm').style.display === 'block' ? 'Eingangsrechnung' : 'Ausgangsrechnung';
+                let buchungssatz = '';
+    
+                if (rechnungstyp === 'Eingangsrechnung') {
+                    buchungssatz = "<b>Der Geschäftsfall lautet vermutlich:<br></b> Einkauf von " + ware + "n " + netto + " netto auf Ziel." +
+                        "<br><br><b>Der Buchungssatz lautet vermutlich:</b>" + 
+                        `<table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:650px;">
+                            <tbody>
+                                <tr>
+                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">` + konto + `<br></td>
+                                    <td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1">` + netto + `<br></td>
+                                    <td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 100px" tabindex="1"><br></td>
+                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"><br></td>
+                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1"><br></td>
+                                </tr>
+                                <tr>
+                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">VORST</td>
+                                    <td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1">` + steuer + `</td>
+                                    <td style="text-align: center;width:100px;white-space: pre;overflow: hidden;text-overflow:ellipsis;min-width: 100px" tabindex="1">an</td>
+                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">VE<br></td>
+                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1">` + brutto + `</td>
+                                </tr>
+                            </tbody>
+                        </table>`
+                        + "<br><b>Erläuterung</b>:<br>Der Nettobetrag in Höhe von " + netto +  " wird als Aufwand im SOLL auf dem Werkstoffkonto " + konto + " gebucht, da hier " + ware + " vorliegen. Die Umsatzsteuer wird als Vorsteuer auf dem Aktivkonto VORST mit " + steuer +  " im SOLL gebucht, da ein Einkauf vorliegt und wir die Steuer somit vom Finanzamt zurückfordern können. Bei dieser Eingangsrechnung entstehen damit Verbindlichkeiten in Höhe von " + brutto + ", also eine Schuld bei einem Lieferanten in Höhe des Bruttobetrags. Diese Verbindlichkeiten werden auf dem Passivkonto VE im HABEN gebucht.";
+                    
+                } else {
+                    // Hier kannst du die Ausgabe für Ausgangsrechnungen definieren, falls benötigt.
+                }
+    
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('buchungssatz').innerHTML = buchungssatz;
+            });
+        </script>
+ 
+    
+</main>
+<div w3-include-html="footer.html"></div>
+<script>
+    includeHTML();
+</script>
+
+</body>
+
+</html>
