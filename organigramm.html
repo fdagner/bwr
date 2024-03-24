@@ -23,211 +23,32 @@
 </style>
 <main>
     <div w3-include-html="navigation.html"></div>
-    <h2>Promptsammlung</h2>
+    <h2>Organigramm erstellen</h2>
 
     <div class="box">
-        <p>Dank KI sind viele Vorlagen und Texte schneller und variantenreicher erstellt als mit recht statischen
-            Vorlagen. Nach 1-2 Verbesserungen und kleinen manuellen Änderungen sind die Vorlage meist schnell
-            einsatzbereit.
-            Die Ergebnisse hier sind nur als Beispiel gedacht, nicht optimiert und nicht auf Richtigkeit überprüft.
-        </p>
-    </div>
-    <details>
-        <summary><b>Kriterien für Konsumentscheidungen</b>
-        </summary>
-        <div class="box">
-            <b>Prompt:</b> <i>Kriterien für Konsumentscheidungen: Notwendigkeit, Prestige/Trends, Kosten, Qualität,
-                Nachhaltigkeit. Erstelle jeweils Fallbeispiele mit 4-5 Sätzen.
-            </i>
-        </div>
-        <h2>Kriterien für Konsumentscheidungen:</h2>
-
-        <ol>
-            <li>
-                <p><strong>Notwendigkeit:</strong> Tom benötigt ein neues Paar Arbeitsschuhe, da seine alten Schuhe
-                    abgenutzt sind und nicht mehr den erforderlichen Schutz bieten. Er wählt ein robustes und bequemes
-                    Paar Sicherheitsschuhe, das seinen Anforderungen entspricht und ihm Sicherheit bei der Arbeit
-                    bietet.</p>
-            </li>
-
-            <li>
-                <p><strong>Prestige/Trends:</strong> Lisa möchte eine neue Handtasche kaufen, um ihrem Outfit eine
-                    stilvolle Note zu verleihen. Sie entscheidet sich für eine Designerhandtasche, die von Prominenten
-                    getragen wird und in den neuesten Modemagazinen zu sehen ist, da sie Wert auf das Prestige und den
-                    Trendfaktor legt.</p>
-            </li>
-
-            <li>
-                <p><strong>Kosten:</strong> Markus ist auf der Suche nach einem neuen Smartphone, möchte aber nicht zu
-                    viel Geld ausgeben. Er vergleicht verschiedene Modelle hinsichtlich ihrer Funktionen und Preise und
-                    entscheidet sich schließlich für ein erschwingliches Smartphone, das seinen Anforderungen entspricht
-                    und gleichzeitig seinem Budget entspricht.</p>
-            </li>
-
-            <li>
-                <p><strong>Qualität:</strong> Laura braucht ein neues Paar Laufschuhe, da sie regelmäßig joggt und gute
-                    Unterstützung für ihre Füße benötigt. Sie entscheidet sich für hochwertige Laufschuhe eines
-                    renommierten Herstellers, die für ihre Langlebigkeit und Komfort bekannt sind, da ihr die Qualität
-                    und Leistung wichtiger sind als der Preis.</p>
-            </li>
-
-            <li>
-                <p><strong>Nachhaltigkeit:</strong> Emma möchte eine neue Winterjacke kaufen, achtet jedoch darauf, dass
-                    sie umweltfreundlich und nachhaltig hergestellt wurde. Sie entscheidet sich für eine Jacke aus
-                    recycelten Materialien und von einem Unternehmen, das umweltfreundliche Produktionspraktiken
-                    anwendet, um ihren ökologischen Fußabdruck zu minimieren.</p>
-            </li>
+        <p>Um ein Modellorganigramm zu erstellen, können wir eine textbasierte KI und draw.io verwenden. Draw.io ist ein kostenloses Diagramm- und Zeichenprogramm, das sowohl lokal installiert als auch als Online-Dienst im Browser laufen kann.  </p>
+       <ol>
+        <li>Schritt: Prompt eingeben und per KI erstellen lassen, zum Beispiel:
+            <br><code>Erstelle ein fiktives Organigramm mit 4 Ebenen (vertikal von oben nach unten) der Firma Anna-Konrad-Bikes E. Kfr. Formatiere als mermaid. Verwende deutsche Begriffe, konkrete Personennamen und die Standardbereiche: Einkauf, Verkauf, Produktion, Verwaltung. Jeder Bereich soll einen eigenen Leiter mit Namen und mehrere Teammitglieder haben. Füge an Verwaltung den Stab EDV mit einer eigenen Leitung und Team an. Die Felder sollen nicht zu breit werden, füge Zeilenumbrüche ein und trenne Personen und Bereiche.</code>
+       <br><br>Beispielergebnis: <br>
+       <code>graph TD
+       A[CEO<br>Anna Konrad] --> B[Verwaltung<br>Geschäftsführung<br>Lukas Schmidt]
+       A --> C[Einkauf<br>Leitung<br>Max Bauer]A --> D[Verkauf<br>Leitung<br>Lena Müller]
+       A --> E[Produktion<br>Leitung<br>Jonas Wagner]
+       B --> F[EDV<br>Leitung<br>Sarah Weber]
+       F --> G[IT-Team<br>Jan Meier<br>Lisa Schneider]
+       C --> H[Einkaufsteam<br>Marie Fischer<br>Tom Becker]
+       D --> I[Verkaufsteam<br>Julia Braun<br>Tim Hoffmann]
+       E --> J[Produktionsteam<br>Simon Richter<br>Laura Schulz]
+      </code><br><br>
+        </li>
+        <li>Schritt: <a href="https://www.drawio.com/">drawio</a> öffnen und ein neues Diagramm erstellen. Das Beispielergebnis kopieren und unter "Anordnen --> Einfügen --> Erweitert --> Mermaid" einfügen.<br><br></li>
+        <li>Schritt (optional): Diagramm bearbeiten und nach Wunsch anpassen.<br><br></li>
+        <li>Schritt: Diagramm markieren und exportieren unter "Datei --> Exportieren als --> SVG (nur Markierung, transparenter Hintergrund)"
+       </li>
         </ol>
-    </details>
-
-    <details>
-        <summary><b>Zahlungsarten</b>
-        </summary>
-        <div class="box"><b>Prompt:</b> <i>Erstelle 5 Fallbeispiele für Zahlungsmöglichkeiten für familientypische
-                Situationen. Wäge Vor- und Nachteile ab un dbewerte aus Sicht des kritischen Verbrauchers</i></div>
-
-        <h2>Kreditkarte:</h2>
-        <p><strong>Fallbeispiel:</strong> Eine Familie plant einen Urlaub und bezahlt die Flugtickets und
-            Hotelreservierungen mit ihrer Kreditkarte.</p>
-        <p><strong>Vorteile:</strong> Bequemlichkeit beim Buchen von Reisen und Unterkünften; bietet oft zusätzliche
-            Versicherungsleistungen wie Reiserücktrittsversicherung und Schutz vor Verlust oder Beschädigung von Gepäck.
-        </p>
-        <p><strong>Nachteile:</strong> Versuchung zu übermäßigem Ausgeben; hohe Zinsen bei nicht rechtzeitiger
-            Rückzahlung; potenzielles Risiko von Schuldenaufbau.</p>
-
-        <h2>Debitkarte:</h2>
-        <p><strong>Fallbeispiel:</strong> Eine Familie verwendet ihre Debitkarte, um ihre wöchentlichen
-            Lebensmittelkäufe zu tätigen.</p>
-        <p><strong>Vorteile:</strong> Direkter Zugriff auf das eigene Bankkonto; begrenztes Risiko von Schulden, da nur
-            verfügbare Geldmittel ausgegeben werden können.</p>
-        <p><strong>Nachteile:</strong> Möglicher Missbrauch, wenn die Karte gestohlen oder die Daten kompromittiert
-            werden; begrenzte oder keine zusätzlichen Versicherungsleistungen im Vergleich zu Kreditkarten.</p>
-
-        <h2>Barzahlung:</h2>
-        <p><strong>Fallbeispiel:</strong> Eine Familie bezahlt für kleine Einkäufe oder Dienstleistungen, wie zum
-            Beispiel Pizza-Lieferungen oder den Friseurbesuch, bar.</p>
-        <p><strong>Vorteile:</strong> Einfachheit und Anonymität; bessere Kontrolle über Ausgaben; kein Risiko von
-            Schulden.</p>
-        <p><strong>Nachteile:</strong> Begrenzte Akzeptanz an manchen Orten; kein Schutz gegen Verlust oder Diebstahl
-            von Bargeld; Schwierigkeiten bei der Nachverfolgung von Ausgaben für Budgetzwecke.</p>
-
-        <h2>Online-Zahlungsdienste (z.B. PayPal):</h2>
-        <p><strong>Fallbeispiel:</strong> Eine Familie kauft Möbel online und bezahlt mit einem Online-Zahlungsdienst
-            wie PayPal.</p>
-        <p><strong>Vorteile:</strong> Sicherheit durch Verschlüsselung und Käuferschutz; einfache Möglichkeit, Zahlungen
-            online zu tätigen, ohne sensible Kreditkarteninformationen preiszugeben.</p>
-        <p><strong>Nachteile:</strong> Potenzielle Gebühren für den Empfang von Geldern oder Währungsumrechnungen;
-            begrenzte Akzeptanz bei einigen Händlern im Vergleich zu traditionellen Zahlungsmethoden.</p>
-
-        <h2>Mobile Zahlungssysteme (z.B. Apple Pay, Google Pay):</h2>
-        <p><strong>Fallbeispiel:</strong> Eine Familie nutzt ein mobiles Zahlungssystem, um im Lebensmittelgeschäft
-            einzukaufen.</p>
-        <p><strong>Vorteile:</strong> Bequemlichkeit durch kontaktloses Bezahlen mit dem Smartphone; zusätzliche
-            Sicherheit durch biometrische Authentifizierung wie Fingerabdruck- oder Gesichtserkennung.</p>
-        <p><strong>Nachteile:</strong> Kompatibilitätsprobleme mit älteren Geräten oder an manchen Standorten;
-            potenzielles Risiko von Datenschutzverletzungen oder Hacking-Angriffen.</p>
-    </details>
-
-    <details>
-        <summary><b>Aufgaben zum Prozentrechnen</b>
-        </summary>
-        <div class="box"><b>Prompt:</b> <i>Erstelle 10 Aufgaben zur Prozentrechnung insbesondere in ökonomischen
-                Kontexten aus dem Alltag. Die Fallbeispiele sollen lebensnah sein. Nenne bei Personen auch die Namen.
-                Erzähle eine kurze Geschichte bei jedem Fallbeispiel. Es soll entweder der Prozentsatz, der verminderte
-                oder vermehrte Grundwert oder der Grundwert berechnet werden. Benutze realistische Werte und möglichst
-                einfache Zahlen. Die Berechnung soll möglichst mit Kopfrechnen lösbar sein. Vermeide W-Fragen: Statt
-                "Wie viel kostet..." schreibe z. B. "Berechne..."</i></div>
-
-        <h2>Aufgaben zur Prozentrechnung:</h2>
-
-        <ol>
-            <li>
-                <p>Sarah möchte ein Paar Schuhe kaufen, die normalerweise 60 Euro kosten. Sie erhält jedoch einen Rabatt
-                    von 25 %. Berechne den reduzierten Preis der Schuhe.</p>
-                <p><strong>Lösung:</strong> 60 € - (25 % von 60 €) = 60 € - 15 € = 45 €</p>
-            </li>
-
-            <li>
-                <p>Max arbeitet in einem Café und erhält ein Trinkgeld von 15 % seines Umsatzes. Wenn er gestern 80 Euro
-                    Umsatz gemacht hat, wie viel Trinkgeld hat er dann erhalten?</p>
-                <p><strong>Lösung:</strong> 15 % von 80 € = 0,15 * 80 € = 12 €</p>
-            </li>
-
-            <li>
-                <p>Julia hat ihr monatliches Taschengeld um 20 % erhöht und erhält nun 36 Euro pro Monat. Berechne, wie
-                    viel Taschengeld sie vor der Erhöhung erhalten hat.</p>
-                <p><strong>Lösung:</strong> 36 € / 120 % = 36 € / 1,2 = 30 €</p>
-            </li>
-
-            <li>
-                <p>Thomas hat sein monatliches Einkommen um 10 % erhöht und verdient nun 2.200 Euro pro Monat. Berechne
-                    sein vorheriges monatliches Einkommen.</p>
-                <p><strong>Lösung:</strong> 2200 € / 110 % = 2200 € / 1,1 = 2.000 €</p>
-            </li>
-
-            <li>
-                <p>Laura spart 15 % ihres monatlichen Einkommens. Wenn sie im letzten Monat 180 Euro gespart hat, wie
-                    hoch war ihr monatliches Einkommen?</p>
-                <p><strong>Lösung:</strong> 180 € / 15 % = 180 € / 0,15 = 1.200 €</p>
-            </li>
-
-            <li>
-                <p>Ein Supermarkt bietet einen Rabatt von 20 % auf alle Lebensmittel an. Wenn der Warenkorb von Marko
-                    normalerweise 50 Euro kostet, wie viel zahlt er dann nach dem Rabatt?</p>
-                <p><strong>Lösung:</strong> 50 € - (20 % von 50 €) = 50 € - 10 € = 40 €</p>
-            </li>
-
-            <li>
-                <p>David hat sein monatliches Budget um 15 % gekürzt und kann nun nur noch 850 Euro pro Monat ausgeben.
-                    Wie hoch war sein ursprüngliches monatliches Budget?</p>
-                <p><strong>Lösung:</strong> 850 € / 85 % = 850 € / 0,85 = 1.000 €</p>
-            </li>
-
-            <li>
-                <p>Anna hat 80 % ihres monatlichen Gehalts für Miete und Nebenkosten ausgegeben. Wenn sie 600 Euro für
-                    Miete und Nebenkosten bezahlt hat, wie hoch ist ihr monatliches Gehalt?</p>
-                <p><strong>Lösung:</strong> 600 € / 80 % = 600 € / 0,80 = 750 €</p>
-            </li>
-
-            <li>
-                <p>Ein Elektronikgeschäft bietet einen Rabatt von 30 % auf alle Fernseher an. Wenn ein Fernseher
-                    normalerweise 400 Euro kostet, wie viel kostet er dann nach dem Rabatt?</p>
-                <p><strong>Lösung:</strong> 400 € - (30 % von 400 €) = 400 € - 120 € = 280 €</p>
-            </li>
-        </ol>
-
-    </details>
-
-    <details>
-        <summary><b>Inventurdifferenzen</b>
-        </summary>
-        <div class="box"><b>Prompt:</b> <i>Erstelle einen kurzen Zeitungsartikel zu Thema Inventurdifferenzen anhand
-                eines Beispielunternehmens (Fahrradhersteller)</i></div>
-
-        <h2>Inventurdifferenzen verursachen Herausforderungen für Fahrradhersteller XYZ</h2>
-
-        Musterstadt, 10. März 2024<br>
-
-        <p><b>Inventurdifferenzen können für Unternehmen zu fehlerhaften Beständen darstellen, und auch der
-                renommierte Fahrradhersteller XYZ bleibt davon nicht unberührt. Das Unternehmen gab kürzlich bekannt,
-                dass
-                es aufgrund von Inventurdifferenzen in beträchtlichem Umfang mit dem Betriebsprüfer des Finanzamts zu
-                kämpfen hat.</b>
-        </p>
-        <p>
-            Trotz der Bemühungen von Fahrradhersteller XYZ, die Genauigkeit seiner Lagerbestände zu gewährleisten,
-            zeigen die aktuellen Zahlen, dass es Unterschiede zwischen den erfassten und den tatsächlichen Beständen
-            gibt. Diese Differenzen haben nicht nur finanzielle Auswirkungen, sondern haben auch dazu geführt, dass das
-            Unternehmen genauer unter die Lupe genommen wird.</p>
-        <p>
-            Die Gründe für diese Differenzen können vielfältig sein, darunter menschliche Fehler bei der
-            Bestandsaufnahme sowie möglicherweise auch Diebstahl oder Verluste während des Transports.
-            Um diesem Problem entgegenzuwirken, hat Fahrradhersteller XYZ bereits Schritte unternommen, darunter die
-            Überprüfung und Verbesserung interner Prozesse sowie Schulungen für Mitarbeiter zur Bestandsverwaltung.
-        </p>
-    </details>
-
     </div>
+    Ergebnis:<img src="media/pic/organigramm.drawio.svg" style="width:100%">
 </main>
 <div w3-include-html="footer.html"></div>
 <script>
