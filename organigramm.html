@@ -31,16 +31,18 @@
         <li>Schritt: Prompt eingeben und per KI erstellen lassen. Dazu verwenden wir entweder direkt <a href="https://www.drawio.com/">draw.io</a> und "Smarte Vorlage" oder zunächst eine textbasierte KI, zum Beispiel:
             <br><code>Erstelle ein fiktives Organigramm mit 4 Ebenen (vertikal von oben nach unten) der Firma Anna-Konrad-Bikes E. Kfr. Formatiere als mermaid. Verwende deutsche Begriffe, konkrete Personennamen und die Standardbereiche: Einkauf, Verkauf, Produktion, Verwaltung. Jeder Bereich soll einen eigenen Leiter mit Namen und mehrere Teammitglieder haben. Füge an Verwaltung den Stab EDV mit einer eigenen Leitung und Team an. Die Felder sollen nicht zu breit werden, füge Zeilenumbrüche ein und trenne Personen und Bereiche.</code>
        <br><br>Beispielergebnis: <br>
-       <pre>graph TD
-       A[CEO<br>Anna Konrad] --> B[Verwaltung<br>Geschäftsführung<br>Lukas Schmidt]
-       A --> C[Einkauf<br>Leitung<br>Max Bauer]A --> D[Verkauf<br>Leitung<br>Lena Müller]
-       A --> E[Produktion<br>Leitung<br>Jonas Wagner]
-       B --> F[EDV<br>Leitung<br>Sarah Weber]
-       F --> G[IT-Team<br>Jan Meier<br>Lisa Schneider]
-       C --> H[Einkaufsteam<br>Marie Fischer<br>Tom Becker]
-       D --> I[Verkaufsteam<br>Julia Braun<br>Tim Hoffmann]
-       E --> J[Produktionsteam<br>Simon Richter<br>Laura Schulz]
-       </pre><br><br>
+       <pre><textarea readonly="readonly" cols="80" rows="12">
+graph TD;
+    A[CEO<br>Anna Konrad] --> B[Verwaltung<br>Geschäftsführung<br>Lukas Schmidt];
+    A --> C[Einkauf<br>Leitung<br>Max Bauer];
+    A --> D[Verkauf<br>Leitung<br>Lena Müller];
+    A --> E[Produktion<br>Leitung<br>Jonas Wagner];
+    B --> F[EDV<br>Leitung<br>Sarah Weber];
+    F --> G[IT-Team<br>Jan Meier<br>Lisa Schneider];
+    C --> H[Einkaufsteam<br>Marie Fischer<br>Tom Becker];
+    D --> I[Verkaufsteam<br>Julia Braun<br>Tim Hoffmann];
+    E --> J[Produktionsteam<br>Simon Richter<br>Laura Schulz];
+       </textarea></pre><br><br>
         </li>
         <li>Schritt: <a href="https://www.drawio.com/">draw.io</a> öffnen und ein neues Diagramm erstellen. Das Beispielergebnis kopieren und unter "Anordnen --> Einfügen --> Erweitert --> Mermaid" einfügen.<br><br></li>
         <li>Schritt (optional): Diagramm bearbeiten und nach Wunsch anpassen.<br><br></li>
