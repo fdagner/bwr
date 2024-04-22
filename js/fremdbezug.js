@@ -192,7 +192,7 @@ function erstelleZufallssatz() {
     random_menge = formatiereMenge(random_menge);
 
     const array_Subjekt = [
-        `In der Einkaufsabteilung wird diskutiert, ob es sich im nächsten Abrechnungszeitraum lohnt ${random_menge} Stück Fremdbauteile selbst herzustellen`,
+        `In der Einkaufsabteilung wird diskutiert, ob es sich im nächsten Abrechnungszeitraum lohnt, ${random_menge} Stück Fremdbauteile selbst herzustellen`,
         `Wir benötigen im nächsten Abrechnungszeitraum ${random_menge} Fremdbauteile. Aufgrund freier Kapazitäten wird im Zweigwerk die Eigenfertigung beabsichtigt`,
     ];
     const array_Subjekt2 = [
