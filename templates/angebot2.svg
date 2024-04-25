@@ -14,19 +14,19 @@
 <!--Gruppe für Kunden- und Liefererdaten-->
   <g id="kundenDaten">
 <!--Kundenanschrift links-->
-    <text id="nameKunde" x="20" y="200" font-family="Verdana" font-size="17" fill="#333"/>
-    <text id="inhaberKunde" x="20" y="220" font-family="Verdana" font-size="17" fill="#333"/>
-    <text id="strasseKunde" x="20" y="240" font-family="Verdana" font-size="17" fill="#333"/>
-    <text id="plzKunde" x="20" y="260" font-family="Verdana" font-size="17" fill="#333"/>
+    <text id="nameKunde" x="20" y="200" font-family="Verdana" font-size="18" fill="#333"/>
+    <text id="inhaberKunde" x="20" y="220" font-family="Verdana" font-size="18" fill="#333"/>
+    <text id="strasseKunde" x="20" y="240" font-family="Verdana" font-size="18" fill="#333"/>
+    <text id="plzKunde" x="20" y="260" font-family="Verdana" font-size="18" fill="#333"/>
   </g>
 <!--Liefererdaten rechts-->
   <g id="liefererDaten">
-    <text id="nameLangLieferer" x="710" y="200" font-family="Verdana" font-size="14" text-anchor="end" fill="#333"/>
-    <text id="strasseLieferer" x="710" y="215" font-family="Verdana" font-size="14" text-anchor="end" fill="#333"/>
-    <text id="plzLieferer" x="710" y="230" font-family="Verdana" font-size="14" text-anchor="end" fill="#333"/>
-    <text id="telefonLieferer" x="710" y="245" font-family="Verdana" text-anchor="end" font-size="14" fill="#333"/>
-    <text id="emailLieferer" x="710" y="260" font-family="Verdana" text-anchor="end" font-size="14" fill="#333"/>
-    <text id="internetLieferer" x="710" y="275" font-family="Verdana" font-size="14" text-anchor="end" fill="#333"/>
+    <text id="nameLangLieferer" x="710" y="200" font-family="Verdana" font-size="16" text-anchor="end" fill="#333"/>
+    <text id="strasseLieferer" x="710" y="220" font-family="Verdana" font-size="16" text-anchor="end" fill="#333"/>
+    <text id="plzLieferer" x="710" y="240" font-family="Verdana" font-size="16" text-anchor="end" fill="#333"/>
+    <text id="telefonLieferer" x="710" y="260" font-family="Verdana" text-anchor="end" font-size="16" fill="#333"/>
+    <text id="emailLieferer" x="710" y="280" font-family="Verdana" text-anchor="end" font-size="16" fill="#333"/>
+    <text id="internetLieferer" x="710" y="300" font-family="Verdana" font-size="16" text-anchor="end" fill="#333"/>
   </g>
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
@@ -34,8 +34,8 @@
     <text id="lieferdatum" x="-120" y="380" font-family="Verdana" font-size="0" fill="#333"><tspan id="rechnungsNummer"/><tspan class="rechnungsDatum"></tspan><tspan class="aktuellesJahr"/></text>
     <text x="-120" y="410" font-family="Verdana" font-size="0" fill="#333"><tspan id="nummerKunde"/></text>
     <text id="datum" x="690" y="340" font-family="Verdana" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
-    <text id="datum" x="20" y="420" font-family="Verdana" font-size="15" fill="#333" text-anchor="start">Wir bedanken uns für Ihre Anfrage.</text>
-   <text id="datum" x="20" y="440" font-family="Verdana" font-size="15" fill="#333" text-anchor="start">Gerne unterbreiten wir hiermit folgendes Angebot:</text>
+    <text id="datum" x="20" y="420" font-family="Verdana" font-size="17" fill="#333" text-anchor="start">Wir bedanken uns für Ihre Anfrage.</text>
+   <text id="datum" x="20" y="440" font-family="Verdana" font-size="17" fill="#333" text-anchor="start">Gerne unterbreiten wir hiermit folgendes Angebot:</text>
   </g>
 <!--Gruppe für Bestelldaten-->
   <g id="bestellDaten">
@@ -84,7 +84,7 @@
   </g>
 <!--Gruppe für Zahlungsbedingungen-->
   <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Verdana" font-size="15" fill="#333">
-    <text x="350" y="810">Das Zahlungsziel beträgt <tspan id="zahlungsziel"> </tspan> Tagen rein netto. </text>
+    <text x="350" y="810">Das Zahlungsziel beträgt <tspan id="zahlungsziel"> </tspan> Tage rein netto. </text>
     <text id="skontotext" x="350" y="830">Der Abzug von <tspan id="skonto"> </tspan> % Skonto ist möglich bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen.</text>
     <text x="350" y="850">Wir liefern in <tspan id="angebotLieferzeit"></tspan> Tagen <tspan id="bezugskostenBedingung"></tspan><tspan id="Eigentumsvorbehalt"> unter Eigentumsvorbehalt</tspan>.</text>
       <text x="350" y="870">Wir würden uns freuen, wenn unser Angebot Ihre Zustimmung findet!</text>
@@ -93,11 +93,11 @@
     <text id="ansprechpartnerLieferer" x="20" y="930" font-family="Verdana"  text-anchor="start" font-size="17"/>
   </g>
   <g id="footerText" transform="translate(0,-10)" fill="#fff">
-    <text id="bankLieferer" x="20" y="1000" font-family="Calibri" font-size="15" fill="#000" />
-    <text id="ibanLieferer" x="20" y="1020" font-family="Calibri" font-size="15" fill="#000" />
-    <text id="bicLieferer" x="20" y="1040" font-family="Calibri" font-size="15" fill="#000" />
-    <text id="amtsgerichtLieferer" x="700" y="1000" font-family="Calibri" font-size="15" fill="#000" text-anchor="end"/>
-    <text id="ustidLieferer" x="700" y="1020" font-family="Calibri" font-size="15" fill="#000" text-anchor="end"/>
-    <text id="steuernummerLieferer" x="700" y="1040" font-family="Calibri" font-size="15" fill="#000" text-anchor="end"/>
+    <text id="bankLieferer" x="20" y="1000" font-family="Calibri" font-size="17" fill="#000" />
+    <text id="ibanLieferer" x="20" y="1020" font-family="Calibri" font-size="17" fill="#000" />
+    <text id="bicLieferer" x="20" y="1040" font-family="Calibri" font-size="17" fill="#000" />
+    <text id="amtsgerichtLieferer" x="700" y="1000" font-family="Calibri" font-size="17" fill="#000" text-anchor="end"/>
+    <text id="ustidLieferer" x="700" y="1020" font-family="Calibri" font-size="17" fill="#000" text-anchor="end"/>
+    <text id="steuernummerLieferer" x="700" y="1040" font-family="Calibri" font-size="17" fill="#000" text-anchor="end"/>
   </g>
 </svg>
