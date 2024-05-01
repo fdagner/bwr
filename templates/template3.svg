@@ -13,23 +13,23 @@
     <text id="adresseLieferer" x="20" y="150" font-family="Arial" font-style="italic" font-size="14" fill="#333"/>
   </g>
 <!--Gruppe für Kunden- und Liefererdaten-->
-  <g id="kundenDaten">
+  <g id="kundenDaten"  font-size="18">
 <!--Kundenanschrift links-->
-    <text id="nameKunde" x="20" y="200" font-family="Arial" font-size="17" fill="#333"/>
-    <text id="inhaberKunde" x="20" y="220" font-family="Arial" font-size="17" fill="#333"/>
-    <text id="strasseKunde" x="20" y="240" font-family="Arial" font-size="17" fill="#333"/>
-    <text id="plzKunde" x="20" y="260" font-family="Arial" font-size="17" fill="#333"/>
+    <text id="nameKunde" x="20" y="200" font-family="Arial" fill="#333"/>
+    <text id="inhaberKunde" x="20" y="220" font-family="Arial" fill="#333"/>
+    <text id="strasseKunde" x="20" y="240" font-family="Arial" fill="#333"/>
+    <text id="plzKunde" x="20" y="260" font-family="Arial" fill="#333"/>
   </g>
 <!--Liefererdaten rechts-->
-  <g id="liefererDaten">
-    <text id="nameLangLieferer" x="555" y="200" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
-    <text id="strasseLieferer" x="555" y="215" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
-    <text id="plzLieferer" x="555" y="230" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
-    <text id="ansprechpartnerLieferer" x="555" y="245" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
-    <text id="telefonLieferer" x="555" y="260" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
-    <text id="emailLieferer" x="555" y="275" font-family="Arial" text-anchor="start" font-size="14" fill="#333"/>
-    <text x="550" y="290" font-family="Arial" font-size="14" fill="#808080" text-anchor="end"></text>
-    <text id="internetLieferer" x="555" y="290" font-family="Arial" font-size="14" text-anchor="start" fill="#333"/>
+  <g id="liefererDaten"  font-size="17">
+    <text id="nameLangLieferer" x="555" y="200" font-family="Arial"  text-anchor="start" fill="#333"/>
+    <text id="strasseLieferer" x="555" y="215" font-family="Arial"  text-anchor="start" fill="#333"/>
+    <text id="plzLieferer" x="555" y="230" font-family="Arial"  text-anchor="start" fill="#333"/>
+    <text id="ansprechpartnerLieferer" x="555" y="245" font-family="Arial" text-anchor="start"  fill="#333"/>
+    <text id="telefonLieferer" x="555" y="260" font-family="Arial" text-anchor="start"  fill="#333"/>
+    <text id="emailLieferer" x="555" y="275" font-family="Arial" text-anchor="start"  fill="#333"/>
+    <text x="550" y="290" font-family="Arial"  fill="#808080" text-anchor="end"></text>
+    <text id="internetLieferer" x="555" y="290" font-family="Arial"  text-anchor="start" fill="#333"/>
   </g>
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
@@ -91,12 +91,12 @@
     <text id="skontotext" x="350" y="890">Falls Sie innerhalb von <tspan id="skontofrist"> </tspan> Tagen zahlen, gewähren wir Ihnen <tspan id="skonto"> </tspan> % Skonto</text>
     <text id="Eigentumsvorbehalt" x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
   </g>
-  <g id="footerText" transform="translate(0,-20)" fill="#fff">
-    <text id="bankLieferer" x="20" y="1000" font-family="Arial" font-size="15" />
-    <text id="ibanLieferer" x="20" y="1020" font-family="Arial" font-size="15" />
-    <text id="bicLieferer" x="20" y="1040" font-family="Arial" font-size="15" />
-    <text id="amtsgerichtLieferer" x="700" y="1000" font-family="Arial" font-size="15" text-anchor="end"/>
-    <text id="ustidLieferer" x="700" y="1020" font-family="Arial" font-size="15" text-anchor="end"/>
-    <text id="steuernummerLieferer" x="700" y="1040" font-family="Arial" font-size="15" text-anchor="end"/>
+  <g id="footerText" transform="translate(0,-20)" fill="#fff" font-size="18">
+    <text id="bankLieferer" x="20" y="1000" font-family="Arial"  />
+    <text id="ibanLieferer" x="20" y="1020" font-family="Arial"  />
+    <text id="bicLieferer" x="20" y="1040" font-family="Arial"  />
+    <text id="amtsgerichtLieferer" x="700" y="1000" font-family="Arial"  text-anchor="end"/>
+    <text id="ustidLieferer" x="700" y="1020" font-family="Arial"  text-anchor="end"/>
+    <text id="steuernummerLieferer" x="700" y="1040" font-family="Arial"  text-anchor="end"/>
   </g>
 </svg>
