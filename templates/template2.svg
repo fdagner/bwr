@@ -20,27 +20,27 @@
     <text id="plzKunde" x="20" y="260" font-family="Calibri" font-size="20" fill="#333"/>
   </g>
 <!--Liefererdaten rechts-->
-  <g id="liefererDaten">
-    <text x="550" y="200" font-family="Calibri" text-anchor="end" font-size="15" fill="#808080">Firma:</text>
-    <text id="nameLangLieferer" x="555" y="200" font-family="Calibri" font-size="15" text-anchor="start" fill="#333"/>
-    <text x="550" y="215" font-family="Calibri" text-anchor="end" font-size="15" fill="#808080">Straße:</text>
-    <text id="strasseLieferer" x="555" y="215" font-family="Calibri" font-size="15" text-anchor="start" fill="#333"/>
-    <text x="550" y="230" font-family="Calibri" text-anchor="end" font-size="15" fill="#808080">Ort:</text>
-    <text id="plzLieferer" x="555" y="230" font-family="Calibri" font-size="15" text-anchor="start" fill="#333"/>
-    <text x="550" y="245" font-family="Calibri" font-size="15" fill="#808080" text-anchor="end">Ansprechpartner:</text>
-    <text id="ansprechpartnerLieferer" x="555" y="245" font-family="Calibri" text-anchor="start" font-size="15" fill="#333"/>
-    <text x="550" y="260" font-family="Calibri" font-size="15" fill="#808080" text-anchor="end">Tel.:</text>
-    <text id="telefonLieferer" x="555" y="260" font-family="Calibri" text-anchor="start" font-size="15" fill="#333"/>
-    <text x="550" y="275" font-family="Calibri" font-size="15" fill="#808080" text-anchor="end">Mail:</text>
-    <text id="emailLieferer" x="555" y="275" font-family="Calibri" text-anchor="start" font-size="15" fill="#333"/>
-    <text x="550" y="290" font-family="Calibri" font-size="15" fill="#808080" text-anchor="end">Internet:</text>
-    <text id="internetLieferer" x="555" y="290" font-family="Calibri" font-size="15" text-anchor="start" fill="#333"/>
+  <g id="liefererDaten" font-size="18">
+    <text x="550" y="200" font-family="Calibri" text-anchor="end"  fill="#808080">Firma:</text>
+    <text id="nameLangLieferer" x="555" y="200" font-family="Calibri"  text-anchor="start" fill="#333"/>
+    <text x="550" y="215" font-family="Calibri" text-anchor="end"  fill="#808080">Straße:</text>
+    <text id="strasseLieferer" x="555" y="215" font-family="Calibri"  text-anchor="start" fill="#333"/>
+    <text x="550" y="230" font-family="Calibri" text-anchor="end"  fill="#808080">Ort:</text>
+    <text id="plzLieferer" x="555" y="230" font-family="Calibri"  text-anchor="start" fill="#333"/>
+    <text x="550" y="245" font-family="Calibri"  fill="#808080" text-anchor="end">Ansprechpartner:</text>
+    <text id="ansprechpartnerLieferer" x="555" y="245" font-family="Calibri" text-anchor="start"  fill="#333"/>
+    <text x="550" y="260" font-family="Calibri"  fill="#808080" text-anchor="end">Tel.:</text>
+    <text id="telefonLieferer" x="555" y="260" font-family="Calibri" text-anchor="start"  fill="#333"/>
+    <text x="550" y="275" font-family="Calibri"  fill="#808080" text-anchor="end">Mail:</text>
+    <text id="emailLieferer" x="555" y="275" font-family="Calibri" text-anchor="start"  fill="#333"/>
+    <text x="550" y="290" font-family="Calibri"  fill="#808080" text-anchor="end">Internet:</text>
+    <text id="internetLieferer" x="555" y="290" font-family="Calibri"  text-anchor="start" fill="#333"/>
   </g>
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
     <text x="20" y="380" font-family="Calibri" font-weight="bold" font-size="34" fill="#333">R E C H N U N G</text>
     <text x="20" y="410"  font-family="Calibri" font-weight="bold" font-size="20" fill="#333">Nummer <tspan class="aktuellesJahr"/>/<tspan id="rechnungsNummer"></tspan></text>
-    <text id="lieferdatum" x="20" y="620" font-weight="bold" font-size="15" fill="#333">- Lieferung <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/> -</text>
+    <text id="lieferdatum" x="20" y="620" font-weight="bold" font-size="16" fill="#333">- Lieferung <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/> -</text>
     <text x="20" y="430"  font-family="Calibri" font-weight="bold" font-size="20" fill="#333">Kunde <tspan id="nummerKunde"/></text>
     <text id="datum" x="690" y="380" font-family="Calibri" font-size="24" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
   </g>
@@ -97,12 +97,12 @@
     <text id="skontotext" x="350" y="890">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto</text>
     <text id="Eigentumsvorbehalt" x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
   </g>
-  <g id="footerText" transform="translate(0,-10)" fill="#fff">
-    <text id="bankLieferer" x="20" y="1000" font-family="Calibri" font-size="15" fill="#000" />
-    <text id="ibanLieferer" x="20" y="1020" font-family="Calibri" font-size="15" fill="#000" />
-    <text id="bicLieferer" x="20" y="1040" font-family="Calibri" font-size="15" fill="#000" />
-    <text id="amtsgerichtLieferer" x="700" y="1000" font-family="Calibri" font-size="15" fill="#000" text-anchor="end"/>
-    <text id="ustidLieferer" x="700" y="1020" font-family="Calibri" font-size="15" fill="#000" text-anchor="end"/>
-    <text id="steuernummerLieferer" x="700" y="1040" font-family="Calibri" font-size="15" fill="#000" text-anchor="end"/>
+  <g id="footerText" font-size="18" transform="translate(0,-10)" fill="#fff">
+    <text id="bankLieferer" x="20" y="1000" font-family="Calibri"  fill="#000" />
+    <text id="ibanLieferer" x="20" y="1020" font-family="Calibri"  fill="#000" />
+    <text id="bicLieferer" x="20" y="1040" font-family="Calibri"  fill="#000" />
+    <text id="amtsgerichtLieferer" x="700" y="1000" font-family="Calibri"  fill="#000" text-anchor="end"/>
+    <text id="ustidLieferer" x="700" y="1020" font-family="Calibri"  fill="#000" text-anchor="end"/>
+    <text id="steuernummerLieferer" x="700" y="1040" font-family="Calibri"  fill="#000" text-anchor="end"/>
   </g>
 </svg>
