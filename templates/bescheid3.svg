@@ -9,46 +9,46 @@
  <text id="adresseStadt" x="20" y="150" font-style="italic" font-size="14" fill="#333">Zweckverband <tspan class="bescheidOrt"></tspan>, Am Wasserwerk 1, <tspan class="bescheidOrtInhaber"></tspan></text>
  </g>
 <!--Gruppe für Kunden- und Liefererdaten-->
- <g id="kundenDaten">
+ <g id="kundenDaten" font-size="18">
 <!--Kundenanschrift links-->
- <text id="bescheidName" x="20" y="200" font-size="16" fill="#333"/>
- <text id="bescheidInhaber" x="20" y="220" font-size="16" fill="#333"/>
- <text class="bescheidStrasse" x="20" y="240" font-size="16" fill="#333"/>
- <text class="bescheidOrtInhaber" x="20" y="260" font-size="16" fill="#333"/>
+ <text id="bescheidName" x="20" y="200" fill="#333"/>
+ <text id="bescheidInhaber" x="20" y="220" fill="#333"/>
+ <text class="bescheidStrasse" x="20" y="240" fill="#333"/>
+ <text class="bescheidOrtInhaber" x="20" y="260" fill="#333"/>
 
  </g>
 <!--Liefererdaten rechts-->
- <g id="liefererDaten">
- <text x="620" y="200" text-anchor="end" font-size="14" fill="#808080" text-anchor="end">Unser Zeichen:</text>
- <text x="630" y="200" font-size="14" text-anchor="start" fill="#333">KA</text>
- <text x="620" y="215" text-anchor="end" font-size="14" fill="#808080" text-anchor="end">Zimmer:</text>
- <text x="630" y="215" font-size="14" text-anchor="start" fill="#333">K76</text>
- <text x="620" y="230" text-anchor="end" font-size="14" fill="#808080" text-anchor="end">Tel. Durchwahl:</text>
- <text x="630" y="230" font-size="14" text-anchor="start" fill="#333">11503</text>
-  <text x="620" y="245" text-anchor="end" font-size="14" fill="#808080" text-anchor="end">Bescheid-Nr.:</text>
- <text x="630" y="245" font-size="14" text-anchor="start" fill="#333"><tspan id="bescheidNummer"></tspan></text>
-<text x="620" y="260" text-anchor="end" font-size="14" fill="#808080" text-anchor="end">Mandatsreferenz:</text>
- <text x="630" y="260" font-size="14" text-anchor="start" fill="#333">M-<tspan id="bescheidAktenzeichen1"></tspan></text>
+ <g id="liefererDaten" font-size="18">
+ <text x="580" y="200" text-anchor="end" fill="#808080" text-anchor="end">Unser Zeichen:</text>
+ <text x="590" y="200" text-anchor="start" fill="#333">KA</text>
+ <text x="580" y="215" text-anchor="end" fill="#808080" text-anchor="end">Zimmer:</text>
+ <text x="590" y="215" text-anchor="start" fill="#333">K76</text>
+ <text x="580" y="230" text-anchor="end" fill="#808080" text-anchor="end">Tel. Durchwahl:</text>
+ <text x="590" y="230" text-anchor="start" fill="#333">11503</text>
+  <text x="580" y="245" text-anchor="end" fill="#808080" text-anchor="end">Bescheid-Nr.:</text>
+ <text x="590" y="245" text-anchor="start" fill="#333"><tspan id="bescheidNummer"></tspan></text>
+<text x="580" y="260" text-anchor="end" fill="#808080" text-anchor="end">Mandatsreferenz:</text>
+ <text x="590" y="260"  text-anchor="start" fill="#333">M-<tspan id="bescheidAktenzeichen1"></tspan></text>
  </g>
 <!--Gruppe für Rechnungsinformationen-->
  <g id="rechnungsInformationen">
  <text x="20" y="350" font-weight="bold" font-size="22" fill="#333">Bescheid über Abwassergebühren</text>
- <text x="20" y="390" font-size="14" fill="#333">Rechtsgrundlage sind die Gebührensatzungen</text>
-  <text x="20" y="410" font-size="14" fill="#333">für Schmutzwasser und Niederschlagswasser</text>
+ <text x="20" y="390" font-size="18" fill="#333">Rechtsgrundlage sind die Gebührensatzungen</text>
+  <text x="20" y="410" font-size="18" fill="#333">für Schmutzwasser und Niederschlagswasser</text>
 
- <text x="710" y="420" font-size="14" fill="#333" text-anchor="end"></text>
- <text id="datum" x="710" y="350" font-size="16" fill="#333" text-anchor="end"><tspan id="bescheidTag">01</tspan>.<tspan id="bescheidMonat">01</tspan>.</tspan><tspan class="aktuellesJahrBescheid"/></text>
+ <text x="710" y="420" font-size="18" fill="#333" text-anchor="end"></text>
+ <text id="datum" x="710" y="350" font-size="18" fill="#333" text-anchor="end"><tspan id="bescheidTag">01</tspan>.<tspan id="bescheidMonat">01</tspan>.</tspan><tspan class="aktuellesJahrBescheid"/></text>
  </g>
 <!--Gruppe für Objekt-->
 
- <text x="20" y="450" fill="#000" font-size="16" font-weight="bold" text-anchor="start">Verbrauchsstelle</text>
- <g font-size="14">
+ <text x="20" y="450" fill="#000" font-size="18" font-weight="bold" text-anchor="start">Verbrauchsstelle</text>
+ <g font-size="18">
  <text x="20" y="480" fill="#333"><tspan class="bescheidStrasse"></tspan><tspan> //001</tspan></text>
  <text class="bescheidOrtInhaber" x="20" y="500" fill="#333" text-anchor="start"/>
  </g>
 
  <!--Gruppe für Messbetrag-->
- <g id="bestellDaten" font-size="14">
+ <g id="bestellDaten" font-size="18">
  <rect x="20" y="600" width="680" height="2" fill="#000"/>
  <text x="20" y="560" fill="#000" font-size="16" font-weight="bold">Gebührenberechnung</text>
  <text x="20" y="590" fill="#000" font-weight="bold">Jahr</text>
@@ -61,7 +61,7 @@
  <text id="bescheidAbfallgebuehr" x="660" y="620" fill="#000" text-anchor="end"></text>
  </g>
 
- <text x="20" y="670" fill="#000" font-size="14" text-anchor="start">Überweisen Sie den Betrag unter Angabe der Mandatreferenz auf unser Bankkonto.</text>
+ <text x="20" y="670" fill="#000" font-size="16" text-anchor="start">Überweisen Sie den Betrag unter Angabe der Mandatreferenz auf unser Bankkonto.</text>
  
 
 <circle cx="10" cy="720" r="10" stroke-width="1" stroke="gray" fill="white" />
