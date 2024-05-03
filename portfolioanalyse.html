@@ -18,15 +18,32 @@
       <h2>Portfolioanalyse</h2>
       <div class="box">
         <div class="grid">
-          <label for="portfolioA">Question Mark:</label>
-          <input type="text" id="portfolioA" value="❓Question Mark">
-          <label for="portfolioB">Stars:</label>
-          <input type="text" id="portfolioB" value="⭐ Stars">
-          <label for="portfolioC">Cash Cows:</label>
-          <input type="text" id="portfolioC" value="🐮Cash Cows">
-          <label for="portfolioD">Poor Dogs:</label>
-          <input type="text" id="portfolioD" value="🐶 Poor Dogs">
+          <div>
+            <label for="portfolioA">Question Mark:</label><br>
+            <input type="text" id="portfolioAx" placeholder="X-Koordinate" value="25"><br>
+            <input type="text" id="portfolioAy" placeholder="Y-Koordinate" value="30"><br>
+            <input type="text" id="portfolioA" value="❓Question Mark">
+          </div>
+          <div>
+            <label for="portfolioB">Stars:</label><br>
+            <input type="text" id="portfolioBx" placeholder="X-Koordinate" value="150"><br>
+            <input type="text" id="portfolioBy" placeholder="Y-Koordinate" value="35"><br>
+            <input type="text" id="portfolioB" value="⭐ Stars">
+          </div>
+          <div>
+            <label for="portfolioC">Cash Cows:</label><br>
+            <input type="text" id="portfolioCx" placeholder="X-Koordinate" value="150"><br>
+            <input type="text" id="portfolioCy" placeholder="Y-Koordinate" value="15"><br>
+            <input type="text" id="portfolioC" value="🐮Cash Cows">
+          </div>
+          <div>
+            <label for="portfolioD">Poor Dogs:</label><br>
+            <input type="text" id="portfolioDx" placeholder="X-Koordinate" value="25"><br>
+            <input type="text" id="portfolioDy" placeholder="Y-Koordinate" value="5"><br>
+            <input type="text" id="portfolioD" value="🐶 Poor Dogs">
+          </div>
         </div>
+        
         <div class="flex-row"><button onclick="portfolioToggleText()"><svg xmlns="http://www.w3.org/2000/svg"
               height="14" width="12" fill="#ff4800"
               viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -40,7 +57,9 @@
                 d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
             </svg> Farbe</button>
         </div>
-        <button onclick="randomizePortfolios()">Neues Portfolio</button>
+        <button onclick="randomizePortfolios()">Zufälliges Portfolio</button>
+        <button onclick="generatePortfolio()">Portfolio erstellen</button>
+    
       </div>
       <div id="portfolioContainer">
         <svg id="portfolioSVG" style="width:100%;background-color:#fff;" xmlns="http://www.w3.org/2000/svg"
@@ -59,8 +78,8 @@
           <text x="60" y="395" font-size="12" fill="#333" text-anchor="middle">0 %</text>
           <text x="187.5" y="395" font-size="12" fill="#333" text-anchor="middle">50 %</text>
           <text x="325" y="395" font-size="12" fill="#333" text-anchor="middle">100 %</text>
-          <text x="462.5" y="395" font-size="12" fill="#333" text-anchor="middle">125 %</text>
-          <text x="600" y="395" font-size="12" fill="#333" text-anchor="middle">150 %</text>
+          <text x="462.5" y="395" font-size="12" fill="#333" text-anchor="middle">150 %</text>
+          <text x="600" y="395" font-size="12" fill="#333" text-anchor="middle">200 %</text>
           <!-- Y-Achse Unterteilung und Beschriftung -->
           <line x1="50" y1="0" x2="60" y2="0" stroke="#333" stroke-width="1" />
           <text x="30" y="5" font-size="12" fill="#333" text-anchor="middle">40 %</text>
@@ -79,8 +98,8 @@
           <text class="item text" x="460" y="260" font-size="18" fill="#333" transform="translate(15,5)">🐮Cash
             Cows</text>
           <!-- Portfolio A -->
-          <circle class="item circle" cx="130" cy="140" r="10" fill="#000" />
-          <text class="item text" x="130" y="140" font-size="18" fill="#333" transform="translate(15,5)">❓Question
+          <circle class="item circle" r="10" fill="#000" />
+          <text class="item text"  font-size="18" fill="#333" transform="translate(15,5)">❓Question
             Mark</text>
 
           <!-- Beschriftungen -->
