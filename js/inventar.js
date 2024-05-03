@@ -103,7 +103,7 @@ function inventarKopiereInZwischenablage() {
 function inventarHerunterladenAlsPNG() {
     const inventarContainer = document.getElementById('inventarContainer');
 
-    html2canvas(inventarContainer).then(canvas => {
+    html2canvas(inventarContainer, optionshtml2canvas).then(canvas => {
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;

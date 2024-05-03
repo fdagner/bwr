@@ -62,7 +62,7 @@ function vorkontierungKopiereInZwischenablage() {
 function vorkontierungHerunterladenAlsPNG() {
   const vorkontierungContainer = document.getElementById('vorkontierungContainer');
 
-  html2canvas(vorkontierungContainer).then(canvas => {
+  html2canvas(vorkontierungContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;

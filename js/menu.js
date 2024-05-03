@@ -52,3 +52,8 @@ function includeHTML() {
       }
     }
   };
+
+   // Konfigurationsoptionen für html2canvas
+   const optionshtml2canvas = {
+    scale: 2, // Maßstab für die Ausgabeauflösung
+  };

@@ -140,7 +140,7 @@ function kopiereInZwischenablage() {
 
 function herunterladenAlsPNG() {
   const tkontoContainer = document.getElementById('tkontoContainer');
-  html2canvas(tkontoContainer).then(canvas => {
+  html2canvas(tkontoContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;

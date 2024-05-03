@@ -570,7 +570,7 @@ function verkaufKopiereInZwischenablage() {
 function verkaufHerunterladenAlsPNG() {
   const verkaufContainer = document.getElementById('verkaufContainer');
 
-  html2canvas(verkaufContainer).then(canvas => {
+  html2canvas(verkaufContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;

@@ -51,7 +51,7 @@ function produktlebenszyklusKopiereInZwischenablage() {
 function produktlebenszyklusHerunterladenAlsPNG() {
   const produktlebenszyklusContainer = document.getElementById('produktlebenszyklusContainer');
 
-  html2canvas(produktlebenszyklusContainer).then(canvas => {
+  html2canvas(produktlebenszyklusContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;

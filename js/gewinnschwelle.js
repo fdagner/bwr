@@ -335,7 +335,7 @@ function generateChart() {
 function gewinnschwelleHerunterladenAlsPNG() {
   const wertetabelle = document.getElementById("gewinnschwelleContainer");
 
-  html2canvas(wertetabelle).then((canvas) => {
+  html2canvas(wertetabelle, optionshtml2canvas).then((canvas) => {
     const dataURL = canvas.toDataURL("image/png");
     const a = document.createElement("a");
     a.href = dataURL;
@@ -366,10 +366,10 @@ function gewinnschwelleHerunterladen() {
 }
 
 
-function gewinnschwelleHerunterladenAlsPNG() {
-  const wertetabelle = document.getElementById('gewinnschwelleAufgabeContainer');
+function gewinnschwelleChartHerunterladenAlsPNG() {
+  const wertetabelle = document.getElementById('gewinnschwelleContainer');
 
-  html2canvas(wertetabelle).then(canvas => {
+  html2canvas(wertetabelle, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
