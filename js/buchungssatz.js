@@ -58,7 +58,7 @@ function buchungssatzKopiereInZwischenablage() {
 function buchungssatzHerunterladenAlsPNG() {
   const buchungssatzContainer = document.getElementById('buchungssatzContainer');
 
-  html2canvas(buchungssatzContainer).then(canvas => {
+  html2canvas(buchungssatzContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
@@ -67,6 +67,8 @@ function buchungssatzHerunterladenAlsPNG() {
     a.click();
     document.body.removeChild(a);
   });
+  scale: 2;
+  onrendered: myRenderFunction;
 }
 
 let clipboardBuchungssatz = new ClipboardJS('#officeButtonBuchungssatz');

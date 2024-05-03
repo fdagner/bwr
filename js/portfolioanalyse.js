@@ -112,7 +112,7 @@ function portfolioKopiereInZwischenablage() {
 function portfolioHerunterladenAlsPNG() {
   const portfolioContainer = document.getElementById('portfolioContainer');
 
-  html2canvas(portfolioContainer).then(canvas => {
+  html2canvas(portfolioContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;

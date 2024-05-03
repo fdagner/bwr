@@ -589,7 +589,7 @@ function einkaufKopiereInZwischenablage() {
 function einkaufHerunterladenAlsPNG() {
   const einkaufContainer = document.getElementById('einkaufContainer');
 
-  html2canvas(einkaufContainer).then(canvas => {
+  html2canvas(einkaufContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;

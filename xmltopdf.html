@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XML to HTML Converter</title>
+</head>
+<body>
+<h1>XML to HTML Converter</h1>
+<input type="file" id="fileInput" accept=".xml">
+<button id="convertButton">Convert to HTML</button>
+<div id="output"></div>
+<script>document.getElementById('convertButton').addEventListener('click', function() {
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
+    
+    if (file) {
+        var reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = function(event) {
+            var xmlString = event.target.result;
+            var htmlString = convertToHTML(xmlString);
+            displayHTML(htmlString);
+        }
+    } else {
+        alert('Please select an XML file.');
+    }
+});
+
+function convertToHTML(xmlString) {
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+    
+    var htmlString = '<ul>';
+    var root = xmlDoc.documentElement;
+    traverseXML(root, '', htmlString);
+    htmlString += '</ul>';
+    
+    return htmlString;
+}
+
+function traverseXML(node, indent, htmlString) {
+    var children = node.childNodes;
+    for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        if (child.nodeType === 1) { // Element node
+            htmlString += '<li>' + indent + child.nodeName + ': ' + child.textContent + '</li>';
+            traverseXML(child, indent + '&nbsp;&nbsp;', htmlString);
+        }
+    }
+}
+
+function displayHTML(htmlString) {
+    var outputDiv = document.getElementById('output');
+    outputDiv.innerHTML = htmlString;
+}
+
+</script>
+</body>
+</html>

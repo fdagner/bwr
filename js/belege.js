@@ -2101,7 +2101,7 @@ function toggleInput(inputId, checkboxId) {
 function herunterladenAlsPNG(containerId, dateiname) {
     const container = document.getElementById(containerId);
 
-    html2canvas(container).then(canvas => {
+    html2canvas(container, optionshtml2canvas).then(canvas => {
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;

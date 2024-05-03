@@ -331,7 +331,7 @@ function produktlebenszyklusKopiereInZwischenablage() {
 function produktlebenszyklusHerunterladenAlsPNG() {
   const produktlebenszyklusContainer = document.getElementById('produktlebenszyklusContainer');
 
-  html2canvas(produktlebenszyklusContainer).then(canvas => {
+  html2canvas(produktlebenszyklusContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
@@ -456,7 +456,7 @@ function portfolioKopiereInZwischenablage() {
 function portfolioHerunterladenAlsPNG() {
   const portfolioContainer = document.getElementById('portfolioContainer');
 
-  html2canvas(portfolioContainer).then(canvas => {
+  html2canvas(portfolioContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
@@ -470,7 +470,7 @@ function portfolioHerunterladenAlsPNG() {
 function bestellmengeDiagrammHerunterladenAlsPNG() {
   const portfolioContainer = document.getElementById('myChart');
 
-  html2canvas(portfolioContainer).then(canvas => {
+  html2canvas(portfolioContainer, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
@@ -504,7 +504,7 @@ function bestellmengeHerunterladen() {
 function bestellmengeHerunterladenAlsPNG() {
   const wertetabelle = document.getElementById('wertetabelle');
 
-  html2canvas(wertetabelle).then(canvas => {
+  html2canvas(wertetabelle, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;

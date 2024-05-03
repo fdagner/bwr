@@ -288,7 +288,7 @@ function fremdbezugKopiereInZwischenablage() {
 function fremdbezugHerunterladenAlsPNG() {
     const fremdbezugContainer = document.getElementById('fremdbezugContainer');
 
-    html2canvas(fremdbezugContainer).then(canvas => {
+    html2canvas(fremdbezugContainer, optionshtml2canvas).then(canvas => {
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;
@@ -302,7 +302,7 @@ function fremdbezugHerunterladenAlsPNG() {
 function fremdbezugDiagrammHerunterladenAlsPNG() {
     const fremdbezugContainer = document.getElementById('fremdbezugChart');
 
-    html2canvas(fremdbezugContainer).then(canvas => {
+    html2canvas(fremdbezugContainer, optionshtml2canvas).then(canvas => {
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;

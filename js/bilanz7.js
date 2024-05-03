@@ -87,7 +87,7 @@ function bilanz7KopiereInZwischenablage() {
 function bilanz7HerunterladenAlsPNG() {
     const bilanz7Container = document.getElementById('bilanz7Container');
 
-    html2canvas(bilanz7Container).then(canvas => {
+    html2canvas(bilanz7Container, optionshtml2canvas).then(canvas => {
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;
