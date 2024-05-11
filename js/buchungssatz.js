@@ -67,8 +67,6 @@ function buchungssatzHerunterladenAlsPNG() {
     a.click();
     document.body.removeChild(a);
   });
-  scale: 2;
-  onrendered: myRenderFunction;
 }
 
 let clipboardBuchungssatz = new ClipboardJS('#officeButtonBuchungssatz');
