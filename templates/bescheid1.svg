@@ -1,4 +1,4 @@
-<svg id="bescheidSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 860" font-family="Arial" style="background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px" onload="SVGonLoad()">
+<svg id="bescheidSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 860" font-family="Arial" style="background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px" onload="SVGonLoadBescheid()">
  <defs id="customDefsBescheid"/>
  <!--Gruppe für Firmeninformationen-->
 <rect x="0" y="0" width="720" height="855" stroke="#ccc" stroke-width="1" fill="white" />
