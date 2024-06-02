@@ -20,42 +20,53 @@
             display: inline-block;
             padding: 1em 0;
             text-align: center;
-            width: 230px;
+            width: 240px;
             line-height: 1.5;
             font-size: medium;
-            color: black;
         }
 
         .taschenrechner #calc output {
             display: block;
-            height: 1.5em;
+            height: 30px;
             background: white;
             text-align: right;
-            font-size: 100%;
+            font-size: 1.1rem;
             padding-right: 5%;
             margin: 5px 6%;
             overflow: auto;
-
         }
 
-        .taschenrechner #calc output.expanded {
-            background: rgba(0, 0, 0, 0.55);
-            text-align: center;
-            height: auto;
-            max-height: 50vh;
-            padding-right: 5%;
-            margin: 0;
+        :fullscreen #taschenrechner {
+            position: absolute;
+            right: 5%;
+            top: 10%;
+        }
+
+        :fullscreen output {
             position: fixed;
             right: 50%;
-            font-size: calc(44px + (160 - 44) * ((100vw - 320px) / (1600 - 320)));
-            bottom: 0;
+            font-size: calc(44px + (160 - 44) * ((100vw - 320px) / (1600 - 320))) !important;
+            bottom: 10%;
             transform: translateX(50%);
-            color: white;
             width: 70%;
-            -webkit-transform : translate3d ( 0,0,0 ) ;
-            z-index: 9999;
-
+            height: auto !important;
+         pointer-events: none;
         }
+
+        :fullscreen #calcToggleButton {
+            display: none;
+        }
+
+        #taschenrechner-fullscreen::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        #taschenrechner-fullscreen {
+            pointer-events: none;
+        }
+output {
+            pointer-events: all;
+}
 
         .taschenrechner #calc fieldset {
             border: none;
@@ -66,10 +77,15 @@
         .taschenrechner #calc button {
             cursor: pointer;
             margin: 5px 2%;
-            width: 18%;
+            width: 40px;
             line-height: 1.5em;
-            padding: 0;
-            color: black;
+            font-size: 1em;
+            white-space: nowrap;
+            border: none;
+            border-radius: 50%;
+            color: #0f6cbf;
+            aspect-ratio: 1 / 1;
+            pointer-events: auto;
         }
 
         .taschenrechner #usage {
@@ -84,127 +100,16 @@
     <div w3-include-html="navigation.html"></div>
     <h2>Taschenrechner</h2>
        <div id="taschenrechnerForm" class="box">
-    <div class="taschenrechner">
-        <form id="calc">
-            <button id="toggleButton" style="float:right;"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
-                    height="1em" style="vertical-align: baseline;" viewBox="0 0 512 512">
-                    <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                    <path
-                        d="M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z" />
-                </svg>
-            </button>
-            <output>0</output>
-
-            <fieldset style="clear:right">
-
-                <button>√</button>
-                <button>x²</button>
-                <button>ln</button>
-                <button>C</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>+</button>
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button>-</button>
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>×</button>
-                <button>0</button>
-                <button>.</button>
-                <button>=</button>
-                <button>÷</button>
-            </fieldset>
-    </div>
-     
-        <p>Ein einfacher Taschnenrechner, der in Moodle bzw. in die mebis Lernplattform eingebunden werden kann.
-            Grundlage ist der <a
-                href="https://wiki.selfhtml.org/wiki/JavaScript/Tutorials/Taschenrechner">Taschenrechner von
-                selfhtml</a>.
-        </p>
-        <h3>Anpassungen</h3>
-        <ul>
-            <li>Farbanpassung an mebis Lernplattform</li>
-            <li>Vergrößerte Ansicht: Display kann zu Demonstrationszwecken per Button ein- und ausgeklappt werden</li>
-        </ul>
-        <h3>In Moodle integrieren</h3>
-        <ul>
-            <li>Sicherheitshalber eine Sicherung des Kurses erstellen (optional).</li>
-            <li>Texteditor in den Einstellungen ausschalten ("Einfacher Editor").</li>
-            <li>Den folgenden Code kopieren und in ein Textfeld, zum Beispiel im Seitenblock, einfügen.</li>
-        </ul>
-        <pre><textarea readonly="readonly" cols="80" rows="12"><style>
-            .taschenrechner #calc {
-                background: #d33f01;
-                border: 1px solid #d33f01;
-                border-radius: 0.5em;
-                box-shadow: inset 0 0 5px white;
-                display: inline-block;
-                padding: 1em 0;
-                text-align: center;
-                width: 230px;
-                line-height: 1.5;
-                font-size:medium;
-        }
-            
-            .taschenrechner #calc output {
-                display: block;
-                height: 1.5em;
-                background: white;
-                text-align: right;
-                font-size: 100%;
-                padding-right: 5%;
-                margin: 5px 6%;
-                overflow: auto;
-        
-            }
-            
-            .taschenrechner #calc output.expanded {
-                background: rgba(0, 0, 0, 0.55);
-                text-align: center;
-                height: auto;
-                max-height: 50vh;
-                padding-right: 5%;
-                margin: 0;
-                font-size: calc(44px + (160 - 44) * ((100vw - 320px) / (1600 - 320)));
-                color: white;
-                width: 70%;
-                 
-            }
-            
-            .taschenrechner #calc fieldset {
-                border: none;
-                margin: 0 auto;
-                padding-bottom: 0;
-            }
-            
-            .taschenrechner #calc button {
-                cursor: pointer;
-                margin: 5px 2%;
-                width: 18%;
-                line-height: 1.5em;
-             }
-            
-            .taschenrechner #usage {
-                display: inline-block;
-                padding: 0 0 0 2em;
-                vertical-align: top;
-            }
-            </style>
-            
-        
-            <div class="taschenrechner">
-                   <form id="calc">
-                    <button id="toggleButton" style="float:right;width:1.8em;aspect-ratio: 1/1;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" style="vertical-align: baseline;" viewBox="0 0 512 512">
-                    <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z"/></svg>
-                     </button>
-                               <output>0</output>
-                              
-                                <fieldset style="clear:right">
-        
+        <div id="taschenrechner-fullscreen">
+            <div id="taschenrechner" class="taschenrechner" tabindex="0">
+                <form id="calc">
+                    <button id="calcToggleButton" style="float:right;border-radius:0;height:30px;width:30px;padding:2px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="28px" viewBox="0 0 512 512">
+                            <path d="M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z"/>
+                        </svg>
+                    </button>
+                    <output tabindex="0">0</output>
+                    <fieldset style="clear:right;padding-top:5%;">
                         <button>√</button>
                         <button>x²</button>
                         <button>ln</button>
@@ -227,7 +132,145 @@
                         <button>÷</button>
                     </fieldset>
                 </form>
+            </div>
+        </div>
+     
+        <p>Ein einfacher Taschnenrechner, der in Moodle bzw. in die mebis Lernplattform eingebunden werden kann.
+            Grundlage ist der <a
+                href="https://wiki.selfhtml.org/wiki/JavaScript/Tutorials/Taschenrechner">Taschenrechner von
+                selfhtml</a>.
+        </p>
+        <h3>Anpassungen</h3>
+        <ul>
+            <li>Farbanpassung an mebis Lernplattform</li>
+            <li>Vergrößerte Ansicht: Display kann zu Demonstrationszwecken per Button ein- und ausgeklappt werden</li>
+        </ul>
+        <h3>In Moodle integrieren</h3>
+        <ul>
+            <li>Sicherheitshalber eine Sicherung des Kurses erstellen (optional).</li>
+            <li>Texteditor in den Einstellungen ausschalten ("Einfacher Editor").</li>
+            <li>Den folgenden Code kopieren und in ein Textfeld, zum Beispiel im Seitenblock, einfügen.</li>
+        </ul>
+        <pre><textarea readonly="readonly" cols="80" rows="12">
+            <style>
+                .taschenrechner #calc {
+                    background: #d33f01;
+                    border: 1px solid #d33f01;
+                    border-radius: 0.5em;
+                    box-shadow: inset 0 0 5px white;
+                    display: inline-block;
+                    padding: 1em 0;
+                    text-align: center;
+                    width: 240px;
+                    line-height: 1.5;
+                    font-size: medium;
+                }
+        
+                .taschenrechner #calc output {
+                    display: block;
+                    height: 30px;
+                    background: white;
+                    text-align: right;
+                    font-size: 1.1rem;
+                    padding-right: 5%;
+                    margin: 5px 6%;
+                    overflow: auto;
+                }
+        
+                :fullscreen #taschenrechner {
+                    position: absolute;
+                    right: 5%;
+                    top: 10%;
+                }
+        
+                :fullscreen output {
+                    position: fixed;
+                    right: 50%;
+                    font-size: calc(44px + (160 - 44) * ((100vw - 320px) / (1600 - 320))) !important;
+                    bottom: 10%;
+                    transform: translateX(50%);
+                    width: 70%;
+                    height: auto !important;
+                 pointer-events: none;
+                }
+        
+                :fullscreen #calcToggleButton {
+                    display: none;
+                }
+        
+                #taschenrechner-fullscreen::backdrop {
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
+                
+                #taschenrechner-fullscreen {
+                    pointer-events: none;
+                }
+        output {
+                    pointer-events: all;
+        }
+        
+                .taschenrechner #calc fieldset {
+                    border: none;
+                    margin: 0 auto;
+                    padding-bottom: 0;
+                }
+        
+                .taschenrechner #calc button {
+                    cursor: pointer;
+                    margin: 5px 2%;
+                    width: 40px;
+                    line-height: 1.5em;
+                    font-size: 1em;
+                    white-space: nowrap;
+                    border: none;
+                    border-radius: 50%;
+                    color: #0f6cbf;
+                    aspect-ratio: 1 / 1;
+                    pointer-events: auto;
+                }
+        
+                .taschenrechner #usage {
+                    display: inline-block;
+                    padding: 0 0 0 2em;
+                    vertical-align: top;
+                }
+            </style>
+        </head>
+        <body>
+            <div id="taschenrechner-fullscreen">
+                <div id="taschenrechner" class="taschenrechner" tabindex="0">
+                    <form id="calc">
+                        <button id="calcToggleButton" style="float:right;border-radius:0;height:30px;width:30px;padding:2px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="28px" viewBox="0 0 512 512">
+                                <path d="M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z"/>
+                            </svg>
+                        </button>
+                        <output tabindex="0">0</output>
+                        <fieldset style="clear:right;padding-top:5%;">
+                            <button>√</button>
+                            <button>x²</button>
+                            <button>ln</button>
+                            <button>C</button>
+                            <button>7</button>
+                            <button>8</button>
+                            <button>9</button>
+                            <button>+</button>
+                            <button>4</button>
+                            <button>5</button>
+                            <button>6</button>
+                            <button>-</button>
+                            <button>1</button>
+                            <button>2</button>
+                            <button>3</button>
+                            <button>×</button>
+                            <button>0</button>
+                            <button>.</button>
+                            <button>=</button>
+                            <button>÷</button>
+                        </fieldset>
+                    </form>
                 </div>
+            </div>
             <script>
                 "use strict";
                 document.addEventListener("DOMContentLoaded", function () {
@@ -260,13 +303,17 @@
                     var form = document.getElementById("calc"),
                         out = document.querySelector("#calc output"),
                         overwrite = true;
-
+        
                     function clear() {
+                        event.preventDefault();
+                        event.stopPropagation();
                         out.textContent = 0;
                         overwrite = true;
                     }
-
+        
                     function extra(type) {
+                        event.preventDefault();
+                        event.stopPropagation();
                         switch (type) {
                             case "√":
                                 out.textContent = Math.sqrt(result(true));
@@ -280,9 +327,10 @@
                         }
                         overwrite = true;
                     }
-
+        
                     function input(c) {
-                        // remove leading zero?
+                        event.preventDefault();
+                        event.stopPropagation();
                         if (overwrite) {
                             out.textContent = (c == "." ? "0." : c);
                         } else {
@@ -290,19 +338,20 @@
                         }
                         overwrite = false;
                     }
-
+        
                     function operator(c) {
+                        event.preventDefault();
+                        event.stopPropagation();
                         out.textContent += " " + c + " ";
                         overwrite = false;
                     }
-
+        
                     function result(noDisplay) {
+                        event.preventDefault();
+                        event.stopPropagation();
                         var input = out.textContent,
                             r = 0;
-                        // replace × with * and ÷ with / for eval()
-                        input = input.replace(/×/g, "*")
-                            .replace(/÷/g, "/");
-                        // remove anything else that is not allowed here
+                        input = input.replace(/×/g, "*").replace(/÷/g, "/");
                         input = input.replace(/[^0-9. +\-*\/]/g, "");
                         try {
                             r = eval(input);
@@ -315,125 +364,103 @@
                         }
                         return r;
                     }
-                    // initialize only if <output> is found
+        
                     if (out) {
                         form.addEventListener("submit", function (ev) {
-                            // prevent form submission and page reload
-                            ev.preventDefault();
-                            ev.stopPropagation();
                             return false;
                         });
-                        // button functionalities
-                        document.querySelectorAll("#calc button")
-                            .forEach(function (b) {
-                                var c = b.textContent;
-                                switch (c) {
-                                    case "9":
-                                    case "8":
-                                    case "7":
-                                    case "6":
-                                    case "5":
-                                    case "4":
-                                    case "3":
-                                    case "2":
-                                    case "1":
-                                    case "0":
-                                    case ".":
-                                        b.addEventListener("click", function () {
-                                            input(c);
-                                        });
-                                        break;
-                                    case "+":
-                                    case "-":
-                                    case "×":
-                                    case "÷":
-                                        b.addEventListener("click", function () {
-                                            operator(c);
-                                        });
-                                        break;
-                                    case "√":
-                                    case "x²":
-                                    case "ln":
-                                        b.addEventListener("click", function () {
-                                            extra(c);
-                                        });
-                                        break;
-                                    case "=":
-                                        b.addEventListener("click", result);
-                                        break;
-                                    case "C":
-                                        b.addEventListener("click", clear);
-                                        break;
-                                }
-                            });
-                        // keyboard support
-                        document.addEventListener("keypress", function (ev) {
-                            // decimal point
-                            if ([44, 46].includes(ev.charCode)) {
-                                // , .
-                                input(".");
+                        document.querySelectorAll("#calc button").forEach(function (b) {
+                            var c = b.textContent;
+                            switch (c) {
+                                case "9":
+                                case "8":
+                                case "7":
+                                case "6":
+                                case "5":
+                                case "4":
+                                case "3":
+                                case "2":
+                                case "1":
+                                case "0":
+                                case ".":
+                                    b.addEventListener("click", function () {
+                                        input(c);
+                                    });
+                                    break;
+                                case "+":
+                                case "-":
+                                case "×":
+                                case "÷":
+                                    b.addEventListener("click", function () {
+                                        operator(c);
+                                    });
+                                    break;
+                                case "√":
+                                case "x²":
+                                case "ln":
+                                    b.addEventListener("click", function () {
+                                        extra(c);
+                                    });
+                                    break;
+                                case "=":
+                                    b.addEventListener("click", result);
+                                    break;
+                                case "C":
+                                    b.addEventListener("click", clear);
+                                    break;
                             }
-                            // digits
-                            if ([48, 49, 50, 51, 52, 53, 54, 55, 56, 57].includes(ev.charCode)) {
-                                // 0-9
-                                input(ev.charCode - 48);
-                            }
-                            // operators
-                            if ([42, 43, 45, 47].includes(ev.charCode)) {
-                                // * + - /
-                                operator(
-                                    ["×", "+", "-", "÷"][
-                                    [42, 43, 45, 47].indexOf(ev.charCode)
-                                    ]);
-                            }
-                            // result
-                            if (ev.charCode == 61) {
-                                // =
+                        });
+        
+                        // Keyboard support
+                        document.addEventListener("keydown", function (ev) {
+                            // Focus must be inside the calculator
+                            if (!form.contains(document.activeElement)) return;
+        
+                            if (ev.key === "Enter" || ev.key === "=") {
                                 result();
-                            }
-                            // clear
-                            if ([67, 99].includes(ev.charCode)) {
-                                // C, c
+                            } else if (ev.key === "Backspace" || ev.key === "Delete") {
                                 clear();
-                            }
-                            // logarithm
-                            if ([76, 108].includes(ev.charCode)) {
-                                // L, l
+                            } else if (ev.key === "c" || ev.key === "C") {
+                                clear();
+                            } else if (ev.key === "l" || ev.key === "L") {
                                 extra("ln");
-                            }
-                            // root
-                            if ([82, 114].includes(ev.charCode)) {
-                                // R, r
+                            } else if (ev.key === "r" || ev.key === "R") {
                                 extra("√");
-                            }
-                            // square
-                            if ([83, 115].includes(ev.charCode)) {
-                                // S, s
+                            } else if (ev.key === "s" || ev.key === "S") {
                                 extra("x²");
-                            }
-                            // additional clear and result keys
-                            switch (ev.code) {
-                                // <delete> and <backspace> to clear display
-                                case "Backspace":
-                                case "Delete":
-                                    clear();
-                                    break;
-                                // both <enter> keys to display result
-                                case "Enter":
-                                case "NumpadEnter":
-                                    result();
-                                    break;
+                            } else if (!isNaN(ev.key) || ev.key === ".") {
+                                input(ev.key);
+                            } else if (["+","-","*","/"].includes(ev.key)) {
+                                operator(
+                                    ev.key.replace("*", "×").replace("/", "÷")
+                                );
                             }
                         });
                     }
                 });
-            </script>
-            <script>
-                document.getElementById('toggleButton').addEventListener('click', function () {
-                    const outputElement = document.querySelector('.taschenrechner #calc output');
-                    outputElement.classList.toggle('expanded');
+        
+                document.addEventListener('DOMContentLoaded', function() {
+                    const calculatorContainer = document.getElementById('taschenrechner-fullscreen');
+                    const fullscreenToggle = document.getElementById('calcToggleButton');
+        
+                    fullscreenToggle.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        if (!document.fullscreenElement) {
+                            if (calculatorContainer.requestFullscreen) {
+                                calculatorContainer.requestFullscreen();
+                            } else if (calculatorContainer.mozRequestFullScreen) { // Firefox
+                                calculatorContainer.mozRequestFullScreen();
+                            } else if (calculatorContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                                calculatorContainer.webkitRequestFullscreen();
+                            } else if (calculatorContainer.msRequestFullscreen) { // IE/Edge
+                                calculatorContainer.msRequestFullscreen();
+                            }
+                        }
+                    });
                 });
-            </script></textarea></pre>
+            </script>
+        </textarea></pre>
         </div>
 </main>
 
@@ -476,11 +503,15 @@
             overwrite = true;
 
         function clear() {
+            event.preventDefault();
+            event.stopPropagation();
             out.textContent = 0;
             overwrite = true;
         }
 
         function extra(type) {
+            event.preventDefault();
+            event.stopPropagation();
             switch (type) {
                 case "√":
                     out.textContent = Math.sqrt(result(true));
@@ -496,7 +527,8 @@
         }
 
         function input(c) {
-            // remove leading zero?
+            event.preventDefault();
+            event.stopPropagation();
             if (overwrite) {
                 out.textContent = (c == "." ? "0." : c);
             } else {
@@ -506,17 +538,18 @@
         }
 
         function operator(c) {
+            event.preventDefault();
+            event.stopPropagation();
             out.textContent += " " + c + " ";
             overwrite = false;
         }
 
         function result(noDisplay) {
+            event.preventDefault();
+            event.stopPropagation();
             var input = out.textContent,
                 r = 0;
-            // replace × with * and ÷ with / for eval()
-            input = input.replace(/×/g, "*")
-                .replace(/÷/g, "/");
-            // remove anything else that is not allowed here
+            input = input.replace(/×/g, "*").replace(/÷/g, "/");
             input = input.replace(/[^0-9. +\-*\/]/g, "");
             try {
                 r = eval(input);
@@ -529,123 +562,100 @@
             }
             return r;
         }
-        // initialize only if <output> is found
+
         if (out) {
             form.addEventListener("submit", function (ev) {
-                // prevent form submission and page reload
-                ev.preventDefault();
-                ev.stopPropagation();
                 return false;
             });
-            // button functionalities
-            document.querySelectorAll("#calc button")
-                .forEach(function (b) {
-                    var c = b.textContent;
-                    switch (c) {
-                        case "9":
-                        case "8":
-                        case "7":
-                        case "6":
-                        case "5":
-                        case "4":
-                        case "3":
-                        case "2":
-                        case "1":
-                        case "0":
-                        case ".":
-                            b.addEventListener("click", function () {
-                                input(c);
-                            });
-                            break;
-                        case "+":
-                        case "-":
-                        case "×":
-                        case "÷":
-                            b.addEventListener("click", function () {
-                                operator(c);
-                            });
-                            break;
-                        case "√":
-                        case "x²":
-                        case "ln":
-                            b.addEventListener("click", function () {
-                                extra(c);
-                            });
-                            break;
-                        case "=":
-                            b.addEventListener("click", result);
-                            break;
-                        case "C":
-                            b.addEventListener("click", clear);
-                            break;
-                    }
-                });
-            // keyboard support
-            document.addEventListener("keypress", function (ev) {
-                // decimal point
-                if ([44, 46].includes(ev.charCode)) {
-                    // , .
-                    input(".");
+            document.querySelectorAll("#calc button").forEach(function (b) {
+                var c = b.textContent;
+                switch (c) {
+                    case "9":
+                    case "8":
+                    case "7":
+                    case "6":
+                    case "5":
+                    case "4":
+                    case "3":
+                    case "2":
+                    case "1":
+                    case "0":
+                    case ".":
+                        b.addEventListener("click", function () {
+                            input(c);
+                        });
+                        break;
+                    case "+":
+                    case "-":
+                    case "×":
+                    case "÷":
+                        b.addEventListener("click", function () {
+                            operator(c);
+                        });
+                        break;
+                    case "√":
+                    case "x²":
+                    case "ln":
+                        b.addEventListener("click", function () {
+                            extra(c);
+                        });
+                        break;
+                    case "=":
+                        b.addEventListener("click", result);
+                        break;
+                    case "C":
+                        b.addEventListener("click", clear);
+                        break;
                 }
-                // digits
-                if ([48, 49, 50, 51, 52, 53, 54, 55, 56, 57].includes(ev.charCode)) {
-                    // 0-9
-                    input(ev.charCode - 48);
-                }
-                // operators
-                if ([42, 43, 45, 47].includes(ev.charCode)) {
-                    // * + - /
-                    operator(
-                        ["×", "+", "-", "÷"][
-                        [42, 43, 45, 47].indexOf(ev.charCode)
-                        ]);
-                }
-                // result
-                if (ev.charCode == 61) {
-                    // =
+            });
+
+            // Keyboard support
+            document.addEventListener("keydown", function (ev) {
+                // Focus must be inside the calculator
+                if (!form.contains(document.activeElement)) return;
+
+                if (ev.key === "Enter" || ev.key === "=") {
                     result();
-                }
-                // clear
-                if ([67, 99].includes(ev.charCode)) {
-                    // C, c
+                } else if (ev.key === "Backspace" || ev.key === "Delete") {
                     clear();
-                }
-                // logarithm
-                if ([76, 108].includes(ev.charCode)) {
-                    // L, l
+                } else if (ev.key === "c" || ev.key === "C") {
+                    clear();
+                } else if (ev.key === "l" || ev.key === "L") {
                     extra("ln");
-                }
-                // root
-                if ([82, 114].includes(ev.charCode)) {
-                    // R, r
+                } else if (ev.key === "r" || ev.key === "R") {
                     extra("√");
-                }
-                // square
-                if ([83, 115].includes(ev.charCode)) {
-                    // S, s
+                } else if (ev.key === "s" || ev.key === "S") {
                     extra("x²");
-                }
-                // additional clear and result keys
-                switch (ev.code) {
-                    // <delete> and <backspace> to clear display
-                    case "Backspace":
-                    case "Delete":
-                        clear();
-                        break;
-                    // both <enter> keys to display result
-                    case "Enter":
-                    case "NumpadEnter":
-                        result();
-                        break;
+                } else if (!isNaN(ev.key) || ev.key === ".") {
+                    input(ev.key);
+                } else if (["+","-","*","/"].includes(ev.key)) {
+                    operator(
+                        ev.key.replace("*", "×").replace("/", "÷")
+                    );
                 }
             });
         }
     });
-</script>
-<script>
-    document.getElementById('toggleButton').addEventListener('click', function () {
-        const outputElement = document.querySelector('.taschenrechner #calc output');
-        outputElement.classList.toggle('expanded');
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const calculatorContainer = document.getElementById('taschenrechner-fullscreen');
+        const fullscreenToggle = document.getElementById('calcToggleButton');
+
+        fullscreenToggle.addEventListener('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!document.fullscreenElement) {
+                if (calculatorContainer.requestFullscreen) {
+                    calculatorContainer.requestFullscreen();
+                } else if (calculatorContainer.mozRequestFullScreen) { // Firefox
+                    calculatorContainer.mozRequestFullScreen();
+                } else if (calculatorContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                    calculatorContainer.webkitRequestFullscreen();
+                } else if (calculatorContainer.msRequestFullscreen) { // IE/Edge
+                    calculatorContainer.msRequestFullscreen();
+                }
+            }
+        });
     });
 </script>
 </main>
