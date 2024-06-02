@@ -50,7 +50,7 @@
             transform: translateX(50%);
             width: 70%;
             height: auto !important;
-         pointer-events: none;
+            pointer-events: none;
         }
 
         :fullscreen #calcToggleButton {
@@ -60,13 +60,14 @@
         #taschenrechner-fullscreen::backdrop {
             background-color: rgba(0, 0, 0, 0.5);
         }
-        
+
         #taschenrechner-fullscreen {
             pointer-events: none;
         }
-output {
+
+        output {
             pointer-events: all;
-}
+        }
 
         .taschenrechner #calc fieldset {
             border: none;
@@ -99,13 +100,15 @@ output {
 <main>
     <div w3-include-html="navigation.html"></div>
     <h2>Taschenrechner</h2>
-       <div id="taschenrechnerForm" class="box">
+    <div id="taschenrechnerForm" class="box">
         <div id="taschenrechner-fullscreen">
             <div id="taschenrechner" class="taschenrechner" tabindex="0">
                 <form id="calc">
-                    <button id="calcToggleButton" style="float:right;border-radius:0;height:30px;width:30px;padding:2px;">
+                    <button id="calcToggleButton"
+                        style="float:right;border-radius:0;height:30px;width:30px;padding:2px;">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="28px" viewBox="0 0 512 512">
-                            <path d="M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z"/>
+                            <path
+                                d="M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z" />
                         </svg>
                     </button>
                     <output tabindex="0">0</output>
@@ -134,7 +137,7 @@ output {
                 </form>
             </div>
         </div>
-     
+
         <p>Ein einfacher Taschnenrechner, der in Moodle bzw. in die mebis Lernplattform eingebunden werden kann.
             Grundlage ist der <a
                 href="https://wiki.selfhtml.org/wiki/JavaScript/Tutorials/Taschenrechner">Taschenrechner von
@@ -303,14 +306,14 @@ output {
                     var form = document.getElementById("calc"),
                         out = document.querySelector("#calc output"),
                         overwrite = true;
-        
+
                     function clear() {
                         event.preventDefault();
                         event.stopPropagation();
                         out.textContent = 0;
                         overwrite = true;
                     }
-        
+
                     function extra(type) {
                         event.preventDefault();
                         event.stopPropagation();
@@ -327,7 +330,7 @@ output {
                         }
                         overwrite = true;
                     }
-        
+
                     function input(c) {
                         event.preventDefault();
                         event.stopPropagation();
@@ -338,14 +341,14 @@ output {
                         }
                         overwrite = false;
                     }
-        
+
                     function operator(c) {
                         event.preventDefault();
                         event.stopPropagation();
                         out.textContent += " " + c + " ";
                         overwrite = false;
                     }
-        
+
                     function result(noDisplay) {
                         event.preventDefault();
                         event.stopPropagation();
@@ -364,7 +367,7 @@ output {
                         }
                         return r;
                     }
-        
+
                     if (out) {
                         form.addEventListener("submit", function (ev) {
                             return false;
@@ -410,12 +413,12 @@ output {
                                     break;
                             }
                         });
-        
+
                         // Keyboard support
                         document.addEventListener("keydown", function (ev) {
                             // Focus must be inside the calculator
                             if (!form.contains(document.activeElement)) return;
-        
+
                             if (ev.key === "Enter" || ev.key === "=") {
                                 result();
                             } else if (ev.key === "Backspace" || ev.key === "Delete") {
@@ -430,7 +433,7 @@ output {
                                 extra("x²");
                             } else if (!isNaN(ev.key) || ev.key === ".") {
                                 input(ev.key);
-                            } else if (["+","-","*","/"].includes(ev.key)) {
+                            } else if (["+", "-", "*", "/"].includes(ev.key)) {
                                 operator(
                                     ev.key.replace("*", "×").replace("/", "÷")
                                 );
@@ -438,30 +441,39 @@ output {
                         });
                     }
                 });
-        
-                document.addEventListener('DOMContentLoaded', function() {
+
+                document.addEventListener('DOMContentLoaded', function () {
                     const calculatorContainer = document.getElementById('taschenrechner-fullscreen');
                     const fullscreenToggle = document.getElementById('calcToggleButton');
-        
-                    fullscreenToggle.addEventListener('click', function(event) {
+
+                    fullscreenToggle.addEventListener('click', function (event) {
                         event.preventDefault();
                         event.stopPropagation();
-                        if (!document.fullscreenElement) {
-                            if (calculatorContainer.requestFullscreen) {
-                                calculatorContainer.requestFullscreen();
-                            } else if (calculatorContainer.mozRequestFullScreen) { // Firefox
-                                calculatorContainer.mozRequestFullScreen();
-                            } else if (calculatorContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                                calculatorContainer.webkitRequestFullscreen();
-                            } else if (calculatorContainer.msRequestFullscreen) { // IE/Edge
-                                calculatorContainer.msRequestFullscreen();
+
+                        const isPortrait = window.innerHeight > window.innerWidth;
+                        const isNarrowScreen = window.innerWidth < 500;
+                        const isHeightScreen = window.innerHeight < 500;
+
+                        if (!isPortrait && !isNarrowScreen && !isHeightScreen) {
+                            if (!document.fullscreenElement) {
+                                if (calculatorContainer.requestFullscreen) {
+                                    calculatorContainer.requestFullscreen();
+                                } else if (calculatorContainer.mozRequestFullScreen) { // Firefox
+                                    calculatorContainer.mozRequestFullScreen();
+                                } else if (calculatorContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                                    calculatorContainer.webkitRequestFullscreen();
+                                } else if (calculatorContainer.msRequestFullscreen) { // IE/Edge
+                                    calculatorContainer.msRequestFullscreen();
+                                }
                             }
+                        } else {
+                            alert('Vollbild kann nicht im Hochformat oder bei weniger als 500px Bildschirmbreite/-höhe gestartet werden');
                         }
                     });
                 });
             </script>
         </textarea></pre>
-        </div>
+    </div>
 </main>
 
 <div w3-include-html="footer.html"></div>
@@ -628,7 +640,7 @@ output {
                     extra("x²");
                 } else if (!isNaN(ev.key) || ev.key === ".") {
                     input(ev.key);
-                } else if (["+","-","*","/"].includes(ev.key)) {
+                } else if (["+", "-", "*", "/"].includes(ev.key)) {
                     operator(
                         ev.key.replace("*", "×").replace("/", "÷")
                     );
@@ -637,23 +649,32 @@ output {
         }
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const calculatorContainer = document.getElementById('taschenrechner-fullscreen');
         const fullscreenToggle = document.getElementById('calcToggleButton');
 
-        fullscreenToggle.addEventListener('click', function(event) {
+        fullscreenToggle.addEventListener('click', function (event) {
             event.preventDefault();
             event.stopPropagation();
-            if (!document.fullscreenElement) {
-                if (calculatorContainer.requestFullscreen) {
-                    calculatorContainer.requestFullscreen();
-                } else if (calculatorContainer.mozRequestFullScreen) { // Firefox
-                    calculatorContainer.mozRequestFullScreen();
-                } else if (calculatorContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                    calculatorContainer.webkitRequestFullscreen();
-                } else if (calculatorContainer.msRequestFullscreen) { // IE/Edge
-                    calculatorContainer.msRequestFullscreen();
+
+            const isPortrait = window.innerHeight > window.innerWidth;
+            const isNarrowScreen = window.innerWidth < 500;
+            const isHeightScreen = window.innerHeight < 500;
+
+            if (!isPortrait && !isNarrowScreen && !isHeightScreen) {
+                if (!document.fullscreenElement) {
+                    if (calculatorContainer.requestFullscreen) {
+                        calculatorContainer.requestFullscreen();
+                    } else if (calculatorContainer.mozRequestFullScreen) { // Firefox
+                        calculatorContainer.mozRequestFullScreen();
+                    } else if (calculatorContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                        calculatorContainer.webkitRequestFullscreen();
+                    } else if (calculatorContainer.msRequestFullscreen) { // IE/Edge
+                        calculatorContainer.msRequestFullscreen();
+                    }
                 }
+            } else {
+                alert('Vollbild kann nicht im Hochformat oder bei weniger als 500px Bildschirmbreite/-höhe gestartet werden');
             }
         });
     });
