@@ -9,7 +9,7 @@ function generiereBuchungssatz() {
   const buchungssatzContainer = document.getElementById('buchungssatzContainer');
   const buchungssatzButtonContainer = document.getElementById('buchungssatzButtonContainer');
 
-  let buchungssatzHTML = '<table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:700px;font-size: 0.8rem;"><tbody>';
+  let buchungssatzHTML = '<table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:700px;"><tbody>';
 
   for (let i = 0; i < anzahlZeilenBuchungssatz; i++) {
     buchungssatzHTML += '<tr>';
