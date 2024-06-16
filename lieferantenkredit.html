@@ -1,0 +1,81 @@
+<style>.timebeam {
+    width:800px;
+    display:block;
+    margin-top: 100px;
+    margin-left: 100px;
+  }
+  
+  .line {
+    width: 100%;
+    background: gray;
+    margin: 50px 0;
+    height: 3px;
+  }
+  
+  .top,
+  .bottom {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  
+  .top .top-element,
+  .bottom .bottom-element {
+    padding: 0 25px;
+    position: relative;
+  }
+  
+  .top-element:before {
+    content: "I";
+    height: 20px;
+    width: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background: #C33900;
+    color: white;
+    position: absolute;
+    left: 0;
+  }
+  
+  .top-element:before {
+    bottom: -63px;
+  }
+  
+   .top-element:after,
+  .bottom-element:after {
+    content: "";
+    height: 50px;
+    width: 2px;
+    background: #8ACCC6;
+    position: absolute;
+  }
+  
+  .top-element:after {
+    left: 10px;
+    bottom: -40px;
+  }
+  
+  .bottom-element:after {
+    left: 10px;
+    top: -40px;
+  }
+  </style>
+
+<div class="container">
+
+    <div class="top">
+      <div class="top-element">Rechnungseingang</div>
+      <div class="top-element">Tag 10</div>
+      <div class="top-element">Tag 30</div>
+    </div>
+  
+      <div class="line"></div>
+  
+    <div class="bottom">
+      <div class="bottom-element">Lorem bottom 1</div>
+      <div class="bottom-element">Lorem bottom 2</div>
+      <div class="bottom-element">Lorem bottom 3</div>
+    </div>
+  
+  </div>
