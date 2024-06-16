@@ -9,21 +9,21 @@ function generiereBuchungssatz() {
   const buchungssatzContainer = document.getElementById('buchungssatzContainer');
   const buchungssatzButtonContainer = document.getElementById('buchungssatzButtonContainer');
 
-  let buchungssatzHTML = '<table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:650px;"><tbody>';
+  let buchungssatzHTML = '<table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:700px;font-size: 0.8rem;"><tbody>';
 
   for (let i = 0; i < anzahlZeilenBuchungssatz; i++) {
     buchungssatzHTML += '<tr>';
-    buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">0000 Kt.</td>';
-    buchungssatzHTML += '<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1">2.000,00 €</td>';
+    buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">0000 Kt.</td>';
+    buchungssatzHTML += '<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 160px" tabindex="1">2.000,00 €</td>';
 
     if (i === 0) {
-      buchungssatzHTML += '<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 100px" tabindex="1">an</td>';
+      buchungssatzHTML += '<td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>';
     } else {
-      buchungssatzHTML += '<td style="text-align: center;width:100px;white-space: pre;overflow: hidden;text-overflow:ellipsis;min-width: 100px" tabindex="1"> </td>';
+      buchungssatzHTML += '<td style="text-align: center;white-space: pre;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1"> </td>';
     }
 
-    buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">0000 Kt.</td>';
-    buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1">2.000,00 €</td>';
+    buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">0000 Kt.</td>';
+    buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 160px" tabindex="1">2.000,00 €</td>';
     buchungssatzHTML += '</tr>';
   }
 
