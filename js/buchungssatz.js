@@ -19,7 +19,7 @@ function generiereBuchungssatz() {
     if (i === 0) {
       buchungssatzHTML += '<td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>';
     } else {
-      buchungssatzHTML += '<td style="text-align: center;white-space: pre;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1"> </td>';
+      buchungssatzHTML += '<td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1"> </td>';
     }
 
     buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">0000 Kt.</td>';
