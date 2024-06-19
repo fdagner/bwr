@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Einkauf von Werkstoffen</title>
+</head>
+<body>
+<h2>Eingabemaske für Eingansgrechnungen (Werkstoffe)</h2>
+<form>
+    <label for="datum">Datum:</label>
+    <input type="date" id="datum" name="datum"><br><br>
+    
+    <label for="belegnr">Beleg-Nr:</label>
+    <input type="text" id="belegnr" value="54" name="belegnr"><br><br>
+    
+    <label for="bearbeiter">Bearbeiter:</label>
+    <input type="text" id="bearbeiter" value="{surename}" name="bearbeiter"><br><br>
+    
+    <h3>Sollbuchungen:</h3>
+    <label for="hauptkonto">Hauptkonto:</label>
+    <input type="text" id="hauptkonto" name="hauptkonto"> Betrag: <input type="number" id="hauptkonto" name="hauptkonto"><br><br>
+
+    <label for="unterkonto">Unterkonto:</label>
+    <input type="text" id="unterkonto" name="unterkonto"> Betrag: <input type="number" id="hauptkonto" name="hauptkonto"><br><br>
+
+    
+    <label for="steuer">Steuer:</label>
+    <input type="number" id="steuer" name="steuer"> Betrag: <input type="number" id="hauptkonto" name="hauptkonto"><br><br>
+
+    
+    <h3>Habenbuchungen:</h3>
+    <label for="habenkonto">Konto:</label>
+    <input type="text" id="habenkonto" name="habenkonto"><br><br>
+    
+    <input type="submit" value="Eingabe speichern">
+</form>
+
+<script>
+    document.getElementById('datum').valueAsDate = new Date();
+</script>
+
+</body>
+</html>

@@ -22,14 +22,14 @@
   </g>
 <!--Liefererdaten rechts-->
   <g id="liefererDaten"  font-size="17">
-    <text id="nameLangLieferer" x="555" y="200" font-family="Arial"  text-anchor="start" fill="#333"/>
-    <text id="strasseLieferer" x="555" y="215" font-family="Arial"  text-anchor="start" fill="#333"/>
-    <text id="plzLieferer" x="555" y="230" font-family="Arial"  text-anchor="start" fill="#333"/>
-    <text id="ansprechpartnerLieferer" x="555" y="245" font-family="Arial" text-anchor="start"  fill="#333"/>
-    <text id="telefonLieferer" x="555" y="260" font-family="Arial" text-anchor="start"  fill="#333"/>
-    <text id="emailLieferer" x="555" y="275" font-family="Arial" text-anchor="start"  fill="#333"/>
+    <text id="nameLangLieferer" x="700" y="200" font-family="Arial"  text-anchor="end" fill="#333"/>
+    <text id="strasseLieferer" x="700" y="215" font-family="Arial"  text-anchor="end" fill="#333"/>
+    <text id="plzLieferer" x="700" y="230" font-family="Arial"  text-anchor="end" fill="#333"/>
+    <text id="ansprechpartnerLieferer" x="700" y="245" font-family="Arial" text-anchor="end"  fill="#333"/>
+    <text id="telefonLieferer" x="700" y="260" font-family="Arial" text-anchor="end"  fill="#333"/>
+    <text id="emailLieferer" x="700" y="275" font-family="Arial" text-anchor="end"  fill="#333"/>
     <text x="550" y="290" font-family="Arial"  fill="#808080" text-anchor="end"></text>
-    <text id="internetLieferer" x="555" y="290" font-family="Arial"  text-anchor="start" fill="#333"/>
+    <text id="internetLieferer" x="700" y="290" font-family="Arial"  text-anchor="end" fill="#333"/>
   </g>
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
