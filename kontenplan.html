@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="minimum-scale=1">
+    <title>Buchführung</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/html2canvas.min.js"></script>
+    <script src="js/js-yaml.min.js"></script>
+    <script src="js/kontenplan.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/menu.js"></script>
+   
+</head>
+<main>
+    <div w3-include-html="navigation.html"></div>
+    <h2>Kontenplan</h2>
+    <div id="kontenplanForm" class="box">
+    <div class="kontenplan">
+        
+        <div>
+            <select id="kontenplan-dropdown" onchange="handleDropdownChange()">
+                <option>Kontenklasse auswählen...</option>
+                <option value="all">Alle Konten</option>
+                <option class="aktiv" value="0">Kontenklasse 0 (Sachanlagen)</option>
+                <option class="aktiv" value="1">Kontenklasse 1 (Finanzanlagen)</option>
+                <option class="aktiv" value="2">Kontenklasse 2 (Umlaufvermögen)</option>
+                <option class="passiv" value="3">Kontenklasse 3 (Eigenkapital und Rückstellungen)</option>
+                <option class="passiv" value="4">Kontenklasse 4 (Verbindlichkeiten)</option>
+                <option class="ertrag" value="5">Kontenklasse 5 (Ertragskonten)</option>
+                <option class="aufwand" value="6">Kontenklasse 6 (Aufwandskonten)</option>
+                <option class="aufwand" value="7">Kontenklasse 7 (Aufwandskonten)</option>
+                <option class="abschluss" value="8">Kontenklasse 8 (Ergebnisrechnung)</option>
+            </select>
+        </div>
+        <div>
+            <input type="text" id="search-input" placeholder="Nach Konto suchen..." oninput="handleSearchInput()">
+        </div>
+        <div>
+            <ul id="list-container"></ul>
+        </div>
+    </div>
+
+    <p>Ein Kontenplan, der in Moodle bzw. in die mebis Lernplattform eingebunden werden kann.     
+    </p>
+    <h3>In Moodle integrieren</h3>
+    <ul>
+        <li>Sicherheitshalber eine Sicherung des Kurses erstellen (optional).</li>
+        <li>Texteditor in den Einstellungen ausschalten ("Einfacher Editor").</li>
+        <li>Den folgenden Code kopieren und in ein Textfeld, zum Beispiel im Seitenblock, einfügen.</li>
+    </ul>
+        <pre><textarea readonly="readonly" cols="80" rows="12">
+            <style>
+                .kontenplan .hidden {
+                    display: none;
+                }
+        
+                .kontenplan .aktiv {
+                    background-color: lightblue
+                }
+        
+                .kontenplan .passiv {
+                    background-color: orange
+                }
+        
+                .kontenplan .ertrag {
+                    background-color: lightgreen
+                }
+        
+                .kontenplan .aufwand {
+                    background-color: pink
+                }
+        
+                .kontenplan .abschluss {
+                    background-color: lightgray
+                }
+        
+                .kontenplan #list-container {
+                    max-width: 550px;
+                   white-space: nowrap;
+                    list-style: none;
+                    overflow: auto;
+                    padding-left: 0em;
+                    padding-top: 5px;
+                }
+        
+                #kontenplan-dropdown, #search-input {
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 14px;
+                }
+            </style>
+            <div class="kontenplan">
+                <div>
+                    <select id="kontenplan-dropdown" onchange="handleDropdownChange()">
+                        <option>Kontenklasse auswählen...</option>
+                        <option value="all">Alle Konten</option>
+                        <option class="aktiv" value="0">Kontenklasse 0 (Sachanlagen)</option>
+                        <option class="aktiv" value="1">Kontenklasse 1 (Finanzanlagen)</option>
+                        <option class="aktiv" value="2">Kontenklasse 2 (Umlaufvermögen)</option>
+                        <option class="passiv" value="3">Kontenklasse 3 (Eigenkapital und Rückstellungen)</option>
+                        <option class="passiv" value="4">Kontenklasse 4 (Verbindlichkeiten)</option>
+                        <option class="ertrag" value="5">Kontenklasse 5 (Ertragskonten)</option>
+                        <option class="aufwand" value="6">Kontenklasse 6 (Aufwandskonten)</option>
+                        <option class="aufwand" value="7">Kontenklasse 7 (Aufwandskonten)</option>
+                        <option class="abschluss" value="8">Kontenklasse 8 (Ergebnisrechnung)</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="text" id="search-input" placeholder="Nach Konto suchen..." oninput="handleSearchInput()">
+                </div>
+                <div>
+                    <ul id="list-container"></ul>
+                </div>
+            </div>
+        
+            <script>
+                const myList = ['0500 GR (Grundstücke)', '0530 BVG (Betriebs- und Verwaltungsgebäude)', '0700 MA (Maschinen und Anlagen)', '0840 FP (Fuhrpark)', '0860 BM (Büromaschinen)', '0870 BGA (Büromöbel und Geschäftsausstattung)', '0890 GWG (Geringwertige Wirtschaftsgüter)', '1500 WP (Wertpapiere des Anlagevermögens)', '2000 R (Rohstoffe)', '2010 F (Fremdbauteile)', '2020 H (Hilfsstoffe)', '2030 B (Betriebsstoffe)', '2400 FO (Forderungen aus Lieferungen und Leistungen)', '2470 ZWFO (Zweifelhafte Forderungen)', '2600 VORST (Vorsteuer)', '2800 BK (Bank)', '2880 KA (Kasse)', '2900 ARA (Aktive Rechnungsabgrenzung)', '3000 EK (Eigenkapital)', '3001 P (Privatkonto)', '3670 EWB (Einzelwertberichtigung)', '3680 PWB (Pauschalwertberichtigung)', '3900 RST (Rückstellungen)', '4200 KBKV (Kurzfristige Bankverbindlichkeiten)', '4250 LBKV (Langfristige Bankverbindlichkeiten)', '4400 VE (Verbindlichkeiten aus LL)', '4800 UST (Umsatzsteuer)', '4830 VFA (Sonst. Steuerverbindlichkeiten)', '4840 VSV (Verbindlichkeiten gegenüber Sozialversicherungsträgern)', '4900 PRA (Passive Rechnungsabgrenzung)', '5000 UEFE (Umsatzerlöse für eigene Erzeugnisse)', '5001 EBFE (Erlösberichtigungen)', '5400 EMP (Erlöse aus Vermietung und Verpachtung)', '5430 ASBE (Andere sonst. betriebl. Erträge)', '5490 PFE (Periodenfremde Erträge)', '5495 EFO (Erträge aus abgeschriebenen Forderungen)', '5650 EAWP (Erträge aus dem Abgang von Wertpapieren des Anlagevermögens)', '5710 ZE (Zinserträge)', '5780 DDE (Dividendenerträge)', '6000 AWR (Aufwendungen für Rohstoffe)', '6001 BZKR (Bezugskosten für Rohstoffe)', '6002 NR (Nachlässe für Rohstoffe)', '6010 AWF (Aufwendungen für Fremdbauteile)', '6011 BZKF (Bezugskosten für Fremdbauteile)', '6012 NF (Nachlässe für Fremdbauteile)', '6020 AWH (Aufwendungen für Hilfsstoffe)', '6021 BZKH (Bezugskosten für Hilfsstoffe)', '6022 NH (Nachlässe für Hilfsstoffe)', '6030 AWB (Aufwendungen für Betriebsstoffe)', '6031 BZKB (Bezugskosten für Betriebsstoffe)', '6032 NB (Nachlässe für Betriebsstoffe)', '6040 AWVM (Aufwendungen für Verpackungsmaterial)', '6140 AFR (Ausgangsfrachten)', '6160 FRI (Fremdinstandhaltung)', '6200 LG (Löhne und Gehälter)', '6400 AGASV (Arbeitgeberanteil zur Sozialversicherung)', '6520 ABSA (Abschr. auf Sachanlagen)', '6540 ABGWG (Abschreibungen auf GWG)', '6700 AWMP (Mieten, Pachten)', '6730 GEB (Gebühren)', '6750 KGV (Kosten des Geldverkehrs)', '6760 PROV (Provisionen)', '6770 RBK (Rechts- und Beratungskosten)', '6800 BMK (Büromaterial und Kleingüter)', '6820 KOM (Kommunikationsgebühren)', '6850 REK (Reisekosten)', '6870 WER (Werbung)', '6900 VBEI (Versicherungsbeiträge)', '6950 ABFO (Abschreibungen auf Forderungen)', '6990 PFAW (Periodenfremde Aufwendungen)', '7000 GWST (Gewerbesteuer)', '7020 GRST (Grundsteuer)', '7030 KFZST (Kraftfahrzeugsteuer)', '7460 VAWP (Verluste aus dem Abgang von Wertpapieren des Anlagevermögens)', '7510 ZAW (Zinsaufwendungen)', '8010 SBK (Schlussbilanzkonto)', '8020 GUV (Gewinn- und Verlustkonto)'];
+        
+                function filterListByFirstDigit(list, digit) {
+                    const filteredList = [];
+                    for (let i = 0; i < list.length; i++) {
+                        if (list[i][0] === digit.toString()) {
+                            filteredList.push(list[i]);
+                        }
+                    }
+                    return filteredList;
+                }
+        
+                function filterListByDigit(digit) {
+                    const filteredList = filterListByFirstDigit(myList, digit);
+                    const listContainer = document.getElementById('list-container');
+                    listContainer.innerHTML = '';
+                    for (let i = 0; i < filteredList.length; i++) {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = filteredList[i];
+                        listContainer.appendChild(listItem);
+                    }
+                }
+        
+                function showAllAccounts() {
+                    const listContainer = document.getElementById('list-container');
+                    listContainer.innerHTML = '';
+                    for (let i = 0; i < myList.length; i++) {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = myList[i];
+                        listContainer.appendChild(listItem);
+                    }
+                }
+        
+                function handleDropdownChange() {
+                    const selectedValue = document.getElementById('kontenplan-dropdown').value;
+        
+                    if (selectedValue === "all") {
+                        showAllAccounts();
+                    } else {
+                        filterListByDigit(parseInt(selectedValue));
+                    }
+                }
+        
+                function handleSearchInput() {
+                    const searchValue = document.getElementById('search-input').value.toLowerCase();
+                    const filteredList = myList.filter(item => item.toLowerCase().includes(searchValue));
+                    const listContainer = document.getElementById('list-container');
+                    listContainer.innerHTML = '';
+                    for (let i = 0; i < filteredList.length; i++) {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = filteredList[i];
+                        listContainer.appendChild(listItem);
+                    }
+                }
+            </script>
+        </textarea></pre>
+    </div>
+</main>
+
+<div w3-include-html="footer.html"></div>
+
+<script>
+    includeHTML();
+</script>
+<script>
+    const myList2 = ['0500 GR (Grundstücke)', '0530 BVG (Betriebs- und Verwaltungsgebäude)', '0700 MA (Maschinen und Anlagen)', '0840 FP (Fuhrpark)', '0860 BM (Büromaschinen)', '0870 BGA (Büromöbel und Geschäftsausstattung)', '0890 GWG (Geringwertige Wirtschaftsgüter)', '1500 WP (Wertpapiere des Anlagevermögens)', '2000 R (Rohstoffe)', '2010 F (Fremdbauteile)', '2020 H (Hilfsstoffe)', '2030 B (Betriebsstoffe)', '2400 FO (Forderungen aus Lieferungen und Leistungen)', '2470 ZWFO (Zweifelhafte Forderungen)', '2600 VORST (Vorsteuer)', '2800 BK (Bank)', '2880 KA (Kasse)', '2900 ARA (Aktive Rechnungsabgrenzung)', '3000 EK (Eigenkapital)', '3001 P (Privatkonto)', '3670 EWB (Einzelwertberichtigung)', '3680 PWB (Pauschalwertberichtigung)', '3900 RST (Rückstellungen)', '4200 KBKV (Kurzfristige Bankverbindlichkeiten)', '4250 LBKV (Langfristige Bankverbindlichkeiten)', '4400 VE (Verbindlichkeiten aus LL)', '4800 UST (Umsatzsteuer)', '4830 VFA (Sonst. Steuerverbindlichkeiten)', '4840 VSV (Verbindlichkeiten gegenüber Sozialversicherungsträgern)', '4900 PRA (Passive Rechnungsabgrenzung)', '5000 UEFE (Umsatzerlöse für eigene Erzeugnisse)', '5001 EBFE (Erlösberichtigungen)', '5400 EMP (Erlöse aus Vermietung und Verpachtung)', '5430 ASBE (Andere sonst. betriebl. Erträge)', '5490 PFE (Periodenfremde Erträge)', '5495 EFO (Erträge aus abgeschriebenen Forderungen)', '5650 EAWP (Erträge aus dem Abgang von Wertpapieren des Anlagevermögens)', '5710 ZE (Zinserträge)', '5780 DDE (Dividendenerträge)', '6000 AWR (Aufwendungen für Rohstoffe)', '6001 BZKR (Bezugskosten für Rohstoffe)', '6002 NR (Nachlässe für Rohstoffe)', '6010 AWF (Aufwendungen für Fremdbauteile)', '6011 BZKF (Bezugskosten für Fremdbauteile)', '6012 NF (Nachlässe für Fremdbauteile)', '6020 AWH (Aufwendungen für Hilfsstoffe)', '6021 BZKH (Bezugskosten für Hilfsstoffe)', '6022 NH (Nachlässe für Hilfsstoffe)', '6030 AWB (Aufwendungen für Betriebsstoffe)', '6031 BZKB (Bezugskosten für Betriebsstoffe)', '6032 NB (Nachlässe für Betriebsstoffe)', '6040 AWVM (Aufwendungen für Verpackungsmaterial)', '6140 AFR (Ausgangsfrachten)', '6160 FRI (Fremdinstandhaltung)', '6200 LG (Löhne und Gehälter)', '6400 AGASV (Arbeitgeberanteil zur Sozialversicherung)', '6520 ABSA (Abschr. auf Sachanlagen)', '6540 ABGWG (Abschreibungen auf GWG)', '6700 AWMP (Mieten, Pachten)', '6730 GEB (Gebühren)', '6750 KGV (Kosten des Geldverkehrs)', '6760 PROV (Provisionen)', '6770 RBK (Rechts- und Beratungskosten)', '6800 BMK (Büromaterial und Kleingüter)', '6820 KOM (Kommunikationsgebühren)', '6850 REK (Reisekosten)', '6870 WER (Werbung)', '6900 VBEI (Versicherungsbeiträge)', '6950 ABFO (Abschreibungen auf Forderungen)', '6990 PFAW (Periodenfremde Aufwendungen)', '7000 GWST (Gewerbesteuer)', '7020 GRST (Grundsteuer)', '7030 KFZST (Kraftfahrzeugsteuer)', '7460 VAWP (Verluste aus dem Abgang von Wertpapieren des Anlagevermögens)', '7510 ZAW (Zinsaufwendungen)', '8010 SBK (Schlussbilanzkonto)', '8020 GUV (Gewinn- und Verlustkonto)'];
+
+    function filterListByFirstDigit(list, digit) {
+        const filteredList = [];
+        for (let i = 0; i < list.length; i++) {
+            if (list[i][0] === digit.toString()) {
+                filteredList.push(list[i]);
+            }
+        }
+        return filteredList;
+    }
+
+    function filterListByDigit(digit) {
+        const filteredList = filterListByFirstDigit(myList2, digit);
+        const listContainer = document.getElementById('list-container');
+        listContainer.innerHTML = '';
+        for (let i = 0; i < filteredList.length; i++) {
+            const listItem = document.createElement('li');
+            listItem.textContent = filteredList[i];
+            listContainer.appendChild(listItem);
+        }
+    }
+
+    function showAllAccounts() {
+        const listContainer = document.getElementById('list-container');
+        listContainer.innerHTML = '';
+        for (let i = 0; i < myList2.length; i++) {
+            const listItem = document.createElement('li');
+            listItem.textContent = myList2[i];
+            listContainer.appendChild(listItem);
+        }
+    }
+
+    function handleDropdownChange() {
+        const selectedValue = document.getElementById('kontenplan-dropdown').value;
+
+        if (selectedValue === "all") {
+            showAllAccounts();
+        } else {
+            filterListByDigit(parseInt(selectedValue));
+        }
+    }
+
+    function handleSearchInput() {
+        const searchValue = document.getElementById('search-input').value.toLowerCase();
+        const filteredList = myList2.filter(item => item.toLowerCase().includes(searchValue));
+        const listContainer = document.getElementById('list-container');
+        listContainer.innerHTML = '';
+        for (let i = 0; i < filteredList.length; i++) {
+            const listItem = document.createElement('li');
+            listItem.textContent = filteredList[i];
+            listContainer.appendChild(listItem);
+        }
+    }
+</script>
+</main>
+</body>
+
+</html>
