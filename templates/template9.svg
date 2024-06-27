@@ -65,7 +65,7 @@
     <text id="einzelpreis1" x="560" y="540" visibility="hidden" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
     <text id="gesamtpreis1" x="690" y="540" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
     <text id="pos2" x="40" y="570" font-family="Arial" font-size="18" fill="#333"/>
-    <text id="artikel2" x="100" y="570" visibility="hidden"font-family="Arial" font-size="18" fill="#333"/>
+    <text id="artikel2" x="100" y="570" font-family="Arial" font-size="18" fill="#333"/>
     <text id="menge2" x="430" y="570" visibility="hidden" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
     <text id="einzelpreis2" x="560" visibility="hidden" y="570" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
     <text id="gesamtpreis2" x="690" y="570" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
