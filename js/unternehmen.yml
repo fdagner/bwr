@@ -1092,3 +1092,27 @@
     bic: "GDFBADNBGXXX"
     inhaber: "Lisa Hammer"
     akzent: "#b8b298"
+
+- unternehmen:
+    id: "46"
+    branche: "Einzehandel"
+    name: "SPL Schuhe & Lederwaren"
+    motto: "Schuhe und Lederwaren Spenge!"
+    bank: "Nürnberg Bank"
+    rechtsform: "GmbH"
+    logo:  "media/pic/tasche.svg"
+    adresse:
+      strasse: "Galeriestraße 23"
+      plz: "90443"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 117-01"
+      email: "info@spl-schuhe.de"
+      internet: "spl-schuhe.de"
+    ust_id: "DE187612875"
+    steuernummer: "21/112/23312"
+    iban: "DE89372340000011453333001"
+    bic: "GERTADNBGXXX"
+    inhaber: "Carsten Spenge"
+    akzent: "white"
