@@ -32,16 +32,72 @@
             oninput="updateChartPoint(6, this.value)"></div>
       </div>
       <div class="flex-row">
-          <div>
-            <input id="crossSlider" type="range" min="50" max="660" value="50" oninput="updateCrossPosition(this.value)">
-            <button onclick="toggleCrossVisibility()"><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
-              fill="#ff4800" viewBox="0 0 448 512">
+        <div>
+          <input id="crossSlider1" type="range" min="50" max="660" value="50"
+            oninput="updateCrossPosition('crossGroup', 'chartLine', this.value)">
+          <button onclick="toggleCrossVisibility('crossGroup', 'crossSlider1', updateCrossPosition)"><svg
+              xmlns="http://www.w3.org/2000/svg" height="14" width="12" fill="#ff4800" viewBox="0 0 448 512">
               <path
                 d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
-            </svg> Markierung</button>
-          </div>
-          <input id="crossLabelInput" type="text" placeholder="Beschriftung">
-          <button onclick="updateCrossLabel()">Beschriftung aktualisieren</button>
+            </svg> Markierung 1</button>
+        </div>
+        <input id="crossLabelInput1" type="text" placeholder="Beschriftung">
+        <button onclick="updateCrossLabel('crossLabelInput1', 'crossText')">Beschriftung aktualisieren</button>
+      </div>
+
+      <div class="flex-row">
+        <div>
+          <input id="crossSlider2" type="range" min="50" max="660" value="50"
+            oninput="updateCrossPosition('crossGroup2', 'chartLine', this.value)">
+          <button onclick="toggleCrossVisibility('crossGroup2', 'crossSlider2', updateCrossPosition)"><svg
+              xmlns="http://www.w3.org/2000/svg" height="14" width="12" fill="#ff4800" viewBox="0 0 448 512">
+              <path
+                d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
+            </svg> Markierung 2</button>
+        </div>
+        <input id="crossLabelInput2" type="text" placeholder="Beschriftung">
+        <button onclick="updateCrossLabel('crossLabelInput2', 'crossText2')">Beschriftung aktualisieren</button>
+      </div>
+
+      <div class="flex-row">
+        <div>
+          <input id="crossSlider3" type="range" min="50" max="660" value="50"
+            oninput="updateCrossPosition('crossGroup3', 'chartLine', this.value)">
+          <button onclick="toggleCrossVisibility('crossGroup3', 'crossSlider3', updateCrossPosition)"><svg
+              xmlns="http://www.w3.org/2000/svg" height="14" width="12" fill="#ff4800" viewBox="0 0 448 512">
+              <path
+                d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
+            </svg> Markierung 3</button>
+        </div>
+        <input id="crossLabelInput3" type="text" placeholder="Beschriftung">
+        <button onclick="updateCrossLabel('crossLabelInput3', 'crossText3')">Beschriftung aktualisieren</button>
+      </div>
+
+      <div class="flex-row">
+        <div>
+          <input id="crossSlider4" type="range" min="50" max="660" value="50"
+            oninput="updateCrossPosition('crossGroup4', 'chartLine', this.value)">
+          <button onclick="toggleCrossVisibility('crossGroup4', 'crossSlider4', updateCrossPosition)"><svg
+              xmlns="http://www.w3.org/2000/svg" height="14" width="12" fill="#ff4800" viewBox="0 0 448 512">
+              <path
+                d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
+            </svg> Markierung 4</button>
+        </div>
+        <input id="crossLabelInput4" type="text" placeholder="Beschriftung">
+        <button onclick="updateCrossLabel('crossLabelInput4', 'crossText4')">Beschriftung aktualisieren</button>
+      </div>
+      <div class="flex-row">
+        <div>
+          <input id="crossSlider5" type="range" min="50" max="660" value="50"
+            oninput="updateCrossPosition('crossGroup5', 'chartLine', this.value)">
+          <button onclick="toggleCrossVisibility('crossGroup5', 'crossSlider5', updateCrossPosition)"><svg
+              xmlns="http://www.w3.org/2000/svg" height="14" width="12" fill="#ff4800" viewBox="0 0 448 512">
+              <path
+                d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
+            </svg> Markierung 5</button>
+        </div>
+        <input id="crossLabelInput5" type="text" placeholder="Beschriftung">
+        <button onclick="updateCrossLabel('crossLabelInput5', 'crossText5')">Beschriftung aktualisieren</button>
       </div>
       <div class="flex-row">
         <button onclick="cycleToggleLabels()"><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
@@ -54,9 +110,9 @@
             <path
               d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
           </svg> Farbe</button>
-          </div>
+      </div>
     </div>
-    
+
     <div id="produktlebenszyklusContainer" style="min-width:500px;padding:5px;">
       <svg style="width:100%;background-color:#fff;padding:2px" xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 720 400">
@@ -71,17 +127,16 @@
           <line x1="50" y1="15" x2="50" y2="300" stroke="#000"></line>
           <text x="45" y="10" text-anchor="middle" fill="grey">Umsatz</text>
         </g>
+        <g class="gitter">
+          <line x1="177.5" y1="15" x2="177.5" y2="300" stroke="#333" stroke-dasharray="2,2" stroke-width="1" />
+          <line x1="302.5" y1="15" x2="302.5" y2="300" stroke="#333" stroke-dasharray="2,2" stroke-width="1" />
+          <line x1="427.5" y1="15" x2="427.5" y2="300" stroke="#333" stroke-dasharray="2,2" stroke-width="1" />
+          <line x1="552.5" y1="15" x2="552.5" y2="300" stroke="#333" stroke-dasharray="2,2" stroke-width="1" />
+        </g>
 
         <!-- Linie -->
         <path id="chartLine" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"
           d="M0,300 C125,250 225,244, 325,135 C425,50 525,150 625,290" transform="translate(50,0)"></path>
-
-        <!-- Kreuz -->
-        <g id="crossGroup" visibility="hidden">
-          <line id="crossLine1" x1="0" y1="0" x2="20" y2="20" stroke="blue" stroke-width="6"></line>
-          <line id="crossLine2" x1="20" y1="0" x2="0" y2="20" stroke="blue" stroke-width="6"></line>
-          <text id="crossText" x="-5" y="-15" font-size="24" fill="blue"></text>
-        </g>
 
         <!-- Text mit Rechtecken -->
         <g font-size="14">
@@ -100,10 +155,45 @@
           <text class="label" x="612.5" y="350" text-anchor="middle">Degeneration</text>
           <rect class="colorlabel" x="555" y="15" width="120" height="375" fill="yellow" opacity="0.2"></rect>
         </g>
+
+        <!-- Kreuz -->
+        <g id="crossGroup" visibility="hidden">
+          <line id="crossLine1" x1="0" y1="0" x2="20" y2="20" stroke="blue" stroke-width="4"></line>
+          <line id="crossLine2" x1="20" y1="0" x2="0" y2="20" stroke="blue" stroke-width="4"></line>
+          <text id="crossText" x="-5" y="-15" font-size="20" fill="blue"></text>
+        </g>
+
+        <!-- Kreuz2 -->
+        <g id="crossGroup2" visibility="hidden">
+          <line id="crossLine12" x1="0" y1="0" x2="20" y2="20" stroke="green" stroke-width="4"></line>
+          <line id="crossLine22" x1="20" y1="0" x2="0" y2="20" stroke="green" stroke-width="4"></line>
+          <text id="crossText2" x="-5" y="-15" font-size="20" fill="green"></text>
+        </g>
+
+        <!-- Kreuz3 -->
+        <g id="crossGroup3" visibility="hidden">
+          <line id="crossLine13" x1="0" y1="0" x2="20" y2="20" stroke="black" stroke-width="4"></line>
+          <line id="crossLine23" x1="20" y1="0" x2="0" y2="20" stroke="black" stroke-width="4"></line>
+          <text id="crossText3" x="-5" y="-15" font-size="20" fill="black"></text>
+        </g>
+
+        <!-- Kreuz4 -->
+        <g id="crossGroup4" visibility="hidden">
+          <line id="crossLine14" x1="0" y1="0" x2="20" y2="20" stroke="red" stroke-width="4"></line>
+          <line id="crossLine24" x1="20" y1="0" x2="0" y2="20" stroke="red" stroke-width="4"></line>
+          <text id="crossText4" x="-5" y="-15" font-size="20" fill="red"></text>
+        </g>
+
+        <!-- Kreuz5 -->
+        <g id="crossGroup5" visibility="hidden">
+          <line id="crossLine15" x1="0" y1="0" x2="20" y2="20" stroke="purple" stroke-width="4"></line>
+          <line id="crossLine25" x1="20" y1="0" x2="0" y2="20" stroke="purple" stroke-width="4"></line>
+          <text id="crossText5" x="-5" y="-15" font-size="20" fill="purple"></text>
+        </g>
       </svg>
     </div>
 
-  
+
 
     <div class="exportButtons">
       <button class="icon" type="button" onclick="produktlebenszyklusHerunterladenAlsPNG()"><svg
@@ -130,47 +220,47 @@
     includeHTML();
 
 
-    function toggleCrossVisibility() {
-      const crossGroup = document.getElementById('crossGroup');
-      crossGroup.setAttribute('visibility', crossGroup.getAttribute('visibility') === 'hidden' ? 'visible' : 'hidden');
-      const crossSlider = document.getElementById('crossSlider');
-      updateCrossPosition(crossSlider.value);
+    function toggleCrossVisibility(groupID, sliderID, updateFunction) {
+      const crossGroup = document.getElementById(groupID);
+      const crossSlider = document.getElementById(sliderID);
+      const isVisible = crossGroup.getAttribute('visibility') === 'visible';
+
+      if (!isVisible) {
+        updateFunction(groupID, 'chartLine', crossSlider.value);
+        crossGroup.setAttribute('visibility', 'visible');
+      } else {
+        crossGroup.setAttribute('visibility', 'hidden');
+      }
     }
 
-    function updateCrossPosition(value) {
+    function updateCrossPosition(groupID, pathID, value) {
+      const crossGroup = document.getElementById(groupID);
+      const path = document.getElementById(pathID);
 
-  const crossGroup = document.getElementById('crossGroup');
-  const path = document.getElementById('chartLine');
+      const length = path.getTotalLength();
+      const point = path.getPointAtLength((value - 50) / 625 * length);
 
-  const length = path.getTotalLength();
-  const point = path.getPointAtLength((value - 50) / 625 * length);
+      const slope = getSlope(path, (value - 50) / 625);
+      const yOffset = 8 * slope;
 
-  // Calculate vertical adjustment based on slope of the line
-  const slope = getSlope(path, (value - 50) / 625);
-  const yOffset = 8 * slope; // Adjust this factor as needed
+      crossGroup.setAttribute('transform', `translate(${point.x + 50},${point.y + yOffset - 10})`);
+    }
 
-  // Set the cross position exactly at the path point
-  crossGroup.setAttribute('transform', `translate(${point.x + 50},${point.y + yOffset - 10})`);
-}
+    function updateCrossLabel(inputID, textID) {
+      const crossLabelInput = document.getElementById(inputID).value;
+      const crossText = document.getElementById(textID);
+      crossText.textContent = crossLabelInput;
+    }
 
-function getSlope(path, t) {
-  // Calculate slope at given t using central difference approximation
-  const epsilon = 0.001;
-  const p1 = path.getPointAtLength(t * path.getTotalLength());
-  const p2 = path.getPointAtLength((t + epsilon) * path.getTotalLength());
+    function getSlope(path, t) {
+      const epsilon = 0.001;
+      const p1 = path.getPointAtLength(t * path.getTotalLength());
+      const p2 = path.getPointAtLength((t + epsilon) * path.getTotalLength());
 
-  // Calculate slope dy/dx
-  const slope = (p2.y - p1.y) / (p2.x - p1.x);
-  return slope;
-}
+      const slope = (p2.y - p1.y) / (p2.x - p1.x);
+      return slope;
+    }
 
-function updateCrossLabel() {
-  const crossLabelInput = document.getElementById('crossLabelInput').value;
-  const crossText = document.getElementById('crossText');
-  
-  // Setze den neuen Text für die Kreuzbeschriftung
-  crossText.textContent = crossLabelInput;
-}
   </script>
 
 </body>
