@@ -16,101 +16,163 @@
   <main>
     <div w3-include-html="navigation.html"></div>
     <h2>Produklebenszyklus</h2>
-      <div class="box">
-        <div class="flex-row">
-          <div>Einführung<br><input id="point1Slider" type="range" min="0" max="300" value="50" step="1"
-              oninput="updateChartPoint(1, this.value)"></div>
-          <div>Wachstum<br><input id="point2Slider" type="range" min="0" max="300" value="56" step="1"
-              oninput="updateChartPoint(2, this.value)"></div>
-          <div>Reife<br><input id="point3Slider" type="range" min="0" max="300" value="165" step="1"
-              oninput="updateChartPoint(3, this.value)"></div>
-          <div>Sättigung<br><input id="point4Slider" type="range" min="0" max="300" value="250" step="1"
-              oninput="updateChartPoint(4, this.value)"></div>
-          <div>Degeneration<br><input id="point5Slider" type="range" min="0" max="300" value="90" step="1"
-              oninput="updateChartPoint(5, this.value)"></div>
-          <div>Schlusswert<br><input id="point6Slider" type="range" min="0" max="300" value="10" step="1"
-              oninput="updateChartPoint(6, this.value)"></div>
-        </div>
-        <div class="flex-row"><button onclick="cycleToggleLabels()"><svg xmlns="http://www.w3.org/2000/svg" height="14"
-              width="12" fill="#ff4800"
-              viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+    <div class="box">
+      <div class="flex-row">
+        <div>Einführung<br><input id="point1Slider" type="range" min="0" max="300" value="50" step="1"
+            oninput="updateChartPoint(1, this.value)"></div>
+        <div>Wachstum<br><input id="point2Slider" type="range" min="0" max="300" value="56" step="1"
+            oninput="updateChartPoint(2, this.value)"></div>
+        <div>Reife<br><input id="point3Slider" type="range" min="0" max="300" value="165" step="1"
+            oninput="updateChartPoint(3, this.value)"></div>
+        <div>Sättigung<br><input id="point4Slider" type="range" min="0" max="300" value="250" step="1"
+            oninput="updateChartPoint(4, this.value)"></div>
+        <div>Degeneration<br><input id="point5Slider" type="range" min="0" max="300" value="90" step="1"
+            oninput="updateChartPoint(5, this.value)"></div>
+        <div>Schlusswert<br><input id="point6Slider" type="range" min="0" max="300" value="10" step="1"
+            oninput="updateChartPoint(6, this.value)"></div>
+      </div>
+      <div class="flex-row">
+          <div>
+            <input id="crossSlider" type="range" min="50" max="660" value="50" oninput="updateCrossPosition(this.value)">
+            <button onclick="toggleCrossVisibility()"><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
+              fill="#ff4800" viewBox="0 0 448 512">
               <path
                 d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
-            </svg> Text</button>
-          <button onclick="cycleToggleColorlabels()"><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
-              fill="#ff4800"
-              viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
-            </svg> Farbe</button>
-        </div>
+            </svg> Markierung</button>
+          </div>
+          <input id="crossLabelInput" type="text" placeholder="Beschriftung">
+          <button onclick="updateCrossLabel()">Beschriftung aktualisieren</button>
       </div>
-      <div id="produktlebenszyklusContainer" style="min-width:500px;padding:5px;">
-        <svg style="width:100%;background-color:#fff;padding:2px" xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 720 400">
-          <!-- X-Achse -->
-          <g font-size="14" transform="translate(0, 300)">
-            <line x1="50" y1="0" x2="675" y2="0" stroke="#000"></line>
-            <text x="690" y="5" text-anchor="middle" fill="grey">Zeit</text>
-          </g>
-
-          <!-- Y-Achse -->
-          <g font-size="14" transform="translate(0, 0)">
-            <line x1="50" y1="15" x2="50" y2="300" stroke="#000"></line>
-            <text x="45" y="10" text-anchor="middle" fill="grey">Umsatz</text>
-          </g>
-
-          <!-- Linie -->
-          <path id="chartLine" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"
-            d="M0,300 C125,250 225,244, 325,135 C425,50 525,150 625,290" transform="translate(50,0)"></path>
-
-          <!-- Text mit Rechtecken -->
-          <g font-size="14">
-            <text class="label" x="112.5" y="350" text-anchor="middle">Einführung</text>
-            <rect class="colorlabel" x="55" y="15" width="120" height="375" fill="#3498db" opacity="0.2"></rect>
-
-            <text class="label" x="237.5" y="350" text-anchor="middle">Wachstum</text>
-            <rect class="colorlabel" x="180" y="15" width="120" height="375" fill="red" opacity="0.2"></rect>
-
-            <text class="label" x="362.5" y="350" text-anchor="middle">Reife</text>
-            <rect class="colorlabel" x="305" y="15" width="120" height="375" fill="gray" opacity="0.2"></rect>
-
-            <text class="label" x="487.5" y="350" text-anchor="middle">Sättigung</text>
-            <rect class="colorlabel" x="430" y="15" width="120" height="375" fill="green" opacity="0.2"></rect>
-
-            <text class="label" x="612.5" y="350" text-anchor="middle">Degeneration</text>
-            <rect class="colorlabel" x="555" y="15" width="120" height="375" fill="yellow" opacity="0.2"></rect>
-          </g>
-        </svg>
-      </div>
-      
-      <div class="exportButtons">
-        <button class="icon" type="button" onclick="produktlebenszyklusHerunterladenAlsPNG()"><svg
-            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+      <div class="flex-row">
+        <button onclick="cycleToggleLabels()"><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
+            fill="#ff4800" viewBox="0 0 448 512">
             <path
-              d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-          </svg></button>
-        <button class="icon" type="button" onclick="produktlebenszyklusHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
-            height="16" width="12"
-            viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
+          </svg> Text</button>
+        <button onclick="cycleToggleColorlabels()"><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
+            fill="#ff4800" viewBox="0 0 448 512">
             <path
-              d="M368 80h32v32H368V80zM352 32c-17.7 0-32 14.3-32 32H128c0-17.7-14.3-32-32-32H32C14.3 32 0 46.3 0 64v64c0 17.7 14.3 32 32 32V352c-17.7 0-32 14.3-32 32v64c0 17.7 14.3 32 32 32H96c17.7 0 32-14.3 32-32H320c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V384c0-17.7-14.3-32-32-32V160c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32H352zM96 160c17.7 0 32-14.3 32-32H320c0 17.7 14.3 32 32 32V352c-17.7 0-32 14.3-32 32H128c0-17.7-14.3-32-32-32V160zM48 400H80v32H48V400zm320 32V400h32v32H368zM48 112V80H80v32H48z" />
-          </svg></button>
-        <button class="icon" type="button" onclick="produktlebenszyklusKopiereInZwischenablage()"><svg
-            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path
-              d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-          </svg></button>
-      </div>
+              d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
+          </svg> Farbe</button>
+          </div>
+    </div>
+    
+    <div id="produktlebenszyklusContainer" style="min-width:500px;padding:5px;">
+      <svg style="width:100%;background-color:#fff;padding:2px" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 720 400">
+        <!-- X-Achse -->
+        <g font-size="14" transform="translate(0, 300)">
+          <line x1="50" y1="0" x2="675" y2="0" stroke="#000"></line>
+          <text x="690" y="5" text-anchor="middle" fill="grey">Zeit</text>
+        </g>
 
-    </main>
-    <script src="js/produktlebenszyklus.js"></script>
-    <div w3-include-html="footer.html"></div> 
-    <script>
+        <!-- Y-Achse -->
+        <g font-size="14" transform="translate(0, 0)">
+          <line x1="50" y1="15" x2="50" y2="300" stroke="#000"></line>
+          <text x="45" y="10" text-anchor="middle" fill="grey">Umsatz</text>
+        </g>
+
+        <!-- Linie -->
+        <path id="chartLine" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"
+          d="M0,300 C125,250 225,244, 325,135 C425,50 525,150 625,290" transform="translate(50,0)"></path>
+
+        <!-- Kreuz -->
+        <g id="crossGroup" visibility="hidden">
+          <line id="crossLine1" x1="0" y1="0" x2="20" y2="20" stroke="blue" stroke-width="6"></line>
+          <line id="crossLine2" x1="20" y1="0" x2="0" y2="20" stroke="blue" stroke-width="6"></line>
+          <text id="crossText" x="-5" y="-15" font-size="24" fill="blue"></text>
+        </g>
+
+        <!-- Text mit Rechtecken -->
+        <g font-size="14">
+          <text class="label" x="112.5" y="350" text-anchor="middle">Einführung</text>
+          <rect class="colorlabel" x="55" y="15" width="120" height="375" fill="#3498db" opacity="0.2"></rect>
+
+          <text class="label" x="237.5" y="350" text-anchor="middle">Wachstum</text>
+          <rect class="colorlabel" x="180" y="15" width="120" height="375" fill="red" opacity="0.2"></rect>
+
+          <text class="label" x="362.5" y="350" text-anchor="middle">Reife</text>
+          <rect class="colorlabel" x="305" y="15" width="120" height="375" fill="gray" opacity="0.2"></rect>
+
+          <text class="label" x="487.5" y="350" text-anchor="middle">Sättigung</text>
+          <rect class="colorlabel" x="430" y="15" width="120" height="375" fill="green" opacity="0.2"></rect>
+
+          <text class="label" x="612.5" y="350" text-anchor="middle">Degeneration</text>
+          <rect class="colorlabel" x="555" y="15" width="120" height="375" fill="yellow" opacity="0.2"></rect>
+        </g>
+      </svg>
+    </div>
+
+  
+
+    <div class="exportButtons">
+      <button class="icon" type="button" onclick="produktlebenszyklusHerunterladenAlsPNG()"><svg
+          xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
+          <path
+            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+        </svg></button>
+      <button class="icon" type="button" onclick="produktlebenszyklusHerunterladen()"><svg
+          xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 448 512">
+          <path
+            d="M368 80h32v32H368V80zM352 32c-17.7 0-32 14.3-32 32H128c0-17.7-14.3-32-32-32H32C14.3 32 0 46.3 0 64v64c0 17.7 14.3 32 32 32V352c-17.7 0-32 14.3-32 32v64c0 17.7 14.3 32 32 32H96c17.7 0 32-14.3 32-32H320c0 17.7 14.3-32 32-32h64c17.7 0 32-14.3 32-32V384c0-17.7-14.3-32-32-32V160c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32H352zM96 160c17.7 0 32-14.3 32-32H320c0 17.7 14.3 32 32 32V352c-17.7 0-32 14.3-32 32H128c0-17.7-14.3-32-32-32V160zM48 400H80v32H48V400zm320 32V400h32v32H368zM48 112V80H80v32H48z" />
+        </svg></button>
+      <button class="icon" type="button" onclick="produktlebenszyklusKopiereInZwischenablage()"><svg
+          xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512">
+          <path
+            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+        </svg></button>
+    </div>
+
+  </main>
+  <script src="js/produktlebenszyklus.js"></script>
+  <div w3-include-html="footer.html"></div>
+  <script>
     includeHTML();
-    </script>
+
+
+    function toggleCrossVisibility() {
+      const crossGroup = document.getElementById('crossGroup');
+      crossGroup.setAttribute('visibility', crossGroup.getAttribute('visibility') === 'hidden' ? 'visible' : 'hidden');
+      const crossSlider = document.getElementById('crossSlider');
+      updateCrossPosition(crossSlider.value);
+    }
+
+    function updateCrossPosition(value) {
+
+  const crossGroup = document.getElementById('crossGroup');
+  const path = document.getElementById('chartLine');
+
+  const length = path.getTotalLength();
+  const point = path.getPointAtLength((value - 50) / 625 * length);
+
+  // Calculate vertical adjustment based on slope of the line
+  const slope = getSlope(path, (value - 50) / 625);
+  const yOffset = 8 * slope; // Adjust this factor as needed
+
+  // Set the cross position exactly at the path point
+  crossGroup.setAttribute('transform', `translate(${point.x + 50},${point.y + yOffset - 10})`);
+}
+
+function getSlope(path, t) {
+  // Calculate slope at given t using central difference approximation
+  const epsilon = 0.001;
+  const p1 = path.getPointAtLength(t * path.getTotalLength());
+  const p2 = path.getPointAtLength((t + epsilon) * path.getTotalLength());
+
+  // Calculate slope dy/dx
+  const slope = (p2.y - p1.y) / (p2.x - p1.x);
+  return slope;
+}
+
+function updateCrossLabel() {
+  const crossLabelInput = document.getElementById('crossLabelInput').value;
+  const crossText = document.getElementById('crossText');
+  
+  // Setze den neuen Text für die Kreuzbeschriftung
+  crossText.textContent = crossLabelInput;
+}
+  </script>
 
 </body>
+
 </html>
