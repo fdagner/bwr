@@ -1116,3 +1116,28 @@
     bic: "GERTADNBGXXX"
     inhaber: "Carsten Spenge"
     akzent: "gray"
+
+- unternehmen:
+    id: "47"
+    branche: "Lieferant"
+    name: "TextilPro"
+    motto: "Wir sind für Sie da!"
+    bank: "Fürth Bank"
+    rechtsform: "e. K."
+    logo:  "media/pic/waren.svg"
+    adresse:
+      strasse: "Händlerstraße 43"
+      plz: "90614"
+      ort: "Fürth"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 112234"
+      email: "info@texprotex.de"
+      internet: "textprotex.de"
+    ust_id: "DE187613455"
+    steuernummer: "21/112/22312"
+    iban: "DE89372234990011453333001"
+    bic: "NMMTADFUEXXX"
+    inhaber: "Ilkay Sahin"
+    akzent: "purple"
+    
