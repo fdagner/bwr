@@ -40,13 +40,12 @@
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
     <text x="20" y="320" font-family="Calibri" font-weight="bold" font-size="30" fill="#333">RECHNUNG NR-<tspan id="rechnungsNummer"/></tspan></text>
-    <text x="20" y="370" font-family="Arial" font-size="18" fill="#333">Mandant: M<tspan id="nummerKunde"/></text>
+    <text x="20" y="370" font-family="Arial" font-size="18" fill="#333">Kunde: <tspan id="nummerKunde"/></text>
     <text id="datum" x="690" y="340" font-family="Arial" font-size="18" fill="#333" text-anchor="end"> <tspan class="rechnungsDatum">01.01.</tspan> <tspan class="aktuellesJahr"/></text>
   </g>
 
-<!--Handwerker Info-->
-<text x="20" y="410" font-family="Arial" font-size="16" fill="#333">Sehr geehrte Damen und Herren,</text>
- <text x="20" y="430" font-family="Arial" font-size="16" fill="#333">hiermit übersenden wir Ihnen die Rechnung für die erbrachten Dienstleistungen.</text>
+<!--Hotel Info-->
+ <text x="20" y="430" font-family="Arial" font-size="16" fill="#333">Vielen Dank für Ihren Aufenthalt bei uns!</text>
 
       
   
@@ -56,7 +55,7 @@
     <rect x="20" y="510" width="680" height="2" fill="#000"/>
     <text id="pos" x="40" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Pos</text>
     <text id="artikel" x="100" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Beschreibung</text>
-    <text id="menge" x="430" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Menge</text>
+    <text id="menge" x="430" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Übernachtungen</text>
     <text id="einzelpreis" x="560" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Einzelpreis</text>
     <text id="gesamtpreis" x="690" y="500" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Gesamtpreis</text>
     <text id="pos1" x="40" y="540" font-family="Arial" font-size="18" fill="#333"/>
