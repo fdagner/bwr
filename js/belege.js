@@ -559,8 +559,13 @@ function loadSupplierData() {
     colorSVGElements.forEach(element => {
         // Check if selectedSupplier.unternehmen.akzent is undefined
         const akzentColor = selectedSupplier.unternehmen.akzent !== undefined ? selectedSupplier.unternehmen.akzent : "#7db9f5";
-
-        element.setAttribute('fill', akzentColor);
+        if (element instanceof SVGElement) {
+            // Wenn es sich um ein SVG-Element handelt, benutze setAttribute für 'fill'
+            element.setAttribute('fill', akzentColor);
+        } else {
+            // Ansonsten setze die Hintergrundfarbe für andere HTML-Elemente
+            element.style.backgroundColor = akzentColor;
+        }
         let colorPicker = document.getElementById("colorPicker");
         // Setze die Standardfarbe
         colorPicker.value = akzentColor;
@@ -595,6 +600,7 @@ function loadSupplierData() {
         svgContainer.removeChild(existingImage);
     });
     // Erstelle ein <image>-Element und füge es zur SVG hinzu
+    if (svgContainer instanceof SVGElement) {
     const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
     image.setAttribute('id', 'uploaded-image');
     image.setAttribute('x', rectElement.getAttribute('x'));
@@ -641,11 +647,19 @@ function loadSupplierData() {
         xhrStandard.responseType = 'blob';
         xhrStandard.send();
     }
+} else {
+return;
+}
 }
 
 // Funktion zum Laden eines Logos
 function loadLogo(event) {
     const svgContainer = document.getElementById('rechnungSVG');
+     // Überprüfe, ob ein SVG-Element vorhanden ist
+     if (!(svgContainer instanceof SVGElement)) {
+        alert('In diesem Beleg kann kein Logo hochgeladen werden.');
+        return;
+    }
     const existingImages = svgContainer.querySelectorAll('#uploaded-image');
 
     existingImages.forEach(existingImage => {
@@ -708,6 +722,18 @@ function applyOrderData() {
         elementsWithClassRechnung7.textContent = formattedSevenDaysAgoRechnung;
     }
 
+     // Fälligkeitsdatum
+     const zahlungszielInput = getNumericValue('zahlungszielInput');
+     const elementsWithClassZiel = document.getElementById('rechnungDatumZiel');
+     if (elementsWithClassZiel) {
+         const currentYear = new Date().getFullYear();
+         const selectedDatumZiel = new Date(`${selectedMonat}/${selectedTag}/${currentYear}`);
+         const datumZiel = new Date(selectedDatumZiel);
+         datumZiel.setDate(selectedDatumZiel.getDate() + zahlungszielInput);
+         const formattedZiel = `${datumZiel.getDate().toString().padStart(2, '0')}.${(datumZiel.getMonth() + 1).toString().padStart(2, '0')}.`;
+         elementsWithClassZiel.textContent = formattedZiel;
+     }
+
     // Annahme: Alle Elemente mit der Klasse 'rechnungsDatum' und kontoauszugDatum sollen aktualisiert werden
     const elementsWithClass = document.getElementsByClassName('rechnungsDatum');
     // Iteriere durch alle Elemente und setze das formatierte Datum
@@ -757,6 +783,8 @@ function applyOrderData() {
         }
 
         if (useScript) {
+            let svgContainer = document.getElementById('rechnungSVG');
+            if (svgContainer instanceof SVGElement) {
             // Füge das dynamische Script zum SVG hinzu
             const dynamicScript = document.createElement('script');
             dynamicScript.type = 'text/javascript';
@@ -779,6 +807,31 @@ function applyOrderData() {
             customDefs.appendChild(dynamicScript);
 
         }
+        else {
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJs';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoad() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahr');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            // Füge das Skript zum body hinzu, wenn 'customDefs' nicht existiert
+            document.body.appendChild(dynamicScript);
+
+ 
+        }
+    }
         SVGonLoad(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
 
 
@@ -860,7 +913,6 @@ function applyOrderData() {
     const rabattInput = getNumericValue('rabattInput');
     const bezugskostenInput = getNumericValue('bezugskostenInput');
     const umsatzsteuerInput = getNumericValue('umsatzsteuerInput');
-    const zahlungszielInput = getNumericValue('zahlungszielInput');
     const skontoInput = getNumericValue('skontoInput');
     const skontofristInput = getNumericValue('skontofristInput');
     let gesamtpreis1 = menge * einzelpreis;
@@ -1909,8 +1961,13 @@ function updateColors() {
     }
     else {
     }
+    // Update the color of SVG elements and other elements with the color picker value
     colorElements.forEach(function (element) {
-        element.setAttribute("fill", colorPicker.value);
+        if (element instanceof SVGElement) {
+            element.setAttribute("fill", colorPicker.value);
+        } else {
+            element.style.backgroundColor = colorPicker.value;
+        }
     });
     adjustTextColor();
 
@@ -1951,40 +2008,60 @@ function calculateContrast(rgb1, rgb2) {
     return contrast;
 }
 
+function rgbToArray(rgb) {
+    const result = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.exec(rgb);
+    return result ? [parseInt(result[1]), parseInt(result[2]), parseInt(result[3])] : [0, 0, 0];
+}
 
 function adjustTextColor() {
     const colorSVGElements = document.querySelectorAll('.colorSVG');
     const liefererInformationen = document.getElementById('liefererInformationen');
     const footerText = document.getElementById('footerText');
-
+    let backgroundColorHex;
+    let rgbBackground;
+ 
     if (liefererInformationen !== null) {
 
         // Überprüfe, ob das Element gefunden wurde, bevor die Hintergrundfarbe abgerufen wird
         if (colorSVGElements.length > 0) {
             // Nehme den Hex-Wert des ersten Rechtecks mit der Klasse "colorSVG"
-            const backgroundColorHex = colorSVGElements[0].getAttribute('fill');
-
+            if (colorSVGElements[0] instanceof SVGElement) {
+            backgroundColorHex = colorSVGElements[0].getAttribute('fill');
+            rgbBackground = hexToRgb(backgroundColorHex);
+            } else {
+            rgbBackground = rgbToArray(colorSVGElements[0].style.backgroundColor);
+             }
+            let textColor;
             // Wandele den Hex-Wert in RGB um
-            const rgbBackground = hexToRgb(backgroundColorHex);
-            const textColor = liefererInformationen.getAttribute('fill');
 
+            if (liefererInformationen instanceof SVGElement) {
+            textColor = liefererInformationen.getAttribute('fill');
+            } else {
+            textColor = window.getComputedStyle(liefererInformationen).color;
+            }
             // Überprüfe, ob RGB-Werte gültig sind
             if (rgbBackground && rgbBackground.length === 3) {
-                const rgbText = hexToRgb(textColor);
-
+                let rgbText;
+                rgbText = hexToRgb(textColor);
                 if (rgbText && rgbText.length === 3) {
                     const contrast = calculateContrast(rgbBackground, rgbText);
-
-                    const contrastThreshold = 100;
+                   const contrastThreshold = 100;
                     const newTextColor = contrast > contrastThreshold ? '#000' : '#fff';
 
                     // Setze die Textfarbe unabhängig von der vorherigen Bedingung
+                    if (liefererInformationen instanceof SVGElement) {
                     liefererInformationen.setAttribute('fill', newTextColor);
                     footerText.setAttribute('fill', newTextColor);
-                }
+                    } else {
+                    liefererInformationen.style.color = newTextColor;
+                    footerText.style.color = newTextColor;
+                } 
             } else { }
         }
+    }   else {
+        console.log("No elements found in colorSVGElements");
     }
+}
 }
 
 // newspaper
@@ -2158,11 +2235,17 @@ function anlagenkarteHerunterladenAlsPNG() {
 function herunterladen(containerId, dateiname) {
     const container = document.getElementById(containerId);
     const containerHTML = container.innerHTML.replace(/&nbsp;/g, ' ');
-
+   
+  
     // Erzeuge ein temporäres div-Element, um die SVG zu rendern
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = containerHTML;
-    const svgElement = tempDiv.querySelector('svg');
+    const svgElement = tempDiv.querySelector('svg');    
+     // Überprüfe, ob ein SVG-Element vorhanden ist
+     if (!svgElement) {
+        alert('Dieser Beleg kann nicht als SVG gespeichert werden.');
+        return;
+    }
 
     const viewBox = svgElement.getAttribute('viewBox').split(' ');
     const viewBoxWidth = parseFloat(viewBox[2]);
@@ -2218,7 +2301,7 @@ function anlagenkarteHerunterladen() {
 
 function kopiereInZwischenablage(containerId) {
     // SVG-Element aus dem Container abrufen
-    const containerSVG = document.getElementById(containerId).querySelector('svg');
+    const containerSVG = document.getElementById("rechnungSVG");
 
     // Kopie des SVG-Elements erstellen, um das Original nicht zu ändern
     const clonedSVG = containerSVG.cloneNode(true);
