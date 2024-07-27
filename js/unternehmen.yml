@@ -947,7 +947,7 @@
     iban: "DE89300000445323837034"
     bic: "GENODEF1NGB"
     inhaber: "Martin Ruf"
-    akzent: "yellow"
+    akzent: "#ffff00"
 
 - unternehmen:
     id: "40"

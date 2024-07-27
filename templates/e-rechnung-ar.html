@@ -1,0 +1,180 @@
+<div id="rechnungSVG" class="container"
+    style="width: 600px; margin: auto; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);" onload="SVGonLoad()">
+    <div id="liefererInformationen" style="text-align: center; margin-bottom: 20px;">
+        <h2 class="colorSVG" style="margin: 0;">E-Rechnung im Postausgang</h2>
+    </div>
+    <div style="background-color: #f5f5f5">
+        <strong>Absender</strong><br><span id="adresseLieferer"><br></span>
+        <br>Steuer-Nr.<span id="steuernummerLieferer"></span>
+        <br><span id="ustidLieferer"></span>
+        <br><span id="amtsgerichtLieferer"></span>
+        <p style="display: none" id="mottoLieferer"></p>
+        <div class="address" style="width: 100%; margin-bottom: 20px;">
+            <div style="display:none" class="sender">
+                <ul style="list-style: none">
+                    <li id="nameLieferer"></li>
+                    <li id="ansprechpartnerLieferer"></li>
+                    <li id="nameLangLieferer"></li>
+                    <li id="strasseLieferer"></li>
+                    <li id="plzLieferer"></li>
+                    <li id="telefonLieferer"></li>
+                    <li id="emailLieferer"></li>
+                    <li id="internetLieferer"></li>
+                    <li id="nummerKunde"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <strong>Empfänger</strong><br><span id="nameKunde"></span> - <span id="inhaberKunde"></span> - <span
+            id="strasseKunde"></span> - <span id="plzKunde"></span>
+        </ul>
+    </div>
+    <br>
+    <div class="details" style="width: 100%; margin-bottom: 20px;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Rechnungsnummer:</strong></td>
+                <td id="rechnungsNummer" style="padding: 10px; border: 1px solid #ddd;"></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Rechnungsdatum:</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;"><span class="rechnungsDatum"></span><span
+                        class="aktuellesJahr"></span></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Fälligkeitsdatum:</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;"><span id="rechnungDatumZiel"></span><span
+                        class="aktuellesJahr"></span></td>
+            </tr>
+        </table><br>
+        <div><strong>Besondere Hinweise</strong>
+            <p id="Eigentumsvorbehalt">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</p>
+            <p style="display: none">Zahlung fällig in <span id="zahlungsziel"> </span> Tagen rein netto</p>
+            <p id="skontotext">Bei Zahlung innerhalb von <span id="skontofrist"> </span> Tagen gewähren wir <span
+                    id="skonto"> </span> % Skonto.</p>
+            <p>...</p>
+        </div>
+
+    </div>
+    <div class="items" style="width: 100%; margin-bottom: 20px;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th id="pos" style="padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;">Pos.</th>
+                    <th id="artikel" style="padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;">
+                        Beschreibung</th>
+                    <th id="menge" style="padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;">Menge</th>
+                    <th id="einzelpreis" style="padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;">
+                        Einzelpreis</th>
+                    <th id="gesamtpreis" style="padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;">
+                        Gesamtpreis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="pos1" style="padding: 10px; border: 1px solid #ddd;"></td>
+                    <td id="artikel1" style="padding: 10px; border: 1px solid #ddd;"></td>
+                    <td id="menge1" style="padding: 10px; border: 1px solid #ddd;">2</td>
+                    <td id="einzelpreis1" style="padding: 10px; border: 1px solid #ddd;"></td>
+                    <td id="gesamtpreis1" style="padding: 10px; border: 1px solid #ddd;"></td>
+                </tr>
+                <tr>
+                    <td id="pos2" style="padding: 10px; border: 1px solid #ddd;"></td>
+                    <td id="artikel2" style="padding: 10px; border: 1px solid #ddd;"></td>
+                    <td id="menge2" style="padding: 10px; border: 1px solid #ddd;"></td>
+                    <td id="einzelpreis2" style="padding: 10px; border: 1px solid #ddd;"></td>
+                    <td id="gesamtpreis2" style="padding: 10px; border: 1px solid #ddd;"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td
+                style="width: 350px;text-align: right;padding: 10px; font-family: Arial; font-size: 18px; font-weight: bold; color: #000;">
+                Warenwert</td>
+            <td id="zwischensumme"
+                style="padding: 10px; font-family: Arial; font-size: 18px; color: #333; text-align: right;"></td>
+        </tr>
+        <tr id="gRabatt">
+            <td id="rabatt"
+                style="text-align: right;padding: 10px; font-family: Arial; font-size: 18px; font-weight: bold; color: #000;">
+            </td>
+            <td id="rabattsumme"
+                style="padding: 10px; font-family: Arial; font-size: 18px; color: #333; text-align: right;"></td>
+        </tr>
+        <tr id="gBezugskosten">
+            <td id="bezugskosten"
+                style="text-align: right;padding: 10px; font-family: Arial; font-size: 18px; font-weight: bold; color: #000;">
+            </td>
+            <td id="bezugskostenSumme"
+                style="padding: 10px; font-family: Arial; font-size: 18px; color: #333; text-align: right;"></td>
+        </tr>
+    </table>
+    <table id="warenwertUstRechnungsbetrag" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td
+                style="width: 350px;text-align: right;padding: 10px; font-family: Arial; font-size: 18px; font-weight: bold; color: #000;">
+                Nettowert</td>
+            <td id="nettowert"
+                style="padding: 10px; font-family: Arial; font-size: 18px; color: #333; text-align: right;"></td>
+        </tr>
+        <tr>
+            <td
+                style="text-align: right;padding: 10px; font-family: Arial; font-size: 18px; font-weight: bold; color: #000;">
+                <tspan id="ust"></tspan> % UST
+            </td>
+            <td id="ustsumme"
+                style="padding: 10px; font-family: Arial; font-size: 18px; color: #333; text-align: right;"></td>
+        </tr>
+
+        <tr>
+            <td
+                style="text-align: right;border-top: 1px dashed #000;padding: 10px; font-family: Arial; font-size: 18px; font-weight: bold; color: #000;">
+                Rechnungsbetrag</td>
+            <td id="rechnungsbetrag"
+                style="border-top: 1px dashed #000;padding: 10px; font-family: Arial; font-size: 18px; color: #333; text-align: right;">
+            </td>
+        </tr>
+    </table>
+    <p style="border-top: 1px dashed #000;"></p>
+    <div style="display: none"><span id="bankLieferer"></span> - <span id="ibanLieferer"></span> - <span
+            id="bicLieferer"></span></div>
+    <div id="footerText"><span class="colorSVG" style="
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s, box-shadow 0.3s;
+    "> Rechnung verbuchen
+        </span>
+        <span class="colorSVG" style="
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, box-shadow 0.3s;
+"> Rechnung versenden
+        </span>
+
+        </div></div>
+
+        </body>
+
+        </html>
