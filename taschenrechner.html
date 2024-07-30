@@ -275,241 +275,8 @@
                 </div>
             </div>
             <script>
-                "use strict";
-                document.addEventListener("DOMContentLoaded", function () {
-                    if (!Array.prototype.includes) {
-                        Array.prototype.includes = function includes(searchElement) {
-                            if (this == null) {
-                                throw new TypeError('this is null or undefined');
-                            }
-                            var object = Object(this),
-                                length = object.length >>> 0;
-                            if (length === 0) {
-                                return false;
-                            }
-                            var start = arguments[1] >> 0,
-                                key = start < 0 ? Math.max(start + length, 0) : start,
-                                currentElement;
-                            while (key < length) {
-                                currentElement = object[key];
-                                if (searchElement === currentElement || (searchElement !== searchElement &&
-                                    currentElement !== currentElement)) {
-                                    return true
-                                }
-                                key++;
-                            }
-                            return false;
-                        };
-                    }
-                    if (!NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype
-                        .forEach;
-                    var form = document.getElementById("calc"),
-                        out = document.querySelector("#calc output"),
-                        overwrite = true;
-
-                    function clear() {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        out.textContent = 0;
-                        overwrite = true;
-                    }
-
-                    function extra(type) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        switch (type) {
-                            case "√":
-                                out.textContent = Math.sqrt(result(true));
-                                break;
-                            case "x²":
-                                out.textContent = Math.pow(result(true), 2);
-                                break;
-                            case "ln":
-                                out.textContent = Math.log(result(true));
-                                break;
-                        }
-                        overwrite = true;
-                    }
-
-                    function input(c) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        if (overwrite) {
-                            out.textContent = (c == "." ? "0." : c);
-                        } else {
-                            out.textContent += c;
-                        }
-                        overwrite = false;
-                    }
-
-                    function operator(c) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        out.textContent += " " + c + " ";
-                        overwrite = false;
-                    }
-
-                    function result(noDisplay) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        var input = out.textContent,
-                            r = 0;
-                        input = input.replace(/×/g, "*").replace(/÷/g, "/");
-                        input = input.replace(/[^0-9. +\-*\/]/g, "");
-                        try {
-                            r = eval(input);
-                        } catch (e) {
-                            r = 0;
-                        }
-                        if (noDisplay !== true) {
-                            out.textContent = r;
-                            overwrite = true;
-                        }
-                        return r;
-                    }
-
-                    if (out) {
-                        form.addEventListener("submit", function (ev) {
-                            return false;
-                        });
-                        document.querySelectorAll("#calc button").forEach(function (b) {
-                            var c = b.textContent;
-                            switch (c) {
-                                case "9":
-                                case "8":
-                                case "7":
-                                case "6":
-                                case "5":
-                                case "4":
-                                case "3":
-                                case "2":
-                                case "1":
-                                case "0":
-                                case ".":
-                                    b.addEventListener("click", function () {
-                                        input(c);
-                                    });
-                                    break;
-                                case "+":
-                                case "-":
-                                case "×":
-                                case "÷":
-                                    b.addEventListener("click", function () {
-                                        operator(c);
-                                    });
-                                    break;
-                                case "√":
-                                case "x²":
-                                case "ln":
-                                    b.addEventListener("click", function () {
-                                        extra(c);
-                                    });
-                                    break;
-                                case "=":
-                                    b.addEventListener("click", result);
-                                    break;
-                                case "C":
-                                    b.addEventListener("click", clear);
-                                    break;
-                            }
-                        });
-
-                        // Keyboard support
-                        document.addEventListener("keydown", function (ev) {
-                            // Focus must be inside the calculator
-                            if (!form.contains(document.activeElement)) return;
-
-                            if (ev.key === "Enter" || ev.key === "=") {
-                                result();
-                            } else if (ev.key === "Backspace" || ev.key === "Delete") {
-                                clear();
-                            } else if (ev.key === "c" || ev.key === "C") {
-                                clear();
-                            } else if (ev.key === "l" || ev.key === "L") {
-                                extra("ln");
-                            } else if (ev.key === "r" || ev.key === "R") {
-                                extra("√");
-                            } else if (ev.key === "s" || ev.key === "S") {
-                                extra("x²");
-                            } else if (!isNaN(ev.key) || ev.key === ".") {
-                                input(ev.key);
-                            } else if (["+", "-", "*", "/"].includes(ev.key)) {
-                                operator(
-                                    ev.key.replace("*", "×").replace("/", "÷")
-                                );
-                            }
-                        });
-                    }
-                });
-
-                document.addEventListener('DOMContentLoaded', function () {
-                    const calculatorContainer = document.getElementById('taschenrechner-fullscreen');
-                    const fullscreenToggle = document.getElementById('calcToggleButton');
-
-                    fullscreenToggle.addEventListener('click', function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        const isPortrait = window.innerHeight > window.innerWidth;
-                        const isNarrowScreen = window.innerWidth < 500;
-                        const isHeightScreen = window.innerHeight < 500;
-
-                        if (!isPortrait && !isNarrowScreen && !isHeightScreen) {
-                            if (!document.fullscreenElement) {
-                                if (calculatorContainer.requestFullscreen) {
-                                    calculatorContainer.requestFullscreen();
-                                } else if (calculatorContainer.mozRequestFullScreen) { // Firefox
-                                    calculatorContainer.mozRequestFullScreen();
-                                } else if (calculatorContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                                    calculatorContainer.webkitRequestFullscreen();
-                                } else if (calculatorContainer.msRequestFullscreen) { // IE/Edge
-                                    calculatorContainer.msRequestFullscreen();
-                                }
-                            }
-                        } else {
-                            alert('Vollbild kann nicht im Hochformat oder bei weniger als 500px Bildschirmbreite/-höhe gestartet werden');
-                        }
-                    });
-                });
-            </script>
-        </textarea></pre>
-    </div>
-</main>
-
-<div w3-include-html="footer.html"></div>
-
-<script>
-    includeHTML();
-</script>
-<script>
     "use strict";
     document.addEventListener("DOMContentLoaded", function () {
-        if (!Array.prototype.includes) {
-            Array.prototype.includes = function includes(searchElement) {
-                if (this == null) {
-                    throw new TypeError('this is null or undefined');
-                }
-                var object = Object(this),
-                    length = object.length >>> 0;
-                if (length === 0) {
-                    return false;
-                }
-                var start = arguments[1] >> 0,
-                    key = start < 0 ? Math.max(start + length, 0) : start,
-                    currentElement;
-                while (key < length) {
-                    currentElement = object[key];
-                    if (searchElement === currentElement || (searchElement !== searchElement &&
-                        currentElement !== currentElement)) {
-                        return true
-                    }
-                    key++;
-                }
-                return false;
-            };
-        }
-        if (!NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype
-            .forEach;
         var form = document.getElementById("calc"),
             out = document.querySelector("#calc output"),
             overwrite = true;
@@ -518,23 +285,6 @@
             event.preventDefault();
             event.stopPropagation();
             out.textContent = 0;
-            overwrite = true;
-        }
-
-        function extra(type) {
-            event.preventDefault();
-            event.stopPropagation();
-            switch (type) {
-                case "√":
-                    out.textContent = Math.sqrt(result(true));
-                    break;
-                case "x²":
-                    out.textContent = Math.pow(result(true), 2);
-                    break;
-                case "ln":
-                    out.textContent = Math.log(result(true));
-                    break;
-            }
             overwrite = true;
         }
 
@@ -556,6 +306,18 @@
             overwrite = false;
         }
 
+        function getMaxDecimalPlaces(input) {
+            let maxDecimalPlaces = 0;
+            let parts = input.split(/[\+\-\×\÷\*\/]/);
+            parts.forEach(part => {
+                let decimalPart = part.split('.')[1];
+                if (decimalPart && decimalPart.length > maxDecimalPlaces) {
+                    maxDecimalPlaces = decimalPart.length;
+                }
+            });
+            return maxDecimalPlaces;
+        }
+
         function result(noDisplay) {
             event.preventDefault();
             event.stopPropagation();
@@ -563,8 +325,12 @@
                 r = 0;
             input = input.replace(/×/g, "*").replace(/÷/g, "/");
             input = input.replace(/[^0-9. +\-*\/]/g, "");
+
+            var decimalPlaces = getMaxDecimalPlaces(input);
+
             try {
                 r = eval(input);
+                r = parseFloat(r.toFixed(decimalPlaces));  // Runde das Ergebnis auf die angegebene Anzahl Dezimalstellen
             } catch (e) {
                 r = 0;
             }
@@ -605,11 +371,141 @@
                             operator(c);
                         });
                         break;
-                    case "√":
-                    case "x²":
-                    case "ln":
+                    case "=":
+                        b.addEventListener("click", result);
+                        break;
+                    case "C":
+                        b.addEventListener("click", clear);
+                        break;
+                }
+            });
+
+            // Keyboard support
+            document.addEventListener("keydown", function (ev) {
+                // Focus must be inside the calculator
+                if (!form.contains(document.activeElement)) return;
+
+                if (ev.key === "Enter" || ev.key === "=") {
+                    result();
+                } else if (ev.key === "Backspace" || ev.key === "Delete") {
+                    clear();
+                } else if (ev.key === "c" || ev.key === "C") {
+                    clear();
+                } else if (!isNaN(ev.key) || ev.key === ".") {
+                    input(ev.key);
+                } else if (["+", "-", "*", "/"].includes(ev.key)) {
+                    operator(
+                        ev.key.replace("*", "×").replace("/", "÷")
+                    );
+                }
+            });
+        }
+    });
+            </script>
+        </textarea></pre>
+    </div>
+</main>
+
+<div w3-include-html="footer.html"></div>
+
+<script>
+    includeHTML();
+</script>
+<script>
+    "use strict";
+    document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById("calc"),
+            out = document.querySelector("#calc output"),
+            overwrite = true;
+
+        function clear() {
+            event.preventDefault();
+            event.stopPropagation();
+            out.textContent = 0;
+            overwrite = true;
+        }
+
+        function input(c) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (overwrite) {
+                out.textContent = (c == "." ? "0." : c);
+            } else {
+                out.textContent += c;
+            }
+            overwrite = false;
+        }
+
+        function operator(c) {
+            event.preventDefault();
+            event.stopPropagation();
+            out.textContent += " " + c + " ";
+            overwrite = false;
+        }
+
+        function getMaxDecimalPlaces(input) {
+            let maxDecimalPlaces = 0;
+            let parts = input.split(/[\+\-\×\÷\*\/]/);
+            parts.forEach(part => {
+                let decimalPart = part.split('.')[1];
+                if (decimalPart && decimalPart.length > maxDecimalPlaces) {
+                    maxDecimalPlaces = decimalPart.length;
+                }
+            });
+            return maxDecimalPlaces;
+        }
+
+        function result(noDisplay) {
+            event.preventDefault();
+            event.stopPropagation();
+            var input = out.textContent,
+                r = 0;
+            input = input.replace(/×/g, "*").replace(/÷/g, "/");
+            input = input.replace(/[^0-9. +\-*\/]/g, "");
+
+            var decimalPlaces = getMaxDecimalPlaces(input);
+
+            try {
+                r = eval(input);
+                r = parseFloat(r.toFixed(decimalPlaces));  // Runde das Ergebnis auf die angegebene Anzahl Dezimalstellen
+            } catch (e) {
+                r = 0;
+            }
+            if (noDisplay !== true) {
+                out.textContent = r;
+                overwrite = true;
+            }
+            return r;
+        }
+
+        if (out) {
+            form.addEventListener("submit", function (ev) {
+                return false;
+            });
+            document.querySelectorAll("#calc button").forEach(function (b) {
+                var c = b.textContent;
+                switch (c) {
+                    case "9":
+                    case "8":
+                    case "7":
+                    case "6":
+                    case "5":
+                    case "4":
+                    case "3":
+                    case "2":
+                    case "1":
+                    case "0":
+                    case ".":
                         b.addEventListener("click", function () {
-                            extra(c);
+                            input(c);
+                        });
+                        break;
+                    case "+":
+                    case "-":
+                    case "×":
+                    case "÷":
+                        b.addEventListener("click", function () {
+                            operator(c);
                         });
                         break;
                     case "=":
@@ -632,12 +528,6 @@
                     clear();
                 } else if (ev.key === "c" || ev.key === "C") {
                     clear();
-                } else if (ev.key === "l" || ev.key === "L") {
-                    extra("ln");
-                } else if (ev.key === "r" || ev.key === "R") {
-                    extra("√");
-                } else if (ev.key === "s" || ev.key === "S") {
-                    extra("x²");
                 } else if (!isNaN(ev.key) || ev.key === ".") {
                     input(ev.key);
                 } else if (["+", "-", "*", "/"].includes(ev.key)) {
@@ -647,36 +537,6 @@
                 }
             });
         }
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const calculatorContainer = document.getElementById('taschenrechner-fullscreen');
-        const fullscreenToggle = document.getElementById('calcToggleButton');
-
-        fullscreenToggle.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            const isPortrait = window.innerHeight > window.innerWidth;
-            const isNarrowScreen = window.innerWidth < 500;
-            const isHeightScreen = window.innerHeight < 500;
-
-            if (!isPortrait && !isNarrowScreen && !isHeightScreen) {
-                if (!document.fullscreenElement) {
-                    if (calculatorContainer.requestFullscreen) {
-                        calculatorContainer.requestFullscreen();
-                    } else if (calculatorContainer.mozRequestFullScreen) { // Firefox
-                        calculatorContainer.mozRequestFullScreen();
-                    } else if (calculatorContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                        calculatorContainer.webkitRequestFullscreen();
-                    } else if (calculatorContainer.msRequestFullscreen) { // IE/Edge
-                        calculatorContainer.msRequestFullscreen();
-                    }
-                }
-            } else {
-                alert('Vollbild kann nicht im Hochformat oder bei weniger als 500px Bildschirmbreite/-höhe gestartet werden');
-            }
-        });
     });
 </script>
 </main>
