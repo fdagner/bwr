@@ -2301,7 +2301,7 @@ function anlagenkarteHerunterladen() {
 
 function kopiereInZwischenablage(containerId) {
     // SVG-Element aus dem Container abrufen
-    const containerSVG = document.getElementById("rechnungSVG");
+    const containerSVG = document.getElementById(containerId);
 
     // Kopie des SVG-Elements erstellen, um das Original nicht zu ändern
     const clonedSVG = containerSVG.cloneNode(true);
