@@ -23,7 +23,7 @@ function generiereBuchungssatz() {
     }
 
     buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">0000 Kt.</td>';
-    buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 160px" tabindex="1">2.000,00 €</td>';
+    buchungssatzHTML += '<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 160px;text-align: right" tabindex="1">2.000,00 €</td>';
     buchungssatzHTML += '</tr>';
   }
 
