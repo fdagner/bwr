@@ -2548,42 +2548,41 @@ function validateInputs() {
     // Validierung für Jahr in der Rechnung
     let jahr = document.getElementById("jahr");
     if (!isValidInput(jahr.value, 4)) {
-        alert("Bitte geben Sie bei Jahr (Rechnung) gültige Werte ein");
+        alert("Bitte geben Sie bei Jahr (Rechnung) gültige Werte ein (maximal 4 Stellen)");
         return false;
     }
 
     // Validierung für Jahr im Kontoauszug
     let jahrKontoauszug = document.getElementById("jahrKontoauszug");
-    if (!isValidNumberInput(jahrKontoauszug.value, 0, 9999)) {
-        alert("Bitte geben Sie bei Jahr (Kontoauszug) gültige Werte zwischen 0 und 9999 ein");
+    if (!isValidInput(jahrKontoauszug.value, 4)) {
+        alert("Bitte geben Sie bei Jahr (Kontoauszug) gültige Werte ein (maximal 4 Stellen)");
         return false;
     }
 
 
     // Validierung für Kontoauszug Vorgang
     let kontoauszugVorgang1Input = document.getElementById("kontoauszugVorgang1Input");
-    if (!isValidInput(kontoauszugVorgang1Input.value, 35)) {
-        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 35 Zeichen!");
+    if (!isValidInput(kontoauszugVorgang1Input.value, 45)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 45 Zeichen!");
         return false;
     }
 
     // Validierung für Kontoauszug Vorgang
-    let kontoauszugVorgang2Input = document.getElementById("kontoauszugVorgang1Input");
-    if (!isValidInput(kontoauszugVorgang2Input.value, 35)) {
-        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 35 Zeichen!");
+    let kontoauszugVorgang2Input = document.getElementById("kontoauszugVorgang2Input");
+    if (!isValidInput(kontoauszugVorgang2Input.value, 45)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 45 Zeichen!");
         return false;
     }
 
 
     // Validierung für Kontoauszug Vorgang
     let kontoauszugVorgang3Input = document.getElementById("kontoauszugVorgang3Input");
-    if (!isValidInput(kontoauszugVorgang3Input.value, 35)) {
-        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 35 Zeichen!");
+    if (!isValidInput(kontoauszugVorgang3Input.value, 45)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung ein. Maximal 45 Zeichen!");
         return false;
     }
 
-
-    // Validierung für Jahr in der Rechnung
+    // Validierung für Kontostand
     let kontoauszugKontostand_altInput = document.getElementById("kontoauszugKontostand_altInput");
     if (!isValidNumberInput(kontoauszugKontostand_altInput.value, -999999999, 999999999)) {
         alert("Bitte geben Sie bei Jahr (Rechnung) gültige Werte zwischen -999999999 und 999999999 ein");
