@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investitionsrechnung</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/html2canvas.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/menu.js"></script>
+</head>
+
+<main>
+    <div w3-include-html="navigation.html"></div>
+    <h2>Investitionsrechnung (beta)</h2>
+    <form id="investitiontrechnungdifferenzenForm" class="box">
+        <p>Für die Investitionsrechnung kann ein zufälliges Datenblatt generiert werden.</p>
+        <button type="button" onclick="setAnschaffungskosten()"><svg xmlns="http://www.w3.org/2000/svg" fill="#ff4800" height="16"
+                width="16"
+                viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path
+                    d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H352c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V80c0-17.7-14.3-32-32-32s-32 14.3-32 32v35.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V432c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H160c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z" />
+            </svg> Neues Datenblatt erstellen</button>
+    </form>
+    <div style="width:700px" contenteditable="true">
+    <div id="investitionsrechnungContainer" style="margin:0 auto;">       
+   
+        <h2>Datenblatt</h2>
+        <table style="border: 1px solid #ccc;font-size: 16px;min-width:650px;border-collapse:collapse;">
+            <tr style="background-color: #ccc;">
+                <th style="width:40%;text-align: left"></th>
+                <th style="width:30%;text-align: left">Anlage I</th>
+                <th style="width:30%;text-align: left">Anlage II</th>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Anschaffungskosten</td>
+                <td id="anlageI"></td>
+                <td id="anlageII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Nutzungsdauer</td>
+                <td id="nutzungsdauerI"></td>
+                <td id="nutzungsdauerII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Produktionsmenge</td>
+                <td id="quantityI"></td>
+                <td id="quantityII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Personalkosten</td>
+                <td id="personalI"></td>
+                <td id="personalII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Materialkosten</td>
+                <td id="materialI"></td>
+                <td id="materialII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Energiekosten</td>
+                <td id="energyI"></td>
+                <td id="energyII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Sonstige variable Kosten pro Jahr</td>
+                <td id="variableI"></td>
+                <td id="variableII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Sonstige fixe Kosten pro Jahr</td>
+                <td id="fixI"></td>
+                <td id="fixII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Kalkulatorischer Zinssatz</td>
+                <td id="interestI"></td>
+                <td id="interestII"></td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+                <td>Gewinn je Stück</td>
+                <td id="profitI"></td>
+                <td id="profitII"></td>
+            </tr>
+        </table>
+        <h1>Lösung</h1>
+
+        <h2>Kostenvergleichsrechnung</h2>
+        <table style="border: 1px solid #ccc;font-size: 16px;min-width:650px;border-collapse:collapse;">
+            <thead>
+                <tr style="background-color: #9ec2ec;">
+                    <th style="width:50%;text-align: left"></th>
+                    <th style="width:25%;text-align: left">Anlage I</th>
+                    <th style="width:25%;text-align: left">Anlage II</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border: 1px solid #ccc;">
+                    <td>Anschaffungskosten</td>
+                    <td style="text-align:right" id="VergleichAnschaffungskostenI"></td>
+                    <td style="text-align:right" id="VergleichAnschaffungskostenII"></td>
+                </tr>
+                <tr style="border: 1px solid #ccc">
+                    <td>Nutzungsdauer (Jahre)</td>
+                    <td style="text-align:right" id="VergleichNutzungsdauerI"></td>
+                    <td style="text-align:right" id="VergleichNutzungsdauerII"></td>
+                <tr style="border: 1px solid #ccc;text-align: center;background-color: #ecb0b0;font-weight: bold">
+                    <td colspan="3">Fixe Kosten p. a.</td>
+                </tr>
+                <tr style="border: 1px solid #ecb0b0";text-align:right>
+                    <td>Abschreibung (€)</td>
+                    <td style="text-align:right" id="VergleichAbschreibungI"></td>
+                    <td style="text-align:right" id="VergleichAbschreibungII"></td>
+                </tr>
+                <tr style="border: 1px solid #ecb0b0">
+                    <td>Kalkulatorische Zinsen (€)</td>
+                    <td style="text-align:right" id="VergleichZinsenI"></td>
+                    <td style="text-align:right" id="VergleichZinsenII"></td>
+                </tr>
+                <tr style="border: 1px solid #ecb0b0">
+                    <td>Sonstige fixe Kosten</td>
+                    <td style="text-align:right" id="VergleichFixI"></td>
+                    <td style="text-align:right" id="VergleichFixII"></td>
+                </tr>
+                <tr style="border: 1px solid #ecb0b0;">
+                    <td style="background-color: #ecb0b0;">Summe fixe Kosten</td>
+                    <td style="text-align:right" id="VergleichSummeFixI"></td>
+                    <td style="text-align:right" id="VergleichSummeFixII"></td>
+                </tr>
+                <tr style="border: 1px solid #ccc;text-align: center;background-color: #f0f7ab;font-weight: bold">
+                    <td colspan="3">Variable Kosten p. a.</td>
+                </tr>
+                <tr style="border: 1px solid #f0f7ab;">
+                    <td>Personalkosten</td>
+                    <td style="text-align:right" id="VergleichPersonalI"></td>
+                    <td style="text-align:right" id="VergleichPersonalII"></td>
+                </tr>
+                <tr style="border: 1px solid #f0f7ab;">
+                    <td>Materialkosten</td>
+                    <td style="text-align:right" id="VergleichMaterialI"></td>
+                    <td style="text-align:right" id="VergleichMaterialII"></td>
+                </tr>
+                <tr style="border: 1px solid #f0f7ab;">
+                    <td>Energiekosten</td>
+                    <td style="text-align:right" id="VergleichEnergieI"></td>
+                    <td style="text-align:right" id="VergleichEnergieII"></td>
+                </tr>
+                <tr style="border: 1px solid #f0f7ab;">
+                    <td>Sonstige variable Kosten</td>
+                    <td style="text-align:right" id="VergleichVariableI"></td>
+                    <td style="text-align:right" id="VergleichVariableII"></td>
+                </tr>
+                <tr style="border: 1px solid #f0f7ab;">
+                    <td style="background-color: #f0f7ab;">Summe variable Kosten</td>
+                    <td style="text-align:right" id="VergleichSummeVariableI"></td>
+                    <td style="text-align:right" id="VergleichSummeVariableII"></td>
+                </tr>
+                <tr style="background-color: #f7d29b;font-weight: bold;">
+                    <td>Gesamtkosten p. a.</td>
+                    <td style="text-align:right" id="VergleichGesamtkostenI"></td>
+                    <td style="text-align:right" id="VergleichGesamtkostenII"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Amortisationsrechnung</h2>
+
+    <table style="border: 1px solid #ccc;font-size: 16px;min-width:650px;border-collapse:collapse;">
+        <tr style="background-color: #9ec2ec;">
+            <th style="width:50%;text-align: left"></th>
+            <th style="width:25%;text-align: left">Anlage I</th>
+            <th style="width:25%;text-align: left">Anlage II</th>
+    </tr>
+    <tr style="border: 1px solid #ccc">
+        <td>Anschaffungskosten (€)</td>
+        <td id="AmortationAnschaffungskostenI">0</td>
+        <td id="AmortationAnschaffungskostenII">0</td>
+    </tr>
+    <tr style="border: 1px solid #ccc">
+        <td>Nutzungsdauer (Jahre)</td>
+        <td id="AmortationNutzungsdauerI">0</td>
+        <td id="AmortationNutzungsdauerII">0</td>
+    </tr>
+    <tr style="border: 1px solid #ccc">
+        <td>Abschreibung pro Jahr (€)</td>
+        <td id="AmortationAbschreibungI">0</td>
+        <td id="AmortationAbschreibungII">0</td>
+    </tr>
+    <tr style="border: 1px solid #ccc">
+        <td>Kalkulatorische Zinsen pro Jahr (€)</td>
+        <td id="AmortationZinsenI">0</td>
+        <td id="AmortationZinsenII">0</td>
+    </tr>
+    <tr style="border: 1px solid #ccc">
+        <td>Gewinn pro Jahr (€)</td>
+        <td id="AmortationGewinnI">0</td>
+        <td id="AmortationGewinnII">0</td>
+    </tr>
+    <tr style="background-color: #f7d29b;font-weight: bold;">
+        <td>Amortisationszeit in Jahren</td>
+        <td id="AmortationZeitI">0</td>
+        <td id="AmortationZeitII">0</td>
+    </tr>
+</table>
+        </div></div>
+        <div class="exportButtons">
+            <button class="icon" type="button" onclick="investitionsrechnungHerunterladenAlsPNG()"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+                    viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path
+                        d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                </svg></button>
+            <button class="icon" type="button" id="officeButtonInvestitionsrechnung"
+                data-clipboard-target="#investitionsrechnungContainer"><svg xmlns="http://www.w3.org/2000/svg"
+                    height="16" width="12"
+                    viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path
+                        d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
+                </svg></button>
+            <button class="icon" type="button" onclick="investitionsrechnungHerunterladen()"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+                    viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path
+                        d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+                </svg></button>
+            <button class="icon" type="button" onclick="investitionsrechnungKopiereInZwischenablage()"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+                    viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path
+                        d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+                </svg></button>
+             </div>
+    
+        <script>
+            // Funktion zum Generieren von zufälligen Beträgen zwischen min und max, gerundet auf volle Hundert
+            function getRandomAmount_100(min, max) {
+                let randomValue = Math.floor(Math.random() * (max - min + 1)) + min;
+                return Math.round(randomValue / 100) * 100; // Runden auf volle Hundert
+            }
+
+            function getRandomAmount_1000(min, max) {
+                let randomValue = Math.floor(Math.random() * (max - min + 1)) + min;
+                return Math.round(randomValue / 1000) * 1000; // Runden auf volle Tausend
+            }
+
+            function getRandomAmount_1(min, max) {
+                let randomValue = Math.floor(Math.random() * (max - min + 1)) + min;
+                return Math.round(randomValue); // Runden auf voller einer
+            }
+
+            // Funktion zum Generieren einer zufälligen Zahl zwischen min und max
+        function getRandomYears(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min; // Zufällige Jahre generieren
+        }
+
+    
+            // Funktion, um die Anschaffungskosten zu setzen, wobei die beiden Werte nahe beieinander liegen
+            function setAnschaffungskosten() {
+
+                // Generiere den Betrag für Anlage I
+                let anlageI = getRandomAmount_1000(30000, 300000);
+                let quantity = getRandomAmount_100(anlageI/100*0.5, anlageI/100*1.25)*100;
+                let personalI = getRandomAmount_100(15000, 30000)/100000;
+                let materialI = getRandomAmount_100(15000, 30000)/100000;
+                let energyI = getRandomAmount_100(5000, 15000)/100000;
+                let variableI = getRandomAmount_1000(anlageI*0.05, anlageI*0.10);
+                let fixI = getRandomAmount_1000(anlageI*0.05, anlageI*0.10);
+                let interest = getRandomAmount_1(2, 6);
+
+                // Generiere den Betrag für Anlage II, der maximal von Anlage I abweicht
+                let abweichung = getRandomAmount_100(-10000, 10000);
+                let abweichung2 = getRandomAmount_1000(-10000, 10000);
+                let anlageII = anlageI + abweichung
+                let personalII = personalI + abweichung/2/100000;
+                let materialII = materialI + abweichung/2/100000;
+                let energyII = energyI + abweichung/2/100000;
+                let variableII = variableI + abweichung2
+                let fixII = fixI + abweichung2
+    
+                // Sicherstellen, dass der Betrag für Anlage II im Bereich von 30.000 bis 300.000 bleibt
+                if (anlageII < 30000) {
+                    anlageII = 30000;
+                } else if (anlageII > 300000) {
+                    anlageII = 300000;
+                }
+
+                // Sicherstellen, dass der Betrag für Personal II im Bereich von 0.15 bis 0.30 bleibt
+                if (personalII < 0.15) {
+                    personalII = 0.15;
+                } else if (personalII > 0.30) {
+                    personalII = 0.30;
+                }
+
+                 // Sicherstellen, dass der Betrag für Material II im Bereich von 0.15 bis 0.30 bleibt
+                 if (materialII < 0.10) {
+                    materialII = 0.10;
+                } else if (materialII > 0.40) {
+                    materialII = 0.40;
+                }
+                
+                 // Sicherstellen, dass der Betrag für Enregie II im Bereich von 0.05 bis 0.15 bleibt
+                 if (energyII < 0.05) {
+                    energyII = 0.05;
+                } else if (energyII > 0.15) {
+                    energyII = 0.15;
+                }
+
+                
+                 // Sicherstellen, dass der Betrag für Variable II im Bereich bleibt
+                 if (variableII < Math.round(anlageI/100 / 1000) * 1000) {
+                    variableII = variableI;
+                } else if (variableII >Math.round(anlageI/10 / 1000) * 1000) {
+                    variableII = variableI;
+                }
+
+                // Sicherstellen, dass der Betrag für Fix II im Bereich von 1000 bis 10000 bleibt
+                if (fixII < Math.round(anlageI/100 / 1000) * 1000) {
+                    fixII = fixI;
+                } else if (fixII > Math.round(anlageI/10 / 1000) * 1000) {
+                    fixII = fixI;
+                }
+
+                // Generiere eine zufällige Nutzungsdauer zwischen 5 und 10 Jahren
+                let nutzungsdauer = getRandomYears(5, 10);
+   
+                let costI = parseFloat(personalI+materialI+energyI+(variableI/quantity)+(fixI/quantity));
+                let costII = parseFloat(personalII+materialII+energyII+(variableII/quantity)+(fixII/quantity));
+                let minSell = Math.min(costI, costII);
+                let sell = getRandomAmount_1(minSell*1.25, minSell*1.75);
+                profitI = sell-costI;
+                profitII = sell-costII;
+
+                AmortationAbschreibungI = anlageI/nutzungsdauer.toFixed(2);
+                AmortationAbschreibungII = anlageII/nutzungsdauer.toFixed(2);
+                AmortationZinsenI = anlageI*interest/(2*100).toFixed(2);
+                AmortationZinsenII = anlageII*interest/(2*100).toFixed(2);
+                AmortationGewinnI = quantity*profitI.toFixed(2);
+                AmortationGewinnII = quantity*profitII.toFixed(2);
+                AmortationZeitI = (anlageI/(AmortationAbschreibungI+AmortationZinsenI+AmortationGewinnI));
+                AmortationZeitII = (anlageI/(AmortationAbschreibungII+AmortationZinsenII+AmortationGewinnII));
+                VergleichSummeFixI = AmortationAbschreibungI+AmortationZinsenI+fixI;
+                VergleichSummeFixII = AmortationAbschreibungII+AmortationZinsenII+fixII;
+                VergleichPersonalI = quantity*personalI.toFixed(2);
+                VergleichPersonalII = quantity*personalII.toFixed(2);
+                VergleichMaterialI = quantity*materialI.toFixed(2);
+                VergleichMaterialII = quantity*materialII.toFixed(2);
+                VergleichEnergieI = quantity*energyI.toFixed(2);
+                VergleichEnergieII = quantity*energyII.toFixed(2);
+                VergleichSummeVariableI = VergleichPersonalI+VergleichMaterialI+VergleichEnergieI+variableI;
+                VergleichSummeVariableII = VergleichPersonalII+VergleichMaterialII+VergleichEnergieII+variableII;
+                VergleichGesamtkostenI = VergleichSummeVariableI+VergleichSummeFixI;
+                VergleichGesamtkostenII = VergleichSummeVariableII+VergleichSummeFixII;
+
+                // Die Beträge in der Tabelle aktualisieren
+                document.getElementById('anlageI').innerText = anlageI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('anlageII').innerText = anlageII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('AmortationAnschaffungskostenI').innerText = anlageI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('AmortationAnschaffungskostenII').innerText = anlageII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('VergleichAnschaffungskostenI').innerText = anlageI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('VergleichAnschaffungskostenII').innerText = anlageII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});              
+                document.getElementById('nutzungsdauerI').innerText = nutzungsdauer + ' Jahre';
+                document.getElementById('nutzungsdauerII').innerText = nutzungsdauer + ' Jahre';
+                document.getElementById('AmortationNutzungsdauerI').innerText = nutzungsdauer + ' Jahre';
+                document.getElementById('AmortationNutzungsdauerII').innerText = nutzungsdauer + ' Jahre';
+                document.getElementById('VergleichNutzungsdauerI').innerText = nutzungsdauer + ' Jahre';
+                document.getElementById('VergleichNutzungsdauerII').innerText = nutzungsdauer + ' Jahre';
+                document.getElementById('quantityI').innerText = quantity.toLocaleString('de-DE').replace(/\./g, ' ') + ' Teile/Jahr';
+                document.getElementById('quantityII').innerText = quantity.toLocaleString('de-DE').replace(/\./g, ' ') + ' Teile/Jahr';
+                document.getElementById('personalI').innerText = personalI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'}) + " /Stück";
+                document.getElementById('personalII').innerText = personalII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'}) + " /Stück";
+                document.getElementById('materialI').innerText = materialI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'}) +  " /Stück";
+                document.getElementById('materialII').innerText = materialII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'}) + " /Stück";
+                document.getElementById('energyI').innerText = energyI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'}) +  " /Stück";
+                document.getElementById('energyII').innerText = energyII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'}) + " /Stück";   
+                document.getElementById('variableI').innerText = variableI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('variableII').innerText = variableII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('VergleichVariableI').innerText = variableI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('VergleichVariableII').innerText = variableII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});              
+                document.getElementById('fixI').innerText = fixI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('fixII').innerText = fixII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('VergleichFixI').innerText = fixI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('VergleichFixII').innerText = fixII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('interestI').innerText = interest.toLocaleString('de-DE').replace(/\./g, ' ') + ' %';
+                document.getElementById('interestII').innerText = interest.toLocaleString('de-DE').replace(/\./g, ' ') + ' %';
+                document.getElementById('profitI').innerText = profitI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('profitII').innerText = profitII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'});
+                document.getElementById('AmortationAbschreibungI').innerText = AmortationAbschreibungI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('AmortationAbschreibungII').innerText = AmortationAbschreibungII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichAbschreibungI').innerText = AmortationAbschreibungI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichAbschreibungII').innerText = AmortationAbschreibungII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('AmortationZinsenI').innerText = AmortationZinsenI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('AmortationZinsenII').innerText = AmortationZinsenII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichZinsenI').innerText = AmortationZinsenI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichZinsenII').innerText = AmortationZinsenII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('AmortationGewinnI').innerText = AmortationGewinnI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('AmortationGewinnII').innerText = AmortationGewinnII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('AmortationZeitI').innerText = AmortationZeitI.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                document.getElementById('AmortationZeitII').innerText = AmortationZeitII.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                document.getElementById('VergleichSummeFixI').innerText = VergleichSummeFixI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichSummeFixII').innerText = VergleichSummeFixII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichPersonalI').innerText = VergleichPersonalI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichPersonalII').innerText = VergleichPersonalII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichPersonalI').innerText = VergleichPersonalI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichPersonalII').innerText = VergleichPersonalII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichMaterialI').innerText = VergleichMaterialI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichMaterialII').innerText = VergleichMaterialII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichEnergieI').innerText = VergleichEnergieI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichEnergieII').innerText = VergleichEnergieII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichSummeVariableI').innerText = VergleichSummeVariableI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichSummeVariableII').innerText = VergleichSummeVariableII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichGesamtkostenI').innerText = VergleichGesamtkostenI.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+                document.getElementById('VergleichGesamtkostenII').innerText = VergleichGesamtkostenII.toLocaleString('de-DE', {style: 'currency', currency: 'EUR'})
+        
+            }
+    
+            // Sobald die Seite geladen wird, die Werte setzen
+            window.onload = function() {
+                setAnschaffungskosten();
+            }
+</script>
+<script>
+            
+function investitionsrechnungHerunterladen() {
+    const investitionsrechnungHTML = document.getElementById('investitionsrechnungContainer').innerHTML;
+    const blob = new Blob([investitionsrechnungHTML], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'investitionsrechnung.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function investitionsrechnungKopiereInZwischenablage() {
+    const investitionsrechnungHTML = document.getElementById('investitionsrechnungContainer').innerHTML;
+    navigator.clipboard.writeText(investitionsrechnungHTML)
+        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
+
+function investitionsrechnungHerunterladenAlsPNG() {
+    const investitionsrechnungContainer = document.getElementById('investitionsrechnungContainer');
+
+    html2canvas(investitionsrechnungContainer, optionshtml2canvas).then(canvas => {
+        const dataURL = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'investitionsrechnung.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+}
+
+let clipboardInvestitionsrechnung = new ClipboardJS('#officeButtonInvestitionsrechnung');
+
+clipboardInvestitionsrechnung.on('success', function (e) {
+    console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
+    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+});
+
+clipboardInvestitionsrechnung.on('error', function (e) {
+    console.error("Fehler beim Kopieren der Tabelle: ", e.action);
+    alert("Fehler beim Kopieren der Tabelle.");
+});
+
+        </script>
+        </body>
+        </html>
+            
+    </div>
+</main>
+<div w3-include-html="footer.html"></div>
+<script>
+    includeHTML();
+</script>
+</body>
+
+</html>
