@@ -595,10 +595,12 @@ function loadSupplierData() {
     const svgContainer = document.getElementById('rechnungSVG');
     const rectElement = document.getElementById('logo-placeholder');
 
-    const existingImages = svgContainer.querySelectorAll('#uploaded-image');
-    existingImages.forEach(existingImage => {
-        svgContainer.removeChild(existingImage);
-    });
+    // Entferne vorhandene Logos (sowohl <image> als auch eingebettete SVGs)
+const existingImages = svgContainer.querySelectorAll('#uploaded-image, svg.logo-svg');
+existingImages.forEach(existingImage => {
+    svgContainer.removeChild(existingImage);
+});
+
     // Erstelle ein <image>-Element und füge es zur SVG hinzu
     if (svgContainer instanceof SVGElement) {
     const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
@@ -609,46 +611,63 @@ function loadSupplierData() {
     image.setAttribute('height', rectElement.getAttribute('height'));
 
     // Setze den href-Attribut basierend auf logoUrl oder den Standardwert
-    if (logoUrl && logoUrl.trim() !== '') {
+    if (rectElement) {
+        const x = rectElement.getAttribute('x');
+        const y = rectElement.getAttribute('y');
+        const width = rectElement.getAttribute('width');
+        const height = rectElement.getAttribute('height');
+
+
         // Überprüfe, ob logoUrl eine externe URL oder ein Pfad zu einer lokalen Datei ist
-        if (logoUrl.startsWith('http') || logoUrl.startsWith('data:image')) {
-            // Wenn logoUrl bereits eine externe URL oder eine Data-URL ist, setze sie direkt
-            image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', logoUrl);
-            svgContainer.appendChild(image);
-        } else {
-            // Lade das Bild, konvertiere es in Base64 und setze es als Data-URL
+        if (logoUrl.startsWith('http') || logoUrl.endsWith('.svg')) {
+            // Lade die SVG-Datei und füge sie direkt als SVG ein
             const xhr = new XMLHttpRequest();
             xhr.onload = function () {
-                const reader = new FileReader();
-                reader.onloadend = function () {
-                    image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
-                    svgContainer.appendChild(image);
-                };
-                reader.readAsDataURL(xhr.response);
+                if (xhr.status === 200) {
+                    const svgContent = xhr.responseText;
+
+                    // Erstelle ein temporäres Container-Element für die SVG
+                    const tempContainer = document.createElement('div');
+                    tempContainer.innerHTML = svgContent;
+
+                    // Füge die SVG in den SVG-Container ein
+                    const svgElement = tempContainer.querySelector('svg');
+                    if (svgElement) {
+                        // Setze die Position und Größe des Logos basierend auf dem Platzhalter
+                        svgElement.setAttribute('x', x);
+                        svgElement.setAttribute('y', y);
+                        svgElement.setAttribute('width', width);
+                        svgElement.setAttribute('height', height);
+
+                        // Füge die SVG in den Container ein
+                        svgElement.classList.add('logo-svg');
+                        svgContainer.appendChild(svgElement);
+                    }
+                }
             };
             xhr.open('GET', logoUrl);
-            xhr.responseType = 'blob';
             xhr.send();
+        } else {
+            // Lade den Standard-SVG und füge ihn direkt als SVG ein
+            const standardImageURL = 'media/pic/standard.svg';
+            const xhrStandard = new XMLHttpRequest();
+            xhrStandard.onload = function () {
+                if (xhrStandard.status === 200) {
+                    const svgContent = xhrStandard.responseText;
+                    const tempContainer = document.createElement('div');
+                    tempContainer.innerHTML = svgContent;
+                    const svgElement = tempContainer.querySelector('svg');
+                    if (svgElement) {
+                        svgContainer.appendChild(svgElement);
+                    }
+                }
+            };
+            xhrStandard.open('GET', standardImageURL);
+            xhrStandard.send();
         }
     } else {
-        // Wenn der Eintrag in YAML leer ist, lade den Standard-SVG als Base64
-        const standardImageURL = 'media/pic/standard.svg';
-
-        const xhrStandard = new XMLHttpRequest();
-        xhrStandard.onload = function () {
-            const reader = new FileReader();
-            reader.onloadend = function () {
-                image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
-                svgContainer.appendChild(image);
-            };
-            reader.readAsDataURL(xhrStandard.response);
-        };
-        xhrStandard.open('GET', standardImageURL);
-        xhrStandard.responseType = 'blob';
-        xhrStandard.send();
+        return;
     }
-} else {
-return;
 }
 }
 
@@ -660,11 +679,11 @@ function loadLogo(event) {
         alert('In diesem Beleg kann kein Logo hochgeladen werden.');
         return;
     }
-    const existingImages = svgContainer.querySelectorAll('#uploaded-image');
-
-    existingImages.forEach(existingImage => {
-        svgContainer.removeChild(existingImage);
-    });
+     // Entferne vorhandene Logos (sowohl <image> als auch SVGs)
+     const existingImages = svgContainer.querySelectorAll('#uploaded-image, svg.logo-svg');
+     existingImages.forEach(existingImage => {
+         svgContainer.removeChild(existingImage);
+     });
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
