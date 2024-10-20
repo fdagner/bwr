@@ -176,7 +176,7 @@ table {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 8px
+  gap: 12px;
 }
 
 .flex-column {

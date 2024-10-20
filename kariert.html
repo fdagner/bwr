@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kariertes-Blatt-Generator (beta)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/menu.js"></script>
+</head>
+
+<body>
+    <main>
+        <div w3-include-html="navigation.html"></div>
+        <h1>Kariertes-Blatt-Generator (beta)</h1>
+        <div class="box">
+            <div class="flex-column">
+                <div>
+                    <label for="rows">Anzahl der Zeilen:</label>
+                    <input type="number" id="rows" min="1" max="56" value="10">
+                </div>
+                <div>
+                    <label for="columns">Anzahl der Spalten:</label>
+                    <input type="number" id="columns" min="1" max="40" value="32">
+                </div>
+                <div>
+                    <label for="borderColor">Gitterfarbe:</label>
+                    <input type="color" id="borderColor" value="#D3D3D3">
+                </div>
+                <div>
+                    <button id="generate">Generieren</button>
+                </div>
+            </div>
+        </div>
+        <div style="display: none" id="svg-container"></div>
+        <div id="table-container"></div>
+
+        <div class="exportButtons">
+            <button class="icon" type="button" id="officeButtontablecontainer" data-clipboard-target="#table-container">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512">
+                    <path
+                        d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
+                </svg>
+            </button>
+
+            <button class="icon" type="button" onclick="svgcontainerHerunterladen()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512">
+                    <path
+                        d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+                </svg>
+            </button>
+            <p style="font-size: small;">Wählen Sie den Office-Export für WORD und ByCS Drive, den SVG-Export für
+                andere, zum Beispiel LibreOffice.
+                50 Zeilen und 32 Spalten entsprechen der Größe von DIN-A4 mit Standardseitenrändern und karierten Zellen
+                in Höhe und
+                Breite von 0,5 cm. Bei zu großer Breite werden die Zellen im Office-Programm verkleinert!</p>
+
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('generate').addEventListener('click', function () {
+            const rowsInput = document.getElementById('rows');
+            const columnsInput = document.getElementById('columns');
+            const rows = parseInt(rowsInput.value, 10);
+            const columns = parseInt(columnsInput.value, 10);
+
+            // Validierung
+            if (isNaN(rows) || rows < 1 || rows > 56) {
+                alert("Bitte geben Sie eine gültige Anzahl von Zeilen (1-56) ein.");
+                rowsInput.focus();
+                return;
+            }
+
+            if (isNaN(columns) || columns < 1 || columns > 40) {
+                alert("Bitte geben Sie eine gültige Anzahl von Spalten (1-40) ein.");
+                columnsInput.focus();
+                return;
+            }
+
+            const cellSizeCm = 0.5; // Größe der Zelle in cm
+            const borderColor = document.getElementById('borderColor').value; // Farbe der Linien
+
+            // SVG Element erstellen
+            let svg = `<svg width="${columns * cellSizeCm * 37.795275591}" height="${rows * cellSizeCm * 37.795275591}" xmlns="http://www.w3.org/2000/svg">`;
+
+            // Horizontale Linien hinzufügen
+            for (let i = 0; i <= rows; i++) {
+                const y = i * cellSizeCm * 37.795275591;
+                svg += `<line x1="0" y1="${y}" x2="${columns * cellSizeCm * 37.795275591}" y2="${y}" stroke="${borderColor}" stroke-width="1"/>`;
+            }
+
+            // Vertikale Linien hinzufügen
+            for (let i = 0; i <= columns; i++) {
+                const x = i * cellSizeCm * 37.795275591;
+                svg += `<line x1="${x}" y1="0" x2="${x}" y2="${rows * cellSizeCm * 37.795275591}" stroke="${borderColor}" stroke-width="1"/>`;
+            }
+
+            svg += '</svg>';
+
+            // SVG in den Container einfügen
+            document.getElementById('svg-container').innerHTML = svg;
+
+            // HTML-Tabelle erstellen
+            let table = '<table style="border-collapse: collapse; margin-top: 20px; table-layout: fixed; width: auto;">';
+            for (let r = 0; r < rows; r++) {
+                table += `<tr style="height: 0.5cm;">`;
+                for (let c = 0; c < columns; c++) {
+                    table += `<td style="width: 0.5cm; height: 0.5cm; border: 1px solid ${borderColor}; padding: 0; line-height: 0.5cm; vertical-align: middle; mso-height-rule: exactly;"></td>`;
+                }
+                table += '</tr>';
+            }
+            table += '</table>';
+
+            // Tabelle in den Container einfügen
+            document.getElementById('table-container').innerHTML = table;
+        });
+    </script>
+
+    <script>
+        function svgcontainerHerunterladen() {
+            const svgcontainer = document.getElementById('svg-container').innerHTML;
+            const blob = new Blob([svgcontainer], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'kariert.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        let clipboardtablecontainer = new ClipboardJS('#officeButtontablecontainer');
+
+        clipboardtablecontainer.on('success', function (e) {
+            console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
+            alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+        });
+
+        clipboardtablecontainer.on('error', function (e) {
+            console.error("Fehler beim Kopieren der Tabelle: ", e.action);
+            alert("Fehler beim Kopieren der Tabelle.");
+        });
+    </script>
+
+    <div w3-include-html="footer.html"></div>
+    <script>
+        includeHTML();
+    </script>
+</body>
+
+</html>
