@@ -33,8 +33,10 @@
                 </div>
             </div>
         </div>
+        <div style="min-width: 800px;">
         <div style="display: none" id="svg-container"></div>
         <div id="table-container"></div>
+        </div>
 
         <div class="exportButtons">
             <button class="icon" type="button" id="officeButtontablecontainer" data-clipboard-target="#table-container">
@@ -139,7 +141,7 @@
 
         clipboardtablecontainer.on('error', function (e) {
             console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-            alert("Fehler beim Kopieren der Tabelle.");
+            alert("Die Tabelle wurde in die Zwischenablage kopiert.");
         });
     </script>
 
