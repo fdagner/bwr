@@ -180,7 +180,7 @@ function erstelleZufallssatz() {
     `. Wir zahlen zudem zusätzlich Verpackungskosten in Höhe von ${random_Bezugskosten} netto`,
     `. Transportversicherung und Rollgeld betragen darüber hinaus netto ${random_Bezugskosten}`,
     `. Die Leihverpackung in Höhe von ${random_Bezugskosten} netto wird zusätzlich berechnet`,
-    `. Netto ${random_Bezugskosten} an Tansportkosten werden zusätzlich berechnet`,
+    `. Netto ${random_Bezugskosten} an Transportkosten werden zusätzlich berechnet`,
     `. Versandkosten in Höhe von netto ${random_Bezugskosten} fallen darüber hinaus an`,
     `. Es fallen des Weiteren Frachtgebühren in Höhe von netto ${random_Bezugskosten} an`,
     `. Es werden noch netto ${random_Bezugskosten} an Versandkosten berechnet`,
@@ -208,6 +208,7 @@ function erstelleZufallssatz() {
 
   // Anzeige wenn Brutto oder Netto
   randomNettowert = nettoOderBrutto === 'Netto' ? `Listenpreis ${nettoWert} netto` : `brutto ${bruttoWert}`;
+  randomNettowertbeiAngebot = `Listenpreis ${nettoWert} netto`;
 
 
   const randomZahlung = array_Zahlung[Math.floor(Math.random() * array_Zahlung.length)];
@@ -280,11 +281,11 @@ function erstelleZufallssatz() {
   let angebotSatz;
   angebotSatz = `<ol style="list-style-type: lower-latin;">`;
   if (randomAngebotSatz < 0.33) {
-    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz: wir akzeptieren das Angebot ${randomZahlung}.</li>`;
+    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowertbeiAngebot} ${randomSupply_Rabatt} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz: wir akzeptieren das Angebot ${randomZahlung}.</li>`;
   } else if (randomAngebotSatz < 0.66) {
-    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz: Wir geben die Bestellung in Auftrag ${randomZahlung}.</li>`;
+    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowertbeiAngebot} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Bilde den Buchungssatz: Wir geben die Bestellung in Auftrag ${randomZahlung}.</li>`;
   } else {
-    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowert} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Wir nehmen das Angebot an ${randomZahlung}. Bilde den Buchungssatz!</li>`;
+    angebotSatz += `<li>${randomAngebot} ${randomWerkstoff} ${randomSupply_Wert} ${randomNettowertbeiAngebot} ${randomSupply_Rabatt_2} ${randomSupply_Skonto} ${randomSupply_Bezugskosten}.</li><li>Wir nehmen das Angebot an ${randomZahlung}. Bilde den Buchungssatz!</li>`;
   }
   angebotSatz += `</ol>`;
 
@@ -313,7 +314,6 @@ function erstelleZufallssatz() {
     USTWertRuecksendung = formatCurrency(USTWertRuecksendung);
     zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
     berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
-    console.log(zieleinkaufspreis_Ruecksendung);
   } else if (randomRuecksendung < 0.66) {
     ruecksendungSatz = `Aufgrund eines Sachmangels senden wir ${randomRuecksendungProzent} % der Werkstoffe aus Geschäftsfall`;
     zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*randomRuecksendungProzent/100);

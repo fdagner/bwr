@@ -50,8 +50,8 @@ function getRandomGewinn() {
 }
 
 function getRandomWunschGewinn() {
-  // Generiere eine zufällige Ganzzahl zwischen 0 und 20 in 1er-Schritten
-  return Math.floor(Math.random() * 21);
+  // Generiere eine zufällige Ganzzahl zwischen -15 und 10 in 1er-Schritten
+  return Math.floor(Math.random() * 26) - 15;
 }
 
 function getRandomBezugskosten() {
@@ -255,7 +255,7 @@ function verkaufErstelleZufallssatz() {
   let verkauf_Random_Gewinn_Berechnet = 0;
   if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
     verkaufWunschGewinn = parseFloat(verkaufRandom_Gewinn);
-    verkaufRandom_Gewinn = parseFloat(verkaufRandom_Gewinn) - parseFloat(verkaufWunschRandom_Gewinn);
+    verkaufRandom_Gewinn = parseFloat(verkaufRandom_Gewinn) + parseFloat(verkaufWunschRandom_Gewinn);
   } else {
     verkaufRandom_Gewinn = verkaufRandom_Gewinn;
   }
