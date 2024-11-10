@@ -24,7 +24,7 @@
 
 - unternehmen:
     id: "2"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Lack Art"
     bank: "Bayern Bank"
     rechtsform: "GmbH"
@@ -47,7 +47,7 @@
 
 - unternehmen:
     id: "3"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "MS-Metall"
     bank: "Hypa Bank"
     rechtsform: "e. K."
@@ -93,7 +93,7 @@
 
 - unternehmen:
     id: "5"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "NaturForst"
     bank: "Bavaria Bank"
     rechtsform: "e. K."
@@ -137,7 +137,7 @@
 
 - unternehmen:
     id: "7"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Maria Metall Profi"
     bank: "Main Bank"
     rechtsform: "e. Kfr."
@@ -160,7 +160,7 @@
 
 - unternehmen:
     id: "8"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Textil Style"
     bank: "BavarianBank"
     rechtsform: "AG"
@@ -183,7 +183,7 @@
 
 - unternehmen:
     id: "9"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Farbenpracht"
     motto: "Mut zu Farbe!"
     bank: "Bayernkasse"
@@ -207,7 +207,7 @@
 
 - unternehmen:
     id: "10"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "AlpenHolz"
     motto: "Nachhaltige Qualität"
     bank: "Bavaria Bank"
@@ -231,7 +231,7 @@
 
 - unternehmen:
     id: "11"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Bayerischer Forst"
     motto: "Holz aus guten Händen"
     bank: "Waldbank"
@@ -255,7 +255,7 @@
 
 - unternehmen:
     id: "12"
-    branche: "Lieferant"
+    branche: "Fahrzeuge"
     name: "Fahrzeuge Huber"
     motto: "Spezialist für Auto und LKW"
     bank: "Mobilbank"
@@ -279,7 +279,7 @@
 
 - unternehmen:
     id: "13"
-    branche: "Lieferant"
+    branche: "Maschinen"
     name: "E.T.U."
     motto: "Elektro Teile Tollmann"
     bank: "Kindlbank"
@@ -303,7 +303,7 @@
 
 - unternehmen:
     id: "14"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Bayerchem"
     motto: "Chemische Werke"
     bank: "Stadtbank"
@@ -351,7 +351,7 @@
 
 - unternehmen:
     id: "16"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Werkstoffunion"
     motto: "Auf uns können Sie bauen!"
     bank: "Sparbank"
@@ -423,7 +423,7 @@
 
 - unternehmen:
     id: "19"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Bayerisches Sägewerk"
     motto: "Natürliches Holz für Ihre Projekte"
     bank: "Bayern Bank"
@@ -448,7 +448,7 @@
 - unternehmen:
     id: "20"
     branche: "Lieferant"
-    name: "Plastöko"
+    name: "ÖkoKu"
     motto: "Fachhandel für Kunststoffe"
     bank: "Eco Bank"
     rechtsform: "GmbH"
@@ -460,8 +460,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "0911 1334567"
-      email: "info@plastoek.de"
-      internet: "plastoek.de"
+      email: "info@ökoku.de"
+      internet: "ökoku.de"
     ust_id: "DE987654321"
     steuernummer: "181/023/23232"
     iban: "DE89370400440532013020"
@@ -495,7 +495,7 @@
 
 - unternehmen:
     id: "22"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "EcoEnergie"
     motto: "Nachhaltige Energie für eine gute Zukunft"
     bank: "GreenBank"
@@ -567,7 +567,7 @@
 
 - unternehmen:
     id: "25"
-    branche: "Lieferant"
+    branche: "Maschinen"
     name: "Präzisions-Maschinen"
     motto: "Innovation in jeder Bewegung"
     bank: "TechBank"
@@ -591,7 +591,7 @@
 
 - unternehmen:
     id: "26"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "EcoFuel"
     motto: "Öl- und Brennstoffhandel"
     bank: "Direktbank"
@@ -663,7 +663,7 @@
 
 - unternehmen:
     id: "29"
-    branche: "Lieferant"
+    branche: "Verpackungen"
     name: "Karton-Meister"
     motto: "Maßgeschneiderte Verpackungslösungen"
     bank: "Meisterbank"
@@ -855,7 +855,7 @@
 
 - unternehmen:
     id: "37"
-    branche: "Lieferant"
+    branche: "Werbung"
     name: "Werbeagentur Mandic"
     motto: "Wir machen bekannt."
     bank: "Grafbank"
@@ -1023,7 +1023,7 @@
 
 - unternehmen:
     id: "43"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Velo-Teile"
     motto: "Ihr kompetenter Zulieferer!"
     bank: "Berlin Bank"
@@ -1119,7 +1119,7 @@
 
 - unternehmen:
     id: "47"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "TextilPro"
     motto: "Wir sind für Sie da!"
     bank: "Fürth Bank"
@@ -1328,7 +1328,7 @@
 
 - unternehmen:
     id: "56"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "TextileSource"
     bank: "Deutsche Bank"
     rechtsform: "OHG"
@@ -1351,7 +1351,7 @@
 
 - unternehmen:
     id: "57"
-    branche: "Lieferant"
+    branche: "Fuhrpark"
     name: "AutoLux"
     bank: "Deutsche Bank"
     rechtsform: "GmbH"
@@ -1374,7 +1374,7 @@
 
 - unternehmen:
     id: "58"
-    branche: "Lieferant"
+    branche: "Maschinen"
     name: "MachinePro"
     bank: "Volksbank"
     rechtsform: "OHG"
@@ -1397,7 +1397,7 @@
 
 - unternehmen:
     id: "59"
-    branche: "Lieferant"
+    branche: "Maschinen"
     name: "TechMachines"
     bank: "Raiffeisenbank"
     rechtsform: "AG"
@@ -1417,3 +1417,195 @@
     bic: "GENODEF1XXX"
     inhaber: "Mehmet Sahin"
     akzent: "#ADD8E6"
+
+- unternehmen:
+    id: "60"
+    branche: "Einzelhandel"
+    name: "Bekleidungshaus Mark"
+    motto: "Wir statten Sie aus!"
+    bank: "Raiffeisenbank"
+    rechtsform: "GmbH"
+    logo: "media/pic/standard.svg"
+    adresse:
+      strasse: "Schulstraße 40"
+      plz: "85049"
+      ort: "Ingolstadt"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 841 223455"
+      email: "info@bekleidung-mark.de"
+      internet: "bekleidung-mark.de"
+    ust_id: "DE109876234"
+    steuernummer: "44/335/23466"
+    iban: "DE89370400440534503040"
+    bic: "GENODIN1XXX"
+    inhaber: "Marina Salini"
+    akzent: "#009ACD"
+
+- unternehmen:
+    id: "61"
+    branche: "Büro"
+    name: "Office 2000"
+    motto: "Büro und Elektroartikel"
+    bank: "Sparkasse"
+    rechtsform: "GmbH"
+    logo: "media/pic/folder.svg"
+    adresse:
+      strasse: "Hauptstraße 40"
+      plz: "85049"
+      ort: "Ingolstadt"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 841 22333455"
+      email: "info@office-2000.de"
+      internet: "office-2000.de"
+    ust_id: "DE109873454"
+    steuernummer: "44/345/11466"
+    iban: "DE89370400262736403040"
+    bic: "GENODIN1XXX"
+    inhaber: "Clemens Müller"
+    akzent: "#CD1076"
+
+- unternehmen:
+    id: "62"
+    branche: "Einzelhandel"
+    name: "AB Möbel"
+    motto: ""
+    bank: "Sparkasse"
+    rechtsform: "e. K."
+    logo: "media/pic/joo.svg"
+    adresse:
+      strasse: "Hohe Straße 40"
+      plz: "91054"
+      ort: "Erlangen"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 8031 114456"
+      email: "info@ab-moebel.de"
+      internet: "ab-moebel.de"
+    ust_id: "DE109873454"
+    steuernummer: "181/345/12366"
+    iban: "DE89370400262736403040"
+    bic: "GENODROS1XXX"
+    inhaber: "Mike Jason"
+    akzent: "#fe6700"
+
+- unternehmen:
+    id: "63"
+    branche: "Fuhrpark"
+    name: "HFE-Gabelstapler"
+    motto: ""
+    bank: "Sparkasse"
+    rechtsform: "e. K."
+    logo: "media/pic/forklift.svg"
+    adresse:
+      strasse: "Gewerbestraße 40"
+      plz: "92637"
+      ort: "Weiden"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 961 8735"
+      email: "info@hfe-stapler.de"
+      internet: "hfe-stapler.de"
+    ust_id: "DE109872344"
+    steuernummer: "181/565/12366"
+    iban: "DE89370400233436403040"
+    bic: "GENODWENS1XXX"
+    inhaber: "Hermann Fischer"
+    akzent: "#a020f0"
+
+- unternehmen:
+    id: "64"
+    branche: "Werkstoffe"
+    name: "Kühne Carbon"
+    motto: ""
+    bank: "Großbank"
+    rechtsform: "GmbH"
+    logo: "media/pic/carbon.svg"
+    adresse:
+      strasse: "Gewerbestraße 22"
+      plz: "90441"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 22735"
+      email: "info@mcarbon.de"
+      internet: "mcarbon.de"
+    ust_id: "DE109872234"
+    steuernummer: "181/535/14566"
+    iban: "DE89370400233436234040"
+    bic: "GENODNBGS1XXX"
+    inhaber: "Lisa Kühne"
+    akzent: "#20b2aa"
+
+- unternehmen:
+    id: "65"
+    branche: "Büro"
+    name: "Bürosysteme Ötztürk"
+    motto: "Alles für's Büro"
+    bank: "Hausbank"
+    rechtsform: "e. K."
+    logo: "media/pic/woman.svg"
+    adresse:
+      strasse: "Gewerbestraße 22"
+      plz: "90441"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 22735"
+      email: "info@buero-ötztuerk.de"
+      internet: "buero-ötztuerk.de"
+    ust_id: "DE109872234"
+    steuernummer: "181/115/22566"
+    iban: "DE83456400233436234040"
+    bic: "GENODNBGS1XXX"
+    inhaber: "Aleya Ötztürk"
+    akzent: "#df757e"
+
+- unternehmen:
+    id: "66"
+    branche: "Werkstoffe"
+    name: "Liquid Tankstation"
+    motto: ""
+    bank: "Genossenschaftsbank"
+    rechtsform: "e. K."
+    logo: "media/pic/oil.svg"
+    adresse:
+      strasse: "Hauptstraße 22"
+      plz: "90443"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 112343"
+      email: "info@liquid-tank.de"
+      internet: "liquid-tank.de"
+    ust_id: "DE109872344"
+    steuernummer: "181/225/12366"
+    iban: "DE834564002332233444040"
+    bic: "GENODNBGA1XXX"
+    inhaber: "Achmed Dincer"
+    akzent: "#467fff"
+
+- unternehmen:
+    id: "67"
+    branche: "Werkstoffe"
+    name: "CARLO"
+    motto: "Technology for you"
+    bank: "Genossenschaftsbank"
+    rechtsform: "GmbH"
+    logo: "media/pic/standard.svg"
+    adresse:
+      strasse: "Hauptstraße 34"
+      plz: "90441"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 902343"
+      email: "info@carlo-t.de"
+      internet: "carlo-t.de"
+    ust_id: "DE101122344"
+    steuernummer: "181/225/34566"
+    iban: "DE834564002332233444040"
+    bic: "GENODNBGS1XXX"
+    inhaber: "Carmen Lohmeier"
+    akzent: "#ff851f"

@@ -314,6 +314,12 @@ let selectedSupplier;
 
 function loadKontoauszugData() {
     const selectedKontoauszugName = document.getElementById('datenKontoauszug').value;
+ 
+    if (!selectedKontoauszugName) {
+        return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
+    }
+
+
     const selectedKontoauszug = yamlData.find(quittung => quittung.unternehmen.name === selectedKontoauszugName);
 
     document.getElementById('kontoauszugBank').textContent = selectedKontoauszug.unternehmen.bank;
@@ -326,6 +332,10 @@ function loadKontoauszugData() {
 
 function loadEmailData() {
     const selectedEmailName = document.getElementById('datenEmail').value;
+    if (!selectedEmailName) {
+        return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
+    }
+
     const selectedEmail = yamlData.find(email => email.unternehmen.name === selectedEmailName);
     document.getElementById('emailName').textContent = selectedEmail.unternehmen.name + ' ' + selectedEmail.unternehmen.rechtsform;
     const elementsWithClassemailInhaber = document.getElementsByClassName('emailInhaber');
@@ -401,6 +411,10 @@ function loadCompanyDataforEmail() {
 
 function loadQuittungData() {
     const selectedQuittungName = document.getElementById('datenQuittung').value;
+    if (!selectedQuittungName) {
+        return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
+    }
+
     const selectedQuittung = yamlData.find(quittung => quittung.unternehmen.name === selectedQuittungName);
     document.getElementById('quittungName').textContent = selectedQuittung.unternehmen.name + " " + selectedQuittung.unternehmen.rechtsform;
     document.getElementById('quittungStrasse').textContent = selectedQuittung.unternehmen.adresse.strasse;
@@ -419,6 +433,10 @@ function loadCompanyDataforQuittung() {
 
 function loadLohnjournalData() {
     const selectedLohnjournalName = document.getElementById('datenLohnjournal').value;
+    if (!selectedLohnjournalName) {
+        return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
+    }
+
     const selectedLohnjournal = yamlData.find(lohnjournal => lohnjournal.unternehmen.name === selectedLohnjournalName);
     document.getElementById('lohnjournalName').textContent = selectedLohnjournal.unternehmen.name + " " + selectedLohnjournal.unternehmen.rechtsform;
     document.getElementById('lohnjournalStrasse').textContent = selectedLohnjournal.unternehmen.adresse.strasse;
@@ -428,6 +446,9 @@ function loadLohnjournalData() {
 
 function loadBescheidData() {
     const selectedBescheidName = document.getElementById('datenBescheid').value;
+    if (!selectedBescheidName) {
+        return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
+    }
     const selectedBescheid = yamlData.find(bescheid => bescheid.unternehmen.name === selectedBescheidName);
     document.getElementById('bescheidName').textContent = selectedBescheid.unternehmen.name + " " + selectedBescheid.unternehmen.rechtsform;
     document.getElementById('bescheidInhaber').textContent = selectedBescheid.unternehmen.inhaber;
@@ -466,6 +487,10 @@ function loadBescheidData() {
 
 function loadKassenbonData() {
     const selectedKassenbonName = document.getElementById('datenKassenbon').value;
+    if (!selectedKassenbonName) {
+        return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
+    }
+
     const selectedKassenbon = yamlData.find(kassenbon => kassenbon.unternehmen.name === selectedKassenbonName);
     document.getElementById('kassenbonName').textContent = selectedKassenbon.unternehmen.name + " " + selectedKassenbon.unternehmen.rechtsform;
     document.getElementById('kassenbonStrasse').textContent = selectedKassenbon.unternehmen.adresse.strasse;
@@ -500,6 +525,10 @@ function loadCompanyDataforKassenbon() {
 
 function loadAnlagenkarteData() {
     const selectedAnlagenkarteName = document.getElementById('datenAnlagenkarte').value;
+    if (!selectedAnlagenkarteName) {
+        return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
+    }
+
     const selectedAnlagenkarte = yamlData.find(anlagenkarte => anlagenkarte.unternehmen.name === selectedAnlagenkarteName);
     document.getElementById('anlagenkarteName').textContent = selectedAnlagenkarte.unternehmen.name + " " + selectedAnlagenkarte.unternehmen.rechtsform;
     document.getElementById('anlagenkarteStrasse').textContent = selectedAnlagenkarte.unternehmen.adresse.strasse;
@@ -520,6 +549,10 @@ function loadAnlagenkarteData() {
 function loadCompanyData() {
     const selectedCompanyName = document.getElementById('datenKunde').value;
 
+    if (!selectedCompanyName) {
+        return;
+    }
+
     const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
 
     // Update the SVG text elements with the selected company data
@@ -537,6 +570,10 @@ function loadCompanyData() {
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
 function loadSupplierData() {
     const selectedSupplierName = document.getElementById('datenLieferer').value;
+    if (!selectedSupplierName) {
+        return;
+    }
+
     const selectedSupplier = yamlData.find(supplier => supplier.unternehmen.name === selectedSupplierName);
     // Update the SVG text elements with the selected supplier data
     document.getElementById('nameLieferer').textContent = selectedSupplier.unternehmen.name + ' ' + selectedSupplier.unternehmen.rechtsform;
@@ -596,94 +633,94 @@ function loadSupplierData() {
     const rectElement = document.getElementById('logo-placeholder');
 
     // Entferne vorhandene Logos (sowohl <image> als auch eingebettete SVGs)
-const existingImages = svgContainer.querySelectorAll('#uploaded-image, svg.logo-svg');
-existingImages.forEach(existingImage => {
-    svgContainer.removeChild(existingImage);
-});
+    const existingImages = svgContainer.querySelectorAll('#uploaded-image, svg.logo-svg');
+    existingImages.forEach(existingImage => {
+        svgContainer.removeChild(existingImage);
+    });
 
     // Erstelle ein <image>-Element und füge es zur SVG hinzu
     if (svgContainer instanceof SVGElement) {
-    const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-    image.setAttribute('id', 'uploaded-image');
-    image.setAttribute('x', rectElement.getAttribute('x'));
-    image.setAttribute('y', rectElement.getAttribute('y'));
-    image.setAttribute('width', rectElement.getAttribute('width'));
-    image.setAttribute('height', rectElement.getAttribute('height'));
+        const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+        image.setAttribute('id', 'uploaded-image');
+        image.setAttribute('x', rectElement.getAttribute('x'));
+        image.setAttribute('y', rectElement.getAttribute('y'));
+        image.setAttribute('width', rectElement.getAttribute('width'));
+        image.setAttribute('height', rectElement.getAttribute('height'));
 
-    // Setze den href-Attribut basierend auf logoUrl oder den Standardwert
-    if (rectElement) {
-        const x = rectElement.getAttribute('x');
-        const y = rectElement.getAttribute('y');
-        const width = rectElement.getAttribute('width');
-        const height = rectElement.getAttribute('height');
+        // Setze den href-Attribut basierend auf logoUrl oder den Standardwert
+        if (rectElement) {
+            const x = rectElement.getAttribute('x');
+            const y = rectElement.getAttribute('y');
+            const width = rectElement.getAttribute('width');
+            const height = rectElement.getAttribute('height');
 
 
-        // Überprüfe, ob logoUrl eine externe URL oder ein Pfad zu einer lokalen Datei ist
-        if (logoUrl.startsWith('http') || logoUrl.endsWith('.svg')) {
-            // Lade die SVG-Datei und füge sie direkt als SVG ein
-            const xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    const svgContent = xhr.responseText;
+            // Überprüfe, ob logoUrl eine externe URL oder ein Pfad zu einer lokalen Datei ist
+            if (logoUrl.startsWith('http') || logoUrl.endsWith('.svg')) {
+                // Lade die SVG-Datei und füge sie direkt als SVG ein
+                const xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        const svgContent = xhr.responseText;
 
-                    // Erstelle ein temporäres Container-Element für die SVG
-                    const tempContainer = document.createElement('div');
-                    tempContainer.innerHTML = svgContent;
+                        // Erstelle ein temporäres Container-Element für die SVG
+                        const tempContainer = document.createElement('div');
+                        tempContainer.innerHTML = svgContent;
 
-                    // Füge die SVG in den SVG-Container ein
-                    const svgElement = tempContainer.querySelector('svg');
-                    if (svgElement) {
-                        // Setze die Position und Größe des Logos basierend auf dem Platzhalter
-                        svgElement.setAttribute('x', x);
-                        svgElement.setAttribute('y', y);
-                        svgElement.setAttribute('width', width);
-                        svgElement.setAttribute('height', height);
+                        // Füge die SVG in den SVG-Container ein
+                        const svgElement = tempContainer.querySelector('svg');
+                        if (svgElement) {
+                            // Setze die Position und Größe des Logos basierend auf dem Platzhalter
+                            svgElement.setAttribute('x', x);
+                            svgElement.setAttribute('y', y);
+                            svgElement.setAttribute('width', width);
+                            svgElement.setAttribute('height', height);
 
-                        // Füge die SVG in den Container ein
-                        svgElement.classList.add('logo-svg');
-                        svgContainer.appendChild(svgElement);
+                            // Füge die SVG in den Container ein
+                            svgElement.classList.add('logo-svg');
+                            svgContainer.appendChild(svgElement);
+                        }
                     }
-                }
-            };
-            xhr.open('GET', logoUrl);
-            xhr.send();
+                };
+                xhr.open('GET', logoUrl);
+                xhr.send();
+            } else {
+                // Lade den Standard-SVG und füge ihn direkt als SVG ein
+                const standardImageURL = 'media/pic/standard.svg';
+                const xhrStandard = new XMLHttpRequest();
+                xhrStandard.onload = function () {
+                    if (xhrStandard.status === 200) {
+                        const svgContent = xhrStandard.responseText;
+                        const tempContainer = document.createElement('div');
+                        tempContainer.innerHTML = svgContent;
+                        const svgElement = tempContainer.querySelector('svg');
+                        if (svgElement) {
+                            svgContainer.appendChild(svgElement);
+                        }
+                    }
+                };
+                xhrStandard.open('GET', standardImageURL);
+                xhrStandard.send();
+            }
         } else {
-            // Lade den Standard-SVG und füge ihn direkt als SVG ein
-            const standardImageURL = 'media/pic/standard.svg';
-            const xhrStandard = new XMLHttpRequest();
-            xhrStandard.onload = function () {
-                if (xhrStandard.status === 200) {
-                    const svgContent = xhrStandard.responseText;
-                    const tempContainer = document.createElement('div');
-                    tempContainer.innerHTML = svgContent;
-                    const svgElement = tempContainer.querySelector('svg');
-                    if (svgElement) {
-                        svgContainer.appendChild(svgElement);
-                    }
-                }
-            };
-            xhrStandard.open('GET', standardImageURL);
-            xhrStandard.send();
+            return;
         }
-    } else {
-        return;
     }
-}
 }
 
 // Funktion zum Laden eines Logos
 function loadLogo(event) {
     const svgContainer = document.getElementById('rechnungSVG');
-     // Überprüfe, ob ein SVG-Element vorhanden ist
-     if (!(svgContainer instanceof SVGElement)) {
+    // Überprüfe, ob ein SVG-Element vorhanden ist
+    if (!(svgContainer instanceof SVGElement)) {
         alert('In diesem Beleg kann kein Logo hochgeladen werden.');
         return;
     }
-     // Entferne vorhandene Logos (sowohl <image> als auch SVGs)
-     const existingImages = svgContainer.querySelectorAll('#uploaded-image, svg.logo-svg');
-     existingImages.forEach(existingImage => {
-         svgContainer.removeChild(existingImage);
-     });
+    // Entferne vorhandene Logos (sowohl <image> als auch SVGs)
+    const existingImages = svgContainer.querySelectorAll('#uploaded-image, svg.logo-svg');
+    existingImages.forEach(existingImage => {
+        svgContainer.removeChild(existingImage);
+    });
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
@@ -741,17 +778,17 @@ function applyOrderData() {
         elementsWithClassRechnung7.textContent = formattedSevenDaysAgoRechnung;
     }
 
-     // Fälligkeitsdatum
-     const zahlungszielInput = getNumericValue('zahlungszielInput');
-     const elementsWithClassZiel = document.getElementById('rechnungDatumZiel');
-     if (elementsWithClassZiel) {
-         const currentYear = new Date().getFullYear();
-         const selectedDatumZiel = new Date(`${selectedMonat}/${selectedTag}/${currentYear}`);
-         const datumZiel = new Date(selectedDatumZiel);
-         datumZiel.setDate(selectedDatumZiel.getDate() + zahlungszielInput);
-         const formattedZiel = `${datumZiel.getDate().toString().padStart(2, '0')}.${(datumZiel.getMonth() + 1).toString().padStart(2, '0')}.`;
-         elementsWithClassZiel.textContent = formattedZiel;
-     }
+    // Fälligkeitsdatum
+    const zahlungszielInput = getNumericValue('zahlungszielInput');
+    const elementsWithClassZiel = document.getElementById('rechnungDatumZiel');
+    if (elementsWithClassZiel) {
+        const currentYear = new Date().getFullYear();
+        const selectedDatumZiel = new Date(`${selectedMonat}/${selectedTag}/${currentYear}`);
+        const datumZiel = new Date(selectedDatumZiel);
+        datumZiel.setDate(selectedDatumZiel.getDate() + zahlungszielInput);
+        const formattedZiel = `${datumZiel.getDate().toString().padStart(2, '0')}.${(datumZiel.getMonth() + 1).toString().padStart(2, '0')}.`;
+        elementsWithClassZiel.textContent = formattedZiel;
+    }
 
     // Annahme: Alle Elemente mit der Klasse 'rechnungsDatum' und kontoauszugDatum sollen aktualisiert werden
     const elementsWithClass = document.getElementsByClassName('rechnungsDatum');
@@ -804,11 +841,11 @@ function applyOrderData() {
         if (useScript) {
             let svgContainer = document.getElementById('rechnungSVG');
             if (svgContainer instanceof SVGElement) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJs';
-            dynamicScript.text = `
+                // Füge das dynamische Script zum SVG hinzu
+                const dynamicScript = document.createElement('script');
+                dynamicScript.type = 'text/javascript';
+                dynamicScript.id = 'customJs';
+                dynamicScript.text = `
             function getCurrentYear() {
                 return new Date().getFullYear();
             }
@@ -823,14 +860,14 @@ function applyOrderData() {
             }
         `;
 
-            customDefs.appendChild(dynamicScript);
+                customDefs.appendChild(dynamicScript);
 
-        }
-        else {
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJs';
-            dynamicScript.text = `
+            }
+            else {
+                const dynamicScript = document.createElement('script');
+                dynamicScript.type = 'text/javascript';
+                dynamicScript.id = 'customJs';
+                dynamicScript.text = `
             function getCurrentYear() {
                 return new Date().getFullYear();
             }
@@ -845,12 +882,12 @@ function applyOrderData() {
             }
         `;
 
-            // Füge das Skript zum body hinzu, wenn 'customDefs' nicht existiert
-            document.body.appendChild(dynamicScript);
+                // Füge das Skript zum body hinzu, wenn 'customDefs' nicht existiert
+                document.body.appendChild(dynamicScript);
 
- 
+
+            }
         }
-    }
         SVGonLoad(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
 
 
@@ -1048,7 +1085,7 @@ function applyOrderData() {
     const warenwertUstRechnungsbetrag_quer = document.getElementById('warenwertUstRechnungsbetrag_quer');
     const gBezugskosten = document.getElementById('gBezugskosten');
 
-     if (warenwertUstRechnungsbetrag) {
+    if (warenwertUstRechnungsbetrag) {
         if (bezugskostenInput > 0) {
         } else {
             warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -30)');
@@ -1072,7 +1109,7 @@ function applyOrderData() {
         } else {
             elemWarenwert.remove();
             elemZwischensumme.remove();
-            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -60)');       
+            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -60)');
         }
     }
 
@@ -2038,25 +2075,25 @@ function adjustTextColor() {
     const footerText = document.getElementById('footerText');
     let backgroundColorHex;
     let rgbBackground;
- 
+
     if (liefererInformationen !== null) {
 
         // Überprüfe, ob das Element gefunden wurde, bevor die Hintergrundfarbe abgerufen wird
         if (colorSVGElements.length > 0) {
             // Nehme den Hex-Wert des ersten Rechtecks mit der Klasse "colorSVG"
             if (colorSVGElements[0] instanceof SVGElement) {
-            backgroundColorHex = colorSVGElements[0].getAttribute('fill');
-            rgbBackground = hexToRgb(backgroundColorHex);
+                backgroundColorHex = colorSVGElements[0].getAttribute('fill');
+                rgbBackground = hexToRgb(backgroundColorHex);
             } else {
-            rgbBackground = rgbToArray(colorSVGElements[0].style.backgroundColor);
-             }
+                rgbBackground = rgbToArray(colorSVGElements[0].style.backgroundColor);
+            }
             let textColor;
             // Wandele den Hex-Wert in RGB um
 
             if (liefererInformationen instanceof SVGElement) {
-            textColor = liefererInformationen.getAttribute('fill');
+                textColor = liefererInformationen.getAttribute('fill');
             } else {
-            textColor = window.getComputedStyle(liefererInformationen).color;
+                textColor = window.getComputedStyle(liefererInformationen).color;
             }
             // Überprüfe, ob RGB-Werte gültig sind
             if (rgbBackground && rgbBackground.length === 3) {
@@ -2064,23 +2101,23 @@ function adjustTextColor() {
                 rgbText = hexToRgb(textColor);
                 if (rgbText && rgbText.length === 3) {
                     const contrast = calculateContrast(rgbBackground, rgbText);
-                   const contrastThreshold = 100;
+                    const contrastThreshold = 100;
                     const newTextColor = contrast > contrastThreshold ? '#000' : '#fff';
 
                     // Setze die Textfarbe unabhängig von der vorherigen Bedingung
                     if (liefererInformationen instanceof SVGElement) {
-                    liefererInformationen.setAttribute('fill', newTextColor);
-                    footerText.setAttribute('fill', newTextColor);
+                        liefererInformationen.setAttribute('fill', newTextColor);
+                        footerText.setAttribute('fill', newTextColor);
                     } else {
-                    liefererInformationen.style.color = newTextColor;
-                    footerText.style.color = newTextColor;
-                } 
-            } else { }
+                        liefererInformationen.style.color = newTextColor;
+                        footerText.style.color = newTextColor;
+                    }
+                } else { }
+            }
+        } else {
+            console.log("No elements found in colorSVGElements");
         }
-    }   else {
-        console.log("No elements found in colorSVGElements");
     }
-}
 }
 
 // newspaper
@@ -2254,14 +2291,14 @@ function anlagenkarteHerunterladenAlsPNG() {
 function herunterladen(containerId, dateiname) {
     const container = document.getElementById(containerId);
     const containerHTML = container.innerHTML.replace(/&nbsp;/g, ' ');
-   
-  
+
+
     // Erzeuge ein temporäres div-Element, um die SVG zu rendern
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = containerHTML;
-    const svgElement = tempDiv.querySelector('svg');    
-     // Überprüfe, ob ein SVG-Element vorhanden ist
-     if (!svgElement) {
+    const svgElement = tempDiv.querySelector('svg');
+    // Überprüfe, ob ein SVG-Element vorhanden ist
+    if (!svgElement) {
         alert('Dieser Beleg kann nicht als SVG gespeichert werden.');
         return;
     }
