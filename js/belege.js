@@ -404,10 +404,15 @@ function loadEmailData() {
 function loadCompanyDataforEmail() {
     const selectedCompanyName = document.getElementById('datenEmailKunde').value;
     const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
-    document.getElementById('emailNameKunde').textContent = selectedCompany.unternehmen.inhaber
-    document.getElementById('emailAdresseKunde').textContent = selectedCompany.unternehmen.kontakt.email
-}
+    let emailInhaber = document.getElementById('emailNameKunde');
+    if (emailInhaber && selectedCompany) {
+        emailInhaber.textContent =  selectedCompany.unternehmen.inhaber;
+        document.getElementById('emailAdresseKunde').textContent = selectedCompany.unternehmen.kontakt.email
+    } else {
+    }
 
+
+}
 
 function loadQuittungData() {
     const selectedQuittungName = document.getElementById('datenQuittung').value;
@@ -492,11 +497,15 @@ function loadKassenbonData() {
     }
 
     const selectedKassenbon = yamlData.find(kassenbon => kassenbon.unternehmen.name === selectedKassenbonName);
+    
+    if (selectedKassenbon)  {    
     document.getElementById('kassenbonName').textContent = selectedKassenbon.unternehmen.name + " " + selectedKassenbon.unternehmen.rechtsform;
     document.getElementById('kassenbonStrasse').textContent = selectedKassenbon.unternehmen.adresse.strasse;
     document.getElementById('kassenbonUSTID').textContent = selectedKassenbon.unternehmen.ust_id;
     document.getElementById('kassenbonSteuernummer').textContent = selectedKassenbon.unternehmen.steuernummer;
     document.getElementById('kassenbonOrt').textContent = selectedKassenbon.unternehmen.adresse.plz + " " + selectedKassenbon.unternehmen.adresse.ort;
+} else {
+}
     let kassenbonInhaber = document.getElementById('kassenbonInhaber');
     if (kassenbonInhaber) {
         kassenbonInhaber.textContent = selectedKassenbon.unternehmen.inhaber;
