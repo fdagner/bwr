@@ -981,7 +981,7 @@ function applyOrderData() {
         gesamtpreis1 = menge * einzelpreis;
         document.getElementById('pos1').textContent = '1';
         document.getElementById('artikel1').textContent = artikel;
-        document.getElementById('menge1').textContent = formatNumber(menge) + ' ' + einheit;
+        document.getElementById('menge1').textContent = formatNumberSpace(menge) + ' ' + einheit;
         document.getElementById('einzelpreis1').textContent = formatCurrency(einzelpreis);
         document.getElementById('gesamtpreis1').textContent = formatCurrency(gesamtpreis1);
     } else {
@@ -999,7 +999,7 @@ function applyOrderData() {
         gesamtpreis2 = menge2 * einzelpreis2;
         document.getElementById('pos2').textContent = '2';
         document.getElementById('artikel2').textContent = artikel2;
-        document.getElementById('menge2').textContent = formatNumber(menge2) + ' ' + einheit2;
+        document.getElementById('menge2').textContent = formatNumberSpace(menge2) + ' ' + einheit2;
         document.getElementById('einzelpreis2').textContent = formatCurrency(einzelpreis2);
         document.getElementById('gesamtpreis2').textContent = formatCurrency(gesamtpreis2);
     } else {
@@ -1905,6 +1905,12 @@ function generateRandomNumber() {
 function formatNumber(number) {
     return new Intl.NumberFormat('de-DE').format(number);
 }
+
+function formatNumberSpace(number) {
+    const formattedNumber = new Intl.NumberFormat('de-DE').format(number);
+    return formattedNumber.replace(/\./g, ' '); // Ersetzt den Punkt durch ein Leerzeichen
+}
+
 
 // Formatieren der Währung mit Euro-Symbol, Tausenderpunkt und Dezimalkomma
 function formatCurrency(amount) {

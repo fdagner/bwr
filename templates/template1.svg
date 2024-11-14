@@ -21,7 +21,7 @@
     <text id="plzKunde" x="20" y="260" font-family="Arial" font-size="18" fill="#333"/>
   </g>
 <!--Liefererdaten rechts-->
-  <g id="liefererDaten" font-size="16">
+  <g id="liefererDaten" font-size="14">
     <text x="530" y="200" font-family="Arial" text-anchor="end" fill="#808080">Firma:</text>
     <text id="nameLangLieferer" x="535" y="200" font-family="Arial" text-anchor="start" fill="#333"/>
     <text x="530" y="215" font-family="Arial" text-anchor="end" fill="#808080">Straße:</text>
