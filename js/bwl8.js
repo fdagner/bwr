@@ -32,6 +32,7 @@ function roundUpToNearest(number) {
 let lagerkosten;
 let bedarf;
 function berechneOptimaleBestellmengeUndHaeufigkeit() {
+  
   let optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value, 10);
   let optimaleBestellhaeufigkeit = parseInt(document.getElementById("optimaleBestellhaeufigkeit").value, 10);
   let bestellkosten = parseInt(document.getElementById("bestellkosten").value, 10);
@@ -167,21 +168,8 @@ function generiereWertetabelle() {
 }
 
 function drawChart(werteArray) {
-// Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
-const plugin = {
-  id: 'customCanvasBackgroundColor',
-  options: {
-    color: 'white', // Set the default color
-  },
-  beforeDraw: (myChart) => {
-    const { ctx } = myChart;
-    ctx.save();
-    ctx.globalCompositeOperation = 'destination-over';
-    ctx.fillStyle = plugin.options.color || '#ffffff';
-    ctx.fillRect(0, 0, myChart.width, myChart.height);
-    ctx.restore();
-  }
-};
+  
+  // Berechnungen
   const optimaleBestellmenge = parseInt(document.getElementById("optimaleBestellmenge").value, 10);
   const bestellkosten = parseInt(document.getElementById("bestellkosten").value, 10);
   const optimaleBestellhaeufigkeit = parseInt(document.getElementById('optimaleBestellhaeufigkeit').value, 10);
@@ -191,9 +179,11 @@ const plugin = {
   const lagerhaltungskostenData = [];
   const bestellkostenData = [];
   const gesamtkostenData = [];
+
   let schrittebestellmenge = roundUpToNearest(optimaleBestellmenge / 100)
+
   // Daten für das Diagramm berechnen
-  for (let i = 0; i <= optimaleBestellmenge * 2; i += schrittebestellmenge) {
+  for (let i = schrittebestellmenge; i <= optimaleBestellmenge * 2; i += schrittebestellmenge) {
     const durchschnittlicherBestand = roundToTwoDecimals(i / 2);
     const bestellkostenGesamt = roundToTwoDecimals(bestellkosten * bedarf / i);
     const lagerhaltungskosten = roundToTwoDecimals(durchschnittlicherBestand * lagerkosten);
@@ -204,78 +194,145 @@ const plugin = {
     bestellkostenData.push(parseFloat(bestellkostenGesamt));
     gesamtkostenData.push(parseFloat(gesamtkosten));
   }
-  if (window.myChart instanceof Chart) {
-    window.myChart.destroy();
-  }
-  let ychartmax = roundUpToNearest((optimaleBestellhaeufigkeit * bestellkosten + optimaleBestellmenge / 2 * lagerkosten) * 3);
-  const ctx = document.getElementById('myChart').getContext('2d');
 
-  window.myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Lagerhaltungskosten',
-        data: lagerhaltungskostenData,
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 3,
-        pointRadius: 0,
-        borderDash: [4,2],
-      }, {
-        label: 'Bestellkosten',
-        data: bestellkostenData,
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 3,
-        pointRadius: 0,
-      },
-      {
-        label: 'Gesamtkosten',
-        data: gesamtkostenData,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 3,
-        pointRadius: 0,
-        borderDash: [10,5],
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-          customCanvasBackgroundColor: {
-          color: 'white',
-        }
-      },
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Bestellmenge'
+  // ApexCharts konfigurieren
+  let ychartmax = roundUpToNearest((optimaleBestellhaeufigkeit * bestellkosten + optimaleBestellmenge / 2 * lagerkosten) * 3);
+  // Berechne den Wert von tickAmount
+  let tickAmount = schrittebestellmenge * 2;
+  // Begrenze tickAmount auf maximal 20
+  if (tickAmount > 20) {
+    tickAmount = 20;
+  }
+  const options = {
+    chart: {
+      type: 'line',
+      height: 500,
+      toolbar: {
+        show: true, // Hier aktivierst du die Toolbar
+        offsetX: 0,
+        offsetY: 0,
+        tools: {
+          download: true,  // Download Button aktivieren
+          selection: true,
+          zoom: true,
+          zoomin: true,
+          zoomout: true,
+          pan: true,
+          reset: true | '<img src="/static/icons/reset.png" width="20">',
+          customIcons: []
+        },
+        export: {
+          svg: {
+            filename: 'chart-export.svg',  // SVG-Dateiname
+          },
+          png: {
+            filename: 'chart-export.png', // PNG-Dateiname
+          },
+          csv: {
+            filename: 'chart-export.csv', // CSV-Dateiname
           }
         },
-        y: {
-          title: {
-            display: true,
-            text: 'Kosten'
-          },
-          beginAtZero: true,
-          max: ychartmax,
-          ticks: {
-            callback: function (value, index, values) {
-              return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
-            },
-          }
+        autoSelected: 'zoom' 
+      },
+    },
+    dataLabels: {
+      enabled: false
+    },
+    series: [
+      {
+        name: 'Lagerhaltungskosten',
+        data: lagerhaltungskostenData,
+      },
+      {
+        name: 'Bestellkosten',
+        data: bestellkostenData,
+      },
+      {
+        name: 'Gesamtkosten',
+        data: gesamtkostenData,
+      }
+    ],
+    stroke: {
+      width: 4,
+      curve: 'straight',
+
+    },
+    xaxis: {
+      categories: labels,
+      title: {
+        text: 'Bestellmenge',
+        style: {
+          fontSize: '14px',
+          fontWeight: 'bold',
+        }
+      },
+      min: 0,
+      tickAmount: tickAmount, // Reduziert die Anzahl der angezeigten Ticks
+      labels: {
+        style: {
+          fontSize: '14px',
+        }
+      },
+    },
+    yaxis: {
+      title: {
+        text: 'Kosten',
+        style: {
+          fontSize: '14px',
+          fontWeight: 'bold',
+        }
+      },
+      max: ychartmax,
+      labels: {
+        formatter: function (value) {
+          return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
+        },
+        style: {
+          fontSize: '16px',
+        }
+      },
+    },
+    grid: {
+      show: true, // Das Grid anzeigen
+      borderColor: '#ccc', // Farbe der Gittergrenzen
+      strokeDashArray: 0, // Strichmuster für Gitterlinien (5px Striche, 5px Lücken)
+      xaxis: {
+        lines: {
+          show: true, // X-Achse Linien anzeigen
+          width: 4,   // Linienbreite der X-Achse
+          color: '#000', // Farbe der X-Achse Linien
+        }
+      },
+      yaxis: {
+        lines: {
+          show: true, // Y-Achse Linien anzeigen
+          width: 1,   // Linienbreite der Y-Achse
+          color: '#000', // Farbe der Y-Achse Linien
+        }
+      },
+    },
+    tooltip: {
+      enabled: false,
+      y: {
+        formatter: function (value) {
+          return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
         }
       }
     },
-    plugins: [plugin],
-  });
+    legend: {
+      position: 'top', // Legende nach oben verschieben
+      horizontalAlign: 'center', // Horizontal zentrieren
+      verticalAlign: 'top', // Vertikal oben ausrichten
+      floating: true, // Optional: floatet die Legende oben über dem Diagramm
+    },
+  };
+ // Entferne den Inhalt des Containers und erstelle das Diagramm neu
+ const chartContainer = document.querySelector("#chart");
+ chartContainer.innerHTML = "";  // Löscht den Inhalt des Containers, falls bereits etwas vorhanden ist
 
-
+  const chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
 }
-
-
 
 
 // Begin Marketing
@@ -515,6 +572,7 @@ function bestellmengeHerunterladenAlsPNG() {
   });
 }
 
+
 let clipboardeinkauf = new ClipboardJS('#bestellmengeOfficeButton');
 
 clipboardeinkauf.on('success', function (e) {
@@ -533,4 +591,4 @@ document.addEventListener('DOMContentLoaded', function () {
   berechneOptimaleBestellmengeUndHaeufigkeit();
 });
 
- 
+
