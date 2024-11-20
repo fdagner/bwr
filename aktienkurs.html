@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/menu.js"></script>
+    <script src="js/js-yaml.min.js"></script>
+    <script src="js/apexcharts.js"></script>
+    <title>BWL</title>
+</head>
+
+
+<body>
+    <main>
+        <div w3-include-html="navigation.html"></div>
+        <h2>Aktienkurs (Diagramm) - beta</h2>
+        <div class="box">
+            <p>Sie können einen zufällige Aktienkurs erzeugen, ausgehend vom aktuellen Datum. Über das Burger-Menü kann das Diagramm heruntergeladen
+                werden.</p>
+            <div id="controls" class="flex-column">
+                <div><label for="unternehmen">Unternehmen wählen:</label><br>
+                    <select id="unternehmen">
+                        <!-- Dropdown-Optionen werden hier dynamisch hinzugefügt -->
+                    </select>
+                </div>
+                <div><label for="year">Jahr für den Schlusswert (nur bei Monate):</label>
+                    <input type="number" id="year" value="2024" min="1900" max="2100">
+                </div>
+                <div class="flex-row">
+                    <div>
+                        <label for="period">Zeitraum:</label>
+                        <input type="number" id="period" value="8" min="3" max="13">
+                    </div>
+                    <div>
+                        <label for="timeframe">Einheit:</label><br>
+                        <select id="timeframe">
+                            <option value="months">Monate</option>
+                            <option value="days">Tage</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div><button id="generate-chart">Neues Diagramm</button></div>
+            </div>
+        </div>
+        <div id="chart" style="width: 100%;"></div>
+
+        <script>
+            async function loadYAML() {
+                try {
+                    const response = await fetch('js/unternehmen.yml'); // Pfad zur YAML-Datei
+                    const yamlText = await response.text(); // Lese die Datei als Text
+                    const data = jsyaml.load(yamlText); // Parsen der YAML-Daten
+
+                    // Ausgabe der geladenen Daten, um die Struktur zu überprüfen
+                    return data.map(item => item.unternehmen) || []; // Extrahiere die 'unternehmen'-Daten
+                } catch (error) {
+                    console.error('Fehler beim Laden der YAML-Datei:', error);
+                    return []; // Fallback zu einem leeren Array, falls ein Fehler auftritt
+                }
+            }
+
+            // Filtere alle Unternehmen mit der Rechtsform "AG"
+            async function filterAGUnternehmen() {
+                const unternehmen = await loadYAML(); // Lade die YAML-Daten
+
+                // Überprüfen, ob "unternehmen" korrekt geladen wurde
+                if (!Array.isArray(unternehmen)) {
+                    console.error("Die 'unternehmen'-Daten sind nicht im richtigen Format.");
+                    return [];
+                }
+
+                // Filtere Unternehmen, deren Rechtsform "AG" ist
+                const agUnternehmen = unternehmen.filter(company => company.rechtsform === "AG");
+                return agUnternehmen;
+            }
+
+
+            async function populateDropdown() {
+                const agUnternehmen = await filterAGUnternehmen();
+                const dropdown = document.getElementById("unternehmen");
+
+                // Sicherstellen, dass Unternehmen mit "AG" vorhanden sind
+                if (agUnternehmen.length === 0) {
+                    console.log("Keine AG-Unternehmen gefunden.");
+                    return;
+                }
+
+                // Füge jede Option zum Dropdown hinzu
+                agUnternehmen.forEach(company => {
+                    const option = document.createElement("option");
+                    option.value = company.id;
+                    option.textContent = `${company.name} (${company.rechtsform})`;
+                    dropdown.appendChild(option);
+                });
+
+                // Setze das erste Unternehmen als ausgewählt
+                if (agUnternehmen.length > 0) {
+                    dropdown.value = agUnternehmen[0].id;
+                    // Rufe renderChart mit dem ersten Unternehmen auf
+                    const firstCompany = agUnternehmen[0];
+                    const data = generateStockData(8, 2024); // Diagramm-Daten generieren
+                    renderChart(data, firstCompany); // Diagramm für das erste Unternehmen anzeigen
+                }
+            }
+
+            function generateStockData(period, year, timeframe) {
+                const today = new Date();
+                const data = [];
+                let currentPrice = Math.floor(Math.random() * (75 - 10 + 1) + 10); // Startpreis zwischen 10€ und 75€
+
+                // Wenn "Tage" gewählt wurde, setzen wir das Enddatum auf heute
+                const endDate = new Date(year, today.getMonth(), today.getDate());
+
+                // Berechnung für Tage
+                if (timeframe === "days") {
+                    for (let i = 0; i < period; i++) {
+                        const date = new Date(endDate);
+                        date.setDate(endDate.getDate() - (period - i)); // Setzt das Datum um die Tage zurück
+                        currentPrice += Math.floor(Math.random() * 5 - 2); // Schwankung von -2 bis +2
+                        currentPrice = Math.max(currentPrice, 1); // Sicherstellen, dass der Preis >= 1€ bleibt
+                        data.push({ x: date, y: currentPrice });
+                    }
+                } else {
+                    // Berechnung für Monate (wie bisher)
+                    for (let i = 0; i < period; i++) {
+                        const date = new Date(endDate.getFullYear(), endDate.getMonth() - period + i);
+                        currentPrice += Math.floor(Math.random() * 5 - 2); // Schwankung von -2 bis +2
+                        currentPrice = Math.max(currentPrice, 1); // Sicherstellen, dass der Preis >= 1€ bleibt
+                        data.push({ x: date, y: currentPrice });
+                    }
+                }
+
+                return data;
+            }
+
+
+
+            // Funktion zum Formatieren der X-Achse (Monat Jahr auf Deutsch)
+            function calculateChartWidth(months) {
+                const widthPerMonth = 75; // 100px pro Monat
+                const maxWidth = 800; // Maximale Breite des Diagramms (z.B. 1200px)
+
+                const calculatedWidth = months * widthPerMonth;
+                return Math.min(calculatedWidth, maxWidth); // Rückgabe der minimalen Breite zwischen berechneter Breite und maxWidth
+            }
+
+
+            function formatXAxisDate(date, timeframe) {
+                const months = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+                if (timeframe === "days") {
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = months[date.getMonth()];
+                    const year = date.getFullYear();
+                    return `${day}. ${month}`;
+                } else {
+                    const month = months[date.getMonth()];
+                    const year = String(date.getFullYear()).slice(2); // Letzten zwei Ziffern des Jahres
+                    return `${month} ${year}`;
+                }
+            }
+
+
+            // Funktion zur Ermittlung des Jahresbereichs für den Titel
+            function getYearForLastPoint(data) {
+                const lastDate = data[data.length - 1].x; // Das Datum des letzten Werts
+                const year = lastDate.getFullYear();
+                return year; // Das Jahr des letzten Datenpunkts zurückgeben
+            }
+
+            // Initialisiere das Diagramm
+            function renderChart(data, company, timeframe) {
+                const prices = data.map(point => point.y);
+                const minPrice = Math.min(...prices);
+                const maxPrice = Math.max(...prices);
+
+                // Y-Achse mit ganzen Euro-Werten
+                const yAxisMin = Math.floor(Math.max(minPrice - 5, 0) / 2) * 2; // Rundet auf die nächste gerade Zahl nach unten
+                const yAxisMax = Math.ceil((maxPrice + 5) / 2) * 2; // Rundet auf die nächste gerade Zahl nach oben
+
+
+                // X-Achse formatieren
+                const formattedData = data.map(point => ({
+                    x: formatXAxisDate(point.x, timeframe),
+                    y: point.y
+                }));
+
+                const chartWidth = calculateChartWidth(data.length); // Dynamische Breite basierend auf der Anzahl der Monate/Tage
+                const yearForLastPoint = getYearForLastPoint(data); // Jahr des letzten Datenpunkts
+
+                const options = {
+                    chart: {
+                        type: 'line',
+                        height: 400,
+                        width: chartWidth, // Dynamische Breite
+                        toolbar: {
+                            show: true,
+                            tools: {
+                                download: true,
+                                selection: true,
+                                zoom: true,
+                                zoomin: true,
+                                zoomout: true,
+                                pan: true,
+                                reset: true
+                            },
+                            export: {
+                                csv: {
+                                    filename: "diagramm-daten",
+                                    columnDelimiter: ',',
+                                    headerCategory: 'Kategorie',
+                                    headerValue: 'Wert',
+                                    dateFormatter: (timestamp) => new Date(timestamp).toLocaleDateString("de-DE")
+                                },
+                                svg: {
+                                    filename: "diagramm-svg"
+                                },
+                                png: {
+                                    filename: "diagramm-png"
+                                }
+                            },
+                            autoSelected: 'zoom'
+                        },
+                    },
+                    series: [{
+                        name: "Stückkurs",
+                        data: formattedData
+                    }],
+                    stroke: {
+                        curve: 'straight',
+                    },
+                    xaxis: {
+                        type: 'category',
+                        title: { text: '' },
+                        labels: {
+                            rotate: -45, // Drehung der X-Achsen-Beschriftungen um 90 Grad
+                            rotateAlways: true,
+                            style: {
+                                fontSize: '15px'
+                            },
+                           
+                        },
+                        crosshairs: {
+                            show: true,
+                            width: 1,
+                            stroke: {
+                                color: '#999',
+                                dashArray: 0
+                            }
+                        }
+                    },
+                    yaxis: {
+                        title: { text: '' },
+                        labels: {
+                            style: {
+                                fontSize: '15px'
+                            },
+                            formatter: (val) => {
+                                return `${val.toFixed(0)} €`;
+                            }
+                        },
+                        min: yAxisMin,
+                        max: yAxisMax,
+                        tickAmount: (yAxisMax - yAxisMin)/2,
+                    },
+                    grid: {
+                        borderColor: '#999',
+                        strokeDashArray: [2],
+                        xaxis: {
+                            lines: {
+                                show: true,
+                            }
+                        },
+                        yaxis: {
+                            lines: {
+                                show: true,
+                            },
+                        }
+                    },
+                    title: {
+                        text: `${company.name} ${company.rechtsform} Aktie`,
+                        align: 'center',
+                        style: {
+                            fontSize: '20px'
+                        },
+                    },
+                    markers: {
+                        size: 5,
+                        colors: ['#FF4560'],
+                        strokeColors: '#000',
+                        strokeWidth: 2,
+                        hover: {
+                            size: 7
+                        }
+                    }
+                };
+
+                const chartElement = document.querySelector("#chart");
+                chartElement.innerHTML = "";
+                const chart = new ApexCharts(chartElement, options);
+                chart.render();
+            }
+
+
+            document.querySelector("#generate-chart").addEventListener("click", async () => {
+                const timeframe = document.querySelector("#timeframe").value; // 'months' oder 'days'
+                const period = parseInt(document.querySelector("#period").value, 10);
+                const year = parseInt(document.querySelector("#year").value, 10);
+
+                // Validierung: Zeitraum zwischen 3 und 12 Monaten und Jahr >= 1900
+                if (isNaN(period) || period < 3 || period > 13) {
+                    alert("Bitte geben Sie einen Zeitraum zwischen 3 und 13 Monaten/Tagen ein!");
+                    return;
+                }
+                if (isNaN(year) || year < 1900 || year > 2100) {
+                    alert("Bitte geben Sie ein gültiges Jahr ein!");
+                    return;
+                }
+
+                const selectedCompanyId = document.querySelector("#unternehmen").value;
+                const unternehmen = await loadYAML();
+                const selectedCompany = unternehmen.find(company => company.id === selectedCompanyId);
+
+                if (!selectedCompany) {
+                    alert("Bitte wählen Sie ein Unternehmen aus!");
+                    return;
+                }
+
+                const data = generateStockData(period, year, timeframe); // Übergabe des timeframes
+                renderChart(data, selectedCompany, timeframe); // Übergabe des timeframes
+            });
+
+            populateDropdown();
+
+
+
+
+        </script>
+
+    </main>
+    <div w3-include-html="footer.html"></div>
+    <script>
+        includeHTML();
+    </script>
+</body>
+
+</html>
