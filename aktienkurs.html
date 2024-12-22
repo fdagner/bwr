@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/menu.js"></script>
+    <script src="js/html2canvas.min.js"></script>
     <script src="js/js-yaml.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
     <script src="js/apexcharts.js"></script>
     <title>BWL</title>
 </head>
@@ -15,9 +17,10 @@
 <body>
     <main>
         <div w3-include-html="navigation.html"></div>
-        <h2>Aktienkurs (Diagramm) - beta</h2>
+        <h2>Aktienkauf mit Diagramm - beta</h2>
         <div class="box">
-            <p>Sie können einen zufällige Aktienkurs erzeugen, ausgehend vom aktuellen Datum. Über das Burger-Menü kann das Diagramm heruntergeladen
+            <p>Sie können einen zufällige Aktienkurs erzeugen, ausgehend vom aktuellen Datum. Über das Burger-Menü kann
+                das Diagramm heruntergeladen
                 werden.</p>
             <div id="controls" class="flex-column">
                 <div><label for="unternehmen">Unternehmen wählen:</label><br>
@@ -36,8 +39,9 @@
                     <div>
                         <label for="timeframe">Einheit:</label><br>
                         <select id="timeframe">
-                            <option value="months">Monate</option>
                             <option value="days">Tage</option>
+                            <option value="months">Monate</option>
+
                         </select>
                     </div>
                 </div>
@@ -47,7 +51,34 @@
             </div>
         </div>
         <div id="chart" style="width: 100%;"></div>
-
+        <div id="aktienContainer" style="min-width: 580px" contenteditable="true"></div>
+      <div class="exportButtons">
+        <button class="icon" type="button" onclick="aktienHerunterladenAlsPNG()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+          </svg></button>
+        <button class="icon" type="button" id="aktienOfficeButton" data-clipboard-target="#aktienContainer"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
+          </svg></button>
+        <button class="icon" type="button" onclick="aktienHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
+            height="16" width="12"
+            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+          </svg></button>
+        <button class="icon" type="button" onclick="aktienKopiereInZwischenablage()"><svg
+            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+          </svg></button>
+      </div><br>
+    </div>
         <script>
             async function loadYAML() {
                 try {
@@ -100,10 +131,10 @@
                 // Setze das erste Unternehmen als ausgewählt
                 if (agUnternehmen.length > 0) {
                     dropdown.value = agUnternehmen[0].id;
-                    // Rufe renderChart mit dem ersten Unternehmen auf
                     const firstCompany = agUnternehmen[0];
-                    const data = generateStockData(8, 2024); // Diagramm-Daten generieren
-                    renderChart(data, firstCompany); // Diagramm für das erste Unternehmen anzeigen
+                    const timeframe = "days"; // Standard auf "Tage"
+                    const data = generateStockData(8, 2024, timeframe);
+                    renderChart(data, firstCompany, timeframe);
                 }
             }
 
@@ -174,6 +205,7 @@
             // Initialisiere das Diagramm
             function renderChart(data, company, timeframe) {
                 const prices = data.map(point => point.y);
+                const lastPrice = prices[prices.length - 1]; // Letzter Kurswert
                 const minPrice = Math.min(...prices);
                 const maxPrice = Math.max(...prices);
 
@@ -242,7 +274,7 @@
                             style: {
                                 fontSize: '15px'
                             },
-                           
+
                         },
                         crosshairs: {
                             show: true,
@@ -265,7 +297,7 @@
                         },
                         min: yAxisMin,
                         max: yAxisMax,
-                        tickAmount: (yAxisMax - yAxisMin)/2,
+                        tickAmount: (yAxisMax - yAxisMin) / 2,
                     },
                     grid: {
                         borderColor: '#999',
@@ -303,6 +335,10 @@
                 chartElement.innerHTML = "";
                 const chart = new ApexCharts(chartElement, options);
                 chart.render();
+                const lastDate = data[data.length - 1].x;
+
+                // Dynamischen Text mit dem letzten Datum und dem Unternehmensnamen einfügen
+                insertDynamicText(lastDate, company, lastPrice);
             }
 
 
@@ -334,10 +370,108 @@
                 renderChart(data, selectedCompany, timeframe); // Übergabe des timeframes
             });
 
+
             populateDropdown();
 
+                // Währung nach DIN 5008
+                function formatCurrency(value) {
+  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+}
+
+            function insertDynamicText(date, company, lastPrice) {
+                // Formatierung des Datums ins deutsche Format
+                let formattedDate = date.toLocaleDateString("de-DE");
+                // Berechnung der Anzahl der Aktien (Zufallswert zwischen 100 und 1000, in 10er-Schritten)
+                let anzahlAktien = Math.floor(Math.random() * (1000 - 100 + 1) / 10) * 10 + 100;
+                // Berechnung der Spesen (1 % vom Kurswert, 500 Aktien, zufälliger Kurswert)
+                let kurswert = (anzahlAktien * lastPrice); // Gesamtkurswert = Anzahl * letzter Kurs
+                let spesen = (kurswert * 0.01); // 1% vom Kurswert
+                let banklastschrift = kurswert + spesen;
+                kurswert = formatCurrency(kurswert);
+                spesen = formatCurrency(spesen);
+                banklastschrift = formatCurrency(banklastschrift);
 
 
+                // Text erstellen
+                let text = `
+                <h2>Aufgabe</h2>
+        Am ${formattedDate} kaufen wir ${anzahlAktien}  Aktien der „${company.name} ${company.rechtsform}“.
+        Die Spesen betragen 1 % vom Kurswert. Bilden Sie den Buchungssatz.
+        <h3>Lösung</h3>
+           <h4>Nebenrechnung</h4>
+         <table style="border-collapse: collapse;white-space:nowrap;width:400px;margin: 0 0">
+            <tr>
+                <td>Kurswert (${anzahlAktien} x ${lastPrice},00 €)</td>
+                <td style="padding-left:6px;text-align:right;">${kurswert}</td><td style="padding-left:6px;text-align:right;">100 %</td>
+            </tr>
+            <tr>
+                <td>+ Spesen</td><td style="padding-left:6px;text-align:right;">${spesen}</td><td style="padding-left:6px;text-align:right;">1 %</td>
+            </tr>
+            <tr>
+                <td style="border-top: solid 1px #ccc">= Banklastschrift</td><td style="border-top: solid 1px #ccc;padding-left:6px;text-align:right;">${banklastschrift}</td><td style="border-top: solid 1px #ccc;padding-left:6px;text-align:right;">101 %</td>
+            </tr>
+        </table>
+        <h4>Buchungssatz</h4>
+        <table style="margin:0;white-space:nowrap;font-family:courier;min-width:540px;"><tbody>
+            <tr>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">1500 WP</td>
+            <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">2800 BK</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 160px;text-align: right" tabindex="1">${banklastschrift}</td>
+            </tr></tbody></table>
+    
+    `;
+
+                // Ausgabe im HTML
+                const dynamicTextElement = document.getElementById("aktienContainer");
+                dynamicTextElement.innerHTML = text;
+            }
+
+// Export
+
+function aktienHerunterladen() {
+  const aktienHTML = document.getElementById('aktienContainer').innerHTML;
+  const blob = new Blob([aktienHTML], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'aktien.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function aktienKopiereInZwischenablage() {
+  const aktienHTML = document.getElementById('aktienContainer').innerHTML;
+  navigator.clipboard.writeText(aktienHTML)
+    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+}
+
+function aktienHerunterladenAlsPNG() {
+  const aktienContainer = document.getElementById('aktienContainer');
+
+  html2canvas(aktienContainer, optionshtml2canvas).then(canvas => {
+    const dataURL = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'aktien.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+}
+
+let clipboardaktien = new ClipboardJS('#aktienOfficeButton');
+
+clipboardaktien.on('success', function (e) {
+  console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
+  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+});
+
+clipboardaktien.on('error', function (e) {
+  console.error("Fehler beim Kopieren der Tabelle: ", e.action);
+  alert("Fehler beim Kopieren der Tabelle.");
+});
 
         </script>
 
