@@ -4,61 +4,52 @@
 
   <!-- Kontoauszug-Rahmen -->
   <rect x="0" y="0" width="760" height="430" fill="#ffffff" stroke="#000" stroke-width="2" />
-  <line x1="0" x2="760" y1="50" y2="50" stroke-width="1" stroke="#000" />
+  <line x1="0" x2="760" y1="50" y2="50" stroke-width="5" stroke="#b61e37" />
 
   <!-- Überschrift -->
-  <rect x="0" y="0" width="760" height="50" fill="lightblue" />
-  <text x="5" y="35" font-family="Verdana" font-size="22" text-anchor="start"
+  <text x="5" y="35" font-family="Courier" font-size="26" text-anchor="start"
     fill="#000000">Wertpapier-Abrechnung</text>
-  <text id="wertpapiereBank" x="750" y="35" font-family="Verdana" font-size="22" text-anchor="end"
+  <text id="wertpapiereBank" x="750" y="35" font-family="Courier" font-size="26" text-anchor="end"
     fill="#000000">HAUSBANK</text>
 
   <!-- Kontodaten -->
-  <text x="10" y="90" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start">
+  <text x="10" y="90" font-family="Courier" font-size="18" fill="#333333" text-anchor="start">
     <tspan id="wertpapiereName"></tspan>
   </text>
-  <text x="10" y="110" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start">
+  <text x="10" y="110" font-family="Courier" font-size="18" fill="#333333" text-anchor="start">
     <tspan id="wertpapiereStrasse"></tspan>
   </text>
-  <text x="10" y="130" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start">
+  <text x="10" y="130" font-family="Courier" font-size="18" fill="#333333" text-anchor="start">
     <tspan id="wertpapiereOrt"></tspan>
   </text>
 
-  <line x1="380" x2="380" y1="50" y2="200" stroke-width="1" stroke="#000" />
-  <text x="400" y="90" font-family="Verdana" font-size="16" fill="#666" text-anchor="start">Auftragsnummer:</text>
-  <text font-family="Verdana" font-size="16" fill="#333333" text-anchor="start" x="550"
+   <text x="350" y="90" font-family="Courier" font-size="18" fill="#666" text-anchor="start" font-weight="bold">Auftragsnummer:</text>
+  <text font-family="Courier" font-size="18" fill="#333333" text-anchor="end" x="750"
     y="90" id="wertpapiereAuftragsnummer"></text>
-  <text x="400" y="110" font-family="Verdana" font-size="16" fill="#666" text-anchor="start">Verwahrungsart:</text>
-  <text id="wertpapierAuftrag" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start" x="550"
+  <text x="350" y="110" font-family="Courier" font-size="18" fill="#666" text-anchor="start" font-weight="bold">Verwahrungsart:</text>
+  <text id="wertpapierAuftrag" font-family="Courier" font-size="18" fill="#333333" text-anchor="end" x="750"
     y="110">Girosammeldepot</text>
-  <text x="400" y="130" font-family="Verdana" font-size="16" fill="#666" text-anchor="start">Depotnummer:</text><text
-    id="wertpapiereID" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start" x="550"
+  <text x="350" y="130" font-family="Courier" font-size="18" fill="#666" text-anchor="start" font-weight="bold">Depotnummer:</text><text
+    id="wertpapiereID" font-family="Courier" font-size="18" fill="#333333" text-anchor="end" x="750"
     y="130"></text>
-  <text x="400" y="150" font-family="Verdana" font-size="16" fill="#666" text-anchor="start">Börsenplatz:</text><text
-    id="wertpapierAuftrag" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start" x="550"
+  <text x="350" y="150" font-family="Courier" font-size="18" fill="#666" text-anchor="start" font-weight="bold">Börsenplatz:</text><text
+    id="wertpapierAuftrag" font-family="Courier" font-size="18" fill="#333333" text-anchor="end" x="750"
     y="150">München</text>
-  <text x="400" y="170" font-family="Verdana" font-size="16" fill="#666" text-anchor="start">ISIN:</text><text font-family="Verdana" font-size="16" fill="#333333" text-anchor="start" x="550"
+  <text x="350" y="170" font-family="Courier" font-size="18" fill="#666" text-anchor="start" font-weight="bold">ISIN:</text><text font-family="Courier" font-size="18" fill="#333333" text-anchor="end" x="750"
     y="170" id="wertpapiereISIN"></text>
-  <text x="400" y="190" font-family="Verdana" font-size="16" fill="#666" text-anchor="start">Schlusstag/-zeit:</text>
-  <text id="wertpapierAuftrag" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start" x="550"
-    y="190"><tspan id="wertpapiereTag">01</tspan>.<tspan id="wertpapiereMonat">01</tspan>.</tspan><tspan class="aktuellesJahrWertpapiere"/> / <tspan id="wertpapiereUhrzeit">10:34 Uhr</tspan></text>
-
-  <line x1="0" x2="760" y1="200" y2="200" stroke-width="1" stroke="#000" />
+  <text x="350" y="190" font-family="Courier" font-size="18" fill="#666" text-anchor="start" font-weight="bold">Schlusstag/-zeit:</text>
+  <text id="wertpapierAuftrag" font-family="Courier" font-size="18" fill="#333333" text-anchor="end" x="750"
+    y="190"><tspan id="wertpapiereTag">01</tspan>.<tspan id="wertpapiereMonat">01</tspan>.</tspan><tspan class="aktuellesJahrWertpapiere"/>/<tspan id="wertpapiereUhrzeit"></tspan></text>
 
   <!-- Abrechnung -->
-  <text x="20" y="230" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start">Sehr geehrter
-    Kunde,</text>
-  <text x="20" y="260" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start">wir haben für Sie <tspan id="wertpapiereArt"></tspan>:</text>
-  <rect x="10" y="275" width="740" height="40" fill="lightblue" />
-  <text x="20" y="300" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start">Bezeichnung:  <tspan id="wertpapiereBezeichnung">XY-AG</tspan></text>
-  <text x="400" y="300" font-family="Verdana" font-size="16" fill="#333333" text-anchor="middle">Stückkurs: <tspan id="wertpapiereStueckkurs">400,00 €</tspan></text>
-  <text x="740" y="300" font-family="Verdana" font-size="16" fill="#333333" text-anchor="end">Stückzahl: <tspan id="wertpapiereAnzahl">500</tspan></text>
+  <text x="20" y="240" font-family="Courier" font-size="18" fill="#333333" text-anchor="start">Wir haben für Sie <tspan id="wertpapiereArt"></tspan>:</text>
+  <rect x="10" y="265" width="740" height="40" fill="pink" />
+  <text x="20" y="290" font-family="Courier" font-size="18" fill="#333333" text-anchor="start"><tspan id="wertpapiereAnzahl">500</tspan> <tspan id="wertpapiereBezeichnung">XY-AG</tspan> zum Stückkurs von <tspan id="wertpapiereStueckkurs">400,00 €</tspan> </text>
 
-
-<text x="400" y="345" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start">Kurswert</text><text x="750" y="345" font-family="Verdana" font-size="16" fill="#333333" text-anchor="end" id="wertpapiereKurswert"></text>
-<text x="400" y="365" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start" id="wertpapiereSpesenart"></text><text x="750" y="365" font-family="Verdana" font-size="16" fill="#333333" text-anchor="end" id="wertpapiereSpesen">100,00 €</text>
-<line x1="400" x2="750" y1="370" y2="370" stroke-width="1" stroke="#000" />
-<text x="400" y="385" font-family="Verdana" font-size="16" fill="#333333" text-anchor="start" id="wertpapiereBankart"></text><text x="750" y="385" font-family="Verdana" font-size="16" fill="#333333" text-anchor="end" id="wertpapiereBanklastschrift">1.100,00 €</text>
+<text x="20" y="345" font-family="Courier" font-size="18" fill="#333333" text-anchor="start" font-weight="bold">Kurswert</text><text x="500" y="345" font-family="Courier" font-size="18" fill="#333333" text-anchor="end" id="wertpapiereKurswert"></text>
+<text x="20" y="365" font-family="Courier" font-size="18" fill="#333333" text-anchor="start" id="wertpapiereSpesenart" font-weight="bold"></text><text x="500" y="365" font-family="Courier" font-size="18" fill="#333333" text-anchor="end" id="wertpapiereSpesen">100,00 €</text>
+<line x1="20" x2="500" y1="370" y2="370" stroke-width="1" stroke="#000" />
+<text x="20" y="385" font-family="Courier" font-size="18" fill="#333333" text-anchor="start" id="wertpapiereBankart" font-weight="bold"></text><text x="500" y="385" font-family="Courier" font-size="18" fill="#333333" text-anchor="end" id="wertpapiereBanklastschrift">1.100,00 €</text>
 
   <!-- Footer -->
   

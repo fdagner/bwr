@@ -143,7 +143,7 @@
             function generateStockData(period, year, timeframe) {
                 const today = new Date();
                 const data = [];
-                let currentPrice = Math.floor(Math.random() * (75 - 10 + 1) + 10); // Startpreis zwischen 10€ und 75€
+                let currentPrice = Math.floor(Math.random() * (250 - 10 + 1) + 10); // Startpreis zwischen 10€ und 75€
 
                 // Wenn "Tage" gewählt wurde, setzen wir das Enddatum auf heute
                 const endDate = new Date(year, today.getMonth(), today.getDate());
