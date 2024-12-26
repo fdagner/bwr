@@ -95,6 +95,7 @@ function reloadDropdownOptions() {
     const dropdownLohnjournal = document.getElementById('datenLohnjournal');
     const dropdownBescheid = document.getElementById('datenBescheid');
     const dropdownAnlagenkarte = document.getElementById('datenAnlagenkarte');
+    const dropdownWertpapiere = document.getElementById('datenWertpapiere');
 
     // Clear existing options
     dropdownCustomer.innerHTML = '';
@@ -109,7 +110,7 @@ function reloadDropdownOptions() {
     dropdownLohnjournal.innerHTML = '';
     dropdownBescheid.innerHTML = '';
     dropdownAnlagenkarte.innerHTML = '';
-
+    dropdownWertpapiere.innerHTML = '';
 
     yamlData.forEach(company => {
         const optionCustomer = document.createElement('option');
@@ -171,6 +172,11 @@ function reloadDropdownOptions() {
         optionAnlagenkarte.value = company.unternehmen.name;
         optionAnlagenkarte.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
         dropdownAnlagenkarte.appendChild(optionAnlagenkarte);
+
+        const optionWertpapiere = document.createElement('option');
+        optionWertpapiere.value = company.unternehmen.name;
+        optionWertpapiere.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+        dropdownWertpapiere.appendChild(optionWertpapiere);
 
     });
 }
@@ -242,6 +248,7 @@ if (!localStorage.getItem('uploadedYamlCompanyData')) {
             const dropdownLohnjournal = document.getElementById('datenLohnjournal');
             const dropdownBescheid = document.getElementById('datenBescheid');
             const dropdownAnlagenkarte = document.getElementById('datenAnlagenkarte');
+            const dropdownWertpapiere = document.getElementById('datenWertpapiere');
 
             yamlData.forEach(company => {
                 const optionCustomer = document.createElement('option');
@@ -304,6 +311,11 @@ if (!localStorage.getItem('uploadedYamlCompanyData')) {
                 optionAnlagenkarte.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
                 dropdownAnlagenkarte.appendChild(optionAnlagenkarte);
 
+                const optionWertpapiere = document.createElement('option');
+                optionWertpapiere.value = company.unternehmen.name;
+                optionWertpapiere.text = company.unternehmen.branche + ' - ' + company.unternehmen.name + ' ' + company.unternehmen.rechtsform;
+                dropdownWertpapiere.appendChild(optionWertpapiere);
+
             });
 
 
@@ -314,7 +326,7 @@ let selectedSupplier;
 
 function loadKontoauszugData() {
     const selectedKontoauszugName = document.getElementById('datenKontoauszug').value;
- 
+
     if (!selectedKontoauszugName) {
         return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
     }
@@ -406,7 +418,7 @@ function loadCompanyDataforEmail() {
     const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
     let emailInhaber = document.getElementById('emailNameKunde');
     if (emailInhaber && selectedCompany) {
-        emailInhaber.textContent =  selectedCompany.unternehmen.inhaber;
+        emailInhaber.textContent = selectedCompany.unternehmen.inhaber;
         document.getElementById('emailAdresseKunde').textContent = selectedCompany.unternehmen.kontakt.email
     } else {
     }
@@ -497,15 +509,15 @@ function loadKassenbonData() {
     }
 
     const selectedKassenbon = yamlData.find(kassenbon => kassenbon.unternehmen.name === selectedKassenbonName);
-    
-    if (selectedKassenbon)  {    
-    document.getElementById('kassenbonName').textContent = selectedKassenbon.unternehmen.name + " " + selectedKassenbon.unternehmen.rechtsform;
-    document.getElementById('kassenbonStrasse').textContent = selectedKassenbon.unternehmen.adresse.strasse;
-    document.getElementById('kassenbonUSTID').textContent = selectedKassenbon.unternehmen.ust_id;
-    document.getElementById('kassenbonSteuernummer').textContent = selectedKassenbon.unternehmen.steuernummer;
-    document.getElementById('kassenbonOrt').textContent = selectedKassenbon.unternehmen.adresse.plz + " " + selectedKassenbon.unternehmen.adresse.ort;
-} else {
-}
+
+    if (selectedKassenbon) {
+        document.getElementById('kassenbonName').textContent = selectedKassenbon.unternehmen.name + " " + selectedKassenbon.unternehmen.rechtsform;
+        document.getElementById('kassenbonStrasse').textContent = selectedKassenbon.unternehmen.adresse.strasse;
+        document.getElementById('kassenbonUSTID').textContent = selectedKassenbon.unternehmen.ust_id;
+        document.getElementById('kassenbonSteuernummer').textContent = selectedKassenbon.unternehmen.steuernummer;
+        document.getElementById('kassenbonOrt').textContent = selectedKassenbon.unternehmen.adresse.plz + " " + selectedKassenbon.unternehmen.adresse.ort;
+    } else {
+    }
     let kassenbonInhaber = document.getElementById('kassenbonInhaber');
     if (kassenbonInhaber) {
         kassenbonInhaber.textContent = selectedKassenbon.unternehmen.inhaber;
@@ -552,6 +564,21 @@ function loadAnlagenkarteData() {
 
     // Aufruf der Funktion und Ausgabe der generierten Nummer
     document.getElementById('anlagenkarteInventarnummer').textContent = "K" + generateRandomAnlagenkarteNumber();
+}
+
+function loadWertpapiereData() {
+    const selectedWertpapiereName = document.getElementById('datenWertpapiere').value;
+    if (!selectedWertpapiereName) {
+        return; // Funktion abbrechen, wenn keine Auswahl getroffen wurde
+    }
+
+    const selectedWertpapiere = yamlData.find(wertpapiere => wertpapiere.unternehmen.name === selectedWertpapiereName);
+    document.getElementById('wertpapiereName').textContent = selectedWertpapiere.unternehmen.name + " " + selectedWertpapiere.unternehmen.rechtsform;
+    document.getElementById('wertpapiereStrasse').textContent = selectedWertpapiere.unternehmen.adresse.strasse;
+    document.getElementById('wertpapiereID').textContent = selectedWertpapiere.unternehmen.id * 6;
+    document.getElementById('wertpapiereBank').textContent = selectedWertpapiere.unternehmen.bank;
+    document.getElementById('wertpapiereOrt').textContent = selectedWertpapiere.unternehmen.adresse.plz + " " + selectedWertpapiere.unternehmen.adresse.ort;
+
 }
 
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
@@ -1783,7 +1810,140 @@ async function anlagenkarteApplySVGholen() {
     }
 
 
-    loadAnlagenkarteData() // Laden der Kassenbon-Daten
+    loadAnlagenkarteData() // Laden der Anlagen-Daten
+}
+
+async function wertpapiereApplySVGholen() {
+    if (!validateInputs()) {
+        // Wenn die Validierung fehlschlägt, stoppe die Funktion
+        return;
+    }
+
+    let selectedWertpapiere = document.getElementById("svgDropdownWertpapiere").value;
+    let svgContainerWertpapiere = document.getElementById("wertpapiereContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedWertpapiere);
+        svgContainerWertpapiere.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+    // Laden der Daten
+
+    let wertpapiereBezeichnung = document.getElementById('wertpapiereBezeichnungInput').value;
+    document.getElementById('wertpapiereBezeichnung').textContent = wertpapiereBezeichnung;
+    let wertpapiereISIN = document.getElementById('wertpapiereISINInput').value;
+    document.getElementById('wertpapiereISIN').textContent = wertpapiereISIN;
+    let wertpapiereStueckkurs = document.getElementById('wertpapiereStueckkursInput').value;
+    document.getElementById('wertpapiereStueckkurs').textContent = formatCurrency(wertpapiereStueckkurs);
+
+    let wertpapiereAnzahl = document.getElementById('wertpapiereAnzahlInput').value;
+    document.getElementById('wertpapiereAnzahl').textContent = wertpapiereAnzahl;
+
+    let wertpapiereKurswert = (wertpapiereAnzahl * wertpapiereStueckkurs); // Gesamtkurswert = Anzahl * Kurs
+    let wertpapiereSpesen = (wertpapiereKurswert * 0.01); // 1% vom Kurswert
+    let wertpapiereBanklastschrift = wertpapiereKurswert + wertpapiereSpesen;
+    let wertpapiereBankgutschrift = wertpapiereKurswert - wertpapiereSpesen;
+    wertpapiereKurswert = formatCurrency(wertpapiereKurswert);
+    document.getElementById('wertpapiereKurswert').textContent = wertpapiereKurswert;
+    wertpapiereSpesen = formatCurrency(wertpapiereSpesen);
+    document.getElementById('wertpapiereSpesen').textContent = wertpapiereSpesen;
+    wertpapiereBanklastschrift = formatCurrency(wertpapiereBanklastschrift);
+    wertpapiereBankgutschrift = formatCurrency(wertpapiereBankgutschrift);
+    let wertpapiereRandomTime = generateRandomTime();
+    document.getElementById('wertpapiereUhrzeit').textContent = wertpapiereRandomTime + ' Uhr';
+
+    let wertpapiereArtInput = document.getElementById('wertpapiereArtInput');
+    let wertpapiereArt;
+    // Überprüfen, welche Option ausgewählt ist
+    if (wertpapiereArtInput.value === 'wertpapiereKauf') {
+        wertpapiereArt = 'gekauft';
+        document.getElementById('wertpapiereBanklastschrift').textContent = wertpapiereBanklastschrift;
+        document.getElementById('wertpapiereSpesenart').textContent = "+ 1 % Spesen";
+        document.getElementById('wertpapiereBankart').textContent = "Banklastschrift";
+    } else {
+        wertpapiereArt = 'verkauft';
+        document.getElementById('wertpapiereBanklastschrift').textContent = wertpapiereBankgutschrift;
+        document.getElementById('wertpapiereSpesenart').textContent = "- 1 % Spesen";
+        document.getElementById('wertpapiereBankart').textContent = "Bankgutschrift";
+    }
+    document.getElementById('wertpapiereArt').textContent = wertpapiereArt;
+
+    const selectedWertpapiereTag = document.getElementById('tagWertpapiereInput').value;
+    const selectedWertpapiereMonat = document.getElementById('monatWertpapiereInput').value;
+    document.getElementById('wertpapiereTag').textContent = selectedWertpapiereTag;
+    document.getElementById('wertpapiereMonat').textContent = selectedWertpapiereMonat;
+
+    let lastGeneratedNumber = selectedWertpapiereTag + selectedWertpapiereMonat; // Initialwert (Startpunkt der Sequenz)
+
+    function generateIncrementalWertpapiereNumber() {
+        // Hole das aktuelle Datum und Zeit
+        let now = new Date();
+        let timestamp = now.getTime(); // Zeitstempel in Millisekunden
+
+        // Kombiniere den Zeitstempel und Sekunden, um einen Basiswert zu erstellen
+        let baseNumber = timestamp;
+
+        // Stelle sicher, dass die neue Nummer höher ist als die letzte
+        lastGeneratedNumber = Math.max(lastGeneratedNumber + 1, baseNumber);
+        let shortenedNumber = lastGeneratedNumber.toString().slice(6);
+
+        return parseInt(shortenedNumber, 10); // Rückgabe als Zahl
+    }
+
+
+    document.getElementById('wertpapiereAuftragsnummer').textContent = generateIncrementalWertpapiereNumber();
+
+    const useScriptWertpapiere = document.getElementById('scriptJahrWertpapiere').checked;
+    if (!useScriptWertpapiere) {
+        // Verwende das Jahr aus dem Textfeld
+        const selectedJahr = document.getElementById('jahrWertpapiere');
+        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrWertpapiere');
+        for (const yearelement of yearelementsWithClass) {
+            yearelement.textContent = selectedJahr.value;
+        }
+
+    } else {
+
+        const customDefs = document.getElementById('customDefsWertpapiere');
+        const customJsScript = document.getElementById('customJsWertpapiere');
+        const useScriptWertpapiere = document.getElementById('scriptJahrWertpapiere').checked;
+
+        if (customJsScript) {
+            customJsScript.remove();
+        }
+
+        if (useScriptWertpapiere) {
+            // Füge das dynamische Script zum SVG hinzu
+            const dynamicScript = document.createElement('script');
+            dynamicScript.type = 'text/javascript';
+            dynamicScript.id = 'customJsWertpapiere';
+            dynamicScript.text = `
+            function getCurrentYear() {
+                return new Date().getFullYear();
+            }
+
+            function SVGonLoadWertpapiere() {
+                const currentDate = new Date();
+                const currentYear = getCurrentYear();
+                const elementsWithClass = document.querySelectorAll('.aktuellesJahrWertpapiere');
+                for (const element of elementsWithClass) {
+                    element.textContent = currentYear;
+                }
+            }
+        `;
+
+            customDefs.appendChild(dynamicScript);
+
+        }
+        SVGonLoadWertpapiere(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
+
+
+    }
+
+
+    loadWertpapiereData() // Laden der Anlagen-Daten
 }
 
 async function bescheidApplySVGholen() {
@@ -2301,6 +2461,11 @@ function anlagenkarteHerunterladenAlsPNG() {
     herunterladenAlsPNG('anlagenkarteContainer', 'anlagenkarte.png');
 }
 
+
+function wertpapiereHerunterladenAlsPNG() {
+    herunterladenAlsPNG('wertpapiereContainer', 'wertpapier.png');
+}
+
 // Export to SVG
 
 function herunterladen(containerId, dateiname) {
@@ -2364,9 +2529,9 @@ function anlagenkarteHerunterladen() {
     herunterladen('anlagenkarteContainer', 'anlagenkarte.svg');
 }
 
-
-
-
+function wertpapiereHerunterladen() {
+    herunterladen('wertpapiereContainer', 'wertpapier.svg');
+}
 
 
 
@@ -2416,6 +2581,10 @@ function bescheidKopiereInZwischenablage() {
 
 function anlagenkarteKopiereInZwischenablage() {
     kopiereInZwischenablage('anlagenkarteContainer');
+}
+
+function wertpapiereKopiereInZwischenablage() {
+    kopiereInZwischenablage('wertpapiereContainer');
 }
 
 
@@ -2625,8 +2794,8 @@ function validateInputs() {
 
     // Validierung für Jahr im Kontoauszug
     let jahrKontoauszug = document.getElementById("jahrKontoauszug");
-    if (!isValidInput(jahrKontoauszug.value, 4)) {
-        alert("Bitte geben Sie bei Jahr (Kontoauszug) gültige Werte ein (maximal 4 Stellen)");
+    if (!isValidInput(jahrKontoauszug.value, 6)) {
+        alert("Bitte geben Sie bei Jahr (Kontoauszug) gültige Werte ein (maximal 6 Stellen)");
         return false;
     }
 
@@ -2755,6 +2924,37 @@ function validateInputs() {
     let anlagenkarteNutzungsdauerInput = document.getElementById("anlagenkarteNutzungsdauerInput");
     if (!isValidNumberInput(anlagenkarteNutzungsdauerInput.value, 0, 99)) {
         alert("Bitte geben Sie bei Nutzungsdauer gültige Werte zwischen 0 und 99 ein");
+        return false;
+    }
+
+    // Validierung für Wertpapiere
+    let wertpapiereBezeichnungInput = document.getElementById("wertpapiereBezeichnungInput");
+    if (!isValidInput(wertpapiereBezeichnungInput.value, 15)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Bezeichnung ein. Maximal 15 Zeichen!");
+        return false;
+    }
+
+    let wertpapiereISINInput = document.getElementById("wertpapiereISINInput");
+    if (!isValidInput(wertpapiereISINInput.value, 12)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Bezeichnung ein. Maximal 12 Zeichen!");
+        return false;
+    }
+
+    let wertpapiereStueckkursInput = document.getElementById("wertpapiereStueckkursInput");
+    if (!isValidNumberInput(wertpapiereStueckkursInput.value, 1, 5000)) {
+        alert("Bitte geben Sie bei Nutzungsdauer gültige Werte zwischen 1 und 5000 ein");
+        return false;
+    }
+
+    let wertpapiereAnzahlInput = document.getElementById("wertpapiereAnzahlInput");
+    if (!isValidNumberInput(wertpapiereAnzahlInput.value, 1, 5000)) {
+        alert("Bitte geben Sie bei Nutzungsdauer gültige Werte zwischen 1 und 5000 ein");
+        return false;
+    }
+
+    let jahrWertpapiere = document.getElementById("jahrWertpapiere");
+    if (!isValidInput(jahrWertpapiere.value, 6)) {
+        alert("Bitte geben Sie bei Jahr gültige Werte ein (maximal 6 Stellen)");
         return false;
     }
 
