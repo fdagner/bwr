@@ -3,11 +3,11 @@
   </defs>
 
   <!-- Kontoauszug-Rahmen -->
-  <rect x="0" y="0" width="760" height="430" fill="#ffffff" stroke="#000" stroke-width="0" />
+  <rect x="1" y="1" width="758" height="428" fill="#ffffff" stroke="#000" stroke-width="1" />
   <line x1="0" x2="760" y1="50" y2="50" stroke-width="1" stroke="#000" />
 
   <!-- Überschrift -->
-  <rect x="0" y="0" width="760" height="50" fill="lightblue" />
+  <rect x="2" y="2" width="756" height="48" fill="lightblue" />
   <text x="5" y="35" font-family="Verdana" font-size="22" text-anchor="start"
     fill="#000000">Wertpapier-Abrechnung</text>
   <text id="wertpapiereBank" x="750" y="35" font-family="Verdana" font-size="22" text-anchor="end"
