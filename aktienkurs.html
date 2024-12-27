@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sie können einen zufällige Aktienkurs mit Aufgabe erzeugen, ausgehend vom aktuellen Datum.">
-    <meta name="keywords" content="BwR, Aktien, Aktie, DAX, Kurs, Aktienkurs, Realschule, Schema, Lehrkraft, Prüfung, Belege, Schemata, Rechnungswesen, Buchführung">
+    <meta name="description"
+        content="Sie können einen zufällige Aktienkurs mit Aufgabe erzeugen, ausgehend vom aktuellen Datum.">
+    <meta name="keywords"
+        content="BwR, Aktien, Aktie, DAX, Kurs, Aktienkurs, Realschule, Schema, Lehrkraft, Prüfung, Belege, Schemata, Rechnungswesen, Buchführung">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/menu.js"></script>
     <script src="js/html2canvas.min.js"></script>
@@ -22,9 +24,15 @@
         <h2>Aktienkauf mit Diagramm - beta</h2>
         <div class="box">
             <p>Sie können einen zufällige Aktienkurs erzeugen, ausgehend vom aktuellen Datum. Über das Burger-Menü kann
-                das Diagramm heruntergeladen
-                werden.</p>
+                das Diagramm heruntergeladen werden. Zum Schlusskurs kann eine Aufgabe erstellt werden. Wählen Sie Kauf oder Verkauf.</p>
             <div id="controls" class="flex-column">
+                <div>
+                    <label for="wertpapiereArtInput">Art: </label><br>
+                    <select id="wertpapiereArtInput">
+                        <option value="wertpapiereKauf">Kauf</option>
+                        <option value="wertpapiereVerkauf">Verkauf</option>
+                    </select>
+                </div>
                 <div><label for="unternehmen">Unternehmen wählen:</label><br>
                     <select id="unternehmen">
                         <!-- Dropdown-Optionen werden hier dynamisch hinzugefügt -->
@@ -49,7 +57,7 @@
                 </div>
 
 
-                <div><button id="generate-chart">Neues Diagramm</button></div>
+                <div><button id="generate-chart">Diagramm und Aufgabe neu erstellen</button></div>
             </div>
         </div>
         <div id="chart" style="width: 100%;"></div>
@@ -136,8 +144,7 @@
                     const firstCompany = agUnternehmen[0];
                     const timeframe = "days"; // Standard auf "Tage"
                     const data = generateStockData(8, 2024, timeframe);
-                    renderChart(data, firstCompany, timeframe);
-                }
+                 }
             }
 
             function generateStockData(period, year, timeframe) {
@@ -203,6 +210,36 @@
                 const year = lastDate.getFullYear();
                 return year; // Das Jahr des letzten Datenpunkts zurückgeben
             }
+
+            let chart; // Globale Variable für das Chart
+
+async function updateChartAndText() {
+    const timeframe = document.querySelector("#timeframe").value;
+    const period = parseInt(document.querySelector("#period").value, 10);
+    const year = parseInt(document.querySelector("#year").value, 10);
+    const selectedCompanyId = document.querySelector("#unternehmen").value;
+
+    const unternehmen = await loadYAML();
+    const selectedCompany = unternehmen.find(company => company.id === selectedCompanyId);
+
+    if (!selectedCompany) {
+        alert("Bitte wählen Sie ein Unternehmen aus!");
+        return;
+    }
+
+    // Generiere die neuen Daten für das Chart
+    const data = generateStockData(period, year, timeframe);
+
+    // Zerstöre das bestehende Chart, falls vorhanden
+    if (chart) {
+        chart.destroy(); // Zerstören des aktuellen Charts
+    }
+
+    // Render das neue Chart
+    renderChart(data, selectedCompany, timeframe);
+    insertDynamicText(new Date(), selectedCompany, data[data.length - 1].y); // Verwende den letzten Preis
+}
+
 
             // Initialisiere das Diagramm
             function renderChart(data, company, timeframe) {
@@ -334,44 +371,15 @@
                 };
 
                 const chartElement = document.querySelector("#chart");
-                chartElement.innerHTML = "";
-                const chart = new ApexCharts(chartElement, options);
-                chart.render();
-                const lastDate = data[data.length - 1].x;
+    chartElement.innerHTML = ""; // Leeren des Chart-Elements
+    chart = new ApexCharts(chartElement, options); // Speichern des neuen Charts in der globalen Variable
+    chart.render(); // Rendern des neuen Charts
+}
 
-                // Dynamischen Text mit dem letzten Datum und dem Unternehmensnamen einfügen
-                insertDynamicText(lastDate, company, lastPrice);
-            }
-
-
-            document.querySelector("#generate-chart").addEventListener("click", async () => {
-                const timeframe = document.querySelector("#timeframe").value; // 'months' oder 'days'
-                const period = parseInt(document.querySelector("#period").value, 10);
-                const year = parseInt(document.querySelector("#year").value, 10);
-
-                // Validierung: Zeitraum zwischen 3 und 12 Monaten und Jahr >= 1900
-                if (isNaN(period) || period < 3 || period > 13) {
-                    alert("Bitte geben Sie einen Zeitraum zwischen 3 und 13 Monaten/Tagen ein!");
-                    return;
-                }
-                if (isNaN(year) || year < 1900 || year > 2100) {
-                    alert("Bitte geben Sie ein gültiges Jahr ein!");
-                    return;
-                }
-
-                const selectedCompanyId = document.querySelector("#unternehmen").value;
-                const unternehmen = await loadYAML();
-                const selectedCompany = unternehmen.find(company => company.id === selectedCompanyId);
-
-                if (!selectedCompany) {
-                    alert("Bitte wählen Sie ein Unternehmen aus!");
-                    return;
-                }
-
-                const data = generateStockData(period, year, timeframe); // Übergabe des timeframes
-                renderChart(data, selectedCompany, timeframe); // Übergabe des timeframes
-            });
-
+// Event Listener für Dropdown-Änderungen
+document.querySelector("#wertpapiereArtInput").addEventListener("change", updateChartAndText);
+document.querySelector("#unternehmen").addEventListener("change", updateChartAndText);
+document.querySelector("#generate-chart").addEventListener("click", updateChartAndText);
 
             populateDropdown();
 
@@ -380,7 +388,15 @@
                 return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
             }
 
+
+            function generateRandomStep() {
+                    const possibleValues = [-0.2, -0.1, -0.05, 0.05, 0.1, 0.2];
+  const randomIndex = Math.floor(Math.random() * possibleValues.length);
+  return possibleValues[randomIndex];
+                }
+
             function insertDynamicText(date, company, lastPrice) {
+    
                 // Formatierung des Datums ins deutsche Format
                 let formattedDate = date.toLocaleDateString("de-DE");
                 // Berechnung der Anzahl der Aktien (Zufallswert zwischen 100 und 1000, in 10er-Schritten)
@@ -389,16 +405,24 @@
                 let kurswert = (anzahlAktien * lastPrice); // Gesamtkurswert = Anzahl * letzter Kurs
                 let spesen = (kurswert * 0.01); // 1% vom Kurswert
                 let banklastschrift = kurswert + spesen;
+                let bankgutschrift = kurswert - spesen;
+                const abweichungKurswertKauf = generateRandomStep();
+                let banklastschriftAlt = bankgutschrift + abweichungKurswertKauf*bankgutschrift;
+                let differenzKurswert = banklastschriftAlt - bankgutschrift;
+                let differenzKurswert_betrag = Math.abs(differenzKurswert);
+                banklastschriftAlt = formatCurrency(banklastschriftAlt);
                 kurswert = formatCurrency(kurswert);
                 spesen = formatCurrency(spesen);
                 banklastschrift = formatCurrency(banklastschrift);
-
-
+                bankgutschrift = formatCurrency(bankgutschrift);
+                differenzKurswert_betrag = formatCurrency(differenzKurswert_betrag);
                 // Text erstellen
-                let text = `
+                let text;
+                if (wertpapiereArtInput.value === 'wertpapiereKauf') {
+                 text = `
                 <h2>Aufgabe</h2>
-        Am ${formattedDate} kaufen wir ${anzahlAktien}  Aktien der „${company.name} ${company.rechtsform}“.
-        Die Spesen betragen 1 % vom Kurswert. Bilden Sie den Buchungssatz.
+        Am ${formattedDate} kaufen wir ${anzahlAktien} Aktien der „${company.name} ${company.rechtsform}“.
+        Die Spesen betragen 1 % vom Kurswert. Bilde den Buchungssatz.
         <h3>Lösung</h3>
            <h4>Nebenrechnung</h4>
          <table style="border-collapse: collapse;white-space:nowrap;width:400px;margin: 0 0">
@@ -423,7 +447,57 @@
             </tr></tbody></table>
     
     `;
-
+                } else {
+                    text = `
+                <h2>Aufgabe</h2>
+        Am ${formattedDate} verkaufen wir ${anzahlAktien} Aktien der „${company.name} ${company.rechtsform}“.
+        Die Spesen betragen 1 % vom Kurswert. Die Banklastschrift beim Kauf betrug ${banklastschriftAlt}. Bilde den Buchungssatz.
+        <h3>Lösung</h3>
+           <h4>Nebenrechnung</h4>
+         <table style="border-collapse: collapse;white-space:nowrap;width:400px;margin: 0 0">
+            <tr>
+                <td>Kurswert (${anzahlAktien} x ${lastPrice},00 €)</td>
+                <td style="padding-left:6px;text-align:right;">${kurswert}</td><td style="padding-left:6px;text-align:right;">100 %</td>
+            </tr>
+            <tr>
+                <td>- Spesen</td><td style="padding-left:6px;text-align:right;">${spesen}</td><td style="padding-left:6px;text-align:right;">1 %</td>
+            </tr>
+            <tr>
+                <td style="border-top: solid 1px #ccc">= Bankgutschrift</td><td style="border-top: solid 1px #ccc;padding-left:6px;text-align:right;">${bankgutschrift}</td><td style="border-top: solid 1px #ccc;padding-left:6px;text-align:right;">99 %</td>
+            </tr>
+        </table>
+        <h4>Buchungssatz</h4>
+        <table style="margin:0;white-space:nowrap;font-family:courier;min-width:660px;"><tbody>
+            <tr>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">2800 BK</td>
+             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${bankgutschrift}</td>
+                       <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">1500 WP</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${banklastschriftAlt}</td>
+            </tr>
+              `;
+              if (differenzKurswert < 0) {
+            text += `
+            <tr>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1"></td>
+             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1"></td>
+                       <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">5650 EAWP</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${differenzKurswert_betrag}</td>
+            </tr></tbody></table>
+           
+    `;  } else {
+        text += `
+            <tr>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">7460 VAWP</td>
+             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${differenzKurswert_betrag}</td>
+                       <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1"></td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1"></td>
+            </tr></tbody></table>
+`;  
+    }
+        }
                 // Ausgabe im HTML
                 const dynamicTextElement = document.getElementById("aktienContainer");
                 dynamicTextElement.innerHTML = text;
@@ -474,7 +548,6 @@
                 console.error("Fehler beim Kopieren der Tabelle: ", e.action);
                 alert("Fehler beim Kopieren der Tabelle.");
             });
-
         </script>
 
     </main>
