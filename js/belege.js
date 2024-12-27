@@ -2929,8 +2929,8 @@ function validateInputs() {
 
     // Validierung für Wertpapiere
     let wertpapiereBezeichnungInput = document.getElementById("wertpapiereBezeichnungInput");
-    if (!isValidInput(wertpapiereBezeichnungInput.value, 15)) {
-        alert("Bitte geben Sie eine gültige Bezeichnung bei Bezeichnung ein. Maximal 15 Zeichen!");
+    if (!isValidInput(wertpapiereBezeichnungInput.value, 20)) {
+        alert("Bitte geben Sie eine gültige Bezeichnung bei Bezeichnung ein. Maximal 20 Zeichen!");
         return false;
     }
 
