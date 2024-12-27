@@ -3,7 +3,7 @@
   </defs>
 
   <!-- Kontoauszug-Rahmen -->
-  <rect x="1" y="1" width="758" height="428" fill="#ffffff" stroke="#000" stroke-width="1" />
+  <rect x="1" y="1" width="758" height="428" fill="#ffffff" stroke="gray" stroke-width="1" />
   <line x1="0" x2="760" y1="50" y2="50" stroke-width="5" stroke="#b61e37" />
 
   <!-- Überschrift -->
