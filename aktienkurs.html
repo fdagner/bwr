@@ -398,6 +398,7 @@ document.querySelector("#generate-chart").addEventListener("click", updateChartA
             function insertDynamicText(date, company, lastPrice) {
     
                 // Formatierung des Datums ins deutsche Format
+                date.setDate(date.getDate() - 1); 
                 let formattedDate = date.toLocaleDateString("de-DE");
                 // Berechnung der Anzahl der Aktien (Zufallswert zwischen 100 und 1000, in 10er-Schritten)
                 let anzahlAktien = Math.floor(Math.random() * (1000 - 100 + 1) / 10) * 10 + 100;
