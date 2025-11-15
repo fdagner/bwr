@@ -1609,3 +1609,27 @@
     bic: "GENODNBGS1XXX"
     inhaber: "Carmen Lohmeier"
     akzent: "#ff851f"
+
+- unternehmen:
+    id: "68"
+    branche: "Modellunternehmen"
+    name: "Vincent Mayer Möbel"
+    motto: " "
+    bank: "Lichtenfelser Stadtbank"
+    rechtsform: "e. K."
+    logo: "media/pic/mamoe.svg"
+    adresse:
+      strasse: "Paukerweg 12"
+      plz: "96215"
+      ort: "Lichtenfels"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 9571 0990-0"
+      email: "info@mamoebel.xyz"
+      internet: "mamoebel.de"
+    ust_id: "DE8142078775"
+    steuernummer: "230/5236/0605"
+    iban: "DE72760480000000604012"
+    bic: "BYSTDEL2SBK"
+    inhaber: "Vincent Mayer"
+    akzent: "#4b4534"
