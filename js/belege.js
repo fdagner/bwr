@@ -1264,11 +1264,25 @@ function applyOrderData() {
     loadCompanyDataforEmail(); // Laden der E-Mail-Daten (Kunde)
 }
 
-function quittungApplySVGholen() {
+async function quittungApplySVGholen() {
     if (!validateInputs()) {
         // Wenn die Validierung fehlschlägt, stoppe die Funktion
         return;
     }
+
+  // Laden der Daten für den Kassenbon
+
+    let selectedQuittung = document.getElementById("svgDropdownQuittung").value;
+    let svgContainerQuittung = document.getElementById("quittungContainer");
+
+    // Laden der SVG-Vorlage und Aktualisieren des Containers
+    try {
+        let svgData = await loadSVGTemplate(selectedQuittung);
+        svgContainerQuittung.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Anwenden der Daten:", error);
+    }
+
     // Laden der Daten für die Quittung
     let quittungZweck = document.getElementById('quittungZweckInput').value;
     document.getElementById('quittungZweck').textContent = quittungZweck;
@@ -2348,7 +2362,6 @@ async function applySVG() {
     } catch (error) {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
-
 
 
     let selectedEmail = document.getElementById("svgDropdownEmail").value;
