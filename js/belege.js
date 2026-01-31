@@ -337,7 +337,7 @@ function loadKontoauszugData() {
     document.getElementById('kontoauszugBank').textContent = selectedKontoauszug.unternehmen.bank;
     document.getElementById('kontoauszugIban').textContent = selectedKontoauszug.unternehmen.iban;
     document.getElementById('kontoauszugBic').textContent = selectedKontoauszug.unternehmen.bic;
-    document.getElementById('kontoauszugName').textContent = selectedKontoauszug.unternehmen.inhaber + ', ' + selectedKontoauszug.unternehmen.name;
+    document.getElementById('kontoauszugName').textContent = selectedKontoauszug.unternehmen.name + ' ' + selectedKontoauszug.unternehmen.rechtsform;
     document.getElementById('kontoauszugAdresse').textContent = selectedKontoauszug.unternehmen.adresse.strasse;
     document.getElementById('kontoauszugOrt').textContent = selectedKontoauszug.unternehmen.adresse.plz + ' ' + selectedKontoauszug.unternehmen.adresse.ort;
 }
