@@ -728,6 +728,41 @@ footer {
   }
 }
 
+
+   .kennzahlen-eingabe {
+      background-color: #f0f4ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .kennzahlen-eingabe h3 {
+      margin-top: 0;
+      color: #1a3c6d;
+    }
+    .kennzahl-row {
+      display: grid;
+      grid-template-columns: 200px 100px 20px 100px 50px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .kennzahl-row label {
+      font-weight: 600;
+    }
+    .kennzahl-row input {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-align: right;
+    }
+    .kennzahl-row input.error {
+      border-color: #ff4444;
+      background-color: #fff0f0;
+    }
+    .kennzahl-row span {
+      text-align: center;
+    }
+
 /* ============================================
    UTILITY CLASSES
    ============================================ */
