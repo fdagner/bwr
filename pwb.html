@@ -16,32 +16,37 @@
 </head>
 <main>
 <div w3-include-html="navigation.html"></div> 
+<h2>Pauschalwertberichtigung</h2>
+    <br>
 
-  <h2>Einzelwertberichtigung</h2>
     <div class="box">
-      <p>Sie können hier zufällige Geschäftsfälle zur Einzelwertberichtigung generieren.</p>
+      <p>Sie können hier zufällige Geschäftsfälle zur Pauschalwertberichtigung generieren.</p>
       
-      <label for="ewbAnzahlKunden">Anzahl der Kunden:</label>
-      <select id="ewbAnzahlKunden">
-        <option value="2">2</option>
-        <option value="3" selected>3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select><br><br>
-      
-      <button onclick="ewbZeigeZufaelligeTabelle()">Aufgabe erstellen</button>
+      <label for="pwbProzentsatz">PWB-Prozentsatz:</label>
+      <select id="pwbProzentsatz">
+        <option value="0.5">0,5 %</option>
+        <option value="1" selected>1 %</option>
+        <option value="1.5">1,5 %</option>
+        <option value="2">2 %</option>
+        <option value="2.5">2,5 %</option>
+        <option value="3">3 %</option>
+      </select><br>
+      <br>
+      <button onclick="pwbZeigeZufaelligeTabelle()">Aufgabe erstellen</button>
     </div>
     
     <div id="Container" style="min-width: 580px" contenteditable="true"></div>
     
-    <div w3-include-html="downloads.html"></div> 
+
+
+
+   <div w3-include-html="downloads.html"></div> 
 
   </main>
-    <script src="js/ewb.js"></script>
+    <script src="js/pwb.js"></script>
         <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div> 
   <script>
   includeHTML();
   </script>
   </body>
-</html>
