@@ -176,6 +176,12 @@ const FormatHelper = {
     }
 };
 
+   // Hilfsfunktion, um den numerischen Wert eines Eingabefelds zu erhalten
+    function getNumericValue(inputId) {
+        const inputValue = document.getElementById(inputId).value;
+        return parseFloat(inputValue) || 0; // Rückgabe von 0, wenn die Umwandlung fehlschlägt
+    }
+
 // Zufallsgeneratoren
 const RandomHelper = {
     // Zufällige Nummer zwischen min und max
@@ -590,7 +596,6 @@ if (!localStorage.getItem('uploadedYamlCompanyData')) {
         });
 }
 
-let selectedSupplier;
 
 // ============================================================================
 // BELEG-DATEN LADEN (Spezifisch)
@@ -623,13 +628,6 @@ function loadQuittungData() {
     loadBelegData('quittung', 'datenQuittung');
 }
 
-
-// Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
-function loadCompanyDataforQuittung() {
-    const selectedCompanyName = document.getElementById('datenQuittungKunde').value;
-    const selectedCompany = yamlData.find(company => company.unternehmen.name === selectedCompanyName);
-    document.getElementById('quittungNameKunde').textContent = selectedCompany.unternehmen.inhaber + ", " + selectedCompany.unternehmen.name;
-}
 
 function loadLohnjournalData() {
     loadBelegData('lohnjournal', 'datenLohnjournal');
@@ -678,12 +676,12 @@ function loadCompanyData() {
     loadSupplierData(); // Aktualisiere auch Lieferant für nummerKunde
 }
 
-// ERSETZEN Sie loadCompanyDataforQuittung:
+
 function loadCompanyDataforQuittung() {
     loadBelegData('kundeQuittung', 'datenQuittungKunde');
 }
 
-// ERSETZEN Sie loadCompanyDataforKassenbon:
+
 function loadCompanyDataforKassenbon() {
     loadBelegData('kundeKassenbon', 'datenKassenbonKunde');
 }
@@ -841,134 +839,26 @@ function applyOrderData() {
         element.textContent = formattedSevenDaysAgoKontoauszug;
     }
 
-    const useScript = document.getElementById('scriptJahr').checked;
-    if (!useScript) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahr');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahr');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
+    handleYearScript({
+    jahrCheckbox: 'scriptJahr',
+    jahrInput: 'jahr',
+    jahrClass: 'aktuellesJahr',
+    customDefs: 'customDefs',
+    scriptId: 'customJs',
+    scriptFunction: 'SVGonLoad'
+});
 
-    } else {
+  
+handleYearScript({
+    jahrCheckbox: 'scriptJahrKontoauszug',
+    jahrInput: 'jahrKontoauszug',
+    jahrClass: 'aktuellesJahrKontoauszug',
+    customDefs: 'customDefsKontoauszug',
+    scriptId: 'customJsKontoauszug',
+    scriptFunction: 'SVGonLoadKontoauszug'
+});
 
-        const customDefs = document.getElementById('customDefs');
-        const customJsScript = document.getElementById('customJs');
-        const useScript = document.getElementById('scriptJahr').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScript) {
-            let svgContainer = document.getElementById('rechnungSVG');
-            if (svgContainer instanceof SVGElement) {
-                // Füge das dynamische Script zum SVG hinzu
-                const dynamicScript = document.createElement('script');
-                dynamicScript.type = 'text/javascript';
-                dynamicScript.id = 'customJs';
-                dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoad() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahr');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-                customDefs.appendChild(dynamicScript);
-
-            }
-            else {
-                const dynamicScript = document.createElement('script');
-                dynamicScript.type = 'text/javascript';
-                dynamicScript.id = 'customJs';
-                dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoad() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahr');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-                // Füge das Skript zum body hinzu, wenn 'customDefs' nicht existiert
-                document.body.appendChild(dynamicScript);
-
-
-            }
-        }
-        SVGonLoad(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-    }
-
-    const useScriptKontoauszug = document.getElementById('scriptJahrKontoauszug').checked;
-    if (!useScriptKontoauszug) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahrKontoauszug');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrKontoauszug');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
-
-    } else {
-
-        const customDefs = document.getElementById('customDefsKontoauszug');
-        const customJsScript = document.getElementById('customJsKontoauszug');
-        const useScriptKontoauszug = document.getElementById('scriptJahrKontoauszug').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScriptKontoauszug) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJsKontoauszug';
-            dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoadKontoauszug() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahrKontoauszug');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-            customDefs.appendChild(dynamicScript);
-
-        }
-        SVGonLoadKontoauszug(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-
-    }
-
-
-    // Hilfsfunktion, um den numerischen Wert eines Eingabefelds zu erhalten
-    function getNumericValue(inputId) {
-        const inputValue = document.getElementById(inputId).value;
-        return parseFloat(inputValue) || 0; // Rückgabe von 0, wenn die Umwandlung fehlschlägt
-    }
-
-    // Lese die eingegebenen Daten aus den Input-Feldern
+     // Lese die eingegebenen Daten aus den Input-Feldern
     const artikel = document.getElementById('artikelInput').value;
     const menge = getNumericValue('mengeInput');
     const einheit = document.getElementById('einheitInput').value;
@@ -1245,811 +1135,27 @@ function applyOrderData() {
 }
 
 async function quittungApplySVGholen() {
-    if (!validateInputs()) {
-        // Wenn die Validierung fehlschlägt, stoppe die Funktion
-        return;
-    }
-
-    // Laden der Daten für den Kassenbon
-
-    let selectedQuittung = document.getElementById("svgDropdownQuittung").value;
-    let svgContainerQuittung = document.getElementById("quittungContainer");
-
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedQuittung);
-        svgContainerQuittung.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
-
-    // Laden der Daten für die Quittung
-    let quittungZweck = document.getElementById('quittungZweckInput').value;
-    document.getElementById('quittungZweck').textContent = quittungZweck;
-    const selectedquittungTag = document.getElementById('tagQuittung').value;
-    const selectedquittungMonat = document.getElementById('monatQuittung').value;
-    document.getElementById('quittungTag').textContent = selectedquittungTag;
-    document.getElementById('quittungMonat').textContent = selectedquittungMonat;
-    let quittungNetto = document.getElementById('quittungNettoInput').value;
-    // Überprüfen, ob das Eingabefeld leer ist
-    if (quittungNetto === "") {
-        // Wenn das Eingabefeld leer ist, setze quittungUST auf 0
-        quittungNetto = 0;
-    }
-    quittungNetto = parseFloat(quittungNetto).toFixed(2);
-    let [nettoVorKomma, nettoNachKomma] = quittungNetto.split('.');
-    document.getElementById('quittungNetto').textContent = nettoVorKomma;
-    document.getElementById('quittungNettoCent').textContent = nettoNachKomma;
-
-    quittungUST = document.getElementById('quittungUSTInput').value;
-
-    // Überprüfen, ob das Eingabefeld leer ist
-    if (quittungUST === "") {
-        // Wenn das Eingabefeld leer ist, setze quittungUST auf 0
-        quittungUST = 0;
-    }
-    document.getElementById('quittungUST').textContent = quittungUST;
-    let quittungUSTBetrag = quittungNetto * quittungUST / 100;
-    document.getElementById('quittungUSTBetrag').textContent = quittungUSTBetrag;
-    quittungUSTBetrag = FormatHelper.roundToTwo(quittungUSTBetrag);
-    quittungUSTBetrag = parseFloat(quittungUSTBetrag).toFixed(2);
-    let [USTVorKomma, USTNachKomma] = quittungUSTBetrag.split('.');
-    document.getElementById('quittungUSTBetrag').textContent = USTVorKomma;
-    document.getElementById('quittungUSTBetragCent').textContent = USTNachKomma;
-    let quittungSumme = parseFloat(quittungUSTBetrag) + parseFloat(quittungNetto);
-    quittungSumme = quittungSumme.toFixed(2);
-    let [summeVorKomma, summeNachKomma] = quittungSumme.split('.');
-    document.getElementById('quittungSumme').textContent = summeVorKomma;
-    document.getElementById('quittungSummeCent').textContent = summeNachKomma;
-    summeVorKomma = parseFloat(summeVorKomma)
-    const quittungInWorten = zahlwort(summeVorKomma);
-    document.getElementById('quittungInWorten').textContent = quittungInWorten;
-
-
-
-    const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
-    if (!useScriptQuittung) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahrQuittung');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrQuittung');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
-
-    } else {
-
-        const customDefs = document.getElementById('customDefsQuittung');
-        const customJsScript = document.getElementById('customJsQuittung');
-        const useScriptQuittung = document.getElementById('scriptJahrQuittung').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScriptQuittung) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJsQuittung';
-            dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoadQuittung() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahrQuittung');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-            customDefs.appendChild(dynamicScript);
-
-        }
-        SVGonLoadQuittung(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-
-    }
-
-
-    loadQuittungData() // Laden der Quittung-Daten
-    loadCompanyDataforQuittung(); // Laden der Quittung-Daten (Kunde) 
+    await applyBelegWithSVG('quittung');
 }
 
 async function kassenbonApplySVGholen() {
-    if (!validateInputs()) {
-        // Wenn die Validierung fehlschlägt, stoppe die Funktion
-        return;
-    }
-    // Laden der Daten für den Kassenbon
-
-    let selectedKassenbon = document.getElementById("svgDropdownKassenbon").value;
-    let svgContainerKassenbon = document.getElementById("kassenbonContainer");
-
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedKassenbon);
-        svgContainerKassenbon.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
-
-
-    let kassenbonZweck = document.getElementById('kassenbonZweckInput').value;
-    document.getElementById('kassenbonZweck').textContent = kassenbonZweck;
-    const selectedkassenbonTag = document.getElementById('tagKassenbon').value;
-    const selectedkassenbonMonat = document.getElementById('monatKassenbon').value;
-    document.getElementById('kassenbonTag').textContent = selectedkassenbonTag;
-    document.getElementById('kassenbonMonat').textContent = selectedkassenbonMonat;
-    let kassenbonRandomTime = RandomHelper.time();
-    document.getElementById('kassenbonUhrzeit').textContent = kassenbonRandomTime + ' Uhr';
-    const kassenbonRandomNumber = RandomHelper.sevenDigit();
-    document.getElementById('kassenbonTransaktionsnummer').textContent = kassenbonRandomNumber;
-    let kassenbonNetto = document.getElementById('kassenbonNettoInput').value;
-    // Überprüfen, ob das Eingabefeld leer ist
-    if (kassenbonNetto === "") {
-        // Wenn das Eingabefeld leer ist, setze quittungUST auf 0
-        kassenbonNetto = 0;
-    }
-
-    document.getElementById('kassenbonNetto').textContent = FormatHelper.currency(kassenbonNetto);
-    kassenbonUST = document.getElementById('kassenbonUSTInput').value;
-    // Überprüfen, ob das Eingabefeld leer ist
-    if (quittungUST === "") {
-        // Wenn das Eingabefeld leer ist, setze quittungUST auf 0
-        quittungUST = 0;
-    }
-
-    document.getElementById('kassenbonUST').textContent = kassenbonUST;
-    let kassenbonUSTBetrag = (kassenbonNetto * kassenbonUST / 100);
-    kassenbonUSTBetrag = FormatHelper.roundToTwo(kassenbonUSTBetrag);
-    document.getElementById('kassenbonUSTBetrag').textContent = FormatHelper.currency(kassenbonUSTBetrag);
-    let kassenbonBrutto = parseFloat(kassenbonNetto) + parseFloat(kassenbonUSTBetrag);
-    let kassenbonBruttoElements = Array.from(document.getElementsByClassName('kassenbonBrutto'));
-
-    // Iteriere über jedes Element und setze den berechneten Bruttobetrag als Textinhalt
-    kassenbonBruttoElements.forEach(function (element) {
-        // Formatieren des Bruttobetrags
-        var formattedKassenbonBrutto = FormatHelper.currency(kassenbonBrutto);
-
-        // Setze den formatierten Bruttobetrag als Textinhalt ins Element
-        element.textContent = formattedKassenbonBrutto;
-    });
-    let kassenbonZahlungsart = document.getElementById('kassenbonDropdownZahlungsart').value;
-    document.getElementById('kassenbonZahlungsart').textContent = kassenbonZahlungsart;
-
-
-    const useScriptKassenbon = document.getElementById('scriptJahrKassenbon').checked;
-    if (!useScriptKassenbon) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahrKassenbon');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrKassenbon');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
-
-    } else {
-
-        const customDefs = document.getElementById('customDefsKassenbon');
-        const customJsScript = document.getElementById('customJsKassenbon');
-        const useScriptKassenbon = document.getElementById('scriptJahrKassenbon').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScriptKassenbon) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJsKassenbon';
-            dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoadKassenbon() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahrKassenbon');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-            customDefs.appendChild(dynamicScript);
-
-        }
-        SVGonLoadKassenbon(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-
-    }
-
-    loadKassenbonData() // Laden der Kassenbon-Daten
-    loadCompanyDataforKassenbon()
+    await applyBelegWithSVG('kassenbon');
 }
 
 async function journalApplySVGholen() {
-
-    let selectedLohnjournal = document.getElementById("svgDropdownLohnjournal").value;
-    let svgContainerLohnjournal = document.getElementById("lohnjournalContainer");
-
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedLohnjournal);
-        svgContainerLohnjournal.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
-    // Laden der Daten des Lohnjournals
-
-    // Funktion zum Zufälligen Auswählen von Mitarbeitern
-
-    const mitarbeiter = [
-        { name: "Smith, John", freibetrag: "0", steuerklasse: "I" },
-        { name: "Garcia, Maria", freibetrag: "0", steuerklasse: "IV" },
-        { name: "Müller, Hans", freibetrag: "0", steuerklasse: "I" },
-        { name: "Nguyen, Linh", freibetrag: "0", steuerklasse: "III" },
-        { name: "Andersen, Erik", freibetrag: "0", steuerklasse: "I" },
-        { name: "Choi, Hye-jin", freibetrag: "0", steuerklasse: "IV" },
-        { name: "Gomez, Juan", freibetrag: "0", steuerklasse: "I" },
-        { name: "Abdullah, Fatima", freibetrag: "0", steuerklasse: "III" },
-        { name: "Bauer, Stephan", freibetrag: "0", steuerklasse: "III" },
-        { name: "Kovács, István", freibetrag: "0", steuerklasse: "I" },
-        { name: "Santos, Sofia", freibetrag: "0", steuerklasse: "IV" },
-        { name: "Ali, Ahmed", freibetrag: "0,5", steuerklasse: "I" },
-        { name: "Hernandez, Carla", freibetrag: "0,5", steuerklasse: "III" },
-        { name: "Novák, Katarina", freibetrag: "0,5", steuerklasse: "IV" },
-        { name: "Fischer, Tobias", freibetrag: "0,5", steuerklasse: "I" },
-        { name: "Silva, Pedro", freibetrag: "0,5", steuerklasse: "III" },
-        { name: "Park, Min-woo", freibetrag: "2,0", steuerklasse: "IV" },
-        { name: "Zhang, Wei", freibetrag: "2,0", steuerklasse: "I" },
-        { name: "Molina, Ana", freibetrag: "2,0", steuerklasse: "III" },
-        { name: "Schneider, Maria", freibetrag: "2,0", steuerklasse: "IV" },
-        { name: "Mikhailova, Elena", freibetrag: "2,0", steuerklasse: "I" }
-    ];
-
-    function chooseRandomMitarbeiter(mitarbeiterListe, anzahl) {
-        const zufälligeMitarbeiter = [];
-        const kopieDerMitarbeiterListe = [...mitarbeiterListe];
-        for (let i = 0; i < anzahl; i++) {
-            const index = Math.floor(Math.random() * kopieDerMitarbeiterListe.length);
-            zufälligeMitarbeiter.push(kopieDerMitarbeiterListe.splice(index, 1)[0]);
-        }
-        return zufälligeMitarbeiter;
-    }
-
-
-    // Auswahl von drei zufälligen Mitarbeitern aus dem Array
-    const ausgewählteMitarbeiter = chooseRandomMitarbeiter(mitarbeiter, 3);
-
-    // Eintragen der ausgewählten Mitarbeiter ins Lohnjournal
-    for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
-        let lohnjournalEintrag = document.getElementById(`lohnjournalArbeitnehmer${i + 1}`);
-        if (lohnjournalEintrag) {
-            lohnjournalEintrag.textContent = `${ausgewählteMitarbeiter[i].name} (${ausgewählteMitarbeiter[i].steuerklasse}/${ausgewählteMitarbeiter[i].freibetrag})`;
-        }
-    }
-
-    function generiereZufallsBruttogehalt() {
-        return Math.round((Math.random() * 4000) + 2000) / 100 * 100; // Zwischen 2000 und 5000 gerundet auf Hunderter
-    }
-
-    // Funktion zur Berechnung der Steuern basierend auf der Steuerklasse
-    function berechneSteuern(brutto, steuerklasse) {
-        let steuersatz = 0;
-        switch (steuerklasse) {
-            case "I":
-                steuersatz = 0.19; // 9% Steuern für Steuerklasse I
-                break;
-            case "III":
-                steuersatz = 0.11; // 5,5% Steuern für Steuerklasse III
-                break;
-            case "IV":
-                steuersatz = 0.14; // 8% Steuern für Steuerklasse IV
-                break;
-            default:
-                steuersatz = 0;
-        }
-        return brutto * steuersatz;
-    }
-
-    // Funktion zur Berechnung der Sozialversicherungsbeiträge
-    function berechneSozialversicherung(brutto) {
-        const sozialversicherungssatz = 0.389; // 16,6% Sozialversicherungssatz (Arbeitnehmer und Arbeitgeber je 10%)
-        return brutto * sozialversicherungssatz;
-    }
-
-    // Eintragen der zufälligen Bruttogehälter, Steuern, Sozialversicherungsbeiträge und Nettogehälter ins Lohnjournal
-    for (let i = 0; i < ausgewählteMitarbeiter.length; i++) {
-        // Generiere zufälliges Bruttogehalt für diesen Mitarbeiter
-        const zufallsBruttogehalt = generiereZufallsBruttogehalt();
-
-        // Eintragen des Bruttogehalts ins Lohnjournal
-        const lohnjournalBrutto = document.getElementById(`lohnjournalBrutto${i + 1}`);
-        if (lohnjournalBrutto) {
-            lohnjournalBrutto.textContent = `${FormatHelper.currency(zufallsBruttogehalt.toFixed(2))}`;
-        }
-
-        // Berechnen der Steuern basierend auf der Steuerklasse und Eintragen ins Lohnjournal
-        const lohnjournalSteuern = document.getElementById(`lohnjournalSteuern${i + 1}`);
-        if (lohnjournalSteuern) {
-            const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
-            lohnjournalSteuern.textContent = `${FormatHelper.currency(steuern.toFixed(2))}`;
-        }
-
-        // Berechnen der Sozialversicherungsbeiträge und Eintragen ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
-        const lohnjournalAN = document.getElementById(`lohnjournalAN${i + 1}`);
-        const lohnjournalAG = document.getElementById(`lohnjournalAG${i + 1}`);
-        if (lohnjournalAN && lohnjournalAG) {
-            const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
-            const anBeitrag = sozialversicherung * 0.5; // 50% für Arbeitnehmer
-            const agBeitrag = sozialversicherung * 0.5; // 50% für Arbeitgeber
-
-            lohnjournalAN.textContent = `${FormatHelper.currency(anBeitrag.toFixed(2))}`;
-            lohnjournalAG.textContent = `${FormatHelper.currency(agBeitrag.toFixed(2))}`;
-        }
-
-        // Berechnen und Eintragen des Nettogehalts ins Lohnjournal
-        const lohnjournalNetto = document.getElementById(`lohnjournalNetto${i + 1}`);
-        if (lohnjournalNetto) {
-            const steuern = berechneSteuern(zufallsBruttogehalt, ausgewählteMitarbeiter[i].steuerklasse);
-            const sozialversicherung = berechneSozialversicherung(zufallsBruttogehalt);
-
-            const netto = zufallsBruttogehalt - steuern - (sozialversicherung * 0.5); // Abzug der Hälfte der Sozialversicherung für Arbeitnehmer
-            lohnjournalNetto.textContent = `${FormatHelper.currency(netto.toFixed(2))}`;
-        }
-    }
-    function berechneSummeBrutto(anzahlMitarbeiter) {
-        let summe = 0;
-        for (let i = 0; i < anzahlMitarbeiter; i++) {
-            summe += generiereZufallsBruttogehalt();
-        }
-        return summe;
-    }
-
-    // Funktion zur Generierung einer zufälligen Ganzzahl zwischen min (inklusive) und max (exklusive)
-    function zufallszahlMitarbeiter(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
-    }
-
-
-    // Generiere eine zufällige Anzahl von Mitarbeitern zwischen 15 und 45
-    const anzahlMitarbeiter = zufallszahlMitarbeiter(15, 46); // 46, weil der obere Wert exklusiv ist, sodass 45 enthalten ist
-    const summeBrutto = berechneSummeBrutto(anzahlMitarbeiter);
-
-    // Eintragen der Summe der Bruttogehälter ins Lohnjournal
-    const lohnjournalBruttoSumme = document.getElementById('lohnjournalBrutto4');
-    if (lohnjournalBruttoSumme) {
-        lohnjournalBruttoSumme.textContent = `${FormatHelper.currency(summeBrutto.toFixed(2))}`;
-    }
-
-    // Annahme: Steuerklasse 4 für alle Mitarbeiter
-    const steuerklasse = "IV";
-
-    // Berechnen der Steuern für die Summe
-    const summeSteuern = berechneSteuern(summeBrutto, steuerklasse);
-
-    // Eintragen der berechneten Steuern ins Lohnjournal
-    const lohnjournalSteuernSumme = document.getElementById('lohnjournalSteuern4');
-    if (lohnjournalSteuernSumme) {
-        lohnjournalSteuernSumme.textContent = `${FormatHelper.currency(summeSteuern.toFixed(2))}`;
-    }
-
-    // Berechnen der Sozialversicherungsbeiträge für die Summe (Arbeitnehmer und Arbeitgeber)
-    const summeSozialversicherung = berechneSozialversicherung(summeBrutto);
-    const summeAnBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitnehmer
-    const summeAgBeitrag = summeSozialversicherung * 0.5; // 50% für Arbeitgeber
-
-    // Eintragen der berechneten Sozialversicherungsbeiträge ins Lohnjournal (Arbeitnehmer und Arbeitgeber)
-    const lohnjournalANSumme = document.getElementById('lohnjournalAN4');
-    const lohnjournalAGSumme = document.getElementById('lohnjournalAG4');
-    if (lohnjournalANSumme && lohnjournalAGSumme) {
-        lohnjournalANSumme.textContent = `${FormatHelper.currency(summeAnBeitrag.toFixed(2))}`;
-        lohnjournalAGSumme.textContent = `${FormatHelper.currency(summeAgBeitrag.toFixed(2))}`;
-    }
-
-    // Berechnen des Nettogehalts für die Summe
-    const summeNetto = summeBrutto - summeSteuern - summeAnBeitrag;
-
-    // Eintragen des Nettogehalts ins Lohnjournal
-    const lohnjournalNettoSumme = document.getElementById('lohnjournalNetto4');
-    if (lohnjournalNettoSumme) {
-        lohnjournalNettoSumme.textContent = `${FormatHelper.currency(summeNetto.toFixed(2))}`;
-    }
-
-    // Array mit den Monatsnamen
-    const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-
-    // Zufällige Auswahl eines Monats
-    const zufälligerMonatIndex = Math.floor(Math.random() * monate.length);
-    const zufälligerMonat = monate[zufälligerMonatIndex];
-
-    // Eintragen des zufälligen Monats ins Lohnjournal
-    const lohnjournalMonat = document.getElementById('lohnjournalMonat');
-    if (lohnjournalMonat) {
-        lohnjournalMonat.textContent = zufälligerMonat;
-    }
-    let lohnjournalSatzOutput = "";
-    lohnjournalSatzOutput += ` <h3>Aufgabe</h3>`;
-    lohnjournalSatzOutput += `<p>Von der Personalabteilung liegt der folgende Belegauszug vor. Bilde die Buchungssätze für die Erfassung
-    des gesamten Personalaufwands, wenn die Auszahlung per Banküberweisung erfolgt.</p>
-`;
-    lohnjournalSatzOutput += `<h3>Lösung</h3>`;
-    lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
-    lohnjournalSatzOutput += `<tbody>`;
-    lohnjournalSatzOutput += `<tr>`;
-    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">6200 LG</td>`;
-    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${FormatHelper.currency(summeBrutto.toFixed(2))}</td>`;
-    lohnjournalSatzOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
-    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">2800 BK</td>`;
-    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${FormatHelper.currency(summeNetto.toFixed(2))}</td>`;
-    lohnjournalSatzOutput += `</tr>`;
-    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
-    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
-    lohnjournalSatzOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
-    lohnjournalSatzOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">4830 VFA</td>`;
-    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${FormatHelper.currency(summeSteuern.toFixed(2))}</td>`;
-    lohnjournalSatzOutput += `</tr>`;
-    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
-    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
-    lohnjournalSatzOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
-    lohnjournalSatzOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">4840 VSV</td>`;
-    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${FormatHelper.currency(summeAnBeitrag.toFixed(2))}</td>`;
-    lohnjournalSatzOutput += `</tr>`;
-    lohnjournalSatzOutput += `</tbody>`;
-    lohnjournalSatzOutput += `</table>`;
-    lohnjournalSatzOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0;margin-bottom:6px;">`;
-    lohnjournalSatzOutput += `<tbody>`;
-    lohnjournalSatzOutput += `<tr>`;
-    lohnjournalSatzOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">6400 AGASV</td>`;
-    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
-    lohnjournalSatzOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
-    lohnjournalSatzOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">4840 VSV</td>`;
-    lohnjournalSatzOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${FormatHelper.currency(summeAgBeitrag.toFixed(2))}</td>`;
-    lohnjournalSatzOutput += `</tr>`;
-    lohnjournalSatzOutput += `</tbody>`;
-    lohnjournalSatzOutput += `</table>`;
-
-    document.getElementById('lohnjournalBuchungssatzContainer').innerHTML = lohnjournalSatzOutput;
-    loadLohnjournalData() // Laden des Lohnjournals
-
+    await applyBelegWithSVG('lohnjournal');
 }
 
 async function anlagenkarteApplySVGholen() {
-    if (!validateInputs()) {
-        // Wenn die Validierung fehlschlägt, stoppe die Funktion
-        return;
-    }
-
-    let selectedAnlagenkarte = document.getElementById("svgDropdownAnlagenkarte").value;
-    let svgContainerAnlagenkarte = document.getElementById("anlagenkarteContainer");
-
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedAnlagenkarte);
-        svgContainerAnlagenkarte.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
-    // Laden der Daten
-
-    let anlagenkarteBezeichnung = document.getElementById('anlagenkarteBezeichnungInput').value;
-    document.getElementById('anlagenkarteBezeichnung').textContent = anlagenkarteBezeichnung;
-
-    let anlagenkarteAnlagekonto = document.getElementById('anlagenkarteAnlagenkontoInput').value;
-    document.getElementById('anlagenkarteAnlagenkonto').textContent = anlagenkarteAnlagekonto;
-
-    let anlagenkarteAnschaffungskosten = document.getElementById('anlagenkarteAnschaffungskostenInput').value;
-    document.getElementById('anlagenkarteAnschaffungskosten').textContent = FormatHelper.currency(anlagenkarteAnschaffungskosten);
-
-    let anlagenkarteNutzungsdauer = document.getElementById('anlagenkarteNutzungsdauerInput').value;
-    document.getElementById('anlagenkarteNutzungsdauer').textContent = anlagenkarteNutzungsdauer;
-
-    const selectedAnlagenkarteTag = document.getElementById('tagAnlagenkarte').value;
-    const selectedAnlagenkarteMonat = document.getElementById('monatAnlagenkarte').value;
-    document.getElementById('anlagenkarteTag').textContent = selectedAnlagenkarteTag;
-    document.getElementById('anlagenkarteMonat').textContent = selectedAnlagenkarteMonat;
-
-    const useScriptAnlagenkarte = document.getElementById('scriptJahrAnlagenkarte').checked;
-    if (!useScriptAnlagenkarte) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahrAnlagenkarte');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrAnlagenkarte');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
-
-    } else {
-
-        const customDefs = document.getElementById('customDefsAnlagenkarte');
-        const customJsScript = document.getElementById('customJsAnlagenkarte');
-        const useScriptAnlagenkarte = document.getElementById('scriptJahrAnlagenkarte').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScriptAnlagenkarte) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJsAnlagenkarte';
-            dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoadAnlagenkarte() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahrAnlagenkarte');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-            customDefs.appendChild(dynamicScript);
-
-        }
-        SVGonLoadAnlagenkarte(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-    }
-
-    loadAnlagenkarteData() // Laden der Anlagen-Daten
+    await applyBelegWithSVG('anlagenkarte');
 }
 
 async function wertpapiereApplySVGholen() {
-    if (!validateInputs()) {
-        // Wenn die Validierung fehlschlägt, stoppe die Funktion
-        return;
-    }
-
-    let selectedWertpapiere = document.getElementById("svgDropdownWertpapiere").value;
-    let svgContainerWertpapiere = document.getElementById("wertpapiereContainer");
-
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedWertpapiere);
-        svgContainerWertpapiere.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
-    // Laden der Daten
-
-    let wertpapiereBezeichnung = document.getElementById('wertpapiereBezeichnungInput').value;
-    document.getElementById('wertpapiereBezeichnung').textContent = wertpapiereBezeichnung;
-    let wertpapiereISIN = document.getElementById('wertpapiereISINInput').value;
-    document.getElementById('wertpapiereISIN').textContent = wertpapiereISIN;
-    let wertpapiereStueckkurs = document.getElementById('wertpapiereStueckkursInput').value;
-    document.getElementById('wertpapiereStueckkurs').textContent = FormatHelper.currency(wertpapiereStueckkurs);
-
-    let wertpapiereAnzahl = document.getElementById('wertpapiereAnzahlInput').value;
-    document.getElementById('wertpapiereAnzahl').textContent = wertpapiereAnzahl;
-
-    let wertpapiereKurswert = (wertpapiereAnzahl * wertpapiereStueckkurs); // Gesamtkurswert = Anzahl * Kurs
-    let wertpapiereSpesen = (wertpapiereKurswert * 0.01); // 1% vom Kurswert
-    let wertpapiereBanklastschrift = wertpapiereKurswert + wertpapiereSpesen;
-    let wertpapiereBankgutschrift = wertpapiereKurswert - wertpapiereSpesen;
-    wertpapiereKurswert = FormatHelper.currency(wertpapiereKurswert);
-    document.getElementById('wertpapiereKurswert').textContent = wertpapiereKurswert;
-    wertpapiereSpesen = FormatHelper.currency(wertpapiereSpesen);
-    document.getElementById('wertpapiereSpesen').textContent = wertpapiereSpesen;
-    wertpapiereBanklastschrift = FormatHelper.currency(wertpapiereBanklastschrift);
-    wertpapiereBankgutschrift = FormatHelper.currency(wertpapiereBankgutschrift);
-    let wertpapiereRandomTime = RandomHelper.time();
-    document.getElementById('wertpapiereUhrzeit').textContent = wertpapiereRandomTime + ' Uhr';
-
-    let wertpapiereArtInput = document.getElementById('wertpapiereArtInput');
-    let wertpapiereArt;
-    // Überprüfen, welche Option ausgewählt ist
-    if (wertpapiereArtInput.value === 'wertpapiereKauf') {
-        wertpapiereArt = 'gekauft';
-        document.getElementById('wertpapiereBanklastschrift').textContent = wertpapiereBanklastschrift;
-        document.getElementById('wertpapiereSpesenart').textContent = "+ 1 % Spesen";
-        document.getElementById('wertpapiereBankart').textContent = "Banklastschrift";
-    } else {
-        wertpapiereArt = 'verkauft';
-        document.getElementById('wertpapiereBanklastschrift').textContent = wertpapiereBankgutschrift;
-        document.getElementById('wertpapiereSpesenart').textContent = "- 1 % Spesen";
-        document.getElementById('wertpapiereBankart').textContent = "Bankgutschrift";
-    }
-    document.getElementById('wertpapiereArt').textContent = wertpapiereArt;
-
-    const selectedWertpapiereTag = document.getElementById('tagWertpapiereInput').value;
-    const selectedWertpapiereMonat = document.getElementById('monatWertpapiereInput').value;
-    document.getElementById('wertpapiereTag').textContent = selectedWertpapiereTag;
-    document.getElementById('wertpapiereMonat').textContent = selectedWertpapiereMonat;
-
-    let lastGeneratedNumber = selectedWertpapiereTag + selectedWertpapiereMonat; // Initialwert (Startpunkt der Sequenz)
-
-    function generateIncrementalWertpapiereNumber() {
-        // Hole das aktuelle Datum und Zeit
-        let now = new Date();
-        let timestamp = now.getTime(); // Zeitstempel in Millisekunden
-
-        // Kombiniere den Zeitstempel und Sekunden, um einen Basiswert zu erstellen
-        let baseNumber = timestamp;
-
-        // Stelle sicher, dass die neue Nummer höher ist als die letzte
-        lastGeneratedNumber = Math.max(lastGeneratedNumber + 1, baseNumber);
-        let shortenedNumber = lastGeneratedNumber.toString().slice(6);
-
-        return parseInt(shortenedNumber, 10); // Rückgabe als Zahl
-    }
-
-
-    document.getElementById('wertpapiereAuftragsnummer').textContent = generateIncrementalWertpapiereNumber();
-
-    const useScriptWertpapiere = document.getElementById('scriptJahrWertpapiere').checked;
-    if (!useScriptWertpapiere) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahrWertpapiere');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrWertpapiere');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
-
-    } else {
-
-        const customDefs = document.getElementById('customDefsWertpapiere');
-        const customJsScript = document.getElementById('customJsWertpapiere');
-        const useScriptWertpapiere = document.getElementById('scriptJahrWertpapiere').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScriptWertpapiere) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJsWertpapiere';
-            dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoadWertpapiere() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahrWertpapiere');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-            customDefs.appendChild(dynamicScript);
-
-        }
-        SVGonLoadWertpapiere(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-
-    }
-
-
-    loadWertpapiereData() // Laden der Anlagen-Daten
+    await applyBelegWithSVG('wertpapiere');
 }
 
 async function bescheidApplySVGholen() {
-    if (!validateInputs()) {
-        // Wenn die Validierung fehlschlägt, stoppe die Funktion
-        return;
-    }
-
-
-    let selectedBescheid = document.getElementById("svgDropdownBescheid").value;
-    let svgContainerBescheid = document.getElementById("bescheidContainer");
-
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
-    try {
-        let svgData = await loadSVGTemplate(selectedBescheid);
-        svgContainerBescheid.innerHTML = svgData;
-    } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
-    }
-
-    const selectedBescheidTag = document.getElementById('tagBescheid').value;
-    const selectedBescheidMonat = document.getElementById('monatBescheid').value;
-    document.getElementById('bescheidTag').textContent = selectedBescheidTag;
-    document.getElementById('bescheidMonat').textContent = selectedBescheidMonat;
-
-    // Grundsteuer
-    const bescheidMessbetragInput = document.getElementById('bescheidMessbetragInput').value;
-    const bescheidMessbetrag = document.getElementById('bescheidMessbetrag');
-    const bescheidHebesatzInput = document.getElementById('bescheidHebesatzInput').value;
-    const bescheidHebesatz = document.getElementById('bescheidHebesatz');
-
-    if (bescheidMessbetrag) {
-        bescheidMessbetrag.textContent = FormatHelper.currency(bescheidMessbetragInput);
-    }
-
-    if (bescheidHebesatz) {
-        bescheidHebesatz.textContent = bescheidHebesatzInput + " %";
-    }
-
-    let bescheidJahressteuer = document.getElementById('bescheidJahressteuer');
-    if (bescheidJahressteuer) {
-        let bescheidMessbetragInput = parseFloat(document.getElementById('bescheidMessbetragInput').value);
-        let bescheidHebesatzInput = parseFloat(document.getElementById('bescheidHebesatzInput').value);
-        let bescheidBerechnungJahressteuer = bescheidMessbetragInput * (bescheidHebesatzInput / 100);
-        bescheidJahressteuer.textContent = FormatHelper.currency(bescheidBerechnungJahressteuer);
-        bescheidRate = FormatHelper.currency((bescheidBerechnungJahressteuer / 4));
-        const elementsWithClassbescheidRate = document.getElementsByClassName('bescheidRate');
-        // Iteriere durch alle Elemente und setze das formatierte Datum
-        for (const element of elementsWithClassbescheidRate) {
-            element.textContent = bescheidRate;
-        }
-
-    }
-
-    // Abfallentsorgung
-    const bescheidAbfallgebuehrInput = document.getElementById('bescheidAbfallgebuehrInput').value;
-    const bescheidAbfallgebuehr = document.getElementById('bescheidAbfallgebuehr');
-    if (bescheidAbfallgebuehr) {
-        bescheidAbfallgebuehr.textContent = FormatHelper.currency(bescheidAbfallgebuehrInput);
-    }
-
-    const bescheidAbfallbezeichnungInput = document.getElementById('bescheidAbfallbezeichnungInput').value;
-    const bescheidAbfallbezeichnung = document.getElementById('bescheidAbfallbezeichnung');
-    if (bescheidAbfallbezeichnung) {
-        bescheidAbfallbezeichnung.textContent = bescheidAbfallbezeichnungInput;
-    }
-
-
-    const useScriptBescheid = document.getElementById('scriptJahrBescheid').checked;
-    if (!useScriptBescheid) {
-        // Verwende das Jahr aus dem Textfeld
-        const selectedJahr = document.getElementById('jahrBescheid');
-        const yearelementsWithClass = document.querySelectorAll('.aktuellesJahrBescheid');
-        for (const yearelement of yearelementsWithClass) {
-            yearelement.textContent = selectedJahr.value;
-        }
-
-    } else {
-
-        const customDefs = document.getElementById('customDefsBescheid');
-        const customJsScript = document.getElementById('customJsBescheid');
-        const useScriptBescheid = document.getElementById('scriptJahrBescheid').checked;
-
-        if (customJsScript) {
-            customJsScript.remove();
-        }
-
-        if (useScriptBescheid) {
-            // Füge das dynamische Script zum SVG hinzu
-            const dynamicScript = document.createElement('script');
-            dynamicScript.type = 'text/javascript';
-            dynamicScript.id = 'customJsBescheid';
-            dynamicScript.text = `
-            function getCurrentYear() {
-                return new Date().getFullYear();
-            }
-
-            function SVGonLoadBescheid() {
-                const currentDate = new Date();
-                const currentYear = getCurrentYear();
-                const elementsWithClass = document.querySelectorAll('.aktuellesJahrBescheid');
-                for (const element of elementsWithClass) {
-                    element.textContent = currentYear;
-                }
-            }
-        `;
-
-            customDefs.appendChild(dynamicScript);
-
-        }
-        SVGonLoadBescheid(); // Aktualisiere das SVG-Dokument basierend auf dem neuen Status der Checkbox
-
-    }
-
-    loadBescheidData() // Laden der Bescheid-Daten
+    await applyBelegWithSVG('bescheid');
 }
 
 
@@ -2129,6 +1235,16 @@ function zahlwort(zahl) {
         trennschritte *= 1000;
     }
     return zahlinworten.trim();
+}
+
+// Local Storage Status anzeigen
+function updateLocalStorageStatus(message) {
+    console.log('Local Storage Status:', message);
+    // Optional: Status-Nachricht im UI anzeigen
+    const statusElement = document.getElementById('localStorageStatus');
+    if (statusElement) {
+        statusElement.textContent = message;
+    }
 }
 
 // ============================================================================
@@ -2581,6 +1697,7 @@ const VALIDATION_RULES = {
     }
 };
 
+
 // ============================================================================
 // VALIDIERUNG
 // ============================================================================
@@ -2613,4 +1730,501 @@ function isValidNumber(value, minValue, maxValue) {
 
 function isValidPercentage(value) {
     return isValidNumber(value, 0, 100);
+}
+
+// ============================================================================
+// BELEG-APPLY KONFIGURATION
+// ============================================================================
+
+const BELEG_APPLY_CONFIG = {
+    quittung: {
+        svgDropdown: 'svgDropdownQuittung',
+        container: 'quittungContainer',
+        jahrCheckbox: 'scriptJahrQuittung',
+        jahrInput: 'jahrQuittung',
+        jahrClass: 'aktuellesJahrQuittung',
+        customDefs: 'customDefsQuittung',
+        scriptId: 'customJsQuittung',
+        scriptFunction: 'SVGonLoadQuittung',
+        dataFunction: () => {
+            // Quittung-spezifische Daten
+            let quittungZweck = document.getElementById('quittungZweckInput').value;
+            document.getElementById('quittungZweck').textContent = quittungZweck;
+            
+            const selectedTag = document.getElementById('tagQuittung').value;
+            const selectedMonat = document.getElementById('monatQuittung').value;
+            document.getElementById('quittungTag').textContent = selectedTag;
+            document.getElementById('quittungMonat').textContent = selectedMonat;
+            
+            let quittungNetto = document.getElementById('quittungNettoInput').value || "0";
+            quittungNetto = parseFloat(quittungNetto).toFixed(2);
+            let [nettoVorKomma, nettoNachKomma] = quittungNetto.split('.');
+            document.getElementById('quittungNetto').textContent = nettoVorKomma;
+            document.getElementById('quittungNettoCent').textContent = nettoNachKomma;
+            
+            let quittungUST = document.getElementById('quittungUSTInput').value || "0";
+            document.getElementById('quittungUST').textContent = quittungUST;
+            
+            let quittungUSTBetrag = parseFloat(quittungNetto) * parseFloat(quittungUST) / 100;
+            quittungUSTBetrag = FormatHelper.roundToTwo(quittungUSTBetrag).toFixed(2);
+            let [USTVorKomma, USTNachKomma] = quittungUSTBetrag.split('.');
+            document.getElementById('quittungUSTBetrag').textContent = USTVorKomma;
+            document.getElementById('quittungUSTBetragCent').textContent = USTNachKomma;
+            
+            let quittungSumme = (parseFloat(quittungUSTBetrag) + parseFloat(quittungNetto)).toFixed(2);
+            let [summeVorKomma, summeNachKomma] = quittungSumme.split('.');
+            document.getElementById('quittungSumme').textContent = summeVorKomma;
+            document.getElementById('quittungSummeCent').textContent = summeNachKomma;
+            
+            const quittungInWorten = zahlwort(parseFloat(summeVorKomma));
+            document.getElementById('quittungInWorten').textContent = quittungInWorten;
+            
+            loadQuittungData();
+            loadCompanyDataforQuittung();
+        }
+    },
+    kassenbon: {
+        svgDropdown: 'svgDropdownKassenbon',
+        container: 'kassenbonContainer',
+        jahrCheckbox: 'scriptJahrKassenbon',
+        jahrInput: 'jahrKassenbon',
+        jahrClass: 'aktuellesJahrKassenbon',
+        customDefs: 'customDefsKassenbon',
+        scriptId: 'customJsKassenbon',
+        scriptFunction: 'SVGonLoadKassenbon',
+        dataFunction: () => {
+            let kassenbonZweck = document.getElementById('kassenbonZweckInput').value;
+            document.getElementById('kassenbonZweck').textContent = kassenbonZweck;
+            
+            const selectedTag = document.getElementById('tagKassenbon').value;
+            const selectedMonat = document.getElementById('monatKassenbon').value;
+            document.getElementById('kassenbonTag').textContent = selectedTag;
+            document.getElementById('kassenbonMonat').textContent = selectedMonat;
+            document.getElementById('kassenbonUhrzeit').textContent = RandomHelper.time() + ' Uhr';
+            document.getElementById('kassenbonTransaktionsnummer').textContent = RandomHelper.sevenDigit();
+            
+            let kassenbonNetto = document.getElementById('kassenbonNettoInput').value || "0";
+            document.getElementById('kassenbonNetto').textContent = FormatHelper.currency(kassenbonNetto);
+            
+            let kassenbonUST = document.getElementById('kassenbonUSTInput').value || "0";
+            document.getElementById('kassenbonUST').textContent = kassenbonUST;
+            
+            let kassenbonUSTBetrag = FormatHelper.roundToTwo(kassenbonNetto * kassenbonUST / 100);
+            document.getElementById('kassenbonUSTBetrag').textContent = FormatHelper.currency(kassenbonUSTBetrag);
+            
+            let kassenbonBrutto = parseFloat(kassenbonNetto) + parseFloat(kassenbonUSTBetrag);
+            let kassenbonBruttoElements = Array.from(document.getElementsByClassName('kassenbonBrutto'));
+            kassenbonBruttoElements.forEach(element => {
+                element.textContent = FormatHelper.currency(kassenbonBrutto);
+            });
+            
+            let kassenbonZahlungsart = document.getElementById('kassenbonDropdownZahlungsart').value;
+            document.getElementById('kassenbonZahlungsart').textContent = kassenbonZahlungsart;
+            
+            loadKassenbonData();
+            loadCompanyDataforKassenbon();
+        }
+    },
+    
+ // HINZUFÜGEN nach kassenbon (in BELEG_APPLY_CONFIG):
+anlagenkarte: {
+    svgDropdown: 'svgDropdownAnlagenkarte',
+    container: 'anlagenkarteContainer',
+    jahrCheckbox: 'scriptJahrAnlagenkarte',
+    jahrInput: 'jahrAnlagenkarte',
+    jahrClass: 'aktuellesJahrAnlagenkarte',
+    customDefs: 'customDefsAnlagenkarte',
+    scriptId: 'customJsAnlagenkarte',
+    scriptFunction: 'SVGonLoadAnlagenkarte',
+    dataFunction: () => {
+        const bezeichnung = document.getElementById('anlagenkarteBezeichnungInput').value;
+        document.getElementById('anlagenkarteBezeichnung').textContent = bezeichnung;
+        
+        const anlagekonto = document.getElementById('anlagenkarteAnlagenkontoInput').value;
+        document.getElementById('anlagenkarteAnlagenkonto').textContent = anlagekonto;
+        
+        const anschaffungskosten = document.getElementById('anlagenkarteAnschaffungskostenInput').value;
+        document.getElementById('anlagenkarteAnschaffungskosten').textContent = FormatHelper.currency(anschaffungskosten);
+        
+        const nutzungsdauer = document.getElementById('anlagenkarteNutzungsdauerInput').value;
+        document.getElementById('anlagenkarteNutzungsdauer').textContent = nutzungsdauer;
+        
+        const tag = document.getElementById('tagAnlagenkarte').value;
+        const monat = document.getElementById('monatAnlagenkarte').value;
+        document.getElementById('anlagenkarteTag').textContent = tag;
+        document.getElementById('anlagenkarteMonat').textContent = monat;
+        
+        loadAnlagenkarteData();
+    }
+},
+wertpapiere: {
+    svgDropdown: 'svgDropdownWertpapiere',
+    container: 'wertpapiereContainer',
+    jahrCheckbox: 'scriptJahrWertpapiere',
+    jahrInput: 'jahrWertpapiere',
+    jahrClass: 'aktuellesJahrWertpapiere',
+    customDefs: 'customDefsWertpapiere',
+    scriptId: 'customJsWertpapiere',
+    scriptFunction: 'SVGonLoadWertpapiere',
+    dataFunction: () => {
+        const bezeichnung = document.getElementById('wertpapiereBezeichnungInput').value;
+        document.getElementById('wertpapiereBezeichnung').textContent = bezeichnung;
+        
+        const isin = document.getElementById('wertpapiereISINInput').value;
+        document.getElementById('wertpapiereISIN').textContent = isin;
+        
+        const stueckkurs = document.getElementById('wertpapiereStueckkursInput').value;
+        document.getElementById('wertpapiereStueckkurs').textContent = FormatHelper.currency(stueckkurs);
+        
+        const anzahl = document.getElementById('wertpapiereAnzahlInput').value;
+        document.getElementById('wertpapiereAnzahl').textContent = anzahl;
+        
+        let kurswert = anzahl * stueckkurs;
+        let spesen = kurswert * 0.01;
+        let banklastschrift = kurswert + spesen;
+        let bankgutschrift = kurswert - spesen;
+        
+        document.getElementById('wertpapiereKurswert').textContent = FormatHelper.currency(kurswert);
+        document.getElementById('wertpapiereSpesen').textContent = FormatHelper.currency(spesen);
+        document.getElementById('wertpapiereUhrzeit').textContent = RandomHelper.time() + ' Uhr';
+        
+        const artInput = document.getElementById('wertpapiereArtInput');
+        if (artInput.value === 'wertpapiereKauf') {
+            document.getElementById('wertpapiereArt').textContent = 'gekauft';
+            document.getElementById('wertpapiereBanklastschrift').textContent = FormatHelper.currency(banklastschrift);
+            document.getElementById('wertpapiereSpesenart').textContent = "+ 1 % Spesen";
+            document.getElementById('wertpapiereBankart').textContent = "Banklastschrift";
+        } else {
+            document.getElementById('wertpapiereArt').textContent = 'verkauft';
+            document.getElementById('wertpapiereBanklastschrift').textContent = FormatHelper.currency(bankgutschrift);
+            document.getElementById('wertpapiereSpesenart').textContent = "- 1 % Spesen";
+            document.getElementById('wertpapiereBankart').textContent = "Bankgutschrift";
+        }
+        
+        const tag = document.getElementById('tagWertpapiereInput').value;
+        const monat = document.getElementById('monatWertpapiereInput').value;
+        document.getElementById('wertpapiereTag').textContent = tag;
+        document.getElementById('wertpapiereMonat').textContent = monat;
+        
+        // Auftragsnummer
+        let lastNum = parseInt(tag + monat);
+        let timestamp = new Date().getTime();
+        lastNum = Math.max(lastNum + 1, timestamp);
+        let shortened = lastNum.toString().slice(6);
+        document.getElementById('wertpapiereAuftragsnummer').textContent = parseInt(shortened, 10);
+        
+        loadWertpapiereData();
+    }
+},
+bescheid: {
+    svgDropdown: 'svgDropdownBescheid',
+    container: 'bescheidContainer',
+    jahrCheckbox: 'scriptJahrBescheid',
+    jahrInput: 'jahrBescheid',
+    jahrClass: 'aktuellesJahrBescheid',
+    customDefs: 'customDefsBescheid',
+    scriptId: 'customJsBescheid',
+    scriptFunction: 'SVGonLoadBescheid',
+    dataFunction: () => {
+        const tag = document.getElementById('tagBescheid').value;
+        const monat = document.getElementById('monatBescheid').value;
+        document.getElementById('bescheidTag').textContent = tag;
+        document.getElementById('bescheidMonat').textContent = monat;
+        
+        // Grundsteuer
+        const messbetrag = document.getElementById('bescheidMessbetragInput').value;
+        const hebesatz = document.getElementById('bescheidHebesatzInput').value;
+        
+        const messbetragElem = document.getElementById('bescheidMessbetrag');
+        if (messbetragElem) messbetragElem.textContent = FormatHelper.currency(messbetrag);
+        
+        const hebesatzElem = document.getElementById('bescheidHebesatz');
+        if (hebesatzElem) hebesatzElem.textContent = hebesatz + " %";
+        
+        const jahressteuerElem = document.getElementById('bescheidJahressteuer');
+        if (jahressteuerElem) {
+            const jahressteuer = parseFloat(messbetrag) * (parseFloat(hebesatz) / 100);
+            jahressteuerElem.textContent = FormatHelper.currency(jahressteuer);
+            
+            const rate = FormatHelper.currency(jahressteuer / 4);
+            const rateElements = document.getElementsByClassName('bescheidRate');
+            for (const element of rateElements) {
+                element.textContent = rate;
+            }
+        }
+        
+        // Abfallentsorgung
+        const abfallgebuehr = document.getElementById('bescheidAbfallgebuehrInput').value;
+        const abfallgebuehrElem = document.getElementById('bescheidAbfallgebuehr');
+        if (abfallgebuehrElem) abfallgebuehrElem.textContent = FormatHelper.currency(abfallgebuehr);
+        
+        const abfallbezeichnung = document.getElementById('bescheidAbfallbezeichnungInput').value;
+        const abfallbezeichnungElem = document.getElementById('bescheidAbfallbezeichnung');
+        if (abfallbezeichnungElem) abfallbezeichnungElem.textContent = abfallbezeichnung;
+        
+        loadBescheidData();
+    }
+},
+// HINZUFÜGEN nach bescheid (in BELEG_APPLY_CONFIG):
+lohnjournal: {
+    svgDropdown: 'svgDropdownLohnjournal',
+    container: 'lohnjournalContainer',
+    jahrCheckbox: null, // Kein Jahr-Script
+    jahrInput: null,
+    jahrClass: null,
+    customDefs: null,
+    scriptId: null,
+    scriptFunction: null,
+    dataFunction: () => {
+        // Mitarbeiter-Array
+        const mitarbeiter = [
+            { name: "Smith, John", freibetrag: "0", steuerklasse: "I" },
+            { name: "Garcia, Maria", freibetrag: "0", steuerklasse: "IV" },
+            { name: "Müller, Hans", freibetrag: "0", steuerklasse: "I" },
+            { name: "Nguyen, Linh", freibetrag: "0", steuerklasse: "III" },
+            { name: "Andersen, Erik", freibetrag: "0", steuerklasse: "I" },
+            { name: "Choi, Hye-jin", freibetrag: "0", steuerklasse: "IV" },
+            { name: "Gomez, Juan", freibetrag: "0", steuerklasse: "I" },
+            { name: "Abdullah, Fatima", freibetrag: "0", steuerklasse: "III" },
+            { name: "Bauer, Stephan", freibetrag: "0", steuerklasse: "III" },
+            { name: "Kovács, István", freibetrag: "0", steuerklasse: "I" },
+            { name: "Santos, Sofia", freibetrag: "0", steuerklasse: "IV" },
+            { name: "Ali, Ahmed", freibetrag: "0,5", steuerklasse: "I" },
+            { name: "Hernandez, Carla", freibetrag: "0,5", steuerklasse: "III" },
+            { name: "Novák, Katarina", freibetrag: "0,5", steuerklasse: "IV" },
+            { name: "Fischer, Tobias", freibetrag: "0,5", steuerklasse: "I" },
+            { name: "Silva, Pedro", freibetrag: "0,5", steuerklasse: "III" },
+            { name: "Park, Min-woo", freibetrag: "2,0", steuerklasse: "IV" },
+            { name: "Zhang, Wei", freibetrag: "2,0", steuerklasse: "I" },
+            { name: "Molina, Ana", freibetrag: "2,0", steuerklasse: "III" },
+            { name: "Schneider, Maria", freibetrag: "2,0", steuerklasse: "IV" },
+            { name: "Mikhailova, Elena", freibetrag: "2,0", steuerklasse: "I" }
+        ];
+        
+        // Hilfsfunktionen
+        const chooseRandom = (liste, anzahl) => {
+            const result = [];
+            const copy = [...liste];
+            for (let i = 0; i < anzahl; i++) {
+                const index = Math.floor(Math.random() * copy.length);
+                result.push(copy.splice(index, 1)[0]);
+            }
+            return result;
+        };
+        
+        const genBruttogehalt = () => Math.round((Math.random() * 4000) + 2000) / 100 * 100;
+        
+        const berechneSteuern = (brutto, steuerklasse) => {
+            const satz = { "I": 0.19, "III": 0.11, "IV": 0.14 }[steuerklasse] || 0;
+            return brutto * satz;
+        };
+        
+        const berechneSozialversicherung = (brutto) => brutto * 0.389;
+        
+        // 3 zufällige Mitarbeiter
+        const ausgewählt = chooseRandom(mitarbeiter, 3);
+        
+        for (let i = 0; i < 3; i++) {
+            const elem = document.getElementById(`lohnjournalArbeitnehmer${i + 1}`);
+            if (elem) {
+                elem.textContent = `${ausgewählt[i].name} (${ausgewählt[i].steuerklasse}/${ausgewählt[i].freibetrag})`;
+            }
+            
+            const brutto = genBruttogehalt();
+            const steuern = berechneSteuern(brutto, ausgewählt[i].steuerklasse);
+            const sv = berechneSozialversicherung(brutto);
+            const anBeitrag = sv * 0.5;
+            const agBeitrag = sv * 0.5;
+            const netto = brutto - steuern - anBeitrag;
+            
+            const setBrutto = document.getElementById(`lohnjournalBrutto${i + 1}`);
+            if (setBrutto) setBrutto.textContent = FormatHelper.currency(brutto.toFixed(2));
+            
+            const setSteuern = document.getElementById(`lohnjournalSteuern${i + 1}`);
+            if (setSteuern) setSteuern.textContent = FormatHelper.currency(steuern.toFixed(2));
+            
+            const setAN = document.getElementById(`lohnjournalAN${i + 1}`);
+            if (setAN) setAN.textContent = FormatHelper.currency(anBeitrag.toFixed(2));
+            
+            const setAG = document.getElementById(`lohnjournalAG${i + 1}`);
+            if (setAG) setAG.textContent = FormatHelper.currency(agBeitrag.toFixed(2));
+            
+            const setNetto = document.getElementById(`lohnjournalNetto${i + 1}`);
+            if (setNetto) setNetto.textContent = FormatHelper.currency(netto.toFixed(2));
+        }
+        
+        // Summen berechnen
+        const anzahlMitarbeiter = Math.floor(Math.random() * 31) + 15; // 15-45
+        let summeBrutto = 0;
+        for (let i = 0; i < anzahlMitarbeiter; i++) {
+            summeBrutto += genBruttogehalt();
+        }
+        
+        const summeSteuern = berechneSteuern(summeBrutto, "IV");
+        const summeSV = berechneSozialversicherung(summeBrutto);
+        const summeANBeitrag = summeSV * 0.5;
+        const summeAGBeitrag = summeSV * 0.5;
+        const summeNetto = summeBrutto - summeSteuern - summeANBeitrag;
+        
+        const setBruttoSumme = document.getElementById('lohnjournalBrutto4');
+        if (setBruttoSumme) setBruttoSumme.textContent = FormatHelper.currency(summeBrutto.toFixed(2));
+        
+        const setSteuernSumme = document.getElementById('lohnjournalSteuern4');
+        if (setSteuernSumme) setSteuernSumme.textContent = FormatHelper.currency(summeSteuern.toFixed(2));
+        
+        const setANSumme = document.getElementById('lohnjournalAN4');
+        if (setANSumme) setANSumme.textContent = FormatHelper.currency(summeANBeitrag.toFixed(2));
+        
+        const setAGSumme = document.getElementById('lohnjournalAG4');
+        if (setAGSumme) setAGSumme.textContent = FormatHelper.currency(summeAGBeitrag.toFixed(2));
+        
+        const setNettoSumme = document.getElementById('lohnjournalNetto4');
+        if (setNettoSumme) setNettoSumme.textContent = FormatHelper.currency(summeNetto.toFixed(2));
+        
+        // Zufälliger Monat
+        const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+        const monatElem = document.getElementById('lohnjournalMonat');
+        if (monatElem) monatElem.textContent = monate[Math.floor(Math.random() * monate.length)];
+        
+        // Buchungssatz-Tabelle
+        let output = '<h3>Aufgabe</h3>';
+        output += '<p>Von der Personalabteilung liegt der folgende Belegauszug vor. Bilde die Buchungssätze für die Erfassung des gesamten Personalaufwands, wenn die Auszahlung per Banküberweisung erfolgt.</p>';
+        output += '<h3>Lösung</h3>';
+        output += '<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0 6px;"><tbody>';
+        output += '<tr>';
+        output += `<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;min-width:120px" tabindex="1">6200 LG</td>`;
+        output += `<td style="text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px" tabindex="1">${FormatHelper.currency(summeBrutto.toFixed(2))}</td>`;
+        output += '<td style="text-align:center;width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:50px" tabindex="1">an</td>';
+        output += '<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;min-width:120px;text-align:left" tabindex="1">2800 BK</td>';
+        output += `<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;min-width:120px;text-align:right" tabindex="1">${FormatHelper.currency(summeNetto.toFixed(2))}</td>`;
+        output += '</tr><tr>';
+        output += '<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;min-width:120px"></td>';
+        output += '<td style="text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px"></td>';
+        output += '<td style="text-align:center;width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:50px"></td>';
+        output += '<td style="text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px" tabindex="1">4830 VFA</td>';
+        output += `<td style="text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px" tabindex="1">${FormatHelper.currency(summeSteuern.toFixed(2))}</td>`;
+        output += '</tr><tr>';
+        output += '<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;min-width:120px"></td>';
+        output += '<td style="text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px"></td>';
+        output += '<td style="text-align:center;width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:50px"></td>';
+        output += '<td style="text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px" tabindex="1">4840 VSV</td>';
+        output += `<td style="text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px" tabindex="1">${FormatHelper.currency(summeANBeitrag.toFixed(2))}</td>`;
+        output += '</tr></tbody></table>';
+        output += '<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0 6px;"><tbody><tr>';
+        output += '<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;min-width:120px" tabindex="1">6400 AGASV</td>';
+        output += '<td style="text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px"></td>';
+        output += '<td style="text-align:center;width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:50px" tabindex="1">an</td>';
+        output += '<td style="text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px" tabindex="1">4840 VSV</td>';
+        output += `<td style="text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;min-width:120px" tabindex="1">${FormatHelper.currency(summeAGBeitrag.toFixed(2))}</td>`;
+        output += '</tr></tbody></table>';
+        
+        document.getElementById('lohnjournalBuchungssatzContainer').innerHTML = output;
+        
+        loadLohnjournalData();
+    }
+}
+};
+
+// Generische Beleg-Apply-Funktion
+async function applyBelegWithSVG(belegType) {
+    if (!validateInputs()) return;
+    
+    const config = BELEG_APPLY_CONFIG[belegType];
+    if (!config) {
+        console.error('Unbekannter Belegtyp:', belegType);
+        return;
+    }
+    
+    // 1. SVG-Template laden
+    const selectedTemplate = document.getElementById(config.svgDropdown)?.value;
+    const container = document.getElementById(config.container);
+    
+    if (selectedTemplate && container) {
+        try {
+            const svgData = await loadSVGTemplate(selectedTemplate);
+            container.innerHTML = svgData;
+        } catch (error) {
+            console.error("Fehler beim Laden der SVG-Vorlage:", error);
+            return;
+        }
+    }
+    
+    // 2. Beleg-spezifische Daten setzen
+    if (config.dataFunction) {
+        config.dataFunction();
+    }
+    
+    // 3. Jahr-Script handhaben
+    handleYearScript(config);
+}
+
+// Jahr-Script Handling (wiederverwendbar)
+function handleYearScript(config) {
+    if (!config.jahrCheckbox) return; // Kein Jahr-Handling nötig
+    
+    const useScript = document.getElementById(config.jahrCheckbox)?.checked;
+    
+    if (!useScript) {
+        // Manuelle Jahreseingabe
+        const jahrInput = document.getElementById(config.jahrInput);
+        const yearElements = document.querySelectorAll(`.${config.jahrClass}`);
+        yearElements.forEach(element => {
+            element.textContent = jahrInput?.value || '';
+        });
+    } else {
+        // Dynamisches Script
+        const customDefs = document.getElementById(config.customDefs);
+        const existingScript = document.getElementById(config.scriptId);
+        
+        if (existingScript) existingScript.remove();
+        
+        if (customDefs) {
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.id = config.scriptId;
+            script.text = `
+                function getCurrentYear() {
+                    return new Date().getFullYear();
+                }
+                
+                function ${config.scriptFunction}() {
+                    const currentYear = getCurrentYear();
+                    const elements = document.querySelectorAll('.${config.jahrClass}');
+                    elements.forEach(element => {
+                        element.textContent = currentYear;
+                    });
+                }
+            `;
+            customDefs.appendChild(script);
+            
+            // Funktion sofort ausführen
+            eval(script.text);
+            if (typeof window[config.scriptFunction] === 'function') {
+                window[config.scriptFunction]();
+            }
+        } else {
+            // Falls customDefs nicht existiert, Script an body anhängen
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.id = config.scriptId;
+            script.text = `
+                function getCurrentYear() {
+                    return new Date().getFullYear();
+                }
+                
+                function ${config.scriptFunction}() {
+                    const currentYear = getCurrentYear();
+                    const elements = document.querySelectorAll('.${config.jahrClass}');
+                    elements.forEach(element => {
+                        element.textContent = currentYear;
+                    });
+                }
+            `;
+            document.body.appendChild(script);
+            eval(script.text);
+            if (typeof window[config.scriptFunction] === 'function') {
+                window[config.scriptFunction]();
+            }
+        }
+    }
 }
