@@ -10,10 +10,11 @@
     <script src="js/menu.js"></script>
     <script src="js/html2canvas.min.js"></script>
     <script src="js/clipboard.min.js"></script>
-    <script src="js/chart.umd.min.js"></script>
+    <script src="js/apexcharts.js"></script>
   </head>
 
-  <body>
+  
+<body>
     <main>
       <div w3-include-html="navigation.html"></div>
       <h1>Betriebswirtschaftslehre 10</h1>
@@ -59,7 +60,13 @@
             step="1"
             value="10"
             required
-          /><br><br>
+          /><br>
+
+          <label for="aufgabenVariante">Aufgabenvariante:</label>
+          <select id="aufgabenVariante" name="aufgabenVariante">
+            <option value="variante1">Variante 1: Planungsaufgabe</option>
+            <option value="variante2">Variante 2: Verlustberechnung</option>
+          </select><br><br>
 
           <button
             type="button"
@@ -69,21 +76,7 @@
             Neue Aufgabe erstellen
           </button>
 
-          <button type="button" id="hideLEgend">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="14"
-              width="12"
-              fill="#ff4800"
-              viewBox="0 0 448 512"
-            >
-              <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-              <path
-                d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"
-              />
-            </svg>
-            Legende
-          </button>
+      
         </form>
       </div>
       <div
@@ -149,31 +142,12 @@
         id="gewinnschwelleContainer"
         style="min-width: 700px; height: 500px; width: 100%"
       >
-        <canvas id="gewinnschwelleChart"></canvas>
+        <div id="gewinnschwelleChart"></div>
       </div>
       <p style="text-align: center">
         Klicken Sie in die Legende, um einzelne Bestandteile auszublenden.
       </p>
-      <div class="exportButtons">
-        <button
-          class="icon"
-          type="button"
-          onclick="gewinnschwelleChartHerunterladenAlsPNG()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="16"
-            width="16"
-            viewBox="0 0 512 512"
-          >
-            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path
-              d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"
-            />
-          </svg>
-        </button>
-      </div>
-    </main>
+       </main>
     <div w3-include-html="footer.html"></div>
     <script>
       includeHTML();
