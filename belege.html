@@ -255,11 +255,11 @@
                 <div class="flex-row">
                     <div>
                         <label for="datenLieferer">Lieferer: </label>
-                        <select id="datenLieferer" onchange="loadSupplierData()">
+                        <select id="datenLieferer">
                          </select>
                     </div>
                     <div><label for="datenKunde">Empfänger:</label>
-                        <select id="datenKunde" onchange="loadCompanyData()">
+                        <select id="datenKunde">
                          </select>
                     </div>
                 </div>
@@ -267,7 +267,7 @@
                 </div>
                 <div><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
                             Modellunternehmen verwenden?</a></small></div>
-            </div>
+         
             <div><br>
                 <button onclick="applySVGholen()">Alle Daten übernehmen</button><br>
             </div><br>
@@ -279,19 +279,19 @@
             </div>
             <br>
             <div class="exportButtons">
-                <button class="icon" type="button" onclick="rechnungHerunterladenAlsPNG()"><svg
+                <button class="icon" type="button" onclick="exportDokument('rechnung','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="rechnungHerunterladen()"><svg
+                <button class="icon" type="button" onclick="exportDokument('rechnung','svg')" data-tooltip="Als SVG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="rechnungKopiereInZwischenablage()"><svg
+                <button class="icon" type="button" onclick="exportDokument('rechnung','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
@@ -408,37 +408,37 @@
                     <div>
                         <h3>Allgemeine Daten</h3>
                         <label for="datenKontoauszug">Kontoinhaber: </label>
-                        <select id="datenKontoauszug" onchange="loadKontoauszugData()">
+                        <select id="datenKontoauszug">
                          </select><small><br><a href="#" class="tablinks"
                                 onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
                                 verwenden?</a></small>
                     </div>
                 </div>
-                <div><br><button onclick="applySVGholen()">Alle Daten übernehmen</button><br></div>
+                <div><br><button onclick="applySVGholen()">Alle Daten übernehmen</button><br></div></div>
                 <br>
                 <div id="kontoauszugContainer" style="text-align:center;margin:0 auto;width:100%;min-width:350px;">
                 </div>
                 <br>
-                <div class="exportButtons">
-                    <button class="icon" type="button" onclick="kontoauszugHerunterladenAlsPNG()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                        </svg></button>
-                    <button class="icon" type="button" onclick="kontoauszugHerunterladen()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                        </svg></button>
-                    <button class="icon" type="button" onclick="kontoauszugKopiereInZwischenablage()"><svg
-                            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                            <path
-                                d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                        </svg></button>
-                </div>
+<div class="exportButtons">
+                <button class="icon" type="button" onclick="exportDokument('kontoauszug','png')" data-tooltip="Als PNG herunterladen"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="exportDokument('kontoauszug','svg')" data-tooltip="Als SVG herunterladen"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
+                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+                    </svg></button>
+                <button class="icon" type="button" onclick="exportDokument('kontoauszug','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
+                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+                    </svg></button>
+                    </div>
         </section>
         <section id="quittung" class="tabcontent">
             <h3>Quittung</h3>
@@ -528,11 +528,11 @@
                 <div class="flex-row">
                     <div>
                         <label for="datenQuittung">Geldempfänger: </label>
-                        <select id="datenQuittung" onchange="loadQuittungData()">
+                        <select id="datenQuittung">
                         </select>
                     </div>
                     <div><label for="datenQuittungKunde">Kunde:</label>
-                        <select id="datenQuittungKunde" onchange="loadCompanyDataforQuittung()">
+                        <select id="datenQuittungKunde">
                                 </select><br>
                     </div>
                 </div>
@@ -544,26 +544,26 @@
             <br>
             <div id="quittungContainer"
                 style="text-align:center;margin:0 auto;width:100%;min-width:350px;max-width:650px"></div><br>
-            <div class="exportButtons">
-                <button class="icon" type="button" onclick="quittungHerunterladenAlsPNG()"><svg
+<div class="exportButtons">
+                <button class="icon" type="button" onclick="exportDokument('quittung','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="quittungHerunterladen()"><svg
+                <button class="icon" type="button" onclick="exportDokument('quittung','svg')" data-tooltip="Als SVG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="quittungKopiereInZwischenablage()"><svg
+                <button class="icon" type="button" onclick="exportDokument('quittung','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
-            </div>
+                    </div>
         </section>
 
         <section id="kassenbon" class="tabcontent">
@@ -659,11 +659,11 @@
                 <div class="flex-row">
                     <div>
                         <label for="datenKassenbon">Geldempfänger: </label>
-                        <select id="datenKassenbon" onchange="loadKassenbonData()">
+                        <select id="datenKassenbon">
                            </select>
                     </div>
                     <div><label for="datenKassenbonKunde">Kunde:</label>
-                        <select id="datenKassenbonKunde" onchange="loadCompanyDataforKassenbon()">
+                        <select id="datenKassenbonKunde">
                               </select>
                     </div>
                 </div>
@@ -675,26 +675,26 @@
             </div>
             <br>
             <div id="kassenbonContainer" style="text-align: center;margin:0 auto;"></div><br>
-            <div class="exportButtons">
-                <button class="icon" type="button" onclick="kassenbonHerunterladenAlsPNG()"><svg
+<div class="exportButtons">
+                <button class="icon" type="button" onclick="exportDokument('kassenbon','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="kassenbonHerunterladen()"><svg
+                <button class="icon" type="button" onclick="exportDokument('kassenbon','svg')" data-tooltip="Als SVG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="kassenbonKopiereInZwischenablage()"><svg
+                <button class="icon" type="button" onclick="exportDokument('kassenbon','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
-            </div>
+                    </div>
         </section>
 
         <section id="email" class="tabcontent">
@@ -715,11 +715,11 @@
                 <div class="flex-row">
                     <div>
                         <label for="datenEmail">Absender: </label>
-                        <select id="datenEmail" onchange="loadEmailData()">
+                        <select id="datenEmail">
                         </select>
                     </div>
                     <div><label for="datenEmailKunde">Empfänger:</label>
-                        <select id="datenEmailKunde" onchange="loadCompanyDataforEmail()">
+                        <select id="datenEmailKunde">
                         </select>
 
                     </div>
@@ -734,8 +734,10 @@
                 style="border:0px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;"
                 contenteditable="true">
             </div><br>
+
+                   
             <div class="exportButtons">
-                <button class="icon" type="button" onclick="emailHerunterladenAlsPNG()"><svg
+               <button class="icon" type="button" onclick="exportDokument('email','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
@@ -753,13 +755,15 @@
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="emailKopiereInZwischenablage()"><svg
+           <button class="icon" type="button" onclick="exportDokument('email','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
             </div>
+
+            
         </section>
 
         <section id="newspaper" class="tabcontent">
@@ -821,26 +825,27 @@
                     <blockquote id="newspaperSource">Quelle: GPT-News</blockquote>
                 </div>
             </div><br>
+                     
             <div class="exportButtons">
-                <button class="icon" type="button" onclick="newspaperHerunterladenAlsPNG()"><svg
+               <button class="icon" type="button" onclick="exportDokument('newspaper','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" id="officeButtonNewspaper"
-                    data-clipboard-target="#newspaperContainer"><svg xmlns="http://www.w3.org/2000/svg" height="16"
-                        width="12"
+                <button class="icon" type="button" id="officeButtonNewspaper" data-clipboard-target="#newspaperContainer"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
-                    </svg></button> <button class="icon" type="button" onclick="newspaperHerunterladen()"><svg
+                    </svg></button>
+                <button class="icon" type="button" onclick="newspaperHerunterladen()"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="newspaperKopiereInZwischenablage()"><svg
+           <button class="icon" type="button" onclick="exportDokument('newspaper','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
@@ -862,7 +867,7 @@
                     <option value="lohnjournal.svg">Klassisch</option>
                 </select>
                 <br>
-                <label for="datenLohnjournal">Unternehmen: </label><select id="datenLohnjournal" onchange="loadLohnjournalData()">
+                <label for="datenLohnjournal">Unternehmen: </label><select id="datenLohnjournal">
                 </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
                         Modellunternehmen
                         verwenden?</a></small>
@@ -871,50 +876,52 @@
 
             </div>
             <div id="lohnjournalBuchungssatzContainer" style="max-width: 760px;margin:0 auto;"></div>
-            <div class="exportButtons">
-                <button class="icon" type="button" onclick="lohnjournalBuchungssatzHerunterladenAlsPNG()"><svg
+
+ 
+      <div class="exportButtons">
+           <button class="icon" type="button" onclick="exportDokument('lohnjournalBS','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" id="officeButtonLohnjournalBuchungssatz"
-                    data-clipboard-target="#lohnjournalBuchungssatzContainer"><svg xmlns="http://www.w3.org/2000/svg"
-                        height="16" width="12"
+                <button class="icon" type="button" id="officeButtonLohnjournalBuchungssatz" data-clipboard-target="#lohnjournalBuchungssatzContainer"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="lohnjournalBuchungssatzHerunterladen()"><svg
+                     <button class="icon" type="button" onclick="lohnjournalBuchungssatzHerunterladen()"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="lohnjournalBuchungssatzKopiereInZwischenablage()"><svg
+                   <button class="icon" type="button" onclick="exportDokument('lohnjournalBS','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
             </div>
+
             <br>
             <div id="lohnjournalContainer" style="min-width: 350px;width: 100%;margin:0 auto;text-align:center">
             </div>
-            <div class="exportButtons">
-                <button class="icon" type="button" onclick="lohnjournalHerunterladenAlsPNG()"><svg
+           <div class="exportButtons">
+               <button class="icon" type="button" onclick="exportDokument('lohnjournal','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="lohnjournalHerunterladen()"><svg
+              <button class="icon" type="button" onclick="exportDokument('lohnjournal','svg')" data-tooltip="Als SVG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="lohnjournalKopiereInZwischenablage()"><svg
+           <button class="icon" type="button" onclick="exportDokument('lohnjournal','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
@@ -1035,7 +1042,7 @@
                         window.onload = updateFields;
                     </script>
                 </div><br>
-                <label for="datenBescheid">Unternehmen: </label><select id="datenBescheid" onchange="loadBescheidData()">
+                <label for="datenBescheid">Unternehmen: </label><select id="datenBescheid">
                 </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
                         Modellunternehmen verwenden?</a></small>
                 <br><br><button onclick="bescheidApplySVGholen()">Bescheid erstellen / aktualisieren</button><br>
@@ -1045,27 +1052,26 @@
             <br>
             <div id="bescheidContainer" style="min-width: 350px;max-width: 100%;margin:0 auto;text-align:center">
             </div>
-            <div class="exportButtons">
-                <button class="icon" type="button" onclick="bescheidHerunterladenAlsPNG()"><svg
+       <div class="exportButtons">
+                <button class="icon" type="button" onclick="exportDokument('bescheid','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="bescheidHerunterladen()"><svg
+                <button class="icon" type="button" onclick="exportDokument('bescheid','svg')" data-tooltip="Als SVG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="bescheidKopiereInZwischenablage()"><svg
+                <button class="icon" type="button" onclick="exportDokument('bescheid','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
-            </div>
-
+                    </div>
 
 
             </div>
@@ -1160,7 +1166,7 @@
                     </div>
                 </div>
                 <br>
-                <label for="datenAnlagenkarte">Unternehmen: </label><select id="datenAnlagenkarte" onchange="loadAnlagenkarteData()">
+                <label for="datenAnlagenkarte">Unternehmen: </label><select id="datenAnlagenkarte">
                    </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
                         Modellunternehmen
                         verwenden?</a></small>
@@ -1172,26 +1178,26 @@
             <br>
             <div id="anlagenkarteContainer" style="min-width: 350px;width: 100%;margin:0 auto;text-align:center">
             </div>
-            <div class="exportButtons">
-                <button class="icon" type="button" onclick="anlagenkarteHerunterladenAlsPNG()"><svg
+           <div class="exportButtons">
+                <button class="icon" type="button" onclick="exportDokument('anlagenkarte','png')" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="anlagenkarteHerunterladen()"><svg
+                <button class="icon" type="button" onclick="exportDokument('anlagenkarte','svg')" data-tooltip="Als SVG herunterladen" data-tooltip="Als SVG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="anlagenkarteKopiereInZwischenablage()"><svg
+                <button class="icon" type="button" onclick="exportDokument('anlagenkarte','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
-            </div>
+                    </div>
         </section>
 
 
@@ -1286,7 +1292,7 @@
                     </div>
                 </div>
                 <br>
-                <label for="datenWertpapiere">Unternehmen: </label><select id="datenWertpapiere" onchange="loadWertpapiereData()">
+                <label for="datenWertpapiere">Unternehmen: </label><select id="datenWertpapiere">
                    </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
                         Modellunternehmen
                         verwenden?</a></small>
@@ -1299,26 +1305,26 @@
             <br>
             <div id="wertpapiereContainer" style="min-width: 350px;width: 100%;margin:0 auto;text-align:center">
             </div>
-            <div class="exportButtons">
-                <button class="icon" type="button" onclick="wertpapiereHerunterladenAlsPNG()"><svg
+              <div class="exportButtons">
+                <button class="icon" type="button" onclick="exportDokument('wertpapiere','png')" data-tooltip="Als PNG herunterladen" data-tooltip="Als PNG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="16"
                         viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="wertpapiereHerunterladen()"><svg
+                <button class="icon" type="button" onclick="exportDokument('wertpapiere','svg')" data-tooltip="Als SVG herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="12"
                         viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
                     </svg></button>
-                <button class="icon" type="button" onclick="wertpapiereKopiereInZwischenablage()"><svg
+                <button class="icon" type="button" onclick="exportDokument('wertpapiere','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
                         xmlns="http://www.w3.org/2000/svg" height="16" width="20"
                         viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
                     </svg></button>
-            </div>
+                    </div>
         </section>
 
     </main>
