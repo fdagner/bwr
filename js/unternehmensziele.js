@@ -10,7 +10,6 @@ const zielBausteine = {
             wachstumPraefix: ["Optimierung des"],  // selten, nur für Effizienz
             hauptteil: [
                 { wort: "CO₂-Ausstoßes", richtung: "reduktion" },
-                { wort: "Treibhausgas-Emissionen", richtung: "reduktion" },
                 { wort: "Energieverbrauchs", richtung: "reduktion" },
                 { wort: "Primärenergieverbrauchs", richtung: "reduktion" },
                 { wort: "Stromverbrauchs", richtung: "reduktion" },
@@ -32,6 +31,7 @@ const zielBausteine = {
             ],
             hauptteil: [
                 { wort: "Energieeffizienz", richtung: "wachstum" },
+                { wort: "Treibhausgas-Emissionen", richtung: "reduktion" },
                 { wort: "Recyclingquote", richtung: "wachstum" },
                 { wort: "Wasserintensität", richtung: "reduktion" },  // Intensität = pro Einheit senken
                 { wort: "CO₂-Intensität", richtung: "reduktion" },
