@@ -790,8 +790,12 @@ footer {
   transition: opacity 0.2s ease;
 }
 
-.icon:hover::after {
-  opacity: 1;
+
+.button-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;              /* Abstand zwischen Buttons */
+  align-items: center;
 }
 /* ============================================
    UTILITY CLASSES
