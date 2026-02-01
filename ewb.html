@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sie können hier eine zufällige Aufgaben generieren.">
+  <meta name="keywords" content="BwR, Buchungssatz, Geschäftsfall, Realschule, Schema, Lehrkraft, Prüfung, Belege, Schemata, Rechnungswesen, Buchführung">
+  <title>Buchführung</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/kontenplan.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+</head>
+  <div w3-include-html="navigation.html"></div> 
+<main>
+  <h2>Einzelwertberichtigung</h2>
+    <div class="box">
+      <p>Sie können hier zufällige Geschäftsfälle zur Einzelwertberichtigung generieren.</p>
+      
+      <label for="ewbAnzahlKunden">Anzahl der Kunden:</label>
+      <select id="ewbAnzahlKunden">
+        <option value="2">2</option>
+        <option value="3" selected>3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select><br>
+      
+      <button onclick="ewbZeigeZufaelligeTabelle()">Aufgabe erstellen</button>
+    </div>
+    
+    <div id="Container" style="min-width: 580px" contenteditable="true"></div>
+    
+    <div w3-include-html="downloads.html"></div> 
+
+  </main>
+    <script src="js/ewb.js"></script>
+        <script src="js/download.js"></script>
+  <div w3-include-html="footer.html"></div> 
+  <script>
+  includeHTML();
+  </script>
+  </body>
+</html>
