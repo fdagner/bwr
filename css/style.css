@@ -790,6 +790,10 @@ footer {
   transition: opacity 0.2s ease;
 }
 
+.icon:hover::after {
+  opacity: 1;
+}
+
 
 .button-row {
   display: flex;
