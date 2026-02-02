@@ -69,7 +69,7 @@
       <button onclick="generatePortfolio()">Daten übernehmen</button>
       <button onclick="randomizePortfolios()">Zufälliges Portfolio</button>
     </div>
-    <div id="portfolioContainer" style="min-width: 700px">
+    <div id="Container" style="min-width: 700px">
       <svg id="portfolioSVG" style="width:100%;background-color:#fff;" xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-20 -20 780 440" style="background-color:#fff;padding:0px;width:100%;max-width:780px" onload="SVGonLoadKontoauszug()" width="780" height="440">
         <!-- Achsen -->
@@ -119,29 +119,12 @@
       </svg>
     </div>
 
-    <div class="exportButtons">
-      <button class="icon" type="button" onclick="portfolioHerunterladenAlsPNG()"><svg
-          xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-          viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-          <path
-            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-        </svg></button>
-      <button class="icon" type="button" onclick="portfolioHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
-          height="16" width="12"
-          viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-          <path
-            d="M368 80h32v32H368V80zM352 32c-17.7 0-32 14.3-32 32H128c0-17.7-14.3-32-32-32H32C14.3 32 0 46.3 0 64v64c0 17.7 14.3 32 32 32V352c-17.7 0-32 14.3-32 32v64c0 17.7 14.3 32 32 32H96c17.7 0 32-14.3 32-32H320c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V384c0-17.7-14.3-32-32-32V160c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32H352zM96 160c17.7 0 32-14.3 32-32H320c0 17.7 14.3 32 32 32V352c-17.7 0-32 14.3-32 32H128c0-17.7-14.3-32-32-32V160zM48 400H80v32H48V400zm320 32V400h32v32H368zM48 112V80H80v32H48z" />
-        </svg></button>
-      <button class="icon" type="button" onclick="portfolioKopiereInZwischenablage()"><svg
-          xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-          viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-          <path
-            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-        </svg></button>
-    </div>
+         <div w3-include-html="downloads.html"></div> 
+ 
 
   </main>
   <script src="js/portfolioanalyse.js"></script>
+       <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div>
   <script>
     includeHTML();
