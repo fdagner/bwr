@@ -21,7 +21,8 @@ const DROPDOWN_CONFIG = {
     'datenLohnjournal': { onChange: loadLohnjournalData, autoUpdate: false },
     'datenBescheid': { onChange: loadBescheidData, autoUpdate: false },
     'datenAnlagenkarte': { onChange: loadAnlagenkarteData, autoUpdate: false },
-    'datenWertpapiere': { onChange: loadWertpapiereData, autoUpdate: false }
+    'datenWertpapiere': { onChange: loadWertpapiereData, autoUpdate: false },
+    'datenLohnabrechnung': { onChange: loadLohnabrechnungFirma, autoUpdate: false }, 
 };
 
 
@@ -137,7 +138,14 @@ const BELEG_FIELD_MAPPING = {
             'kassenbonStrasseKunde': 'unternehmen.adresse.strasse',
             'kassenbonOrtKunde': (data) => `${data.unternehmen.adresse.plz} ${data.unternehmen.adresse.ort}`
         }
+    },
+    lohnabrechnungFirma: {
+    fields: {
+        'lohnabrechnungFirmaName': (data) => `${data.unternehmen.name} ${data.unternehmen.rechtsform}`,
+        'lohnabrechnungFirmaStrasse': 'unternehmen.adresse.strasse',
+        'lohnabrechnungFirmaOrt': (data) => `${data.unternehmen.adresse.plz} ${data.unternehmen.adresse.ort}`
     }
+}
 };
 
 
@@ -1489,7 +1497,8 @@ const EXPORT_CONFIG = {
     lohnjournalBS: { id: 'lohnjournalBuchungssatzContainer', name: 'lohnjournalBuchungssatz' },
     bescheid: { id: 'bescheidContainer', name: 'bescheid' },
     anlagenkarte: { id: 'anlagenkarteContainer', name: 'anlagenkarte' },
-    wertpapiere: { id: 'wertpapiereContainer', name: 'wertpapier' }
+    wertpapiere: { id: 'wertpapiereContainer', name: 'wertpapier' },
+    lohnabrechnung: { id: 'lohnabrechnungContainer', name: 'lohnabrechnung' }
 };
 
 // ============================================================================
@@ -1686,7 +1695,12 @@ const VALIDATION_RULES = {
         'wertpapiereStueckkursInput': { min: 1, max: 5000, label: 'Stückkurs' },
         'wertpapiereAnzahlInput': { min: 1, max: 5000, label: 'Wertpapiere Anzahl' },
         'bescheidMessbetragInput': { min: 0, max: 9999, label: 'Messbetrag' },
-        'bescheidHebesatzInput': { min: 0, max: 999, label: 'Hebesatz' }
+        'bescheidHebesatzInput': { min: 0, max: 999, label: 'Hebesatz' },
+        'lohnabrechnungBruttoInput': { min: 0, max: 9999, label: 'Bruttogehalt' },
+        'lohnabrechnungKVSatzInput': { min: 0, max: 20, label: 'KV-Satz' },
+        'lohnabrechnungPVSatzInput': { min: 0, max: 5, label: 'PV-Satz' },
+        'lohnabrechnungRVSatzInput': { min: 0, max: 20, label: 'RV-Satz' },
+        'lohnabrechnungALVSatzInput': { min: 0, max: 10, label: 'ALV-Satz' },
     },
 
     // Prozentfelder
@@ -1731,6 +1745,11 @@ function isValidNumber(value, minValue, maxValue) {
 function isValidPercentage(value) {
     return isValidNumber(value, 0, 100);
 }
+
+
+
+
+
 
 // ============================================================================
 // BELEG-APPLY KONFIGURATION
@@ -2227,4 +2246,248 @@ function handleYearScript(config) {
             }
         }
     }
+
+    
+}
+
+// ============================================================================
+// LOHNABRECHNUNG
+// ============================================================================
+const MITARBEITER_DATEN = {
+    vornamen: {
+        m: [
+            'Max', 'Alexander', 'Thomas', 'Michael', 'Andreas', 'Stefan', 'Christian', 'Daniel', 'Sebastian', 'Markus',
+            'Ahmet', 'Mehmet', 'Ali', 'Emre', 'Yusuf', 'Hassan', 'Omar', 'Ivan', 'Dimitri', 'Carlos'
+        ],
+        w: [
+            'Anna', 'Maria', 'Laura', 'Sarah', 'Julia', 'Lisa', 'Sophie', 'Hannah', 'Lena', 'Emma','Aylin', 'Fatima', 'Zeynep',
+            'Mariam', 'Leila', 'Elena', 'Natalia', 'Sofia', 'Irina', 'Ana'
+        ]
+    },
+
+    nachnamen: [
+        // deutsch
+        'Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Schulz', 'Hoffmann',
+        'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Schröder', 'Neumann', 'Schwarz', 'Zimmermann', 'Braun',
+       'Yılmaz', 'Demir', 'Kaya','Haddad', 'Khan', 'Hussein', 'Petrov', 'Ivanov', 'Smirnov','Garcia', 'Martinez', 'Lopez',
+        'Nowak', 'Kowalski'
+    ],
+
+    strassen: [
+        'Hauptstraße', 'Bahnhofstraße', 'Kirchstraße', 'Gartenstraße', 'Schulstraße', 'Bergstraße',
+        'Dorfstraße', 'Lindenstraße', 'Ringstraße', 'Waldstraße'
+    ],
+
+    banken: [
+        'Sparkasse', 'Volksbank', 'Commerzbank', 'Deutsche Bank', 'Postbank', 'HypoVereinsbank'
+    ]
+};
+
+
+// Zufällige Mitarbeiterdaten generieren
+function generateMitarbeiterDaten() {
+    const geschlecht = Math.random() > 0.5 ? 'm' : 'w';
+    const vorname = MITARBEITER_DATEN.vornamen[geschlecht][Math.floor(Math.random() * MITARBEITER_DATEN.vornamen[geschlecht].length)];
+    const nachname = MITARBEITER_DATEN.nachnamen[Math.floor(Math.random() * MITARBEITER_DATEN.nachnamen.length)];
+    const strasse = MITARBEITER_DATEN.strassen[Math.floor(Math.random() * MITARBEITER_DATEN.strassen.length)];
+    const hausnummer = Math.floor(Math.random() * 150) + 1;
+    const bank = MITARBEITER_DATEN.banken[Math.floor(Math.random() * MITARBEITER_DATEN.banken.length)];
+    
+    // Personalnummer
+    const personalnr = String(Math.floor(Math.random() * 90000) + 10000) + '-' + String(Math.floor(Math.random() * 90) + 10);
+    
+    // Geburtsdatum (zwischen 25 und 60 Jahren)
+    const alter = Math.floor(Math.random() * 36) + 25;
+    const jahr = new Date().getFullYear() - alter;
+    const monat = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+    const tag = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+    const geburtsdatum = `${tag}.${monat}.${jahr.toString().slice(2)}`;
+    
+    // Eintrittsdatum (zwischen 1 und 15 Jahren zurück)
+    const dienstjahre = Math.floor(Math.random() * 15) + 1;
+    const eintrittJahr = new Date().getFullYear() - dienstjahre;
+    const eintrittMonat = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+    const eintrittTag = '01';
+    const eintrittsdatum = `${eintrittTag}.${eintrittMonat}.${eintrittJahr.toString().slice(2)}`;
+    
+    // Steuer-ID (11-stellig)
+    const steuerID = String(Math.floor(Math.random() * 90000000000) + 10000000000);
+    
+    // IBAN (DE + 20 Ziffern)
+    const iban = 'DE' + String(Math.floor(Math.random() * 90) + 10) + ' ' +
+                 String(Math.floor(Math.random() * 9000) + 1000) + ' ' +
+                 String(Math.floor(Math.random() * 9000) + 1000) + ' ' +
+                 String(Math.floor(Math.random() * 9000) + 1000) + ' ' +
+                 String(Math.floor(Math.random() * 9000) + 1000) + ' ' +
+                 String(Math.floor(Math.random() * 90) + 10);
+    
+    return {
+        name: `${nachname}, ${vorname}`,
+        strasse: `${strasse} ${hausnummer}`,
+        personalnr: personalnr,
+        geburtsdatum: geburtsdatum,
+        eintrittsdatum: eintrittsdatum,
+        steuerID: steuerID,
+        bank: bank,
+        iban: iban
+    };
+}
+
+// Lohnsteuer-Berechnung (vereinfacht nach Grundtabelle 2024)
+function berechneLohnsteuer(brutto, steuerklasse, kinderfreibetrag) {
+    // Vereinfachte Berechnung - in Realität viel komplexer
+    const jahresbrutto = brutto * 12;
+    let steuersatz = 0;
+    
+    switch(steuerklasse) {
+        case 'I':
+            if (jahresbrutto <= 11604) steuersatz = 0;
+            else if (jahresbrutto <= 17005) steuersatz = 0.14;
+            else if (jahresbrutto <= 66760) steuersatz = 0.24;
+            else if (jahresbrutto <= 277825) steuersatz = 0.42;
+            else steuersatz = 0.45;
+            break;
+        case 'II':
+            // Ähnlich wie I, aber mit Entlastungsbetrag
+            if (jahresbrutto <= 11604) steuersatz = 0;
+            else if (jahresbrutto <= 17005) steuersatz = 0.12;
+            else if (jahresbrutto <= 66760) steuersatz = 0.22;
+            else if (jahresbrutto <= 277825) steuersatz = 0.40;
+            else steuersatz = 0.43;
+            break;
+        case 'III':
+            if (jahresbrutto <= 23208) steuersatz = 0;
+            else if (jahresbrutto <= 34010) steuersatz = 0.08;
+            else if (jahresbrutto <= 133520) steuersatz = 0.14;
+            else if (jahresbrutto <= 277825) steuersatz = 0.32;
+            else steuersatz = 0.35;
+            break;
+        case 'IV':
+            if (jahresbrutto <= 11604) steuersatz = 0;
+            else if (jahresbrutto <= 17005) steuersatz = 0.14;
+            else if (jahresbrutto <= 66760) steuersatz = 0.24;
+            else if (jahresbrutto <= 277825) steuersatz = 0.42;
+            else steuersatz = 0.45;
+            break;
+        case 'V':
+            if (jahresbrutto <= 11604) steuersatz = 0.14;
+            else if (jahresbrutto <= 17005) steuersatz = 0.24;
+            else if (jahresbrutto <= 66760) steuersatz = 0.32;
+            else if (jahresbrutto <= 277825) steuersatz = 0.42;
+            else steuersatz = 0.45;
+            break;
+        case 'VI':
+            steuersatz = 0.42; // Pauschal höherer Satz für Zweitjob
+            break;
+    }
+    
+    // Monatliche Lohnsteuer
+    let lohnsteuer = (brutto * steuersatz);
+    
+    // Kinderfreibetrag reduziert Steuer (vereinfacht)
+    const freibetrag = parseFloat(kinderfreibetrag.replace(',', '.'));
+    lohnsteuer = Math.max(0, lohnsteuer - (freibetrag * 20));
+    
+    return FormatHelper.roundToTwo(lohnsteuer);
+}
+
+// Firma laden
+function loadLohnabrechnungFirma() {
+    loadBelegData('lohnabrechnungFirma', 'datenLohnabrechnung');
+}
+
+// Hauptfunktion: Lohnabrechnung erstellen
+async function lohnabrechnungApplySVGholen() {
+    if (!validateInputs()) return;
+    
+    // SVG laden
+    let selectedQuittung = document.getElementById("svgDropdownLohnabrechnung").value;
+    const container = document.getElementById('lohnabrechnungContainer');
+    try {
+        const svgData = await loadSVGTemplate(selectedQuittung);
+         container.innerHTML = svgData;
+    } catch (error) {
+        console.error("Fehler beim Laden der SVG-Vorlage:", error);
+        return;
+    }
+
+        // Firmendaten laden
+    loadLohnabrechnungFirma();
+    
+    // Mitarbeiterdaten generieren
+    const mitarbeiter = generateMitarbeiterDaten();
+    document.getElementById('lohnabrechnungMitarbeiterName').textContent = mitarbeiter.name;
+    document.getElementById('lohnabrechnungMitarbeiterStrasse').textContent = mitarbeiter.strasse;
+    document.getElementById('lohnabrechnungPersonalnr').textContent = mitarbeiter.personalnr;
+    document.getElementById('lohnabrechnungGeburtsdatum').textContent = mitarbeiter.geburtsdatum;
+    document.getElementById('lohnabrechnungEintrittsdatum').textContent = mitarbeiter.eintrittsdatum;
+    document.getElementById('lohnabrechnungSteuerID').textContent = mitarbeiter.steuerID;
+    document.getElementById('lohnabrechnungBank').textContent = mitarbeiter.bank;
+    document.getElementById('lohnabrechnungIBAN').textContent = mitarbeiter.iban;
+    
+    // Monat
+    const monat = document.getElementById('lohnabrechnungMonatInput').value;
+    document.getElementById('lohnabrechnungMonat').textContent = monat;
+    
+    // Steuerliche Daten
+    const steuerklasse = document.getElementById('lohnabrechnungSteuerklasseInput').value;
+    const kinderfreibetrag = document.getElementById('lohnabrechnungKinderfreibetragInput').value;
+    const religion = document.getElementById('lohnabrechnungKirchensteuerInput').checked
+  ? (Math.random() < 0.5 ? 'röm.-kath.' : 'evangelisch')
+  : 'keine';
+    
+    document.getElementById('lohnabrechnungSteuerklasse').textContent = steuerklasse;
+    document.getElementById('lohnabrechnungKinderfreibetrag').textContent = kinderfreibetrag;
+    document.getElementById('lohnabrechnungReligion').textContent = religion;
+    
+    // Brutto
+    const brutto = parseFloat(document.getElementById('lohnabrechnungBruttoInput').value);
+    document.getElementById('lohnabrechnungBrutto').textContent = FormatHelper.currency(brutto);
+    
+    // Lohnsteuer berechnen
+    const lohnsteuer = berechneLohnsteuer(brutto, steuerklasse, kinderfreibetrag);
+    document.getElementById('lohnabrechnungLohnsteuer').textContent = FormatHelper.currency(lohnsteuer);
+    
+    // Solidaritätszuschlag
+    const soliAktiv = document.getElementById('lohnabrechnungSoliInput').checked;
+    const soli = soliAktiv ? FormatHelper.roundToTwo(lohnsteuer * 0.055) : 0;
+    document.getElementById('lohnabrechnungSoli').textContent = soliAktiv ? FormatHelper.currency(soli) : '0,00 €';
+    
+    // Kirchensteuer
+    const kirchensteuerAktiv = document.getElementById('lohnabrechnungKirchensteuerInput').checked;
+    const kirchensteuer = kirchensteuerAktiv ? FormatHelper.roundToTwo(lohnsteuer * 0.08) : 0;
+    document.getElementById('lohnabrechnungKirchensteuer').textContent = kirchensteuerAktiv ? FormatHelper.currency(kirchensteuer) : '0,00 €';
+    
+    // Steuerabzüge gesamt
+    const steuerGesamt = lohnsteuer + soli + kirchensteuer;
+    document.getElementById('lohnabrechnungSteuerGesamt').textContent = FormatHelper.currency(steuerGesamt);
+    
+    // Sozialversicherung AN-Anteile
+    const kvSatz = parseFloat(document.getElementById('lohnabrechnungKVSatzInput').value) / 100;
+    const pvSatz = parseFloat(document.getElementById('lohnabrechnungPVSatzInput').value) / 100;
+    const rvSatz = parseFloat(document.getElementById('lohnabrechnungRVSatzInput').value) / 100;
+    const alvSatz = parseFloat(document.getElementById('lohnabrechnungALVSatzInput').value) / 100;
+    
+    const kvAN = FormatHelper.roundToTwo(brutto * kvSatz);
+    const pvAN = FormatHelper.roundToTwo(brutto * pvSatz);
+    const rvAN = FormatHelper.roundToTwo(brutto * rvSatz);
+    const alvAN = FormatHelper.roundToTwo(brutto * alvSatz);
+    
+    document.getElementById('lohnabrechnungKrankenversicherung').textContent = FormatHelper.currency(kvAN);
+    document.getElementById('lohnabrechnungPflegeversicherung').textContent = FormatHelper.currency(pvAN);
+    document.getElementById('lohnabrechnungRentenversicherung').textContent = FormatHelper.currency(rvAN);
+    document.getElementById('lohnabrechnungArbeitslosenversicherung').textContent = FormatHelper.currency(alvAN);
+    
+    const svGesamt = kvAN + pvAN + rvAN + alvAN;
+    document.getElementById('lohnabrechnungSVGesamt').textContent = FormatHelper.currency(svGesamt);
+    
+    // Gesamtabzüge
+    const abzuegeGesamt = steuerGesamt + svGesamt;
+    document.getElementById('lohnabrechnungAbzuegeGesamt').textContent = FormatHelper.currency(abzuegeGesamt);
+    
+    // Netto
+    const netto = brutto - abzuegeGesamt;
+    document.getElementById('lohnabrechnungNetto').textContent = FormatHelper.currency(netto);
+    
+ 
 }

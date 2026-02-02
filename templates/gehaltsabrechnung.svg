@@ -1,0 +1,98 @@
+<svg id="kontoauszugSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 760 760" style="background-color:#fff;padding:0px;width:100%;max-width:760px" onload="SVGonLoadKontoauszug()">
+   <defs id="customDefsLohnabrechnung">
+  </defs>
+
+  <!-- Hauptrahmen -->
+  <rect x="0" y="0" width="760" height="760" fill="#fff" stroke="#000" stroke-width="2" />
+
+  <!-- Firmen-Header -->
+  <rect x="1" y="1" width="758" height="80" fill="#fff"/>
+  <text id="lohnabrechnungFirmaName" x="20" y="65" font-family="Arial" font-size="32" fill="#03858a"></text>
+
+
+  <!-- Titel -->
+  <rect x="18" y="100" width="724" height="40" fill="#01858a"/>
+  <text x="380" y="127" font-family="Arial" font-size="22" text-anchor="middle" fill="#fff">GEHALTSABRECHNUNG</text>
+
+  <!-- Abrechnungsmonat -->
+  <text x="20" y="170" font-family="Arial" font-size="16">Abrechnungsmonat: <tspan id="lohnabrechnungMonat" ></tspan></text>
+
+  <!-- Mitarbeiterdaten Box -->
+  <rect x="18" y="185" width="724" height="140" fill="#71eff3"/>
+  <text x="25" y="205" font-family="Arial" font-size="14" font-weight="bold" >Name, Vorname</text>
+  <text x="200" y="205" font-family="Arial" font-size="14" font-weight="bold" >Straße</text>
+  <text x="480" y="205" font-family="Arial" font-size="14" font-weight="bold" >PLZ/Ort</text>
+  
+  <text id="lohnabrechnungMitarbeiterName" x="25" y="225" font-family="Arial" font-size="14"></text>
+  <text id="lohnabrechnungMitarbeiterStrasse" x="200" y="225" font-family="Arial" font-size="14"></text>
+  <text id="lohnabrechnungFirmaOrt" x="480" y="225" font-family="Arial" font-size="14"></text>
+
+  <text x="25" y="255" font-family="Arial" font-size="14" font-weight="bold" >Personalnr.</text>
+  <text x="200" y="255" font-family="Arial" font-size="14" font-weight="bold" >Geburtsdatum</text>
+  <text x="340" y="255" font-family="Arial" font-size="14" font-weight="bold" >Eintrittsdatum</text>
+  <text x="480" y="255" font-family="Arial" font-size="14" font-weight="bold">Steueridentifikationsnr.</text>
+  
+  <text id="lohnabrechnungPersonalnr" x="25" y="275" font-family="Arial" font-size="14"></text>
+  <text id="lohnabrechnungGeburtsdatum" x="200" y="275" font-family="Arial" font-size="14"></text>
+  <text id="lohnabrechnungEintrittsdatum" x="340" y="275" font-family="Arial" font-size="14"></text>
+  <text id="lohnabrechnungSteuerID" x="480" y="275" font-family="Arial" font-size="14"></text>
+
+  <text x="25" y="305" font-family="Arial" font-size="14" font-weight="bold" >Lohnsteuerklasse</text>
+  <text x="200" y="305" font-family="Arial" font-size="14" font-weight="bold">Kinderfreibetrag</text>
+  <text x="340" y="305" font-family="Arial" font-size="14" font-weight="bold">Religion</text>
+  <text id="lohnabrechnungBank" x="480" y="305" font-family="Arial" font-size="14" font-weight="bold"></text>
+  
+  <text id="lohnabrechnungSteuerklasse" x="25" y="320" font-family="Arial" font-size="14"></text>
+  <text id="lohnabrechnungKinderfreibetrag" x="200" y="320" font-family="Arial" font-size="14"></text>
+  <text id="lohnabrechnungReligion" x="340" y="320" font-family="Arial" font-size="14"></text>
+  <text id="lohnabrechnungIBAN" x="480" y="320" font-family="Arial" font-size="14"></text>
+
+  
+  <!-- Bruttobezüge -->
+  <rect x="18" y="355" width="724" height="25" fill="#71eff3"/>
+  <text x="25" y="373" font-family="Arial" font-size="16" font-weight="bold" >Steuerpflichtiger Bruttolohn</text>
+  <text id="lohnabrechnungBrutto" x="735" y="373" font-family="Arial" font-size="16" font-weight="bold" text-anchor="end"></text>
+
+  <!-- Steuerabzüge -->
+  <text x="25" y="420" font-family="Arial" font-size="14">Lohnsteuer</text>
+  <text id="lohnabrechnungLohnsteuer" x="735" y="420" font-family="Arial" font-size="14" text-anchor="end"></text>
+  
+  <text x="25" y="440" font-family="Arial" font-size="14">Solidaritätszuschlag</text>
+  <text id="lohnabrechnungSoli" x="735" y="440" font-family="Arial" font-size="14" text-anchor="end"></text>
+  
+  <text x="25" y="460" font-family="Arial" font-size="14">Kirchensteuer</text>
+  <text id="lohnabrechnungKirchensteuer" x="735" y="460" font-family="Arial" font-size="14" text-anchor="end"></text>
+
+  <line x1="18" y1="470" x2="742" y2="470" stroke="#03858a" stroke-width="1"/>
+  <text x="25" y="488" font-family="Arial" font-size="14">Steuerabzüge gesamt</text>
+  <text id="lohnabrechnungSteuerGesamt" x="735" y="488" font-family="Arial" font-size="14" text-anchor="end"></text>
+
+
+
+  <!-- Sozialversicherung -->
+  <text x="25" y="525" font-family="Arial" font-size="14">Krankenversicherung</text>
+  <text id="lohnabrechnungKrankenversicherung" x="735" y="525" font-family="Arial" font-size="14" text-anchor="end"></text>
+  
+  <text x="25" y="545" font-family="Arial" font-size="14">Pflegeversicherung</text>
+  <text id="lohnabrechnungPflegeversicherung" x="735" y="545" font-family="Arial" font-size="14" text-anchor="end"></text>
+  
+  <text x="25" y="565" font-family="Arial" font-size="14">Rentenversicherung</text>
+  <text id="lohnabrechnungRentenversicherung" x="735" y="565" font-family="Arial" font-size="14" text-anchor="end"></text>
+  
+  <text x="25" y="585" font-family="Arial" font-size="14">Arbeitslosenversicherung</text>
+  <text id="lohnabrechnungArbeitslosenversicherung" x="735" y="585" font-family="Arial" font-size="14" text-anchor="end"></text>
+
+  <line x1="18" y1="595" x2="742" y2="595" stroke="#037050" stroke-width="1"/>
+  <text x="25" y="613" font-family="Arial" font-size="14" class="text-italic">Sozialversicherungsabzüge gesamt</text>
+  <text id="lohnabrechnungSVGesamt" x="735" y="613" font-family="Arial" font-size="14" class="text-italic" text-anchor="end"></text>
+
+
+  <!-- Summen -->
+  <rect x="18" y="640" width="724" height="25" fill="#71eff3"/>
+  <text x="25" y="658" font-family="Arial" font-size="16" >Summe der gesetzlichen Abzüge</text>
+  <text id="lohnabrechnungAbzuegeGesamt" x="735" y="658" font-family="Arial" font-size="16"  text-anchor="end"></text>
+
+  <rect x="18" y="675" width="724" height="30" fill="#01858a"/>
+  <text x="25" y="698" font-family="Arial" font-size="18" fill="#fff">Auszahlungsbetrag</text>
+  <text id="lohnabrechnungNetto" x="735" y="698" font-family="Arial" font-size="18"  text-anchor="end"  fill="#fff"></text>
+</svg>
