@@ -149,109 +149,6 @@ const BELEG_FIELD_MAPPING = {
 };
 
 // ============================================================================
-// URL-Parameter
-// ============================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-
-    // 1. Artikel
-    if (params.has('artikel1'))  document.getElementById('artikelInput').value   = params.get('artikel1');
-    if (params.has('menge1'))     document.getElementById('mengeInput').value    = params.get('menge1');
-    if (params.has('einheit1'))   document.getElementById('einheitInput').value  = params.get('einheit1');
-    if (params.has('einzelpreis1')) document.getElementById('einzelpreisInput').value = params.get('einzelpreis1');
-
-    // 2. Artikel
-    if (params.has('artikel2'))  document.getElementById('artikelInput2').value   = params.get('artikel2');
-    if (params.has('menge2'))     document.getElementById('mengeInput2').value    = params.get('menge2');
-    if (params.has('einheit2'))   document.getElementById('einheitInput2').value  = params.get('einheit2');
-    if (params.has('einzelpreis2')) document.getElementById('einzelpreisInput2').value = params.get('einzelpreis2');
-
-    // Rabatt & Bezugskosten
-    if (params.has('rabatt'))       document.getElementById('rabattInput').value       = params.get('rabatt');
-    if (params.has('bezugskosten')) document.getElementById('bezugskostenInput').value = params.get('bezugskosten');
-
-    // Steuer, Zahlung etc.
-    if (params.has('umsatzsteuer'))  document.getElementById('umsatzsteuerInput').value  = params.get('umsatzsteuer') || '19';
-    if (params.has('zahlungsziel'))  document.getElementById('zahlungszielInput').value  = params.get('zahlungsziel') || '30';
-    if (params.has('skonto'))        document.getElementById('skontoInput').value        = params.get('skonto')     || '2';
-    if (params.has('skontofrist'))   document.getElementById('skontofristInput').value   = params.get('skontofrist')|| '20';
-
-    // Lieferzeit, Vorlage, etc.
-    if (params.has('lieferzeit')) document.getElementById('angebotLieferzeitInput').value = params.get('lieferzeit');
-    if (params.has('vorlage'))    document.getElementById('svgDropdown').value = params.get('vorlage');
-
-    // Datum (falls du es splitten willst: 18.03.2025 → Tag/Monat/Jahr)
-    if (params.has('datum')) {
-        const [tag, monat, jahr] = params.get('datum').split(/[.-]/);
-        if (tag)  document.getElementById('tag').value   = tag.padStart(2, '0');
-        if (monat) document.getElementById('monat').value = monat.padStart(2, '0');
-        if (jahr)  document.getElementById('jahr').value  = jahr;
-    }
-
-    // Farbe (z. B. #7db9f5)
-    if (params.has('farbe')) document.getElementById('colorPicker').value = params.get('farbe');
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const params = new URLSearchParams(window.location.search);
-    
-    // Belegart / Tab auslesen – mehrere gängige Namen abfangen
-    let gewuenschterTab = null;
-    
-    if (params.has('beleg')) {
-        gewuenschterTab = params.get('beleg').toLowerCase().trim();
-    } else if (params.has('tab')) {
-        gewuenschterTab = params.get('tab').toLowerCase().trim();
-    } else if (params.has('type')) {
-        gewuenschterTab = params.get('type').toLowerCase().trim();
-    }
-
-    // Mapping: URL-Name → ID des Tabs (muss mit deinem HTML übereinstimmen)
-    const tabMapping = {
-        'rechnung':               'rechnung',
-        'angebot':                'rechnung',     // gleicher Tab
-        'gutschrift':             'rechnung',
-        'rechnung/angebot/gutschrift': 'rechnung',
-        'kontoauszug':            'kontoauszug',
-        'quittung':               'quittung',
-        'kassenbon':              'kassenbon',
-        'kassenbuch':             'kassenbon',    // Synonym
-        'email':                  'email',
-        'mail':                   'email',
-        'zeitungsartikel':        'newspaper',
-        'zeitung':                'newspaper',
-        'artikel':                'newspaper',
-        'lohnabrechnung':         'lohnabrechnung',
-        'gehaltsabrechnung':      'lohnabrechnung',
-        'lohnjournal':            'lohnjournal',
-        'bescheid':               'bescheid',
-        'anlagenkarte':           'anlagenkarte',
-        'wertpapiere':            'wertpapiere',
-        'modellunternehmen':      'modellunternehmen'
-    };
-
-    const tabId = tabMapping[gewuenschterTab] || null;
-
-    if (tabId) {
-        // Den gewünschten Tab öffnen
-        const tabButton = document.querySelector(`.tablinks[onclick*="openCity(event, '${tabId}')"]`);
-        if (tabButton) {
-            // Simuliere Klick auf den Button
-            tabButton.click();
-        } else {
-            // Fallback: direkt per JS öffnen (wenn du openCity nicht ändern willst)
-            openCity({ currentTarget: tabButton }, tabId);
-        }
-    } else {
-        // Standard: dein defaultOpen (Modellunternehmen?)
-        document.getElementById('defaultOpen')?.click();
-    }
-
-    // Hier kannst du dann noch die anderen Parameter auslesen (wie vorher besprochen)
-    // z. B. artikel1, menge1, vorlage, farbe, datum usw.
-});
-
-// ============================================================================
 // HILFSFUNKTIONEN - Formatierung und Berechnungen
 // ============================================================================
 const FormatHelper = {
@@ -307,6 +204,40 @@ const RandomHelper = {
         return `${hour}:${minute < 10 ? '0' + minute : minute}`;
     }
 };
+
+// ============================================================================
+// SAFE DOM HELPER - Verhindert Null-Pointer Fehler
+// ============================================================================
+const SafeDOM = {
+    setText: (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    },
+    setHTML: (id, html) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    },
+    setValue: (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+    },
+    setAttr: (id, attr, value) => {
+        const el = document.getElementById(id);
+        if (el) el.setAttribute(attr, value);
+    },
+    setClass: (className, text) => {
+        const els = document.getElementsByClassName(className);
+        for (const el of els) el.textContent = text;
+    },
+    exists: (id) => {
+        return document.getElementById(id) !== null;
+    },
+    remove: (id) => {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+    }
+};
+
 
 // ============================================================================
 // BELEG-DATEN LADEN (Generisch)
@@ -898,15 +829,14 @@ function applyOrderData() {
     const formattedDatumKontoauszug = `${selectedTagKontoauszug}.${selectedMonatKontoauszug}.`;
 
     // 7 Tage abziehen
-    const elementsWithClassRechnung7 = document.getElementById('rechnungDatum-7');
-    if (elementsWithClassRechnung7) {
+    if (SafeDOM.exists('rechnungDatum-7')) {
         const currentYear = new Date().getFullYear();
         const selectedDatumRechnung = new Date(`${selectedMonat}/${selectedTag}/${currentYear}`);
         const sevenDaysAgoRechnung = new Date(selectedDatumRechnung);
         sevenDaysAgoRechnung.setDate(selectedDatumRechnung.getDate() - 7);
         const formattedSevenDaysAgoRechnung = `${sevenDaysAgoRechnung.getDate().toString().padStart(2, '0')}.${(sevenDaysAgoRechnung.getMonth() + 1).toString().padStart(2, '0')}.`;
-        elementsWithClassRechnung7.textContent = formattedSevenDaysAgoRechnung;
-    }
+        SafeDOM.setText('rechnungDatum-7', formattedSevenDaysAgoRechnung);
+}
 
     // Fälligkeitsdatum
     const zahlungszielInput = getNumericValue('zahlungszielInput');
@@ -921,11 +851,7 @@ function applyOrderData() {
     }
 
     // Annahme: Alle Elemente mit der Klasse 'rechnungsDatum' und kontoauszugDatum sollen aktualisiert werden
-    const elementsWithClass = document.getElementsByClassName('rechnungsDatum');
-    // Iteriere durch alle Elemente und setze das formatierte Datum
-    for (const element of elementsWithClass) {
-        element.textContent = formattedDatum;
-    }
+  SafeDOM.setClass('rechnungsDatum', formattedDatum);
 
     const elementsWithClassKontoauszug = document.getElementsByClassName('kontoauszugDatum');
     for (const element of elementsWithClassKontoauszug) {
@@ -995,38 +921,40 @@ handleYearScript({
 
     if (menge && einzelpreis) {
         gesamtpreis1 = menge * einzelpreis;
-        document.getElementById('pos1').textContent = '1';
-        document.getElementById('artikel1').textContent = artikel;
-        document.getElementById('menge1').textContent = FormatHelper.numberSpace(menge) + ' ' + einheit;
-        document.getElementById('einzelpreis1').textContent = FormatHelper.currency(einzelpreis);
-        document.getElementById('gesamtpreis1').textContent = FormatHelper.currency(gesamtpreis1);
+        SafeDOM.setText('pos1', '1');  // ✓ Kein Fehler mehr!
+        SafeDOM.setText('artikel1', artikel);
+        SafeDOM.setText('menge1', FormatHelper.numberSpace(menge) + ' ' + einheit);
+        SafeDOM.setText('einzelpreis1', FormatHelper.currency(einzelpreis));
+        SafeDOM.setText('gesamtpreis1', FormatHelper.currency(gesamtpreis1));
     } else {
         gesamtpreis1 = 0;
-        document.getElementById('pos1').textContent = '';
-        document.getElementById('artikel1').textContent = artikel;
-        document.getElementById('menge1').textContent = '';
-        document.getElementById('einzelpreis1').textContent = '';
-        document.getElementById('gesamtpreis1').textContent = '';
+        SafeDOM.setText('pos1', '');
+        SafeDOM.setText('artikel1', artikel);
+        SafeDOM.setText('menge1', '');
+        SafeDOM.setText('einzelpreis1', '');
+        SafeDOM.setText('gesamtpreis1', '');
     }
 
     // Setze die gelesenen Daten in die SVG-Textelemente
 
-    if (menge2 && einzelpreis2) {
+
+   if (menge2 && einzelpreis2) {
         gesamtpreis2 = menge2 * einzelpreis2;
-        document.getElementById('pos2').textContent = '2';
-        document.getElementById('artikel2').textContent = artikel2;
-        document.getElementById('menge2').textContent = FormatHelper.numberSpace(menge2) + ' ' + einheit2;
-        document.getElementById('einzelpreis2').textContent = FormatHelper.currency(einzelpreis2);
-        document.getElementById('gesamtpreis2').textContent = FormatHelper.currency(gesamtpreis2);
+        SafeDOM.setText('pos2', '2');
+        SafeDOM.setText('artikel2', artikel2);
+        SafeDOM.setText('menge2', FormatHelper.numberSpace(menge2) + ' ' + einheit2);
+        SafeDOM.setText('einzelpreis2', FormatHelper.currency(einzelpreis2));
+        SafeDOM.setText('gesamtpreis2', FormatHelper.currency(gesamtpreis2));
     } else {
         gesamtpreis2 = 0;
-        document.getElementById('pos2').textContent = '';
-        document.getElementById('artikel2').textContent = artikel2;
-        document.getElementById('menge2').textContent = '';
-        document.getElementById('einzelpreis2').textContent = '';
-        document.getElementById('gesamtpreis2').textContent = '';
+        SafeDOM.setText('pos2', '');
+        SafeDOM.setText('artikel2', artikel2);
+        SafeDOM.setText('menge2', '');
+        SafeDOM.setText('einzelpreis2', '');
+        SafeDOM.setText('gesamtpreis2', '');
     }
 
+ 
 
     let angebotLieferzeitSVG = document.getElementById('angebotLieferzeit');
     if (angebotLieferzeitSVG) {
@@ -1066,35 +994,39 @@ handleYearScript({
     let gesamtRechnungsbetrag;
 
     // Setze die Zwischensumme in das SVG-Textelement
-    document.getElementById('zwischensumme').textContent = FormatHelper.currency(zwischensumme);
-    document.getElementById('bezugskostenSumme').textContent = FormatHelper.currency(bezugskostenInput);
-    document.getElementById('bezugskosten').textContent = bezugskostenArtInput;
-    if (rabattInput > 0) {
-        document.getElementById('rabatt').textContent = '- ' + rabattInput + ' % Rabatt'
-        document.getElementById('rabattsumme').textContent = FormatHelper.currency(rabattsumme);
-        nettowert = zwischensumme - rabattsumme + bezugskostenInput
-    } else {
-        document.getElementById('rabatt').textContent = ' '
-        document.getElementById('rabattsumme').textContent = ' ';
-        nettowert = zwischensumme + bezugskostenInput;
-    }
+ SafeDOM.setText('zwischensumme', FormatHelper.currency(zwischensumme));
+SafeDOM.setText('bezugskostenSumme', FormatHelper.currency(bezugskostenInput));
+SafeDOM.setText('bezugskosten', FormatHelper.currency(bezugskostenArtInput));
 
-    document.getElementById('nettowert').textContent = FormatHelper.currency(nettowert);
+// Rabatt-Bereich
+if (rabattInput > 0) {
+    SafeDOM.setText('rabatt', `- ${rabattInput} % Rabatt`);
+    SafeDOM.setText('rabattsumme', FormatHelper.currency(rabattsumme));
+    nettowert = zwischensumme - rabattsumme + bezugskostenInput;
+} else {
+    SafeDOM.setText('rabatt', ' ');
+    SafeDOM.setText('rabattsumme', ' ');
+    nettowert = zwischensumme + bezugskostenInput;
+}
 
-    if (umsatzsteuerInput > 0) {
-        umsatzsteuersumme = nettowert * umsatzsteuerInput / 100
-        document.getElementById('ust').textContent = '+ ' + umsatzsteuerInput;
-        document.getElementById('ustsumme').textContent = FormatHelper.currency(umsatzsteuersumme);
-        gesamtRechnungsbetrag = nettowert + umsatzsteuersumme;
-    } else {
-        umsatzsteuersumme = ' ';
-        document.getElementById('ust').textContent = ' '
-        document.getElementById('ustsumme').textContent = ' ';
-        gesamtRechnungsbetrag = nettowert;
-    }
+// Nettowert
+SafeDOM.setText('nettowert', FormatHelper.currency(nettowert));
 
+// Umsatzsteuer
+if (umsatzsteuerInput > 0) {
+    umsatzsteuersumme = nettowert * umsatzsteuerInput / 100;
+    SafeDOM.setText('ust', `+ ${umsatzsteuerInput}`);
+    SafeDOM.setText('ustsumme', FormatHelper.currency(umsatzsteuersumme));
+    gesamtRechnungsbetrag = nettowert + umsatzsteuersumme;
+} else {
+    umsatzsteuersumme = ' ';  // oder 0, je nach Logik
+    SafeDOM.setText('ust', ' ');
+    SafeDOM.setText('ustsumme', ' ');
+    gesamtRechnungsbetrag = nettowert;
+}
 
-    document.getElementById('rechnungsbetrag').textContent = FormatHelper.currency(gesamtRechnungsbetrag);
+// Gesamtbetrag / Rechnungsbetrag
+SafeDOM.setText('rechnungsbetrag', FormatHelper.currency(gesamtRechnungsbetrag));
 
     // Platz machen wenn keine Bezugskosten oder Rabatt
     const warenwertUstRechnungsbetrag = document.getElementById('warenwertUstRechnungsbetrag');
@@ -1104,13 +1036,13 @@ handleYearScript({
     if (warenwertUstRechnungsbetrag) {
         if (bezugskostenInput > 0) {
         } else {
-            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -30)');
-            gBezugskosten.remove();
+            SafeDOM.setAttr('warenwertUstRechnungsbetrag', 'transform', 'translate(0, -30)');
+            SafeDOM.remove('gBezugskosten');
         };
 
         if (rabattInput > 0) {
         } else {
-            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -30)');
+            SafeDOM.setAttr('warenwertUstRechnungsbetrag', 'transform', 'translate(0, -30)');
             gBezugskosten.setAttribute('transform', 'translate(0, -30)');
         };
 
@@ -1137,7 +1069,7 @@ handleYearScript({
         } else {
             // Setze den Transform-Wert auf den ursprünglichen Wert oder einen anderen Wert nach Bedarf
             warenwertUstRechnungsbetrag_quer.setAttribute('transform', 'translate(200, 0)');
-            gBezugskosten.remove();
+            SafeDOM.remove('gBezugskosten');
         }
     } else {
 
@@ -1171,71 +1103,86 @@ handleYearScript({
     } else { }
 
 
-    // Laden der Daten für den Kontoauszug
-    const kontoauszugNummer = document.getElementById('kontoauszugNummerInput').value;
-    document.getElementById('kontoauszugNummer').textContent = kontoauszugNummer;
+   // Laden der Daten für den Kontoauszug
 
-    const kontoauszugVorgang1 = document.getElementById('kontoauszugVorgang1Input').value;
-    document.getElementById('kontoauszugVorgang1').textContent = kontoauszugVorgang1;
+const kontoauszugNummer = document.getElementById('kontoauszugNummerInput').value;
+SafeDOM.setText('kontoauszugNummer', kontoauszugNummer);
 
-    const kontoauszugWertstellung1Input = document.getElementById('kontoauszugWertstellung1Input').value;
-    const kontoauszugWertstellung1 = kontoauszugWertstellung1Input ? parseFloat(kontoauszugWertstellung1Input) : 0;
-    document.getElementById('kontoauszugWertstellung1').textContent = kontoauszugWertstellung1 !== 0 ? FormatHelper.currencyWithSign(kontoauszugWertstellung1) : "";
+// Vorgang 1
+const kontoauszugVorgang1 = document.getElementById('kontoauszugVorgang1Input').value;
+SafeDOM.setText('kontoauszugVorgang1', kontoauszugVorgang1);
 
-    const kontoauszugVorgang2 = document.getElementById('kontoauszugVorgang2Input').value;
-    document.getElementById('kontoauszugVorgang2').textContent = kontoauszugVorgang2;
+const wert1Input = document.getElementById('kontoauszugWertstellung1Input').value;
+const wert1 = wert1Input ? parseFloat(wert1Input) : 0;
+SafeDOM.setText(
+  'kontoauszugWertstellung1',
+  wert1 !== 0 ? FormatHelper.currencyWithSign(wert1) : ''
+);
 
-    const kontoauszugWertstellung2Input = document.getElementById('kontoauszugWertstellung2Input').value;
-    const kontoauszugWertstellung2 = kontoauszugWertstellung2Input !== "" ? parseFloat(kontoauszugWertstellung2Input) : 0;
-    document.getElementById('kontoauszugWertstellung2').textContent = kontoauszugWertstellung2 !== 0 ? FormatHelper.currencyWithSign(kontoauszugWertstellung2) : "";
+// Vorgang 2
+const kontoauszugVorgang2 = document.getElementById('kontoauszugVorgang2Input').value;
+SafeDOM.setText('kontoauszugVorgang2', kontoauszugVorgang2);
 
-    const kontoauszugVorgang3 = document.getElementById('kontoauszugVorgang3Input').value;
-    document.getElementById('kontoauszugVorgang3').textContent = kontoauszugVorgang3;
+const wert2Input = document.getElementById('kontoauszugWertstellung2Input').value;
+const wert2 = wert2Input !== '' ? parseFloat(wert2Input) : 0;
+SafeDOM.setText(
+  'kontoauszugWertstellung2',
+  wert2 !== 0 ? FormatHelper.currencyWithSign(wert2) : ''
+);
 
-    const kontoauszugWertstellung3Input = document.getElementById('kontoauszugWertstellung3Input').value;
-    const kontoauszugWertstellung3 = kontoauszugWertstellung3Input ? parseFloat(kontoauszugWertstellung3Input) : 0;
-    document.getElementById('kontoauszugWertstellung3').textContent = kontoauszugWertstellung3 !== 0 ? FormatHelper.currencyWithSign(kontoauszugWertstellung3) : "";
+// Vorgang 3
+const kontoauszugVorgang3 = document.getElementById('kontoauszugVorgang3Input').value;
+SafeDOM.setText('kontoauszugVorgang3', kontoauszugVorgang3);
 
-    const kontoauszugKontostand_altInput = document.getElementById('kontoauszugKontostand_altInput').value;
-    const kontoauszugKontostand_alt = kontoauszugKontostand_altInput ? parseFloat(kontoauszugKontostand_altInput) : 0;
-    document.getElementById('kontoauszugKontostand_alt').textContent = kontoauszugKontostand_alt !== 0 ? FormatHelper.currencyWithSign(kontoauszugKontostand_alt) : "";
+const wert3Input = document.getElementById('kontoauszugWertstellung3Input').value;
+const wert3 = wert3Input ? parseFloat(wert3Input) : 0;
+SafeDOM.setText(
+  'kontoauszugWertstellung3',
+  wert3 !== 0 ? FormatHelper.currencyWithSign(wert3) : ''
+);
 
-    let kontoauszugKontostand_neu = kontoauszugKontostand_alt + kontoauszugWertstellung1 + kontoauszugWertstellung2 + kontoauszugWertstellung3;
+// Alter Kontostand
+const kontostandAltInput = document.getElementById('kontoauszugKontostand_altInput').value;
+const kontostandAlt = kontostandAltInput ? parseFloat(kontostandAltInput) : 0;
+SafeDOM.setText(
+  'kontoauszugKontostand_alt',
+  kontostandAlt !== 0 ? FormatHelper.currencyWithSign(kontostandAlt) : ''
+);
 
-    document.getElementById('kontoauszugKontostand_neu').textContent = FormatHelper.currencyWithSign(kontoauszugKontostand_neu);
+// Neuer Kontostand (berechnen + setzen)
+const kontostandNeu = kontostandAlt + wert1 + wert2 + wert3;
+SafeDOM.setText('kontoauszugKontostand_neu', FormatHelper.currencyWithSign(kontostandNeu));
 
-    // Check if both kontoauszugWertstellung1 and kontoauszugVorgang1 are empty
-    if (kontoauszugWertstellung1 === 0 && kontoauszugVorgang1.trim() === "") {
-        // If both are empty, remove the element with id 'kontoauszugDatum1'
-        const kontoauszugDatum1Element = document.getElementById('kontoauszugDatum1');
-        if (kontoauszugDatum1Element) {
-            kontoauszugDatum1Element.parentNode.removeChild(kontoauszugDatum1Element);
-        }
+// Hilfsfunktion: Entfernt ein Element, wenn es existiert
+function removeIfExists(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.parentNode.removeChild(element);
     }
+}
 
-    // Check if both kontoauszugWertstellung1 and kontoauszugVorgang1 are empty
-    if (kontoauszugWertstellung2 === 0 && kontoauszugVorgang2.trim() === "") {
-        // If both are empty, remove the element with id 'kontoauszugDatum1'
-        const kontoauszugDatum2Element = document.getElementById('kontoauszugDatum2');
-        if (kontoauszugDatum2Element) {
-            kontoauszugDatum2Element.parentNode.removeChild(kontoauszugDatum2Element);
-        }
-    }
+// Zeile 1 entfernen, wenn Vorgang UND Betrag leer sind
+if (wert1 === 0 && kontoauszugVorgang1.trim() === "") {
+    removeIfExists('kontoauszugDatum1');
+}
 
-    // Check if both kontoauszugWertstellung1 and kontoauszugVorgang1 are empty
-    if (kontoauszugWertstellung3 === 0 && kontoauszugVorgang3.trim() === "") {
-        // If both are empty, remove the element with id 'kontoauszugDatum1'
-        const kontoauszugDatum3Element = document.getElementById('kontoauszugDatum3');
-        if (kontoauszugDatum3Element) {
-            kontoauszugDatum3Element.parentNode.removeChild(kontoauszugDatum3Element);
-        }
-    }
+// Zeile 2 entfernen, wenn Vorgang UND Betrag leer sind
+if (wert2 === 0 && kontoauszugVorgang2.trim() === "") {
+    removeIfExists('kontoauszugDatum2');
+}
 
-    // Laden der Daten für die Mail
-    const emailTextMessage = document.getElementById('emailInputText').value;
-    document.getElementById('emailTextMessage').textContent = emailTextMessage;
-    const emailSubject = document.getElementById('emailSubjectInput').value;
-    document.getElementById('emailSubject').textContent = emailSubject;
+// Zeile 3 entfernen, wenn Vorgang UND Betrag leer sind
+if (wert3 === 0 && kontoauszugVorgang3.trim() === "") {
+    removeIfExists('kontoauszugDatum3');
+}
+// Laden der Daten für die Mail / E-Mail-Vorschau
+
+
+const emailTextMessage = document.getElementById('emailInputText').value;
+SafeDOM.setText('emailTextMessage', emailTextMessage);
+
+const emailSubject = document.getElementById('emailSubjectInput').value;
+SafeDOM.setText('emailSubject', emailSubject);
 
     loadCompanyData(); // Laden der Kundeninformationen
     loadSupplierData(); // Laden der Lieferanteninformationen
