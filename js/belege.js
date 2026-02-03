@@ -148,6 +148,108 @@ const BELEG_FIELD_MAPPING = {
 }
 };
 
+// ============================================================================
+// URL-Parameter
+// ============================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+
+    // 1. Artikel
+    if (params.has('artikel1'))  document.getElementById('artikelInput').value   = params.get('artikel1');
+    if (params.has('menge1'))     document.getElementById('mengeInput').value    = params.get('menge1');
+    if (params.has('einheit1'))   document.getElementById('einheitInput').value  = params.get('einheit1');
+    if (params.has('einzelpreis1')) document.getElementById('einzelpreisInput').value = params.get('einzelpreis1');
+
+    // 2. Artikel
+    if (params.has('artikel2'))  document.getElementById('artikelInput2').value   = params.get('artikel2');
+    if (params.has('menge2'))     document.getElementById('mengeInput2').value    = params.get('menge2');
+    if (params.has('einheit2'))   document.getElementById('einheitInput2').value  = params.get('einheit2');
+    if (params.has('einzelpreis2')) document.getElementById('einzelpreisInput2').value = params.get('einzelpreis2');
+
+    // Rabatt & Bezugskosten
+    if (params.has('rabatt'))       document.getElementById('rabattInput').value       = params.get('rabatt');
+    if (params.has('bezugskosten')) document.getElementById('bezugskostenInput').value = params.get('bezugskosten');
+
+    // Steuer, Zahlung etc.
+    if (params.has('umsatzsteuer'))  document.getElementById('umsatzsteuerInput').value  = params.get('umsatzsteuer') || '19';
+    if (params.has('zahlungsziel'))  document.getElementById('zahlungszielInput').value  = params.get('zahlungsziel') || '30';
+    if (params.has('skonto'))        document.getElementById('skontoInput').value        = params.get('skonto')     || '2';
+    if (params.has('skontofrist'))   document.getElementById('skontofristInput').value   = params.get('skontofrist')|| '20';
+
+    // Lieferzeit, Vorlage, etc.
+    if (params.has('lieferzeit')) document.getElementById('angebotLieferzeitInput').value = params.get('lieferzeit');
+    if (params.has('vorlage'))    document.getElementById('svgDropdown').value = params.get('vorlage');
+
+    // Datum (falls du es splitten willst: 18.03.2025 → Tag/Monat/Jahr)
+    if (params.has('datum')) {
+        const [tag, monat, jahr] = params.get('datum').split(/[.-]/);
+        if (tag)  document.getElementById('tag').value   = tag.padStart(2, '0');
+        if (monat) document.getElementById('monat').value = monat.padStart(2, '0');
+        if (jahr)  document.getElementById('jahr').value  = jahr;
+    }
+
+    // Farbe (z. B. #7db9f5)
+    if (params.has('farbe')) document.getElementById('colorPicker').value = params.get('farbe');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const params = new URLSearchParams(window.location.search);
+    
+    // Belegart / Tab auslesen – mehrere gängige Namen abfangen
+    let gewuenschterTab = null;
+    
+    if (params.has('beleg')) {
+        gewuenschterTab = params.get('beleg').toLowerCase().trim();
+    } else if (params.has('tab')) {
+        gewuenschterTab = params.get('tab').toLowerCase().trim();
+    } else if (params.has('type')) {
+        gewuenschterTab = params.get('type').toLowerCase().trim();
+    }
+
+    // Mapping: URL-Name → ID des Tabs (muss mit deinem HTML übereinstimmen)
+    const tabMapping = {
+        'rechnung':               'rechnung',
+        'angebot':                'rechnung',     // gleicher Tab
+        'gutschrift':             'rechnung',
+        'rechnung/angebot/gutschrift': 'rechnung',
+        'kontoauszug':            'kontoauszug',
+        'quittung':               'quittung',
+        'kassenbon':              'kassenbon',
+        'kassenbuch':             'kassenbon',    // Synonym
+        'email':                  'email',
+        'mail':                   'email',
+        'zeitungsartikel':        'newspaper',
+        'zeitung':                'newspaper',
+        'artikel':                'newspaper',
+        'lohnabrechnung':         'lohnabrechnung',
+        'gehaltsabrechnung':      'lohnabrechnung',
+        'lohnjournal':            'lohnjournal',
+        'bescheid':               'bescheid',
+        'anlagenkarte':           'anlagenkarte',
+        'wertpapiere':            'wertpapiere',
+        'modellunternehmen':      'modellunternehmen'
+    };
+
+    const tabId = tabMapping[gewuenschterTab] || null;
+
+    if (tabId) {
+        // Den gewünschten Tab öffnen
+        const tabButton = document.querySelector(`.tablinks[onclick*="openCity(event, '${tabId}')"]`);
+        if (tabButton) {
+            // Simuliere Klick auf den Button
+            tabButton.click();
+        } else {
+            // Fallback: direkt per JS öffnen (wenn du openCity nicht ändern willst)
+            openCity({ currentTarget: tabButton }, tabId);
+        }
+    } else {
+        // Standard: dein defaultOpen (Modellunternehmen?)
+        document.getElementById('defaultOpen')?.click();
+    }
+
+    // Hier kannst du dann noch die anderen Parameter auslesen (wie vorher besprochen)
+    // z. B. artikel1, menge1, vorlage, farbe, datum usw.
+});
 
 // ============================================================================
 // HILFSFUNKTIONEN - Formatierung und Berechnungen

@@ -367,6 +367,68 @@ function erstelleZufallssatz() {
 
 }
 
+// ============================================================================
+// NEUE HILFSFUNKTIONEN FÜR BELEG-BUTTONS
+// ============================================================================
+
+function parseNumericValue(value) {
+    if (!value) return '0';
+    return value.toString().replace(/[€\s]/g, '').replace(/\./g, '').replace(',', '.');
+}
+
+function extractZahlungsart(kontoCode) {
+    const zahlungsarten = {
+        '2880 KA': 'bar',
+        '2800 BK': 'Banküberweisung',
+        '4400 VE': 'Rechnung'
+    };
+    return zahlungsarten[kontoCode] || 'Rechnung';
+}
+
+function extractWerkstoffName(kontoCode) {
+    const werkstoffe = {
+        '6000 AWR': 'Rohstoffe',
+        '6010 AWF': 'Fremdbauteile',
+        '6020 AWH': 'Hilfsstoffe',
+        '6030 AWB': 'Betriebsstoffe'
+    };
+    return werkstoffe[kontoCode] || 'Werkstoffe';
+}
+
+function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten) {
+    const params = new URLSearchParams();
+    params.set('beleg', 'rechnung');
+    
+    if (geschaeftsfallDaten.listeneinkaufspreis) {
+        params.set('einzelpreis1', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
+    }
+    if (geschaeftsfallDaten.rabattSatz) {
+        params.set('rabatt', geschaeftsfallDaten.rabattSatz);
+    }
+    if (geschaeftsfallDaten.bezugskostenWert) {
+        params.set('bezugskosten', parseNumericValue(geschaeftsfallDaten.bezugskostenWert));
+    }
+    if (geschaeftsfallDaten.skontoSatz) {
+        params.set('skonto', geschaeftsfallDaten.skontoSatz);
+    }
+    if (geschaeftsfallDaten.werkstoff) {
+        params.set('artikel1', geschaeftsfallDaten.werkstoff);
+    }
+    
+    // Standard-Werte
+    params.set('menge1', '1');
+    params.set('einheit1', 'Stück');
+    params.set('umsatzsteuer', '19');
+    params.set('tag', new Date().getDate().toString());
+    params.set('monat', (new Date().getMonth() + 1).toString());
+    
+    return `belege.html?${params.toString()}`;
+}
+
+function erstelleGeschaeftsfallButton(nummer, daten) {
+    const url = erzeugeURLFuerGeschaeftsfall(daten);
+    return `<button class="geschaeftsfall-beleg-button" onclick="window.open('${url}', '_blank')" title="Beleg für Geschäftsfall ${nummer} erstellen">📄 Beleg erstellen</button>`;
+}
 
 function zeigeZufaelligenSatz(i) {
 
@@ -387,11 +449,25 @@ function zeigeZufaelligenSatz(i) {
 
        // Generierte Sätze hinzufügen
 
-    satzOutput += `<li>`;
-    if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
-      satzOutput += `<div>${formattedAngebot}</div>`;
-    } else {
-      satzOutput += `<div>${formattedSatz}</div></li>`;
+ satzOutput += `<li>`;
+if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
+    satzOutput += `<div>${formattedAngebot}</div>`;
+} else {
+    satzOutput += `<div>${formattedSatz}</div>`;  // ← Ohne </li>!
+    
+    // ============ NEU: BUTTON HINZUFÜGEN ============
+    const geschaeftsfallDaten = {
+        listeneinkaufspreis: listeneinkaufspreis,
+        rabattSatz: antwort_rabattSatz,
+        bezugskostenWert: antwort_bezugskostenWert,
+        skontoSatz: antwort_skontoSatz,
+        werkstoff: extractWerkstoffName(konto_1)
+    };
+    
+    satzOutput += `<div style="margin: 10px 0;">`;
+    satzOutput += erstelleGeschaeftsfallButton(i, geschaeftsfallDaten);
+    satzOutput += `</div>`;
+    satzOutput += `</li>`;  // ← Jetzt erst </li>
       if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && buchungsoptionDropdown.value === 'buchungssatz') {
       satzOutput += `<li><div>${formattedRuecksendung}  ${currentI} zurück und erhalten dafür eine Gutschrift.</div></li>`;
       }
