@@ -234,13 +234,119 @@ function extractBelegData(svgDoc, belegType) {
 }
 
 /**
+ * Finde Unternehmen im YAML anhand von Name, Adresse oder anderen Merkmalen
+ */
+function findCompanyInYaml(searchText) {
+    if (!searchText || !yamlData || yamlData.length === 0) {
+        return null;
+    }
+    
+    // Bereinige Suchtext (entferne Zeilenumbrüche und extra Leerzeichen)
+    searchText = searchText.replace(/\n/g, ' ').replace(/\s+/g, ' ').toLowerCase().trim();
+    
+    // Extrahiere wichtige Tokens aus dem Suchtext
+    const searchTokens = searchText.split(' ').filter(token => token.length > 2);
+    
+    let bestMatch = null;
+    let bestScore = 0;
+    
+    // Durchsuche alle Unternehmen
+    for (const company of yamlData) {
+        const u = company.unternehmen;
+        if (!u) continue;
+        
+        let score = 0;
+        
+        // Sammle alle vergleichbaren Felder
+        const compareFields = [
+            u.name,
+            u.rechtsform,
+            `${u.name} ${u.rechtsform}`,
+            u.adresse?.strasse,
+            u.adresse?.ort,
+            u.adresse?.plz,
+            `${u.adresse?.plz} ${u.adresse?.ort}`,
+            u.inhaber
+        ];
+        
+        // Erstelle kombinierten String aus allen Feldern
+        const companyText = compareFields
+            .filter(f => f)
+            .join(' ')
+            .toLowerCase()
+            .replace(/\s+/g, ' ');
+        
+        // Score 1: Exakter Name-Match
+        if (u.name && searchText.includes(u.name.toLowerCase())) {
+            score += 10;
+        }
+        
+        // Score 2: Rechtsform-Match
+        if (u.rechtsform && searchText.includes(u.rechtsform.toLowerCase())) {
+            score += 5;
+        }
+        
+        // Score 3: Token-Matching
+        for (const token of searchTokens) {
+            if (companyText.includes(token)) {
+                score += 1;
+            }
+        }
+        
+        // Score 4: Adresse-Match
+        if (u.adresse?.strasse && searchText.includes(u.adresse.strasse.toLowerCase())) {
+            score += 8;
+        }
+        
+        if (u.adresse?.ort && searchText.includes(u.adresse.ort.toLowerCase())) {
+            score += 6;
+        }
+        
+        // Score 5: PLZ-Match
+        if (u.adresse?.plz && searchText.includes(String(u.adresse.plz))) {
+            score += 4;
+        }
+        
+        // Prüfe ob dieser Match besser ist
+        if (score > bestScore && score >= 5) { // Mindestens Score 5 erforderlich
+            bestScore = score;
+            bestMatch = u.name;
+        }
+    }
+    
+    if (bestMatch) {
+        console.log(`✓ Unternehmen gefunden: ${bestMatch} (Score: ${bestScore})`);
+        return bestMatch;
+    }
+    
+    console.warn(`⚠ Kein Unternehmen gefunden für: "${searchText.substring(0, 50)}..."`);
+    return null;
+}
+
+/**
  * Bereinige extrahierte Werte für Formular-Eingabe
  */
-function cleanValueForInput(value, fieldType) {
+function cleanValueForInput(value, fieldType, elementId) {
     if (!value || value === '') return value;
     
     // String zu String konvertieren
     value = String(value).trim();
+    
+    // Für Dropdown-Felder (Unternehmensauswahl): Suche im YAML
+    if (fieldType === 'select' && (
+        elementId.includes('daten') || 
+        elementId.includes('Lieferer') || 
+        elementId.includes('Kunde') ||
+        elementId.includes('kontoinhaber') ||
+        elementId.includes('empfaenger')
+    )) {
+        const foundCompany = findCompanyInYaml(value);
+        if (foundCompany) {
+            return foundCompany;
+        }
+        // Falls nicht gefunden, gebe Original zurück
+        return value;
+    }
     
     // Für Zahlenfelder: Entferne Formatierung
     if (fieldType === 'input' || fieldType === 'number') {
@@ -309,8 +415,8 @@ async function fillFormWithExtractedData(belegType, extractedData) {
         
         for (const key of possibleKeys) {
             if (extractedData[key] !== undefined && extractedData[key] !== '') {
-                // Bereinige Wert vor dem Setzen
-                let cleanedValue = cleanValueForInput(extractedData[key], paramConfig.type);
+                // Bereinige Wert vor dem Setzen (mit elementId für YAML-Suche)
+                let cleanedValue = cleanValueForInput(extractedData[key], paramConfig.type, paramConfig.elementId);
                 
                 const success = setFieldValue(paramConfig.elementId, cleanedValue, paramConfig.type);
                 if (success) {
@@ -327,8 +433,8 @@ async function fillFormWithExtractedData(belegType, extractedData) {
             for (const [dataKey, dataValue] of Object.entries(extractedData)) {
                 if (dataKey.toLowerCase().includes(paramName.toLowerCase()) ||
                     paramName.toLowerCase().includes(dataKey.toLowerCase())) {
-                    // Bereinige Wert vor dem Setzen
-                    let cleanedValue = cleanValueForInput(dataValue, paramConfig.type);
+                    // Bereinige Wert vor dem Setzen (mit elementId für YAML-Suche)
+                    let cleanedValue = cleanValueForInput(dataValue, paramConfig.type, paramConfig.elementId);
                     
                     const success = setFieldValue(paramConfig.elementId, cleanedValue, paramConfig.type);
                     if (success) {
