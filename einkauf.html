@@ -19,10 +19,13 @@
     <h2>Einkauf</h2>
     <br>
 
+
+ 
+
+
     <div id="generator-container">
       <div class="box">
-        <p>Sie können hier zufällige Geschäftsfälle generieren. Passen Sie ggf. Beträge und Bezeichnungen an Ihr
-          Modellunternehmen an. </p>
+        <p>Sie können hier zufällige Geschäftsfälle generieren, Buchungssätze ausleiten und passende Belege erstellen.. </p>
           <label for="buchungsoptionDropdown">Geschäftsfall:</label>
           <select id="buchungsoptionDropdown">
             <option value="buchungssatz">Aufwand buchen</option>
@@ -48,9 +51,40 @@
           <option value="9">9</option>
           <option value="10">10</option>
         </select><br>
+        <h3>Unternehmen auswählen</h3>
+<div class="flex-row">
+    <div>
+        <label for="einkaufKaeufer">Empfänger:</label>
+        <select id="einkaufKaeufer">
+            <!-- Wird automatisch befüllt -->
+        </select>
+    </div>
+    <div>
+        <label for="einkaufLieferer">Lieferer:</label>
+        <select id="einkaufLieferer">
+            <!-- Wird automatisch befüllt -->
+        </select>
+    </div>
+</div>
+<br>
+<small><a href="belege.html#modellunternehmen" target="_blank">Eigenes Modellunternehmen verwenden?</a></small>
+<br><br>
         <button onclick="zeigeZufaelligenSatz()">Aufgaben erstellen</button>
-      </div>
-      <div id="einkaufContainer" style="min-width: 580px" contenteditable="true"></div>
+    
+
+
+ <div class="output-wrapper" style="display: flex; gap: 20px;">
+    <!-- Exportierbarer Inhalt -->
+    <div id="einkaufContainer" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+
+    <!-- Buttons daneben – nicht exportiert -->
+    <div id="button-column" style="width: 180px; flex-shrink: 0;">
+      <!-- Hier kommen später die Buttons rein -->
+    </div>
+  </div>
+</div>
+
+
       <div class="exportButtons">
         <button class="icon" type="button" onclick="einkaufHerunterladenAlsPNG()"><svg
             xmlns="http://www.w3.org/2000/svg" height="16" width="16"
@@ -80,6 +114,8 @@
     </div>
   </main>
   <script src="js/einkauf.js"></script>
+
+
   <div w3-include-html="footer.html"></div> 
   <script>
   includeHTML();

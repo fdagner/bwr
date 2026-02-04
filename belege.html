@@ -15,6 +15,24 @@
 </head>
 
 <body>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // URL-Parameter auslesen
+    const params = new URLSearchParams(window.location.search);
+    
+    // Parameter in Felder eintragen
+    for (const [key, value] of params) {
+        const field = document.getElementById(key + 'Input');
+        if (field) {
+            field.value = decodeURIComponent(value);
+        }
+    }
+    
+    // Automatisch Beleg generieren
+    if (typeof applyOrderData === 'function') {
+        setTimeout(() => applyOrderData(), 500);
+    }
+});</script>
     <main>
         <div w3-include-html="navigation.html"></div>
         <h2>Belege</h2>
@@ -78,6 +96,18 @@
                 // Rufen Sie die Funktion zum Laden der Daten aus dem Local Storage auf
                 loadUploadedDataFromLocalStorage();
             </script>
+
+            <h3>Belege importieren</h3>
+<p>
+    <label for="belegImportInput">SVG-Beleg importieren:</label>
+    <input type="file" id="belegImportInput" accept=".svg" onchange="handleBelegImport()">
+</p>
+<p>
+    <strong>Status:</strong> 
+    <span id="belegImportStatus" style="font-style: italic; background-color: #f5f5f5; padding: 4px 8px;">
+        Keine Datei ausgewählt
+    </span>
+</p>
             <h3>Belege exportieren</h3>
             <details>
                 <summary>Anleitung</summary><video style="width:100%" controls>
@@ -909,6 +939,12 @@
             <option>2,5</option>
             <option>3,0</option>
         </select></div>
+    </div><div class="flex-row">
+        <div class="flex-column">
+            <label for="lohnabrechnungLohnsteuerInput">Lohnsteuer (€):</label>
+            <input type="number" id="lohnabrechnungLohnsteuerInput" value="0" min="0" max="99999" step="0.01">
+            <small>Wird automatisch berechnet, kann manuell angepasst werden</small>
+        </div>
     </div>
     <div class="flex-row">
    <div class="flex-column">
@@ -1471,6 +1507,8 @@
         includeHTML();
     </script>
     <script src="js/belege.js"></script>
+        <script src="js/beleg_url_parameter.js"></script>
+        <script src="js/beleg_import.js"></script>
 
     <script>
         // Get the element with id="defaultOpen" and click on it
