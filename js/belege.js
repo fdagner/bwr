@@ -996,7 +996,7 @@ handleYearScript({
     // Setze die Zwischensumme in das SVG-Textelement
  SafeDOM.setText('zwischensumme', FormatHelper.currency(zwischensumme));
 SafeDOM.setText('bezugskostenSumme', FormatHelper.currency(bezugskostenInput));
-SafeDOM.setText('bezugskosten', FormatHelper.currency(bezugskostenArtInput));
+SafeDOM.setText('bezugskosten', bezugskostenArtInput);
 
 // Rabatt-Bereich
 if (rabattInput > 0) {

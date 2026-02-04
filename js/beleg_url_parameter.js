@@ -49,8 +49,8 @@ const URL_PARAM_CONFIG = {
         farbe: { elementId: 'colorPicker', type: 'input' },
         
         // Unternehmen
-        lieferer: { elementId: 'datenLieferer', type: 'select' },
-        kunde: { elementId: 'datenKunde', type: 'select' }
+  lieferer: { elementId: 'datenLieferer', type: 'select' },
+        kunde: { elementId: 'datenKunde', type: 'select' },
     },
     
     // ========== KONTOAUSZUG ==========
@@ -368,9 +368,17 @@ function loadURLParametersForBeleg(belegType, params) {
     // Durchlaufe alle Parameter für diesen Beleg
     for (const [paramName, paramConfig] of Object.entries(config)) {
         if (params.has(paramName)) {
-            const value = params.get(paramName);
+            let value = params.get(paramName);
+            
+            // WICHTIG: Für Unternehmen-Dropdowns - nutze cleanValueForInput!
+            // (Genau wie beim Beleg-Import)
+            if (typeof cleanValueForInput === 'function') {
+                value = cleanValueForInput(value, paramConfig.type, paramConfig.elementId);
+            }
+            
             if (setFieldValue(paramConfig.elementId, value, paramConfig.type)) {
                 setCount++;
+                console.log(`  ✓ ${paramName} = ${value}`);
             }
         } else if (paramConfig.default) {
             // Setze Standardwert, falls kein Parameter übergeben wurde
@@ -378,7 +386,7 @@ function loadURLParametersForBeleg(belegType, params) {
         }
     }
     
-    console.log(`${setCount} Parameter für ${belegType} gesetzt`);
+    console.log(`✓ ${setCount} Parameter für ${belegType} gesetzt`);
     return setCount > 0;
 }
 
