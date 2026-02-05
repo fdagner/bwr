@@ -183,7 +183,7 @@ function verkaufErstelleZufallssatz() {
   let verkaufRandom_Skonto = (verkaufRandomSk < 0.5) ? 2 : 3;
   verkaufRandom_Bezugskosten = formatCurrency(verkaufRandom_Bezugskosten);
   // Arrays mit verschiedenen Teilen des Satzes
-  const verkaufArray_Subjekt = [`${lieferer} verkauft `, `${lieferer} liefert `, `Firma ${lieferer} verkauft `, `${lieferer} veräußert `, `${lieferer} haben verkauft: `];
+  const verkaufArray_Subjekt = [`${lieferer} verkauft `, `${lieferer} liefert `, `Firma ${lieferer} verkauft `, `${lieferer} veräußert `, `${lieferer} hat verkauft: `];
   const verkaufArray_Subjekt_2 = [`Verkauf `];
   const verkaufArray_Subjekt_3 = [`Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: `, `${lieferer} erhält eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis berechnen, wenn wir mit den folgenden Werten kalkulieren: `];
   const verkaufArray_Subjekt_4 = [`${lieferer} erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei`, `${lieferer} erhält eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis bei `];
