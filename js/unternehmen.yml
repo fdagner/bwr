@@ -436,7 +436,7 @@
       land: "Deutschland"
     kontakt:
       telefon: "089 7654321"
-      email: "info@bayerisches-saegewerk.de"
+      email: "info@bay-saegewerk.de"
       internet: "saegewerk-bayern.de"
     ust_id: "DE876543210"
     steuernummer: "765/022/22222"
@@ -700,8 +700,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "0921 7654323"
-      email: "info@bayreuth-grosshandel.de"
-      internet: "bayreuth-grosshandel.de"
+      email: "info@bayreuth-handel.de"
+      internet: "bayreuth-handel.de"
     ust_id: "DE876543210"
     steuernummer: "765/035/35353"
     iban: "DE89370400440532013032"
@@ -1637,7 +1637,7 @@
 - unternehmen:
     id: "69"
     branche: "Schule"
-    name: "Privates Gymnasium Lichtenfels"
+    name: "Gymnasium Lichtenfels"
     motto: " "
     bank: "Lichtenfelser Stadtbank"
     rechtsform: " "
@@ -1661,7 +1661,7 @@
 - unternehmen:
     id: "70"
     branche: "Schule"
-    name: "Montessori Gemeinschaftsschule Sonnenblick"
+    name: "Montessorischule"
     motto: "Lernen in Freiheit"
     bank: "Sonnenberger Volksbank"
     rechtsform: "gGmbH"
@@ -1673,8 +1673,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "+49 8845 22290"
-      email: "info@montessori-sonnenblick.de"
-      internet: "montessori-sonnenblick.de"
+      email: "info@montessori-sde"
+      internet: "montessori-s.de"
     ust_id: "DE998123765"
     steuernummer: "189/33045/1120"
     iban: "DE12500105170689432014"
@@ -1697,7 +1697,7 @@
       land: "Deutschland"
     kontakt:
       telefon: "+49 4123 88990"
-      email: "kontakt@waldorf-nordhain.de"
+      email: "kontakt@waldorf-nord.de"
       internet: "waldorf-nordhain.de"
     ust_id: "DE713459821"
     steuernummer: "204/56781/9903"
@@ -1709,7 +1709,7 @@
 - unternehmen:
     id: "72"
     branche: "Schule"
-    name: "Technisches Berufskolleg Westfalen"
+    name: "Technisches Berufskolleg"
     motto: "Zukunft gestalten"
     bank: "Westfalenbank"
     rechtsform: " "
