@@ -8,7 +8,7 @@
   <meta name="keywords" content="BwR, Realschule, Schema, Lehrkraft, Prüfung, Belege, Schemata, Rechnungswesen, Buchführung">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/menu.js"></script>
-  <title>BwR-Helfer</title>
+  <title>BwR</title>
 </head>
 
 <body>
@@ -16,9 +16,8 @@
     <div w3-include-html="navigation.html"></div> 
     <p style="text-align: justify;">
       <br>
-      <b>Erstellen Sie für den BwR-Unterricht mit wenigen Handgriffen Belege, T-Konten, Schemata und Geschäftsfälle,
-        die
-        Sie jederzeit weiterverarbeiten können:</b>
+      <b>Erstellen Sie für den BwR-Unterricht mit wenigen Handgriffen Belege, Geschäftsfälle, Aufgaben, Diagramme, T-Konten und Schemata,
+        die Sie jederzeit weiterverarbeiten können. Die Exportformate sind speziell für die Verwendung auf der ByCS Lernplattform optimiert.</p>
     </p>
     <!-- Slideshow container -->
     <div class="slideshow-container">
@@ -56,8 +55,6 @@
 
     <section>
       <h2>Exportformate</h2>
-      <p><b>Exportieren Sie nach PNG, Office, SVG, HTML und speziell für die Verwendung auf der ByCS
-          Lernplattform:</b></p>
       <ul>
         <li><strong>PNG:</strong> Optimal für schnelle Verarbeitung in Office-Anwendungen und im Internet.</li>
         <li><strong>Office:</strong> Kopie in der Zwischenablage zur Weiterverarbeitung in einer Textverarbeitung oder
@@ -77,32 +74,49 @@
     </section>
 
 
+<script>
+let slideIndex = 1;
+let autoTimer;                  // für das automatische Intervall
 
-      <script>
+showSlides(slideIndex);
 
-        let slideIndex = 1;
-        showSlides(slideIndex);
+// Manuelle Weiter-/Zurück-Navigation
+function plusSlides(n) {
+    clearTimeout(autoTimer);    // Automatik stoppen
+    showSlides(slideIndex += n);
+    startAuto();                // danach wieder automatisch starten
+}
 
-        function plusSlides(n) {
-          showSlides(slideIndex += n);
-        }
+// Direkt zu einer bestimmten Folie springen (falls du Dots/Punkte hast – sonst ignorierbar)
+function currentSlide(n) {
+    clearTimeout(autoTimer);
+    showSlides(slideIndex = n);
+    startAuto();
+}
 
-        function currentSlide(n) {
-          showSlides(slideIndex = n);
-        }
+function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    
+    if (n > slides.length)  { slideIndex = 1; }
+    if (n < 1)              { slideIndex = slides.length; }
+    
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    
+    slides[slideIndex - 1].style.display = "block";
+}
 
-        function showSlides(n) {
-          let i;
-          let slides = document.getElementsByClassName("mySlides");
-          if (n > slides.length) { slideIndex = 1 }
-          if (n < 1) { slideIndex = slides.length }
-          for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-          }
-          slides[slideIndex - 1].style.display = "block";
-        }
+// Automatik starten / neu starten
+function startAuto() {
+    autoTimer = setTimeout(() => {
+        plusSlides(1);          // nächste Folie
+    }, 2000);                   // 3000 ms = 3 Sekunden
+}
 
-      </script>
+startAuto();                    // beim Laden sofort starten
+</script>
 
   </main>
   <div w3-include-html="footer.html"></div> 
