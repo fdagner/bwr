@@ -1,3 +1,66 @@
+// Globale Variable – wird von einkauf.js benötigt
+  let yamlData = [];
+  let lieferer = '<i>[Modellunternehmen]</i>';
+
+  // Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
+  function loadYamlFromLocalStorage() {
+    const saved = localStorage.getItem('uploadedYamlCompanyData');
+    if (saved) {
+      try {
+        yamlData = JSON.parse(saved);
+        console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
+        document.dispatchEvent(new Event('yamlDataLoaded'));
+        return true;
+      } catch (err) {
+        console.warn("localStorage YAML kaputt:", err);
+      }
+    }
+    return false;
+  }
+
+  // Versuch 2: Standard-Datei laden
+  function loadDefaultYaml() {
+    fetch('js/unternehmen.yml')
+      .then(res => {
+        if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
+        return res.text();
+      })
+      .then(yamlText => {
+        yamlData = jsyaml.load(yamlText) || [];
+        console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
+        document.dispatchEvent(new Event('yamlDataLoaded'));
+      })
+      .catch(err => {
+        console.error("Konnte unternehmen.yml nicht laden:", err);
+        // Optional: leere Liste oder Fehlermeldung im UI
+      });
+  }
+
+  // Start: zuerst localStorage, sonst Standard
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const liefererSelect = document.getElementById('einkaufLieferer');
+
+    // Initialwert setzen
+    if (liefererSelect && liefererSelect.value) {
+        lieferer = liefererSelect.value.trim();
+    }
+
+    // Bei jeder Änderung aktualisieren
+    liefererSelect.addEventListener('change', () => {
+        lieferer = liefererSelect.value.trim() || '';  // leer wenn nichts ausgewählt
+        console.log('lieferer geändert:', lieferer);
+    });
+
+    if (!loadYamlFromLocalStorage()) {
+      loadDefaultYaml();
+    }
+  });
+
+
+
+
+
 const verkaufAnzahlDropdown = document.getElementById('verkaufAnzahlDropdown');
 const verkaufMitRabatt = document.getElementById('verkaufMitRabatt');
 const verkaufMitBezugskosten = document.getElementById('verkaufMitBezugskosten');
@@ -21,6 +84,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initialisiere den Zustand der "mitBezugskosten"-Checkbox beim Laden der Seite
   verkaufUpdateMitBezugskostenState();
+  if (yamlData && yamlData.length > 0) {
+        fillCompanyDropdowns();
+    } else {
+        // Falls yamlData noch nicht geladen → auf Event warten oder fetch auslösen
+        document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
+    }
+
 });
 
 // Auf 2 Dezimalstellen runden
@@ -95,9 +165,6 @@ function inputSellChangeCategory() {
     }
   } else {
     verkaufKontenZahlung = {
-      "in bar": "2880 KA",
-      "per Barzahlung": "2880 KA",
-      "per Banküberweisung": "2800 BK",
       "gegen Rechnung": "2400 FO",
       "mit Versenden einer Ausgangsrechnung": "2400 FO",
       "auf Rechnung": "2400 FO",
@@ -116,15 +183,15 @@ function verkaufErstelleZufallssatz() {
   let verkaufRandom_Skonto = (verkaufRandomSk < 0.5) ? 2 : 3;
   verkaufRandom_Bezugskosten = formatCurrency(verkaufRandom_Bezugskosten);
   // Arrays mit verschiedenen Teilen des Satzes
-  const verkaufArray_Subjekt = ['Wir verkaufen ', 'Wir liefern ', 'Unsere Firma verkauft ', 'Wir veräußern ', 'Wir haben verkauft: '];
-  const verkaufArray_Subjekt_2 = ['Verkauf '];
-  const verkaufArray_Subjekt_3 = ['Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: ', 'Wir erhalten eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis berechnen, wenn wir mit den folgenden Werten kalkulieren: '];
-  const verkaufArray_Subjekt_4 = ['Uns erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei', 'Wir erhalten eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis bei '];
-  const verkaufArray_Subjekt_5 = [`Unser Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
-  const verkaufArray_Subjekt_6 = [`Ein Kunde verhandelt mit uns über den Kauf von Fertigerzeugnissen`, 'Wir erhalten von einem Kunden eine Anfrage für Fertigerzeugnisse', 'Ein Kunde sendet uns per E-Mail eine Anfrage für den Bezug von Fertigerzeugnissen', 'Ein Stammkunde möchte bei uns Fertigerzeugnisse kaufen und sendet eine Anfrage'];
+  const verkaufArray_Subjekt = [`${lieferer} verkauft `, `${lieferer} liefert `, `Firma ${lieferer} verkauft `, `${lieferer} veräußert `, `${lieferer} haben verkauft: `];
+  const verkaufArray_Subjekt_2 = [`Verkauf `];
+  const verkaufArray_Subjekt_3 = [`Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: `, `${lieferer} erhält eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis berechnen, wenn wir mit den folgenden Werten kalkulieren: `];
+  const verkaufArray_Subjekt_4 = [`${lieferer} erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei`, `${lieferer} erhält eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis bei `];
+  const verkaufArray_Subjekt_5 = [`Ein Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
+  const verkaufArray_Subjekt_6 = [`Ein Kunde verhandelt mit ${lieferer} über den Kauf von Fertigerzeugnissen`, `${lieferer} erhalten von einem Kunden eine Anfrage für Fertigerzeugnisse`, `Ein Kunde sendet ${lieferer} per E-Mail eine Anfrage für den Bezug von Fertigerzeugnissen`, `Ein Stammkunde möchte bei ${lieferer} Fertigerzeugnisse kaufen und sendet eine Anfrage`];
   const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
   const verkaufArray_Fertigerzeugnisse_2 = Object.keys(kontenUmsatzerloese_2);
-  const verkaufArray_Supply_Wert = ['mit einem Verkaufspreis in Höhe von', 'im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
+  const verkaufArray_Supply_Wert = ['mit einem Verkaufspreis in Höhe von', 'im Wert von', 'mit', 'in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
   const verkaufArray_Zahlung = Object.keys(verkaufKontenZahlung);
   const verkaufArray_Supply_Rabatt = [`, ${verkaufRandom_Rabatt} % Rabatt`];
   const verkaufArray_Supply_Rabatt_2 = [
@@ -366,10 +433,24 @@ function verkaufErstelleZufallssatz() {
 function verkaufZeigeZufaelligenSatz() {
 
   const verkaufAnzahl = parseInt(verkaufAnzahlDropdown.value);
+  const container = document.getElementById('verkaufContainer');
+  const buttonColumn = document.getElementById('verkauf-button-column'); // ← muss im HTML existieren!
+
+  if (!container || !buttonColumn) {
+    console.error("Container oder Button-Column nicht gefunden");
+    return;
+  }
+
+  // Inhalte zurücksetzen
+  container.innerHTML = '';
+  buttonColumn.innerHTML = '';
+
 
   let verkaufSatzOutput = '<h2>Aufgaben</h2>';
   verkaufSatzOutput += '<ol>';
   let verkaufAntwortOutput = `<h2>Lösung</h2>`;
+
+  
 
   for (let i = 1; i <= verkaufAnzahl; i++) {
     const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_Gewinn_berechnet, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz] = verkaufErstelleZufallssatz();
@@ -397,6 +478,43 @@ function verkaufZeigeZufaelligenSatz() {
     }
 
     verkaufSatzOutput += `</li>`;
+
+    // ── Beleg-Buttons erzeugen ────────────────────────────────────────────────
+const buttonColumn = document.getElementById('verkauf-button-column'); // ← Muss im HTML existieren!
+
+if (!buttonColumn) {
+    console.warn("verkauf-button-column nicht gefunden → Buttons werden nicht angezeigt");
+} else {
+    const geschaeftsfallDaten = {
+        listenverkaufspreis: verkaufListenverkaufspreis,
+        rabattSatz:          verkaufAntwort_rabattSatz,
+        bezugskostenWert:    verkaufAntwort_bezugskostenWert,   // meist Versandkosten
+        skontoSatz:          verkaufAntwort_skontoSatz,
+        produktName:         verkaufExtractProduktName(verkaufKonto_1)
+    };
+
+    const buttonDiv = document.createElement('div');
+    buttonDiv.style.margin = '12px 0';
+
+    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation') {
+        // Angebot + Rechnung bei Kalkulation
+        buttonDiv.innerHTML = `
+            ${verkaufErstelleAngebotButton(i, geschaeftsfallDaten)}
+            <div style="margin-top:8px;"></div>
+            ${verkaufErstelleRechnungButton(i, geschaeftsfallDaten)}
+        `;
+    } else {
+        // Alle anderen Fälle → (vorerst) nur Rechnung
+        buttonDiv.innerHTML = erstelleGeschaeftsfallButton(i, geschaeftsfallDaten);
+    }
+
+    // Neuen Container pro Aufgabe erzeugen (oder einfach anhängen)
+    const colItem = document.createElement('div');
+    colItem.style.marginBottom = '20px';
+    colItem.appendChild(buttonDiv);
+
+    buttonColumn.appendChild(colItem);
+}
 
     // Generierte Antworten hinzufügen
     verkaufAntwortOutput += `${parseInt(i)}.<br><br>`;
@@ -545,6 +663,188 @@ function verkaufZeigeZufaelligenSatz() {
 
   // Sätze und Antworten auf der Seite anzeigen
   document.getElementById('verkaufContainer').innerHTML = verkaufSatzOutput + verkaufAntwortOutput;
+}
+
+// ============================================================================
+// Dropdowns mit YAML-Unternehmen befüllen
+// ============================================================================
+function fillCompanyDropdowns() {
+    if (!yamlData || yamlData.length === 0) {
+        console.warn("yamlData ist leer → keine Unternehmen zum Befüllen");
+        return;
+    }
+
+    // Sortierung: erst nach Branche, dann nach Name
+    const sortedCompanies = [...yamlData].sort((a, b) => {
+        const brancheA = a.unternehmen?.branche || '';
+        const brancheB = b.unternehmen?.branche || '';
+        if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
+        return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+    });
+
+    const kaueferSelect  = document.getElementById('einkaufKaeufer');
+    const liefererSelect = document.getElementById('einkaufLieferer');
+
+    // Leeren + Option "Bitte auswählen" hinzufügen
+    const clearAndAddPlaceholder = (select) => {
+        if (!select) return;
+        select.innerHTML = '';
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.text = '— bitte Unternehmen auswählen —';
+        opt.disabled = true;
+        opt.selected = true;
+        select.appendChild(opt);
+    };
+
+    clearAndAddPlaceholder(kaueferSelect);
+    clearAndAddPlaceholder(liefererSelect);
+
+    // Alle Unternehmen einfügen
+    sortedCompanies.forEach(company => {
+        const u = company.unternehmen;
+        if (!u?.name) return;
+
+        const displayText = u.branche 
+            ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
+            : `${u.name} ${u.rechtsform || ''}`.trim();
+
+        const option = document.createElement('option');
+        option.value = u.name;           // ← wichtig: value = Firmenname
+        option.textContent = displayText;
+
+        // Optional: data-Attribute für spätere Verwendung
+        option.dataset.id       = u.id       || '';
+        option.dataset.rechtsform = u.rechtsform || '';
+        option.dataset.branche  = u.branche  || '';
+
+        // Kopie für beide Dropdowns
+        if (kaueferSelect)  kaueferSelect.appendChild(option.cloneNode(true));
+        if (liefererSelect) liefererSelect.appendChild(option);
+    });
+
+    console.log(`Dropdowns befüllt mit ${sortedCompanies.length} Unternehmen`);
+}
+
+// ============================================================================
+// HILFSFUNKTIONEN FÜR VERKAUFS-BELEG-BUTTONS
+// ============================================================================
+
+function verkaufParseNumericValue(value) {
+    if (!value) return '0';
+    return value.toString()
+        .replace(/[€\s]/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.');
+}
+
+function verkaufExtractZahlungsart(kontoCode) {
+    const map = {
+        '2400 FO': 'Rechnung'
+    };
+    return map[kontoCode] || 'Rechnung';
+}
+
+function verkaufExtractProduktName(kontoCode) {
+    // Hier kannst du später erweitern, wenn du mehrere Erlöskonten hast
+    if (kontoCode.includes('5000')) return 'Fertigerzeugnisse';
+    return 'Erzeugnisse';
+}
+
+function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
+    const params = new URLSearchParams();
+
+    // Basis-Parameter
+    params.set('beleg', 'rechnung');   // oder 'ausgangsrechnung' – je nach deinem belege.html
+
+    // Vorlage je nach Typ
+    let vorlage = null;
+    if (typ === 'angebot') {
+        vorlage = 'angebot2.svg';     //
+    } else if (typ === 'rechnung') {
+        vorlage = 'template1.svg';   // ← anpassen!
+    }
+
+    if (vorlage) {
+        params.set('vorlage', vorlage);
+    }
+
+    // ── Verkaufsspezifische Parameter ───────────────────────────────────────
+    if (geschaeftsfallDaten.listenverkaufspreis) {
+        params.set('einzelpreis1', verkaufParseNumericValue(geschaeftsfallDaten.listenverkaufspreis));
+    }
+    if (geschaeftsfallDaten.rabattSatz) {
+        params.set('rabatt', geschaeftsfallDaten.rabattSatz);
+    }
+    if (geschaeftsfallDaten.bezugskostenWert) {   // meist Versandkosten beim Verkauf
+        params.set('versandkosten', verkaufParseNumericValue(geschaeftsfallDaten.bezugskostenWert));
+    }
+    if (geschaeftsfallDaten.skontoSatz) {
+        params.set('skonto', geschaeftsfallDaten.skontoSatz);
+    }
+    if (geschaeftsfallDaten.produktName) {
+        params.set('artikel1', geschaeftsfallDaten.produktName);
+    }
+
+    // Kunde / Verkäufer (deine Dropdown-IDs anpassen!)
+    const kundeSelect   = document.getElementById('einkaufKaeufer');   
+    const liefererSelect = document.getElementById('einkaufLieferer'); 
+
+    if (kundeSelect?.value)    params.set('kunde',    kundeSelect.value.trim());
+    if (liefererSelect?.value) params.set('lieferer', liefererSelect.value.trim());
+
+    // Standardwerte
+    params.set('menge1',     '1');
+    params.set('einheit1',   'Stück');
+    params.set('umsatzsteuer', '19');
+    params.set('tag',   new Date().getDate().toString());
+    params.set('monat', (new Date().getMonth() + 1).toString());
+
+    return `belege.html?${params.toString()}`;
+}
+
+
+function erstelleGeschaeftsfallButton(nummer, daten) {
+const url = verkaufErzeugeURLFuerBeleg(daten, 'rechnung');
+    
+    let buttonText = `📄 ${nummer}. Ausgangsrechnung erstellen`;
+    let titleText = `Eingangsrechnung für Aufgabe ${nummer} als SVG-Beleg öffnen`;
+       
+    return `
+        <button
+            class="geschaeftsfall-beleg-button"
+            onclick="window.open('${url}', '_blank')"
+            title="${titleText}"
+            style="width: 100%; padding: 10px 12px; font-size: 14px;"
+        >
+            ${buttonText}
+        </button>
+    `;
+}
+
+function verkaufErstelleAngebotButton(nummer, daten) {
+    const url = verkaufErzeugeURLFuerBeleg(daten, 'angebot');
+    
+    return `
+        <button class="geschaeftsfall-beleg-button angebot-button"
+                onclick="window.open('${url}', '_blank')"
+                title="Angebot für Aufgabe ${nummer} erstellen"
+                style="width: 100%; padding: 10px 12px; font-size: 14px;">
+            📄 ${nummer}a. Angebot erstellen
+        </button>
+    `;
+}
+
+function verkaufErstelleRechnungButton(nummer, daten) {
+    const url = verkaufErzeugeURLFuerBeleg(daten, 'rechnung');
+    return `
+        <button class="geschaeftsfall-beleg-button rechnung-button"
+                onclick="window.open('${url}', '_blank')"
+                title="Ausgangsrechnung für Aufgabe ${nummer} erstellen"
+                style="width:100%; padding:10px 12px; font-size:14px;">
+            📄 ${nummer}b. Ausgangsrechnung erstellen
+        </button>
+    `;
 }
 
 // Export

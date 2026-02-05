@@ -47,9 +47,31 @@
         <option value="9">9</option>
         <option value="10">10</option>
       </select><br>
+        <h3>Unternehmen auswählen</h3>
+<div class="flex-row">
+    <div>
+        <label for="einkaufKaeufer">Empfänger:</label>
+        <select id="einkaufKaeufer">
+            <!-- Wird automatisch befüllt -->
+        </select>
+    </div>
+    <div>
+        <label for="einkaufLieferer">Lieferer:</label>
+        <select id="einkaufLieferer">
+            <!-- Wird automatisch befüllt -->
+        </select>
+    </div>
+</div>
       <button onclick="verkaufZeigeZufaelligenSatz()">Aufgaben erstellen</button>
     </div>
-    <div id="verkaufContainer" style="min-width: 580px" contenteditable="true"></div>
+   <div style="display: flex; gap: 30px;">
+    <div id="verkaufContainer" style="flex: 3;">
+        <!-- Hier kommen Aufgaben + Lösungen -->
+    </div>
+    <div id="verkauf-button-column" style="flex: 1; min-width: 240px;">
+        <!-- Hier kommen die Beleg-Buttons -->
+    </div>
+</div>
     <div class="exportButtons">
       <button class="icon" type="button" onclick="verkaufHerunterladenAlsPNG()"><svg
           xmlns="http://www.w3.org/2000/svg" height="16" width="16"
