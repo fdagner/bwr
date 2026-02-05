@@ -195,12 +195,12 @@ function verkaufErstelleZufallssatz() {
   const verkaufArray_Zahlung = Object.keys(verkaufKontenZahlung);
   const verkaufArray_Supply_Rabatt = [`, ${verkaufRandom_Rabatt} % Rabatt`];
   const verkaufArray_Supply_Rabatt_2 = [
-    `. Wir bieten ${verkaufRandom_Rabatt} % Treuerabatt`,
-    `. Wir bieten ${verkaufRandom_Rabatt} % Mengenrabatt`,
+    `. ${lieferer} bietet ${verkaufRandom_Rabatt} % Treuerabatt`,
+    `. ${lieferer} bietet ${verkaufRandom_Rabatt} % Mengenrabatt`,
     `. ${verkaufRandom_Rabatt} % Sonderrabatt werden von uns angeboten`,
     `. ${verkaufRandom_Rabatt} % Rabatt können vom Kunden abgezogen werden`,
-    `. Wir gewähren zudem ${verkaufRandom_Rabatt} % Kundenrabatt`,
-    `. Wir gewähren zudem ${verkaufRandom_Rabatt} % Mengenrabatt`,
+    `. ${lieferer} gewährt zudem ${verkaufRandom_Rabatt} % Kundenrabatt`,
+    `. ${lieferer} gewährt zudem ${verkaufRandom_Rabatt} % Mengenrabatt`,
   ];
   const verkaufArray_Supply_Skonto = [
     `. Der Kunde kann ${verkaufRandom_Skonto} % Skonto abziehen`,
@@ -212,8 +212,8 @@ function verkaufErstelleZufallssatz() {
     ` sowie ${verkaufRandom_Skonto} % Skonto`,
   ];
   const verkaufArray_Supply_Bezugskosten = [
-    `. Zusätzlich belasten wir den Kunden mit Versandkosten von netto ${verkaufRandom_Bezugskosten}`,
-    `. Zusätzlich berechnen wir Verpackungskosten in Höhe von ${verkaufRandom_Bezugskosten} netto`,
+    `. Zusätzlich belastet ${lieferer} den Kunden mit Versandkosten von netto ${verkaufRandom_Bezugskosten}`,
+    `. Zusätzlich berechnet ${lieferer} Verpackungskosten in Höhe von ${verkaufRandom_Bezugskosten} netto`,
     `. Transportversicherung und Rollgeld betragen darüber hinaus netto ${verkaufRandom_Bezugskosten} und werden dem Kunden zusätzlich berechnet`,
     `. Die Leihverpackung in Höhe von ${verkaufRandom_Bezugskosten} netto wird dem Kunden zusätzlich berechnet`,
     `. Es werden darüber hinaus netto ${verkaufRandom_Bezugskosten} an Versandkosten dem Kunden berechnet`,
@@ -797,8 +797,8 @@ function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
     params.set('menge1',     '1');
     params.set('einheit1',   'Stück');
     params.set('umsatzsteuer', '19');
-    params.set('tag',   new Date().getDate().toString());
-    params.set('monat', (new Date().getMonth() + 1).toString());
+    params.set('tag', now.getDate().toString().padStart(2, '0'));
+    params.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
 
     return `belege.html?${params.toString()}`;
 }
