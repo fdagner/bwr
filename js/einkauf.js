@@ -1,6 +1,6 @@
 // Globale Variable – wird von einkauf.js benötigt
   let yamlData = [];
-  let kunde = 'BwR-Modellunternehmen';
+  let kunde = '<i>[Modellunternehmen]</i>';
 
   // Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
   function loadYamlFromLocalStorage() {
@@ -222,13 +222,13 @@ function erstelleZufallssatz() {
   random_Bezugskosten = formatCurrency(random_Bezugskosten);
   // Arrays mit verschiedenen Teilen des Satzes
   const array_Subjekt = [`${kunde} kauft`, `${kunde} bezieht `, `${kunde} kauft `, `${kunde} erwirbt `, `Ein Lieferant sendet an ${kunde} `];
-  const array_Subjekt_2 = [`${kunde} erhält vom Lieferer `, `${kunde} erwirbt `, `${kunde} bezieht vom Lieferanten`];
+  const array_Subjekt_2 = [`Kauf `, `Erwerb `, `Beschaffung `, `Bezug `];
   const array_Subjekt_3 = [`Berechne den Einstandspreis: ${kunde} erhält ein Angebot für `, `Berechne den Einstandspreis, wenn ${kunde} ein Angebot erhält für `];
   const array_Subjekt_4 = ['Berechne den Einstandspreis: Unser Lieferant sendet ein Angebot für den Bezug', 'Berechne den Einstandspreis eines Angebots für den Kauf '];
   const array_Subjekt_5 = [`${kunde} bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${random_Skonto} % Skonto`, `Die Rechnung wird mit ${random_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${random_Skonto} % Skonto per Bank`,  ];
   const array_Werkstoffe = Object.keys(kontenWerkstoffe);
   const array_Werkstoffe_2 = Object.keys(kontenWerkstoffe_2);
-  const array_Supply_Wert = ['im Wert von', 'mit', 'mit einem Wert in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
+  const array_Supply_Wert = ['im Wert von', 'mit', 'in Höhe von', 'mit einem Warenwert von ', ' ' ];
   const array_Zahlung = Object.keys(kontenZahlung);
   const array_Supply_Rabatt = [`, abzüglich ${random_Rabatt} % Rabatt`];
   const array_Supply_Rabatt_2 = [
@@ -275,7 +275,7 @@ function erstelleZufallssatz() {
   let randomNettowert;
 
   // Anzeige wenn Brutto oder Netto
-  randomNettowert = nettoOderBrutto === 'Netto' ? `Listenpreis ${nettoWert} netto` : `brutto ${bruttoWert}`;
+  randomNettowert = nettoOderBrutto === 'Netto' ? `${nettoWert} netto` : `brutto ${bruttoWert}`;
   randomNettowertbeiAngebot = `Listenpreis ${nettoWert} netto`;
 
 
@@ -383,7 +383,7 @@ function erstelleZufallssatz() {
     zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
     berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
   } else if (randomRuecksendung < 0.66) {
-    ruecksendungSatz = `Aufgrund eines Sachmangels sendet ${kunde} ${randomRuecksendungProzent} % der Werkstoffe aus Geschäftsfall`;
+    ruecksendungSatz = `Aufgrund eines Sachmangels sendet ${kunde} ${randomRuecksendungProzent} % der Werkstoffe `;
     zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*randomRuecksendungProzent/100);
     USTWertRuecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*19/100);
     berechnung_bruttoWertRuecksendung = USTWertRuecksendung+zieleinkaufspreis_Ruecksendung;
@@ -391,7 +391,7 @@ function erstelleZufallssatz() {
     zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
     berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
   } else {
-    ruecksendungSatz = `${kunde} sendet ${randomRuecksendungProzent} % der Werkstoffe aus dem Geschäftsfall`;
+    ruecksendungSatz = `${kunde} sendet ${randomRuecksendungProzent} % der Werkstoffe `;
     zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*randomRuecksendungProzent/100);
     USTWertRuecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung*19/100);
     berechnung_bruttoWertRuecksendung = USTWertRuecksendung+zieleinkaufspreis_Ruecksendung;
@@ -526,13 +526,26 @@ function extractWerkstoffName(kontoCode) {
     return werkstoffe[kontoCode] || 'Werkstoffe';
 }
 
-function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, isGutschrift = false) {
+function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isGutschrift = false) {
     const params = new URLSearchParams();
-    
-    // Immer Rechnung als Basis
+
+    // Immer fix: beleg=rechnung (Basis-Parameter, falls benötigt)
     params.set('beleg', 'rechnung');
 
-    // Bestehende Parameter
+    // Vorlage nur setzen, wenn explizit gewünscht
+    let vorlage = null;
+    if (typ === 'angebot') {
+        vorlage = 'angebot1.svg';
+    } else if (isGutschrift || typ === 'gutschrift') {
+        vorlage = 'gutschrift2.svg';
+    }
+    // Für normale Rechnung → bewusst KEIN vorlage-Parameter
+
+    if (vorlage) {
+        params.set('vorlage', vorlage);
+    }
+
+    // ── alle anderen Parameter ──────────────────────────────────────────────
     if (geschaeftsfallDaten.listeneinkaufspreis) {
         params.set('einzelpreis1', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
     }
@@ -549,49 +562,40 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, isGutschrift = false)
         params.set('artikel1', geschaeftsfallDaten.werkstoff);
     }
 
-    // Unternehmen
     const kaeuferSelect = document.getElementById('einkaufKaeufer');
     const liefererSelect = document.getElementById('einkaufLieferer');
+    if (kaeuferSelect?.value)    params.set('kunde',   kaeuferSelect.value.trim());
+    if (liefererSelect?.value)   params.set('lieferer', liefererSelect.value.trim());
 
-    if (kaeuferSelect?.value) {
-        params.set('kunde', kaeuferSelect.value.trim());
-    }
-    if (liefererSelect?.value) {
-        params.set('lieferer', liefererSelect.value.trim());
-    }
-
-    // Standardwerte
-    params.set('menge1', '1');
-    params.set('einheit1', 'Stück');
+    params.set('menge1',     '1');
+    params.set('einheit1',   'Stück');
     params.set('umsatzsteuer', '19');
-    params.set('tag', new Date().getDate().toString());
+    params.set('tag',   new Date().getDate().toString());
     params.set('monat', (new Date().getMonth() + 1).toString());
 
-    // NEU: Bei Gutschrift andere Vorlage erzwingen
+    // Falls Gutschrift → Menge ggf. negativ (optional, je nach deiner Vorlage)
     if (isGutschrift) {
-        params.set('vorlage', 'gutschrift2.svg');
-        // Optional: Menge negativ machen oder andere Parameter anpassen
-        // params.set('menge1', '-1');   // ← falls du die Gutschrift mengenmäßig negativ darstellen willst
+        // params.set('menge1', '-1');   // ← nur wenn du das wirklich brauchst
     }
 
     return `belege.html?${params.toString()}`;
 }
 
 function erstelleGeschaeftsfallButton(nummer, daten, isGutschrift = false) {
-    const url = erzeugeURLFuerGeschaeftsfall(daten, isGutschrift);
+    const url = erzeugeURLFuerGeschaeftsfall(daten, isGutschrift ? 'gutschrift' : 'rechnung', isGutschrift);
     
     let buttonText = `📄 ${nummer}. Eingangsrechnung erstellen`;
     let titleText = `Eingangsrechnung für Aufgabe ${nummer} als SVG-Beleg öffnen`;
-
+    
     if (isGutschrift) {
         buttonText = `📄 ${nummer}. Beleg für Rücksendung erstellen`;
-        titleText = `Gutschrift für Rücksendung Aufgabe ${nummer}. erstellen`;
+        titleText = `Gutschrift für Rücksendung Aufgabe ${nummer} erstellen`;
     }
-
+    
     return `
-        <button 
-            class="geschaeftsfall-beleg-button ${isGutschrift ? 'gutschrift-button' : ''}" 
-            onclick="window.open('${url}', '_blank')" 
+        <button
+            class="geschaeftsfall-beleg-button ${isGutschrift ? 'gutschrift-button' : ''}"
+            onclick="window.open('${url}', '_blank')"
             title="${titleText}"
             style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
@@ -599,6 +603,35 @@ function erstelleGeschaeftsfallButton(nummer, daten, isGutschrift = false) {
         </button>
     `;
 }
+
+function erstelleAngebotButton(nummer, daten) {
+    const url = erzeugeURLFuerGeschaeftsfall(daten, 'angebot');
+    return `
+        <button
+            class="geschaeftsfall-beleg-button angebot-button"
+            onclick="window.open('${url}', '_blank')"
+            title="Angebot für Aufgabe ${nummer} als SVG öffnen"
+             style="width: 100%; padding: 10px 12px; font-size: 14px;"
+        >
+            📄 ${nummer}a. Angebot erstellen
+        </button>
+    `;
+}
+
+function erstelleRechnungButton(nummer, daten) {
+    const url = erzeugeURLFuerGeschaeftsfall(daten, 'rechnung');   // → KEIN vorlage-Parameter
+    return `
+        <button
+            class="geschaeftsfall-beleg-button rechnung-button"
+            onclick="window.open('${url}', '_blank')"
+            title="Eingangsrechnung für Aufgabe ${nummer} als SVG öffnen"
+            style="width: 100%; padding: 9px 11px; font-size: 13px;"
+        >
+            📄 ${nummer}b. Eingangsrechnung erstellen
+        </button>
+    `;
+}
+
 function zeigeZufaelligenSatz() {
   // Falls eine andere Funktion vorhanden ist → abbrechen
   if (typeof zeigeZufaelligenSatzMitUnternehmen === 'function') {
@@ -653,7 +686,7 @@ aufgabeHtml += `<div>${formattedSatz}</div>`;
 
     // ← Hier kommen die Rücksendungen – als bedingter Block innerhalb dieses Cases
     if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE") {
-      aufgabeHtml += `<li>Rücksendung: ${formattedRuecksendung} aus Geschäftsfall ${currentI} zurück und erhalten dafür eine Gutschrift.
+      aufgabeHtml += `<li>${formattedRuecksendung} aus Geschäftsfall ${currentI} zurück und erhält dafür eine Gutschrift.
         </div></li>
       `;
     }
@@ -675,43 +708,47 @@ aufgabeHtml += `<div>${formattedSatz}</div>`;
  
 
  // Rechnungs-Button immer
-  const geschaeftsfallDaten = {
-        listeneinkaufspreis: listeneinkaufspreis,
-        rabattSatz: antwort_rabattSatz,
-        bezugskostenWert: antwort_bezugskostenWert,
-        skontoSatz: antwort_skontoSatz,
-        werkstoff: extractWerkstoffName(konto_1)
-    };
+const geschaeftsfallDaten = {
+    listeneinkaufspreis: listeneinkaufspreis,
+    rabattSatz:          antwort_rabattSatz,
+    bezugskostenWert:    antwort_bezugskostenWert,
+    skontoSatz:          antwort_skontoSatz,
+    werkstoff:           extractWerkstoffName(konto_1)
+};
 
-    // Rechnungs-Button immer
-   const buttonHtml = erstelleGeschaeftsfallButton(i, geschaeftsfallDaten, false);
 const buttonDiv = document.createElement('div');
 buttonDiv.style.margin = '12px 0';
-buttonDiv.innerHTML = buttonHtml;
-buttonColumn.appendChild(buttonDiv);
 
-// Zusätzlich Gutschrift-Button, wenn Rücksendung aktiv und Bedingungen passen
-if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && buchungsoptionDropdown.value === 'buchungssatz') {
+if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
+    // Speziell für Einkaufskalkulation: Angebot + Rechnung
+    buttonDiv.innerHTML = `
+        ${erstelleAngebotButton(currentI, geschaeftsfallDaten)}
+        <div style="margin-top:8px;"></div>
+        ${erstelleRechnungButton(currentI, geschaeftsfallDaten)}
+    `;
+} else {
+    // Alle anderen Modi → nur eine Rechnung (wie bisher)
+    const buttonHtml = erstelleGeschaeftsfallButton(currentI, geschaeftsfallDaten, false);
+    buttonDiv.innerHTML = buttonHtml;
+}
 
-    // WICHTIG: Hier die nächste Nummer verwenden (i + 1)
-    const gutschriftNummer = i + 1;
-
-    const gutschriftButtonHtml = erstelleGeschaeftsfallButton(
-        gutschriftNummer,           // ← geänderte Nummer!
-        geschaeftsfallDaten, 
-        true                        // isGutschrift = true
-    );
-
+// Gutschrift-Button (Rücksendung) – bleibt wie bisher
+if (mitRuecksendung.checked && currentI > 0 && currentI < anzahl && konto_2 === "4400 VE" && buchungsoptionDropdown.value === 'buchungssatz') {
+    const gutschriftNummer = currentI + 1;
+    const gutschriftButtonHtml = erstelleGeschaeftsfallButton(gutschriftNummer, geschaeftsfallDaten, true);
     const gutschriftDiv = document.createElement('div');
     gutschriftDiv.style.margin = '8px 0 16px 0';
     gutschriftDiv.innerHTML = gutschriftButtonHtml;
     buttonColumn.appendChild(gutschriftDiv);
 
-    // Optional: visueller Hinweis in der Aufgabe selbst (kann angepasst werden)
+    // Hinweis in Aufgabe
     aufgabeHtml += `<div style="font-size:0.9em; color:#d32f2f; margin-top:6px;">
         → Rücksendung → Gutschrift erstellen (siehe Button für Aufgabe ${gutschriftNummer} rechts)
     </div>`;
 }
+
+buttonColumn.appendChild(buttonDiv);
+
     // ── Lösung / Antwort (wird exportiert) ─────────────────────────────
     antwortOutput += `<div style="margin-top: 1.5em;"><strong>${parseInt(i)}.</strong><br>`;
 

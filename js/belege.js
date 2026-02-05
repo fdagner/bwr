@@ -269,6 +269,8 @@ function loadBelegData(belegType, dropdownId) {
         });
     }
 
+    
+
     // Klassen-basierte Felder befüllen (z.B. für Bescheid)
     if (config.classFields) {
         Object.entries(config.classFields).forEach(([className, path]) => {
@@ -548,6 +550,8 @@ function updateAllDropdowns() {
         const brancheB = b.unternehmen?.branche || '';
         return brancheA.localeCompare(brancheB);
     });
+
+
 
     // Befülle alle Dropdowns
     Object.keys(DROPDOWN_CONFIG).forEach(dropdownId => {
