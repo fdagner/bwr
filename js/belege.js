@@ -3125,7 +3125,7 @@ function handleYearScript(config) {
     
 }
 
-// ============================================================================
+/// ============================================================================
 // LOHNABRECHNUNG
 // ============================================================================
 const MITARBEITER_DATEN = {
@@ -3319,8 +3319,18 @@ async function lohnabrechnungApplySVGholen() {
     const brutto = parseFloat(document.getElementById('lohnabrechnungBruttoInput').value);
     document.getElementById('lohnabrechnungBrutto').textContent = FormatHelper.currency(brutto);
     
-    // Lohnsteuer berechnen
-    const lohnsteuer = berechneLohnsteuer(brutto, steuerklasse, kinderfreibetrag);
+    // Lohnsteuer: Automatisch berechnen ODER manuellen Wert behalten
+    const lohnsteuerGesperrt = document.getElementById('lohnabrechnungLohnsteuerSperreInput').checked;
+    
+    if (!lohnsteuerGesperrt) {
+        // Entsperrt: Neu berechnen
+        const lohnsteuerBerechnet = berechneLohnsteuer(brutto, steuerklasse, kinderfreibetrag);
+        document.getElementById('lohnabrechnungLohnsteuerInput').value = lohnsteuerBerechnet.toFixed(2);
+    }
+    // Sonst: Gesperrt - manueller Wert bleibt im Input-Feld
+    
+    // Wert aus dem Input-Feld verwenden
+    const lohnsteuer = parseFloat(document.getElementById('lohnabrechnungLohnsteuerInput').value);
     document.getElementById('lohnabrechnungLohnsteuer').textContent = FormatHelper.currency(lohnsteuer);
     
     // Solidaritätszuschlag
@@ -3337,12 +3347,13 @@ async function lohnabrechnungApplySVGholen() {
     const steuerGesamt = lohnsteuer + soli + kirchensteuer;
     document.getElementById('lohnabrechnungSteuerGesamt').textContent = FormatHelper.currency(steuerGesamt);
     
-    // Sozialversicherung AN-Anteile
+    // Sozialversicherung AN-Anteile (VEREINFACHT - nur Prozentsätze, keine Sonderfälle)
     const kvSatz = parseFloat(document.getElementById('lohnabrechnungKVSatzInput').value) / 100;
     const pvSatz = parseFloat(document.getElementById('lohnabrechnungPVSatzInput').value) / 100;
     const rvSatz = parseFloat(document.getElementById('lohnabrechnungRVSatzInput').value) / 100;
     const alvSatz = parseFloat(document.getElementById('lohnabrechnungALVSatzInput').value) / 100;
     
+    // Einfache Berechnung: Brutto × Prozentsatz
     const kvAN = FormatHelper.roundToTwo(brutto * kvSatz);
     const pvAN = FormatHelper.roundToTwo(brutto * pvSatz);
     const rvAN = FormatHelper.roundToTwo(brutto * rvSatz);
