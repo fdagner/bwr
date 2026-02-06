@@ -269,8 +269,6 @@ function loadBelegData(belegType, dropdownId) {
         });
     }
 
-    
-
     // Klassen-basierte Felder befüllen (z.B. für Bescheid)
     if (config.classFields) {
         Object.entries(config.classFields).forEach(([className, path]) => {
@@ -384,6 +382,7 @@ function applySupplierSpecificData(data) {
 }
 
 // Logo-Logik für Lieferant (SVG-spezifisch)
+// Logo-Logik für Lieferant (SVG-spezifisch)
 function loadSupplierLogo(logoUrl) {
     const svgContainer = document.getElementById('rechnungSVG');
     const rectElement = document.getElementById('logo-placeholder');
@@ -400,11 +399,27 @@ function loadSupplierLogo(logoUrl) {
     const height = rectElement.getAttribute('height');
 
     const standardImageURL = 'media/pic/standard.svg';
+    
+    // Prüfe ob Base64-Logo (von Benutzerunternehmen)
+    if (logoUrl && logoUrl.startsWith('data:image')) {
+        // Base64 SVG - erstelle image Element
+        const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+        image.setAttribute('id', 'uploaded-image');
+        image.setAttribute('x', x);
+        image.setAttribute('y', y);
+        image.setAttribute('width', width);
+        image.setAttribute('height', height);
+        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', logoUrl);
+        svgContainer.appendChild(image);
+        return;
+    }
+    
+    // Fallback: URL oder Standardbild
     const imageUrl = (logoUrl && logoUrl.trim() !== '' && (logoUrl.startsWith('http') || logoUrl.endsWith('.svg')))
         ? logoUrl
         : standardImageURL;
 
-    // Lade SVG-Datei
+    // Lade SVG-Datei per XHR
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.status === 200) {
@@ -422,6 +437,26 @@ function loadSupplierLogo(logoUrl) {
                 svgContainer.appendChild(svgElement);
             }
         }
+    };
+    xhr.onerror = function() {
+        // Bei Fehler: Zeige Standardbild
+        const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+        image.setAttribute('id', 'uploaded-image');
+        image.setAttribute('x', x);
+        image.setAttribute('y', y);
+        image.setAttribute('width', width);
+        image.setAttribute('height', height);
+        
+        fetch(standardImageURL)
+            .then(r => r.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
+                    svgContainer.appendChild(image);
+                };
+                reader.readAsDataURL(blob);
+            });
     };
     xhr.open('GET', imageUrl);
     xhr.send();
@@ -515,12 +550,686 @@ function handleFileUpload() {
     }
 }
 
+
+
+
+
+
+// ============================================================================
+// BENUTZERDEFINIERTE UNTERNEHMEN - LOCAL STORAGE VERWALTUNG
+// ============================================================================
+
+let uploadedLogoBase64 = null; // Globale Variable für hochgeladenes Logo
+
+// Logo-Upload-Handler
+function handleLogoUpload(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('logoPreview');
+    
+    if (!file) {
+        uploadedLogoBase64 = null;
+        preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
+        return;
+    }
+    
+    // Prüfe Dateityp
+    const validTypes = ['image/svg+xml'];
+    if (!validTypes.includes(file.type)) {
+        alert('Bitte nur SVG-Dateien hochladen.');
+        event.target.value = '';
+        uploadedLogoBase64 = null;
+        preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
+        return;
+    }
+    
+    // Prüfe Dateigröße (max 500KB)
+    if (file.size > 500 * 1024) {
+        alert('Die Datei ist zu groß. Maximal 500KB erlaubt.');
+        event.target.value = '';
+        uploadedLogoBase64 = null;
+        preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
+        return;
+    }
+    
+    // Konvertiere zu Base64
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        uploadedLogoBase64 = e.target.result;
+        preview.innerHTML = `
+            <img src="${uploadedLogoBase64}" style="max-width: 150px; max-height: 80px; border: 1px solid #ccc; padding: 5px;">
+            <br><small style="color: #28a745;">✓ Logo hochgeladen</small>
+        `;
+    };
+    reader.onerror = function() {
+        alert('Fehler beim Lesen der Datei.');
+        uploadedLogoBase64 = null;
+        preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
+    };
+    reader.readAsDataURL(file);
+}
+
+// Funktion zum Abrufen der benutzerdefinierten Unternehmen aus dem Local Storage
+function getUserCompanies() {
+    const stored = localStorage.getItem('userCompanies');
+    return stored ? JSON.parse(stored) : [];
+}
+
+// Funktion zum Speichern der benutzerdefinierten Unternehmen im Local Storage
+function saveUserCompanies(companies) {
+    localStorage.setItem('userCompanies', JSON.stringify(companies));
+}
+
+// Funktion zum Generieren einer eindeutigen ID
+function generateCompanyId() {
+    const userCompanies = getUserCompanies();
+    const existingIds = userCompanies.map(c => c.unternehmen.id);
+    let newId = Math.floor(Math.random() * 9000) + 1000;
+    
+    // Stelle sicher, dass die ID einzigartig ist
+    while (existingIds.includes(newId)) {
+        newId = Math.floor(Math.random() * 9000) + 1000;
+    }
+    
+    return newId;
+}
+
+/// Validierungs-Hilfsfunktionen
+const CompanyValidation = {
+    // Verhindere XSS und HTML-Tags
+    sanitizeInput: (input) => {
+        if (!input) return '';
+        // Entferne HTML-Tags und Script-Tags
+        return input
+            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+            .replace(/<[^>]+>/g, '')
+            .replace(/[{}]/g, '')
+            .trim();
+    },
+    
+    // Validiere Text (Buchstaben, Umlaute, Sonderzeichen)
+    isValidText: (value, maxLength = 50, allowNumbers = false) => {
+        if (!value) return true; // Optional field
+        const sanitized = CompanyValidation.sanitizeInput(value);
+        if (sanitized.length > maxLength) return false;
+        if (!allowNumbers && /\d/.test(sanitized)) return false;
+        return true;
+    },
+    
+    // Validiere PLZ (genau 5 Ziffern)
+    isValidPLZ: (value) => {
+        if (!value) return true;
+        return /^[0-9]{5}$/.test(value.trim());
+    },
+    
+    // Validiere Telefon
+    isValidPhone: (value) => {
+        if (!value) return true;
+        const sanitized = value.trim();
+        return /^[0-9\s\+\-\/()]{0,25}$/.test(sanitized);
+    },
+    
+    // Validiere E-Mail
+    isValidEmail: (value) => {
+        if (!value) return true;
+        const sanitized = value.trim();
+        return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(sanitized) 
+            && sanitized.length <= 60;
+    },
+    
+    // Validiere Website
+    isValidWebsite: (value) => {
+        if (!value) return true;
+        const sanitized = value.trim();
+        return /^[a-zA-Z0-9.\-:/]{0,60}$/.test(sanitized);
+    },
+    
+    // Validiere IBAN
+    isValidIBAN: (value) => {
+        if (!value) return true;
+        const cleaned = value.replace(/\s/g, '').toUpperCase();
+        // Deutsche IBAN: DE + 20 Ziffern
+        return /^DE[0-9]{20}$/.test(cleaned);
+    },
+    
+    // Validiere BIC
+isValidBIC: (value) => {
+    if (!value) return true;
+
+    const cleaned = value.replace(/\s/g, '').toUpperCase();
+
+    return /^[A-Z0-9]+$/.test(cleaned);
+},
+    // Validiere USt-ID
+    isValidUstID: (value) => {
+        if (!value) return true;
+        const cleaned = value.replace(/\s/g, '').toUpperCase();
+        return /^DE[0-9]{9,20}$/.test(cleaned);
+    },
+    
+    // Validiere Steuernummer
+    isValidSteuernummer: (value) => {
+        if (!value) return true;
+        const sanitized = value.trim();
+        return /^[0-9\/]{0,20}$/.test(sanitized);
+    }
+};
+
+
+// Zusätzliche Sicherheits-Validierung (verhindert XSS auch wenn HTML-Pattern umgangen wird)
+function containsDangerousChars(value) {
+    if (!value) return false;
+    // Prüfe auf gefährliche Zeichen
+    const dangerousChars = /<|>|\{|\}|<script|javascript:|onerror=|onload=/i;
+    return dangerousChars.test(value);
+}
+
+// Formular-Handler zum Hinzufügen/Bearbeiten eines Unternehmens
+function handleAddCompanyForm(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const isEditing = form.dataset.editIndex !== undefined;
+    const editIndex = parseInt(form.dataset.editIndex);
+    
+    
+    // Hole Formulardaten
+    const rawName = document.getElementById('newCompanyName').value;
+    const rechtsform = document.getElementById('newCompanyRechtsform').value;
+    const rawBranche = document.getElementById('newCompanyBranche').value;
+    const rawMotto = document.getElementById('newCompanyMotto').value;
+    const rawInhaber = document.getElementById('newCompanyInhaber').value;
+    const rawStrasse = document.getElementById('newCompanyStrasse').value;
+    const rawPLZ = document.getElementById('newCompanyPLZ').value;
+    const rawOrt = document.getElementById('newCompanyOrt').value;
+    const rawTelefon = document.getElementById('newCompanyTelefon').value;
+    const rawEmail = document.getElementById('newCompanyEmail').value;
+    const rawInternet = document.getElementById('newCompanyInternet').value;
+    const rawBank = document.getElementById('newCompanyBank').value;
+    const rawIBAN = document.getElementById('newCompanyIBAN').value;
+    const rawBIC = document.getElementById('newCompanyBIC').value;
+    const rawUstID = document.getElementById('newCompanyUstID').value;
+    const rawSteuernummer = document.getElementById('newCompanySteuernummer').value;
+    const akzent = document.getElementById('newCompanyAkzent').value;
+    
+    // Erste Sicherheitsschicht: Prüfe auf gefährliche Zeichen
+    const allInputs = [
+        rawName, rawBranche, rawMotto, rawInhaber, rawStrasse, 
+        rawOrt, rawTelefon, rawEmail, rawInternet, rawBank, 
+        rawIBAN, rawBIC, rawUstID, rawSteuernummer
+    ];
+    
+    for (const input of allInputs) {
+        if (containsDangerousChars(input)) {
+            alert('Ungültige Eingabe erkannt: Die Zeichen <, >, {, }, <script>, javascript: und Event-Handler sind nicht erlaubt.');
+            return;
+        }
+    }
+    
+    // Sanitize alle Eingaben
+    const name = CompanyValidation.sanitizeInput(rawName);
+
+    // ===================================================================
+    // NEU: Prüfe nur den NAMEN (ohne Rechtsform)
+    // ===================================================================
+    const existierendesUnternehmen = yamlData.find(company => {
+        return company.unternehmen.name.toLowerCase() === name.toLowerCase();
+    });
+    
+    // Wenn Duplikat gefunden UND wir bearbeiten nicht gerade dieses Unternehmen
+    if (existierendesUnternehmen) {
+        if (isEditing) {
+            // Beim Bearbeiten: Erlaube den gleichen Namen nur für das aktuell bearbeitete Unternehmen
+            const userCompanies = getUserCompanies();
+            const currentCompany = userCompanies[editIndex];
+            
+            if (currentCompany.unternehmen.name.toLowerCase() !== name.toLowerCase()) {
+                alert(`Ein Unternehmen mit dem Namen "${name}" existiert bereits!\n\nBitte wählen Sie einen anderen Namen.`);
+                return;
+            }
+        } else {
+            // Beim Hinzufügen: Kein Duplikat erlaubt
+            alert(`Ein Unternehmen mit dem Namen "${name}" existiert bereits!\n\nBitte wählen Sie einen anderen Namen.`);
+            return;
+        }
+    }
+    // ===================================================================
+    
+    const branche = CompanyValidation.sanitizeInput(rawBranche);
+    const motto = CompanyValidation.sanitizeInput(rawMotto);
+    const inhaber = CompanyValidation.sanitizeInput(rawInhaber);
+    const strasse = CompanyValidation.sanitizeInput(rawStrasse);
+    const plz = rawPLZ.trim();
+    const ort = CompanyValidation.sanitizeInput(rawOrt);
+    const telefon = rawTelefon.trim();
+    const email = rawEmail.trim().toLowerCase();
+    const internet = rawInternet.trim().toLowerCase();
+    const bank = CompanyValidation.sanitizeInput(rawBank);
+    const iban = rawIBAN.replace(/\s/g, '').toUpperCase();
+    const bic = rawBIC.replace(/\s/g, '').toUpperCase();
+    const ustId = rawUstID.replace(/\s/g, '').toUpperCase();
+    const steuernummer = rawSteuernummer.trim();
+    
+    // ALLE Pflichtfeld-Validierungen
+    if (!name || name.length === 0) {
+        alert('Bitte geben Sie einen Firmennamen ein.');
+        return;
+    }
+    
+    if (!rechtsform || rechtsform === '') {
+        alert('Bitte wählen Sie eine Rechtsform aus.');
+        return;
+    }
+    
+    if (!branche || branche.length === 0) {
+        alert('Bitte geben Sie eine Branche ein.');
+        return;
+    }
+    
+    if (!motto || motto.length === 0) {
+        alert('Bitte geben Sie ein Motto ein.');
+        return;
+    }
+    
+    if (!inhaber || inhaber.length === 0) {
+        alert('Bitte geben Sie einen Inhaber/Geschäftsführer ein.');
+        return;
+    }
+    
+    if (!strasse || strasse.length === 0) {
+        alert('Bitte geben Sie eine Straße ein.');
+        return;
+    }
+    
+    if (!plz || plz.length === 0) {
+        alert('Bitte geben Sie eine PLZ ein.');
+        return;
+    }
+    
+    if (!ort || ort.length === 0) {
+        alert('Bitte geben Sie einen Ort ein.');
+        return;
+    }
+    
+    if (!telefon || telefon.length === 0) {
+        alert('Bitte geben Sie eine Telefonnummer ein.');
+        return;
+    }
+    
+    if (!email || email.length === 0) {
+        alert('Bitte geben Sie eine E-Mail-Adresse ein.');
+        return;
+    }
+    
+    if (!internet || internet.length === 0) {
+        alert('Bitte geben Sie eine Internet-Adresse ein.');
+        return;
+    }
+    
+    if (!bank || bank.length === 0) {
+        alert('Bitte geben Sie eine Bank ein.');
+        return;
+    }
+    
+    if (!iban || iban.length === 0) {
+        alert('Bitte geben Sie eine IBAN ein.');
+        return;
+    }
+    
+    if (!bic || bic.length === 0) {
+        alert('Bitte geben Sie einen BIC ein.');
+        return;
+    }
+    
+    if (!ustId || ustId.length === 0) {
+        alert('Bitte geben Sie eine USt-IdNr. ein.');
+        return;
+    }
+    
+    if (!steuernummer || steuernummer.length === 0) {
+        alert('Bitte geben Sie eine Steuernummer ein.');
+        return;
+    }
+    
+    // Detaillierte Format-Validierungen
+    if (!CompanyValidation.isValidText(name, 50, true)) {
+        alert('Firmenname: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidText(branche, 50, true)) {
+        alert('Branche: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidText(motto, 100, true)) {
+        alert('Motto: Maximal 100 Zeichen, keine HTML-Tags oder Scripte.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidText(inhaber, 50, false)) {
+        alert('Inhaber: Maximal 50 Zeichen, nur Buchstaben, keine Zahlen.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidText(strasse, 60, true)) {
+        alert('Straße: Maximal 60 Zeichen, keine HTML-Tags oder Scripte.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidPLZ(plz)) {
+        alert('PLZ: Bitte geben Sie genau 5 Ziffern ein.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidText(ort, 50, false)) {
+        alert('Ort: Maximal 50 Zeichen, nur Buchstaben.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidPhone(telefon)) {
+        alert('Telefon: Ungültiges Format. Nur Zahlen und + - / ( ) erlaubt, maximal 25 Zeichen.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidEmail(email)) {
+        alert('E-Mail: Bitte geben Sie eine gültige E-Mail-Adresse ein (maximal 60 Zeichen).');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidWebsite(internet)) {
+        alert('Internet: Ungültiges Format. Nur Buchstaben, Zahlen und . - : / erlaubt, maximal 60 Zeichen.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidText(bank, 50, true)) {
+        alert('Bank: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidIBAN(iban)) {
+        alert('IBAN: Ungültiges Format. Erforderlich: DE + 20 Ziffern (z.B. DE89370400440532013000).');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidBIC(bic)) {
+        alert('BIC: Ungültiges Format. Erforderlich: 8 oder 11 Zeichen (z.B. COBADEFFXXX).');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidUstID(ustId)) {
+        alert('USt-IdNr.: Ungültiges Format. Erforderlich: DE + 9 Ziffern (z.B. DE123456789).');
+        return;
+    }
+    
+    if (!CompanyValidation.isValidSteuernummer(steuernummer)) {
+        alert('Steuernummer: Nur Zahlen und / erlaubt, maximal 20 Zeichen.');
+        return;
+    }
+    
+    // Hole oder generiere ID
+    let companyId;
+    if (isEditing) {
+        const userCompanies = getUserCompanies();
+        companyId = userCompanies[editIndex].unternehmen.id;
+    } else {
+        companyId = generateCompanyId();
+    }
+    
+    // Erstelle Unternehmensobjekt
+    const newCompany = {
+        unternehmen: {
+            id: companyId,
+            name: name,
+            rechtsform: rechtsform,
+            branche: branche,
+            motto: motto,
+            inhaber: inhaber,
+            logo: uploadedLogoBase64 || '',
+            adresse: {
+                strasse: strasse,
+                plz: plz,
+                ort: ort,
+                land: 'Deutschland'
+            },
+            kontakt: {
+                telefon: telefon,
+                email: email,
+                internet: internet
+            },
+            bank: bank,
+            iban: iban,
+            bic: bic,
+            ust_id: ustId,
+            steuernummer: steuernummer,
+            akzent: akzent
+        }
+    };
+    
+    // Speichere im Local Storage
+    const userCompanies = getUserCompanies();
+    
+    if (isEditing) {
+        userCompanies[editIndex] = newCompany;
+        saveUserCompanies(userCompanies);
+        alert('Unternehmen erfolgreich aktualisiert!');
+        updateLocalStorageStatus('Unternehmen aktualisiert.');
+    } else {
+        userCompanies.push(newCompany);
+        saveUserCompanies(userCompanies);
+        alert('Unternehmen erfolgreich hinzugefügt!');
+        updateLocalStorageStatus('Eigenes Unternehmen hinzugefügt.');
+    }
+    
+    // Aktualisiere yamlData
+    mergeUserCompaniesIntoYamlData();
+    
+    // Aktualisiere alle Dropdowns
+    updateAllDropdowns();
+    
+    // Aktualisiere die Unternehmensliste
+    displayUserCompanies();
+    
+    // Formular zurücksetzen
+    form.reset();
+    delete form.dataset.editIndex;
+    uploadedLogoBase64 = null;
+    document.getElementById('logoPreview').innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
+    
+    // Button zurücksetzen
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.textContent = '✓ Unternehmen hinzufügen';
+    submitButton.style.background = '#28a745';
+}
+
+// Funktion zum Zusammenführen der benutzerdefinierten Unternehmen mit den Standard-YAML-Daten
+function mergeUserCompaniesIntoYamlData() {
+    // Lade die Standard-YAML-Daten neu
+    const standardYamlData = JSON.parse(localStorage.getItem('standardYamlData') || '[]');
+    const userCompanies = getUserCompanies();
+    
+    // Kombiniere Standard- und Benutzerdaten
+    yamlData = [...standardYamlData, ...userCompanies];
+    
+    // Sortiere nach Branche
+    yamlData.sort((a, b) => {
+        const brancheA = a.unternehmen?.branche || '';
+        const brancheB = b.unternehmen?.branche || '';
+        return brancheA.localeCompare(brancheB);
+    });
+}
+
+// Funktion zum Anzeigen der benutzerdefinierten Unternehmen
+function displayUserCompanies() {
+    const userCompanies = getUserCompanies();
+    const container = document.getElementById('userCompanyList');
+    
+    if (!container) return;
+    
+    if (userCompanies.length === 0) {
+        container.innerHTML = '<p style="color: #666; font-style: italic;">Noch keine eigenen Unternehmen hinzugefügt.</p>';
+        return;
+    }
+    
+    let html = '<div style="display: grid; gap: 15px;">';
+    
+    userCompanies.forEach((company, index) => {
+        const u = company.unternehmen;
+        html += `
+            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 4px; background: #f9f9f9;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        <h4 style="margin: 0 0 10px 0;">${u.name} ${u.rechtsform}</h4>
+                        <p style="margin: 5px 0; color: #666;">
+                            <strong>Branche:</strong> ${u.branche}<br>
+                            <strong>Ort:</strong> ${u.adresse.ort}
+                            ${u.kontakt.email ? `<br><strong>E-Mail:</strong> ${u.kontakt.email}` : ''}
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="editUserCompany(${index})" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
+                            ✎ Bearbeiten
+                        </button>
+                        <button onclick="deleteUserCompany(${index})" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
+                            ✕ Löschen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Funktion zum Löschen eines benutzerdefinierten Unternehmens
+function deleteUserCompany(index) {
+    if (!confirm('Möchten Sie dieses Unternehmen wirklich löschen?')) {
+        return;
+    }
+    
+    const userCompanies = getUserCompanies();
+    userCompanies.splice(index, 1);
+    saveUserCompanies(userCompanies);
+    
+    // Wenn alle benutzerdefinierten Unternehmen gelöscht wurden
+    if (userCompanies.length === 0) {
+        // Lade die Standard-YAML-Daten neu
+        loadStandardYamlData();
+        updateLocalStorageStatus('Alle eigenen Unternehmen gelöscht. Standard-Daten wiederhergestellt.');
+    } else {
+        mergeUserCompaniesIntoYamlData();
+        updateLocalStorageStatus('Unternehmen gelöscht.');
+    }
+    
+    updateAllDropdowns();
+    displayUserCompanies();
+}
+
+// Funktion zum Bearbeiten eines benutzerdefinierten Unternehmens
+// Funktion zum Bearbeiten eines benutzerdefinierten Unternehmens
+function editUserCompany(index) {
+    const userCompanies = getUserCompanies();
+    const company = userCompanies[index];
+    const u = company.unternehmen;
+    
+    // Fülle das Formular mit den aktuellen Daten
+    document.getElementById('newCompanyName').value = u.name;
+    document.getElementById('newCompanyRechtsform').value = u.rechtsform;
+    document.getElementById('newCompanyBranche').value = u.branche;
+    document.getElementById('newCompanyMotto').value = u.motto;
+    document.getElementById('newCompanyInhaber').value = u.inhaber;
+    document.getElementById('newCompanyStrasse').value = u.adresse.strasse;
+    document.getElementById('newCompanyPLZ').value = u.adresse.plz;
+    document.getElementById('newCompanyOrt').value = u.adresse.ort;
+    document.getElementById('newCompanyTelefon').value = u.kontakt.telefon;
+    document.getElementById('newCompanyEmail').value = u.kontakt.email;
+    document.getElementById('newCompanyInternet').value = u.kontakt.internet;
+    document.getElementById('newCompanyBank').value = u.bank;
+    document.getElementById('newCompanyIBAN').value = u.iban;
+    document.getElementById('newCompanyBIC').value = u.bic;
+    document.getElementById('newCompanyUstID').value = u.ust_id;
+    document.getElementById('newCompanySteuernummer').value = u.steuernummer;
+    document.getElementById('newCompanyAkzent').value = u.akzent;
+    
+    // Setze das Logo
+    uploadedLogoBase64 = u.logo;
+    const preview = document.getElementById('logoPreview');
+    if (u.logo) {
+        preview.innerHTML = `
+            <img src="${u.logo}" style="max-width: 150px; max-height: 80px; border: 1px solid #ccc; padding: 5px;">
+            <br><small style="color: #28a745;">✓ Aktuelles Logo</small>
+        `;
+    }
+    
+    // Ändere den Submit-Button temporär
+    const form = document.getElementById('addCompanyForm');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    
+    submitButton.textContent = '✓ Änderungen speichern';
+    submitButton.style.background = '#ffc107';
+    
+    // Speichere den Index für die Bearbeitung
+    form.dataset.editIndex = index;
+    
+    // Scrolle zum Formular
+    const detailsElement = document.querySelector('details[open]');
+    if (detailsElement) {
+        detailsElement.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        // Öffne das Details-Element, falls geschlossen
+        const addCompanyDetails = document.querySelector('details summary:contains("Eigenes Unternehmen hinzufügen")');
+        if (addCompanyDetails && addCompanyDetails.parentElement) {
+            addCompanyDetails.parentElement.open = true;
+            addCompanyDetails.parentElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+    
+}
+
+// Funktion zum Laden der Standard-YAML-Daten
+function loadStandardYamlData() {
+    fetch('js/unternehmen.yml')
+        .then(response => response.text())
+        .then(data => {
+            const standardData = jsyaml.load(data);
+            localStorage.setItem('standardYamlData', JSON.stringify(standardData));
+            yamlData = standardData;
+            updateAllDropdowns();
+        })
+        .catch(error => {
+            console.error("Fehler beim Laden der Standard-YAML-Daten:", error);
+        });
+}
+
+// Funktion zum Exportieren der aktuellen YAML-Daten (inkl. Benutzerunternehmen)
+function exportCurrentYamlData() {
+    try {
+        const yamlString = jsyaml.dump(yamlData);
+        const blob = new Blob([yamlString], { type: 'text/yaml' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'meine_unternehmen.yml';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('YAML-Datei erfolgreich heruntergeladen!');
+    } catch (error) {
+        console.error('Fehler beim Exportieren:', error);
+        alert('Fehler beim Exportieren der Daten.');
+    }
+}
+
+// Modifizierte Funktion zum Laden der hochgeladenen Daten
 function loadUploadedDataFromLocalStorage() {
+    // Lade die hochgeladene YAML-Datei (alte Funktion)
     const uploadedDataJSON = localStorage.getItem('uploadedYamlCompanyData');
     if (uploadedDataJSON) {
         try {
             const uploadedData = JSON.parse(uploadedDataJSON);
-            // Verarbeite die geladenen Daten wie gewünscht, z.B. Sortieren und Dropdowns aktualisieren
             yamlData = uploadedData;
             uploadedData.sort((a, b) => {
                 if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
@@ -532,11 +1241,120 @@ function loadUploadedDataFromLocalStorage() {
         } catch (error) {
             console.error("Error parsing uploaded data from Local Storage:", error);
         }
+    } else {
+        // Keine hochgeladene Datei vorhanden, lade Standard-Daten + Benutzerunternehmen
+        if (!localStorage.getItem('standardYamlData')) {
+            loadStandardYamlData();
+        } else {
+            const standardData = JSON.parse(localStorage.getItem('standardYamlData'));
+            yamlData = standardData;
+            mergeUserCompaniesIntoYamlData();
+            updateAllDropdowns();
+        }
     }
+    
+    // Zeige benutzerdefinierte Unternehmen an
+    displayUserCompanies();
 }
-// Rufe die Funktion zum Laden der hochgeladenen Daten aus dem Local Storage auf
-loadUploadedDataFromLocalStorage();
 
+
+
+// Initialisierung beim Laden der Seite
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisiere die Standard-YAML-Daten, falls noch nicht vorhanden
+    if (!localStorage.getItem('standardYamlData')) {
+        loadStandardYamlData();
+    }
+    
+    // Lade Benutzerunternehmen
+    displayUserCompanies();
+    
+    // Füge Export-Button hinzu (optional)
+    const modellunternehmenSection = document.getElementById('modellunternehmen');
+    if (modellunternehmenSection && !document.getElementById('exportYamlButton')) {
+        const exportButton = document.createElement('button');
+        exportButton.id = 'exportYamlButton';
+        exportButton.textContent = 'Aktuelle Unternehmen exportieren';
+        exportButton.onclick = exportCurrentYamlData;
+        exportButton.style.marginTop = '10px';
+        
+        // Füge den Button nach dem "Daten zurücksetzen" Button ein
+        const resetButton = modellunternehmenSection.querySelector('button');
+        if (resetButton && resetButton.parentNode) {
+            resetButton.parentNode.insertBefore(exportButton, resetButton.nextSibling);
+        }
+    }
+});
+
+
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("belegImportInput");
+
+// Klick → normaler Datei-Dialog
+dropZone.addEventListener("click", () => fileInput.click());
+
+// Drag & Drop Styling
+dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.classList.add("dragover");
+});
+
+dropZone.addEventListener("dragleave", () => {
+    dropZone.classList.remove("dragover");
+});
+
+dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("dragover");
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        fileInput.files = files;
+        handleBelegImport();
+    }
+});
+
+// Normale Dateiauswahl
+fileInput.addEventListener("change", handleBelegImport);
+
+function handleBelegImport() {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    dropZone.querySelector("p").textContent = file.name;
+
+    console.log("Datei geladen:", file);
+}
+
+
+
+// Modifizierte deleteAndLoadDefaultData Funktion
+function deleteAndLoadDefaultData() {
+    if (!confirm('Möchten Sie wirklich alle Daten zurücksetzen? Dies löscht auch Ihre eigenen Unternehmen!')) {
+        return;
+    }
+    
+    // Lösche alle benutzerdefinierten Daten
+    localStorage.removeItem('uploadedYamlCompanyData');
+    localStorage.removeItem('userCompanies');
+    localStorage.removeItem('standardYamlData');
+    
+    // Setze Datei-Input zurück
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput) fileInput.value = '';
+    
+    // Lade Standard-YAML-Daten neu
+    loadStandardYamlData();
+    
+    // Aktualisiere Anzeige
+    displayUserCompanies();
+    uploadedLogoBase64 = null;
+    document.getElementById('logoPreview').innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
+    document.getElementById('addCompanyForm').reset();
+    
+    updateLocalStorageStatus('Alle Daten wurden erfolgreich zurückgesetzt.');
+    alert('Daten erfolgreich zurückgesetzt.');
+}
 
 // ============================================================================
 // DROPDOWN-VERWALTUNG
@@ -550,8 +1368,6 @@ function updateAllDropdowns() {
         const brancheB = b.unternehmen?.branche || '';
         return brancheA.localeCompare(brancheB);
     });
-
-
 
     // Befülle alle Dropdowns
     Object.keys(DROPDOWN_CONFIG).forEach(dropdownId => {
@@ -636,9 +1452,18 @@ if (!localStorage.getItem('uploadedYamlCompanyData')) {
     fetch('js/unternehmen.yml')
         .then(response => response.text())
         .then(data => {
-            yamlData = jsyaml.load(data);
-            updateAllDropdowns(); // ← Einfach unsere zentrale Funktion verwenden!
+            const standardData = jsyaml.load(data);
+            // Speichere Standard-Daten
+            localStorage.setItem('standardYamlData', JSON.stringify(standardData));
+            yamlData = standardData;
+            
+            // Füge Benutzerunternehmen hinzu
+            mergeUserCompaniesIntoYamlData();
+            updateAllDropdowns();
         });
+} else {
+    // Wenn hochgeladene Daten vorhanden sind, lade diese
+    loadUploadedDataFromLocalStorage();
 }
 
 
@@ -1033,78 +1858,75 @@ if (umsatzsteuerInput > 0) {
 SafeDOM.setText('rechnungsbetrag', FormatHelper.currency(gesamtRechnungsbetrag));
 
     // Platz machen wenn keine Bezugskosten oder Rabatt
-    const warenwertUstRechnungsbetrag = document.getElementById('warenwertUstRechnungsbetrag');
-    const warenwertUstRechnungsbetrag_quer = document.getElementById('warenwertUstRechnungsbetrag_quer');
-    const gBezugskosten = document.getElementById('gBezugskosten');
+  const warenwertUstRechnungsbetrag = document.getElementById('warenwertUstRechnungsbetrag');
+const warenwertUstRechnungsbetrag_quer = document.getElementById('warenwertUstRechnungsbetrag_quer');
+const gBezugskosten = document.getElementById('gBezugskosten');
 
-    if (warenwertUstRechnungsbetrag) {
-        if (bezugskostenInput > 0) {
-        } else {
-            SafeDOM.setAttr('warenwertUstRechnungsbetrag', 'transform', 'translate(0, -30)');
-            SafeDOM.remove('gBezugskosten');
-        };
+if (warenwertUstRechnungsbetrag) {
+    if (bezugskostenInput > 0) {
+        // Bezugskosten vorhanden - keine Änderung
+    } else {
+        SafeDOM.setAttr('warenwertUstRechnungsbetrag', 'transform', 'translate(0, -30)');
+        SafeDOM.remove('gBezugskosten');
+    }
 
-        if (rabattInput > 0) {
-        } else {
-            SafeDOM.setAttr('warenwertUstRechnungsbetrag', 'transform', 'translate(0, -30)');
+    if (rabattInput > 0) {
+        // Rabatt vorhanden - keine Änderung
+    } else {
+        SafeDOM.setAttr('warenwertUstRechnungsbetrag', 'transform', 'translate(0, -30)');
+        if (gBezugskosten) {  // ← NUR wenn Element existiert
             gBezugskosten.setAttribute('transform', 'translate(0, -30)');
-        };
-
-    } else {
-
-    }
-
-    const elemWarenwert = document.getElementById('warenwert');
-    const elemZwischensumme = document.getElementById('zwischensumme');
-    if (elemWarenwert && warenwertUstRechnungsbetrag) {
-        if (bezugskostenInput > 0 || rabattInput > 0) {
-        } else {
-            elemWarenwert.remove();
-            elemZwischensumme.remove();
-            warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -60)');
         }
     }
+}
 
+const elemWarenwert = document.getElementById('warenwert');
+const elemZwischensumme = document.getElementById('zwischensumme');
+if (elemWarenwert && warenwertUstRechnungsbetrag) {
+    if (bezugskostenInput > 0 || rabattInput > 0) {
+        // Bezugskosten oder Rabatt vorhanden - keine Änderung
+    } else {
+        elemWarenwert.remove();
+        elemZwischensumme.remove();
+        warenwertUstRechnungsbetrag.setAttribute('transform', 'translate(0, -60)');
+    }
+}
 
-    if (warenwertUstRechnungsbetrag_quer) {
+if (warenwertUstRechnungsbetrag_quer) {
+    if (bezugskostenInput > 0) {
+        // Ändere den Transform-Wert, um die Y-Position um 20 zu verringern
+        warenwertUstRechnungsbetrag_quer.setAttribute('transform', 'translate(0, 0)');
+    } else {
+        // Setze den Transform-Wert auf den ursprünglichen Wert oder einen anderen Wert nach Bedarf
+        warenwertUstRechnungsbetrag_quer.setAttribute('transform', 'translate(200, 0)');
+        SafeDOM.remove('gBezugskosten');
+    }
+}
+
+const inputLieferbedingung = document.getElementById("lieferbedingungInput");
+
+const elemBezugskostenBedingung = document.getElementById('bezugskostenBedingung');
+if (elemBezugskostenBedingung) {
+    if (inputLieferbedingung && inputLieferbedingung.checked) {  // ← Prüfe auch inputLieferbedingung
         if (bezugskostenInput > 0) {
-            // Ändere den Transform-Wert, um die Y-Position um 20 zu verringern
-            warenwertUstRechnungsbetrag_quer.setAttribute('transform', 'translate(0, 0)');
+            elemBezugskostenBedingung.textContent = "ab Werk";
         } else {
-            // Setze den Transform-Wert auf den ursprünglichen Wert oder einen anderen Wert nach Bedarf
-            warenwertUstRechnungsbetrag_quer.setAttribute('transform', 'translate(200, 0)');
-            SafeDOM.remove('gBezugskosten');
+            elemBezugskostenBedingung.textContent = "frei Haus";
         }
     } else {
-
+        elemBezugskostenBedingung.textContent = "";
     }
+}
 
-    const inputLieferbedingung = document.getElementById("lieferbedingungInput");
-
-
-    const elemBezugskostenBedingung = document.getElementById('bezugskostenBedingung');
-    if (elemBezugskostenBedingung) {
-        const bezugskostenBedingung = document.getElementById('bezugskostenBedingung');
-        if (inputLieferbedingung.checked) {
-            if (bezugskostenInput > 0) {
-                bezugskostenBedingung.textContent = "ab Werk";
-            } else {
-                bezugskostenBedingung.textContent = "frei Haus";
-            }
-
-        } else {
-            bezugskostenBedingung.textContent = "";
-        }
-    } else { }
-
-    const inputEigentumsvorbehalt = document.getElementById("eigentumsvorbehaltInput");
-    const eigentumsvorbehalt = document.getElementById('Eigentumsvorbehalt');
-    if (eigentumsvorbehalt) {
-        if (inputEigentumsvorbehalt.checked) {
-        } else {
-            eigentumsvorbehalt.remove();
-        }
-    } else { }
+const inputEigentumsvorbehalt = document.getElementById("eigentumsvorbehaltInput");
+const eigentumsvorbehalt = document.getElementById('Eigentumsvorbehalt');
+if (eigentumsvorbehalt) {
+    if (inputEigentumsvorbehalt && inputEigentumsvorbehalt.checked) {  // ← Prüfe auch inputEigentumsvorbehalt
+        // Eigentumsvorbehalt bleibt sichtbar
+    } else {
+        eigentumsvorbehalt.remove();
+    }
+}
 
 
    // Laden der Daten für den Kontoauszug
