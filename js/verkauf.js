@@ -797,8 +797,10 @@ function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
     params.set('menge1',     '1');
     params.set('einheit1',   'Stück');
     params.set('umsatzsteuer', '19');
-    params.set('tag', now.getDate().toString().padStart(2, '0'));
-    params.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
+const now = new Date();
+
+params.set('tag', now.getDate().toString().padStart(2, '0'));
+params.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
 
     return `belege.html?${params.toString()}`;
 }
