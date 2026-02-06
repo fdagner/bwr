@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <nav class="tab">
             <button class="tablinks" id="defaultOpen"
                 onclick="openCity(event, 'modellunternehmen')">Modellunternehmen</button>
+            <button class="tablinks" onclick="openCity(event, 'import')">Beleg importieren</button>
             <button class="tablinks" onclick="openCity(event, 'rechnung')">Rechnung/Angebot/Gutschrift</button>
             <button class="tablinks" onclick="openCity(event, 'kontoauszug')">Kontoauszug</button>
             <button class="tablinks" onclick="openCity(event, 'quittung')">Quittung</button>
@@ -53,22 +54,13 @@ document.addEventListener('DOMContentLoaded', function() {
         </nav>
         <section id="modellunternehmen" class="tabcontent">
             <h3>Modellunternehmen</h3>
-            <details>
-                <summary>Anleitung</summary><video style="width:100%" controls>
-                    <source src="media/video/modellunternehmen.mp4" type="video/mp4">
-                </video>
-            </details>
-            <p> Es steht eine umfangreiche Liste von Modellunternehmen zur Verfügung. Sie können auch Daten eigener
-                Modellunternehmen verwenden. Laden Sie hierzu die <a href="js/unternehmen.yml">Standarddaten</a>
-                herunter und bearbeiten Sie diese
-                mit einem einfachen Texteditor. Achten Sie darauf, die Yaml-Struktur nicht zu verändern.
-                Anschließend können Sie ihre Datei lokal im Browser hochladen und Ihre eigenen Unternehmen auswählen.
-                Die Daten bleiben im Browser gespeichert (falls zugelassen).</p>
-            <p>Eigene Datei verwenden und im Browser speichern: <input type="file" id="fileInput" accept=".yml"
+                <p> Es stehen bereits Modellunternehmen zur Verfügung. Sie können zusätzlich eigene Modellunternehmen manuell anlegen. Diese werden – sofern erlaubt – direkt in Ihrem Browser gespeichert.
+Sie haben außerdem die Möglichkeit, eine aktuelle Datei mit allen Unternehmen herunterzuladen, um diese in einem anderen Browser wieder zu importieren.</p>
+            <p>Datei im Browser speichern: <input type="file" id="fileInput" accept=".yml"
                     onchange="handleFileUpload()"></p>
             <p>Status: <span id="localStorageStatus" style="font-style: italic;background-color: #f5f5f5;">Daten werden
-                    aus dem Local Storage geladen...</span></p>
-            <button onclick="deleteAndLoadDefaultData()">Daten zurücksetzen</button>
+                    aus dem Local Storage geladen...</span></p> <p>
+            <button onclick="deleteAndLoadDefaultData()" style="margin-right:6px">Daten zurücksetzen</button>
             <!-- Ihr vorhandener HTML-Inhalt -->
 
             <script>
@@ -97,26 +89,177 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadUploadedDataFromLocalStorage();
             </script>
 
-            <h3>Belege importieren</h3>
-<p>
-    <label for="belegImportInput">SVG-Beleg importieren:</label>
-    <input type="file" id="belegImportInput" accept=".svg" onchange="handleBelegImport()">
-</p>
+             <details>
+        <summary><strong>Eigenes Unternehmen hinzufügen</strong></summary>
+        <div class="box" style="margin-top: 15px;">
+            <form id="addCompanyForm" onsubmit="handleAddCompanyForm(event)">
+                <div class="grid3">
+    <div>
+        <h4>Basisdaten</h4>
+        <label for="newCompanyName">Firmenname: *</label><br>
+        <input type="text" id="newCompanyName" required 
+               placeholder="z.B. ABC-Bikes"
+               maxlength="50"
+               title="Keine Sonderzeichen wie <, >, {, } erlaubt"><br>
+        
+        <label for="newCompanyRechtsform">Rechtsform: *</label><br>
+        <select id="newCompanyRechtsform" required>
+            <option value="">-- Bitte wählen --</option>
+            <option value="e. K.">e. K.</option>
+            <option value="e. Kfr.">e. Kfr.</option>
+            <option value="GmbH">GmbH</option>
+            <option value="UG">UG</option>
+            <option value="AG">AG</option>
+            <option value="OHG">OHG</option>
+            <option value="KG">KG</option>
+            <option value="GmbH & Co. KG">GmbH & Co. KG</option>
+        </select><br>
+        
+        <label for="newCompanyBranche">Branche: *</label><br>
+        <input type="text" id="newCompanyBranche" required
+               placeholder="z.B. Fahrradhandel"
+               maxlength="50"
+               title="Keine Sonderzeichen wie <, >, {, } erlaubt"><br>
+        
+        <label for="newCompanyMotto">Motto: *</label><br>
+        <input type="text" id="newCompanyMotto" required
+               placeholder="z.B. Fahrräder von A bis Z!"
+               maxlength="100"
+               title="Keine Sonderzeichen wie <, >, {, } erlaubt"><br>
+        
+        <label for="newCompanyInhaber">Inhaber/Geschäftsführer: *</label><br>
+        <input type="text" id="newCompanyInhaber" required
+               placeholder="z.B. Erna Kistner"
+               maxlength="50"
+               pattern="[a-zA-ZäöüÄÖÜß\s\.,'\-]*"
+               title="Nur Buchstaben und Sonderzeichen wie Bindestrich, Punkt, Komma, Apostroph"><br>
+        
+        <label for="newCompanyLogo">Logo hochladen:</label><br>
+        <input type="file" id="newCompanyLogo" 
+               accept="image/svg+xml"
+               onchange="handleLogoUpload(event)"><br>
+        <small style="color: #666;">Max. 500KB | Nur SVG (optional)</small><br>
+        <div id="logoPreview" style="margin-top: 10px;">
+            <small style="color: #666;">Keine Datei ausgewählt</small>
+        </div>
+    </div>
+    
+    <div>
+        <h4>Adresse & Kontakt</h4>
+        <label for="newCompanyStrasse">Straße & Hausnummer: *</label><br>
+        <input type="text" id="newCompanyStrasse" required
+               placeholder="z.B. Schwabacher Weg 50"
+               maxlength="60"
+               pattern="[a-zA-Z0-9äöüÄÖÜß\s\.,'\-]*"
+               title="Buchstaben, Zahlen und gängige Sonderzeichen erlaubt"><br>
+        
+        <label for="newCompanyPLZ">PLZ: *</label><br>
+        <input type="text" id="newCompanyPLZ" required
+               placeholder="z.B. 85049"
+               maxlength="5"
+               pattern="[0-9]{5}"
+               title="Genau 5 Ziffern"><br>
+        
+        <label for="newCompanyOrt">Ort: *</label><br>
+        <input type="text" id="newCompanyOrt" required 
+               placeholder="z.B. Ingolstadt"
+               maxlength="50"
+               pattern="[a-zA-ZäöüÄÖÜß\s\-]*"
+               title="Nur Buchstaben, Leerzeichen und Bindestrich"><br>
+        
+        <label for="newCompanyTelefon">Telefon: *</label><br>
+        <input type="tel" id="newCompanyTelefon" required
+               placeholder="z.B. 0841 0802020"
+               maxlength="25"
+               pattern="[0-9\s+\(\)\-]*"
+               title="Nur Zahlen und Zeichen: + - ( ) Leerzeichen"><br>
+        
+        <label for="newCompanyEmail">E-Mail: *</label><br>
+        <input type="email" id="newCompanyEmail" required
+               placeholder="z.B. info@firma.de"
+               maxlength="60"
+               title="Gültige E-Mail-Adresse erforderlich"><br>
+        
+        <label for="newCompanyInternet">Internet: *</label><br>
+        <input type="text" id="newCompanyInternet" required
+               placeholder="z.B. www.firma.de"
+               maxlength="60"
+               pattern="[a-zA-Z0-9\.\:\-]*"
+               title="Nur Buchstaben, Zahlen und . - :">
+    </div>
+    
+    <div>
+        <h4>Finanz- & Steuerdaten</h4>
+        <label for="newCompanyBank">Bank: *</label><br>
+        <input type="text" id="newCompanyBank" required
+               placeholder="z.B. BavarianBank"
+               maxlength="50"
+               pattern="[a-zA-Z0-9äöüÄÖÜß\s\.\-]*"
+               title="Buchstaben, Zahlen und gängige Sonderzeichen erlaubt"><br>
+        
+        <label for="newCompanyIBAN">IBAN: *</label><br>
+        <input type="text" id="newCompanyIBAN" required
+               placeholder="z.B. DE89 3704 0044 0532 0130 00"
+               maxlength="34"
+               pattern="[A-Z]{2}[0-9\s]{2,32}"
+               title="Format: DE + Zahlen (Leerzeichen erlaubt)"
+               style="text-transform: uppercase"><br>
+        
+        <label for="newCompanyBIC">BIC: *</label><br>
+        <input type="text" id="newCompanyBIC" required
+               placeholder="z.B. COBADEFFXXX"
+               maxlength="11"
+               title="8 oder 11 Zeichen (Buchstaben und Zahlen)"
+               style="text-transform: uppercase"><br>
+        
+        <label for="newCompanyUstID">USt-IdNr.: *</label><br>
+        <input type="text" id="newCompanyUstID" required
+               placeholder="z.B. DE123456789"
+               maxlength="25"
+               title="Format: DE + Ziffern"
+               style="text-transform: uppercase"><br>
+        
+        <label for="newCompanySteuernummer">Steuernummer: *</label><br>
+        <input type="text" id="newCompanySteuernummer" required
+               placeholder="z.B. 181/001/11111"
+               maxlength="20"
+               pattern="[0-9\-]*"
+               title="Nur Zahlen und Bindestrich (Format: 181-001-11111)"><br>
+        
+        <label for="newCompanyAkzent">Akzentfarbe: *</label><br>
+        <input type="color" id="newCompanyAkzent" required value="#7db9f5">
+    </div>
+</div>
+                
+                <br>
+                <button type="submit" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                    ✓ Unternehmen hinzufügen
+                </button>
+            </form>
+        </div>
+
+        <summary><strong>Meine hinzugefügten Unternehmen</strong></summary>
+        <div id="userCompanyList" style="margin-top: 15px;">
+            <!-- Wird dynamisch gefüllt -->
+        </div>
+    </details>
+    </section>
+          <section id="import" class="tabcontent">
+       <h3>Belege importieren</h3>
+<p>Sie können hier als SVG exportierte Belege wieder importieren und bearbeiten.</p>
+
+<div class="drop-zone" id="dropZone">
+    <p>SVG hier hineinziehen oder klicken zum Auswählen</p>
+    <input type="file" id="belegImportInput" accept=".svg">
+</div>
+
 <p>
     <strong>Status:</strong> 
     <span id="belegImportStatus" style="font-style: italic; background-color: #f5f5f5; padding: 4px 8px;">
         Keine Datei ausgewählt
     </span>
 </p>
-            <h3>Belege exportieren</h3>
-            <details>
-                <summary>Anleitung</summary><video style="width:100%" controls>
-                    <source src="media/video/belege.mp4" type="video/mp4">
-                </video>
-            </details>
-            <p>Benutzen Sie - wenn möglich - SVG-Dateien. Sie haben einige Vorteile gegenüber Pixelgrafiken, vor allem
-                im Online-Bereich.</p>
-
+         
         </section>
         <section id="rechnung" class="tabcontent">
             <h3>Rechnung/Angebot/Gutschrift</h3>
