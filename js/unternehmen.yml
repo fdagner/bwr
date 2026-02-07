@@ -447,7 +447,7 @@
 
 - unternehmen:
     id: "20"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "ÖkoKu"
     motto: "Fachhandel für Kunststoffe"
     bank: "Eco Bank"
@@ -855,7 +855,7 @@
 
 - unternehmen:
     id: "37"
-    branche: "Werbung"
+    branche: "Dienstleistung"
     name: "Werbeagentur Mandic"
     motto: "Wir machen bekannt."
     bank: "Grafbank"
@@ -975,7 +975,7 @@
 
 - unternehmen:
     id: "41"
-    branche: "Sonstige"
+    branche: "Dienstleistung"
     name: "UBW & Partner"
     motto: "Unternehmensberatung Walter & Partner"
     bank: "Hausbank"
@@ -1047,7 +1047,7 @@
 
 - unternehmen:
     id: "44"
-    branche: "Hotel"
+    branche: "Reisen"
     name: "Hotel Sonne"
     motto: "Hier fühlen Sie sich wohl"
     bank: "Berlin Bank"
@@ -1071,7 +1071,7 @@
 
 - unternehmen:
     id: "45"
-    branche: "Lieferant"
+    branche: "Werkstoffe"
     name: "Top-Stoffe"
     motto: "Europas größter Stoffhandel!"
     bank: "Nürnberg Bank"
@@ -1236,8 +1236,8 @@
 
 - unternehmen:
     id: "52"
-    branche: "Hotel"
-    name: "CityStay"
+    branche: "Reisen"
+    name: "CityStay Hotel"
     bank: "Logostikbank"
     rechtsform: "GmbH & Co. KG"
     logo: "media/pic/hotel.svg"
@@ -1282,8 +1282,8 @@
 
 - unternehmen:
     id: "54"
-    branche: "Hotel"
-    name: "RelaxInn"
+    branche: "Reisen"
+    name: "RelaxInn Hostel"
     bank: "GLS Bank"
     rechtsform: "GmbH & Co. KG"
     logo: "media/pic/hotel2.svg"
@@ -1873,3 +1873,100 @@
     bic: "EIRADE77XXX"
     inhaber: "Bgm. Martin Kessler"
     akzent: "#8c5fd1"
+
+
+- unternehmen:
+    id: "79"
+    branche: "Reisen"
+    name: "ReiseWelt Entdecker"
+    motto: "Deine Reise beginnt hier!"
+    bank: "ReiseBank"
+    rechtsform: "GmbH"
+    logo: "media/pic/reisewelt.svg"
+    adresse:
+      strasse: "Bahnhofstraße 18"
+      plz: "90402"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 2345678"
+      email: "info@reisewelt-entdecker.de"
+      internet: "reisewelt-entdecker.de"
+    ust_id: "DE912345678"
+    steuernummer: "241/901/56789"
+    iban: "DE89370400440532013079"
+    bic: "COBADEFFXXX"
+    inhaber: "Lena Sommerfeld"
+    akzent: "#1E90FF"
+
+- unternehmen:
+    id: "80"
+    branche: "Reisen"
+    name: "Horizont Reisebüro"
+    motto: "Urlaub, der begeistert"
+    bank: "Bayern Bank"
+    rechtsform: "e. Kfr."
+    logo: "media/pic/horizont.svg"
+    adresse:
+      strasse: "Hauptplatz 7"
+      plz: "85049"
+      ort: "Ingolstadt"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 841 998877"
+      email: "buchung@horizont-reisen.de"
+      internet: "horizont-reisen.de"
+    ust_id: "DE876543210"
+    steuernummer: "181/080/99887"
+    iban: "DE89370400440532013080"
+    bic: "COBADEFFXXX"
+    inhaber: "Tobias Fernweh"
+    akzent: "#ffff00"
+
+- unternehmen:
+    id: "81"
+    branche: "Dienstleistung"
+    name: "PixelPuls Media"
+    motto: "Digital. Modern. Wirksam."
+    bank: "Digital Bank"
+    rechtsform: "GmbH"
+    logo: "media/pic/pixel.svg"
+    adresse:
+      strasse: "Creative Campus 3"
+      plz: "90443"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 555 22 11"
+      email: "hello@pixelpuls.de"
+      internet: "pixelpuls.de"
+    ust_id: "DE345678901"
+    steuernummer: "241/902/34567"
+    iban: "DE89370400440532013081"
+    bic: "COBADEFFXXX"
+    inhaber: "Jonas Webinger"
+    akzent: "#fff"
+
+- unternehmen:
+    id: "82"
+    branche: "Dienstleistung"
+    name: "WebKreativ Studio"
+    motto: "Deine Marke – online zum Leben erweckt"
+    bank: "Sparkasse Nürnberg"
+    rechtsform: "e. K."
+    logo: "media/pic/webkreativ.svg"
+    adresse:
+      strasse: "Designallee 9"
+      plz: "91052"
+      ort: "Erlangen"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 9131 88 99 00"
+      email: "kontakt@webkreativ-studio.de"
+      internet: "webkreativ-studio.de"
+    ust_id: "DE456789012"
+    steuernummer: "220/345/67890"
+    iban: "DE89370400440532013082"
+    bic: "BYLADEM1NBG"
+    inhaber: "Sara Code & Design"
+    akzent: "#FF69B4"

@@ -1595,6 +1595,7 @@ function loadSupplierData() {
 
     // Lieferanten-spezifische Logik
     applySupplierSpecificData(selectedData);
+    adjustTextColor();
 }
 
 // Funktion zum Laden eines Logos
