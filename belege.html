@@ -455,7 +455,10 @@ Sie haben außerdem die Möglichkeit, eine aktuelle Datei mit allen Unternehmen 
                 <!-- Vorlage -->
                 <fieldset class="vorlage-gruppe">
                     <legend>Vorlage</legend>
-                    
+                            <div class="form-field">
+                <label for="colorPicker">Akzentfarbe</label>
+                <input type="color" id="colorPicker" value="#7db9f5" style="flex:none"/>
+            </div>
                     <div class="form-field">
                         <label for="svgDropdown">Auswählen</label>
                         <select id="svgDropdown">
@@ -479,6 +482,7 @@ Sie haben außerdem die Möglichkeit, eine aktuelle Datei mit allen Unternehmen 
                         </select>
                     </div>
                 </fieldset>
+              
             </div>
         </section>
 
@@ -516,10 +520,7 @@ Sie haben außerdem die Möglichkeit, eine aktuelle Datei mit allen Unternehmen 
         <section class="form-section form-actions">
             <button type="button" onclick="applySVGholen()">Alle Daten übernehmen</button>
             
-            <div class="form-field">
-                <label for="colorPicker">Akzentfarbe</label>
-                <input type="color" id="colorPicker" value="#7db9f5" />
-            </div>
+      
         </section>
     </form>
 
