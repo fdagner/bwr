@@ -4,33 +4,87 @@ const parsedData = jsyaml.load(kontoAuswahlYAML);
 // Select the container for the checkboxes
 const kontoAuswahlContainer = document.getElementById('kontoAuswahlContainer');
 
+// Hilfsfunktion: Kontenklasse anhand erster Ziffer ermitteln
+function getKlassenName(kontonummer) {
+    const ersteZiffer = kontonummer.charAt(0);
+    const klassen = {
+        '0': 'Klasse 0 – Anlagevermögen',
+        '1': 'Klasse 1 – Umlaufvermögen und ARA',
+        '2': 'Klasse 2 – Finanzanlagen',
+        '3': 'Klasse 3 – Eigenkapital & Rückstellungen',
+        '4': 'Klasse 4 – Verbindlichkeiten und PRA',
+        '5': 'Klasse 5 – Erträge',
+        '6': 'Klasse 6 – Betriebliche Aufwanden',
+        '7': 'Klasse 7 – Weitere Aufwendungen',
+        '8': 'Klasse 8 – Ergebnisrechnungen',
+        '9': 'Klasse 9 – Kosten- und Leistungsrechnung'
+    };
+    return klassen[ersteZiffer] || 'Sonstige Konten';
+}
 
-// Fill the container with checkboxes for the accounts from the YAML file
+// Konten nach Klassen gruppieren
+const gruppen = {};
 parsedData.konten.forEach(konto => {
-  // Create a div to wrap the input and label
-  const divContainer = document.createElement('div');
-  divContainer.classList.add('radioKonto');
+    const klasse = getKlassenName(konto.value_number);
+    if (!gruppen[klasse]) {
+        gruppen[klasse] = [];
+    }
+    gruppen[klasse].push(konto);
+});
 
-  // Checkbox
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.value = konto.value_number + ' ' + konto.value_account;
-  checkbox.id = 'konto_' + konto.value_number; // Assign a unique ID for each checkbox
-  const label = document.createElement('label');
-  label.htmlFor = 'konto_' + konto.value_number;
-  label.appendChild(document.createTextNode(konto.label));
+// Sortierte Reihenfolge der Klassen (0 → 9)
+const sortierteKlassen = Object.keys(gruppen).sort((a, b) => {
+    const nrA = a.match(/\d+/) ? parseInt(a.match(/\d+/)[0]) : 99;
+    const nrB = b.match(/\d+/) ? parseInt(b.match(/\d+/)[0]) : 99;
+    return nrA - nrB;
+});
 
-  // Append to the div container
-  divContainer.appendChild(checkbox);
-  divContainer.appendChild(label);
+// HTML-Ausgabe erzeugen
+// ... (der obere Teil mit Gruppierung bleibt gleich)
 
-  // Append the div container to kontoAuswahlContainer
-  kontoAuswahlContainer.appendChild(divContainer);
+// HTML-Ausgabe erzeugen
+sortierteKlassen.forEach(klasse => {
+    // Ganzer Block pro Klasse
+    const gruppenDiv = document.createElement('div');
+    gruppenDiv.className = 'konto-gruppe';
+
+    // Überschrift (jetzt allein in der Zeile)
+    const ueberschrift = document.createElement('h4');
+    ueberschrift.textContent = klasse;
+    gruppenDiv.appendChild(ueberschrift);
+
+    // Container für die Checkboxen dieser Klasse
+    const flexRow = document.createElement('div');
+    flexRow.className = 'flex-row';
+
+    gruppen[klasse]
+        .sort((a, b) => a.value_number.localeCompare(b.value_number, undefined, { numeric: true }))
+        .forEach(konto => {
+            const divContainer = document.createElement('div');
+            divContainer.classList.add('radioKonto');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = konto.value_number + ' ' + konto.value_account;
+            checkbox.id = 'konto_' + konto.value_number;
+
+            const label = document.createElement('label');
+            label.htmlFor = checkbox.id;
+            label.textContent = konto.value_number + ' ' + konto.value_account;  
+            // ↑ Hier kannst du auch konto.label nehmen, wenn du die längeren Texte willst
+
+            divContainer.appendChild(checkbox);
+            divContainer.appendChild(label);
+            flexRow.appendChild(divContainer);
+        });
+
+    gruppenDiv.appendChild(flexRow);
+    kontoAuswahlContainer.appendChild(gruppenDiv);
 });
 function generiereTKonto() {
   const anzahlZeilen = document.getElementById('anzahlZeilen').value;
   const summenzeileCheckbox = document.getElementById('summenzeileCheckbox');
-  const tkontoContainer = document.getElementById('tkontoContainer');
+  const Container = document.getElementById('Container');
   const buttonContainer = document.getElementById('buttonContainer');
 
   // Sammle die ausgewählten Konten
@@ -84,7 +138,7 @@ function generiereTKonto() {
       randomZahlWertHaben = "";
     }
 
-    tkontoHTML += '<table style="border-collapse: collapse;width:650px;background-color:#fff"><tbody><tr><th style="width:25%;text-align:left" >Soll</th><th style="text-align:center;" colspan="2" >' + kontoAuswahl + '</th><th style="width:25%;text-align:right;" >Haben</th></tr>';
+    tkontoHTML += '<table style="margin: 0 auto;border-collapse: collapse;width:650px;background-color:#fff"><tbody><tr><th style="width:25%;text-align:left" >Soll</th><th style="text-align:center;" colspan="2" >' + kontoAuswahl + '</th><th style="width:25%;text-align:right;" >Haben</th></tr>';
 
     tkontoHTML += '<tr style="border-top: 2px solid #AAAAAA">' +
       `<td style="border-top: 2px solid #AAAAAA;width:25%; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; max-width: 160px">${abSollWert}&nbsp;</td>` +
@@ -114,54 +168,9 @@ function generiereTKonto() {
     tkontoHTML += '</tbody></table><br>';
   });
   tkontoHTML += '<div>';
-  tkontoContainer.innerHTML = tkontoHTML;
+  Container.innerHTML = tkontoHTML;
 
   // Display the buttons after generation
   buttonContainer.style.display = 'block';
 }
-
-function herunterladen() {
-  const tkontoHTML = document.getElementById('tkontoContainer').innerHTML;
-  const blob = new Blob([tkontoHTML], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'tkonto.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-function kopiereInZwischenablage() {
-  const tkontoHTML = document.getElementById('tkontoContainer').innerHTML;
-  navigator.clipboard.writeText(tkontoHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function herunterladenAlsPNG() {
-  const tkontoContainer = document.getElementById('tkontoContainer');
-  html2canvas(tkontoContainer, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = 'T-Konten' + '.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-}
-
-
-let clipboard = new ClipboardJS('#tkontoOfficeButton');
-
-clipboard.on('success', function (e) {
-  console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
-});
-
-clipboard.on('error', function (e) {
-  console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-  alert("Fehler beim Kopieren der Tabelle.");
-});
-
 

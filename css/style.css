@@ -892,3 +892,31 @@ footer {
     opacity: 0;
     cursor: pointer;
 }
+
+
+.konto-gruppe {
+    margin: 1.8em 0 1.2em 0;
+    width: 100%;
+}
+
+.konto-gruppe h4 {
+    margin: 0 0 0.6em 0;
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+    font-size: 1.1em;
+}
+
+.konto-gruppe .flex-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin-left: 0;
+}
+
+.konto-gruppe .radioKonto {
+    white-space: nowrap;
+    min-width: 180px;          /* verhindert zu starkes Zerreißen */
+}
