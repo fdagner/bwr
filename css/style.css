@@ -1143,3 +1143,174 @@ select:focus {
   justify-content: space-between;
   align-items: center;
 }
+
+/* ============================================
+   ZUSÄTZLICHE FIELDSET-GRUPPEN - ALLE SECTIONS
+   ============================================ */
+
+/* Lohnabrechnung Fieldsets */
+.steuer-gruppe {
+    background-color: #fff0f5;
+    border-color: #ffcce0;
+}
+
+.steuer-gruppe:hover {
+    border-color: #ff99cc;
+}
+
+.steuer-berechnung-gruppe {
+    background-color: #fff5f0;
+    border-color: #ffe0cc;
+}
+
+.steuer-berechnung-gruppe:hover {
+    border-color: #ffcc99;
+}
+
+.sozialversicherung-gruppe {
+    background-color: #f0f5ff;
+    border-color: #cce0ff;
+}
+
+.sozialversicherung-gruppe:hover {
+    border-color: #99ccff;
+}
+
+/* Bescheid Fieldsets */
+.bescheid-art-gruppe {
+    background-color: #fffbf0;
+    border-color: #fff0cc;
+}
+
+.bescheid-art-gruppe:hover {
+    border-color: #ffe699;
+}
+
+.bescheid-daten-gruppe {
+    background-color: #f0fff5;
+    border-color: #ccffdd;
+}
+
+.bescheid-daten-gruppe:hover {
+    border-color: #99ffbb;
+}
+
+/* Anlagenkarte Fieldsets */
+.anlage-daten-gruppe {
+    background-color: #f5f0ff;
+    border-color: #e0ccff;
+}
+
+.anlage-daten-gruppe:hover {
+    border-color: #cc99ff;
+}
+
+/* Wertpapiere Fieldsets */
+.wertpapier-daten-gruppe {
+    background-color: #fff5f0;
+    border-color: #ffdccc;
+}
+
+.wertpapier-daten-gruppe:hover {
+    border-color: #ffb399;
+}
+
+.wertpapier-art-gruppe {
+    background-color: #f0fffa;
+    border-color: #ccffee;
+}
+
+.wertpapier-art-gruppe:hover {
+    border-color: #99ffdd;
+}
+
+/* Spezielle Input-Gruppen */
+.checkbox-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkbox-inline input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+/* Email Container Spezial-Styling */
+#emailContainer {
+    border: 0px solid #00000039;
+    line-height: 0.75;
+    padding: 0px;
+    margin: 0px;
+    min-width: 700px;
+}
+
+/* Newspaper Container */
+#newspaperContainer {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+#newspaperDiv {
+    max-width: 700px;
+    background-color: #f5f5f5;
+    padding: 4px;
+    margin: 0 auto;
+}
+
+#newspaperContent {
+    text-align: justify;
+    column-count: 2;
+    column-width: 150px;
+    column-gap: 30px;
+}
+
+/* Lohnjournal spezielle Container */
+#lohnjournalBuchungssatzContainer {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+/* Responsive Anpassungen für alle neuen Sections */
+@media (max-width: 768px) {
+    #emailContainer {
+        min-width: 100%;
+    }
+    
+    #newspaperContent {
+        column-count: 1;
+    }
+    
+    .checkbox-inline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Verbesserte Hover-Effekte für alle Fieldsets */
+.steuer-gruppe,
+.steuer-berechnung-gruppe,
+.sozialversicherung-gruppe,
+.bescheid-art-gruppe,
+.bescheid-daten-gruppe,
+.anlage-daten-gruppe,
+.wertpapier-daten-gruppe,
+.wertpapier-art-gruppe {
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.steuer-gruppe:hover,
+.steuer-berechnung-gruppe:hover,
+.sozialversicherung-gruppe:hover,
+.bescheid-art-gruppe:hover,
+.bescheid-daten-gruppe:hover,
+.anlage-daten-gruppe:hover,
+.wertpapier-daten-gruppe:hover,
+.wertpapier-art-gruppe:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}

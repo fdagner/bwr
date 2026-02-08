@@ -534,58 +534,30 @@ const layouts = [
 // Personendaten mit realistischen Profilen
 // ────────────────────────────────────────────────
 const personen = [
-  { vorname: 'Aghad', name: 'Esen', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Dilara', name: 'Antal', geschlecht: 'w', bildungsgrad: 'hoch' },
+  { vorname: 'Max', name: 'Mustermann', geschlecht: 'm', bildungsgrad: 'mittel' },
+  { vorname: 'Anna', name: 'Musterfrau', geschlecht: 'w', bildungsgrad: 'hoch' },
   { vorname: 'Lukas', name: 'Schmidt', geschlecht: 'm', bildungsgrad: 'hoch' },
   { vorname: 'Sophia', name: 'Müller', geschlecht: 'w', bildungsgrad: 'mittel' },
   { vorname: 'Felix', name: 'Fischer', geschlecht: 'm', bildungsgrad: 'mittel' },
   { vorname: 'Emma', name: 'Weber', geschlecht: 'w', bildungsgrad: 'hoch' },
   { vorname: 'Noah', name: 'Meyer', geschlecht: 'm', bildungsgrad: 'niedrig' },
   { vorname: 'Mia', name: 'Wagner', geschlecht: 'w', bildungsgrad: 'mittel' },
-  { vorname: 'Ben', name: 'Balic', geschlecht: 'm', bildungsgrad: 'mittel' },
+  { vorname: 'Ben', name: 'Becker', geschlecht: 'm', bildungsgrad: 'mittel' },
   { vorname: 'Lea', name: 'Schulz', geschlecht: 'w', bildungsgrad: 'hoch' },
   { vorname: 'Paul', name: 'Hoffmann', geschlecht: 'm', bildungsgrad: 'hoch' },
-  { vorname: 'Laura', name: 'Celik', geschlecht: 'w', bildungsgrad: 'mittel' },
+  { vorname: 'Laura', name: 'Bauer', geschlecht: 'w', bildungsgrad: 'mittel' },
   { vorname: 'David', name: 'Richter', geschlecht: 'm', bildungsgrad: 'hoch' },
-  { vorname: 'Aylin', name: 'Masala', geschlecht: 'w', bildungsgrad: 'mittel' },
+  { vorname: 'Sarah', name: 'Klein', geschlecht: 'w', bildungsgrad: 'mittel' },
   { vorname: 'Leon', name: 'Wolf', geschlecht: 'm', bildungsgrad: 'niedrig' },
-  { vorname: 'Hannah', name: 'Satari', geschlecht: 'w', bildungsgrad: 'hoch' },
+  { vorname: 'Hannah', name: 'Schröder', geschlecht: 'w', bildungsgrad: 'hoch' },
   { vorname: 'Julian', name: 'Neumann', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Eda', name: 'Yilmaz', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Anthony', name: 'Brown', geschlecht: 'm', bildungsgrad: 'niedrig' },
+  { vorname: 'Lena', name: 'Schwarz', geschlecht: 'w', bildungsgrad: 'hoch' },
+  { vorname: 'Tim', name: 'Braun', geschlecht: 'm', bildungsgrad: 'niedrig' },
   { vorname: 'Julia', name: 'Hofmann', geschlecht: 'w', bildungsgrad: 'mittel' },
   { vorname: 'Jonas', name: 'König', geschlecht: 'm', bildungsgrad: 'mittel' },
   { vorname: 'Marie', name: 'Krause', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Elias', name: 'Panovski', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Charlotte', name: 'Schmitt', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Tim', name: 'Becker', geschlecht: 'm', bildungsgrad: 'niedrig' },
-  { vorname: 'Sarah', name: 'Lorenz', geschlecht: 'w', bildungsgrad: 'niedrig' },
-  { vorname: 'Kevin', name: 'Seidel', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Nina', name: 'Brandt', geschlecht: 'w', bildungsgrad: 'mittel' },
-  { vorname: 'Daniel', name: 'Krüger', geschlecht: 'm', bildungsgrad: 'hoch' },
-  { vorname: 'Katharina', name: 'Voigt', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Marco', name: 'Roth', geschlecht: 'm', bildungsgrad: 'niedrig' },
-  { vorname: 'Selin', name: 'Demir', geschlecht: 'w', bildungsgrad: 'mittel' },
-  { vorname: 'Tobias', name: 'Arnold', geschlecht: 'm', bildungsgrad: 'hoch' },
-  { vorname: 'Jasmin', name: 'Öztürk', geschlecht: 'w', bildungsgrad: 'niedrig' },
-  { vorname: 'Mehmet', name: 'Kaya', geschlecht: 'm', bildungsgrad: 'niedrig' },
-  { vorname: 'Elif', name: 'Aydin', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Can', name: 'Demir', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Zeynep', name: 'Arslan', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Amir', name: 'Hosseini', geschlecht: 'm', bildungsgrad: 'hoch' },
-  { vorname: 'Sara', name: 'Mohammadi', geschlecht: 'w', bildungsgrad: 'mittel' },
-  { vorname: 'Reza', name: 'Karimi', geschlecht: 'm', bildungsgrad: 'niedrig' },
-  { vorname: 'Omar', name: 'Haddad', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Fatima', name: 'El Mansouri', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Youssef', name: 'Ben Ali', geschlecht: 'm', bildungsgrad: 'niedrig' },
-  { vorname: 'Ivan', name: 'Petrov', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Milena', name: 'Jovanovic', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Marko', name: 'Nikolic', geschlecht: 'm', bildungsgrad: 'niedrig' },
-  { vorname: 'Aleksandar', name: 'Stojanov', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Elena', name: 'Georgieva', geschlecht: 'w', bildungsgrad: 'niedrig' },
-  { vorname: 'Samuel', name: 'Okafor', geschlecht: 'm', bildungsgrad: 'hoch' },
-  { vorname: 'Amina', name: 'Diallo', geschlecht: 'w', bildungsgrad: 'mittel' },
-  { vorname: 'Ibrahim', name: 'Sissoko', geschlecht: 'm', bildungsgrad: 'hoch' }
+  { vorname: 'Elias', name: 'Lange', geschlecht: 'm', bildungsgrad: 'mittel' },
+  { vorname: 'Charlotte', name: 'Schmitt', geschlecht: 'w', bildungsgrad: 'hoch' }
 ];
 
 // Adressdaten
@@ -599,16 +571,7 @@ const adressen = [
   { plz: '60311', ort: 'Frankfurt', strassen: ['Zeil 112', 'Kaiserstraße 48', 'Große Bockenheimer Str. 19'] },
   { plz: '40213', ort: 'Düsseldorf', strassen: ['Königsallee 92', 'Schadowstraße 11', 'Immermannstraße 34'] },
   { plz: '04109', ort: 'Leipzig', strassen: ['Grimmaische Straße 25', 'Petersstraße 16', 'Hainstraße 8'] },
-  { plz: '01067', ort: 'Dresden', strassen: ['Prager Straße 2', 'Wilsdruffer Straße 20', 'Neumarkt 12'] },
-  { plz: '90762', ort: 'Fürth', strassen: ['Schwabacher Straße 45', 'Gustavstraße 12', 'Königstraße 89'] },
-  { plz: '91052', ort: 'Erlangen', strassen: ['Hauptstraße 33', 'Nürnberger Straße 15', 'Goethestraße 8'] },
-  { plz: '97070', ort: 'Würzburg', strassen: ['Domstraße 6', 'Juliuspromenade 40', 'Theaterstraße 22'] },
-  { plz: '91074', ort: 'Herzogenaurach', strassen: ['Hauptstraße 21', 'Marktplatz 3', 'Einsteinstraße 5'] },
-  { plz: '86150', ort: 'Augsburg', strassen: ['Maximilianstraße 54', 'Karolinenstraße 18', 'Hallstraße 9'] },
-  { plz: '84028', ort: 'Landshut', strassen: ['Altstadt 82', 'Ländtorplatz 4', 'Neustadt 21'] },
-  { plz: '93047', ort: 'Regensburg', strassen: ['Maximilianstraße 26', 'Gesandtenstraße 14', 'Dachauplatz 7'] },
-  { plz: '96047', ort: 'Bamberg', strassen: ['Obere Brücke 3', 'Grüner Markt 10', 'Lange Straße 18'] },
-  { plz: '87435', ort: 'Kempten', strassen: ['Residenzplatz 5', 'Fischerstraße 9', 'Bahnhofstraße 14'] }
+  { plz: '01067', ort: 'Dresden', strassen: ['Prager Straße 2', 'Wilsdruffer Straße 20', 'Neumarkt 12'] }
 ];
 
 // Weitere persönliche Daten
@@ -1005,67 +968,7 @@ function zufallsauswahl(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function extractAktuelleStelleOrt(berufspraxisText) {
-  // Extrahiere die letzte Zeile (aktuelle Stelle)
-  const zeilen = berufspraxisText.split('\n');
-  const aktuelleZeile = zeilen[zeilen.length - 1];
-  
-  // Suche nach Ortsangaben in der letzten Zeile
-  // Format: "Position bei Firma, Ort" oder "Position bei Firma Ort"
-  const ortMatch = aktuelleZeile.match(/,\s*([A-ZÄÖÜ][a-zäöüß]+)(?:\s|$)/);
-  
-  if (ortMatch) {
-    return ortMatch[1];
-  }
-  
-  // Fallback: Suche nach bekannten Städten
-  const staedteListe = [
-    'Nürnberg', 'München', 'Berlin', 'Hamburg', 'Köln', 'Stuttgart', 
-    'Frankfurt', 'Düsseldorf', 'Leipzig', 'Dresden', 'Fürth', 'Erlangen',
-    'Würzburg', 'Herzogenaurach', 'Augsburg', 'Landshut', 'Regensburg',
-    'Bamberg', 'Kempten', 'Bonn', 'Halle', 'Leverkusen', 'Ludwigshafen',
-    'Walldorf', 'Ingolstadt', 'Zuffenhausen', 'Aachen', 'Mannheim',
-    'Dortmund', 'Amsterdam'
-  ];
-  
-  for (const stadt of staedteListe) {
-    if (aktuelleZeile.includes(stadt)) {
-      return stadt;
-    }
-  }
-  
-  // Wenn nichts gefunden, return null
-  return null;
-}
 
-function findePassendeAdresse(ort, alleAdressen) {
-  // Suche zuerst exakte Übereinstimmung
-  const exakt = alleAdressen.find(a => a.ort === ort);
-  if (exakt) return exakt;
-  
-  // Suche nach Orten in der Nähe (z.B. Zuffenhausen -> Stuttgart)
-  const naheOrte = {
-    'Zuffenhausen': 'Stuttgart',
-    'Herzogenaurach': 'Nürnberg',
-    'Erlangen': 'Nürnberg',
-    'Fürth': 'Nürnberg',
-    'Walldorf': 'Heidelberg',
-    'Leverkusen': 'Köln',
-    'Ludwigshafen': 'Mannheim',
-    'Ingolstadt': 'München',
-    'Halle': 'Leipzig',
-    'Bonn': 'Köln',
-    'Amsterdam': 'Hamburg' // Norddeutschland
-  };
-  
-  if (naheOrte[ort]) {
-    const alternativOrt = alleAdressen.find(a => a.ort === naheOrte[ort]);
-    if (alternativOrt) return alternativOrt;
-  }
-  
-  // Fallback: Zufällige Adresse
-  return zufallsauswahl(alleAdressen);
-}
 
 function generateGeburtsdatum(bildungsgrad) {
   const currentYear = new Date().getFullYear(); // Dynamisch aktuelles Jahr ermitteln
@@ -1095,50 +998,43 @@ function generateGeburtsdatum(bildungsgrad) {
   };
 }
 
-function generateKonsistenteZeitlinie(geburtsjahr, bildungsgrad, geschlecht) {
+function generateKonsistenteZeitlinie(geburtsjahr, bildungsgrad, geschlecht, stadt) {
   const currentYear = new Date().getFullYear();
   let timeline = {};
   
   // Schulbildung
   if (bildungsgrad === 'niedrig') {
-    // Hauptschule: 6 Jahre (typisch 10-16 Jahre)
     timeline.schulStart = geburtsjahr + 6;
-    timeline.schulEnde = timeline.schulStart + 9; // bis ca. 15-16
+    timeline.schulEnde = timeline.schulStart + 9;
     timeline.schulText = `Hauptschulabschluss (${timeline.schulStart}-${timeline.schulEnde})`;
   } else if (bildungsgrad === 'mittel') {
-    // Realschule: 6 Jahre (typisch 10-16 Jahre)
     timeline.schulStart = geburtsjahr + 6;
-    timeline.schulEnde = timeline.schulStart + 10; // bis ca. 16-17
+    timeline.schulEnde = timeline.schulStart + 10;
     const schultyp = Math.random() > 0.5 ? 'Realschulabschluss' : 'Mittlere Reife';
     timeline.schulText = `${schultyp} (${timeline.schulStart}-${timeline.schulEnde})`;
   } else { // hoch
-    // Abitur: 12-13 Jahre (typisch 6-18/19 Jahre)
     timeline.schulStart = geburtsjahr + 6;
-    timeline.schulEnde = timeline.schulStart + 12; // bis ca. 18-19
+    timeline.schulEnde = timeline.schulStart + 12;
     timeline.schulText = `Abitur (${timeline.schulStart}-${timeline.schulEnde})`;
   }
   
-  // Ausbildung/Studium direkt nach der Schule
+  // Ausbildung/Studium
   timeline.ausbildungStart = timeline.schulEnde;
   
   if (bildungsgrad === 'niedrig') {
-    // 2-3 Jahre Ausbildung
     const dauer = Math.random() > 0.5 ? 2 : 3;
     timeline.ausbildungEnde = timeline.ausbildungStart + dauer;
     timeline.ausbildungText = zufallsauswahl(bildungswege[bildungsgrad].ausbildungen[geschlecht])
       .replace(/\(\d{4}-\d{4}\)/, `(${timeline.ausbildungStart}-${timeline.ausbildungEnde})`);
   } else if (bildungsgrad === 'mittel') {
-    // 2.5-3.5 Jahre Ausbildung
     const dauer = Math.random() > 0.5 ? 3 : 3.5;
     timeline.ausbildungEnde = timeline.ausbildungStart + Math.floor(dauer);
     timeline.ausbildungText = zufallsauswahl(bildungswege[bildungsgrad].ausbildungen[geschlecht])
       .replace(/\(\d{4}-\d{4}\)/, `(${timeline.ausbildungStart}-${timeline.ausbildungEnde})`);
   } else { // hoch
-    // Studium 3-4 Jahre (Bachelor) oder Ausbildung + Weiterbildung
     const ausbildungVorlage = zufallsauswahl(bildungswege[bildungsgrad].ausbildungen[geschlecht]);
     
     if (ausbildungVorlage.includes('+')) {
-      // Ausbildung + Weiterbildung
       const erstausbildung = timeline.ausbildungStart;
       const erstausbildungEnde = erstausbildung + 3;
       const weiterbildungEnde = erstausbildungEnde + 2;
@@ -1147,21 +1043,17 @@ function generateKonsistenteZeitlinie(geburtsjahr, bildungsgrad, geschlecht) {
         .replace(/\((\d{4})-(\d{4}) \+ (\d{4})-(\d{4})\)/, 
           `(${erstausbildung}-${erstausbildungEnde} + ${erstausbildungEnde}-${weiterbildungEnde})`);
     } else {
-      // Studium
-      const dauer = Math.random() > 0.7 ? 4 : 3; // Bachelor meist 3 Jahre
+      const dauer = Math.random() > 0.7 ? 4 : 3;
       timeline.ausbildungEnde = timeline.ausbildungStart + dauer;
       timeline.ausbildungText = ausbildungVorlage
         .replace(/\(\d{4}-\d{4}\)/, `(${timeline.ausbildungStart}-${timeline.ausbildungEnde})`);
     }
   }
   
-  // Berufspraxis - beginnt nach Ausbildung
+  // Berufspraxis - WICHTIG: Verwende die übergebene Stadt!
   timeline.berufStart = timeline.ausbildungEnde;
-  
-  // Berufspraxis-Vorlage holen und Jahreszahlen anpassen
   const berufVorlage = zufallsauswahl(berufspraxisProfile[bildungsgrad][geschlecht]);
   
-  // Extrahiere die Struktur (Anzahl der Stationen)
   const stationen = berufVorlage.split('\n');
   let berufspraxisNeu = [];
   let aktuellesJahr = timeline.berufStart;
@@ -1170,17 +1062,17 @@ function generateKonsistenteZeitlinie(geburtsjahr, bildungsgrad, geschlecht) {
     const station = stationen[i];
     
     if (i === stationen.length - 1) {
-      // Letzte Station: bis heute
-      const neueStation = station.replace(/(\d{4})-heute/, `${aktuellesJahr}-heute`);
+      // Letzte Station mit der gewählten Stadt!
+      const neueStation = station
+        .replace(/(\d{4})-heute/, `${aktuellesJahr}-heute`)
+        .replace(/,\s*[A-Za-zäöüÄÖÜß\s]+$/, `, ${stadt}`); // Ersetze Stadt am Ende
       berufspraxisNeu.push(neueStation);
     } else {
-      // Frühere Stationen: 2-4 Jahre Dauer
-      const dauer = Math.floor(Math.random() * 3) + 2; // 2-4 Jahre
+      const dauer = Math.floor(Math.random() * 3) + 2;
       const endeJahr = aktuellesJahr + dauer;
       
-      // Stelle sicher, dass wir nicht in der Zukunft landen
       if (endeJahr > currentYear) {
-        break; // Diese und alle weiteren Stationen überspringen
+        break;
       }
       
       const neueStation = station.replace(/(\d{4})-(\d{4})/, `${aktuellesJahr}-${endeJahr}`);
@@ -1208,6 +1100,11 @@ async function generateLebenslauf() {
   const bildungsgrad = person.bildungsgrad;
   const geschlecht = person.geschlecht;
   
+  // EINE Stadt für Wohnadresse UND Arbeitgeber!
+  const adresse = zufallsauswahl(adressen);
+  const stadt = adresse.ort;
+  const strasse = zufallsauswahl(adresse.strassen);
+  
   // Persönliche Daten
   const staatsangehoerigkeit = zufallsauswahl(staatsangehoerigkeiten);
   const familienstand = zufallsauswahl(familienstaende);
@@ -1219,23 +1116,11 @@ async function generateLebenslauf() {
   const fotoDateiname = `${geschlecht}_foto${fotoNum}.jpg`;
   const fotoBase64 = await loadFotoAsBase64(fotoDateiname);
   
-  // Bildungsweg - konsistente Zeitlinie generieren
-  const timeline = generateKonsistenteZeitlinie(geburtsdatumObj.birthYear, bildungsgrad, geschlecht);
+  // Bildungsweg - konsistente Zeitlinie mit derselben Stadt!
+  const timeline = generateKonsistenteZeitlinie(geburtsdatumObj.birthYear, bildungsgrad, geschlecht, stadt);
   const schulausbildungText = timeline.schulText;
   const ausbildungText = timeline.ausbildungText;
   const berufspraxisText = timeline.berufspraxisText;
-  
-  // Aktuellen Arbeitsort extrahieren
-  const aktuellerArbeitsort = extractAktuelleStelleOrt(berufspraxisText);
-  
-  // Adresse basierend auf aktuellem Arbeitsort wählen
-  let adresse;
-  if (aktuellerArbeitsort) {
-    adresse = findePassendeAdresse(aktuellerArbeitsort, adressen);
-  } else {
-    adresse = zufallsauswahl(adressen);
-  }
-  const strasse = zufallsauswahl(adresse.strassen);
   
   // Kenntnisse
   const besondereKenntnisseText = zufallsauswahl(qualifikationen[bildungsgrad]);
