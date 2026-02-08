@@ -534,29 +534,29 @@ const layouts = [
 // Personendaten mit realistischen Profilen
 // ────────────────────────────────────────────────
 const personen = [
-  { vorname: 'Max', name: 'Mustermann', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Anna', name: 'Musterfrau', geschlecht: 'w', bildungsgrad: 'hoch' },
+  { vorname: 'Aghad', name: 'Esen', geschlecht: 'm', bildungsgrad: 'mittel' },
+  { vorname: 'Dilara', name: 'Antal', geschlecht: 'w', bildungsgrad: 'hoch' },
   { vorname: 'Lukas', name: 'Schmidt', geschlecht: 'm', bildungsgrad: 'hoch' },
   { vorname: 'Sophia', name: 'Müller', geschlecht: 'w', bildungsgrad: 'mittel' },
   { vorname: 'Felix', name: 'Fischer', geschlecht: 'm', bildungsgrad: 'mittel' },
   { vorname: 'Emma', name: 'Weber', geschlecht: 'w', bildungsgrad: 'hoch' },
   { vorname: 'Noah', name: 'Meyer', geschlecht: 'm', bildungsgrad: 'niedrig' },
   { vorname: 'Mia', name: 'Wagner', geschlecht: 'w', bildungsgrad: 'mittel' },
-  { vorname: 'Ben', name: 'Becker', geschlecht: 'm', bildungsgrad: 'mittel' },
+  { vorname: 'Ben', name: 'Balic', geschlecht: 'm', bildungsgrad: 'mittel' },
   { vorname: 'Lea', name: 'Schulz', geschlecht: 'w', bildungsgrad: 'hoch' },
   { vorname: 'Paul', name: 'Hoffmann', geschlecht: 'm', bildungsgrad: 'hoch' },
-  { vorname: 'Laura', name: 'Bauer', geschlecht: 'w', bildungsgrad: 'mittel' },
+  { vorname: 'Laura', name: 'Celik', geschlecht: 'w', bildungsgrad: 'mittel' },
   { vorname: 'David', name: 'Richter', geschlecht: 'm', bildungsgrad: 'hoch' },
-  { vorname: 'Sarah', name: 'Klein', geschlecht: 'w', bildungsgrad: 'mittel' },
+  { vorname: 'Aylin', name: 'Masala', geschlecht: 'w', bildungsgrad: 'mittel' },
   { vorname: 'Leon', name: 'Wolf', geschlecht: 'm', bildungsgrad: 'niedrig' },
-  { vorname: 'Hannah', name: 'Schröder', geschlecht: 'w', bildungsgrad: 'hoch' },
+  { vorname: 'Hannah', name: 'Satari', geschlecht: 'w', bildungsgrad: 'hoch' },
   { vorname: 'Julian', name: 'Neumann', geschlecht: 'm', bildungsgrad: 'mittel' },
-  { vorname: 'Lena', name: 'Schwarz', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Tim', name: 'Braun', geschlecht: 'm', bildungsgrad: 'niedrig' },
+  { vorname: 'Eda', name: 'Yilmaz', geschlecht: 'w', bildungsgrad: 'hoch' },
+  { vorname: 'Anthony', name: 'Brown', geschlecht: 'm', bildungsgrad: 'niedrig' },
   { vorname: 'Julia', name: 'Hofmann', geschlecht: 'w', bildungsgrad: 'mittel' },
   { vorname: 'Jonas', name: 'König', geschlecht: 'm', bildungsgrad: 'mittel' },
   { vorname: 'Marie', name: 'Krause', geschlecht: 'w', bildungsgrad: 'hoch' },
-  { vorname: 'Elias', name: 'Lange', geschlecht: 'm', bildungsgrad: 'mittel' },
+  { vorname: 'Elias', name: 'Panovski', geschlecht: 'm', bildungsgrad: 'mittel' },
   { vorname: 'Charlotte', name: 'Schmitt', geschlecht: 'w', bildungsgrad: 'hoch' }
 ];
 
@@ -571,7 +571,16 @@ const adressen = [
   { plz: '60311', ort: 'Frankfurt', strassen: ['Zeil 112', 'Kaiserstraße 48', 'Große Bockenheimer Str. 19'] },
   { plz: '40213', ort: 'Düsseldorf', strassen: ['Königsallee 92', 'Schadowstraße 11', 'Immermannstraße 34'] },
   { plz: '04109', ort: 'Leipzig', strassen: ['Grimmaische Straße 25', 'Petersstraße 16', 'Hainstraße 8'] },
-  { plz: '01067', ort: 'Dresden', strassen: ['Prager Straße 2', 'Wilsdruffer Straße 20', 'Neumarkt 12'] }
+  { plz: '01067', ort: 'Dresden', strassen: ['Prager Straße 2', 'Wilsdruffer Straße 20', 'Neumarkt 12'] },
+  { plz: '90762', ort: 'Fürth', strassen: ['Schwabacher Straße 45', 'Gustavstraße 12', 'Königstraße 89'] },
+  { plz: '91052', ort: 'Erlangen', strassen: ['Hauptstraße 33', 'Nürnberger Straße 15', 'Goethestraße 8'] },
+  { plz: '97070', ort: 'Würzburg', strassen: ['Domstraße 6', 'Juliuspromenade 40', 'Theaterstraße 22'] },
+  { plz: '91074', ort: 'Herzogenaurach', strassen: ['Hauptstraße 21', 'Marktplatz 3', 'Einsteinstraße 5'] },
+  { plz: '86150', ort: 'Augsburg', strassen: ['Maximilianstraße 54', 'Karolinenstraße 18', 'Hallstraße 9'] },
+  { plz: '84028', ort: 'Landshut', strassen: ['Altstadt 82', 'Ländtorplatz 4', 'Neustadt 21'] },
+  { plz: '93047', ort: 'Regensburg', strassen: ['Maximilianstraße 26', 'Gesandtenstraße 14', 'Dachauplatz 7'] },
+  { plz: '96047', ort: 'Bamberg', strassen: ['Obere Brücke 3', 'Grüner Markt 10', 'Lange Straße 18'] },
+  { plz: '87435', ort: 'Kempten', strassen: ['Residenzplatz 5', 'Fischerstraße 9', 'Bahnhofstraße 14'] }
 ];
 
 // Weitere persönliche Daten
