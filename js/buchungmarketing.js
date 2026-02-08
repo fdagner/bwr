@@ -199,7 +199,8 @@ function parseNumericValue(value) {
 
 const wertFormulierungen = [
   " in Höhe von ",
-  " von "
+  "  ",
+  " mit einem Betrag von "
 ];
 // ============================================================================
 // GESCHÄFTSFALL GENERIEREN
