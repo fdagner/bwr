@@ -2170,7 +2170,7 @@
     motto: "Internet.Mobil.Telefon"
     bank: "Sparbank"
     rechtsform: "AG"
-    logo: "media/pic/mail.svg"
+    logo: "media/pic/glasfaser.svg"
     adresse:
       strasse: "Schnellstraße 10"
       plz: "90441"
@@ -2185,4 +2185,4 @@
     iban: "DE89370400449434513034"
     bic: "GENODEF1NBG"
     inhaber: "Frieda Macher"
-    akzent: "#ffff00"
+    akzent: "#ffc0cb"
