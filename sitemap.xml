@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Startseite -->
+  <url>
+    <loc>https://www.meinbwr.de/index.html</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- BwR Bereich -->
+  <url>
+    <loc>https://www.meinbwr.de/belege.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Vorlagen Dropdown -->
+  <url><loc>https://www.meinbwr.de/kontenplan.html</loc></url>
+  <url><loc>https://www.meinbwr.de/t-konto.html</loc></url>
+  <url><loc>https://www.meinbwr.de/buchungssatz.html</loc></url>
+  <url><loc>https://www.meinbwr.de/vorkontierung.html</loc></url>
+  <url><loc>https://www.meinbwr.de/kariert.html</loc></url>
+
+  <!-- BwR 7 -->
+  <url><loc>https://www.meinbwr.de/unternehmensziele.html</loc></url>
+  <url><loc>https://www.meinbwr.de/inventar.html</loc></url>
+  <url><loc>https://www.meinbwr.de/bilanz7.html</loc></url>
+  <url><loc>https://www.meinbwr.de/inventurdifferenzen.html</loc></url>
+
+  <!-- BwR 8 -->
+  <url><loc>https://www.meinbwr.de/guv.html</loc></url>
+  <url><loc>https://www.meinbwr.de/einkauf.html</loc></url>
+  <url><loc>https://www.meinbwr.de/bestellmenge.html</loc></url>
+  <url><loc>https://www.meinbwr.de/bestand.html</loc></url>
+  <url><loc>https://www.meinbwr.de/verkauf.html</loc></url>
+  <url><loc>https://www.meinbwr.de/marketingmix.html</loc></url>
+  <url><loc>https://www.meinbwr.de/produktlebenszyklus.html</loc></url>
+  <url><loc>https://www.meinbwr.de/portfolioanalyse.html</loc></url>
+  <url><loc>https://www.meinbwr.de/buchungmarketing.html</loc></url>
+  <url><loc>https://www.meinbwr.de/lebenslauf.html</loc></url>
+
+  <!-- BwR 9 -->
+  <url><loc>https://www.meinbwr.de/organigramm.html</loc></url>
+  <url><loc>https://www.meinbwr.de/aktienkurs.html</loc></url>
+  <url><loc>https://www.meinbwr.de/investitionsrechnung.html</loc></url>
+  <url><loc>https://www.meinbwr.de/zinsformel.html</loc></url>
+  <url><loc>https://www.meinbwr.de/ewb.html</loc></url>
+  <url><loc>https://www.meinbwr.de/pwb.html</loc></url>
+
+  <!-- BwR 10 -->
+  <url><loc>https://www.meinbwr.de/bilanz10.html</loc></url>
+  <url><loc>https://www.meinbwr.de/bab.html</loc></url>
+  <url><loc>https://www.meinbwr.de/vollkostenrechnung.html</loc></url>
+  <url><loc>https://www.meinbwr.de/gewinnschwelle.html</loc></url>
+  <url><loc>https://www.meinbwr.de/fremdbezug.html</loc></url>
+
+  <!-- Sonstiges -->
+  <url><loc>https://www.meinbwr.de/kontle.html</loc></url>
+  <url><loc>https://www.meinbwr.de/giftforstash.html</loc></url>
+
+</urlset>
