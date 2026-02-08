@@ -16,7 +16,7 @@
 <text x="322" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNetto" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="30" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="50" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungNettoCent" text-anchor="start"></tspan><tspan>--------</tspan></text>
-<rect x="496" y="30" width="5" height="25" fill="#fff"/>
+<rect x="496" y="30" width="44" height="25" fill="#fff"/>
 <text x="25" y="45" font-family="Verdana" font-size="22" font-weight="bold" fill="red">Quittung</text>
 <text x="235" y="50" font-family="Verdana" font-size="12">netto</text>
 <text x="235" y="80" font-family="Verdana" font-size="12">+ <tspan id="quittungUST" font-family="Calli" font-size="16" fill="darkblue"></tspan> % USt.</text>
@@ -24,18 +24,18 @@
 <text x="322" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungUSTBetrag" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="60" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="80" font-family="Calli" font-size="18" fill="darkblue"><tspan text-anchor="start" id="quittungUSTBetragCent"></tspan><tspan>--------</tspan></text>
-<rect x="496" y="60" width="5" height="25" fill="#fff"/>
+<rect x="496" y="60" width="44" height="25" fill="#fff"/>
 <text x="235" y="110" font-family="Verdana" font-size="12">gesamt</text>
 <rect x="320" y="90" width="150" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="322" y="110" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungSumme" text-anchor="start"></tspan><tspan>--------------------</tspan></text>
 <rect x="430" y="90" width="65" height="25" stroke="#000" stroke-width="1" fill="#eee"/>
 <text x="432" y="110" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungSummeCent" text-anchor="start"></tspan><tspan>--------</tspan></text>
-<rect x="496" y="90" width="5" height="25" fill="#fff"/>
+<rect x="496" y="90" width="44" height="25" fill="#fff"/>
 <text x="5" y="130" font-family="Verdana" font-size="12">Betrag in Worten</text>
 <text x="490" y="135" font-family="Verdana" font-size="10" text-anchor="end">Cent wie oben</text>
 <rect x="5" y="140" width="485" height="30" stroke="#000" font-size="10" stroke-width="1" fill="#eee"/>
 <text x="10" y="160" font-family="Calli" font-size="18" fill="darkblue"><tspan id="quittungInWorten" text-anchor="start"></tspan><tspan>------------------------------------------------------</tspan></text>
-<rect x="491" y="140" width="15" height="30" fill="#fff"/>
+<rect x="491" y="140" width="77" height="30" fill="#fff"/>
 <text x="5" y="195" font-family="Verdana" font-size="12">von:</text>
 <rect x="40" y="175" width="450" height="30" stroke="#000" stroke-width="1" fill="#eee"/>
 <text id="quittungNameKunde" x="45" y="195" font-family="Calli" font-size="18" fill="darkblue"></text>

@@ -29,16 +29,18 @@
       });
     }
 
-    let clipboard = new ClipboardJS('#officeButton');
-
-    clipboard.on('success', function (e) {
-      console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-      alert("Die Tabelle wurde in die Zwischenablage kopiert.");
-    });
-
-    clipboard.on('error', function (e) {
-      console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-      alert("Fehler beim Kopieren der Tabelle.");
-    });
-
-    
+  // SVG-Export
+function exportSVG(containerId, filename = 'download.svg') {
+    const container = document.getElementById('Container');
+    if (!container) return;
+    const svg = container.querySelector('svg');
+    if (!svg) return alert('Kein SVG gefunden');
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([svgData], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+}

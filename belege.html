@@ -37,8 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div w3-include-html="navigation.html"></div>
         <h2>Belege</h2>
         <nav class="tab">
-            <button class="tablinks" id="defaultOpen"
-                onclick="openCity(event, 'modellunternehmen')">Modellunternehmen</button>
+            <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'import')">Beleg importieren</button>
             <button class="tablinks" onclick="openCity(event, 'rechnung')">Rechnung/Angebot/Gutschrift</button>
             <button class="tablinks" onclick="openCity(event, 'kontoauszug')">Kontoauszug</button>
             <button class="tablinks" onclick="openCity(event, 'quittung')">Quittung</button>
@@ -51,318 +50,150 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="tablinks" onclick="openCity(event, 'anlagenkarte')">Anlagenkarte</button>
             <button class="tablinks" onclick="openCity(event, 'wertpapiere')">Wertpapiere</button>
         </nav>
-        <section id="modellunternehmen" class="tabcontent">
-            <h3>Modellunternehmen</h3>
-            <details>
-                <summary>Anleitung</summary><video style="width:100%" controls>
-                    <source src="media/video/modellunternehmen.mp4" type="video/mp4">
-                </video>
-            </details>
-            <p> Es steht eine umfangreiche Liste von Modellunternehmen zur Verfügung. Sie können auch Daten eigener
-                Modellunternehmen verwenden. Laden Sie hierzu die <a href="js/unternehmen.yml">Standarddaten</a>
-                herunter und bearbeiten Sie diese
-                mit einem einfachen Texteditor. Achten Sie darauf, die Yaml-Struktur nicht zu verändern.
-                Anschließend können Sie ihre Datei lokal im Browser hochladen und Ihre eigenen Unternehmen auswählen.
-                Die Daten bleiben im Browser gespeichert (falls zugelassen).</p>
-            <p>Eigene Datei verwenden und im Browser speichern: <input type="file" id="fileInput" accept=".yml"
-                    onchange="handleFileUpload()"></p>
-            <p>Status: <span id="localStorageStatus" style="font-style: italic;background-color: #f5f5f5;">Daten werden
-                    aus dem Local Storage geladen...</span></p>
-            <button onclick="deleteAndLoadDefaultData()">Daten zurücksetzen</button>
-            <!-- Ihr vorhandener HTML-Inhalt -->
+      
+          <section id="import" class="tabcontent">
+       <h3>Belege importieren</h3>
+<p>Sie können hier als SVG exportierte Belege wieder importieren und bearbeiten.</p>
 
-            <script>
-                // Ihre JavaScript-Logik hier
+<div class="drop-zone" id="dropZone">
+    <p>SVG hier hineinziehen oder klicken zum Auswählen</p>
+    <input type="file" id="belegImportInput" accept=".svg">
+</div>
 
-                function updateLocalStorageStatus(status) {
-                    document.getElementById('localStorageStatus').textContent = status;
-                }
-
-                function loadUploadedDataFromLocalStorage() {
-                    const uploadedDataJSON = localStorage.getItem('uploadedYamlCompanyData');
-                    if (uploadedDataJSON) {
-                        updateLocalStorageStatus('Daten werden aus dem Browserspeicher verwendet.');
-                        try {
-                            const uploadedData = JSON.parse(uploadedDataJSON);
-                            // Verarbeiten Sie die geladenen Daten
-                        } catch (error) {
-                            console.error("Error parsing uploaded data from Local Storage:", error);
-                        }
-                    } else {
-                        updateLocalStorageStatus('Standdarddaten werden verwendet.');
-                    }
-                }
-
-                // Rufen Sie die Funktion zum Laden der Daten aus dem Local Storage auf
-                loadUploadedDataFromLocalStorage();
-            </script>
-
-            <h3>Belege importieren</h3>
-<p>
-    <label for="belegImportInput">SVG-Beleg importieren:</label>
-    <input type="file" id="belegImportInput" accept=".svg" onchange="handleBelegImport()">
-</p>
 <p>
     <strong>Status:</strong> 
     <span id="belegImportStatus" style="font-style: italic; background-color: #f5f5f5; padding: 4px 8px;">
         Keine Datei ausgewählt
     </span>
 </p>
-            <h3>Belege exportieren</h3>
-            <details>
-                <summary>Anleitung</summary><video style="width:100%" controls>
-                    <source src="media/video/belege.mp4" type="video/mp4">
-                </video>
-            </details>
-            <p>Benutzen Sie - wenn möglich - SVG-Dateien. Sie haben einige Vorteile gegenüber Pixelgrafiken, vor allem
-                im Online-Bereich.</p>
-
-        </section>
-        <section id="rechnung" class="tabcontent">
-            <h3>Rechnung/Angebot/Gutschrift</h3>
-            <div class="box">
-
-                <div>
-                    <h3>Daten</h3>
-                </div>
-                <div class="flex-row">
-                    <div class="grid3">
-                        <div>
-                            <h4>1. Artikel</h4>
-                            <div><label for="artikelInput">Bezeichnung<br></label>
-                                <input type="text" id="artikelInput" placeholder="Artikelbezeichnung" />
-                            </div>
-                            <div><label for="mengeInput">Menge:<br></label>
-                                <input type="number" id="mengeInput" placeholder="Menge" min="0" max="1000" />
-                                <input type="text" id="einheitInput" placeholder="Einheit" />
-                            </div>
-                            <div>
-                                <label for="einzelpreisInput">Einzelpreis:<br></label>
-                                <input type="number" id="einzelpreisInput" min="0" placeholder="Einzelpreis" />
-                            </div>
-                        </div>
-                        <div>
-                            <div>
-                                <h4>2. Artikel</h4>
-                                <label for="artikelInput">Bezeichnung<br></label>
-                                <input type="text" id="artikelInput2" placeholder="Artikelbezeichnung" />
-                            </div>
-                            <div>
-                                <label for="mengeInput">Menge:<br></label>
-                                <input type="number" id="mengeInput2" placeholder="Menge" min="0" max="1000" />
-                                <input type="text" id="einheitInput2" placeholder="Einheit" />
-                            </div>
-                            <div>
-                                <label for="einzelpreisInput">Einzelpreis:<br></label>
-                                <input type="number" id="einzelpreisInput2" min="0" placeholder="Einzelpreis" />
-                            </div>
-                        </div>
-                        <div>
-                            <div>
-                                <h4>Rabatt und Bezugskosten</h4>
-                                <label for="rabattInput">Rabatt (%):<br></label>
-                                <input type="number" id="rabattInput" placeholder="Rabatt eingeben" />
-                            </div>
-                            <div>
-                                <label for="bezugskostenInput">Bezugskosten:<br></label>
-                                <input type="number" id="bezugskostenInput" min="0"
-                                    placeholder="Bezugskosten eingeben" />
-                                <input type="text" id="bezugskostenArtInput" value="Versand">
-                            </div>
-                            <div>Lieferbedingung: <input type="checkbox" id="lieferbedingungInput"></div>
-                            <div><label for="angebotLieferzeitInput">Lieferzeit in Tagen:</label><br><input type="text"
-                                    id="angebotLieferzeitInput" value="1-3"><br></div>
-                            <div>Eigentumsvorbehalt: <input type="checkbox" id="eigentumsvorbehaltInput" checked></div>
-                        </div>
-                        <div>
-                            <div>
-                                <h4>Zahlungsbedingungen</h4>
-                                <label for="umsatzsteuerInput">Umsatzsteuer:<br></label>
-                                <input type="number" id="umsatzsteuerInput" value="19" min="0"
-                                    placeholder="Umsatzsteuer eingeben" />
-                            </div>
-                            <div>
-                                <label for="zahlungszielInput">Zahlungsziel:<br></label>
-                                <input type="number" id="zahlungszielInput" value="30" min="0"
-                                    placeholder="Zahlungsziel eingeben" />
-                            </div>
-                            <div>
-                                <label for="skontoInput">Skonto:<br></label>
-                                <input type="number" id="skontoInput" value="2" min="0" placeholder="Skonto eingeben" />
-                            </div>
-                            <div>
-                                <label for="skontoInput">Skontofrist:<br></label>
-                                <input type="number" id="skontofristInput" value="20" min="0"
-                                    placeholder="Skontofrist eingeben" />
-                            </div>
-
-                        </div>
-                        <div>
-                            <h4>Datum</h4>
-                            <div><label for="tag">Tag:</label>
-                                <select id="tag">
-                                    <!-- Füge Optionen für die Tage hinzu -->
-                                    <option value="01">01</option>
-                                    <option value="02">02</option>
-                                    <option value="03">03</option>
-                                    <option value="04">04</option>
-                                    <option value="05">05</option>
-                                    <option value="06">06</option>
-                                    <option value="07">07</option>
-                                    <option value="08">08</option>
-                                    <option value="09">09</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                    <option value="13">13</option>
-                                    <option value="14">14</option>
-                                    <option value="15">15</option>
-                                    <option value="16">16</option>
-                                    <option value="17">17</option>
-                                    <option value="18">18</option>
-                                    <option value="19">19</option>
-                                    <option value="20">20</option>
-                                    <option value="21">21</option>
-                                    <option value="22">22</option>
-                                    <option value="23">23</option>
-                                    <option value="24">24</option>
-                                    <option value="25">25</option>
-                                    <option value="26">26</option>
-                                    <option value="27">27</option>
-                                    <option value="28">28</option>
-                                    <option value="29">29</option>
-                                    <option value="30">30</option>
-                                    <option value="31">31</option>
-                                </select>
-                                <br>
-                                <label for="monat">Monat:</label>
-                                <select id="monat">
-                                    <!-- Füge Optionen für die Monate hinzu -->
-                                    <option value="01">Januar</option>
-                                    <option value="02">Februar</option>
-                                    <option value="03">März</option>
-                                    <option value="04">April</option>
-                                    <option value="05">Mai</option>
-                                    <option value="06">Juni</option>
-                                    <option value="07">Juli</option>
-                                    <option value="08">August</option>
-                                    <option value="09">September</option>
-                                    <option value="10">Oktober</option>
-                                    <option value="11">November</option>
-                                    <option value="12">Dezember</option>
-                                </select><br><label for="jahr">Jahr:</label>
-                                <input type="text" id="jahr" value="" placeholder="Jahr" /><br>
-                                Skript verwenden: <input type="checkbox" id="scriptJahr"
-                                    onchange="toggleInput('jahr', 'scriptJahr')">
-                            </div>
-                        </div>
-                        <div>
-                            <h4>Vorlage</h4>
-                            <label for="svgDropdown">
-                                Auswählen:
-                            </label><br>
-                            <select id="svgDropdown">
-                                <option value="template1.svg">Rechnung Klassisch</option>
-                                <option value="template2.svg">Rechnung Modern</option>
-                                <option value="template3.svg">Rechnung Mutig</option>
-                                <option value="template4.svg">Rechnung Elegant</option>
-                                <option value="template5.svg">Rechnung Querformat</option>
-                                <option value="template5b.svg">Rechnung Querformat II</option>
-                                <option value="e-rechnung-er.html">E-Rechnung (ER)</option>
-                                <option value="e-rechnung-ar.html">E-Rechnung (AR)</option>
-                                <option value="template6.svg">Rechnung Spedition</option>
-                                <option value="template7.svg">Rechnung Handwerker</option>
-                                <option value="template8.svg">Rechnung Anwalt</option>
-                                <option value="template9.svg">Rechnung Steuerberater</option>
-                                <option value="template10.svg">Rechnung Hotel</option>
-                                <option value="angebot1.svg">Angebot</option>
-                                <option value="angebot2.svg">Angebot 2</option>
-                                <option value="gutschrift1.svg">Gutschrift bei Mängelrüge</option>
-                                <option value="gutschrift2.svg">Gutschrift bei Rücksendung</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <h3>Allgemeine Daten</h3>
-                <div class="flex-row">
-                    <div>
-                        <label for="datenLieferer">Lieferer: </label>
-                        <select id="datenLieferer">
-                         </select>
-                    </div>
-                    <div><label for="datenKunde">Empfänger:</label>
-                        <select id="datenKunde">
-                         </select>
-                    </div>
-                </div>
-                <div>Eigenes Logo hochladen: <input type="file" accept="image/*" onchange="loadLogo(event)">
-                </div>
-                <div><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
-                            Modellunternehmen verwenden?</a></small></div>
          
-            <div><br>
-                <button onclick="applySVGholen()">Alle Daten übernehmen</button><br>
-            </div><br>
-            <div><label for="colorPicker">Akzentfarbe:</label>
-                <input type="color" id="colorPicker" value="#7db9f5">
-            </div>
-            </div><br>
-            <div id="rechnung1Container" style="margin:0 auto;width:100%;min-width:350px;text-align: center">
-            </div>
-            <br>
-            <div class="exportButtons">
-                <button class="icon" type="button" onclick="exportDokument('rechnung','png')" data-tooltip="Als PNG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('rechnung','svg')" data-tooltip="Als SVG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('rechnung','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                    </svg></button>
-            </div>
         </section>
+     <section id="rechnung" class="tabcontent">
+    <header>
+        <h2>Rechnung/Angebot/Gutschrift</h2>
+    </header>
 
+    <!-- Hauptformular -->
+    <form class="box rechnung-form">
+        <section class="form-section">
+            <h3>Artikeldaten</h3>
+            
+            <div class="grid3">
+                <!-- Artikel 1 -->
+                <fieldset class="artikel-gruppe">
+                    <legend>1. Artikel</legend>
+                    
+                    <div class="form-field">
+                        <label for="artikelInput">Bezeichnung</label>
+                        <input type="text" id="artikelInput" placeholder="Artikelbezeichnung" />
+                    </div>
+                    
+                    <div class="form-field form-field-group">
+                        <label for="mengeInput">Menge</label>
+                        <div class="input-group">
+                            <input type="number" id="mengeInput" placeholder="Menge" min="0" max="1000" />
+                            <input type="text" id="einheitInput" placeholder="Einheit" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="einzelpreisInput">Einzelpreis</label>
+                        <input type="number" id="einzelpreisInput" min="0" placeholder="Einzelpreis" />
+                    </div>
+                </fieldset>
 
-        <section id="kontoauszug" class="tabcontent">
-            <h3>Kontoauszug</h3>
-            <div class="box">
-                <div class="grid3">
-                    <div>
-                        <h4>1. Vorgang</h4>
-                        <label for="kontoauszugVorgang1Input">Bezeichnung<br></label>
-                        <input type="text" id="kontoauszugVorgang1Input" placeholder="Buchung" /><br>
-                        <label for="kontoauszugWertstellung1Input"></label>
-                        <input type="number" id="kontoauszugWertstellung1Input" placeholder="Wert" />
+                <!-- Artikel 2 -->
+                <fieldset class="artikel-gruppe">
+                    <legend>2. Artikel</legend>
+                    
+                    <div class="form-field">
+                        <label for="artikelInput2">Bezeichnung</label>
+                        <input type="text" id="artikelInput2" placeholder="Artikelbezeichnung" />
                     </div>
-                    <div>
-                        <h4>2. Vorgang</h4>
-                        <label for="kontoauszugVorgang2Input">Bezeichnung<br></label>
-                        <input type="text" id="kontoauszugVorgang2Input" placeholder="Buchung" /><br>
-                        <label for="kontoauszugWertstellung2Input"></label>
-                        <input type="number" id="kontoauszugWertstellung2Input" placeholder="Wert" />
+                    
+                    <div class="form-field form-field-group">
+                        <label for="mengeInput2">Menge</label>
+                        <div class="input-group">
+                            <input type="number" id="mengeInput2" placeholder="Menge" min="0" max="1000" />
+                            <input type="text" id="einheitInput2" placeholder="Einheit" />
+                        </div>
                     </div>
-                    <div>
-                        <h4>3. Vorgang</h4>
-                        <label for="kontoauszugVorgang3Input">Bezeichnung<br></label>
-                        <input type="text" id="kontoauszugVorgang3Input" placeholder="Buchung" /><br>
-                        <label for="kontoauszugWertstellung3Input"></label>
-                        <input type="number" id="kontoauszugWertstellung3Input" placeholder="Wert" />
+                    
+                    <div class="form-field">
+                        <label for="einzelpreisInput2">Einzelpreis</label>
+                        <input type="number" id="einzelpreisInput2" min="0" placeholder="Einzelpreis" />
                     </div>
-                    <div>
-                        <h4>Datum</h4>
-                        <label for="tagKontoauszug">Tag:</label>
-                        <select id="tagKontoauszug">
-                            <!-- Füge Optionen für die Tage hinzu -->
+                </fieldset>
+
+                <!-- Rabatt und Bezugskosten -->
+                <fieldset class="preisanpassung-gruppe">
+                    <legend>Rabatt und Bezugskosten</legend>
+                    
+                    <div class="form-field">
+                        <label for="rabattInput">Rabatt (%)</label>
+                        <input type="number" id="rabattInput" placeholder="Rabatt eingeben" />
+                    </div>
+                    
+                    <div class="form-field form-field-group">
+                        <label for="bezugskostenInput">Bezugskosten</label>
+                        <div class="input-group">
+                            <input type="number" id="bezugskostenInput" min="0" placeholder="Bezugskosten eingeben" />
+                            <input type="text" id="bezugskostenArtInput" value="Versand" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="lieferbedingungInput">
+                            <input type="checkbox" id="lieferbedingungInput" />
+                            Lieferbedingung
+                        </label>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="angebotLieferzeitInput">Lieferzeit in Tagen</label>
+                        <input type="text" id="angebotLieferzeitInput" value="1-3" />
+                    </div>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="eigentumsvorbehaltInput">
+                            <input type="checkbox" id="eigentumsvorbehaltInput" checked />
+                            Eigentumsvorbehalt
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- Zahlungsbedingungen -->
+                <fieldset class="zahlung-gruppe">
+                    <legend>Zahlungsbedingungen</legend>
+                    
+                    <div class="form-field">
+                        <label for="umsatzsteuerInput">Umsatzsteuer (%)</label>
+                        <input type="number" id="umsatzsteuerInput" value="19" min="0" placeholder="Umsatzsteuer eingeben" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="zahlungszielInput">Zahlungsziel (Tage)</label>
+                        <input type="number" id="zahlungszielInput" value="30" min="0" placeholder="Zahlungsziel eingeben" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="skontoInput">Skonto (%)</label>
+                        <input type="number" id="skontoInput" value="2" min="0" placeholder="Skonto eingeben" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="skontofristInput">Skontofrist (Tage)</label>
+                        <input type="number" id="skontofristInput" value="20" min="0" placeholder="Skontofrist eingeben" />
+                    </div>
+                </fieldset>
+
+                <!-- Datum -->
+                <fieldset class="datum-gruppe">
+                    <legend>Datum</legend>
+                    
+                    <div class="form-field">
+                        <label for="tag">Tag</label>
+                        <select id="tag">
                             <option value="01">01</option>
                             <option value="02">02</option>
                             <option value="03">03</option>
@@ -395,10 +226,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="30">30</option>
                             <option value="31">31</option>
                         </select>
-                        <br>
-                        <label for="monatKontoauszug">Monat:</label>
-                        <select id="monatKontoauszug">
-                            <!-- Füge Optionen für die Monate hinzu -->
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="monat">Monat</label>
+                        <select id="monat">
                             <option value="01">Januar</option>
                             <option value="02">Februar</option>
                             <option value="03">März</option>
@@ -412,92 +244,374 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="11">November</option>
                             <option value="12">Dezember</option>
                         </select>
-                        <label for="jahrKontoauszug">Jahr:</label>
-                        <input type="text" id="jahrKontoauszug" value="" placeholder="Jahr" /><br>
-                        Skript verwenden: <input type="checkbox" id="scriptJahrKontoauszug"
-                            onchange="toggleInput('jahrKontoauszug', 'scriptJahrKontoauszug');">
-
                     </div>
-                    <div>
-                        <h4>Beleg-Daten</h4>
-                        <label for="kontoauszugNummerInput">Auszug-Nr.<br></label>
-                        <input type="number" id="kontoauszugNummerInput" min="0" value="12" /><br><br>
-                        <label for="kontoauszugKontostand_altInput">Alter Kontostand<br></label>
-                        <input type="number" id="kontoauszugKontostand_altInput" placeholder="Wert" /><br><br>
-                        <label for="svgDropdownKontoauszug">
-                            Vorlage<br>
+                    
+                    <div class="form-field">
+                        <label for="jahr">Jahr</label>
+                        <input type="text" id="jahr" value="" placeholder="Jahr" />
+                    </div>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="scriptJahr">
+                            <input type="checkbox" id="scriptJahr" onchange="toggleInput('jahr', 'scriptJahr')" />
+                            Skript verwenden
                         </label>
+                    </div>
+                </fieldset>
+
+                <!-- Vorlage -->
+                <fieldset class="vorlage-gruppe">
+                    <legend>Vorlage</legend>
+                            <div class="form-field">
+                <label for="colorPicker">Akzentfarbe</label>
+                <input type="color" id="colorPicker" value="#7db9f5" style="flex:none"/>
+            </div>
+                    <div class="form-field">
+                        <label for="svgDropdown">Auswählen</label>
+                        <select id="svgDropdown">
+                            <option value="template1.svg">Rechnung Klassisch</option>
+                            <option value="template2.svg">Rechnung Modern</option>
+                            <option value="template3.svg">Rechnung Mutig</option>
+                            <option value="template4.svg">Rechnung Elegant</option>
+                            <option value="template5.svg">Rechnung Querformat</option>
+                            <option value="template5b.svg">Rechnung Querformat II</option>
+                            <option value="e-rechnung-er.html">E-Rechnung (ER)</option>
+                            <option value="e-rechnung-ar.html">E-Rechnung (AR)</option>
+                            <option value="template6.svg">Rechnung Spedition</option>
+                            <option value="template7.svg">Rechnung Handwerker</option>
+                            <option value="template8.svg">Rechnung Anwalt</option>
+                            <option value="template9.svg">Rechnung Steuerberater</option>
+                            <option value="template10.svg">Rechnung Hotel</option>
+                            <option value="angebot1.svg">Angebot</option>
+                            <option value="angebot2.svg">Angebot 2</option>
+                            <option value="gutschrift1.svg">Gutschrift bei Mängelrüge</option>
+                            <option value="gutschrift2.svg">Gutschrift bei Rücksendung</option>
+                        </select>
+                    </div>
+                </fieldset>
+              
+            </div>
+        </section>
+
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <h3>Allgemeine Daten</h3>
+            
+            <div class="flex-row">
+                <div class="form-field">
+                    <label for="datenLieferer">Lieferer</label>
+                    <select id="datenLieferer"></select>
+                </div>
+                
+                <div class="form-field">
+                    <label for="datenKunde">Empfänger</label>
+                    <select id="datenKunde"></select>
+                </div>
+            </div>
+            
+            <div class="form-field">
+                <label for="logoUpload">Eigenes Logo hochladen</label>
+                <input type="file" id="logoUpload" accept="image/*" onchange="loadLogo(event)" />
+            </div>
+            
+            
+        </section>
+
+        <!-- Aktionen -->
+        <section class="form-section form-actions">
+            <button type="button" onclick="applySVGholen()">Alle Daten übernehmen</button>
+            
+      
+        </section>
+    </form>
+
+    <!-- Vorschau -->
+    <section class="preview-section">
+        <div id="rechnung1Container"></div>
+    </section>
+
+    <!-- Export-Buttons -->
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="icon" type="button" onclick="exportDokument('rechnung','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg>
+        </button>
+        
+      <button class="icon" type="button" onclick="exportDokument('rechnung','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg>
+        </button>
+        
+        <button class="icon" type="button" onclick="exportDokument('rechnung','clipboard')" 
+                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
+                aria-label="Als HTML-Code in Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
+                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg>
+        </button>
+    </nav>
+</section>
+
+      <section id="kontoauszug" class="tabcontent">
+    <header>
+        <h2>Kontoauszug</h2>
+    </header>
+
+    <!-- Hauptformular -->
+    <form class="box kontoauszug-form">
+        <section class="form-section">
+            <h3>Buchungsvorgänge</h3>
+            
+            <div class="grid3">
+                <!-- Vorgang 1 -->
+                <fieldset class="vorgang-gruppe">
+                    <legend>1. Vorgang</legend>
+                    
+                    <div class="form-field">
+                        <label for="kontoauszugVorgang1Input">Bezeichnung</label>
+                        <input type="text" id="kontoauszugVorgang1Input" placeholder="Buchung" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="kontoauszugWertstellung1Input">Wertstellung</label>
+                        <input type="number" id="kontoauszugWertstellung1Input" placeholder="Wert" />
+                    </div>
+                </fieldset>
+
+                <!-- Vorgang 2 -->
+                <fieldset class="vorgang-gruppe">
+                    <legend>2. Vorgang</legend>
+                    
+                    <div class="form-field">
+                        <label for="kontoauszugVorgang2Input">Bezeichnung</label>
+                        <input type="text" id="kontoauszugVorgang2Input" placeholder="Buchung" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="kontoauszugWertstellung2Input">Wertstellung</label>
+                        <input type="number" id="kontoauszugWertstellung2Input" placeholder="Wert" />
+                    </div>
+                </fieldset>
+
+                <!-- Vorgang 3 -->
+                <fieldset class="vorgang-gruppe">
+                    <legend>3. Vorgang</legend>
+                    
+                    <div class="form-field">
+                        <label for="kontoauszugVorgang3Input">Bezeichnung</label>
+                        <input type="text" id="kontoauszugVorgang3Input" placeholder="Buchung" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="kontoauszugWertstellung3Input">Wertstellung</label>
+                        <input type="number" id="kontoauszugWertstellung3Input" placeholder="Wert" />
+                    </div>
+                </fieldset>
+
+                <!-- Datum -->
+                <fieldset class="datum-gruppe">
+                    <legend>Datum</legend>
+                    
+                    <div class="form-field">
+                        <label for="tagKontoauszug">Tag</label>
+                        <select id="tagKontoauszug">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="monatKontoauszug">Monat</label>
+                        <select id="monatKontoauszug">
+                            <option value="01">Januar</option>
+                            <option value="02">Februar</option>
+                            <option value="03">März</option>
+                            <option value="04">April</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Dezember</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="jahrKontoauszug">Jahr</label>
+                        <input type="text" id="jahrKontoauszug" value="" placeholder="Jahr" />
+                    </div>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="scriptJahrKontoauszug">
+                            <input type="checkbox" id="scriptJahrKontoauszug" 
+                                   onchange="toggleInput('jahrKontoauszug', 'scriptJahrKontoauszug');" />
+                            Skript verwenden
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- Beleg-Daten -->
+                <fieldset class="beleg-gruppe">
+                    <legend>Beleg-Daten</legend>
+                    
+                    <div class="form-field">
+                        <label for="kontoauszugNummerInput">Auszug-Nr.</label>
+                        <input type="number" id="kontoauszugNummerInput" min="0" value="12" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="kontoauszugKontostand_altInput">Alter Kontostand</label>
+                        <input type="number" id="kontoauszugKontostand_altInput" placeholder="Wert" />
+                    </div>
+                </fieldset>
+
+             <fieldset class="vorlage-gruppe">
+                    <legend>Vorlage</legend>
+                    <div class="form-field">
+                        <label for="svgDropdownKontoauszug">Vorlage</label>
                         <select id="svgDropdownKontoauszug">
                             <option value="kontoauszug1.svg">Klassisch</option>
                             <option value="kontoauszug2.svg">Modern</option>
                         </select>
                     </div>
-                    <div>
-                    </div>
-                </div>
-                <div class="flex-row">
-
-                    <div>
-                        <h3>Allgemeine Daten</h3>
-                        <label for="datenKontoauszug">Kontoinhaber: </label>
-                        <select id="datenKontoauszug">
-                         </select><small><br><a href="#" class="tablinks"
-                                onclick="openCity(event, 'modellunternehmen')">Eigenes Modellunternehmen
-                                verwenden?</a></small>
-                    </div>
-                </div>
-                <div><br><button onclick="applySVGholen()">Alle Daten übernehmen</button><br></div></div>
-                <br>
-                <div id="kontoauszugContainer" style="text-align:center;margin:0 auto;width:100%;min-width:350px;">
-                </div>
-                <br>
-<div class="exportButtons">
-                <button class="icon" type="button" onclick="exportDokument('kontoauszug','png')" data-tooltip="Als PNG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('kontoauszug','svg')" data-tooltip="Als SVG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('kontoauszug','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                    </svg></button>
-                    </div>
+                </fieldset>
+                     </div>
         </section>
-        <section id="quittung" class="tabcontent">
-            <h3>Quittung</h3>
-            <div class="box">
 
-                <div class="grid3">
-                    <div>
-                        <h4>Beträge</h4><label for="quittungNettoInput">Nettobetrag: </label><br>
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <h3>Allgemeine Daten</h3>
+            
+            <div class="form-field">
+                <label for="datenKontoauszug">Kontoinhaber</label>
+                <select id="datenKontoauszug"></select>
+            </div>
+            
+            
+        </section>
+
+        <!-- Aktionen -->
+        <section class="form-section form-actions">
+            <button type="button" onclick="applySVGholen()">Alle Daten übernehmen</button>
+        </section>
+    </form>
+
+    <!-- Vorschau -->
+    <section class="preview-section">
+        <div id="kontoauszugContainer"></div>
+    </section>
+
+    <!-- Export-Buttons -->
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="icon" type="button" onclick="exportDokument('kontoauszug','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg>
+        </button>
+        
+        <button class="icon" type="button" onclick="exportDokument('kontoauszug','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg>
+        </button>
+        
+        <button class="icon" type="button" onclick="exportDokument('kontoauszug','clipboard')" 
+                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
+                aria-label="Als HTML-Code in Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
+                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg>
+        </button>
+    </nav>
+</section>
+     <section id="quittung" class="tabcontent">
+    <header>
+        <h2>Quittung</h2>
+    </header>
+
+    <!-- Hauptformular -->
+    <form class="box quittung-form">
+        <section class="form-section">
+            <h3>Beträge und Details</h3>
+            
+            <div class="grid3">
+                <!-- Beträge -->
+                <fieldset class="betrag-gruppe">
+                    <legend>Beträge</legend>
+                    
+                    <div class="form-field">
+                        <label for="quittungNettoInput">Nettobetrag</label>
                         <input type="number" id="quittungNettoInput" placeholder="netto" />
-                        <br><br>
-                        <label for="quittungUSTInput">Umsatzsteuersatz</label><br>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="quittungUSTInput">Umsatzsteuersatz (%)</label>
                         <input type="number" id="quittungUSTInput" value="19" />
                     </div>
-                    <div>
-                        <h4>Weitere Daten</h4><label for="quittungUSTInput">Für: </label><br>
-                        <input type="text" id="quittungZweckInput" placeholder="Zweck" /><br>
-                        <br><label for="svgDropdownQuittung">Vorlage: </label><br>
+                </fieldset>
+
+                <!-- Weitere Daten -->
+                <fieldset class="details-gruppe">
+                    <legend>Weitere Daten</legend>
+                    
+                    <div class="form-field">
+                        <label for="quittungZweckInput">Für</label>
+                        <input type="text" id="quittungZweckInput" placeholder="Zweck" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="svgDropdownQuittung">Vorlage</label>
                         <select id="svgDropdownQuittung">
                             <option value="quittung1.svg">Klassisch</option>
                             <option value="quittung2.svg">Modern</option>
                         </select>
                     </div>
-                    <div>
-                        <h4>Datum</h4>
-                        <label for="tagQuittung">Tag:</label>
+                </fieldset>
+
+                <!-- Datum -->
+                <fieldset class="datum-gruppe">
+                    <legend>Datum</legend>
+                    
+                    <div class="form-field">
+                        <label for="tagQuittung">Tag</label>
                         <select id="tagQuittung">
-                            <!-- Füge Optionen für die Tage hinzu -->
                             <option value="01">01</option>
                             <option value="02">02</option>
                             <option value="03">03</option>
@@ -530,10 +644,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="30">30</option>
                             <option value="31">31</option>
                         </select>
-                        <br>
-                        <label for="monatQuittung">Monat:</label>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="monatQuittung">Monat</label>
                         <select id="monatQuittung">
-                            <!-- Füge Optionen für die Monate hinzu -->
                             <option value="01">Januar</option>
                             <option value="02">Februar</option>
                             <option value="03">März</option>
@@ -547,89 +662,140 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="11">November</option>
                             <option value="12">Dezember</option>
                         </select>
-                        <label for="jahrQuittung">Jahr:</label>
-                        <input type="text" id="jahrQuittung" value="" placeholder="Jahr" /><br>
-                        Skript verwenden: <input type="checkbox" id="scriptJahrQuittung"
-                            onchange="toggleInput('jahrQuittung', 'scriptJahrQuittung');">
-
                     </div>
-
-                </div>
-                <h3>Allgemeine Daten</h3>
-
-                <div class="flex-row">
-                    <div>
-                        <label for="datenQuittung">Geldempfänger: </label>
-                        <select id="datenQuittung">
-                        </select>
+                    
+                    <div class="form-field">
+                        <label for="jahrQuittung">Jahr</label>
+                        <input type="text" id="jahrQuittung" value="" placeholder="Jahr" />
                     </div>
-                    <div><label for="datenQuittungKunde">Kunde:</label>
-                        <select id="datenQuittungKunde">
-                                </select><br>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="scriptJahrQuittung">
+                            <input type="checkbox" id="scriptJahrQuittung" 
+                                   onchange="toggleInput('jahrQuittung', 'scriptJahrQuittung');" />
+                            Skript verwenden
+                        </label>
                     </div>
-                </div>
-                <div><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
-                            Modellunternehmen
-                            verwenden?</a></small></div>
-                <br><button onclick="quittungApplySVGholen()">Alle Daten übernehmen</button><br>
+                </fieldset>
             </div>
-            <br>
-            <div id="quittungContainer"
-                style="text-align:center;margin:0 auto;width:100%;min-width:350px;max-width:650px"></div><br>
-<div class="exportButtons">
-                <button class="icon" type="button" onclick="exportDokument('quittung','png')" data-tooltip="Als PNG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('quittung','svg')" data-tooltip="Als SVG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('quittung','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                    </svg></button>
-                    </div>
         </section>
 
-        <section id="kassenbon" class="tabcontent">
-            <h3>Kassenbon (Auszug)</h3>
-            <div class="box">
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <h3>Allgemeine Daten</h3>
+            
+            <div class="flex-row">
+                <div class="form-field">
+                    <label for="datenQuittung">Geldempfänger</label>
+                    <select id="datenQuittung"></select>
+                </div>
+                
+                <div class="form-field">
+                    <label for="datenQuittungKunde">Kunde</label>
+                    <select id="datenQuittungKunde"></select>
+                </div>
+            </div>
+            
+            
+        </section>
 
-                <div class="grid3">
-                    <div>
-                        <h4>Beträge</h4><label for="kassenbonNettoInput">Nettobetrag: </label><br>
+        <!-- Aktionen -->
+        <section class="form-section form-actions">
+            <button type="button" onclick="quittungApplySVGholen()">Alle Daten übernehmen</button>
+        </section>
+    </form>
+
+    <!-- Vorschau -->
+    <section class="preview-section">
+        <div id="quittungContainer"></div>
+    </section>
+
+    <!-- Export-Buttons -->
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="icon" type="button" onclick="exportDokument('quittung','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg>
+        </button>
+        
+        <button class="icon" type="button" onclick="exportDokument('quittung','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg>
+        </button>
+        
+        <button class="icon" type="button" onclick="exportDokument('quittung','clipboard')" 
+                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
+                aria-label="Als HTML-Code in Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
+                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg>
+        </button>
+    </nav>
+</section>
+
+      <!-- KASSENBON SECTION -->
+<section id="kassenbon" class="tabcontent">
+    <header>
+        <h2>Kassenbon (Auszug)</h2>
+    </header>
+
+    <form class="box kassenbon-form">
+        <section class="form-section">
+            <h3>Beträge und Details</h3>
+            
+            <div class="grid3">
+                <!-- Beträge -->
+                <fieldset class="betrag-gruppe">
+                    <legend>Beträge</legend>
+                    
+                    <div class="form-field">
+                        <label for="kassenbonNettoInput">Nettobetrag</label>
                         <input type="number" id="kassenbonNettoInput" placeholder="netto" />
-                        <br><br>
-                        <label for="kassenbonUSTInput">Umsatzsteuersatz</label><br>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="kassenbonUSTInput">Umsatzsteuersatz (%)</label>
                         <input type="number" id="kassenbonUSTInput" value="19" />
                     </div>
-                    <div>
-                        <h4>Weitere Daten</h4><label for="kassenbonUSTInput">Bezeichnung: </label><br>
-                        <input type="text" id="kassenbonZweckInput" placeholder="Zweck" /><br><br>
-                        <label for="kassenbonDropdownZahlungsart">Zahlungsart: </label><br>
+                </fieldset>
+
+                <!-- Weitere Daten -->
+                <fieldset class="details-gruppe">
+                    <legend>Weitere Daten</legend>
+                    
+                    <div class="form-field">
+                        <label for="kassenbonZweckInput">Bezeichnung</label>
+                        <input type="text" id="kassenbonZweckInput" placeholder="Zweck" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="kassenbonDropdownZahlungsart">Zahlungsart</label>
                         <select id="kassenbonDropdownZahlungsart">
                             <option value="Barzahlung">Barzahlung</option>
                             <option value="Girocard">Girocard</option>
                             <option value="Kreditkarte">Kreditkarte</option>
                         </select>
-                        <br><label for="svgDropdownKassenbon">Vorlage: </label><br>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="svgDropdownKassenbon">Vorlage</label>
                         <select id="svgDropdownKassenbon">
                             <option value="kassenbon.svg">Klassisch</option>
                             <option value="kassenbontaxi.svg">Taxi</option>
                         </select>
                     </div>
-                    <div>
-                        <h4>Datum</h4>
-                        <label for="tagKassenbon">Tag:</label>
+                </fieldset>
+
+                <!-- Datum -->
+                <fieldset class="datum-gruppe">
+                    <legend>Datum</legend>
+                    
+                    <div class="form-field">
+                        <label for="tagKassenbon">Tag</label>
                         <select id="tagKassenbon">
-                            <!-- Füge Optionen für die Tage hinzu -->
                             <option value="01">01</option>
                             <option value="02">02</option>
                             <option value="03">03</option>
@@ -662,10 +828,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="30">30</option>
                             <option value="31">31</option>
                         </select>
-                        <br>
-                        <label for="monatKassenbon">Monat:</label>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="monatKassenbon">Monat</label>
                         <select id="monatKassenbon">
-                            <!-- Füge Optionen für die Monate hinzu -->
                             <option value="01">Januar</option>
                             <option value="02">Februar</option>
                             <option value="03">März</option>
@@ -679,124 +846,164 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="11">November</option>
                             <option value="12">Dezember</option>
                         </select>
-                        <label for="jahrKassenbon">Jahr:</label>
-                        <input type="text" id="jahrKassenbon" value="" placeholder="Jahr" /><br>
-                        Skript verwenden: <input type="checkbox" id="scriptJahrKassenbon"
-                            onchange="toggleInput('jahrKassenbon', 'scriptJahrKassenbon');">
                     </div>
-
-                </div>
-                <h3>Allgemeine Daten</h3>
-
-                <div class="flex-row">
-                    <div>
-                        <label for="datenKassenbon">Geldempfänger: </label>
-                        <select id="datenKassenbon">
-                           </select>
+                    
+                    <div class="form-field">
+                        <label for="jahrKassenbon">Jahr</label>
+                        <input type="text" id="jahrKassenbon" value="" placeholder="Jahr" />
                     </div>
-                    <div><label for="datenKassenbonKunde">Kunde:</label>
-                        <select id="datenKassenbonKunde">
-                              </select>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="scriptJahrKassenbon">
+                            <input type="checkbox" id="scriptJahrKassenbon" 
+                                   onchange="toggleInput('jahrKassenbon', 'scriptJahrKassenbon');" />
+                            Skript verwenden
+                        </label>
                     </div>
-                </div>
-                <div><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
-                            Modellunternehmen
-                            verwenden?</a></small></div>
-                <br><button onclick="kassenbonApplySVGholen()">Alle Daten übernehmen</button><br>
-
+                </fieldset>
             </div>
-            <br>
-            <div id="kassenbonContainer" style="text-align: center;margin:0 auto;"></div><br>
-<div class="exportButtons">
-                <button class="icon" type="button" onclick="exportDokument('kassenbon','png')" data-tooltip="Als PNG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('kassenbon','svg')" data-tooltip="Als SVG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('kassenbon','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                    </svg></button>
-                    </div>
         </section>
 
-        <section id="email" class="tabcontent">
-            <h3>Mail</h3>
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <h3>Allgemeine Daten</h3>
+            
+            <div class="flex-row">
+                <div class="form-field">
+                    <label for="datenKassenbon">Geldempfänger</label>
+                    <select id="datenKassenbon"></select>
+                </div>
+                
+                <div class="form-field">
+                    <label for="datenKassenbonKunde">Kunde</label>
+                    <select id="datenKassenbonKunde"></select>
+                </div>
+            </div>
+            
+            
+        </section>
 
-            <div class="box">
+        <!-- Aktionen -->
+        <section class="form-section form-actions">
+            <button type="button" onclick="kassenbonApplySVGholen()">Alle Daten übernehmen</button>
+        </section>
+    </form>
 
-                <label for="emailSubjectInput">E-Mail-Betreff:<br></label>
-                <input type="text" id="emailSubjectInput" placeholder="Betreff" /><br><label for="emailInputText">
-                    E-Mail-Text<br></label>
-                <textarea id="emailInputText" name="emailInputText" rows="4" cols="50"></textarea><br> Vorlage<br>
+    <!-- Vorschau -->
+    <section class="preview-section">
+        <div id="kassenbonContainer"></div>
+    </section>
+
+    <!-- Export-Buttons -->
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="icon" type="button" onclick="exportDokument('kassenbon','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" onclick="exportDokument('kassenbon','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" onclick="exportDokument('kassenbon','clipboard')" 
+                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
+                aria-label="Als HTML-Code in Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
+                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg>
+        </button>
+    </nav>
+</section>
+
+<!-- EMAIL SECTION -->
+<section id="email" class="tabcontent">
+    <header>
+        <h2>Mail</h2>
+    </header>
+
+    <form class="box email-form">
+        <section class="form-section">
+            <div class="form-field">
+                <label for="emailSubjectInput">E-Mail-Betreff</label>
+                <input type="text" id="emailSubjectInput" placeholder="Betreff" />
+            </div>
+            
+            <div class="form-field">
+                <label for="emailInputText">E-Mail-Text</label>
+                <textarea id="emailInputText" name="emailInputText" rows="4" cols="50"></textarea>
+            </div>
+            
+            <div class="form-field">
+                <label for="svgDropdownEmail">Vorlage</label>
                 <select id="svgDropdownEmail">
-
                     <option value="mail1.html">Klassisch</option>
                     <option value="mail2.html">Modern</option>
                 </select>
-                <h3>Allgemeine Daten</h3>
-                <div class="flex-row">
-                    <div>
-                        <label for="datenEmail">Absender: </label>
-                        <select id="datenEmail">
-                        </select>
-                    </div>
-                    <div><label for="datenEmailKunde">Empfänger:</label>
-                        <select id="datenEmailKunde">
-                        </select>
+            </div>
+        </section>
 
-                    </div>
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <h3>Allgemeine Daten</h3>
+            
+            <div class="flex-row">
+                <div class="form-field">
+                    <label for="datenEmail">Absender</label>
+                    <select id="datenEmail"></select>
                 </div>
-                <div><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
-                            Modellunternehmen verwenden?</a></small></div>
-                <br><button onclick="applySVGholen()">Daten übernehmen</button><br>
+                
+                <div class="form-field">
+                    <label for="datenEmailKunde">Empfänger</label>
+                    <select id="datenEmailKunde"></select>
+                </div>
             </div>
-
-            </div><br>
-            <div id="emailContainer"
-                style="border:0px solid #00000039;line-height:0.75;padding:0px;margin:0px;min-width:700px;"
-                contenteditable="true">
-            </div><br>
-
-                   
-            <div class="exportButtons">
-               <button class="icon" type="button" onclick="exportDokument('email','png')" data-tooltip="Als PNG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                    </svg></button>
-                <button class="icon" type="button" id="officeButtonEmail" data-clipboard-target="#emailContainer"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="emailHerunterladen()"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                    </svg></button>
-           <button class="icon" type="button" onclick="exportDokument('email','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                    </svg></button>
-            </div>
-
+            
             
         </section>
+
+        <!-- Aktionen -->
+        <section class="form-section form-actions">
+            <button type="button" onclick="applySVGholen()">Daten übernehmen</button>
+        </section>
+    </form>
+
+    <!-- Vorschau (contenteditable) -->
+    <section class="preview-section">
+        <div id="emailContainer" contenteditable="true"></div>
+    </section>
+
+    <!-- Export-Buttons -->
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="icon" type="button" onclick="exportDokument('email','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" id="officeButtonEmail" data-clipboard-target="#emailContainer"
+                data-tooltip="In Zwischenablage kopieren" aria-label="In Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" onclick="emailHerunterladen()"
+                data-tooltip="Als HTML herunterladen" aria-label="Als HTML herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" onclick="exportDokument('email','clipboard')" 
+                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
+                aria-label="Als HTML-Code in Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
+                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg>
+        </button>
+    </nav>
+</section>
 
         <section id="newspaper" class="tabcontent">
             <h3>Zeitungsartikel</h3>
@@ -891,146 +1098,188 @@ document.addEventListener('DOMContentLoaded', function() {
         </section>
 
 <section id="lohnabrechnung" class="tabcontent">
-    <h3>Lohn-/Gehaltsabrechnung (beta)</h3>
-   <div class="box">
-    <!-- Allgemein -->
-        <label for="lohnabrechnungMonatInput">Abrechnungsmonat:</label>
-        <select id="lohnabrechnungMonatInput">
-            <option>Januar</option>
-            <option>Februar</option>
-            <option>März</option>
-            <option>April</option>
-            <option>Mai</option>
-            <option>Juni</option>
-            <option>Juli</option>
-            <option selected>August</option>
-            <option>September</option>
-            <option>Oktober</option>
-            <option>November</option>
-            <option>Dezember</option>
-        </select>
-<br><br>
-        <label for="lohnabrechnungBruttoInput">Brutto (€):</label>
-        <input type="number" id="lohnabrechnungBruttoInput" value="3500" min="0" max="99999" step="0.01">
+    <header>
+        <h2>Lohn-/Gehaltsabrechnung (beta)</h2>
+    </header>
 
-    <!-- Steuer --><br><br>
-    <strong>Steuerliche Angaben</strong>
+    <form class="box lohnabrechnung-form">
+        <p>Einfache Abrechnung ohne Sonderfälle oder Zuschläge.</p>
 
-    <div class="flex-row">
-        <div class="flex-column">
+        <section class="form-section">
+            <div class="grid3">
+                <!-- Grunddaten -->
+                <fieldset class="lohn-daten-gruppe">
+                    <legend>Grunddaten</legend>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungMonatInput">Abrechnungsmonat</label>
+                        <select id="lohnabrechnungMonatInput">
+                            <option>Januar</option>
+                            <option>Februar</option>
+                            <option>März</option>
+                            <option>April</option>
+                            <option>Mai</option>
+                            <option>Juni</option>
+                            <option>Juli</option>
+                            <option selected>August</option>
+                            <option>September</option>
+                            <option>Oktober</option>
+                            <option>November</option>
+                            <option>Dezember</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungBruttoInput">Brutto (€)</label>
+                        <input type="number" id="lohnabrechnungBruttoInput" value="3500" min="0" max="99999" step="0.01" />
+                    </div>
+                </fieldset>
 
-        <label for="lohnabrechnungSteuerklasseInput">Steuerklasse:</label>
-        <select id="lohnabrechnungSteuerklasseInput">
-            <option value="I" selected>I (ledig)</option>
-            <option value="II">II (alleinerziehend)</option>
-            <option value="III">III (verheiratet, höheres Einkommen)</option>
-            <option value="IV">IV (gleiches Einkommen)</option>
-            <option value="V">V (geringeres Einkommen)</option>
-            <option value="VI">VI (Zweitjob)</option>
-        </select>
-</div>   <div class="flex-column">
-        <label for="lohnabrechnungKinderfreibetragInput">Kinderfreibetrag:</label>
-        <select id="lohnabrechnungKinderfreibetragInput">
-            <option selected>0</option>
-            <option>0,5</option>
-            <option>1,0</option>
-            <option>1,5</option>
-            <option>2,0</option>
-            <option>2,5</option>
-            <option>3,0</option>
-        </select></div>
-    </div><div class="flex-row">
-        <div class="flex-column">
-            <label for="lohnabrechnungLohnsteuerInput">Lohnsteuer (€):</label>
-            <input type="number" id="lohnabrechnungLohnsteuerInput" value="0" min="0" max="99999" step="0.01">
-            <small>Wird automatisch berechnet, kann manuell angepasst werden</small>
-        </div>
-    </div>
-    <div class="flex-row">
-   <div class="flex-column">
-        <label>
-            <input type="checkbox" id="lohnabrechnungKirchensteuerInput" checked>
-            Kirchensteuer (8% der Lohnsteuer)
-        </label>
+                <!-- Steuerliche Angaben -->
+                <fieldset class="steuer-gruppe">
+                    <legend>Steuerliche Angaben</legend>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungSteuerklasseInput">Steuerklasse</label>
+                        <select id="lohnabrechnungSteuerklasseInput">
+                            <option value="I" selected>I (ledig)</option>
+                            <option value="II">II (alleinerziehend)</option>
+                            <option value="III">III (verheiratet, höheres Einkommen)</option>
+                            <option value="IV">IV (gleiches Einkommen)</option>
+                            <option value="V">V (geringeres Einkommen)</option>
+                            <option value="VI">VI (Zweitjob)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungKinderfreibetragInput">Kinderfreibetrag</label>
+                        <select id="lohnabrechnungKinderfreibetragInput">
+                            <option selected>0</option>
+                            <option>0,5</option>
+                            <option>1,0</option>
+                            <option>1,5</option>
+                            <option>2,0</option>
+                            <option>2,5</option>
+                            <option>3,0</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungLohnsteuerInput">Lohnsteuer (€)</label>
+                        <div class="input-group">
+                            <input type="number" id="lohnabrechnungLohnsteuerInput" value="0" min="0" max="99999" step="0.01" />
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="lohnabrechnungLohnsteuerSperreInput" />
+                                🔒
+                            </label>
+                        </div>
+                        <small>Automatisch berechnet. 🔒 = manuell</small>
+                    </div>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="lohnabrechnungKirchensteuerInput">
+                            <input type="checkbox" id="lohnabrechnungKirchensteuerInput" checked />
+                            Kirchensteuer (8%)
+                        </label>
+                    </div>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="lohnabrechnungSoliInput">
+                            <input type="checkbox" id="lohnabrechnungSoliInput" />
+                            Soli (5,5%)
+                        </label>
+                    </div>
+                </fieldset>
 
-        <label>
-            <input type="checkbox" id="lohnabrechnungSoliInput">
-            Solidaritätszuschlag (5,5%)
-            <small> – ab 2021 nur für hohe Einkommen</small>
-        </label>
-    </div>
-</div><br><br>
-    <!-- Sozialversicherung -->
-    <strong>Sozialversicherung (AN-Anteile)</strong>
-    <div class="flex-row">
-        <div class="flex-column">
-            <label for="lohnabrechnungKVSatzInput">Krankenversicherung (%)</label>
-            <input type="number" id="lohnabrechnungKVSatzInput" value="8.1" step="0.1">
-            <small>7,3% + ∅ 0,8%</small>
-        </div>
+                <!-- Sozialversicherung -->
+                <fieldset class="sozialversicherung-gruppe">
+                    <legend>Sozialversicherung (AN)</legend>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungKVSatzInput">Krankenversicherung (%)</label>
+                        <input type="number" id="lohnabrechnungKVSatzInput" value="8.1" step="0.1" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungPVSatzInput">Pflegeversicherung (%)</label>
+                        <input type="number" id="lohnabrechnungPVSatzInput" value="1.525" step="0.001" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungRVSatzInput">Rentenversicherung (%)</label>
+                        <input type="number" id="lohnabrechnungRVSatzInput" value="9.3" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="lohnabrechnungALVSatzInput">Arbeitslosenvers. (%)</label>
+                        <input type="number" id="lohnabrechnungALVSatzInput" value="1.3" />
+                    </div>
+                </fieldset>
 
-                <div class="flex-column">
-            <label for="lohnabrechnungPVSatzInput">Pflegeversicherung (%)</label>
-            <input type="number" id="lohnabrechnungPVSatzInput" value="1.525" step="0.001">
-            <small>+0,6% kinderlos</small>
-        </div>
+                <!-- Vorlage -->
+                <fieldset class="vorlage-gruppe">
+                    <legend>Vorlage</legend>
+                    
+                    <div class="form-field">
+                        <label for="svgDropdownLohnabrechnung">Auswählen</label>
+                        <select id="svgDropdownLohnabrechnung">
+                            <option value="lohnabrechnung.svg">Lohn Klassisch</option>
+                            <option value="gehaltsabrechnung.svg">Gehalt Klassisch</option>
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+        </section>
 
-           <div class="flex-column">
-            <label for="lohnabrechnungRVSatzInput">Rentenversicherung (%)</label>
-            <input type="number" id="lohnabrechnungRVSatzInput" value="9.3">
-        </div>
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <div class="form-field">
+                <label for="datenLohnabrechnung">Unternehmen</label>
+                <select id="datenLohnabrechnung"></select>
+            </div>
+            
+            <div class="form-field">
+                <small>
+                    <a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">
+                        Eigenes Modellunternehmen verwenden?
+                    </a>
+                </small>
+            </div>
+        </section>
 
-               <div class="flex-column">
-            <label for="lohnabrechnungALVSatzInput">Arbeitslosenversicherung (%)</label>
-            <input type="number" id="lohnabrechnungALVSatzInput" value="1.3">
-        </div>
-    </div>
-<br>
-    <!-- Vorlage & Unternehmen -->
-         <div class="flex-row">
-        <label for="svgDropdownLohnabrechnung">Vorlage:</label>
-        <select id="svgDropdownLohnabrechnung">
-            <option value="lohnabrechnung.svg">Lohn Klassisch</option>
-            <option value="gehaltsabrechnung.svg">Gehalt Klassisch</option>
-        </select>
-    </div>
+        <!-- Aktionen -->
+        <section class="form-section form-actions">
+            <button type="button" onclick="lohnabrechnungApplySVGholen()">Abrechnung erstellen</button>
+        </section>
+    </form>
 
-        <label for="datenLohnabrechnung">Unternehmen:</label>
-        <select id="datenLohnabrechnung"></select>
-<br>
-    <small>
-        <a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">
-            Eigenes Modellunternehmen verwenden?
-        </a>
-    </small>
-<br><br>
-    <button onclick="lohnabrechnungApplySVGholen()">Abrechnung erstellen</button>
-</div>
+    <!-- Vorschau -->
+    <section class="preview-section">
+        <div id="lohnabrechnungContainer"></div>
+    </section>
 
-    
-    <br>
-    <div id="lohnabrechnungContainer" style="min-width: 350px;width: 100%;margin:0 auto;text-align:center">
-    </div>
-    
-    <div class="exportButtons">
-        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','png')" data-tooltip="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
+    <!-- Export-Buttons -->
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
                 <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
             </svg>
         </button>
-        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','svg')" data-tooltip="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512">
+        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
                 <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
             </svg>
         </button>
-        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','clipboard')" data-tooltip="In Zwischenablage">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512">
+        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','clipboard')" 
+                data-tooltip="In Zwischenablage" aria-label="In Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
                 <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
             </svg>
         </button>
-    </div>
+    </nav>
 </section>
-
 
         <section id="lohnjournal" class="tabcontent">
             <h3>Lohn-/Gehaltsjournal</h3>
@@ -1042,10 +1291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </select>
                 <br>
                 <label for="datenLohnjournal">Unternehmen: </label><select id="datenLohnjournal">
-                </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
-                        Modellunternehmen
-                        verwenden?</a></small>
-                <br><br><button onclick="journalApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
+                </select><br><button onclick="journalApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
             </div>
 
             </div>
@@ -1217,8 +1463,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </script>
                 </div><br>
                 <label for="datenBescheid">Unternehmen: </label><select id="datenBescheid">
-                </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
-                        Modellunternehmen verwenden?</a></small>
+                </select><br>
                 <br><br><button onclick="bescheidApplySVGholen()">Bescheid erstellen / aktualisieren</button><br>
             </div>
 
@@ -1341,10 +1586,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <br>
                 <label for="datenAnlagenkarte">Unternehmen: </label><select id="datenAnlagenkarte">
-                   </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
-                        Modellunternehmen
-                        verwenden?</a></small>
-
+                   </select>
                 <br><br><button onclick="anlagenkarteApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
 
             </div>
@@ -1467,10 +1709,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <br>
                 <label for="datenWertpapiere">Unternehmen: </label><select id="datenWertpapiere">
-                   </select><br><small><a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">Eigenes
-                        Modellunternehmen
-                        verwenden?</a></small>
-                        
+                   </select>                       
 
                 <br><br><button onclick="wertpapiereApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
 

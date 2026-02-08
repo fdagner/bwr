@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sie können hier zufällige Bestandsveränderungen generieren.">
+  <meta name="keywords" content="BwR, Buchungssatz, Bestandsveränderung, Realschule, Schema, Lehrkraft, Prüfung, Rechnungswesen, Buchführung">
+  <title>Lebenslauf</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+  <style>
+    #officeButton {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div> 
+    <h2>Lebenslauf (beta)</h2>
+
+    <div id="generator-container">
+      <div class="box"><p>Hier können Sie Lebensläufe generieren. Bildungsgrad, Name, Foto und Layout werden jeweils zufällig miteinander kombiniert. Im Rahmen der internen und externen Personalbeschaffung stellen Schüler sinnvolle Kriterien zur Bewerberauswahl zusammen, anhand derer sie Bewerbungen analysieren, um eine begründete (Vor-)Auswahl zu treffen. Die Lebensläufe sind zur Weiterverarbeitung gedacht. Das können Sie direkt hier schon machen. Wenn die Lebensläufe nicht ganz perfekt sind, kommt es dem didaktischen Einsatzzweck zu Gute.
+      </p>
+
+    
+<div id="generator-controls" style="margin: 20px 0; text-align: center;">
+  <button id="generate-btn" style="padding: 12px 24px; font-size: 1.1em; cursor: pointer;">
+    Neuen Lebenslauf generieren
+  </button>
+</div>
+</div>
+
+    <div id="Container" style="min-width: 780px; flex: 1;" contenteditable="true">
+
+  </div>
+
+          <div w3-include-html="downloads.html"></div> 
+  </main>
+  <script src="js/download.js"></script>
+    <script src="js/lebenslauf.js"></script>
+  <div w3-include-html="footer.html"></div> 
+  <script>
+  includeHTML();
+  </script>
+</main>
+</body>
+</html>

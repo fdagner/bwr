@@ -863,3 +863,454 @@ footer {
     transform: translateY(0);
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
+
+
+.drop-zone {
+    border: 2px dashed #999;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #fafafa;
+    position: relative;
+}
+
+.drop-zone:hover {
+    background-color: #f0f0f0;
+}
+
+.drop-zone.dragover {
+    border-color: #007bff;
+    background-color: #e8f1ff;
+}
+
+/* Versteckt das echte File-Input */
+.drop-zone input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+.konto-gruppe {
+    margin: 1.8em 0 1.2em 0;
+    width: 100%;
+}
+
+.konto-gruppe h4 {
+    margin: 0 0 0.6em 0;
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+    font-size: 1.1em;
+}
+
+.konto-gruppe .flex-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin-left: 0;
+}
+
+.konto-gruppe .radioKonto {
+    white-space: nowrap;
+    min-width: 180px;          /* verhindert zu starkes Zerreißen */
+}
+
+/* ============================================
+   VERBESSERTE FORMULAR-STRUKTUR
+   ============================================ */
+
+/* Formular-Sektionen */
+.form-section {
+  margin-bottom: 32px;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+/* Fieldsets für logische Gruppierung */
+fieldset {
+  border: 2px solid var(--border-light);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0;
+  background-color: var(--surface);
+  transition: all 0.3s ease;
+}
+
+fieldset:hover {
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow);
+}
+
+legend {
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--primary-color);
+  background-color: var(--surface);
+  border-radius: 4px;
+  border: 2px solid var(--border-light);
+}
+
+/* Form Fields */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-field:last-child {
+  margin-bottom: 0;
+}
+
+.form-field label {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+}
+
+/* Input Groups (für mehrere Inputs nebeneinander) */
+.input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input-group input:first-child {
+  flex: 2;
+}
+
+.input-group input:last-child {
+  flex: 1;
+}
+
+/* Checkbox Fields */
+.checkbox-field {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-field label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-field input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Spezifische Gruppen */
+.artikel-gruppe {
+  background-color: #f8f9ff;
+}
+
+.preisanpassung-gruppe {
+  background-color: #fff8f0;
+}
+
+.zahlung-gruppe {
+  background-color: #f0fff8;
+}
+
+.datum-gruppe {
+  background-color: #fff0f8;
+}
+
+.vorlage-gruppe {
+  background-color: #f8f0ff;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  padding-top: 24px;
+  border-top: 2px solid var(--border-light);
+}
+
+.form-actions button {
+  align-self: flex-start;
+}
+
+/* Preview Section */
+.preview-section {
+  margin: 32px 0;
+  padding: 24px;
+  background-color: var(--surface-dark);
+  border-radius: 8px;
+  min-height: 200px;
+}
+
+#rechnung1Container {
+  margin: 0 auto;
+  width: 100%;
+  min-width: 350px;
+  text-align: center;
+}
+
+/* Export Navigation */
+.exportButtons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 16px;
+  background-color: var(--surface-dark);
+  border-radius: 8px;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+  fieldset {
+    padding: 16px;
+  }
+  
+  legend {
+    font-size: 14px;
+  }
+  
+  .grid3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .input-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .input-group input {
+    flex: 1 !important;
+  }
+}
+
+/* Accessibility Improvements */
+.form-field label:focus-within {
+  color: var(--accent-color);
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  border-color: var(--accent-color);
+}
+
+/* Verbesserte Button-Gruppe */
+.button-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.grid-dynamic {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.portfolio-entry {
+  border: 1px solid #ddd;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+.portfolio-entry strong {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ============================================
+   ZUSÄTZLICHE FIELDSET-GRUPPEN - ALLE SECTIONS
+   ============================================ */
+
+/* Lohnabrechnung Fieldsets */
+.steuer-gruppe {
+    background-color: #fff0f5;
+    border-color: #ffcce0;
+}
+
+.steuer-gruppe:hover {
+    border-color: #ff99cc;
+}
+
+.steuer-berechnung-gruppe {
+    background-color: #fff5f0;
+    border-color: #ffe0cc;
+}
+
+.steuer-berechnung-gruppe:hover {
+    border-color: #ffcc99;
+}
+
+.sozialversicherung-gruppe {
+    background-color: #f0f5ff;
+    border-color: #cce0ff;
+}
+
+.sozialversicherung-gruppe:hover {
+    border-color: #99ccff;
+}
+
+/* Bescheid Fieldsets */
+.bescheid-art-gruppe {
+    background-color: #fffbf0;
+    border-color: #fff0cc;
+}
+
+.bescheid-art-gruppe:hover {
+    border-color: #ffe699;
+}
+
+.bescheid-daten-gruppe {
+    background-color: #f0fff5;
+    border-color: #ccffdd;
+}
+
+.bescheid-daten-gruppe:hover {
+    border-color: #99ffbb;
+}
+
+/* Anlagenkarte Fieldsets */
+.anlage-daten-gruppe {
+    background-color: #f5f0ff;
+    border-color: #e0ccff;
+}
+
+.anlage-daten-gruppe:hover {
+    border-color: #cc99ff;
+}
+
+/* Wertpapiere Fieldsets */
+.wertpapier-daten-gruppe {
+    background-color: #fff5f0;
+    border-color: #ffdccc;
+}
+
+.wertpapier-daten-gruppe:hover {
+    border-color: #ffb399;
+}
+
+.wertpapier-art-gruppe {
+    background-color: #f0fffa;
+    border-color: #ccffee;
+}
+
+.wertpapier-art-gruppe:hover {
+    border-color: #99ffdd;
+}
+
+/* Spezielle Input-Gruppen */
+.checkbox-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkbox-inline input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+/* Email Container Spezial-Styling */
+#emailContainer {
+    border: 0px solid #00000039;
+    line-height: 0.75;
+    padding: 0px;
+    margin: 0px;
+    min-width: 700px;
+}
+
+/* Newspaper Container */
+#newspaperContainer {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+#newspaperDiv {
+    max-width: 700px;
+    background-color: #f5f5f5;
+    padding: 4px;
+    margin: 0 auto;
+}
+
+#newspaperContent {
+    text-align: justify;
+    column-count: 2;
+    column-width: 150px;
+    column-gap: 30px;
+}
+
+/* Lohnjournal spezielle Container */
+#lohnjournalBuchungssatzContainer {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+/* Responsive Anpassungen für alle neuen Sections */
+@media (max-width: 768px) {
+    #emailContainer {
+        min-width: 100%;
+    }
+    
+    #newspaperContent {
+        column-count: 1;
+    }
+    
+    .checkbox-inline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Verbesserte Hover-Effekte für alle Fieldsets */
+.steuer-gruppe,
+.steuer-berechnung-gruppe,
+.sozialversicherung-gruppe,
+.bescheid-art-gruppe,
+.bescheid-daten-gruppe,
+.anlage-daten-gruppe,
+.wertpapier-daten-gruppe,
+.wertpapier-art-gruppe {
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.steuer-gruppe:hover,
+.steuer-berechnung-gruppe:hover,
+.sozialversicherung-gruppe:hover,
+.bescheid-art-gruppe:hover,
+.bescheid-daten-gruppe:hover,
+.anlage-daten-gruppe:hover,
+.wertpapier-daten-gruppe:hover,
+.wertpapier-art-gruppe:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}

@@ -1,149 +1,164 @@
-const svgWidth = 550;
+// portfolioanalyse.js – Komplette Version mit dynamischen Einträgen + Umsatz-Radius
+
+const svgWidth  = 550;
 const svgHeight = 380;
-generatePortfolio();
+const minRadius = 6;
+const maxRadius = 36;   // bei Umsatz 10
 
-function randomizePortfolios() {
-  const portfolios = [
-    document.getElementById('portfolioA').value,
-    document.getElementById('portfolioB').value,
-    document.getElementById('portfolioC').value,
-    document.getElementById('portfolioD').value
-  ];
+// Globale Datenstruktur
+let portfolioEntries = [
+  { id: 'A', label: 'Question Mark',  defaultX: 25,  defaultY: 30,  emoji: '❓', isFixed: true, umsatz: 5 },
+  { id: 'B', label: 'Stars',         defaultX: 150, defaultY: 35,  emoji: '⭐', isFixed: true, umsatz: 8 },
+  { id: 'C', label: 'Cash Cows',     defaultX: 150, defaultY: 15,  emoji: '🐮', isFixed: true, umsatz: 7 },
+  { id: 'D', label: 'Poor Dogs',     defaultX: 25,  defaultY: 5,   emoji: '🐶', isFixed: true, umsatz: 3 }
+];
 
-  function getRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  const svg = document.getElementById('portfolioSVG');
-
-  const existingItems = svg.querySelectorAll('.item');
-  existingItems.forEach(item => item.remove());
-
-  portfolios.forEach(portfolio => {
-    let x, y;
-    switch (portfolio) {
-      case portfolios[0]:
-        x = getRandomNumber(55, 250);
-        y = getRandomNumber(15, 180);
-        break;
-      case portfolios[1]:
-        x = getRandomNumber(375, 550);
-        y = getRandomNumber(15, 180);
-        break;
-      case portfolios[2]:
-        x = getRandomNumber(375, 550);
-        y = getRandomNumber(215, 350);
-        break;
-      case portfolios[3]:
-        x = getRandomNumber(55, 250);
-        y = getRandomNumber(215, 350);
-        break;
-      default:
-        break;
-    }
-
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', x);
-    circle.setAttribute('cy', y);
-    circle.setAttribute('r', 10);
-    circle.setAttribute('fill', getRandomColor());
-    circle.classList.add('item');
-    circle.classList.add('circle');
-    svg.appendChild(circle);
-
-    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', x);
-    text.setAttribute('y', y);
-    text.setAttribute('font-size', 18);
-    text.setAttribute('fill', '#333');
-    text.setAttribute('transform', 'translate(15,5)');
-    text.textContent = portfolio;
-    text.classList.add('item');
-    text.classList.add('text');
-    svg.appendChild(text);
-  });
-  fillInputFields();
-}
-
-function generatePortfolio() {
-  if (!validateInputs()) {
-    // Wenn die Validierung fehlschlägt, stoppe die Funktion
+// ───────────────────────────────────────────────
+// Initialisierung – Eingabefelder erstellen
+// ───────────────────────────────────────────────
+function initPortfolioInputs() {
+  const container = document.getElementById('portfolioEntries');
+  if (!container) {
+    console.error("Element #portfolioEntries nicht gefunden!");
     return;
   }
+  
+  container.innerHTML = '';
 
-  const portfolios = [
-    {
-      name: document.getElementById('portfolioA').value,
-      x: 50 + parseFloat(svgWidth) * parseFloat(document.getElementById('portfolioAx').value) / 200,
-      y: svgHeight - (parseFloat(svgHeight) * parseFloat(document.getElementById('portfolioAy').value) / 40),
-    },
-    {
-      name: document.getElementById('portfolioB').value,
-      x: 50 + parseFloat(svgWidth) * parseFloat(document.getElementById('portfolioBx').value) / 200,
-      y: svgHeight - (parseFloat(svgHeight) * parseFloat(document.getElementById('portfolioBy').value) / 40),
-    },
-    {
-      name: document.getElementById('portfolioC').value,
-      x: 50 + parseFloat(svgWidth) * parseFloat(document.getElementById('portfolioCx').value) / 200,
-      y: svgHeight - (parseFloat(svgHeight) * parseFloat(document.getElementById('portfolioCy').value) / 40),
-    },
-    {
-      name: document.getElementById('portfolioD').value,
-      x: 50 + parseFloat(svgWidth) * parseFloat(document.getElementById('portfolioDx').value) / 200,
-      y: svgHeight - (parseFloat(svgHeight) * parseFloat(document.getElementById('portfolioDy').value) / 40),
+  portfolioEntries.forEach((entry, index) => {
+    const div = document.createElement('div');
+    div.className = 'portfolio-entry';
+    div.dataset.index = index;
+
+    let removeBtn = '';
+    if (!entry.isFixed) {
+      removeBtn = `<button type="button" class="remove-btn" onclick="removePortfolioEntry(${index})">✕ Entfernen</button>`;
     }
-  ];
+
+    div.innerHTML = `
+      <div class="entry-header">
+        <strong>${entry.emoji || ''} ${entry.label}</strong>
+        ${removeBtn}
+      </div>
+      <label>Bezeichnung:</label>
+      <input type="text" class="port-name" value="${entry.emoji || ''}${entry.label}" maxlength="30"><br>
+      
+      <label>Rel. Marktanteil (0–200):</label>
+      <input type="number" class="port-x" value="${entry.defaultX}" min="0" max="200" step="1"><br>
+      
+      <label>Marktwachstum (0–40):</label>
+      <input type="number" class="port-y" value="${entry.defaultY}" min="0" max="40" step="1"><br>
+      
+      <label>Umsatz (1–10) → Kreisgröße:</label>
+      <input type="number" class="port-u" value="${entry.umsatz || 5}" min="1" max="10" step="1">
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+// ───────────────────────────────────────────────
+function addPortfolioEntry() {
+  const newEntry = {
+    id: 'extra_' + Date.now(),
+    label: 'Neuer Eintrag',
+    defaultX: Math.round(Math.random() * 160 + 20),
+    defaultY: Math.round(Math.random() * 30 + 5),
+    umsatz: 5,
+    isFixed: false
+  };
+  portfolioEntries.push(newEntry);
+  initPortfolioInputs();
+  // Optional: direkt aktualisieren
+  // generatePortfolio();
+}
+
+// ───────────────────────────────────────────────
+function removePortfolioEntry(index) {
+  if (portfolioEntries[index].isFixed) return;
+  portfolioEntries.splice(index, 1);
+  initPortfolioInputs();
+  generatePortfolio();
+}
+
+// ───────────────────────────────────────────────
+// Hauptzeichnungsfunktion
+// ───────────────────────────────────────────────
+function generatePortfolio() {
+  if (!validateAllInputs()) return;
 
   const svg = document.getElementById('portfolioSVG');
+  if (!svg) return;
 
-  const existingItems = svg.querySelectorAll('.item');
-  existingItems.forEach(item => item.remove());
+  // Alte Punkte entfernen
+  svg.querySelectorAll('.item').forEach(el => el.remove());
 
-  portfolios.forEach(portfolio => {
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', portfolio.x);
-    circle.setAttribute('cy', portfolio.y);
-    circle.setAttribute('r', 10);
-    circle.setAttribute('fill', getRandomColor());
-    circle.classList.add('item');
-    circle.classList.add('circle');
+  const entryElements = document.querySelectorAll('.portfolio-entry');
+
+  entryElements.forEach((el) => {
+    const name   = el.querySelector('.port-name').value.trim();
+    const xVal   = parseFloat(el.querySelector('.port-x').value);
+    const yVal   = parseFloat(el.querySelector('.port-y').value);
+    const umsatz = parseInt(el.querySelector('.port-u').value) || 5;
+
+    // Koordinaten skalieren
+    const cx = 50 + (svgWidth * xVal / 200);
+    const cy = svgHeight - (svgHeight * yVal / 40);
+
+    // Radius nach Umsatz
+    const radius = minRadius + (maxRadius - minRadius) * (umsatz - 1) / 9;
+
+    // Kreis zeichnen
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", radius);
+    circle.setAttribute("fill", getRandomColor());
+    circle.classList.add("item", "circle");
+    // Tooltip mit Umsatz
+    circle.innerHTML = `<title>Umsatz: ${umsatz} / 10</title>`;
     svg.appendChild(circle);
 
-    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', portfolio.x);
-    text.setAttribute('y', portfolio.y);
-    text.setAttribute('font-size', 18);
-    text.setAttribute('fill', '#333');
-    text.setAttribute('transform', 'translate(15,5)');
-    text.textContent = portfolio.name;
-    text.classList.add('item');
-    text.classList.add('text');
+    // Text
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", cx);
+    text.setAttribute("y", cy);
+    text.setAttribute("font-size", 16);
+    text.setAttribute("fill", "#333");
+    text.setAttribute("transform", "translate(15,5)");
+    text.textContent = name;
+    text.classList.add("item", "text");
     svg.appendChild(text);
   });
-}
 
-function fillInputFields() {
-  const portfolios = document.querySelectorAll('.circle');
-
-  const inputFields = [
-    document.getElementById('portfolioAx'),
-    document.getElementById('portfolioAy'),
-    document.getElementById('portfolioBx'),
-    document.getElementById('portfolioBy'),
-    document.getElementById('portfolioCx'),
-    document.getElementById('portfolioCy'),
-    document.getElementById('portfolioDx'),
-    document.getElementById('portfolioDy')
-  ];
-
-  portfolios.forEach((portfolio, index) => {
-    inputFields[index * 2].value = Math.round(200 * parseFloat(portfolio.getAttribute('cx') - 50) / parseFloat(svgWidth));
-    inputFields[index * 2 + 1].value = Math.round((40 - (40 * parseFloat(portfolio.getAttribute('cy')) / parseFloat(svgHeight))));
+  // Zurückschreiben der gerundeten Werte
+  entryElements.forEach(el => {
+    el.querySelector('.port-x').value = Math.round(parseFloat(el.querySelector('.port-x').value));
+    el.querySelector('.port-y').value = Math.round(parseFloat(el.querySelector('.port-y').value));
   });
 }
 
+// ───────────────────────────────────────────────
+function validateAllInputs() {
+  const entries = document.querySelectorAll('.portfolio-entry');
+  for (let el of entries) {
+    const x = parseFloat(el.querySelector('.port-x').value);
+    const y = parseFloat(el.querySelector('.port-y').value);
+    const u = parseInt(el.querySelector('.port-u').value);
+    const name = el.querySelector('.port-name').value.trim();
 
+    if (isNaN(x) || x < 0 || x > 200 ||
+        isNaN(y) || y < 0 || y > 40  ||
+        isNaN(u) || u < 1 || u > 10  ||
+        name.length < 1 || name.length > 30) {
+      alert("Bitte prüfen:\n• Marktanteil: 0–200\n• Wachstum: 0–40\n• Umsatz: 1–10\n• Name: max. 30 Zeichen");
+      return false;
+    }
+  }
+  return true;
+}
 
+// ───────────────────────────────────────────────
 function getRandomColor() {
   const letters = '0123456789ABCDEF';
   let color = '#';
@@ -153,102 +168,157 @@ function getRandomColor() {
   return color;
 }
 
-function validateInputs() {
-  const positions = ["A", "B", "D", "C"]; // Liste der Positionen
+// ───────────────────────────────────────────────
+// Zufalls-Modus
+// ───────────────────────────────────────────────
+function randomizePortfolios() {
+  const entryElements = document.querySelectorAll('.portfolio-entry');
 
-  for (let i = 0; i < positions.length; i++) {
-    const prefix = "portfolio" + positions[i];
-    const xInput = portfolioIsValid(document.getElementById(prefix + "x").value);
-    const yInput = portfolioIsValid(document.getElementById(prefix + "y").value);
-  
-    if (isNaN(xInput) || isNaN(yInput) || xInput === "" || yInput === "" || xInput < 0 || xInput > 200 || yInput < 0 || yInput > 40) {
-      alert("Bitte geben Sie gültige Koordinaten ein. X-Werte von 0 bis 200, Y-Werte von 0-40");
-      console.log("Ungültige Koordinaten gefunden. Abbruch der Validierung.");
-      return false; // Abbruch der Validierung und Rückgabe von false
+  // Wir erwarten, dass die ersten 4 Einträge die Standard-Quadranten sind (in dieser Reihenfolge):
+  // 0 → Question Mark   (hohes Wachstum, niedriger Marktanteil)
+  // 1 → Stars           (hohes Wachstum, hoher Marktanteil)
+  // 2 → Cash Cows       (niedriges Wachstum, hoher Marktanteil)
+  // 3 → Poor Dogs       (niedriges Wachstum, niedriger Marktanteil)
+
+  entryElements.forEach((el, index) => {
+    const xInput = el.querySelector('.port-x');
+    const yInput = el.querySelector('.port-y');
+    const uInput = el.querySelector('.port-u');
+
+    let x, y;
+
+    if (index < 4) {
+      // ── Standard-Quadranten ───────────────────────────────────────
+      switch (index) {
+        case 0: // Question Mark – oben links
+          x = randomInRange(10,  80);   // niedriger bis mittlerer Marktanteil
+          y = randomInRange(22,  38);   // hohes Wachstum
+          break;
+
+        case 1: // Stars – oben rechts
+          x = randomInRange(110, 190);  // hoher Marktanteil
+          y = randomInRange(22,  38);   // hohes Wachstum
+          break;
+
+        case 2: // Cash Cows – unten rechts
+          x = randomInRange(110, 190);  // hoher Marktanteil
+          y = randomInRange(2,   18);   // niedriges Wachstum
+          break;
+
+        case 3: // Poor Dogs – unten links
+          x = randomInRange(10,  80);   // niedriger bis mittlerer Marktanteil
+          y = randomInRange(2,   18);   // niedriges Wachstum
+          break;
+      }
+    } else {
+      // ── Zusätzliche Einträge → komplett zufällig ──────────────────
+      x = randomInRange(5, 195);
+      y = randomInRange(1, 39);
     }
 
-    const tInput = portfolioIsValid(document.getElementById(prefix).value);
-    if (tInput.length > 30 || !portfolioIsValid(tInput)) {
-      alert("Bitte geben Sie einen gültigen Text ein mit maximal 30 Zeichen!");
-      console.log("Ungültiger Text gefunden. Abbruch der Validierung.");
-      return false; // Abbruch der Validierung und Rückgabe von false
-    }
-  }
+    // Umsatz immer zufällig (1–10)
+    const umsatz = Math.floor(Math.random() * 10) + 1;
 
-  console.log("Alle Validierungen erfolgreich.");
-  return true; // Rückgabe true, wenn alle Validierungen erfolgreich waren
+    xInput.value = x;
+    yInput.value = y;
+    uInput.value = umsatz;
+  });
+
+  // Direkt aktualisieren
+  generatePortfolio();
 }
 
-function portfolioIsValid(input) {
-  // Überprüfung auf HTML-Tags und Skripte
-  const regex = /<.*?>/g;
-  if (regex.test(input)) {
-      alert("Ungültige Eingabe: HTML-Tags oder Skripte sind nicht erlaubt.");
-      return false;
-  }
-
-   // Wenn die Eingabe gültig ist, geben Sie sie zurück
-  return input;
+// Hilfsfunktion für Zufallswerte in einem Bereich (inkl. ganzer Zahlen)
+function randomInRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
-let textLabelsVisible = true;
+// ───────────────────────────────────────────────
+// Toggle-Funktionen (Text / Kreise / Gitter)
+// ───────────────────────────────────────────────
+let textLabelsVisible   = true;
 let circleLabelsVisible = true;
 let gitterLabelsVisible = true;
 
 function portfolioToggleText() {
-  const textlabels = document.querySelectorAll('.text');
-
-  textlabels.forEach(textlabel => textlabel.style.display = textLabelsVisible ? 'none' : 'inline');
-
+  document.querySelectorAll('.text').forEach(el => {
+    el.style.display = textLabelsVisible ? 'none' : 'inline';
+  });
   textLabelsVisible = !textLabelsVisible;
 }
 
-function portfolioToggleGitter() {
-  const gitterlabels = document.querySelectorAll('.gitter');
-
-  gitterlabels.forEach(gitterlabel => gitterlabel.style.display = gitterLabelsVisible ? 'none' : 'inline');
-
-  gitterLabelsVisible = !gitterLabelsVisible;
-}
-
 function portfolioToggleCircle() {
-  const circlelabels = document.querySelectorAll('.circle');
-
-  circlelabels.forEach(circlelabel => circlelabel.style.display = circleLabelsVisible ? 'none' : 'inline');
-
+  document.querySelectorAll('.circle').forEach(el => {
+    el.style.display = circleLabelsVisible ? 'none' : 'inline';
+  });
   circleLabelsVisible = !circleLabelsVisible;
 }
 
+function portfolioToggleGitter() {
+  document.querySelectorAll('.gitter').forEach(el => {
+    el.style.display = gitterLabelsVisible ? 'none' : 'inline';
+  });
+  gitterLabelsVisible = !gitterLabelsVisible;
+}
 
+// ───────────────────────────────────────────────
+// Download / Kopieren
+// ───────────────────────────────────────────────
 function portfolioHerunterladen() {
-  const portfolioHTML = document.getElementById('portfolioContainer').innerHTML;
-  const blob = new Blob([portfolioHTML], { type: 'text/html' });
+  const svg = document.getElementById('portfolioSVG');
+  if (!svg) return;
+
+  const serializer = new XMLSerializer();
+  const svgStr = serializer.serializeToString(svg);
+  const blob = new Blob([svgStr], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'portfolio.svg';
+  a.href = url;
+  a.download = 'portfolioanalyse.svg';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 function portfolioKopiereInZwischenablage() {
-  const portfolioHTML = document.getElementById('portfolioContainer').innerHTML;
-  navigator.clipboard.writeText(portfolioHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+  const svg = document.getElementById('portfolioSVG');
+  if (!svg) return;
+
+  const serializer = new XMLSerializer();
+  const svgStr = serializer.serializeToString(svg);
+
+  navigator.clipboard.writeText(svgStr)
+    .then(() => alert('SVG-Code in die Zwischenablage kopiert'))
+    .catch(err => console.error('Kopieren fehlgeschlagen:', err));
 }
 
 function portfolioHerunterladenAlsPNG() {
-  const portfolioContainer = document.getElementById('portfolioContainer');
+  const container = document.getElementById('portfolioContainer') || document.getElementById('portfolioSVG');
+  if (!container || typeof html2canvas !== 'function') {
+    alert('html2canvas nicht geladen oder Container nicht gefunden.');
+    return;
+  }
 
-  html2canvas(portfolioContainer, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = 'portfolio.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  html2canvas(container, {
+    backgroundColor: '#ffffff',
+    scale: 2
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'portfolioanalyse.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(err => {
+    console.error('PNG-Export fehlgeschlagen:', err);
+    alert('Fehler beim PNG-Export.');
   });
 }
+
+// ───────────────────────────────────────────────
+// Start
+// ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initPortfolioInputs();
+  generatePortfolio();
+});
