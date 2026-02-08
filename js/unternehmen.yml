@@ -2162,3 +2162,27 @@
     bic: "GENODEM1GLS"
     inhaber: "Lea Nachhaltig"
     akzent: "#32CD32"
+
+- unternehmen:
+    id: "91"
+    branche: "Logistik"
+    name: "EU Glasfaser"
+    motto: "Internet.Mobil.Telefon"
+    bank: "Sparbank"
+    rechtsform: "AG"
+    logo: "media/pic/mail.svg"
+    adresse:
+      strasse: "Schnellstraße 10"
+      plz: "90441"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "0961 7654326"
+      email: "info@peuglas.de"
+      internet: "euglas.de"
+    ust_id: "DE987654321"
+    steuernummer: "181/066/45573"
+    iban: "DE89370400449434513034"
+    bic: "GENODEF1NBG"
+    inhaber: "Frieda Macher"
+    akzent: "#ffff00"
