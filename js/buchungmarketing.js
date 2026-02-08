@@ -199,7 +199,6 @@ function parseNumericValue(value) {
 
 const wertFormulierungen = [
   " in Höhe von ",
-  "  ",
   " mit einem Betrag von "
 ];
 // ============================================================================
