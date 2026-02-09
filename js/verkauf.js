@@ -1,6 +1,6 @@
 // Globale Variable – wird von einkauf.js benötigt
   let yamlData = [];
-  let kunde = '<i>[Modellunternehmen]</i>';
+  let lieferer = '<i>[Modellunternehmen]</i>';
 
   // ============================================================================
 // BENUTZERDEFINIERTE UNTERNEHMEN - Integration
@@ -52,7 +52,6 @@ function loadYamlFromLocalStorage() {
   return false;
 }
 
-  // Versuch 2: Standard-Datei laden
 // Versuch 2: Standard-Datei laden
 function loadDefaultYaml() {
   fetch('js/unternehmen.yml')
@@ -83,25 +82,23 @@ function loadDefaultYaml() {
   // Start: zuerst localStorage, sonst Standard
   document.addEventListener('DOMContentLoaded', () => {
 
-    const kaeuferSelect = document.getElementById('einkaufKaeufer');
+    const kaeuferSelect = document.getElementById('einkaufLieferer');
 
     // Initialwert setzen
     if (kaeuferSelect && kaeuferSelect.value) {
-        kunde = kaeuferSelect.value.trim();
+        lieferer = kaeuferSelect.value.trim();
     }
 
     // Bei jeder Änderung aktualisieren
     kaeuferSelect.addEventListener('change', () => {
-        kunde = kaeuferSelect.value.trim() || '';  // leer wenn nichts ausgewählt
-        console.log('Kunde geändert:', kunde);
+        lieferer = kaeuferSelect.value.trim() || '';  // leer wenn nichts ausgewählt
+        console.log('Lieferer geändert:', lieferer);
     });
 
     if (!loadYamlFromLocalStorage()) {
       loadDefaultYaml();
     }
   });
-
-
 
 
 
@@ -940,7 +937,8 @@ clipboardverkauf.on('error', function (e) {
 });
 
 
-    function autoSelectMyCompany() {
+
+            function autoSelectMyCompany() {
         const myCompanyName = localStorage.getItem('myCompany');
         
         if (!myCompanyName) return;
