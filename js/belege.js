@@ -726,13 +726,26 @@ function updateAllDropdowns() {
         const dropdown = document.getElementById(dropdownId);
         if (!dropdown) return;
 
-        dropdown.innerHTML = '';
+        dropdown.innerHTML = '';  // alles löschen
+
+        // ← Hier die entscheidende Zeile(n) hinzufügen
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.text = '— Bitte Unternehmen auswählen —';
+        placeholder.disabled = true;           // optional: verhindert erneutes Auswählen
+        placeholder.selected = true;           // ← das macht den Unterschied!
+        dropdown.appendChild(placeholder);
+
+        // Nun die echten Einträge
         sortedData.forEach(company => {
             const option = document.createElement('option');
             option.value = company.unternehmen.name;
-            option.text = `${company.unternehmen.branche} - ${company.unternehmen.name} ${company.unternehmen.rechtsform}`;
+            option.text = `${company.unternehmen.branche} - ${company.unternehmen.name} ${company.unternehmen.rechtsform || ''}`.trim();
             dropdown.appendChild(option);
         });
+
+        // Sicherstellen, dass wirklich nichts anderes ausgewählt ist
+        dropdown.value = '';
     });
 }
 

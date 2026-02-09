@@ -597,18 +597,28 @@ function initializeURLParameters() {
 // ============================================================================
 
 // Initialisierung beim Laden der Seite
-document.addEventListener('DOMContentLoaded', initializeURLParameters);
 
-// ============================================================================
-// EXPORT FÜR NODE.JS (falls benötigt)
-// ============================================================================
+  function autoSelectMyCompanyOnlyIfNeeded() {
+    const company = localStorage.getItem('myCompany');
+    if (!company) return;
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        URL_PARAM_CONFIG,
-        TAB_MAPPING,
-        APPLY_FUNCTIONS,
-        initializeURLParameters,
-        loadURLParametersForBeleg
-    };
+    document.querySelectorAll('select.meinUnternehmen').forEach(select => {
+        // Nur setzen, wenn leer oder Placeholder
+        if (!select.value || select.value.trim() === '' || select.value === 'Bitte wählen') {
+            const opt = Array.from(select.options).find(o => o.value === company || o.text === company);
+            if (opt) {
+                select.value = opt.value;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        }
+    });
 }
+
+// Timing anpassen
+document.addEventListener('DOMContentLoaded', () => {
+    initializeURLParameters();           // zuerst!
+    
+    setTimeout(() => {
+        autoSelectMyCompanyOnlyIfNeeded();
+    }, 400);
+});

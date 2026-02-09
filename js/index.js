@@ -45,6 +45,40 @@ function initializeYamlData() {
     console.log('Finale yamlData hat jetzt', yamlData.length, 'Unternehmen (Basis + eigene)');
 }
 
+// Event Listener für Dropdown-Änderungen erweitern
+document.getElementById('allCompaniesDropdown')?.addEventListener('change', function() {
+    const selectedName = this.value;
+    const setButton = document.getElementById('setMyCompanyButton');
+    const myCompanyName = localStorage.getItem('myCompany');
+    
+    // Button aktivieren/deaktivieren
+    if (setButton) {
+        setButton.disabled = !selectedName || (selectedName === myCompanyName);
+    }
+    
+    if (!selectedName) return;
+
+    const company = yamlData.find(c => c.unternehmen.name === selectedName);
+    if (!company) return;
+
+    // Beispiel: In einem Div anzeigen
+    const previewDiv = document.getElementById('companyPreview');
+    if (previewDiv) {
+        const isMyCompany = (selectedName === myCompanyName);
+        const myCompanyBadge = isMyCompany 
+            ? '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;">★ Mein Unternehmen</span>' 
+            : '';
+        
+        previewDiv.innerHTML = `
+            <strong>${company.unternehmen.name} ${company.unternehmen.rechtsform}</strong>${myCompanyBadge}<br>
+            Branche: ${company.unternehmen.branche}<br>
+            Ort: ${company.unternehmen.adresse.plz} ${company.unternehmen.adresse.ort}<br>
+            E-Mail: ${company.unternehmen.kontakt.email || '–'}
+        `;
+    }
+});
+
+// Funktion zum Befüllen des Dropdowns mit allen Unternehmen
 // Funktion zum Befüllen des Dropdowns mit allen Unternehmen
 function populateAllCompaniesDropdown() {
     const dropdown = document.getElementById('allCompaniesDropdown');
@@ -87,11 +121,25 @@ function populateAllCompaniesDropdown() {
     });
 
     console.log(`Dropdown befüllt mit ${sortedCompanies.length} Unternehmen`);
+    
+    // NEU: Aktualisiere "Mein Unternehmen" Status nach dem Befüllen
+    updateMyCompanyStatus();
+    
+    // NEU: Auto-select in Dropdowns mit class="meinUnternehmen"
+    autoSelectMyCompany();
 }
 
 
 document.getElementById('allCompaniesDropdown')?.addEventListener('change', function() {
     const selectedName = this.value;
+    const setButton = document.getElementById('setMyCompanyButton');
+    const myCompanyName = localStorage.getItem('myCompany');
+    
+    // Button aktivieren/deaktivieren
+    if (setButton) {
+        setButton.disabled = !selectedName || (selectedName === myCompanyName);
+    }
+    
     if (!selectedName) return;
 
     const company = yamlData.find(c => c.unternehmen.name === selectedName);
@@ -100,8 +148,13 @@ document.getElementById('allCompaniesDropdown')?.addEventListener('change', func
     // Beispiel: In einem Div anzeigen
     const previewDiv = document.getElementById('companyPreview');
     if (previewDiv) {
+        const isMyCompany = (selectedName === myCompanyName);
+        const myCompanyBadge = isMyCompany 
+            ? '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;">★ Mein Unternehmen</span>' 
+            : '';
+        
         previewDiv.innerHTML = `
-            <strong>${company.unternehmen.name} ${company.unternehmen.rechtsform}</strong><br>
+            <strong>${company.unternehmen.name} ${company.unternehmen.rechtsform}</strong>${myCompanyBadge}<br>
             Branche: ${company.unternehmen.branche}<br>
             Ort: ${company.unternehmen.adresse.plz} ${company.unternehmen.adresse.ort}<br>
             E-Mail: ${company.unternehmen.kontakt.email || '–'}
@@ -642,6 +695,7 @@ if (isEditing) {
 mergeUserCompaniesIntoYamlData();
 markObsoleteUserCompanies();
 displayUserCompanies();
+populateAllCompaniesDropdown();
 
 // Formular zurücksetzen
 form.reset();
@@ -949,6 +1003,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Komplette YAML-Initialisierung + Merge + Mark + Display
     initializeYamlData();
+    updateMyCompanyStatus();
+    autoSelectMyCompany();
     
     // Füge Export-Button hinzu (optional)
     const modellunternehmenSection = document.getElementById('modellunternehmen');
@@ -1039,4 +1095,97 @@ function markObsoleteUserCompanies() {
     });
 
     saveUserCompanies(userCompanies);
+}
+
+
+// ============================================================================
+// MEIN UNTERNEHMEN - VERWALTUNG
+// ============================================================================
+
+// Funktion zum Speichern des Standard-Unternehmens
+function setAsMyCompany() {
+    const dropdown = document.getElementById('allCompaniesDropdown');
+    const selectedName = dropdown.value;
+    
+    if (!selectedName) {
+        alert('Bitte wählen Sie zuerst ein Unternehmen aus.');
+        return;
+    }
+    
+    const company = yamlData.find(c => c.unternehmen.name === selectedName);
+    if (!company) {
+        alert('Unternehmen nicht gefunden.');
+        return;
+    }
+    
+    // Speichere im Local Storage
+    localStorage.setItem('myCompany', selectedName);
+    
+    // Aktualisiere die Anzeige
+    updateMyCompanyStatus();
+    
+    alert(`"${selectedName}" wurde als Ihr Standard-Unternehmen gespeichert.`);
+    updateLocalStorageStatus('Standard-Unternehmen gespeichert.');
+}
+
+// Funktion zum Entfernen des Standard-Unternehmens
+function clearMyCompany() {
+    if (!confirm('Möchten Sie Ihr Standard-Unternehmen wirklich entfernen?')) {
+        return;
+    }
+    
+    localStorage.removeItem('myCompany');
+    updateMyCompanyStatus();
+    
+    alert('Standard-Unternehmen wurde entfernt.');
+    updateLocalStorageStatus('Standard-Unternehmen entfernt.');
+}
+
+// Funktion zum Aktualisieren der Status-Anzeige
+function updateMyCompanyStatus() {
+    const myCompanyName = localStorage.getItem('myCompany');
+    const statusDiv = document.getElementById('myCompanyStatus');
+    const nameSpan = document.getElementById('myCompanyName');
+    const setButton = document.getElementById('setMyCompanyButton');
+    
+    if (myCompanyName) {
+        if (statusDiv) {
+            statusDiv.style.display = 'block';
+            if (nameSpan) nameSpan.textContent = myCompanyName;
+        }
+        // Prüfe ob das aktuell ausgewählte Unternehmen bereits "Mein Unternehmen" ist
+        const dropdown = document.getElementById('allCompaniesDropdown');
+        if (setButton && dropdown) {
+            setButton.disabled = (dropdown.value === myCompanyName);
+        }
+    } else {
+        if (statusDiv) statusDiv.style.display = 'none';
+        if (setButton) setButton.disabled = false;
+    }
+}
+
+// Funktion zum automatischen Auswählen in Dropdowns mit class="meinUnternehmen"
+function autoSelectMyCompany() {
+    const myCompanyName = localStorage.getItem('myCompany');
+    
+    if (!myCompanyName) return;
+    
+    // Finde alle Dropdowns mit der Klasse "meinUnternehmen"
+    const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+    
+    dropdowns.forEach(dropdown => {
+        // Suche nach der passenden Option
+        const options = Array.from(dropdown.options);
+        const matchingOption = options.find(opt => opt.value === myCompanyName);
+        
+        if (matchingOption) {
+            dropdown.value = myCompanyName;
+            
+            // Trigger change event falls andere Scripts darauf reagieren
+            const event = new Event('change', { bubbles: true });
+            dropdown.dispatchEvent(event);
+            
+            console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
+        }
+    });
 }

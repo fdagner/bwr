@@ -300,12 +300,12 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="flex-row">
                 <div class="form-field">
                     <label for="datenLieferer">Lieferer</label>
-                    <select id="datenLieferer"></select>
+                    <select id="datenLieferer" class="meinUnternehmen"></select>
                 </div>
                 
                 <div class="form-field">
                     <label for="datenKunde">Empfänger</label>
-                    <select id="datenKunde"></select>
+                    <select id="datenKunde" class="meinUnternehmen"></select>
                 </div>
             </div>
             
@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             <div class="form-field">
                 <label for="datenKontoauszug">Kontoinhaber</label>
-                <select id="datenKontoauszug"></select>
+                <select id="datenKontoauszug" class="meinUnternehmen"></select>
             </div>
             
             
@@ -687,12 +687,12 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="flex-row">
                 <div class="form-field">
                     <label for="datenQuittung">Geldempfänger</label>
-                    <select id="datenQuittung"></select>
+                    <select id="datenQuittung" class="meinUnternehmen"></select>
                 </div>
                 
                 <div class="form-field">
                     <label for="datenQuittungKunde">Kunde</label>
-                    <select id="datenQuittungKunde"></select>
+                    <select id="datenQuittungKunde" class="meinUnternehmen"></select>
                 </div>
             </div>
             
@@ -876,7 +876,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <div class="form-field">
                     <label for="datenKassenbonKunde">Kunde</label>
-                    <select id="datenKassenbonKunde"></select>
+                    <select id="datenKassenbonKunde" class="meinUnternehmen"></select>
                 </div>
             </div>
             
@@ -1236,7 +1236,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <section class="form-section">
             <div class="form-field">
                 <label for="datenLohnabrechnung">Unternehmen</label>
-                <select id="datenLohnabrechnung"></select>
+                <select id="datenLohnabrechnung" class="meinUnternehmen"></select>
             </div>
             
             <div class="form-field">
@@ -1291,7 +1291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <option value="lohnjournal.svg">Klassisch</option>
                 </select>
                 <br>
-                <label for="datenLohnjournal">Unternehmen: </label><select id="datenLohnjournal">
+                <label for="datenLohnjournal">Unternehmen: </label><select id="datenLohnjournal" class="meinUnternehmen">
                 </select><br><button onclick="journalApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
             </div>
 
@@ -1463,7 +1463,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         window.onload = updateFields;
                     </script>
                 </div><br>
-                <label for="datenBescheid">Unternehmen: </label><select id="datenBescheid">
+                <label for="datenBescheid">Unternehmen: </label><select id="datenBescheid" class="meinUnternehmen">
                 </select><br>
                 <br><br><button onclick="bescheidApplySVGholen()">Bescheid erstellen / aktualisieren</button><br>
             </div>
@@ -1586,7 +1586,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
                 <br>
-                <label for="datenAnlagenkarte">Unternehmen: </label><select id="datenAnlagenkarte">
+                <label for="datenAnlagenkarte">Unternehmen: </label><select id="datenAnlagenkarte" class="meinUnternehmen">
                    </select>
                 <br><br><button onclick="anlagenkarteApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
 
@@ -1709,7 +1709,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
                 <br>
-                <label for="datenWertpapiere">Unternehmen: </label><select id="datenWertpapiere">
+                <label for="datenWertpapiere">Unternehmen: </label><select id="datenWertpapiere" class="meinUnternehmen">
                    </select>                       
 
                 <br><br><button onclick="wertpapiereApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
@@ -1745,15 +1745,66 @@ document.addEventListener('DOMContentLoaded', function() {
     <div w3-include-html="footer.html"></div>
     <script>
         includeHTML();
-    </script>
-    <script src="js/belege.js"></script>
-        <script src="js/beleg_url_parameter.js"></script>
-        <script src="js/beleg_import.js"></script>
+    </script>  
 
     <script>
         // Get the element with id="defaultOpen" and click on it
         document.getElementById("defaultOpen").click();
+
+          function autoSelectMyCompany() {
+        const myCompanyName = localStorage.getItem('myCompany');
+        
+        if (!myCompanyName) return;
+        
+        // Finde alle Dropdowns mit class="meinUnternehmen"
+        const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+        
+        dropdowns.forEach(dropdown => {
+            // Suche nach der passenden Option
+            const options = Array.from(dropdown.options);
+            const matchingOption = options.find(opt => opt.value === myCompanyName);
+            
+            if (matchingOption) {
+                dropdown.value = myCompanyName;
+                
+                // Trigger change event falls andere Scripts darauf reagieren
+                const event = new Event('change', { bubbles: true });
+                dropdown.dispatchEvent(event);
+                
+                console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
+            }
+        });
+    }
+
+
+    function autoSelectMyCompanyOnlyIfNeeded() {
+    const company = localStorage.getItem('myCompany');
+    if (!company) return;
+
+    document.querySelectorAll('select.meinUnternehmen').forEach(select => {
+        // Nur setzen, wenn leer oder Placeholder
+        if (!select.value || select.value.trim() === '' || select.value === 'Bitte wählen') {
+            const opt = Array.from(select.options).find(o => o.value === company || o.text === company);
+            if (opt) {
+                select.value = opt.value;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        }
+    });
+}
+
+// Timing anpassen
+document.addEventListener('DOMContentLoaded', () => {
+    initializeURLParameters();           // zuerst!
+    
+    setTimeout(() => {
+        autoSelectMyCompanyOnlyIfNeeded();
+    }, 400);
+});
     </script>
+        <script src="js/belege.js"></script>
+        <script src="js/beleg_url_parameter.js"></script>
+        <script src="js/beleg_import.js"></script>
 </body>
 
 </html>

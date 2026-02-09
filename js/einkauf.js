@@ -31,7 +31,7 @@ function mergeUserCompaniesIntoYamlData() {
   }
 }
 
-  // Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
+
 // Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
 function loadYamlFromLocalStorage() {
   const saved = localStorage.getItem('uploadedYamlCompanyData');
@@ -965,3 +965,36 @@ clipboardeinkauf.on('error', function (e) {
 });
 
 
+
+            function autoSelectMyCompany() {
+        const myCompanyName = localStorage.getItem('myCompany');
+        
+        if (!myCompanyName) return;
+        
+        // Finde alle Dropdowns mit class="meinUnternehmen"
+        const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+        
+        dropdowns.forEach(dropdown => {
+            // Suche nach der passenden Option
+            const options = Array.from(dropdown.options);
+            const matchingOption = options.find(opt => opt.value === myCompanyName);
+            
+            if (matchingOption) {
+                dropdown.value = myCompanyName;
+                
+                // Trigger change event falls andere Scripts darauf reagieren
+                const event = new Event('change', { bubbles: true });
+                dropdown.dispatchEvent(event);
+                
+                console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
+            }
+        });
+    }
+
+ // WICHTIG: Warte bis die Seite vollständig geladen ist
+    document.addEventListener('DOMContentLoaded', function() {
+        // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
+        setTimeout(function() {
+            autoSelectMyCompany();
+   }, 100);
+    });

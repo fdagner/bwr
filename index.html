@@ -69,7 +69,7 @@
     <section id="modellunternehmen">
 
       <h2 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 1.5rem;">
-        Modellunternehmen verwalten
+        Modellunternehmen verwalten und festlegen
       </h2>
       <div class="modellunternehmen-section"
         style="margin: 0 auto; padding: 16px 20px; background: #f8f9fa; border-radius: 10px; border: 1px solid #e0e0e0;">
@@ -295,18 +295,33 @@
         </div>
       </details>
 <br>
-        <div class="modellunternehmen-section"
-        style="margin: 0 auto; padding: 16px 20px; background: #f8f9fa; border-radius: 10px; border: 1px solid #e0e0e0;">
-  <label for="allCompaniesDropdown" style="font-weight: 600; display: block; margin-bottom: 8px;">
+     <div class="modellunternehmen-section"
+     style="margin: 0 auto; padding: 16px 20px; background: #f8f9fa; border-radius: 10px; border: 1px solid #e0e0e0;">
+    <label for="allCompaniesDropdown" style="font-weight: 600; display: block; margin-bottom: 8px;">
         Alle verfügbaren Unternehmen:
     </label>
-    <select id="allCompaniesDropdown" 
-            style="width: 200px; padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px;">
-        <option value="">— Bitte auswählen —</option>
-    </select>
+    <div style="display: flex; gap: 10px; align-items: start;">
+        <select id="allCompaniesDropdown" 
+                style="flex: 1; max-width: 400px; padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px;">
+            <option value="">— Bitte auswählen —</option>
+        </select>
+        <button id="setMyCompanyButton" 
+                onclick="setAsMyCompany()" 
+                disabled>
+            ★ Als Modellunternehmen verwenden
+        </button>
+    </div>
+
     <div id="companyPreview" style="margin-top: 16px; padding: 12px; background: #fff; border: 1px solid #ddd; border-radius: 6px; min-height: 80px;">
-    Wählen Sie ein Unternehmen aus, um Details zu sehen.
-</div></div>
+        Wählen Sie ein Unternehmen aus, um Details zu sehen.
+    </div>
+        <div id="myCompanyStatus" style="margin-top: 8px; padding: 8px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px; display: none;">
+        <strong>Aktuell als Modellunternehmen gespeichert:</strong> <span id="myCompanyName">-</span>
+        <button onclick="clearMyCompany()" style="margin-left: 10px; padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 0.85em;">
+            ✕ Entfernen
+        </button>
+    </div>
+</div>
 
     </section>
 

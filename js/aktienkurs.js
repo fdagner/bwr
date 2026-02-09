@@ -2,39 +2,88 @@
             // YAML-Daten und Unternehmen laden
             // ============================================================================
             let yamlData = [];
-            
-            // Versuch 1: Aus localStorage laden
-            function loadYamlFromLocalStorage() {
-                const saved = localStorage.getItem('uploadedYamlCompanyData');
-                if (saved) {
-                    try {
-                        yamlData = JSON.parse(saved);
-                        console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
-                        document.dispatchEvent(new Event('yamlDataLoaded'));
-                        return true;
-                    } catch (err) {
-                        console.warn("localStorage YAML kaputt:", err);
-                    }
-                }
-                return false;
-            }
 
-            // Versuch 2: Standard-Datei laden
-            function loadDefaultYaml() {
-                fetch('js/unternehmen.yml')
-                    .then(res => {
-                        if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-                        return res.text();
-                    })
-                    .then(yamlText => {
-                        yamlData = jsyaml.load(yamlText) || [];
-                        console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
-                        document.dispatchEvent(new Event('yamlDataLoaded'));
-                    })
-                    .catch(err => {
-                        console.error("Konnte unternehmen.yml nicht laden:", err);
-                    });
-            }
+  let kunde = '<i>[Modellunternehmen]</i>';
+
+  // ============================================================================
+// BENUTZERDEFINIERTE UNTERNEHMEN - Integration
+// ============================================================================
+
+// Funktion zum Abrufen der benutzerdefinierten Unternehmen aus dem Local Storage
+function getUserCompanies() {
+  const stored = localStorage.getItem('userCompanies');
+  return stored ? JSON.parse(stored) : [];
+}
+
+// Funktion zum Zusammenführen der benutzerdefinierten Unternehmen mit den Standard-YAML-Daten
+function mergeUserCompaniesIntoYamlData() {
+  const userCompanies = getUserCompanies();
+  
+  if (userCompanies.length > 0) {
+    // Füge Benutzerunternehmen zu yamlData hinzu
+    yamlData = [...yamlData, ...userCompanies];
+    
+    // Sortiere nach Branche
+    yamlData.sort((a, b) => {
+      const brancheA = a.unternehmen?.branche || '';
+      const brancheB = b.unternehmen?.branche || '';
+      return brancheA.localeCompare(brancheB);
+    });
+    
+    console.log(`${userCompanies.length} Benutzerunternehmen hinzugefügt. Gesamt: ${yamlData.length} Unternehmen`);
+  }
+}
+
+
+// Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
+function loadYamlFromLocalStorage() {
+  const saved = localStorage.getItem('uploadedYamlCompanyData');
+  if (saved) {
+    try {
+      yamlData = JSON.parse(saved);
+      console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
+      
+      // ← NEU: Benutzerdefinierte Unternehmen hinzufügen
+      mergeUserCompaniesIntoYamlData();
+      
+      document.dispatchEvent(new Event('yamlDataLoaded'));
+      return true;
+    } catch (err) {
+      console.warn("localStorage YAML kaputt:", err);
+    }
+  }
+  return false;
+}
+
+  // Versuch 2: Standard-Datei laden
+// Versuch 2: Standard-Datei laden
+function loadDefaultYaml() {
+  fetch('js/unternehmen.yml')
+    .then(res => {
+      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
+      return res.text();
+    })
+    .then(yamlText => {
+      yamlData = jsyaml.load(yamlText) || [];
+      
+      // ← NEU: Standard-Daten im LocalStorage speichern (falls noch nicht vorhanden)
+      if (!localStorage.getItem('standardYamlData')) {
+        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
+      }
+      
+      // ← NEU: Benutzerdefinierte Unternehmen hinzufügen
+      mergeUserCompaniesIntoYamlData();
+      
+      console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
+      document.dispatchEvent(new Event('yamlDataLoaded'));
+    })
+    .catch(err => {
+      console.error("Konnte unternehmen.yml nicht laden:", err);
+      // Optional: leere Liste oder Fehlermeldung im UI
+    });
+}
+
+
 
             async function loadYAML() {
                 try {
@@ -133,7 +182,7 @@
                 if (agUnternehmen.length > 0) {
                     dropdown.value = agUnternehmen[0].id;
                     // Initial das Chart und Text erstellen
-                    updateChartAndText();
+     
                 }
             }
 
@@ -673,3 +722,37 @@
                 
                 populateDropdown();
             });
+
+            function autoSelectMyCompany() {
+        const myCompanyName = localStorage.getItem('myCompany');
+        
+        if (!myCompanyName) return;
+        
+        // Finde alle Dropdowns mit class="meinUnternehmen"
+        const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+        
+        dropdowns.forEach(dropdown => {
+            // Suche nach der passenden Option
+            const options = Array.from(dropdown.options);
+            const matchingOption = options.find(opt => opt.value === myCompanyName);
+            
+            if (matchingOption) {
+                dropdown.value = myCompanyName;
+                
+                // Trigger change event falls andere Scripts darauf reagieren
+                const event = new Event('change', { bubbles: true });
+                dropdown.dispatchEvent(event);
+                
+                console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
+            }
+        });
+    }
+
+    // WICHTIG: Warte bis die Seite vollständig geladen ist
+    document.addEventListener('DOMContentLoaded', function() {
+        // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
+        setTimeout(function() {
+            autoSelectMyCompany();
+            updateChartAndText();
+        }, 100);
+    });
