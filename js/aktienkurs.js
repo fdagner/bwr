@@ -252,8 +252,7 @@ function loadDefaultYaml() {
                 const selectedCompany = unternehmen.find(company => company.id === selectedCompanyId);
 
                 if (!selectedCompany) {
-                    alert("Bitte wählen Sie ein Unternehmen aus!");
-                    return;
+                         return;
                 }
 
                 const data = generateStockData(period, year, timeframe);
