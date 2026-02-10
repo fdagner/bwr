@@ -753,5 +753,5 @@ function loadDefaultYaml() {
         setTimeout(function() {
             autoSelectMyCompany();
             updateChartAndText();
-        }, 100);
+        }, 500);
     });

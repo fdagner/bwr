@@ -10,39 +10,35 @@ let yamlData = []; // Initialize yamlData as an empty array
 
 function initializeYamlData() {
     let baseData = [];
-
+    
     // Priorität 1: Hochgeladene YAML (wenn vorhanden)
     const uploadedJSON = localStorage.getItem('uploadedYamlCompanyData');
     if (uploadedJSON) {
         try {
             baseData = JSON.parse(uploadedJSON);
             console.log('Hochgeladene YAML geladen mit', baseData.length, 'Unternehmen');
+            
+            // Basis setzen
+            yamlData = baseData;
+            
+            // Merge: Eigene Unternehmen IMMER hinzufügen
+            mergeUserCompaniesIntoYamlData();
+            markObsoleteUserCompanies();
+            displayUserCompanies();
+            populateAllCompaniesDropdown();
+            
+            console.log('Finale yamlData hat jetzt', yamlData.length, 'Unternehmen (Basis + eigene)');
+            return; // Fertig, verwende hochgeladene Daten
+            
         } catch (err) {
             console.warn('Hochgeladene YAML korrupt → falle auf Standard zurück', err);
+            localStorage.removeItem('uploadedYamlCompanyData'); // Korrupte Daten entfernen
         }
     }
-
-    // Priorität 2: Standard-YAML (nur wenn nichts hochgeladen)
-    if (baseData.length === 0) {
-        const standardJSON = localStorage.getItem('standardYamlData');
-        if (standardJSON) {
-            baseData = JSON.parse(standardJSON);
-            console.log('Standard-YAML geladen mit', baseData.length, 'Unternehmen');
-        } else {
-            loadStandardYamlData(); // asynchron → Abbruch hier
-            return;
-        }
-    }
-
-    // Basis setzen
-    yamlData = baseData;
-
-    // Merge: Eigene Unternehmen IMMER hinzufügen (Option B)
-    mergeUserCompaniesIntoYamlData();
-  displayUserCompanies();
-  populateAllCompaniesDropdown();
-
-    console.log('Finale yamlData hat jetzt', yamlData.length, 'Unternehmen (Basis + eigene)');
+    
+    // Priorität 2: Standard-YAML vom Server laden (IMMER frisch, nicht aus Local Storage)
+    console.log('Lade Standard-YAML frisch vom Server...');
+    loadStandardYamlData();
 }
 
 // Event Listener für Dropdown-Änderungen erweitern
@@ -78,7 +74,6 @@ document.getElementById('allCompaniesDropdown')?.addEventListener('change', func
     }
 });
 
-// Funktion zum Befüllen des Dropdowns mit allen Unternehmen
 // Funktion zum Befüllen des Dropdowns mit allen Unternehmen
 function populateAllCompaniesDropdown() {
     const dropdown = document.getElementById('allCompaniesDropdown');
@@ -150,14 +145,16 @@ document.getElementById('allCompaniesDropdown')?.addEventListener('change', func
     if (previewDiv) {
         const isMyCompany = (selectedName === myCompanyName);
         const myCompanyBadge = isMyCompany 
-            ? '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;">★ Mein Unternehmen</span>' 
+            ? '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;">★ Modellunternehmen</span>' 
             : '';
         
         previewDiv.innerHTML = `
-            <strong>${company.unternehmen.name} ${company.unternehmen.rechtsform}</strong>${myCompanyBadge}<br>
+        ${myCompanyBadge}
+            <h4>   <img src="${company.unternehmen.logo}" style="width: 50px;vertical-align: middle"> ${company.unternehmen.name} ${company.unternehmen.rechtsform}</h4>
+            Motto: ${company.unternehmen.motto}<br>
             Branche: ${company.unternehmen.branche}<br>
             Ort: ${company.unternehmen.adresse.plz} ${company.unternehmen.adresse.ort}<br>
-            E-Mail: ${company.unternehmen.kontakt.email || '–'}
+            E-Mail: ${company.unternehmen.kontakt.email || '–'}<br>
         `;
     }
 });
@@ -910,20 +907,50 @@ if (isObsolete) {
 
 // Funktion zum Laden der Standard-YAML-Daten
 function loadStandardYamlData() {
-    fetch('js/unternehmen.yml')
-        .then(response => response.text())
+    fetch('js/unternehmen.yml?v=' + Date.now()) // Cache-Buster für Updates
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
         .then(data => {
             const standardData = jsyaml.load(data);
-            localStorage.setItem('standardYamlData', JSON.stringify(standardData));
-            console.log('Standard-YAML gespeichert');
-            initializeYamlData();  // ← zurück zur zentralen Logik
+            console.log('Standard-YAML frisch geladen mit', standardData.length, 'Unternehmen');
+            
+            // NICHT im Local Storage speichern - immer frisch laden
+            // (Nur für Fallback-Zwecke im Session Storage)
+            sessionStorage.setItem('standardYamlData', JSON.stringify(standardData));
+            
+            // Basis setzen
+            yamlData = standardData;
+            
+            // Merge: Eigene Unternehmen IMMER hinzufügen
+            mergeUserCompaniesIntoYamlData();
+            markObsoleteUserCompanies();
+            displayUserCompanies();
+            populateAllCompaniesDropdown();
+            
+            console.log('Finale yamlData hat jetzt', yamlData.length, 'Unternehmen (Standard + eigene)');
         })
         .catch(error => {
             console.error("Fehler beim Laden der Standard-YAML:", error);
+            
+            // Fallback: Versuche Session Storage
+            const sessionData = sessionStorage.getItem('standardYamlData');
+            if (sessionData) {
+                console.warn('Verwende Standard-YAML aus Session Storage (Fallback)');
+                yamlData = JSON.parse(sessionData);
+                mergeUserCompaniesIntoYamlData();
+                markObsoleteUserCompanies();
+                displayUserCompanies();
+                populateAllCompaniesDropdown();
+            } else {
+                alert('Fehler beim Laden der Unternehmensdaten. Bitte Seite neu laden.');
+            }
         });
 }
 
-// Funktion zum Exportieren der aktuellen YAML-Daten (inkl. Benutzerunternehmen)
 function exportCurrentYamlData() {
     try {
         // 1. Nur nicht-obsolete Unternehmen auswählen
@@ -986,7 +1013,6 @@ function exportCurrentYamlData() {
 
 
 
-
 // Modifizierte Funktion zum Laden der hochgeladenen Daten
 function loadUploadedDataFromLocalStorage() {
     initializeYamlData(); // 
@@ -996,25 +1022,21 @@ function loadUploadedDataFromLocalStorage() {
 
 // Initialisierung beim Laden der Seite
 document.addEventListener('DOMContentLoaded', function() {
-// Standard-Daten initialisieren (falls nötig)
-    if (!localStorage.getItem('standardYamlData')) {
-        loadStandardYamlData();
-    }
 
+    
     // Komplette YAML-Initialisierung + Merge + Mark + Display
     initializeYamlData();
     updateMyCompanyStatus();
     autoSelectMyCompany();
     
-    // Füge Export-Button hinzu (optional)
-    const modellunternehmenSection = document.getElementById('modellunternehmen');
+    // Export-Button hinzufügen
+    const modellunternehmenSection = document.getElementById('exportbutton');
     if (modellunternehmenSection && !document.getElementById('exportYamlButton')) {
         const exportButton = document.createElement('button');
         exportButton.id = 'exportYamlButton';
         exportButton.textContent = 'Aktuelle Unternehmen exportieren';
         exportButton.onclick = exportCurrentYamlData;
         
-        // Füge den Button nach dem "Daten zurücksetzen" Button ein
         const resetButton = modellunternehmenSection.querySelector('button');
         if (resetButton && resetButton.parentNode) {
             resetButton.parentNode.insertBefore(exportButton, resetButton.nextSibling);
@@ -1025,30 +1047,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Modifizierte deleteAndLoadDefaultData Funktion
 function deleteAndLoadDefaultData() {
-    if (!confirm('Möchten Sie wirklich die Daten zurücksetzen? Ihre eigenen Unternehmen bleiben erhalten')) {
+    if (!confirm('Möchten Sie wirklich die Daten zurücksetzen? Ihre eigenen Unternehmen bleiben erhalten.')) {
         return;
     }
     
-    // Lösche alle benutzerdefinierten Daten
+    // Lösche hochgeladene Daten
     localStorage.removeItem('uploadedYamlCompanyData');
-    localStorage.removeItem('standardYamlData');
+    
+    // Session Storage leeren (wird beim nächsten Laden neu gefüllt)
+    sessionStorage.removeItem('standardYamlData');
     
     // Setze Datei-Input zurück
     const fileInput = document.getElementById('fileInput');
     if (fileInput) fileInput.value = '';
     
-    // Lade Standard-YAML-Daten neu
+    // Lade Standard-YAML-Daten frisch vom Server
+    console.log('Lade frische Standard-Daten nach Reset...');
     loadStandardYamlData();
-    initializeYamlData();
     
-    // Aktualisiere Anzeige
-    displayUserCompanies();
-    uploadedLogoBase64 = null;
-    document.getElementById('logoPreview').innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
-    document.getElementById('addCompanyForm').reset();
+    updateLocalStorageStatus('Daten wurden zurückgesetzt. Standard-Liste wird vom Server geladen.');
+    alert('Daten erfolgreich zurückgesetzt. Standard-Liste wurde aktualisiert.');
+}
+
+// Optional: Funktion zum manuellen Aktualisieren der Standard-Daten
+function refreshStandardData() {
+    const uploadedJSON = localStorage.getItem('uploadedYamlCompanyData');
     
-    updateLocalStorageStatus('Alle Daten wurden erfolgreich zurückgesetzt.');
-    alert('Daten erfolgreich zurückgesetzt.');
+    if (uploadedJSON) {
+        alert('Sie verwenden eine hochgeladene Liste. Um die Standard-Daten zu aktualisieren, setzen Sie bitte zuerst die Daten zurück.');
+        return;
+    }
+    
+    if (!confirm('Möchten Sie die Standard-Unternehmensliste vom Server neu laden?')) {
+        return;
+    }
+    
+    sessionStorage.removeItem('standardYamlData');
+    console.log('Aktualisiere Standard-Daten vom Server...');
+    loadStandardYamlData();
+    
+    alert('Standard-Daten wurden aktualisiert.');
+    updateLocalStorageStatus('Standard-Daten vom Server aktualisiert.');
 }
 
 function markObsoleteUserCompanies() {

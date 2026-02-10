@@ -255,7 +255,7 @@
 
 - unternehmen:
     id: "12"
-    branche: "Fahrzeuge"
+    branche: "Fuhrpark"
     name: "Fahrzeuge Huber"
     motto: "Spezialist für Auto und LKW"
     bank: "Mobilbank"
@@ -1641,7 +1641,7 @@
     motto: " "
     bank: "Lichtenfelser Stadtbank"
     rechtsform: " "
-    logo: " "
+    logo: "media/pic/odf.svg"
     adresse:
       strasse: "Am Stadtgraben 34"
       plz: "96215"
@@ -1665,7 +1665,7 @@
     motto: "Lernen in Freiheit"
     bank: "Sonnenberger Volksbank"
     rechtsform: "gGmbH"
-    logo: " "
+    logo: "media/pic/students.svg"
     adresse:
       strasse: "Sonnenweg 12"
       plz: "82343"
@@ -1689,7 +1689,7 @@
     motto: "Gemeinsam wachsen"
     bank: "Nordhainer Sparkasse"
     rechtsform: "e.V."
-    logo: " "
+    logo: "media/pic/waldorf.svg"
     adresse:
       strasse: "Birkenallee 7"
       plz: "27456"

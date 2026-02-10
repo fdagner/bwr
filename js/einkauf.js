@@ -996,5 +996,5 @@ clipboardeinkauf.on('error', function (e) {
         // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
         setTimeout(function() {
             autoSelectMyCompany();
-   }, 100);
+   }, 500);
     });
