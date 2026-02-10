@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" id="svg6911" viewBox="0 0 321.33 373.3" version="1.1">
+  <g id="layer1" transform="translate(-197 -85.273)">
+    <g id="g7507">
+      <path id="path7435-0" d="m272.67 173.46c6.4222-32.53 8.3424-76.977 65.218-82.015 56.947-1.8608 63.978 43.083 75.448 76.734l-20.62 1.864c-7.2303-24.65-4.5956-64.717-54.828-61.512-43.487 4.7359-37.638 40.287-43.479 65.084l-21.739-0.15534z" fill="#008000"/>
+      <path id="path7435" d="m293.33 173.33c6.6962-34.904 8.6983-82.594 68-88 59.376-1.9966 66.707 46.226 78.667 82.333l-21.5 2c-7.5387-26.449-4.7916-69.439-57.167-66-45.34 5.09-39.24 43.23-45.33 69.84l-22.667-0.16667z" fill="#4a0"/>
+      <path id="path6921" fill="#24a318" d="m255 161.67c-0.93781 108.61-2.9775 208.4-8.3333 281.67 121.56 29.225 186.33 7.9717 271.67 5-15.152-83.35-38.219-148.23-28.333-290-78.333 6.108-156.67 10.392-235 3.3333z"/>
+      <path id="path7433" d="m255.33 161-31.667 35c5.03 97.82-9.82 163.84-26.66 226.67l53.333 21.667c7.7351-68.547 6.1274-170.47 5-283.33z" fill="#008000"/>
+      <path id="path7474" d="m360.65 218.81-6.0046 23.798c34.166-5.6954 57.215-0.10383 63.11 20.944l-10.869 4.3815c14.655 12.931 16.424 20.418 17.791 34.365 7.5862-3.5436 19.082-20.972 15.586-47.856l-8.8411 4.2078c-2.426-24.847-48.235-44.038-69.609-39.164l-1.163-0.67634z" fill="#008000"/>
+      <path id="path7474-4" d="m308.53 346.49 23.884-5.6547c-20.82-27.69-26.49-50.72-10.54-65.66l8.9026 7.6207c4.7098-18.969 10.535-23.993 22.278-31.641-6.6444-5.095-27.411-7.2511-49.648 8.2557l7.8127 5.9019c-20.924 13.618-16.811 63.114-2.6242 79.828l-0.0634 1.3438z" fill="#008000"/>
+      <path id="path7474-1" d="m440.9 320.96-19.921-14.338c-7.2723 33.866-20.951 53.241-42.691 50.98l-0.076-11.719c-17.416 8.8704-25.028 7.7614-38.5 3.9022 0.5045 8.3578 12.482 25.458 38.767 32.098l-0.66041-9.7691c23.997 6.8842 58.694-28.653 62.025-50.321l1.0567-0.83263z" fill="#008000"/>
+    </g>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Green Shopping Bag</dc:title>
+        <dc:date>2010-09-25T05:28:41</dc:date>
+        <dc:description>My green shopping bag.</dc:description>
+        <dc:source>http://openclipart.org/detail/86611/green-shopping-bag-by-stevepetmonkey</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>stevepetmonkey</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Go Green</rdf:li>
+            <rdf:li>Green Shopping Bag</rdf:li>
+            <rdf:li>Recycle</rdf:li>
+            <rdf:li>Shopping</rdf:li>
+            <rdf:li>Shopping Bag</rdf:li>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>
