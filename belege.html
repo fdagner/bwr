@@ -1500,26 +1500,46 @@ document.addEventListener('DOMContentLoaded', function() {
         </section>
 
 
-        <section id="anlagenkarte" class="tabcontent">
-            <h3>Anlagenkarte</h3>
-            <div class="box">
-                <div class="grid3">
-                    <div id="bescheidAbfall">
-                        <h4>Daten</h4>
-                        <label for="anlagenkarteBezeichnungInput">Bezeichnung:</label><br>
-                        <input type="text" id="anlagenkarteBezeichnungInput" value="CNC-Fräse M84" /><br>
-                        <label for="anlagenkarteAnlagenkontoInput">Anlagenkonto:</label><br>
-                        <input type="text" id="anlagenkarteAnlagenkontoInput" value="0700 MA" /><br>
-                        <label for="anlagenkarteAnschaffungskostenInput">Anschaffungskosten:</label><br>
-                        <input type="number" id="anlagenkarteAnschaffungskostenInput" value="72000" /><br>
-                        <label for="anlagenkarteNutzungsdauerInput">Nutzungsdauer (Jahre):</label><br>
-                        <input type="number" id="anlagenkarteNutzungsdauerInput" value="7" /><br>
+    <section id="anlagenkarte" class="tabcontent">
+    <header>
+        <h2>Anlagenkarte</h2>
+    </header>
+
+    <form class="box anlagenkarte-form">
+        <section class="form-section">
+            <div class="grid3">
+                <!-- Daten -->
+                <fieldset class="anlage-daten-gruppe">
+                    <legend>Daten</legend>
+                    
+                    <div class="form-field">
+                        <label for="anlagenkarteBezeichnungInput">Bezeichnung</label>
+                        <input type="text" id="anlagenkarteBezeichnungInput" value="CNC-Fräse M84" />
                     </div>
-                    <div>
-                        <h4>Datum</h4>
-                        <label for="tagAnlagenkarte">Tag:</label>
+                    
+                    <div class="form-field">
+                        <label for="anlagenkarteAnlagenkontoInput">Anlagenkonto</label>
+                        <input type="text" id="anlagenkarteAnlagenkontoInput" value="0700 MA" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="anlagenkarteAnschaffungskostenInput">Anschaffungskosten</label>
+                        <input type="number" id="anlagenkarteAnschaffungskostenInput" value="72000" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="anlagenkarteNutzungsdauerInput">Nutzungsdauer (Jahre)</label>
+                        <input type="number" id="anlagenkarteNutzungsdauerInput" value="7" />
+                    </div>
+                </fieldset>
+
+                <!-- Datum -->
+                <fieldset class="datum-gruppe">
+                    <legend>Datum</legend>
+                    
+                    <div class="form-field">
+                        <label for="tagAnlagenkarte">Tag</label>
                         <select id="tagAnlagenkarte">
-                            <!-- Füge Optionen für die Tage hinzu -->
                             <option value="01">01</option>
                             <option value="02">02</option>
                             <option value="03">03</option>
@@ -1552,10 +1572,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="30">30</option>
                             <option value="31">31</option>
                         </select>
-                        <br>
-                        <label for="monatAnlagenkarte">Monat:</label>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="monatAnlagenkarte">Monat</label>
                         <select id="monatAnlagenkarte">
-                            <!-- Füge Optionen für die Monate hinzu -->
                             <option value="01">Januar</option>
                             <option value="02">Februar</option>
                             <option value="03">März</option>
@@ -1569,80 +1590,132 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="11">November</option>
                             <option value="12">Dezember</option>
                         </select>
-                        <label for="jahrAnlagenkarte">Jahr:</label>
-                        <input type="text" id="jahrAnlagenkarte" value="" placeholder="Jahr" /><br>
-                        Skript verwenden: <input type="checkbox" id="scriptJahrAnlagenkarte"
-                            onchange="toggleInput('jahrAnlagenkarte', 'scriptJahrAnlagenkarte');">
                     </div>
+                    
+                    <div class="form-field">
+                        <label for="jahrAnlagenkarte">Jahr</label>
+                        <input type="text" id="jahrAnlagenkarte" value="" placeholder="Jahr" />
+                    </div>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="scriptJahrAnlagenkarte">
+                            <input type="checkbox" id="scriptJahrAnlagenkarte" 
+                                   onchange="toggleInput('jahrAnlagenkarte', 'scriptJahrAnlagenkarte');" />
+                            Skript verwenden
+                        </label>
+                    </div>
+                </fieldset>
 
-
-                    <div>
-                        <h4>Vorlage</h4>
-                        <label for="svgDropdownAnlagenkarte">Auswählen: </label><br>
+                <!-- Vorlage -->
+                <fieldset class="vorlage-gruppe">
+                    <legend>Vorlage</legend>
+                    
+                    <div class="form-field">
+                        <label for="svgDropdownAnlagenkarte">Auswählen</label>
                         <select id="svgDropdownAnlagenkarte">
                             <option value="anlagenkarte.svg">Klassisch</option>
                             <option value="anlagenkarte2.svg">Einfach</option>
                         </select>
                     </div>
-                </div>
-                <br>
-                <label for="datenAnlagenkarte">Unternehmen: </label><select id="datenAnlagenkarte" class="meinUnternehmen">
-                   </select>
-                <br><br><button onclick="anlagenkarteApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
+                </fieldset>
+            </div>
+        </section>
 
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <div class="form-field">
+                <label for="datenAnlagenkarte">Unternehmen</label>
+                <select id="datenAnlagenkarte" class="meinUnternehmen"></select>
             </div>
+            
+            <div class="form-field">
+            
             </div>
-            <br>
-            <div id="anlagenkarteContainer" style="min-width: 350px;width: 100%;margin:0 auto;text-align:center">
-            </div>
-           <div class="exportButtons">
-                <button class="icon" type="button" onclick="exportDokument('anlagenkarte','png')" data-tooltip="Als PNG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('anlagenkarte','svg')" data-tooltip="Als SVG herunterladen" data-tooltip="Als SVG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('anlagenkarte','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                    </svg></button>
-                    </div>
         </section>
 
 
-        <section id="wertpapiere" class="tabcontent">
-            <h3>Belegauszug Wertpapiere</h3>
-            <div class="box">
-                <div class="grid3">
-                    <div id="wertpapiereDaten">
-                        <h4>Daten</h4>
-                            <label for="wertpapiereArtInput">Art: </label><br>
-                            <select id="wertpapiereArtInput">
-                                <option value="wertpapiereKauf">Kauf</option>
-                                <option value="wertpapiereVerkauf">Verkauf</option>
-                            </select><br>
-                        <label for="wertpapiereBezeichnungInput">Bezeichnung:</label><br>
-                        <input type="text" id="wertpapiereBezeichnungInput" value="XY-Aktien" /><br>
-                        <label for="wertpapiereISINInput">ISIN:</label><br>
-                        <input type="text" id="wertpapiereISINInput" value="DE0007100000" /><br>
-                        <label for="wertpapiereStueckkursLabel">Stückkurs:</label><br>
-                        <input type="number" id="wertpapiereStueckkursInput" value="200" /><br>
-                        <label for="wertpapiereAnzahlLabel">Anzahl</label><br>
-                        <input type="number" id="wertpapiereAnzahlInput" value="70" /><br>
+       <section class="form-section form-actions">
+            <button type="button" onclick="anlagenkarteApplySVGholen()">Beleg erstellen / aktualisieren</button>
+        </section>
+    </form>
+
+    <!-- Vorschau -->
+    <section class="preview-section">
+        <div id="anlagenkarteContainer"></div>
+    </section>
+
+    <!-- Export-Buttons -->
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="icon" type="button" onclick="exportDokument('anlagenkarte','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" onclick="exportDokument('anlagenkarte','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" onclick="exportDokument('anlagenkarte','clipboard')" 
+                data-tooltip="Als HTML-Code in Zwischenablage herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
+                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg>
+        </button>
+    </nav>
+</section>
+
+<!-- WERTPAPIERE SECTION -->
+<section id="wertpapiere" class="tabcontent">
+    <header>
+        <h2>Belegauszug Wertpapiere</h2>
+    </header>
+
+    <form class="box wertpapiere-form">
+        <section class="form-section">
+            <div class="grid3">
+                <!-- Daten -->
+                <fieldset class="wertpapier-daten-gruppe">
+                    <legend>Daten</legend>
+                    
+                    <div class="form-field">
+                        <label for="wertpapiereArtInput">Art</label>
+                        <select id="wertpapiereArtInput">
+                            <option value="wertpapiereKauf">Kauf</option>
+                            <option value="wertpapiereVerkauf">Verkauf</option>
+                        </select>
                     </div>
-                    <div>
-                        <h4>Datum</h4>
-                        <label for="tagWertpapiereLabel">Tag:</label>
+                    
+                    <div class="form-field">
+                        <label for="wertpapiereBezeichnungInput">Bezeichnung</label>
+                        <input type="text" id="wertpapiereBezeichnungInput" value="XY-Aktien" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="wertpapiereISINInput">ISIN</label>
+                        <input type="text" id="wertpapiereISINInput" value="DE0007100000" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="wertpapiereStueckkursInput">Stückkurs</label>
+                        <input type="number" id="wertpapiereStueckkursInput" value="200" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="wertpapiereAnzahlInput">Anzahl</label>
+                        <input type="number" id="wertpapiereAnzahlInput" value="70" />
+                    </div>
+                </fieldset>
+
+                <!-- Datum -->
+                <fieldset class="datum-gruppe">
+                    <legend>Datum</legend>
+                    
+                    <div class="form-field">
+                        <label for="tagWertpapiereInput">Tag</label>
                         <select id="tagWertpapiereInput">
-                            <!-- Füge Optionen für die Tage hinzu -->
                             <option value="01">01</option>
                             <option value="02">02</option>
                             <option value="03">03</option>
@@ -1675,10 +1748,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="30">30</option>
                             <option value="31">31</option>
                         </select>
-                        <br>
-                        <label for="monatWertpapiereLabel">Monat:</label>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="monatWertpapiereInput">Monat</label>
                         <select id="monatWertpapiereInput">
-                            <!-- Füge Optionen für die Monate hinzu -->
                             <option value="01">Januar</option>
                             <option value="02">Februar</option>
                             <option value="03">März</option>
@@ -1692,54 +1766,81 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="11">November</option>
                             <option value="12">Dezember</option>
                         </select>
-                        <label for="jahrWertpapiereLabel">Jahr:</label>
-                        <input type="text" id="jahrWertpapiere" value="" placeholder="Jahr" /><br>
-                        Skript verwenden: <input type="checkbox" id="scriptJahrWertpapiere"
-                            onchange="toggleInput('jahrWertpapiere', 'scriptJahrWertpapiere');">
                     </div>
+                    
+                    <div class="form-field">
+                        <label for="jahrWertpapiere">Jahr</label>
+                        <input type="text" id="jahrWertpapiere" value="" placeholder="Jahr" />
+                    </div>
+                    
+                    <div class="form-field checkbox-field">
+                        <label for="scriptJahrWertpapiere">
+                            <input type="checkbox" id="scriptJahrWertpapiere" 
+                                   onchange="toggleInput('jahrWertpapiere', 'scriptJahrWertpapiere');" />
+                            Skript verwenden
+                        </label>
+                    </div>
+                </fieldset>
 
-                    <div>
-                        <h4>Vorlage</h4>
-                        <label for="svgDropdownWertpapiere">Auswählen: </label><br>
+                <!-- Vorlage -->
+                <fieldset class="vorlage-gruppe">
+                    <legend>Vorlage</legend>
+                    
+                    <div class="form-field">
+                        <label for="svgDropdownWertpapiere">Auswählen</label>
                         <select id="svgDropdownWertpapiere">
                             <option value="wertpapier.svg">Klassisch</option>
                             <option value="wertpapier2.svg">Modern</option>
-                       
                         </select>
                     </div>
-                </div>
-                <br>
-                <label for="datenWertpapiere">Unternehmen: </label><select id="datenWertpapiere" class="meinUnternehmen">
-                   </select>                       
-
-                <br><br><button onclick="wertpapiereApplySVGholen()">Beleg erstellen / aktualisieren</button><br>
-
+                </fieldset>
             </div>
-            </div>
-            <br>
-            <div id="wertpapiereContainer" style="min-width: 350px;width: 100%;margin:0 auto;text-align:center">
-            </div>
-              <div class="exportButtons">
-                <button class="icon" type="button" onclick="exportDokument('wertpapiere','png')" data-tooltip="Als PNG herunterladen" data-tooltip="Als PNG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('wertpapiere','svg')" data-tooltip="Als SVG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="exportDokument('wertpapiere','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                    </svg></button>
-                    </div>
         </section>
+
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <div class="form-field">
+                <label for="datenWertpapiere">Unternehmen</label>
+                <select id="datenWertpapiere" class="meinUnternehmen"></select>
+            </div>
+            
+            <div class="form-field">
+        
+            </div>
+        </section>
+
+        <!-- Aktionen -->
+        <section class="form-section form-actions">
+            <button type="button" onclick="wertpapiereApplySVGholen()">Beleg erstellen / aktualisieren</button>
+        </section>
+    </form>
+
+    <!-- Vorschau -->
+    <section class="preview-section">
+        <div id="wertpapiereContainer"></div>
+    </section>
+
+    <!-- Export-Buttons -->
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="icon" type="button" onclick="exportDokument('wertpapiere','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" onclick="exportDokument('wertpapiere','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg>
+        </button>
+        <button class="icon" type="button" onclick="exportDokument('wertpapiere','clipboard')" 
+                data-tooltip="Als HTML-Code in Zwischenablage herunterladen">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
+                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
+            </svg>
+        </button>
+    </nav>
 
     </main>
     <div w3-include-html="footer.html"></div>
