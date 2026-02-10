@@ -188,3 +188,10 @@
       
       window.getSelection().removeAllRanges();
     }
+
+
+     // Beim Laden der Seite automatisch einen BAB erstellen
+    document.addEventListener("DOMContentLoaded", function() {
+      pwbZeigeZufaelligeTabelle();
+    });
+
