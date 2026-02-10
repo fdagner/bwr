@@ -101,7 +101,7 @@ function addMarkierung() {
 
 function createMarkierungControl(markierung) {
   const container = document.getElementById('markierungenContainer');
-  
+container.classList.add('flex-row');
   const div = document.createElement('div');
   div.className = 'markierung-item';
   div.id = `markierung-control-${markierung.id}`;
