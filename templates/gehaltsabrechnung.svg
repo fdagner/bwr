@@ -50,7 +50,7 @@
   
   <!-- Bruttobezüge -->
   <rect x="18" y="355" width="724" height="25" fill="#71eff3"/>
-  <text x="25" y="373" font-family="Arial" font-size="16" font-weight="bold" >Steuerpflichtiger Bruttolohn</text>
+  <text x="25" y="373" font-family="Arial" font-size="16" font-weight="bold" >Steuerpflichtiger Bruttogehalt</text>
   <text id="lohnabrechnungBrutto" x="735" y="373" font-family="Arial" font-size="16" font-weight="bold" text-anchor="end"></text>
 
   <!-- Steuerabzüge -->
