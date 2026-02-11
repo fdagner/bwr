@@ -176,7 +176,7 @@ const geschaeftsfallTypen = {
       { beschreibung: ' beschafft Verpackungsmaterial für Fertigerzeugnisse', artikel: 'Verpackungsfolie', einheit: 'Rol.' },
       { beschreibung: ' kauft Füllmaterial für die Verpackung von Fertigerzeugnissen', artikel: 'Füllmaterial (Polster)', einheit: 'Pak.' },
       { beschreibung: ' erwirbt Versandkartons für die Auslieferung von Fertigerzeugnissen', artikel: 'Wellpappkartons (50 Stück)', einheit: 'Pak.' },
-      { beschreibung: ' kauft Klebeband und Verpackungsmaterial für den Versand von Fertigerzeugnissen', artikel: 'Verpackungsset (Klebeband + Polster)', einheit: 'Set' },
+      { beschreibung: ' kauft Klebeband und Verpackungsmaterial für den Versand von Fertigerzeugnissen', artikel: 'Klebeband + Polster', einheit: 'Set' },
       { beschreibung: ' bestellt für die Verpackung von Fertigerzeugnissen Schutzfolien', artikel: 'Luftpolsterfolie', einheit: 'Rol.' },
       { beschreibung: ' kauft Verpackungskartons für den Transport der Fertigerzeugnissen zum Kunden', artikel: 'Faltkartons (200 Stück)', einheit: 'Pak.' }
     ]

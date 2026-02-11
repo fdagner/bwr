@@ -15,18 +15,9 @@
 <body>
 <main>
   <div w3-include-html="navigation.html"></div>
-    <h2>Buchungen Ausgangsfrachten</h2>
+    <h2>Buchungen Ausgangsfrachten/Verpackungsmaterial</h2>
     <div id="generator-container">
       <div class="box">
-
-        <!-- Infobox wie im Screenshot -->
-        <div style="background-color: #f5f5dc; border: 1px solid #ccc; padding: 14px 18px; margin-bottom: 18px; line-height: 1.8;">
-          <strong>Beim Verkauf von Fertigerzeugnissen entstehen oft zusätzliche Aufwendungen:</strong>
-          <ul style="margin: 8px 0 0 0; padding-left: 20px;">
-            <li>für den Einkauf von <strong>Verpackungsmaterial</strong> &nbsp;&nbsp;&nbsp; (<strong>6040 AWVM</strong>)</li>
-            <li>für die Übernahme von <strong>Frachtkosten</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<strong>6140 AFR</strong>)</li>
-          </ul>
-        </div>
 
         <p>Sie können hier zufällige Geschäftsfälle aus dem Bereich Ausgangsfrachten generieren, Buchungssätze ausleiten und passende Belege erstellen.</p>
 
@@ -67,8 +58,8 @@
               <button type="button" onclick="alleKontenAuswaehlen()">Alle auswählen</button>
               <button type="button" onclick="alleKontenAbwaehlen()">Alle abwählen</button>
             </div>
-          </div>
-          <div class="auswahl-info" id="auswahlInfo">
+          </div> <br>
+          <div class="auswahl-info" id="auswahlInfo" style="display: none">
             ℹ️ Keine Konten ausgewählt - es werden alle verfügbaren Geschäftsfälle verwendet
           </div>
         </div>
