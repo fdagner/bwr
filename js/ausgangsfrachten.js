@@ -166,7 +166,7 @@ const geschaeftsfallTypen = {
     lieferanten: ['PackDesign Pro', 'GreenWrap Solutions'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: '. Die Rechnung geht ein', konto: '4400 VE' },
+      { text: '. Hierfür liegt eine Rechnung vor', konto: '4400 VE' },
       { text: ' auf Ziel', konto: '4400 VE' },
       { text: '. Die Rechnung geht ein', konto: '4400 VE' }
     ],
@@ -188,7 +188,7 @@ const geschaeftsfallTypen = {
     lieferanten: ['TransMove', 'SpeedyDelivery'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: '. Hierfür geht eine Rechnung ein', konto: '4400 VE' },
+      { text: '. Hierfür liegt eine Rechnung vor', konto: '4400 VE' },
       { text: ' auf Ziel', konto: '4400 VE' },
       { text: '. Es geht eine Rechnung ein', konto: '4400 VE' }
     ],
