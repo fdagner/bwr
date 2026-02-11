@@ -99,7 +99,7 @@ const geschaeftsfallTypen = {
     lieferanten: ['EU Glasfaser'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: ', wobei eine Rechnung eingeht', konto: '4400 VE' },
+      { text: ', hierfür geht eine Rechnung ein', konto: '4400 VE' },
       { text: ' auf Ziel', konto: '4400 VE' },
       { text: '. Es geht eine Rechnung ein', konto: '4400 VE' }
     ],
@@ -120,7 +120,7 @@ const geschaeftsfallTypen = {
     lieferanten: ['Notariat Weidner'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-       { text: ', wobei eine Rechnung eingeht', konto: '4400 VE' }
+       { text: ', hierfür geht eine Rechnung ein', konto: '4400 VE' }
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
