@@ -1,5 +1,5 @@
 // ============================================================================
-// MARKETING & VERWALTUNG - GESCHÄFTSFÄLLE
+// MARKETING & VERWALTUNG - GESCHÄFTSFALLE
 // ============================================================================
 
 // Globale Variablen
@@ -85,11 +85,11 @@ const geschaeftsfallTypen = {
     ],
     mitVorsteuer: false,
     geschaeftsfaelle: [
-      { beschreibung: ' kauft Briefmarken', artikel: 'Briefmarken (Kompakt)' },
-      { beschreibung: ' erwirbt Postwertzeichen', artikel: 'Postwertzeichen' },
-      { beschreibung: ' kauft Briefmarken für die Geschäftspost', artikel: 'Briefmarken (Standard)' },
-      { beschreibung: ' erwirbt Postwertzeichen für den Postversand', artikel: 'Briefmarken (Maxi)' },
-      { beschreibung: ' kauft Briefmarken', artikel: 'Briefmarken (Standard)' }
+      { beschreibung: ' kauft Briefmarken', artikel: 'Briefmarken (Kompakt)', einheit: 'Stück' },
+      { beschreibung: ' erwirbt Postwertzeichen', artikel: 'Postwertzeichen', einheit: 'Stück' },
+      { beschreibung: ' kauft Briefmarken für die Geschäftspost', artikel: 'Briefmarken (Standard)', einheit: 'Stück' },
+      { beschreibung: ' erwirbt Postwertzeichen für den Postversand', artikel: 'Briefmarken (Maxi)', einheit: 'Stück' },
+      { beschreibung: ' kauft Briefmarken', artikel: 'Briefmarken (Standard)', einheit: 'Stück' }
     ]
   },
   
@@ -105,11 +105,11 @@ const geschaeftsfallTypen = {
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
-      { beschreibung: ' erhält die Anschlussgebühren für Internet', artikel: 'Internetanschluss (Monat)' },
-      { beschreibung: ' erhält die monatliche Telefongebühr', artikel: 'Telefon- und Internetanschluss' },
-      { beschreibung: ' bekommt die Aufstellung für Telefon und Internet', artikel: 'Business-Internetpaket' },
-      { beschreibung: ' erhält die monatliche Kommunikationsgebühren', artikel: 'Kommunikationspaket' },
-      { beschreibung: ' erhält die Kosten für den Glasfaseranschluss', artikel: 'Glasfaseranschluss' }
+      { beschreibung: ' erhält die Anschlussgebühren für Internet', artikel: 'Internetanschluss (Monat)', einheit: 'Monat' },
+      { beschreibung: ' erhält die monatliche Telefongebühr', artikel: 'Telefon- und Internetanschluss', einheit: 'Monat' },
+      { beschreibung: ' bekommt die Aufstellung für Telefon und Internet', artikel: 'Business-Internetpaket', einheit: 'Monat' },
+      { beschreibung: ' erhält die monatliche Internetgebühren', artikel: 'Internetpaket XXl', einheit: 'Monat' },
+      { beschreibung: ' erhält die Kosten für den Glasfaseranschluss', artikel: 'Glasfaseranschluss', einheit: 'Monat' }
     ]
   },
 
@@ -124,11 +124,11 @@ const geschaeftsfallTypen = {
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
-      { beschreibung: ' lässt einen Vertrag notariell beglaubigen', artikel: 'Notarielle Beglaubigung' },
-      { beschreibung: ' lässt ein Schreiben notariell beurkunden', artikel: 'Notarielle Beurkundung' },
-      { beschreibung: ' nimmt eine notarielle Beratung in Anspruch', artikel: 'Notarielle Beratung' },
-      { beschreibung: ' lässt einen Kaufvertrag notariell beurkunden', artikel: 'Beurkundung Kaufvertrag' },
-      { beschreibung: ' lässt eine Unterschrift notariell beglaubigen', artikel: 'Beglaubigung Unterschrift' }
+      { beschreibung: ' lässt einen Vertrag notariell beglaubigen', artikel: 'Notarielle Beglaubigung', einheit: 'Lst.' },
+      { beschreibung: ' lässt ein Schreiben notariell beurkunden', artikel: 'Notarielle Beurkundung', einheit: 'Lst.' },
+      { beschreibung: ' nimmt eine notarielle Beratung in Anspruch', artikel: 'Notarielle Beratung', einheit: 'Lst.' },
+      { beschreibung: ' lässt einen Kaufvertrag notariell beurkunden', artikel: 'Beurkundung Kaufvertrag', einheit: 'Lst.' },
+      { beschreibung: ' lässt eine Unterschrift notariell beglaubigen', artikel: 'Beglaubigung Unterschrift', einheit: 'Lst.' }
     ]
   },
   
@@ -142,11 +142,11 @@ const geschaeftsfallTypen = {
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
-      { beschreibung: ' nimmt eine rechtliche Beratung in Anspruch', artikel: 'Rechtsberatung' },
-      { beschreibung: ' lässt einen Vertrag anwaltlich prüfen', artikel: 'Vertragsprüfung' },
-      { beschreibung: ' beauftragt den Anwalt mit einem Schreiben', artikel: 'Anwaltliches Schreiben' },
-      { beschreibung: ' lässt eine rechtliche Stellungnahme erstellen', artikel: 'Rechtliche Stellungnahme' },
-      { beschreibung: ' nimmt ein anwaltliches Beratungsgespräch in Anspruch', artikel: 'Beratungsgespräch' }
+      { beschreibung: ' nimmt eine rechtliche Beratung in Anspruch', artikel: 'Rechtsberatung', einheit: 'Lst.' },
+      { beschreibung: ' lässt einen Vertrag anwaltlich prüfen', artikel: 'Vertragsprüfung', einheit: 'Lst.' },
+      { beschreibung: ' beauftragt den Anwalt mit einem Schreiben', artikel: 'Anwaltliches Schreiben', einheit: 'Lst.' },
+      { beschreibung: ' lässt eine rechtliche Stellungnahme erstellen', artikel: 'Rechtliche Stellungnahme', einheit: 'Lst.' },
+      { beschreibung: ' nimmt ein anwaltliches Beratungsgespräch in Anspruch', artikel: 'Beratungsgespräch', einheit: 'h' }
     ]
   },
   
@@ -160,13 +160,33 @@ const geschaeftsfallTypen = {
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
-      { beschreibung: ' überweist die Kosten für die Betreuung der Homepage', artikel: 'Homepage-Betreuung' },
-      { beschreibung: ' lässt Werbeflyer erstellen', artikel: 'Werbeflyer (1000 Stück)' },
-      { beschreibung: ' lässt Werbematerialien drucken', artikel: 'Druck Werbematerialien' },
-      { beschreibung: ' beauftragt die Gestaltung eines Werbeplakats', artikel: 'Werbeplakat (DIN A1)' },
-      { beschreibung: ' lässt Visitenkarten drucken', artikel: 'Visitenkarten (500 Stück)' },
-      { beschreibung: ' beauftragt eine Social Media Kampagne', artikel: 'Social Media Kampagne' },
-      { beschreibung: ' lässt ein Logo gestalten', artikel: 'Logogestaltung' }
+      { beschreibung: ' überweist die Kosten für die Betreuung der Homepage', artikel: 'Homepage-Betreuung', einheit: 'Monat' },
+      { beschreibung: ' lässt Werbeflyer erstellen', artikel: 'Werbeflyer (1000 Stück)', einheit: 'Aufl.' },
+      { beschreibung: ' lässt Werbematerialien drucken', artikel: 'Druck Werbematerialien', einheit: 'Aufl.' },
+      { beschreibung: ' beauftragt die Gestaltung eines Werbeplakats', artikel: 'Werbeplakat (DIN A1)', einheit: 'Stück' },
+      { beschreibung: ' lässt Visitenkarten drucken', artikel: 'Visitenkarten (500 Stück)', einheit: 'Aufl.' },
+      { beschreibung: ' beauftragt eine Social Media Kampagne', artikel: 'Social Media Kampagne', einheit: 'Monat' },
+      { beschreibung: ' lässt ein Logo gestalten', artikel: 'Logogestaltung', einheit: 'Lst.' }
+    ]
+  },
+  
+  reisekosten: {
+    name: 'Reisekosten',
+    konto: '6850 REK',
+    lieferanten: ['Hotel Merian', 'Best Western', 'Hotel Parkstadt'],
+    belegtyp: 'rechnung',
+    vorlage: 'template10.svg',
+    zahlungsarten: [
+      { text: ', hierfür geht eine Rechnung ein', konto: '4400 VE' },
+      { text: ' auf Ziel', konto: '4400 VE' }
+    ],
+    mitVorsteuer: true,
+    umsatzsteuerSatz: 0.07, // 7% UST (ohne Frühstück)
+    geschaeftsfaelle: [
+      { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung wegen einer Fortbildung', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
+      { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung wegen eines Messebesuchs', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
+      { beschreibung: ' bekommt die Hotelrechnung für eine Fortbildungsreise', artikel: 'Übernachtung', einheit: 'ÜN' },
+      { beschreibung: ' erhält die Hotelrechnung wegen eines Messebesuchs', artikel: 'Übernachtung Business', einheit: 'ÜN' }
     ]
   }
 
@@ -219,6 +239,7 @@ function erstelleZufallsGeschaeftsfall() {
   const geschaeftsfall = typ.geschaeftsfaelle[Math.floor(Math.random() * typ.geschaeftsfaelle.length)];
   const beschreibung = geschaeftsfall.beschreibung;
   const artikel = geschaeftsfall.artikel;
+  const einheit = geschaeftsfall.einheit || 'Stück'; // Fallback auf "Stück" falls nicht definiert
   
   // Betrag generieren (je nach Typ unterschiedlich)
   let nettoBetrag;
@@ -228,6 +249,8 @@ function erstelleZufallsGeschaeftsfall() {
     nettoBetrag = generateRandomBetrag(30, 150);
   } else if (zufallsTyp === 'notar' || zufallsTyp === 'anwalt') {
     nettoBetrag = generateRandomBetrag(100, 500);
+  } else if (zufallsTyp === 'reisekosten') {
+    nettoBetrag = generateRandomBetrag(60, 200);
   } else {
     nettoBetrag = generateRandomBetrag(50, 400);
   }
@@ -240,7 +263,9 @@ function erstelleZufallsGeschaeftsfall() {
   let bruttoFormatted = nettoFormatted;
   
   if (typ.mitVorsteuer) {
-    vorsteuer = roundToTwoDecimals(nettoBetrag * 0.19);
+    // Prüfe ob spezieller UST-Satz definiert ist (z.B. 7% für Reisekosten)
+    const ustSatz = typ.umsatzsteuerSatz || 0.19;
+    vorsteuer = roundToTwoDecimals(nettoBetrag * ustSatz);
     vorsteuerFormatted = formatCurrency(vorsteuer);
     bruttoBetrag = roundToTwoDecimals(nettoBetrag + vorsteuer);
     bruttoFormatted = formatCurrency(bruttoBetrag);
@@ -298,13 +323,15 @@ const geschaeftsfallText = `${ausgabe}${beschreibung}${verbindung}${zText}${wert
     typDaten: typ,
     lieferant: lieferant,
     artikel: artikel,
+    einheit: einheit,
     zahlungsart: zahlungsart,
     nettoBetrag: nettoBetrag,
     nettoFormatted: nettoFormatted,
     vorsteuer: vorsteuer,
     vorsteuerFormatted: vorsteuerFormatted,
     bruttoBetrag: bruttoBetrag,
-    bruttoFormatted: bruttoFormatted
+    bruttoFormatted: bruttoFormatted,
+    ustProzent: typ.umsatzsteuerSatz ? roundToTwoDecimals(typ.umsatzsteuerSatz * 100) : 19
   };
 }
 
@@ -356,61 +383,129 @@ function erstelleBuchungssatz(geschaeftsfall) {
 }
 
 // ============================================================================
-// BELEG-BUTTON ERSTELLEN
+// BELEG-URL ERSTELLEN - KOMPLETT NEU STRUKTURIERT
 // ============================================================================
 
 function erstelleBelegURL(geschaeftsfall) {
   const params = new URLSearchParams();
-  
-  // Belegtyp
-  params.set('beleg', geschaeftsfall.typDaten.belegtyp);
-  
-  // Kunde & Lieferant
-  const kundeSelect = document.getElementById('marketingKunde');
-  if (kundeSelect?.value) {
-    params.set('kunde', kundeSelect.value.trim());
-  }
-  params.set('lieferer', geschaeftsfall.lieferant);
-  
-  // ────────────────────────────────────────────────
-  // Umsatzsteuer: IMMER explizit setzen – bei Kassenbon garantiert 0
-  // ────────────────────────────────────────────────
-  const ustWert = geschaeftsfall.typDaten.mitVorsteuer ? '19' : '0';
-  params.set('ust', ustWert);              
-
-  // Datum
-  const now = new Date();
-  params.set('tag', now.getDate().toString().padStart(2, '0'));
-  params.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
-
-  // Betrag & Artikel – unterschiedlich je Belegtyp
   const typ = geschaeftsfall.typDaten;
+  const belegtyp = typ.belegtyp;
   
-  // Welchen Betrag übergeben? Bei Kassenbon meist den relevanten Endbetrag (netto = brutto bei 0%)
-  const preisWert = typ.mitVorsteuer 
-    ? geschaeftsfall.bruttoBetrag 
-    : geschaeftsfall.nettoBetrag;
+  // Belegtyp setzen
+  params.set('beleg', belegtyp);
   
-  const preisString = parseNumericValue(formatCurrency(preisWert));
-
-  if (typ.belegtyp === 'kassenbon') {
-    // Kassenbon: meist nur Summen-Feld(er) + explizit 0% Ust
-    params.set('netto', preisString);        
-     params.set('bezeichnung', geschaeftsfall.artikel);   
-    params.set('empfaenger', geschaeftsfall.lieferant);  
-    params.delete('lieferer');
-    params.delete('artikel1');
-    params.delete('einzelpreis1');
-    params.delete('menge1');
-  } else {
-    // Rechnung: klassische Zeile
+  // Kunde auslesen
+  const kundeSelect = document.getElementById('marketingKunde');
+  const kundeValue = kundeSelect?.value?.trim() || '';
+  
+  // Datum - immer aktuell
+  const now = new Date();
+  const tag = now.getDate().toString().padStart(2, '0');
+  const monat = (now.getMonth() + 1).toString().padStart(2, '0');
+  const jahr = now.getFullYear().toString();
+  
+  // ========================================================================
+  // RECHNUNG - Parameter gemäß URL_PARAM_CONFIG.rechnung
+  // ========================================================================
+  if (belegtyp === 'rechnung') {
+    // Kunde & Lieferant
+    if (kundeValue) params.set('kunde', kundeValue);
+    params.set('lieferer', geschaeftsfall.lieferant);
+    
+    // Artikel 1
     params.set('artikel1', geschaeftsfall.artikel);
-    params.set('einzelpreis1', preisString);
     params.set('menge1', '1');
+    params.set('einheit1', geschaeftsfall.einheit);
+    
+    // Einzelpreis - bei Rechnung ist das der Netto-Einzelpreis
+    const einzelpreis = parseNumericValue(formatCurrency(geschaeftsfall.nettoBetrag));
+    params.set('einzelpreis1', einzelpreis);
+    
+    // Umsatzsteuer - IMMER explizit setzen (kann 0, 7 oder 19 sein)
+    const ustWert = typ.mitVorsteuer ? geschaeftsfall.ustProzent.toString() : '0';
+    params.set('umsatzsteuer', ustWert);
+    
+    // Vorlage - falls spezifisch definiert
+    if (typ.vorlage) {
+      params.set('vorlage', typ.vorlage);
+    }
+    
+    // Datum
+    params.set('tag', tag);
+    params.set('monat', monat);
+    params.set('jahr', jahr);
+    
+    // Standard-Zahlungskonditionen (können später angepasst werden)
+    params.set('zahlungsziel', '30');
+    params.set('skonto', '2');
+    params.set('skontofrist', '20');
   }
-
+  
+  // ========================================================================
+  // KASSENBON - Parameter gemäß URL_PARAM_CONFIG.kassenbon
+  // ========================================================================
+  else if (belegtyp === 'kassenbon') {
+    // Empfänger & Kunde
+    params.set('empfaenger', geschaeftsfall.lieferant);
+    if (kundeValue) params.set('kunde', kundeValue);
+    
+    // Bezeichnung (= Artikel)
+    params.set('bezeichnung', geschaeftsfall.artikel);
+    
+    // Nettobetrag - bei Kassenbon ist netto = brutto wenn ust=0
+    const nettoWert = parseNumericValue(formatCurrency(geschaeftsfall.nettoBetrag));
+    params.set('netto', nettoWert);
+    
+    // Umsatzsteuer - IMMER explizit setzen (bei Kassenbon meist 0 oder 19)
+    const ustWert = typ.mitVorsteuer ? '19' : '0';
+    params.set('ust', ustWert);
+    
+    // Zahlungsart - aus Geschäftsfall ableiten
+    // "in bar" → "bar", "per Girocard" → "karte"
+    let zahlungsart = 'bar';
+    if (geschaeftsfall.zahlungsart.text.toLowerCase().includes('girocard') || 
+        geschaeftsfall.zahlungsart.text.toLowerCase().includes('karte')) {
+      zahlungsart = 'karte';
+    }
+    params.set('zahlungsart', zahlungsart);
+    
+    // Datum
+    params.set('tag', tag);
+    params.set('monat', monat);
+    params.set('jahr', jahr);
+  }
+  
+  // ========================================================================
+  // QUITTUNG - Parameter gemäß URL_PARAM_CONFIG.quittung
+  // ========================================================================
+  else if (belegtyp === 'quittung') {
+    // Empfänger & Kunde
+    params.set('empfaenger', geschaeftsfall.lieferant);
+    if (kundeValue) params.set('kunde', kundeValue);
+    
+    // Zweck (= Artikel)
+    params.set('zweck', geschaeftsfall.artikel);
+    
+    // Nettobetrag
+    const nettoWert = parseNumericValue(formatCurrency(geschaeftsfall.nettoBetrag));
+    params.set('netto', nettoWert);
+    
+    // Umsatzsteuer
+    const ustWert = typ.mitVorsteuer ? '19' : '0';
+    params.set('ust', ustWert);
+    
+    // Datum
+    params.set('tag', tag);
+    params.set('monat', monat);
+    params.set('jahr', jahr);
+  }
+  
   return `belege.html?${params.toString()}`;
 }
+
+// ============================================================================
+// BELEG-BUTTON ERSTELLEN
+// ============================================================================
 
 function erstelleBelegButton(nummer, geschaeftsfall) {
   const url = erstelleBelegURL(geschaeftsfall);
