@@ -77,7 +77,7 @@ const geschaeftsfallTypen = {
   postwertzeichen: {
     name: 'Postwertzeichen/Briefmarken',
     konto: '6820 KOM',
-    lieferanten: ['Post & Shop'],
+    lieferanten: ['Post und Shop'],
     belegtyp: 'kassenbon',
     zahlungsarten: [
       { text: 'in bar', konto: '2880 KA' },
