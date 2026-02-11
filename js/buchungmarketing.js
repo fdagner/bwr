@@ -173,7 +173,7 @@ const geschaeftsfallTypen = {
   reisekosten: {
     name: 'Reisekosten',
     konto: '6850 REK',
-    lieferanten: ['Hotel Sonne', 'RelaxInn Hostel', 'Hotel CtityStay'],
+    lieferanten: ['Hotel Sonne', 'RelaxInn Hostel', 'CityStay Hotel'],
     belegtyp: 'rechnung',
     vorlage: 'template10.svg',
     zahlungsarten: [
