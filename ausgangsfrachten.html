@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sie können hier zufällige Ausgangsfrachten-Geschäftsfälle generieren.">
+  <meta name="keywords" content="BwR, Buchungssatz, Geschäftsfall, Ausgangsfrachten, Verpackungsmaterial, Realschule, Schema, Lehrkraft, Prüfung, Belege, Schemata, Rechnungswesen, Buchführung">
+  <title>Buchführung - Ausgangsfrachten</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+</head>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+    <h2>Buchungen Ausgangsfrachten</h2>
+    <div id="generator-container">
+      <div class="box">
+
+        <!-- Infobox wie im Screenshot -->
+        <div style="background-color: #f5f5dc; border: 1px solid #ccc; padding: 14px 18px; margin-bottom: 18px; line-height: 1.8;">
+          <strong>Beim Verkauf von Fertigerzeugnissen entstehen oft zusätzliche Aufwendungen:</strong>
+          <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+            <li>für den Einkauf von <strong>Verpackungsmaterial</strong> &nbsp;&nbsp;&nbsp; (<strong>6040 AWVM</strong>)</li>
+            <li>für die Übernahme von <strong>Frachtkosten</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<strong>6140 AFR</strong>)</li>
+          </ul>
+        </div>
+
+        <p>Sie können hier zufällige Geschäftsfälle aus dem Bereich Ausgangsfrachten generieren, Buchungssätze ausleiten und passende Belege erstellen.</p>
+
+        <label for="anzahlDropdown">Anzahl der Geschäftsfälle:</label>
+        <select id="anzahlDropdown">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select><br>
+
+        <h3>Unternehmen auswählen</h3>
+        <div class="flex-row">
+          <div>
+            <label for="ausgangsfrachtenKunde">Kunde/Empfänger:</label>
+            <select id="ausgangsfrachtenKunde" class="meinUnternehmen">
+              <!-- Wird automatisch befüllt -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Konto-Auswahl Container -->
+        <div class="konto-auswahl-container">
+          <div class="konto-auswahl-header">
+            <h3>Konten auswählen</h3>
+
+            <div class="flex-row" id="kontoGrid">
+              <!-- Wird dynamisch befüllt -->
+            </div>
+
+            <div class="auswahl-buttons">
+              <button type="button" onclick="alleKontenAuswaehlen()">Alle auswählen</button>
+              <button type="button" onclick="alleKontenAbwaehlen()">Alle abwählen</button>
+            </div>
+          </div>
+          <div class="auswahl-info" id="auswahlInfo">
+            ℹ️ Keine Konten ausgewählt - es werden alle verfügbaren Geschäftsfälle verwendet
+          </div>
+        </div>
+
+        <br>
+        <button onclick="zeigeZufaelligeGeschaeftsfaelle()">Aufgaben erstellen</button>
+
+        <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+          <!-- Exportierbarer Inhalt -->
+          <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+          <!-- Buttons daneben – nicht exportiert -->
+          <div id="button-column" style="width: 180px; flex-shrink: 0;">
+            <!-- Beleg-Buttons werden hier eingefügt -->
+          </div>
+        </div>
+
+      </div>
+      <div w3-include-html="downloads.html"></div>
+    </div>
+</main>
+
+  <script src="js/ausgangsfrachten.js"></script>
+  <script src="js/download.js"></script>
+  <div w3-include-html="footer.html"></div>
+  <script>
+    includeHTML();
+  </script>
+</body>
+</html>
