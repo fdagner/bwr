@@ -46,10 +46,26 @@
             </select>
           </div>
         </div>
- 
 
+        <!-- NEU: Konto-Auswahl Container -->
+        <div class="konto-auswahl-container">
+          <div class="konto-auswahl-header">
+            <h3>📊 Konten auswählen</h3>
+            <div class="auswahl-buttons">
+              <button type="button" onclick="alleKontenAuswaehlen()">Alle auswählen</button>
+              <button type="button" onclick="alleKontenAbwaehlen()">Alle abwählen</button>
+            </div>
+          </div>
+          
+          <div class="flex-row" id="kontoGrid">
+            <!-- Wird dynamisch befüllt -->
+          </div>
+          
+          <div class="auswahl-info" id="auswahlInfo" style="display: none;">
+            ℹ️ Keine Konten ausgewählt - es werden alle verfügbaren Geschäftsfälle verwendet
+          </div>
+        </div>
 
-        
         <button onclick="zeigeZufaelligeGeschaeftsfaelle()">Aufgaben erstellen</button>
 
         <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">

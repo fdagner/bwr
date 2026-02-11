@@ -1,10 +1,26 @@
 // ============================================================================
-// MARKETING & VERWALTUNG - GESCHÄFTSFALLE
+// MARKETING & VERWALTUNG - GESCHÄFTSFALLE MIT KONTO-AUSWAHL
 // ============================================================================
 
 // Globale Variablen
 let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
+
+// NEU: Konten-Definitionen mit Beschreibungen
+const kontenDefinitionen = {
+  '6820 KOM': {
+    beschreibung: '',
+  },
+  '6770 RBK': {
+    beschreibung: '',
+  },
+  '6870 WER': {
+    beschreibung: '',
+  },
+  '6850 REK': {
+    beschreibung: '',
+  }
+};
 
 // ============================================================================
 // YAML-DATEN LADEN
@@ -68,12 +84,92 @@ function loadDefaultYaml() {
 }
 
 // ============================================================================
+// NEU: KONTO-AUSWAHL FUNKTIONEN
+// ============================================================================
+
+function initializeKontoAuswahl() {
+  const kontoGrid = document.getElementById('kontoGrid');
+  if (!kontoGrid) return;
+  
+  kontoGrid.innerHTML = '';
+  
+  Object.entries(kontenDefinitionen).forEach(([kontoNr, info]) => {
+    const item = document.createElement('div');
+    item.className = 'konto-checkbox-item';
+    
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = `konto-${kontoNr.replace(/\s/g, '-')}`;
+    checkbox.value = kontoNr;
+    checkbox.checked = true; // Standardmäßig alle ausgewählt
+    checkbox.onchange = updateAuswahlInfo;
+    
+    const label = document.createElement('label');
+    label.className = 'konto-label';
+    label.htmlFor = checkbox.id;
+    
+    const nummer = document.createElement('div');
+    nummer.className = 'konto-nummer';
+    nummer.textContent = kontoNr;
+    
+    const beschreibung = document.createElement('div');
+    beschreibung.className = 'konto-beschreibung';
+    beschreibung.textContent = info.beschreibung;
+    
+    label.appendChild(nummer);
+    label.appendChild(beschreibung);
+    
+    item.appendChild(checkbox);
+    item.appendChild(label);
+    
+    kontoGrid.appendChild(item);
+  });
+  
+  updateAuswahlInfo();
+}
+
+function updateAuswahlInfo() {
+  const auswahlInfo = document.getElementById('auswahlInfo');
+  const checkboxes = document.querySelectorAll('#kontoGrid input[type="checkbox"]');
+  const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+  
+  if (checkedCount === 0) {
+    auswahlInfo.textContent = '⚠️ Keine Konten ausgewählt - es werden alle verwendet';
+    auswahlInfo.style.background = '#fff3cd';
+    auswahlInfo.style.color = '#856404';
+  } else if (checkedCount === checkboxes.length) {
+    auswahlInfo.textContent = '✓ Alle Konten ausgewählt';
+    auswahlInfo.style.background = '#d4edda';
+    auswahlInfo.style.color = '#155724';
+  } else {
+    auswahlInfo.textContent = `✓ ${checkedCount} von ${checkboxes.length} Konten ausgewählt`;
+    auswahlInfo.style.background = '#d1ecf1';
+    auswahlInfo.style.color = '#0c5460';
+  }
+}
+
+function alleKontenAuswaehlen() {
+  const checkboxes = document.querySelectorAll('#kontoGrid input[type="checkbox"]');
+  checkboxes.forEach(cb => cb.checked = true);
+  updateAuswahlInfo();
+}
+
+function alleKontenAbwaehlen() {
+  const checkboxes = document.querySelectorAll('#kontoGrid input[type="checkbox"]');
+  checkboxes.forEach(cb => cb.checked = false);
+  updateAuswahlInfo();
+}
+
+function getAusgewaehlteKonten() {
+  const checkboxes = document.querySelectorAll('#kontoGrid input[type="checkbox"]:checked');
+  return Array.from(checkboxes).map(cb => cb.value);
+}
+
+// ============================================================================
 // GESCHÄFTSFALL-DEFINITIONEN
 // ============================================================================
 
 const geschaeftsfallTypen = {
-
-
   postwertzeichen: {
     name: 'Postwertzeichen/Briefmarken',
     konto: '6820 KOM',
@@ -113,7 +209,6 @@ const geschaeftsfallTypen = {
     ]
   },
 
-  
   notar: {
     name: 'Notarkosten',
     konto: '6770 RBK',
@@ -181,16 +276,16 @@ const geschaeftsfallTypen = {
       { text: ' auf Ziel', konto: '4400 VE' }
     ],
     mitVorsteuer: true,
-    umsatzsteuerSatz: 0.07, // 7% UST (ohne Frühstück)
+    umsatzsteuerSatz: 0.07,
     geschaeftsfaelle: [
       { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung aufgrund einer Fortbildung', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
       { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung aufgrund eines Messebesuchs', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
-      { beschreibung: ' bekommt die Hotelrechnung für eine Fortbildungsreise', artikel: 'Übernachtung', einheit: 'ÜN' },
-      { beschreibung: ' erhält die Hotelrechnung wegen eines Messebesuchs', artikel: 'Übernachtung Business', einheit: 'ÜN' }
+      { beschreibung: ' bekommt die Übernachtungskosten für eine Fortbildungsreise', artikel: 'Übernachtung', einheit: 'ÜN' },
+      { beschreibung: ' erhält die Hotelkosten wegen eines Messebesuchs', artikel: 'Übernachtung Business', einheit: 'ÜN' }
     ]
   },
 
-    reisekosten_pauschal: {
+  reisekosten_pauschal: {
     name: 'Reisekosten pauschal',
     konto: '6850 REK',
     lieferanten: ['Horozont Reisebüro', 'Reisewelt Entdecker'],
@@ -209,7 +304,6 @@ const geschaeftsfallTypen = {
       { beschreibung: ' erhält die Reiserechnung wegen eines Messebesuchs', artikel: 'Businessreise Messe', einheit: 'ÜN' }
     ]
   }
-  
 };
 
 // ============================================================================
@@ -225,7 +319,6 @@ function roundToTwoDecimals(num) {
 }
 
 function generateRandomBetrag(min = 20, max = 500) {
-  // Generiere Beträge in 5€-Schritten
   const steps = Math.floor((max - min) / 5);
   return min + (Math.floor(Math.random() * steps) * 5);
 }
@@ -239,27 +332,43 @@ const wertFormulierungen = [
   " in Höhe von ",
   " mit einem Betrag von "
 ];
+
 // ============================================================================
-// GESCHÄFTSFALL GENERIEREN
+// GESCHÄFTSFALL GENERIEREN - ERWEITERT MIT KONTO-FILTER
 // ============================================================================
 
 function erstelleZufallsGeschaeftsfall() {
-  // Zufälligen Typ auswählen
-  const typen = Object.keys(geschaeftsfallTypen);
-  const zufallsTyp = typen[Math.floor(Math.random() * typen.length)];
+  // NEU: Hole ausgewählte Konten
+  const ausgewaehlteKonten = getAusgewaehlteKonten();
+  
+  // Filtere Geschäftsfalltypen nach ausgewählten Konten
+  let verfuegbareTypen = Object.keys(geschaeftsfallTypen);
+  
+  if (ausgewaehlteKonten.length > 0) {
+    verfuegbareTypen = verfuegbareTypen.filter(typKey => {
+      const typ = geschaeftsfallTypen[typKey];
+      return ausgewaehlteKonten.includes(typ.konto);
+    });
+  }
+  
+  // Wenn keine Typen verfügbar sind, alle verwenden
+  if (verfuegbareTypen.length === 0) {
+    verfuegbareTypen = Object.keys(geschaeftsfallTypen);
+  }
+  
+  // Zufälligen Typ aus verfügbaren auswählen
+  const zufallsTyp = verfuegbareTypen[Math.floor(Math.random() * verfuegbareTypen.length)];
   const typ = geschaeftsfallTypen[zufallsTyp];
   
-  // Zufällige Werte generieren
+  // Rest wie gehabt...
   const lieferant = typ.lieferanten[Math.floor(Math.random() * typ.lieferanten.length)];
   const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
   
-  // WICHTIG: Wähle einen Geschäftsfall aus dem Array (Beschreibung + Artikel zusammen)
   const geschaeftsfall = typ.geschaeftsfaelle[Math.floor(Math.random() * typ.geschaeftsfaelle.length)];
   const beschreibung = geschaeftsfall.beschreibung;
   const artikel = geschaeftsfall.artikel;
-  const einheit = geschaeftsfall.einheit || 'Stück'; // Fallback auf "Stück" falls nicht definiert
+  const einheit = geschaeftsfall.einheit || 'Stück';
   
-  // Betrag generieren (je nach Typ unterschiedlich)
   let nettoBetrag;
   if (zufallsTyp === 'postwertzeichen') {
     nettoBetrag = generateRandomBetrag(10, 100);
@@ -283,7 +392,6 @@ function erstelleZufallsGeschaeftsfall() {
   let bruttoFormatted = nettoFormatted;
   
   if (typ.mitVorsteuer) {
-    // Prüfe ob spezieller UST-Satz definiert ist (z.B. 7% für Reisekosten)
     const ustSatz = typ.umsatzsteuerSatz || 0.19;
     vorsteuer = roundToTwoDecimals(nettoBetrag * ustSatz);
     vorsteuerFormatted = formatCurrency(vorsteuer);
@@ -291,51 +399,46 @@ function erstelleZufallsGeschaeftsfall() {
     bruttoFormatted = formatCurrency(bruttoBetrag);
   }
   
-  // Geschäftsfall-Text erstellen
-let betragText;
-let betragHinweis = '';
-
-if (!typ.mitVorsteuer) {
-  // Ohne Umsatzsteuer → immer nur netto (kein anderer Sinn möglich)
-  betragText = nettoFormatted;
-} else {
-  // Mit Vorsteuer → zufällig netto ODER brutto zeigen
-  const showNetto = Math.random() < 0.5;           // ~50:50 Chance
-  // Alternativ: Math.random() < 0.35    → öfter netto
-  //             Math.random() < 0.65    → öfter brutto
+  let betragText;
+  let betragHinweis = '';
   
-  if (showNetto) {
+  if (!typ.mitVorsteuer) {
     betragText = nettoFormatted;
-    betragHinweis = ' netto';
   } else {
-    betragText = bruttoFormatted;
-    betragHinweis = ' brutto';
+    const showNetto = Math.random() < 0.5;
+    
+    if (showNetto) {
+      betragText = nettoFormatted;
+      betragHinweis = ' netto';
+    } else {
+      betragText = bruttoFormatted;
+      betragHinweis = ' brutto';
+    }
   }
-}
-
-const zText = zahlungsart.text.trim();  // trim() statt nur trimStart(), um auch trailing spaces zu entfernen
-
-let verbindung = '';
-if (zText) {
-  if (zText.startsWith(',') || zText.startsWith('.')) {
-    verbindung = '';
-  } else {
-    verbindung = ' ';
+  
+  const zText = zahlungsart.text.trim();
+  
+  let verbindung = '';
+  if (zText) {
+    if (zText.startsWith(',') || zText.startsWith('.')) {
+      verbindung = '';
+    } else {
+      verbindung = ' ';
+    }
   }
-}
-
-const varianten = [
-  `${kunde}`,
-  `Firma ${kunde}`,
-  `Unternehmen ${kunde}`,
-  `Das Unternehmen ${kunde}`,
-  `Die Firma ${kunde}`
-];
-
-const ausgabe = varianten[Math.floor(Math.random() * varianten.length)];
-
-const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
-const geschaeftsfallText = `${ausgabe}${beschreibung}${verbindung}${zText}${wertPhrase}${betragText}${betragHinweis}.`;
+  
+  const varianten = [
+    `${kunde}`,
+    `Firma ${kunde}`,
+    `Unternehmen ${kunde}`,
+    `Das Unternehmen ${kunde}`,
+    `Die Firma ${kunde}`
+  ];
+  
+  const ausgabe = varianten[Math.floor(Math.random() * varianten.length)];
+  
+  const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
+  const geschaeftsfallText = `${ausgabe}${beschreibung}${verbindung}${zText}${wertPhrase}${betragText}${betragHinweis}.`;
   
   return {
     text: geschaeftsfallText,
@@ -367,7 +470,6 @@ function erstelleBuchungssatz(geschaeftsfall) {
       <tbody>`;
   
   if (typ.mitVorsteuer) {
-    // Buchung mit Vorsteuer - 3 Konten in 2 Zeilen
     buchungssatzHTML += `
         <tr>
           <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
@@ -384,7 +486,6 @@ function erstelleBuchungssatz(geschaeftsfall) {
           <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.bruttoFormatted}</td>
         </tr>`;
   } else {
-    // Buchung ohne Vorsteuer - 2 Konten in einer Zeile
     buchungssatzHTML += `
         <tr>
           <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
@@ -403,7 +504,7 @@ function erstelleBuchungssatz(geschaeftsfall) {
 }
 
 // ============================================================================
-// BELEG-URL ERSTELLEN - KOMPLETT NEU STRUKTURIERT
+// BELEG-URL ERSTELLEN
 // ============================================================================
 
 function erstelleBelegURL(geschaeftsfall) {
@@ -411,77 +512,54 @@ function erstelleBelegURL(geschaeftsfall) {
   const typ = geschaeftsfall.typDaten;
   const belegtyp = typ.belegtyp;
   
-  // Belegtyp setzen
   params.set('beleg', belegtyp);
   
-  // Kunde auslesen
   const kundeSelect = document.getElementById('marketingKunde');
   const kundeValue = kundeSelect?.value?.trim() || '';
   
-  // Datum - immer aktuell
   const now = new Date();
   const tag = now.getDate().toString().padStart(2, '0');
   const monat = (now.getMonth() + 1).toString().padStart(2, '0');
   const jahr = now.getFullYear().toString();
   
-  // ========================================================================
-  // RECHNUNG - Parameter gemäß URL_PARAM_CONFIG.rechnung
-  // ========================================================================
   if (belegtyp === 'rechnung') {
-    // Kunde & Lieferant
     if (kundeValue) params.set('kunde', kundeValue);
     params.set('lieferer', geschaeftsfall.lieferant);
     
-    // Artikel 1
     params.set('artikel1', geschaeftsfall.artikel);
     params.set('menge1', '1');
     params.set('einheit1', geschaeftsfall.einheit);
     
-    // Einzelpreis - bei Rechnung ist das der Netto-Einzelpreis
     const einzelpreis = parseNumericValue(formatCurrency(geschaeftsfall.nettoBetrag));
     params.set('einzelpreis1', einzelpreis);
     
-    // Umsatzsteuer - IMMER explizit setzen (kann 0, 7 oder 19 sein)
     const ustWert = typ.mitVorsteuer ? geschaeftsfall.ustProzent.toString() : '0';
     params.set('umsatzsteuer', ustWert);
     
-    // Vorlage - falls spezifisch definiert
     if (typ.vorlage) {
       params.set('vorlage', typ.vorlage);
     }
     
-    // Datum
     params.set('tag', tag);
     params.set('monat', monat);
     params.set('jahr', jahr);
     
-    // Standard-Zahlungskonditionen (können später angepasst werden)
     params.set('zahlungsziel', '30');
     params.set('skonto', '2');
     params.set('skontofrist', '20');
   }
-  
-  // ========================================================================
-  // KASSENBON - Parameter gemäß URL_PARAM_CONFIG.kassenbon
-  // ========================================================================
   else if (belegtyp === 'kassenbon') {
-    // Empfänger & Kunde
     params.set('empfaenger', geschaeftsfall.lieferant);
     if (kundeValue) params.set('kunde', kundeValue);
     
-    // Bezeichnung (= Artikel)
     params.set('bezeichnung', geschaeftsfall.artikel);
     
-    // Nettobetrag - bei Kassenbon ist netto = brutto wenn ust=0
     const nettoWert = parseNumericValue(formatCurrency(geschaeftsfall.nettoBetrag));
     params.set('netto', nettoWert);
     
-    // Umsatzsteuer - IMMER explizit setzen (bei Kassenbon meist 0 oder 19)
     const ustWert = typ.mitVorsteuer ? '19' : '0';
     params.set('ust', ustWert);
     
-    // Zahlungsart - aus Geschäftsfall ableiten
-    // "in bar" → "bar", "per Girocard" → "karte"
     let zahlungsart = 'bar';
     if (geschaeftsfall.zahlungsart.text.toLowerCase().includes('girocard') || 
         geschaeftsfall.zahlungsart.text.toLowerCase().includes('karte')) {
@@ -489,32 +567,22 @@ function erstelleBelegURL(geschaeftsfall) {
     }
     params.set('zahlungsart', zahlungsart);
     
-    // Datum
     params.set('tag', tag);
     params.set('monat', monat);
     params.set('jahr', jahr);
   }
-  
-  // ========================================================================
-  // QUITTUNG - Parameter gemäß URL_PARAM_CONFIG.quittung
-  // ========================================================================
   else if (belegtyp === 'quittung') {
-    // Empfänger & Kunde
     params.set('empfaenger', geschaeftsfall.lieferant);
     if (kundeValue) params.set('kunde', kundeValue);
     
-    // Zweck (= Artikel)
     params.set('zweck', geschaeftsfall.artikel);
     
-    // Nettobetrag
     const nettoWert = parseNumericValue(formatCurrency(geschaeftsfall.nettoBetrag));
     params.set('netto', nettoWert);
     
-    // Umsatzsteuer
     const ustWert = typ.mitVorsteuer ? '19' : '0';
     params.set('ust', ustWert);
     
-    // Datum
     params.set('tag', tag);
     params.set('monat', monat);
     params.set('jahr', jahr);
@@ -557,7 +625,7 @@ function erstelleBelegButton(nummer, geschaeftsfall) {
 
 function zeigeZufaelligeGeschaeftsfaelle() {
   const anzahl = parseInt(document.getElementById('anzahlDropdown').value);
-  const container = document.getElementById('marketingContainer');
+  const container = document.getElementById('Container');
   const buttonColumn = document.getElementById('button-column');
   
   if (!container || !buttonColumn) {
@@ -565,7 +633,6 @@ function zeigeZufaelligeGeschaeftsfaelle() {
     return;
   }
   
-  // Inhalte zurücksetzen
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
   
@@ -575,15 +642,12 @@ function zeigeZufaelligeGeschaeftsfaelle() {
   for (let i = 1; i <= anzahl; i++) {
     const geschaeftsfall = erstelleZufallsGeschaeftsfall();
     
-    // Aufgabe
     aufgabenHTML += `<li>${geschaeftsfall.text}</li>`;
     
-    // Lösung
     loesungenHTML += `<div style="margin-top: 1.5em;"><strong>${i}.</strong><br>`;
     loesungenHTML += erstelleBuchungssatz(geschaeftsfall);
     loesungenHTML += `</div>`;
     
-    // Button
     const buttonDiv = document.createElement('div');
     buttonDiv.style.margin = '12px 0';
     buttonDiv.innerHTML = erstelleBelegButton(i, geschaeftsfall);
@@ -649,7 +713,7 @@ function fillCompanyDropdowns() {
 // ============================================================================
 
 function marketingHerunterladen() {
-  const marketingHTML = document.getElementById('marketingContainer').innerHTML;
+  const marketingHTML = document.getElementById('Container').innerHTML;
   const blob = new Blob([marketingHTML], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -660,16 +724,16 @@ function marketingHerunterladen() {
 }
 
 function marketingKopiereInZwischenablage() {
-  const marketingHTML = document.getElementById('marketingContainer').innerHTML;
+  const marketingHTML = document.getElementById('Container').innerHTML;
   navigator.clipboard.writeText(marketingHTML)
     .then(() => alert('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
 function marketingHerunterladenAlsPNG() {
-  const marketingContainer = document.getElementById('marketingContainer');
+  const Container = document.getElementById('Container');
   
-  html2canvas(marketingContainer, optionshtml2canvas).then(canvas => {
+  html2canvas(Container, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
@@ -697,6 +761,9 @@ clipboardMarketing.on('error', function (e) {
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // NEU: Konto-Auswahl initialisieren
+  initializeKontoAuswahl();
+  
   const kundeSelect = document.getElementById('marketingKunde');
   
   if (kundeSelect && kundeSelect.value) {
@@ -719,36 +786,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-
-    function autoSelectMyCompany() {
-        const myCompanyName = localStorage.getItem('myCompany');
-        
-        if (!myCompanyName) return;
-        
-        // Finde alle Dropdowns mit class="meinUnternehmen"
-        const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-        
-        dropdowns.forEach(dropdown => {
-            // Suche nach der passenden Option
-            const options = Array.from(dropdown.options);
-            const matchingOption = options.find(opt => opt.value === myCompanyName);
-            
-            if (matchingOption) {
-                dropdown.value = myCompanyName;
-                
-                // Trigger change event falls andere Scripts darauf reagieren
-                const event = new Event('change', { bubbles: true });
-                dropdown.dispatchEvent(event);
-                
-                console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
-            }
-        });
+function autoSelectMyCompany() {
+  const myCompanyName = localStorage.getItem('myCompany');
+  
+  if (!myCompanyName) return;
+  
+  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+  
+  dropdowns.forEach(dropdown => {
+    const options = Array.from(dropdown.options);
+    const matchingOption = options.find(opt => opt.value === myCompanyName);
+    
+    if (matchingOption) {
+      dropdown.value = myCompanyName;
+      
+      const event = new Event('change', { bubbles: true });
+      dropdown.dispatchEvent(event);
+      
+      console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
     }
+  });
+}
 
- // WICHTIG: Warte bis die Seite vollständig geladen ist
-    document.addEventListener('DOMContentLoaded', function() {
-        // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
-        setTimeout(function() {
-            autoSelectMyCompany();
-   }, 100);
-    });
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    autoSelectMyCompany();
+  }, 100);
+});
