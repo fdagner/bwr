@@ -1168,7 +1168,7 @@
     id: "49"
     branche: "Einzelhandel"
     name: "ModeWelt"
-    bank: "Sparkasse"
+    bank: "Sparbank"
     rechtsform: "GmbH"
     logo: "media/pic/shirt.svg"
     adresse:
@@ -1191,7 +1191,7 @@
     id: "50"
     branche: "Recht und Ordnung"
     name: "RechtsSchutz"
-    bank: "Deutsche Bank"
+    bank: "Großbank"
     rechtsform: "GmbH"
     logo: "media/pic/recht.svg"
     adresse:
@@ -1330,7 +1330,7 @@
     id: "56"
     branche: "Werkstoffe"
     name: "TextileSource"
-    bank: "Deutsche Bank"
+    bank: "Großbank"
     rechtsform: "OHG"
     logo: "media/pic/textil.svg"
     adresse:
@@ -1353,7 +1353,7 @@
     id: "57"
     branche: "Fuhrpark"
     name: "AutoLux"
-    bank: "Deutsche Bank"
+    bank: "Großbank"
     rechtsform: "GmbH"
     logo: "media/pic/auto2.svg"
     adresse:
@@ -1399,7 +1399,7 @@
     id: "59"
     branche: "Maschinen"
     name: "TechMachines"
-    bank: "Raiffeisenbank"
+    bank: "Geschäftsbank"
     rechtsform: "AG"
     logo: "media/pic/machine2.svg"
     adresse:
@@ -1423,7 +1423,7 @@
     branche: "Einzelhandel"
     name: "Bekleidungshaus Mark"
     motto: "Wir statten Sie aus!"
-    bank: "Raiffeisenbank"
+    bank: "Geschäftsbank"
     rechtsform: "GmbH"
     logo: "media/pic/standard.svg"
     adresse:
@@ -1447,7 +1447,7 @@
     branche: "Büro"
     name: "Office 2000"
     motto: "Bürobedarf und Elektroartikel"
-    bank: "Sparkasse"
+    bank: "Sparbank"
     rechtsform: "GmbH"
     logo: "media/pic/folder.svg"
     adresse:
@@ -1471,7 +1471,7 @@
     branche: "Einzelhandel"
     name: "AB Möbel"
     motto: ""
-    bank: "Sparkasse"
+    bank: "Sparbank"
     rechtsform: "e. K."
     logo: "media/pic/joo.svg"
     adresse:
@@ -1495,7 +1495,7 @@
     branche: "Fuhrpark"
     name: "HFE-Gabelstapler"
     motto: ""
-    bank: "Sparkasse"
+    bank: "Sparbank"
     rechtsform: "e. K."
     logo: "media/pic/forklift.svg"
     adresse:
@@ -1687,7 +1687,7 @@
     branche: "Schule"
     name: "Waldorf Campus Nordhain"
     motto: "Gemeinsam wachsen"
-    bank: "Nordhainer Sparkasse"
+    bank: "Nordhainer Sparbank"
     rechtsform: "e.V."
     logo: "media/pic/waldorf.svg"
     adresse:
@@ -1807,7 +1807,7 @@
     branche: "Stadt/Gemeinde"
     name: "Stadt Waldbruck"
     motto: "Tradition & Zukunft"
-    bank: "Waldbrucker Sparkasse"
+    bank: "Waldbrucker Sparbank"
     rechtsform: " "
     logo: " "
     adresse:
@@ -1855,7 +1855,7 @@
     branche: "Stadt/Gemeinde"
     name: "Gemeinde Eibenfeld"
     motto: "Natürlich verbunden"
-    bank: "Eibenfelder Raiffeisenbank"
+    bank: "Eibenfelder Geschäftsbank"
     rechtsform: " "
     logo: " "
     adresse:
@@ -1952,7 +1952,7 @@
     branche: "Dienstleistung"
     name: "WebKreativ Studio"
     motto: "Deine Marke – online zum Leben erweckt"
-    bank: "Sparkasse Nürnberg"
+    bank: "Sparbank Nürnberg"
     rechtsform: "e. K."
     logo: "media/pic/webkreativ.svg"
     adresse:
@@ -2024,7 +2024,7 @@
     branche: "Einzelhandel"
     name: "StadtKauf Nürnberg"
     motto: "Alles nah. Alles da."
-    bank: "Sparkasse Nürnberg"
+    bank: "Sparbank Nürnberg"
     rechtsform: "GmbH"
     logo: "media/pic/stadtkauf.svg"
     adresse:
@@ -2096,7 +2096,7 @@
     branche: "Fuhrpark"
     name: "AutoLog Service"
     motto: "Ihr Fuhrpark aus guten Händen"
-    bank: "Deutsche Bank"
+    bank: "Großbank"
     rechtsform: "GmbH"
     logo: "media/pic/autolog.svg"
     adresse:
@@ -2192,7 +2192,7 @@
     branche: "Handwerk"
     name: "Elektro Berger"
     motto: "Kompetent. Zuverlässig."
-    bank: "Sparkasse Regensburg"
+    bank: "Sparbank Regensburg"
     rechtsform: "e. K."
     logo: "media/pic/handyman.svg"
     adresse:
@@ -2216,7 +2216,7 @@
     branche: "Handwerk"
     name: "Sanitär Huber"
     motto: "Wasser marsch – Wir sind für Sie da!"
-    bank: "VR Bank Passau"
+    bank: "VS Bank Passau"
     rechtsform: "e. Kfr."
     logo: "media/pic/monkey.svg"
     adresse:
@@ -2240,7 +2240,7 @@
     branche: "Handwerk"
     name: "Malerbetrieb Farkas"
     motto: "Farbe bringt Leben!"
-    bank: "Sparkasse Bamberg"
+    bank: "Sparbank Bamberg"
     rechtsform: "e. K."
     logo: "media/pic/colors.svg"
     adresse:
@@ -2264,7 +2264,7 @@
     branche: "Einzelhandel"
     name: "Bio-Paradies Ammersee"
     motto: "Natürlich gut leben"
-    bank: "Raiffeisenbank Ammersee"
+    bank: "Geschäftsbank Ammersee"
     rechtsform: "e. K."
     logo: "media/pic/bio.svg"
     adresse:
@@ -2288,7 +2288,7 @@
     branche: "Einzelhandel"
     name: "TechMarkt Würzburg"
     motto: "Technik, die begeistert"
-    bank: "Sparkasse Mainfranken"
+    bank: "Sparbank Mainfranken"
     rechtsform: "GmbH"
     logo: "media/pic/elec.svg"
     adresse:
@@ -2312,7 +2312,7 @@
     branche: "Einzelhandel"
     name: "Spielwaren Kraus"
     motto: "Kinderträume werden wahr"
-    bank: "VR Bank Coburg"
+    bank: "VS Bank Coburg"
     rechtsform: "e. Kfr."
     logo: "media/pic/toy.svg"
     adresse:
@@ -2360,7 +2360,7 @@
     branche: "Großhandel"
     name: "FrischePro Bayern"
     motto: "Obst & Gemüse in Premiumqualität"
-    bank: "Sparkasse Landshut"
+    bank: "Sparbank Landshut"
     rechtsform: "GmbH"
     logo: "media/pic/vege.svg"
     adresse:
@@ -2408,7 +2408,7 @@
     branche: "Dienstleistung"
     name: "CleanPro"
     motto: "Gebäudereinigung"
-    bank: "Sparkasse Augsburg"
+    bank: "Sparbank Augsburg"
     rechtsform: "GmbH"
     logo: "media/pic/clean.svg"
     adresse:
@@ -2432,7 +2432,7 @@
     branche: "Dienstleistung"
     name: "SecureGuard Bayern"
     motto: "Ihr Schutz ist unsere Mission"
-    bank: "VR Bank Erlangen"
+    bank: "VS Bank Erlangen"
     rechtsform: "GmbH"
     logo: "media/pic/firewall.svg"
     adresse:
@@ -2456,7 +2456,7 @@
     branche: "Dienstleistung"
     name: "EventKonzept München"
     motto: "Unvergessliche Momente schaffen"
-    bank: "HypoVereinsbank"
+    bank: "AlphaVereinsbank"
     rechtsform: "GmbH"
     logo: "media/pic/event.svg"
     adresse:
@@ -2480,7 +2480,7 @@
     branche: "Werkstoffe"
     name: "BayStahl Handel"
     motto: "Stahl in allen Formen"
-    bank: "Sparkasse Schweinfurt"
+    bank: "Sparbank Schweinfurt"
     rechtsform: "GmbH"
     logo: "media/pic/cog.svg"
     adresse:
@@ -2504,7 +2504,7 @@
     branche: "Werkstoffe"
     name: "Kunststoff Zentrum"
     motto: "Innovative Kunststofflösungen"
-    bank: "VR Bank Regensburg"
+    bank: "VS Bank Regensburg"
     rechtsform: "GmbH"
     logo: "media/pic/plastic2.svg"
     adresse:
@@ -2528,7 +2528,7 @@
     branche: "Werkstoffe"
     name: "Baustoff Kaiser"
     motto: "Bauen Sie auf uns!"
-    bank: "Sparkasse Ingolstadt"
+    bank: "Sparbank Ingolstadt"
     rechtsform: "e. K."
     logo: "media/pic/cargo.svg"
     adresse:
@@ -2552,7 +2552,7 @@
     branche: "Logistik"
     name: "Spedition Express"
     motto: "Schnell. Zuverlässig. Regional."
-    bank: "Sparkasse Nürnberg"
+    bank: "Sparbank Nürnberg"
     rechtsform: "GmbH"
     logo: "media/pic/deliver.svg"
     adresse:
@@ -2576,7 +2576,7 @@
     branche: "Logistik"
     name: "BayernTrans Spedition"
     motto: "Ihre Ladung in guten Händen"
-    bank: "VR Bank München"
+    bank: "VS Bank München"
     rechtsform: "GmbH"
     logo: "media/pic/transport2.svg"
     adresse:
@@ -2594,3 +2594,51 @@
     bic: "GENODEF1M01"
     inhaber: "Ludwig Fernfahrer"
     akzent: "#1874CD"
+
+- unternehmen:
+    id: "109"
+    branche: "Büro"
+    name: "Bürosysteme Altan"
+    motto: "Alles aus einer Hand"
+    bank: "VS Bank München"
+    rechtsform: "GmbH"
+    logo: "media/pic/office.svg"
+    adresse:
+      strasse: "Handelsweg 23"
+      plz: "85406"
+      ort: "Zolling"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 8167 556677"
+      email: "info@b-altan.de"
+      internet: "b-altan.de"
+    ust_id: "DE901476890"
+    steuernummer: "181/124/78331"
+    iban: "DE89701600111234901234"
+    bic: "GENODZO1M01"
+    inhaber: "Altan Merman"
+    akzent: "#e8f1fa"
+
+- unternehmen:
+    id: "110"
+    branche: "Werkstoffe"
+    name: "Schmierstoffe Witzling"
+    motto: "Läuft mit uns..."
+    bank: "Sparbank München"
+    rechtsform: "e. Kfr."
+    logo: "media/pic/oil.svg"
+    adresse:
+      strasse: "Handelsweg 24"
+      plz: "85406"
+      ort: "Zolling"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 8167 556677"
+      email: "info@schmitzling.de"
+      internet: "schmitzling.de"
+    ust_id: "DE901434890"
+    steuernummer: "181/124/78331"
+    iban: "DE89323400111234901234"
+    bic: "GENODZO1M02"
+    inhaber: "Anna Witzling"
+    akzent: "#f5f2ed"
