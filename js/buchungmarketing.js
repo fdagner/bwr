@@ -99,7 +99,7 @@ const geschaeftsfallTypen = {
     lieferanten: ['EU Glasfaser'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: ', hierfür geht eine Rechnung ein', konto: '4400 VE' },
+      { text: ', es geht eine Rechnung ein', konto: '4400 VE' },
       { text: ' auf Ziel', konto: '4400 VE' },
       { text: '. Es geht eine Rechnung ein', konto: '4400 VE' }
     ],
@@ -135,7 +135,7 @@ const geschaeftsfallTypen = {
   anwalt: {
     name: 'Anwaltskosten',
     konto: '6770 RBK',
-    lieferanten: ['Meininger und Partner'],
+    lieferanten: ['Meininger und Partner','Mona Klingenbeil'],
     belegtyp: 'rechnung',
     zahlungsarten: [
       { text: ', wobei eine Rechnung eingeht', konto: '4400 VE' }
@@ -153,7 +153,7 @@ const geschaeftsfallTypen = {
   werbung: {
     name: 'Werbekosten',
     konto: '6870 WER',
-    lieferanten: ['Werbeagentur Mandic'],
+    lieferanten: ['Werbeagentur Mandic', 'WebKreativ Studio'],
     belegtyp: 'rechnung',
     zahlungsarten: [
       { text: ', per Rechnung', konto: '4400 VE' }
@@ -177,7 +177,7 @@ const geschaeftsfallTypen = {
     belegtyp: 'rechnung',
     vorlage: 'template10.svg',
     zahlungsarten: [
-      { text: ', hierfür geht eine Rechnung ein', konto: '4400 VE' },
+      { text: ', es geht eine Rechnung ein', konto: '4400 VE' },
       { text: ' auf Ziel', konto: '4400 VE' }
     ],
     mitVorsteuer: true,
@@ -188,9 +188,27 @@ const geschaeftsfallTypen = {
       { beschreibung: ' bekommt die Hotelrechnung für eine Fortbildungsreise', artikel: 'Übernachtung', einheit: 'ÜN' },
       { beschreibung: ' erhält die Hotelrechnung wegen eines Messebesuchs', artikel: 'Übernachtung Business', einheit: 'ÜN' }
     ]
+  },
+
+    reisekosten_pauschal: {
+    name: 'Reisekosten pauschal',
+    konto: '6850 REK',
+    lieferanten: ['Horozont Reisebüro', 'Reisewelt Entdecker'],
+    belegtyp: 'rechnung',
+    vorlage: 'template10.svg',
+    zahlungsarten: [
+      { text: ', hierfür geht eine Rechnung ein', konto: '4400 VE' },
+      { text: ' auf Ziel', konto: '4400 VE' }
+    ],
+    mitVorsteuer: true,
+    umsatzsteuerSatz: 0.19,
+    geschaeftsfaelle: [
+      { beschreibung: ' erhält eine Rechnung für eine Reise aufgrund einer Fortbildung', artikel: 'Reiseleistungen mit Verpflegung', einheit: 'ÜN' },
+      { beschreibung: ' erhält eine Rechnung für eine Reise aufgrund eines Messebesuchs', artikel: 'Businessreise Premium++', einheit: 'ÜN' },
+      { beschreibung: ' bekommt die Rechnung für eine Fortbildungsreise', artikel: 'Businessreise inkl. Verpflg.', einheit: 'ÜN' },
+      { beschreibung: ' erhält die Reiserechnung wegen eines Messebesuchs', artikel: 'Businessreise Messe', einheit: 'ÜN' }
+    ]
   }
-
-
   
 };
 
@@ -246,11 +264,13 @@ function erstelleZufallsGeschaeftsfall() {
   if (zufallsTyp === 'postwertzeichen') {
     nettoBetrag = generateRandomBetrag(10, 100);
   } else if (zufallsTyp === 'telefonInternet') {
-    nettoBetrag = generateRandomBetrag(30, 150);
+    nettoBetrag = generateRandomBetrag(50, 150);
   } else if (zufallsTyp === 'notar' || zufallsTyp === 'anwalt') {
-    nettoBetrag = generateRandomBetrag(100, 500);
+    nettoBetrag = generateRandomBetrag(400, 1500);
   } else if (zufallsTyp === 'reisekosten') {
-    nettoBetrag = generateRandomBetrag(60, 200);
+    nettoBetrag = generateRandomBetrag(90, 250);
+  } else if (zufallsTyp === 'reisekosten_pauschal') {
+    nettoBetrag = generateRandomBetrag(500, 2000);
   } else {
     nettoBetrag = generateRandomBetrag(50, 400);
   }
