@@ -818,7 +818,7 @@ function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
         params.set('rabatt', geschaeftsfallDaten.rabattSatz);
     }
     if (geschaeftsfallDaten.bezugskostenWert) {   // meist Versandkosten beim Verkauf
-        params.set('versandkosten', verkaufParseNumericValue(geschaeftsfallDaten.bezugskostenWert));
+        params.set('bezugskosten', verkaufParseNumericValue(geschaeftsfallDaten.bezugskostenWert));
     }
     if (geschaeftsfallDaten.skontoSatz) {
         params.set('skonto', geschaeftsfallDaten.skontoSatz);
