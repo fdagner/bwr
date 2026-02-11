@@ -441,8 +441,8 @@ function erstelleBelegURL(geschaeftsfall) {
     params.set('monat', monat);
     params.set('jahr', jahr);
     params.set('zahlungsziel', '30');
-    params.set('skonto', '2');
-    params.set('skontofrist', '20');
+    params.set('skonto', '0');
+    params.set('skontofrist', '0');
   }
 
   return `belege.html?${params.toString()}`;
