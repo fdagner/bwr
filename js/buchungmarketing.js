@@ -278,8 +278,8 @@ const geschaeftsfallTypen = {
     mitVorsteuer: true,
     umsatzsteuerSatz: 0.07,
     geschaeftsfaelle: [
-      { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung aufgrund einer Fortbildung', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
-      { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung aufgrund eines Messebesuchs', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
+      { beschreibung: ' erhält die Kosten für eine Hotelübernachtung aufgrund einer Fortbildung', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
+      { beschreibung: ' erhält die Aufstellung für eine Hotelübernachtung aufgrund eines Messebesuchs', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
       { beschreibung: ' bekommt die Übernachtungskosten für eine Fortbildungsreise', artikel: 'Übernachtung', einheit: 'ÜN' },
       { beschreibung: ' erhält die Hotelkosten wegen eines Messebesuchs', artikel: 'Übernachtung Business', einheit: 'ÜN' }
     ]
@@ -563,7 +563,7 @@ function erstelleBelegURL(geschaeftsfall) {
     let zahlungsart = 'bar';
     if (geschaeftsfall.zahlungsart.text.toLowerCase().includes('girocard') || 
         geschaeftsfall.zahlungsart.text.toLowerCase().includes('karte')) {
-      zahlungsart = 'karte';
+      zahlungsart = 'Girocard';
     }
     params.set('zahlungsart', zahlungsart);
     
