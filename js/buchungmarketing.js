@@ -396,7 +396,9 @@ function erstelleBelegURL(geschaeftsfall) {
   if (typ.belegtyp === 'kassenbon') {
     // Kassenbon: meist nur Summen-Feld(er) + explizit 0% Ust
     params.set('netto', preisString);        
-     params.set('bezeichnung', geschaeftsfall.artikel);     
+     params.set('bezeichnung', geschaeftsfall.artikel);   
+    params.set('empfaenger', geschaeftsfall.lieferant);  
+    params.delete('lieferer');
     params.delete('artikel1');
     params.delete('einzelpreis1');
     params.delete('menge1');
