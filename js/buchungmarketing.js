@@ -173,7 +173,7 @@ const geschaeftsfallTypen = {
   reisekosten: {
     name: 'Reisekosten',
     konto: '6850 REK',
-    lieferanten: ['Hotel Merian', 'Best Western', 'Hotel Parkstadt'],
+    lieferanten: ['Hotel Sonne', 'RelaxInn Hostel', 'Hotel CtityStay'],
     belegtyp: 'rechnung',
     vorlage: 'template10.svg',
     zahlungsarten: [
@@ -183,8 +183,8 @@ const geschaeftsfallTypen = {
     mitVorsteuer: true,
     umsatzsteuerSatz: 0.07, // 7% UST (ohne Frühstück)
     geschaeftsfaelle: [
-      { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung wegen einer Fortbildung', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
-      { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung wegen eines Messebesuchs', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
+      { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung aufgrund einer Fortbildung', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
+      { beschreibung: ' erhält eine Rechnung für eine Hotelübernachtung aufgrund eines Messebesuchs', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
       { beschreibung: ' bekommt die Hotelrechnung für eine Fortbildungsreise', artikel: 'Übernachtung', einheit: 'ÜN' },
       { beschreibung: ' erhält die Hotelrechnung wegen eines Messebesuchs', artikel: 'Übernachtung Business', einheit: 'ÜN' }
     ]
