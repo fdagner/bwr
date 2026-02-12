@@ -73,7 +73,6 @@ function loadDefaultYaml() {
 
 const geschaeftsfallTypen = {
 
-
   postwertzeichen: {
     name: 'Postwertzeichen/Briefmarken',
     konto: '6820 KOM',
@@ -113,7 +112,6 @@ const geschaeftsfallTypen = {
     ]
   },
 
-  
   notar: {
     name: 'Notarkosten',
     konto: '6770 RBK',
@@ -169,9 +167,6 @@ const geschaeftsfallTypen = {
       { beschreibung: ' lässt ein Logo gestalten', artikel: 'Logogestaltung' }
     ]
   }
-
-
-  
 };
 
 // ============================================================================
@@ -187,7 +182,6 @@ function roundToTwoDecimals(num) {
 }
 
 function generateRandomBetrag(min = 20, max = 500) {
-  // Generiere Beträge in 5€-Schritten
   const steps = Math.floor((max - min) / 5);
   return min + (Math.floor(Math.random() * steps) * 5);
 }
@@ -201,26 +195,23 @@ const wertFormulierungen = [
   " in Höhe von ",
   " mit einem Betrag von "
 ];
+
 // ============================================================================
 // GESCHÄFTSFALL GENERIEREN
 // ============================================================================
 
 function erstelleZufallsGeschaeftsfall() {
-  // Zufälligen Typ auswählen
   const typen = Object.keys(geschaeftsfallTypen);
   const zufallsTyp = typen[Math.floor(Math.random() * typen.length)];
   const typ = geschaeftsfallTypen[zufallsTyp];
   
-  // Zufällige Werte generieren
   const lieferant = typ.lieferanten[Math.floor(Math.random() * typ.lieferanten.length)];
   const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
   
-  // WICHTIG: Wähle einen Geschäftsfall aus dem Array (Beschreibung + Artikel zusammen)
   const geschaeftsfall = typ.geschaeftsfaelle[Math.floor(Math.random() * typ.geschaeftsfaelle.length)];
   const beschreibung = geschaeftsfall.beschreibung;
   const artikel = geschaeftsfall.artikel;
   
-  // Betrag generieren (je nach Typ unterschiedlich)
   let nettoBetrag;
   if (zufallsTyp === 'postwertzeichen') {
     nettoBetrag = generateRandomBetrag(10, 100);
@@ -246,51 +237,44 @@ function erstelleZufallsGeschaeftsfall() {
     bruttoFormatted = formatCurrency(bruttoBetrag);
   }
   
-  // Geschäftsfall-Text erstellen
-let betragText;
-let betragHinweis = '';
+  let betragText;
+  let betragHinweis = '';
 
-if (!typ.mitVorsteuer) {
-  // Ohne Umsatzsteuer → immer nur netto (kein anderer Sinn möglich)
-  betragText = nettoFormatted;
-} else {
-  // Mit Vorsteuer → zufällig netto ODER brutto zeigen
-  const showNetto = Math.random() < 0.5;           // ~50:50 Chance
-  // Alternativ: Math.random() < 0.35    → öfter netto
-  //             Math.random() < 0.65    → öfter brutto
-  
-  if (showNetto) {
+  if (!typ.mitVorsteuer) {
     betragText = nettoFormatted;
-    betragHinweis = ' netto';
   } else {
-    betragText = bruttoFormatted;
-    betragHinweis = ' brutto';
+    const showNetto = Math.random() < 0.5;
+    if (showNetto) {
+      betragText = nettoFormatted;
+      betragHinweis = ' netto';
+    } else {
+      betragText = bruttoFormatted;
+      betragHinweis = ' brutto';
+    }
   }
-}
 
-const zText = zahlungsart.text.trim();  // trim() statt nur trimStart(), um auch trailing spaces zu entfernen
+  const zText = zahlungsart.text.trim();
 
-let verbindung = '';
-if (zText) {
-  if (zText.startsWith(',') || zText.startsWith('.')) {
-    verbindung = '';
-  } else {
-    verbindung = ' ';
+  let verbindung = '';
+  if (zText) {
+    if (zText.startsWith(',') || zText.startsWith('.')) {
+      verbindung = '';
+    } else {
+      verbindung = ' ';
+    }
   }
-}
 
-const varianten = [
-  `${kunde}`,
-  `Firma ${kunde}`,
-  `Unternehmen ${kunde}`,
-  `Das Unternehmen ${kunde}`,
-  `Die Firma ${kunde}`
-];
+  const varianten = [
+    `${kunde}`,
+    `Firma ${kunde}`,
+    `Unternehmen ${kunde}`,
+    `Das Unternehmen ${kunde}`,
+    `Die Firma ${kunde}`
+  ];
 
-const ausgabe = varianten[Math.floor(Math.random() * varianten.length)];
-
-const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
-const geschaeftsfallText = `${ausgabe}${beschreibung}${verbindung}${zText}${wertPhrase}${betragText}${betragHinweis}.`;
+  const ausgabe = varianten[Math.floor(Math.random() * varianten.length)];
+  const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
+  const geschaeftsfallText = `${ausgabe}${beschreibung}${verbindung}${zText}${wertPhrase}${betragText}${betragHinweis}.`;
   
   return {
     text: geschaeftsfallText,
@@ -320,7 +304,6 @@ function erstelleBuchungssatz(geschaeftsfall) {
       <tbody>`;
   
   if (typ.mitVorsteuer) {
-    // Buchung mit Vorsteuer - 3 Konten in 2 Zeilen
     buchungssatzHTML += `
         <tr>
           <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
@@ -337,7 +320,6 @@ function erstelleBuchungssatz(geschaeftsfall) {
           <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.bruttoFormatted}</td>
         </tr>`;
   } else {
-    // Buchung ohne Vorsteuer - 2 Konten in einer Zeile
     buchungssatzHTML += `
         <tr>
           <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
@@ -362,31 +344,23 @@ function erstelleBuchungssatz(geschaeftsfall) {
 function erstelleBelegURL(geschaeftsfall) {
   const params = new URLSearchParams();
   
-  // Belegtyp
   params.set('beleg', geschaeftsfall.typDaten.belegtyp);
   
-  // Kunde & Lieferant
   const kundeSelect = document.getElementById('marketingKunde');
   if (kundeSelect?.value) {
     params.set('kunde', kundeSelect.value.trim());
   }
   params.set('lieferer', geschaeftsfall.lieferant);
   
-  // ────────────────────────────────────────────────
-  // Umsatzsteuer: IMMER explizit setzen – bei Kassenbon garantiert 0
-  // ────────────────────────────────────────────────
   const ustWert = geschaeftsfall.typDaten.mitVorsteuer ? '19' : '0';
-  params.set('ust', ustWert);              
+  params.set('ust', ustWert);
 
-  // Datum
   const now = new Date();
   params.set('tag', now.getDate().toString().padStart(2, '0'));
   params.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
 
-  // Betrag & Artikel – unterschiedlich je Belegtyp
   const typ = geschaeftsfall.typDaten;
   
-  // Welchen Betrag übergeben? Bei Kassenbon meist den relevanten Endbetrag (netto = brutto bei 0%)
   const preisWert = typ.mitVorsteuer 
     ? geschaeftsfall.bruttoBetrag 
     : geschaeftsfall.nettoBetrag;
@@ -394,14 +368,12 @@ function erstelleBelegURL(geschaeftsfall) {
   const preisString = parseNumericValue(formatCurrency(preisWert));
 
   if (typ.belegtyp === 'kassenbon') {
-    // Kassenbon: meist nur Summen-Feld(er) + explizit 0% Ust
     params.set('netto', preisString);        
-     params.set('bezeichnung', geschaeftsfall.artikel);     
+    params.set('bezeichnung', geschaeftsfall.artikel);     
     params.delete('artikel1');
     params.delete('einzelpreis1');
     params.delete('menge1');
   } else {
-    // Rechnung: klassische Zeile
     params.set('artikel1', geschaeftsfall.artikel);
     params.set('einzelpreis1', preisString);
     params.set('menge1', '1');
@@ -448,7 +420,6 @@ function zeigeZufaelligeGeschaeftsfaelle() {
     return;
   }
   
-  // Inhalte zurücksetzen
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
   
@@ -458,15 +429,12 @@ function zeigeZufaelligeGeschaeftsfaelle() {
   for (let i = 1; i <= anzahl; i++) {
     const geschaeftsfall = erstelleZufallsGeschaeftsfall();
     
-    // Aufgabe
     aufgabenHTML += `<li>${geschaeftsfall.text}</li>`;
     
-    // Lösung
     loesungenHTML += `<div style="margin-top: 1.5em;"><strong>${i}.</strong><br>`;
     loesungenHTML += erstelleBuchungssatz(geschaeftsfall);
     loesungenHTML += `</div>`;
     
-    // Button
     const buttonDiv = document.createElement('div');
     buttonDiv.style.margin = '12px 0';
     buttonDiv.innerHTML = erstelleBelegButton(i, geschaeftsfall);
@@ -576,6 +544,121 @@ clipboardMarketing.on('error', function (e) {
 });
 
 // ============================================================================
+// KI-ASSISTENT PROMPT
+// ============================================================================
+
+const KI_ASSISTENT_PROMPT = `
+Du bist ein freundlicher Buchführungs-Assistent für Schüler der Realschule (BwR), 8. Klasse. Du hilfst beim Verständnis von Buchungssätzen im Bereich Marketing und Verwaltung.
+
+Aufgabe:
+- Gib KEINE fertigen Buchungssätze, Beträge oder Konten vor.
+- Führe die Schüler durch gezielte Fragen und Hinweise zur richtigen Lösung.
+- Ziel: Lernförderung, nicht das Abnehmen der Denkarbeit.
+
+Pädagogischer Ansatz:
+- Frage nach dem konkreten Geschäftsfall oder Beleg und dessen Inhalt.
+- Stelle gezielte Rückfragen, um den Stand des Schülers zu verstehen.
+- Beantworte deine Rückfragen nicht selbst, hake bei falschen Antworten nach.
+- Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
+- Erst wenn alle Teilschritte richtig beantwortet wurden, bestätige den vollständigen Buchungssatz.
+
+Methodik bei Rückfragen:
+- Was ist bei diesem Geschäftsfall der Aufwand?
+- Wie wurde bezahlt – bar, per Girocard (Bank) oder auf Ziel (Rechnung)?
+- Gibt es Vorsteuer? Woran erkennst du das?
+- Welche Konten sind betroffen?
+- Welche Seite (Soll/Haben) wird beim Aufwandskonto gebucht?
+
+Kontenplan – Marketing und Verwaltung:
+
+Aufwandskonten (immer im SOLL):
+- 6820 KOM – Kommunikationsaufwendungen (Telefon, Internet, Briefmarken, Porto)
+- 6770 RBK – Rechts- und Beratungskosten (Notar, Anwalt)
+- 6870 WER – Werbeaufwendungen (Werbung, Flyer, Homepage, Logo)
+- 6850 REK – Reisekosten (Hotelübernachtung, Geschäftsreise)
+
+Vorsteuer (im SOLL, nur bei Rechnungen mit USt):
+- 2600 VORST – Vorsteuer 7% oder 19%
+
+Zahlungsarten (immer im HABEN):
+- 2880 KA – Kasse (Barzahlung)
+- 2800 BK – Bank (Zahlung per Girocard)
+- 4400 VE – Verbindlichkeiten (Zahlung auf Ziel / offene Rechnung)
+
+Buchungslogik:
+- Aufwandskonto immer im Soll
+- Zahlungskonto immer im Haben
+- Zahlung per Rechnung: Gegenkonto = 4400 VE
+- Barzahlung: Gegenkonto = 2880 KA
+- Girocard/Überweisung: Gegenkonto = 2800 BK
+- Vorsteuer (2600 VORST) nur bei Rechnung und umsatzsteuerpflichtig
+- Keine Vorsteuer bei Briefmarken/Postwertzeichen
+
+Vorsteuer-Berechnung:
+- Nettobetrag × 0,19 = Vorsteuer
+- Bruttobetrag = Nettobetrag + Vorsteuer
+- Wenn „brutto“ angegeben: Netto = Brutto ÷ 1,19
+- Wenn „netto“ angegeben: Brutto = Netto × 1,19
+- Wenn nichts angegeben: nachfragen oder Hinweis im Text beachten
+
+Buchungssatz-Schema:
+- Ohne Vorsteuer (z. B. Briefmarken):
+  Aufwandskonto (Soll) | Betrag | an | Zahlungskonto (Haben) | Betrag
+- Mit Vorsteuer (z. B. Rechnung Werbung):
+  Aufwandskonto (Soll) | Nettobetrag
+  2600 VORST (Soll) | Vorsteuerbetrag | an | 4400 VE (Haben) | Bruttobetrag
+
+Häufige Schülerfehler – darauf hinweisen, nicht vorwegnehmen:
+- Vorsteuer vergessen obwohl Rechnung
+- Vorsteuer gebucht obwohl Kassenbon / keine USt
+- Soll und Haben verwechselt
+- Falsche Zahlungsart (KA statt BK oder umgekehrt)
+- Brutto statt Netto beim Aufwandskonto eingetragen
+- Falsches Aufwandskonto
+
+Tonalität:
+- Freundlich, ermutigend, auf Augenhöhe mit Realschülerinnen und -schülern
+- Einfache Sprache, keine Fachbegriffe ohne Erklärung
+- Kurze Antworten – maximal 1–2 Sätze pro Nachricht
+- Gelegentlich Emojis zur Auflockerung 🧾✅❓
+
+Was du NICHT tust:
+- Nenne den fertigen Buchungssatz nicht, bevor der Schüler selbst darauf gekommen ist
+- Rechne nicht vor, bevor gefragt wurde
+- Gib keine Lösungen auf Anfrage wie „sag mir einfach die Antwort“ – erkläre, dass das Ziel das eigene Verstehen ist
+`;
+
+
+function kopiereKiPrompt() {
+  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
+    const btn = document.getElementById('kiPromptKopierenBtn');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+    btn.classList.add('ki-prompt-btn--success');
+    setTimeout(() => {
+      btn.innerHTML = originalHTML;
+      btn.classList.remove('ki-prompt-btn--success');
+    }, 2500);
+  }).catch(err => {
+    console.error('Fehler beim Kopieren:', err);
+    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+  });
+}
+
+function toggleKiPromptVorschau() {
+  const vorschau = document.getElementById('kiPromptVorschau');
+  const btn = document.getElementById('kiPromptToggleBtn');
+  const isHidden = getComputedStyle(vorschau).display === 'none';
+  if (isHidden) {
+    vorschau.style.display = 'block';
+    btn.textContent = 'Vorschau ausblenden ▲';
+  } else {
+    vorschau.style.display = 'none';
+    btn.textContent = 'Prompt anzeigen ▼';
+  }
+}
+
+// ============================================================================
 // INITIALISIERUNG
 // ============================================================================
 
@@ -600,38 +683,33 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
   }
+
+  // Prompt-Text in Vorschau einfügen
+  const vorschauEl = document.getElementById('kiPromptVorschau');
+  if (vorschauEl) {
+    vorschauEl.textContent = KI_ASSISTENT_PROMPT;
+  }
 });
 
-
-    function autoSelectMyCompany() {
-        const myCompanyName = localStorage.getItem('myCompany');
-        
-        if (!myCompanyName) return;
-        
-        // Finde alle Dropdowns mit class="meinUnternehmen"
-        const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-        
-        dropdowns.forEach(dropdown => {
-            // Suche nach der passenden Option
-            const options = Array.from(dropdown.options);
-            const matchingOption = options.find(opt => opt.value === myCompanyName);
-            
-            if (matchingOption) {
-                dropdown.value = myCompanyName;
-                
-                // Trigger change event falls andere Scripts darauf reagieren
-                const event = new Event('change', { bubbles: true });
-                dropdown.dispatchEvent(event);
-                
-                console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
-            }
-        });
+function autoSelectMyCompany() {
+  const myCompanyName = localStorage.getItem('myCompany');
+  if (!myCompanyName) return;
+  
+  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+  dropdowns.forEach(dropdown => {
+    const options = Array.from(dropdown.options);
+    const matchingOption = options.find(opt => opt.value === myCompanyName);
+    if (matchingOption) {
+      dropdown.value = myCompanyName;
+      const event = new Event('change', { bubbles: true });
+      dropdown.dispatchEvent(event);
+      console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
     }
+  });
+}
 
- // WICHTIG: Warte bis die Seite vollständig geladen ist
-    document.addEventListener('DOMContentLoaded', function() {
-        // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
-        setTimeout(function() {
-            autoSelectMyCompany();
-   }, 100);
-    });
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    autoSelectMyCompany();
+  }, 100);
+});

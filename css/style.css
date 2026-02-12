@@ -1466,3 +1466,121 @@ select:focus {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
 }
+
+    /* ── KI-Assistent Block ─────────────────────────────────────────── */
+    .ki-assistent-box {
+      margin-top: 2rem;
+      border: 2px solid var(--border-light);
+      border-radius: 10px;
+      background: var(--surface-dark);
+      overflow: hidden;
+    }
+
+    .ki-assistent-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+    }
+
+    .ki-assistent-header .ki-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .ki-assistent-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .ki-assistent-header p {
+      margin: 2px 0 0;
+      font-size: 0.8rem;
+      opacity: 0.88;
+    }
+
+    .ki-assistent-body {
+      padding: 16px 18px;
+    }
+
+    .ki-hinweis {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      border-radius: 0 6px 6px 0;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .ki-hinweis .hinweis-icon {
+      font-size: 1.1rem;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .ki-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+ 
+
+     .ki-prompt-vorschau-wrapper {
+      margin-top: 14px;
+    }
+
+    #kiPromptVorschau {
+      display: none;
+      width: 100%;
+      min-height: 220px;
+      max-height: 380px;
+      padding: 12px 14px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: #1f2937;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 6px;
+      resize: vertical;
+      box-sizing: border-box;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+
+    .ki-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .ki-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: #e0edff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    @media (max-width: 600px) {
+      .ki-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .ki-prompt-btn {
+        justify-content: center;
+      }
+    }
