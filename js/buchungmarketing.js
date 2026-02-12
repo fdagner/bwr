@@ -204,7 +204,7 @@ const geschaeftsfallTypen = {
       { beschreibung: ' erhält die Anschlussgebühren für Internet', artikel: 'Internetanschluss (Monat)', einheit: 'Monat' },
       { beschreibung: ' erhält die monatliche Telefongebühr', artikel: 'Telefon- und Internetanschluss', einheit: 'Monat' },
       { beschreibung: ' bekommt die Aufstellung für Telefon und Internet', artikel: 'Business-Internetpaket', einheit: 'Monat' },
-      { beschreibung: ' erhält die monatliche Internetgebühren', artikel: 'Internetpaket XXl', einheit: 'Monat' },
+      { beschreibung: ' erhält die monatlichen Internetgebühren', artikel: 'Internetpaket XXl', einheit: 'Monat' },
       { beschreibung: ' erhält die Kosten für den Glasfaseranschluss', artikel: 'Glasfaseranschluss', einheit: 'Monat' }
     ]
   },
