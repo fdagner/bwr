@@ -474,7 +474,7 @@ function verkaufErstelleZufallssatz() {
 function verkaufZeigeZufaelligenSatz() {
 
   const verkaufAnzahl = parseInt(verkaufAnzahlDropdown.value);
-  const container = document.getElementById('verkaufContainer');
+  const container = document.getElementById('Container');
   const buttonColumn = document.getElementById('verkauf-button-column'); // ← muss im HTML existieren!
 
   if (!container || !buttonColumn) {
@@ -703,7 +703,7 @@ if (!buttonColumn) {
 
 
   // Sätze und Antworten auf der Seite anzeigen
-  document.getElementById('verkaufContainer').innerHTML = verkaufSatzOutput + verkaufAntwortOutput;
+  document.getElementById('Container').innerHTML = verkaufSatzOutput + verkaufAntwortOutput;
 }
 
 // ============================================================================
@@ -893,7 +893,7 @@ function verkaufErstelleRechnungButton(nummer, daten) {
 // Export
 
 function verkaufHerunterladen() {
-  const einkaufHTML = document.getElementById('verkaufContainer').innerHTML;
+  const einkaufHTML = document.getElementById('Container').innerHTML;
   const blob = new Blob([einkaufHTML], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -904,16 +904,16 @@ function verkaufHerunterladen() {
 }
 
 function verkaufKopiereInZwischenablage() {
-  const einkaufHTML = document.getElementById('verkaufContainer').innerHTML;
+  const einkaufHTML = document.getElementById('Container').innerHTML;
   navigator.clipboard.writeText(einkaufHTML)
     .then(() => alert('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
 function verkaufHerunterladenAlsPNG() {
-  const verkaufContainer = document.getElementById('verkaufContainer');
+  const Container = document.getElementById('Container');
 
-  html2canvas(verkaufContainer, optionshtml2canvas).then(canvas => {
+  html2canvas(Container, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;

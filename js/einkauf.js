@@ -684,7 +684,7 @@ function zeigeZufaelligenSatz() {
   }
 
   const anzahl = parseInt(anzahlDropdown.value);
-  const container = document.getElementById('einkaufContainer');
+  const container = document.getElementById('Container');
   const buttonColumn = document.getElementById('button-column'); // ← muss im HTML existieren!
 
   if (!container || !buttonColumn) {
@@ -921,7 +921,7 @@ buttonColumn.appendChild(buttonDiv);
 // Export
 
 function einkaufHerunterladen() {
-  const einkaufHTML = document.getElementById('einkaufContainer').innerHTML;
+  const einkaufHTML = document.getElementById('Container').innerHTML;
   const blob = new Blob([einkaufHTML], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -932,16 +932,16 @@ function einkaufHerunterladen() {
 }
 
 function einkaufKopiereInZwischenablage() {
-  const einkaufHTML = document.getElementById('einkaufContainer').innerHTML;
+  const einkaufHTML = document.getElementById('Container').innerHTML;
   navigator.clipboard.writeText(einkaufHTML)
     .then(() => alert('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
 function einkaufHerunterladenAlsPNG() {
-  const einkaufContainer = document.getElementById('einkaufContainer');
+  const Container = document.getElementById('Container');
 
-  html2canvas(einkaufContainer, optionshtml2canvas).then(canvas => {
+  html2canvas(Container, optionshtml2canvas).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
