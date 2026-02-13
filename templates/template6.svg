@@ -74,12 +74,12 @@
     </g>
     </g>
     <g id="warenwertUstRechnungsbetrag">
-    <rect x="380" y="690" width="300" height="1" fill="#000"/>
+    <rect x="380" y="690" width="320" height="1" fill="#000"/>
     <text x="380" y="710" font-family="Calibri" fill="#000" font-weight="bold">Nettowert</text>
     <text id="nettowert" x="690" y="710" font-family="Calibri" fill="#333" text-anchor="end"/>
     <text x="380" y="740" font-family="Calibri" fill="#000" font-weight="bold"><tspan id="ust"> </tspan> % UST </text>
     <text id="ustsumme" x="690" y="740" font-family="Calibri" fill="#333" text-anchor="end"/>
-    <rect x="380" y="750" width="300" height="1" fill="#000"/>
+    <rect x="380" y="750" width="320" height="1" fill="#000"/>
     <text x="380" y="770" font-family="Calibri" fill="#000" font-weight="bold">Rechnungsbetrag</text>
     <text id="rechnungsbetrag" x="690" y="770" font-family="Calibri" fill="#333" text-anchor="end"/>
     </g>
