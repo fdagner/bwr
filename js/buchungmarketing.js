@@ -708,53 +708,7 @@ function fillCompanyDropdowns() {
   console.log(`Dropdown befüllt mit ${sortedCompanies.length} Unternehmen`);
 }
 
-// ============================================================================
-// EXPORT-FUNKTIONEN
-// ============================================================================
 
-function marketingHerunterladen() {
-  const marketingHTML = document.getElementById('Container').innerHTML;
-  const blob = new Blob([marketingHTML], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'marketing.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-function marketingKopiereInZwischenablage() {
-  const marketingHTML = document.getElementById('Container').innerHTML;
-  navigator.clipboard.writeText(marketingHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function marketingHerunterladenAlsPNG() {
-  const Container = document.getElementById('Container');
-  
-  html2canvas(Container, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = 'marketing.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-}
-
-let clipboardMarketing = new ClipboardJS('#marketingOfficeButton');
-
-clipboardMarketing.on('success', function (e) {
-  console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
-});
-
-clipboardMarketing.on('error', function (e) {
-  console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-  alert("Fehler beim Kopieren der Tabelle.");
-});
 
 // ============================================================================
 // KI-ASSISTENT PROMPT

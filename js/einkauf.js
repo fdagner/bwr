@@ -918,52 +918,6 @@ buttonColumn.appendChild(buttonDiv);
   container.innerHTML = satzOutput + antwortOutput;
 }
 
-// Export
-
-function einkaufHerunterladen() {
-  const einkaufHTML = document.getElementById('Container').innerHTML;
-  const blob = new Blob([einkaufHTML], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'einkauf.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-function einkaufKopiereInZwischenablage() {
-  const einkaufHTML = document.getElementById('Container').innerHTML;
-  navigator.clipboard.writeText(einkaufHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function einkaufHerunterladenAlsPNG() {
-  const Container = document.getElementById('Container');
-
-  html2canvas(Container, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = 'einkauf.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-}
-
-let clipboardeinkauf = new ClipboardJS('#einkaufOfficeButton');
-
-clipboardeinkauf.on('success', function (e) {
-  console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
-});
-
-clipboardeinkauf.on('error', function (e) {
-  console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-  alert("Fehler beim Kopieren der Tabelle.");
-});
-
 
 
             function autoSelectMyCompany() {

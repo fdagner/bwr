@@ -890,51 +890,8 @@ function verkaufErstelleRechnungButton(nummer, daten) {
     `;
 }
 
-// Export
 
-function verkaufHerunterladen() {
-  const einkaufHTML = document.getElementById('Container').innerHTML;
-  const blob = new Blob([einkaufHTML], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'verkauf.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
 
-function verkaufKopiereInZwischenablage() {
-  const einkaufHTML = document.getElementById('Container').innerHTML;
-  navigator.clipboard.writeText(einkaufHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function verkaufHerunterladenAlsPNG() {
-  const Container = document.getElementById('Container');
-
-  html2canvas(Container, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = 'einkauf.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-}
-
-let clipboardverkauf = new ClipboardJS('#verkaufOfficeButton');
-
-clipboardverkauf.on('success', function (e) {
-  console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
-});
-
-clipboardverkauf.on('error', function (e) {
-  console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-  alert("Fehler beim Kopieren der Tabelle.");
-});
 
 
 
