@@ -2,16 +2,43 @@
 <html lang="de">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sie können hier zufällige Marketing-Geschäftsfälle generieren.">
-  <meta name="keywords" content="BwR, Buchungssatz, Geschäftsfall, Marketing, Realschule, Schema, Lehrkraft, Prüfung, Belege, Schemata, Rechnungswesen, Buchführung">
-  <title>Buchführung - Marketing</title>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- === SEO Core === -->
+    <title>Marketing-Geschäftsfälle & Buchungssätze – BwR Generator | meinbwr.de</title>
+    <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Marketing-Geschäftsfälle (Werbung, Provisionen, Messekosten, Sponsoring u.v.m.), leite Buchungssätze ab und erstelle passende Belege. Wähle Anzahl & Konten. Ideal für Rechnungswesen-Unterricht Realschule Bayern (meist Klasse 9/10), Prüfungen und Leistungsnachweise. Mit KI-Prompt für lernfördernden Chatbot.">
+
+    <link rel="canonical" href="https://www.meinbwr.de/buchungmarketing.html">
+
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="meinbwr.de – BwR & BWL Unterrichtsmaterial Bayern">
+
+    <!-- === Open Graph (Facebook, Linked, WhatsApp, etc.) === -->
+    <meta property="og:title" content="Marketing Buchungen Generator – Geschäftsfälle & Belege BwR">
+    <meta property="og:description" content="Erstelle in Sekunden zufällige Aufgaben aus dem Marketing-Bereich: Werbekosten, Provisionen, Messeausgaben → Buchungssätze + Belege. Konten frei wählbar, Export möglich. Perfekt für BwR Realschule Bayern – Klasse 9/10, Abschlussprüfungsvorbereitung. Inkl. fertiger KI-System-Prompt (sokratisch, lösungsfrei).">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.meinbwr.de/buchungmarketing.html">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Screenshot: Marketing-Geschäftsfälle mit Buchungssätzen, Kontenauswahl und Beleg-Buttons BwR">
+    <meta property="og:site_name" content="meinbwr.de – BwR Material">
+    <meta property="og:locale" content="de_DE">
+
+    <!-- === Twitter / X Cards === -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Marketing Buchungssätze Generator BwR – mit Belegen">
+    <meta name="twitter:description" content="Zufällige Marketing-Aufgaben generieren: Werbung, Provision, Sponsoring → Buchungssätze + Belege. Konten auswählen, Anzahl bestimmen. Ideal für Realschule BwR (Klasse 9/10). Inkl. KI-Prompt.">
+    <meta name="twitter:image:alt" content="BwR Tool: Marketing-Geschäftsfälle Vorschau mit Buchungen und Kontenauswahl">
+
+    <!-- === Keywords – Long-Tail & prüfungsrelevant === -->
+    <meta name="keywords" content="Marketing Geschäftsfälle BwR, Buchungssatz Marketing, Werbekosten buchen, Provision Buchung, Messekosten Buchführung, Sponsoring BwR, BwR Realschule Bayern, Buchungen Marketing Klasse 9 10, zufällige Aufgaben Rechnungswesen, Belege Marketing BwR, Abschlussprüfung BwR Marketing">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
   <script src="js/clipboard.min.js"></script>
   <script src="js/menu.js"></script>
+  <title>Marketing Buchungen | meinbwr.de BwR</title>
 </head>
 
 <body>
@@ -58,8 +85,8 @@
               <button type="button" onclick="alleKontenAuswaehlen()">Alle auswählen</button>
               <button type="button" onclick="alleKontenAbwaehlen()">Alle abwählen</button>
             </div>
-          </div>
-          <div class="auswahl-info" id="auswahlInfo" style="display: none;">
+          </div><br>
+          <div class="auswahl-info" id="auswahlInfo">
             ℹ️ Keine Konten ausgewählt - es werden alle verfügbaren Geschäftsfälle verwendet
           </div>
         </div>
@@ -78,6 +105,69 @@
       </div>
 
         <div w3-include-html="downloads.html"></div> 
+
+        <!-- ══════════════════════════════════════════════════════════════
+           KI-ASSISTENT PROMPT
+      ══════════════════════════════════════════════════════════════ -->
+      <div class="ki-assistent-box">
+
+        <div class="ki-assistent-header">
+          <span class="ki-icon">🤖</span>
+          <div>
+            <h3>KI-Assistent – System-Prompt</h3>
+            <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+          </div>
+        </div>
+
+        <div class="ki-assistent-body">
+
+          <div class="ki-hinweis">
+            <span class="hinweis-icon">💡</span>
+            <span>
+              Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+              Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+            </span>
+          </div>
+
+          <div class="ki-chips">
+            <span class="ki-chip">📚 BwR Realschule</span>
+            <span class="ki-chip">🧾 Buchungen im Marketing</span>
+            <span class="ki-chip">✅ Sokrat. Methode</span>
+            <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+          </div>
+
+          <div class="ki-actions" style="margin-top: 14px;">
+            <button
+              class="ki-prompt-btn ki-prompt-btn--primary"
+              id="kiPromptKopierenBtn"
+              onclick="kopiereKiPrompt()"
+              title="Prompt in die Zwischenablage kopieren"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Prompt kopieren
+            </button>
+
+            <button
+              class="ki-prompt-btn ki-prompt-btn--ghost"
+              id="kiPromptToggleBtn"
+              onclick="toggleKiPromptVorschau()"
+              title="Prompt-Text ein- oder ausblenden"
+            >
+              Prompt anzeigen ▼
+            </button>
+          </div>
+
+          <div class="ki-prompt-vorschau-wrapper">
+            <textarea id="kiPromptVorschau" readonly spellcheck="false" aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+          </div>
+
+        </div>
+      </div>
+      <!-- Ende KI-Assistent -->
   </main>
   
   <script src="js/buchungmarketing.js"></script>

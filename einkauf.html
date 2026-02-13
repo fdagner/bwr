@@ -69,7 +69,7 @@
 
  <div class="output-wrapper" style="display: flex; gap: 20px;">
     <!-- Exportierbarer Inhalt -->
-    <div id="einkaufContainer" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+    <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
 
     <!-- Buttons daneben – nicht exportiert -->
     <div id="button-column" style="width: 180px; flex-shrink: 0;">
@@ -79,37 +79,74 @@
 </div>
 
 
-      <div class="exportButtons">
-        <button class="icon" type="button" onclick="einkaufHerunterladenAlsPNG()"><svg
-            xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-            viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path
-              d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-          </svg></button>
-        <button class="icon" type="button" id="einkaufOfficeButton" data-clipboard-target="#einkaufContainer"><svg
-            xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path
-              d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
-          </svg></button>
-        <button class="icon" type="button" onclick="einkaufHerunterladen()"><svg xmlns="http://www.w3.org/2000/svg"
-            height="16" width="12"
-            viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path
-              d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-          </svg></button>
-        <button class="icon" type="button" onclick="einkaufKopiereInZwischenablage()"><svg
-            xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-            viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path
-              d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-          </svg></button>
-      </div><br>
-    </div>
+        <div w3-include-html="downloads.html"></div> 
+
+      <!-- ══════════════════════════════════════════════════════════════
+           KI-ASSISTENT PROMPT
+      ══════════════════════════════════════════════════════════════ -->
+      <div class="ki-assistent-box">
+
+        <div class="ki-assistent-header">
+          <span class="ki-icon">🤖</span>
+          <div>
+            <h3>KI-Assistent – System-Prompt</h3>
+            <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+          </div>
+        </div>
+
+        <div class="ki-assistent-body">
+
+          <div class="ki-hinweis">
+            <span class="hinweis-icon">💡</span>
+            <span>
+              Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+              Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+            </span>
+          </div>
+
+          <div class="ki-chips">
+            <span class="ki-chip">📚 BwR Realschule</span>
+            <span class="ki-chip">🧾 Buchungen beim Einkauf</span>
+            <span class="ki-chip">✅ Sokrat. Methode</span>
+            <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+          </div>
+
+          <div class="ki-actions" style="margin-top: 14px;">
+            <button
+              class="ki-prompt-btn ki-prompt-btn--primary"
+              id="kiPromptKopierenBtn"
+              onclick="kopiereKiPrompt()"
+              title="Prompt in die Zwischenablage kopieren"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Prompt kopieren
+            </button>
+
+            <button
+              class="ki-prompt-btn ki-prompt-btn--ghost"
+              id="kiPromptToggleBtn"
+              onclick="toggleKiPromptVorschau()"
+              title="Prompt-Text ein- oder ausblenden"
+            >
+              Prompt anzeigen ▼
+            </button>
+          </div>
+
+          <div class="ki-prompt-vorschau-wrapper">
+            <textarea id="kiPromptVorschau" readonly spellcheck="false" aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+          </div>
+
+        </div>
+      </div>
+      <!-- Ende KI-Assistent -->
   </main>
   <script src="js/einkauf.js"></script>
 
-
+    <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div> 
   <script>
   includeHTML();

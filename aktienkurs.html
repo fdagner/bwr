@@ -4,17 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Sie können einen zufällige Aktienkurs mit Aufgabe erzeugen, ausgehend vom aktuellen Datum.">
-    <meta name="keywords"
-        content="BwR, Aktien, Aktie, DAX, Kurs, Aktienkurs, Realschule, Schema, Lehrkraft, Prüfung, Belege, Schemata, Rechnungswesen, Buchführung">
+
+    <!-- === SEO Core === -->
+    <title>Zufälligen Aktienkurs erstellen + Diagramm & Aufgabe | meinbwr.de BwR-Tool</title>
+    <meta name="description" content="Kostenloses BwR-Tool: Erzeuge realistische zufällige Aktienkursverläufe (Tage oder Monate) ab einem Wunschdatum, erstelle fertige Kauf-/Verkaufsaufgaben mit Belegen und Diagramm (ApexCharts). Ideal für Rechnungswesen-Unterricht, Klassenarbeiten, Prüfungen und Leistungsnachweise an Realschulen und Gymnasien.">
+
+    <link rel="canonical" href="https://www.meinbwr.de/aktienkurs.html">
+
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="meinbwr.de – Unterrichtsmaterial BwR / BWL">
+
+    <!-- === Open Graph (Facebook, LinkedIn, WhatsApp, Messenger, iMessage …) === -->
+    <meta property="og:title" content="Aktienkurs-Generator mit Diagramm & fertiger Aufgabe – BwR Tool">
+    <meta property="og:description" content="Sofort nutzbares Tool für den BwR-Unterricht: Zufälliger Aktienkursverlauf (DAX-ähnlich), interaktives Diagramm, Kauf- oder Verkaufsaufgabe erstellen, Beleg-Buttons und Download-Funktion. Perfekt für Realschule, Mittelschule und Gymnasium.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.meinbwr.de/aktienkurs.html">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Screenshot: Zufälliger Aktienkurs mit Diagramm und BwR-Aufgabe">
+    <meta property="og:site_name" content="meinbwr.de – BwR & BWL Material">
+    <meta property="og:locale" content="de_DE">
+
+    <!-- === Twitter / X Cards (sehr wichtig 2026) === -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Zufälliger Aktienkurs + Aufgabe für BwR-Unterricht">
+    <meta name="twitter:description" content="Erstelle in Sekunden realistische Aktienkurse mit Diagramm und passender Kauf-/Verkaufsaufgabe. Download, Beleg-Buttons, ideal für Rechnungswesen an Realschulen.">
+    <meta name="twitter:image:alt" content="BwR Aktienkurs Generator Vorschau">
+
+    <!-- === Keywords (nach wie vor nützlich für Long-Tail & kleinere Suchmaschinen) === -->
+    <meta name="keywords" content="Aktienkurs erstellen, BwR Tool, Aktienkurs Diagramm, Rechnungswesen Aufgabe, BWL Unterrichtsmaterial, Aktienkauf Verkauf Beleg, Realschule Wirtschaft, zufälliger Aktienkurs, Börsenkurs Generator, ApexCharts BwR">
+
+     <!-- Styles & Scripts (defer wo sinnvoll für Ladezeit) -->
     <link rel="stylesheet" href="css/style.css">
+
     <script src="js/menu.js"></script>
     <script src="js/html2canvas.min.js"></script>
     <script src="js/js-yaml.min.js"></script>
     <script src="js/clipboard.min.js"></script>
     <script src="js/apexcharts.min.js"></script>
-    <title>BWL</title>
+
+    <!-- Title ganz am Ende – überschreibt vorherige title-Tags im Tab -->
+    <title>Aktienkurs-Generator BwR | meinbwr.de</title>
 </head>
 
 
@@ -80,7 +110,7 @@
 
     </main>
        <script src="js/aktienkurs.js"></script>
-        
+            <script src="js/download.js"></script>
       <div w3-include-html="footer.html"></div>
     <script>
         includeHTML();

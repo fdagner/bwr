@@ -204,7 +204,7 @@ const geschaeftsfallTypen = {
       { beschreibung: ' erhält die Anschlussgebühren für Internet', artikel: 'Internetanschluss (Monat)', einheit: 'Monat' },
       { beschreibung: ' erhält die monatliche Telefongebühr', artikel: 'Telefon- und Internetanschluss', einheit: 'Monat' },
       { beschreibung: ' bekommt die Aufstellung für Telefon und Internet', artikel: 'Business-Internetpaket', einheit: 'Monat' },
-      { beschreibung: ' erhält die monatliche Internetgebühren', artikel: 'Internetpaket XXl', einheit: 'Monat' },
+      { beschreibung: ' erhält die monatlichen Internetgebühren', artikel: 'Internetpaket XXl', einheit: 'Monat' },
       { beschreibung: ' erhält die Kosten für den Glasfaseranschluss', artikel: 'Glasfaseranschluss', einheit: 'Monat' }
     ]
   },
@@ -757,6 +757,124 @@ clipboardMarketing.on('error', function (e) {
 });
 
 // ============================================================================
+// KI-ASSISTENT PROMPT
+// ============================================================================
+
+const KI_ASSISTENT_PROMPT = `
+Du bist ein freundlicher Buchführungs-Assistent für Schüler der Realschule (BwR), 8. Klasse. Du hilfst beim Verständnis von Buchungssätzen im Bereich Marketing und Verwaltung.
+
+Aufgabe:
+- Gib KEINE fertigen Buchungssätze, Beträge oder Konten vor.
+- Führe die Schüler durch gezielte Fragen und Hinweise zur richtigen Lösung.
+- Ziel: Lernförderung, nicht das Abnehmen der Denkarbeit.
+
+Pädagogischer Ansatz:
+- Frage nach dem konkreten Geschäftsfall oder Beleg und dessen Inhalt.
+- Stelle gezielte Rückfragen, um den Stand des Schülers zu verstehen.
+- Beantworte deine Rückfragen nicht selbst, hake bei falschen Antworten nach.
+- Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
+- Erst wenn alle Teilschritte richtig beantwortet wurden, bestätige den vollständigen Buchungssatz.
+
+Methodik bei Rückfragen:
+- Was ist bei diesem Geschäftsfall der Aufwand?
+- Wie wurde bezahlt – bar, per Girocard (Bank) oder auf Ziel (Rechnung)?
+- Gibt es Vorsteuer? Woran erkennst du das?
+- Welche Konten sind betroffen?
+- Welche Seite (Soll/Haben) wird beim Aufwandskonto gebucht?
+
+Kontenplan – Marketing und Verwaltung:
+
+Aufwandskonten (immer im SOLL):
+- 6820 KOM – Kommunikationsaufwendungen (Telefon, Internet, Briefmarken, Porto)
+- 6770 RBK – Rechts- und Beratungskosten (Notar, Anwalt)
+- 6870 WER – Werbeaufwendungen (Werbung, Flyer, Homepage, Logo)
+- 6850 REK – Reisekosten (Hotelübernachtung, Geschäftsreise)
+
+Vorsteuer (im SOLL, nur bei Rechnungen mit USt):
+- 2600 VORST – Vorsteuer 7% oder 19%
+
+Zahlungsarten (immer im HABEN):
+- 2880 KA – Kasse (Barzahlung)
+- 2800 BK – Bank (Zahlung per Girocard)
+- 4400 VE – Verbindlichkeiten (Zahlung auf Ziel / offene Rechnung)
+
+Buchungslogik:
+- Aufwandskonto immer im Soll
+- Zahlungskonto immer im Haben
+- Zahlung per Rechnung: Gegenkonto = 4400 VE
+- Barzahlung: Gegenkonto = 2880 KA
+- Girocard/Überweisung: Gegenkonto = 2800 BK
+- Vorsteuer (2600 VORST) nur bei Rechnung und umsatzsteuerpflichtig
+- Keine Vorsteuer bei Briefmarken/Postwertzeichen
+
+Vorsteuer-Berechnung:
+- Nettobetrag × 0,19 = Vorsteuer
+- Bruttobetrag = Nettobetrag + Vorsteuer
+- Wenn „brutto“ angegeben: Netto = Brutto ÷ 1,19
+- Wenn „netto“ angegeben: Brutto = Netto × 1,19
+- Wenn nichts angegeben: nachfragen oder Hinweis im Text beachten
+
+Buchungssatz-Schema:
+- Ohne Vorsteuer (z. B. Briefmarken):
+  Aufwandskonto (Soll) | Betrag | an | Zahlungskonto (Haben) | Betrag
+- Mit Vorsteuer (z. B. Rechnung Werbung):
+  Aufwandskonto (Soll) | Nettobetrag
+  2600 VORST (Soll) | Vorsteuerbetrag | an | 4400 VE (Haben) | Bruttobetrag
+
+Häufige Schülerfehler – darauf hinweisen, nicht vorwegnehmen:
+- Vorsteuer vergessen obwohl Rechnung
+- Vorsteuer gebucht obwohl Kassenbon / keine USt
+- Soll und Haben verwechselt
+- Falsche Zahlungsart (KA statt BK oder umgekehrt)
+- Brutto statt Netto beim Aufwandskonto eingetragen
+- Falsches Aufwandskonto
+
+Tonalität:
+- Freundlich, ermutigend, auf Augenhöhe mit Realschülerinnen und -schülern
+- Einfache Sprache, keine Fachbegriffe ohne Erklärung
+- Kurze Antworten – maximal 1–2 Sätze pro Nachricht
+- Gelegentlich Emojis zur Auflockerung 🧾✅❓
+
+Was du NICHT tust:
+- Nenne den fertigen Buchungssatz nicht, bevor der Schüler selbst darauf gekommen ist
+- Rechne nicht vor, bevor gefragt wurde
+- Gib keine Lösungen auf Anfrage wie „sag mir einfach die Antwort“ – erkläre, dass das Ziel das eigene Verstehen ist
+`;
+
+
+function kopiereKiPrompt() {
+  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
+    const btn = document.getElementById('kiPromptKopierenBtn');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+    btn.classList.add('ki-prompt-btn--success');
+    setTimeout(() => {
+      btn.innerHTML = originalHTML;
+      btn.classList.remove('ki-prompt-btn--success');
+    }, 2500);
+  }).catch(err => {
+    console.error('Fehler beim Kopieren:', err);
+    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+  });
+}
+
+function toggleKiPromptVorschau() {
+  const vorschau = document.getElementById('kiPromptVorschau');
+  const btn = document.getElementById('kiPromptToggleBtn');
+  const isHidden = getComputedStyle(vorschau).display === 'none';
+  if (isHidden) {
+    vorschau.style.display = 'block';
+    btn.textContent = 'Vorschau ausblenden ▲';
+  } else {
+    vorschau.style.display = 'none';
+    btn.textContent = 'Prompt anzeigen ▼';
+  }
+}
+
+
+
+
+// ============================================================================
 // INITIALISIERUNG
 // ============================================================================
 
@@ -784,7 +902,15 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
   }
+
+  
+  // Prompt-Text in Vorschau einfügen
+  const vorschauEl = document.getElementById('kiPromptVorschau');
+  if (vorschauEl) {
+    vorschauEl.textContent = KI_ASSISTENT_PROMPT;
+  }
 });
+
 
 function autoSelectMyCompany() {
   const myCompanyName = localStorage.getItem('myCompany');
@@ -807,6 +933,9 @@ function autoSelectMyCompany() {
     }
   });
 }
+
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
