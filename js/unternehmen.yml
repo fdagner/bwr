@@ -876,7 +876,7 @@
     iban: "DE89370400445300013034"
     bic: "GENODEF1NDB"
     inhaber: "Velican Mandic"
-    akzent: "#000"
+    akzent: "#000000"
 
 - unternehmen:
     id: "37"
