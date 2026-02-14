@@ -415,12 +415,57 @@ select:focus {
 
 .dropdown-content a:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  padding-left: 24px;
+  padding-left: 20px;
 }
 
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+/* Sub-Dropdown Container */
+.dropdown-sub {
+  position: relative;
+}
+
+/* Sub-Button */
+.sub-dropbtn {
+  background-color: #2c3e50;
+  color: white;
+  padding: 12px 16px;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Sub-Dropdown Content */
+.dropdown-sub-content {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background-color: #34495e;
+  min-width: 200px;
+  z-index: 1;
+}
+
+/* Links im Submenu */
+.dropdown-sub-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-sub-content a:hover {
+  background-color: #3d566e;
+}
+
+/* Hover zum Öffnen */
+.dropdown-sub:hover .dropdown-sub-content {
+  display: block;
+}
+
 
 /* ============================================
    TABS

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- === SEO Core === -->
+    <title>Abschluss Erfolgskonten & GuV – Zufallsaufgabe BwR | meinbwr.de</title>
+    <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Aufgaben zum Abschluss der Aufwandskonten (Erfolgskonten) und Übertrag auf das GuV-Konto. Ideal für BwR Jahrgangsstufe 8 Realschule Bayern (LehrplanPLUS), Gewinn- & Verlustrechnung, Buchführungsabschluss, Prüfungsvorbereitung und Leistungsnachweise. Mit Export (PNG/SVG/Clipboard) und KI-Prompt für sokratischen Chatbot.">
+
+    <link rel="canonical" href="https://www.meinbwr.de/lb8-1-erfolgskonten.html">
+
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+
+    <!-- === Open Graph === -->
+    <meta property="og:title" content="Abschluss Erfolgskonten & GuV-Konto – BwR Aufgabe Generator">
+    <meta property="og:description" content="Zufällige Aufgabe zum Abschluss der Aufwandskonten (Aufwandsarten → GuV-Konto). Perfekt für BwR 8 Realschule Bayern – Gewinnermittlung, Buchführungsabschluss, Prüfungen. Export als Bild/Text, plus fertiger KI-Prompt (sokratisch, lösungsfrei).">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.meinbwr.de/lb8-1-erfolgskonten.html">
+    <meta property="og:image" content="https://www.meinbwr.de/images/erfolgskonten-abschluss-tool-vorschau.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Screenshot: Aufgabe Abschluss Erfolgskonten mit GuV-Konto und Buchungssätzen BwR">
+    <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
+    <meta property="og:locale" content="de_DE">
+
+    <!-- === Twitter / X Cards === -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GuV-Abschluss Generator BwR – Erfolgskonten Klasse 8">
+    <meta name="twitter:description" content="Zufällige Aufgabe: Aufwandskonten abschließen → GuV-Konto bilden. Ideal für BwR 8 Realschule Bayern – Buchführungsabschluss & Gewinnermittlung.">
+    <meta name="twitter:image" content="https://www.meinbwr.de/images/erfolgskonten-abschluss-tool-vorschau.jpg">
+    <meta name="twitter:image:alt" content="BwR Tool: Abschluss Erfolgskonten & GuV Vorschau">
+
+    <!-- === Keywords – stark prüfungsorientiert === -->
+    <meta name="keywords" content="Abschluss Erfolgskonten BwR, GuV-Konto Aufgabe, Aufwandskonten abschließen, Gewinn- und Verlustrechnung BwR, BwR 8 Realschule Bayern, Buchführungsabschluss Klasse 8, Erfolgskonten Buchung, GuV Zufallsaufgabe, Prüfung BwR Gewinnermittlung, Rechnungswesen Jahrgangsstufe 8">ce-width, initial-scale=1.0">
+  <title>Abschluss Aufwandskonten</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+  <title>Abschluss Erfolgskonten & GuV | meinbwr.de BwR</title>
+</head>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+
+  <h2>Abschluss der Erfolgskonten</h2>
+
+  <div id="generator-container">
+    <div class="box">
+      <p>Hier können Sie eine Aufgabe zum Abschluss der Erfolgskonten und das GUV-Konto generieren.</p>
+      <button onclick="zeigeZufaelligenBestandsabschluss()">Neue Aufgabe erstellen</button>
+    </div>
+
+    <div id="Container" style="max-width:960px;margin:0 auto;" contenteditable="true"></div>
+
+    <div w3-include-html="downloads.html"></div>
+
+    <!-- KI-ASSISTENT -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli&nbsp;…)</p>
+        </div>
+      </div>
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+          Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.</span>
+        </div>
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">🧾 Abschluss Aufwandskonten</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+        <div class="ki-actions" style="margin-top:14px;">
+          <button class="ki-prompt-btn ki-prompt-btn--primary"
+                  id="kiPromptKopierenBtn"
+                  onclick="kopiereKiPrompt()"
+                  title="Prompt in die Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+          <button class="ki-prompt-btn ki-prompt-btn--ghost"
+                  id="kiPromptToggleBtn"
+                  onclick="toggleKiPromptVorschau()">
+            Prompt anzeigen ▼
+          </button>
+        </div>
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false"
+                    aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/lb8-1-erfolgskonten.js"></script>
+  <script src="js/download.js"></script>
+  <div w3-include-html="footer.html"></div>
+  <script>includeHTML();</script>
+</main>
+</body>
+</html>
