@@ -172,6 +172,7 @@ const URL_PARAM_CONFIG = {
     
     // ========== BESCHEID ==========
     bescheid: {
+
         // Grundsteuer
         messbetrag: { elementId: 'bescheidMessbetragInput', type: 'input' },
         hebesatz: { elementId: 'bescheidHebesatzInput', type: 'input' },
@@ -186,7 +187,7 @@ const URL_PARAM_CONFIG = {
         jahr: { elementId: 'jahrBescheid', type: 'input' },
         
         // Vorlage
-        vorlage: { elementId: 'svgDropdownBescheid', type: 'select' },
+        art: { elementId: 'svgDropdownBescheid', type: 'select' },
         
         // Unternehmen
         unternehmen: { elementId: 'datenBescheid', type: 'select' }

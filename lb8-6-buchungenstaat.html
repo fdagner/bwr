@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- === SEO Core === -->
+    <title>Staat & Steuern Buchungssätze – BwR Generator | meinbwr.de</title>
+    <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Geschäftsfälle aus dem Bereich Staat & Steuern (Grundsteuer, Gewerbesteuer, KFZ-Steuer, Gebühren), leite Buchungssätze ab und erstelle passende Bescheide. Wähle Anzahl & Konten. Ideal für Rechnungswesen-Unterricht Realschule Bayern (Klasse 9/10).">
+
+    <link rel="canonical" href="https://www.meinbwr.de/lb8-6-buchungenstaat.html">
+
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="meinbwr.de – BwR & BWL Unterrichtsmaterial Bayern">
+
+    <!-- === Open Graph === -->
+    <meta property="og:title" content="Staat & Steuern Buchungen Generator – Geschäftsfälle & Bescheide BwR">
+    <meta property="og:description" content="Erstelle in Sekunden zufällige Aufgaben: Grundsteuer, Gewerbesteuer, KFZ-Steuer, Gebühren → Buchungssätze + Bescheide. Konten frei wählbar. Perfekt für BwR Realschule Bayern – Klasse 9/10.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.meinbwr.de/lb8-6-buchungenstaat.html">
+    <meta property="og:site_name" content="meinbwr.de – BwR Material">
+    <meta property="og:locale" content="de_DE">
+
+    <!-- === Keywords === -->
+    <meta name="keywords" content="Buchung Grundsteuer BwR, Buchung Gewerbesteuer, KFZ-Steuer buchen, Gebühren Buchungssatz, BwR Realschule Bayern, Buchungen Staat Klasse 9 10, zufällige Aufgaben Rechnungswesen, Bescheid Buchführung">
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+     <title>Buchung Steuern und Gebühren | meinbwr.de</title>
+</head>
+
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div> 
+    <h2>Buchungen Steuern und Gebühren</h2>
+    <div id="generator-container">
+      <div class="box">
+        <p>Sie können hier zufällige Geschäftsfälle aus dem Bereich Steuern und Gebühren generieren, Buchungssätze ausleiten und passende Bescheide erstellen.</p>
+        
+        <label for="anzahlDropdown">Anzahl der Geschäftsfälle:</label>
+        <select id="anzahlDropdown">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select><br>
+        
+        <h3>Unternehmen auswählen</h3>
+        <div class="flex-row">
+          <div>
+            <label for="staatKunde">Unternehmen:</label>
+            <select id="staatKunde" class="meinUnternehmen">
+              <!-- Wird automatisch befüllt -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Konto-Auswahl Container -->
+        <div class="konto-auswahl-container">
+          <div class="konto-auswahl-header">
+            <h3>Konten auswählen</h3>
+               
+          <div class="flex-row" id="kontoGrid">
+            <!-- Wird dynamisch befüllt -->
+          </div>
+                 <div class="auswahl-buttons">
+              <button type="button" onclick="alleKontenAuswaehlen()">Alle auswählen</button>
+              <button type="button" onclick="alleKontenAbwaehlen()">Alle abwählen</button>
+            </div>
+          </div><br>
+          <div class="auswahl-info" id="auswahlInfo">
+            ℹ️ Keine Konten ausgewählt - es werden alle verfügbaren Geschäftsfälle verwendet
+          </div>
+        </div>
+<br>
+        <button onclick="zeigeZufaelligeGeschaeftsfaelle()">Aufgaben erstellen</button>
+
+        <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+          <!-- Exportierbarer Inhalt -->
+          <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+
+          <!-- Buttons daneben – nicht exportiert -->
+          <div id="button-column" style="width: 180px; flex-shrink: 0;">
+            <!-- Beleg-Buttons werden hier eingefügt -->
+          </div>
+        </div>
+      </div>
+
+        <div w3-include-html="downloads.html"></div> 
+
+        <!-- ══════════════════════════════════════════════════════════════
+           KI-ASSISTENT PROMPT
+      ══════════════════════════════════════════════════════════════ -->
+      <div class="ki-assistent-box">
+
+        <div class="ki-assistent-header">
+          <span class="ki-icon">🤖</span>
+          <div>
+            <h3>KI-Assistent – System-Prompt</h3>
+            <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+          </div>
+        </div>
+
+        <div class="ki-assistent-body">
+
+          <div class="ki-hinweis">
+            <span class="hinweis-icon">💡</span>
+            <span>
+              Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+              Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+            </span>
+          </div>
+
+          <div class="ki-chips">
+            <span class="ki-chip">📚 BwR Realschule</span>
+            <span class="ki-chip">🏛️ Buchungen Steuern &amp; Gebühren</span>
+            <span class="ki-chip">✅ Sokrat. Methode</span>
+            <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+          </div>
+
+          <div class="ki-actions" style="margin-top: 14px;">
+            <button
+              class="ki-prompt-btn ki-prompt-btn--primary"
+              id="kiPromptKopierenBtn"
+              onclick="kopiereKiPrompt()"
+              title="Prompt in die Zwischenablage kopieren"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Prompt kopieren
+            </button>
+
+            <button
+              class="ki-prompt-btn ki-prompt-btn--ghost"
+              id="kiPromptToggleBtn"
+              onclick="toggleKiPromptVorschau()"
+              title="Prompt-Text ein- oder ausblenden"
+            >
+              Prompt anzeigen ▼
+            </button>
+          </div>
+
+          <div class="ki-prompt-vorschau-wrapper">
+            <textarea id="kiPromptVorschau" readonly spellcheck="false" aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+          </div>
+
+        </div>
+      </div>
+      <!-- Ende KI-Assistent -->
+  </main>
+  
+  <script src="js/lb8-6-buchungenstaat.js"></script>
+  <script src="js/download.js"></script>
+  <div w3-include-html="footer.html"></div> 
+  <script>
+    includeHTML();
+  </script>
+</main>
+</body>
+</html>

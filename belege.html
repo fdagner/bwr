@@ -1487,6 +1487,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Füge einen Event-Listener hinzu, um die Anzeige zu aktualisieren, wenn die Option geändert wird
                         document.getElementById("svgDropdownBescheid").addEventListener("change", updateFields);
 
+                        window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const art = urlParams.get('art');
+    const dropdown = document.getElementById("svgDropdownBescheid");
+
+    if (art && dropdown) {
+        if (Array.from(dropdown.options).some(opt => opt.value === art)) {
+            dropdown.value = art;
+            
+            // Wichtig: setTimeout mit 0 → nach dem aktuellen Call-Stack
+            setTimeout(updateFields, 50);
+            // oder etwas robuster:
+            // setTimeout(updateFields, 50);
+        }
+    } else {
+        updateFields();
+    }
+});
+
                         // Aktualisiere die Anzeige beim Laden der Seite
                         window.onload = updateFields;
                     </script>
