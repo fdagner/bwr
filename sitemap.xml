@@ -1,60 +1,201 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Startseite -->
+  <!-- Startseite & Hauptseiten -->
   <url>
     <loc>https://www.meinbwr.de/index.html</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- BwR Bereich -->
   <url>
     <loc>https://www.meinbwr.de/belege.html</loc>
-    <priority>0.8</priority>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
-  <!-- Vorlagen Dropdown -->
-  <url><loc>https://www.meinbwr.de/kontenplan.html</loc></url>
-  <url><loc>https://www.meinbwr.de/t-konto.html</loc></url>
-  <url><loc>https://www.meinbwr.de/buchungssatz.html</loc></url>
-  <url><loc>https://www.meinbwr.de/vorkontierung.html</loc></url>
-  <url><loc>https://www.meinbwr.de/kariert.html</loc></url>
+  <!-- Vorlagen / Buchführungsgrundlagen -->
+  <url>
+    <loc>https://www.meinbwr.de/kontenplan.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/t-konto.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/buchungssatz.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/vorkontierung.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/kariert.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
 
   <!-- BwR 7 -->
-  <url><loc>https://www.meinbwr.de/unternehmensziele.html</loc></url>
-  <url><loc>https://www.meinbwr.de/inventar.html</loc></url>
-  <url><loc>https://www.meinbwr.de/bilanz7.html</loc></url>
-  <url><loc>https://www.meinbwr.de/inventurdifferenzen.html</loc></url>
+  <url>
+    <loc>https://www.meinbwr.de/unternehmensziele.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/inventar.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/bilanz7.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/inventurdifferenzen.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
-  <!-- BwR 8 -->
-  <url><loc>https://www.meinbwr.de/guv.html</loc></url>
-  <url><loc>https://www.meinbwr.de/einkauf.html</loc></url>
-  <url><loc>https://www.meinbwr.de/bestellmenge.html</loc></url>
-  <url><loc>https://www.meinbwr.de/bestand.html</loc></url>
-  <url><loc>https://www.meinbwr.de/verkauf.html</loc></url>
-  <url><loc>https://www.meinbwr.de/marketingmix.html</loc></url>
-  <url><loc>https://www.meinbwr.de/lb8-3-produktlebenszyklus.html</loc></url>
-  <url><loc>https://www.meinbwr.de/portfolioanalyse.html</loc></url>
-  <url><loc>https://www.meinbwr.de/buchungmarketing.html</loc></url>
-  <url><loc>https://www.meinbwr.de/lebenslauf.html</loc></url>
+  <!-- BwR 8 – alle Lernbereiche aus dem Dropdown -->
+  <url>
+    <loc>https://www.meinbwr.de/lb8-1-erfolgskonten.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-1-guv.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-1-einkauf.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-1-bestellmenge.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-1-bestand.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-3-produktlebenszyklus.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-3-portfolioanalyse.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-3-buchungmarketing.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-4-verkauf.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-4-ausgangsfrachten.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-5-lebenslauf.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/lb8-6-buchungenstaat.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- BwR 9 -->
-  <url><loc>https://www.meinbwr.de/organigramm.html</loc></url>
-  <url><loc>https://www.meinbwr.de/aktienkurs.html</loc></url>
-  <url><loc>https://www.meinbwr.de/investitionsrechnung.html</loc></url>
-  <url><loc>https://www.meinbwr.de/zinsformel.html</loc></url>
-  <url><loc>https://www.meinbwr.de/ewb.html</loc></url>
-  <url><loc>https://www.meinbwr.de/pwb.html</loc></url>
+  <url>
+    <loc>https://www.meinbwr.de/organigramm.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/aktienkurs.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/investitionsrechnung.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/zinsformel.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/ewb.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/pwb.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- BwR 10 -->
-  <url><loc>https://www.meinbwr.de/bilanz10.html</loc></url>
-  <url><loc>https://www.meinbwr.de/bab.html</loc></url>
-  <url><loc>https://www.meinbwr.de/vollkostenrechnung.html</loc></url>
-  <url><loc>https://www.meinbwr.de/gewinnschwelle.html</loc></url>
-  <url><loc>https://www.meinbwr.de/fremdbezug.html</loc></url>
+  <url>
+    <loc>https://www.meinbwr.de/bilanz10.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/bab.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/vollkostenrechnung.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/gewinnschwelle.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/fremdbezug.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- Sonstiges -->
-  <url><loc>https://www.meinbwr.de/kontle.html</loc></url>
-  <url><loc>https://www.meinbwr.de/giftforstash.html</loc></url>
+  <url>
+    <loc>https://www.meinbwr.de/kontle.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.meinbwr.de/giftforstash.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
 
 </urlset>
