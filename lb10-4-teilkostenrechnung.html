@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Rechenaufgaben zur Deckungsbeitragsrechnung / Teilkostenrechnung. Ideal für BwR Klasse 10 Realschule Bayern.">
+
+  <link rel="canonical" href="https://www.meinbwr.de/lb10-4-teilkostenrechnung.html">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+
+  <meta property="og:title" content="Teilkostenrechnung – Generator">
+  <meta property="og:description" content="Zufällige Aufgaben zur Deckungsbeitragsrechnung. Perfekt für BwR Klasse 10 Realschule Bayern.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb10-4-teilkostenrechnung.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
+  <meta property="og:locale" content="de_DE">
+
+  <meta name="keywords" content="Teilkostenrechnung BwR, Deckungsbeitragsrechnung, Betriebsergebnis, Preisuntergrenze, BwR Realschule, BwR 10 Bayern, Fixkosten, variable Kosten, Deckungsbeitrag">
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+    <title>Teilkostenrechnung | meinbwr.de BwR</title>
+</head>
+
+<body>
+  <main>
+    <div w3-include-html="navigation.html"></div>
+    <h2>Teilkostenrechnung</h2>
+
+    <div id="generator-container">
+      <div class="box">
+        <p>Hier können Sie zufällige Aufgaben zur <strong>Teilkostenrechnung (Deckungsbeitragsrechnung)</strong> erstellen. Wählen Sie die gewünschte Aufgabenvariante aus.</p>
+
+        <h3>Aufgabenvariante</h3>
+        <div class="flex-row">
+          <div>
+            <label for="tkVariante">Variante:</label>
+            <select id="tkVariante"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;">
+              <option value="betriebsergebnis" selected>Betriebsergebnis</option>
+              <option value="preisuntergrenze">Langfristige Preisuntergrenze</option>
+              <option value="nettoverkaufserloes">Nettoverkaufserlöse</option>
+              <option value="fixkosten">Fixkosten</option>
+              <option value="zusatzauftrag">Zusatzauftrag</option>
+            </select>
+          </div>
+        </div>
+
+        <h3>Unternehmen auswählen</h3>
+        <div class="flex-row">
+          <div>
+            <label for="tkKunde">Unternehmen:</label>
+            <select id="tkKunde" class="meinUnternehmen">
+              <!-- Wird automatisch befüllt -->
+            </select>
+          </div>
+        </div>
+
+        <h3>Produktnamen (Fertigerzeugnisse)</h3>
+        <div class="flex-row">
+          <div>
+            <label for="prod1">Produkt 1:</label>
+            <input type="text" id="prod1" value="Produkt A" maxlength="30" placeholder="z. B. Bazi"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;">
+          </div>
+          <div>
+            <label for="prod2">Produkt 2:</label>
+            <input type="text" id="prod2" value="Produkt B" maxlength="30" placeholder="z. B. Zenzi"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;">
+          </div>
+        </div>
+
+        <h3>Art der Fertigerzeugnisse</h3>
+        <div class="flex-row">
+          <div>
+            <label for="erzeugnisArt">Bezeichnung:</label>
+            <input type="text" id="erzeugnisArt" value="Fertigerzeugnisse" maxlength="40" placeholder="z. B. Trachtenjacken"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; min-width: 220px;">
+          </div>
+        </div>
+
+        <h3>Zahlenbereiche</h3>
+        <div class="flex-row">
+          <div>
+            <label>Nettoverkaufspreis (€/Stk.)</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="number" id="nvpMin" value="50" min="1" step="1"
+                style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; width:80px;">
+              <span>bis</span>
+              <input type="number" id="nvpMax" value="200" min="1" step="1"
+                style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; width:80px;">
+            </div>
+          </div>
+          <div>
+            <label>Variable Kosten (€/Stk.)</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="number" id="vkMin" value="20" min="1" step="1"
+                style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; width:80px;">
+              <span>bis</span>
+              <input type="number" id="vkMax" value="150" min="1" step="1"
+                style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; width:80px;">
+            </div>
+          </div>
+          <div>
+            <label>Produktionsmenge (Stk.)</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="number" id="mengeMin" value="500" min="1" step="100"
+                style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; width:80px;">
+              <span>bis</span>
+              <input type="number" id="mengeMax" value="6000" min="1" step="100"
+                style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; width:80px;">
+            </div>
+          </div>
+          <div>
+            <label>Fixkosten gesamt (€)</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="number" id="fixMin" value="50000" min="1" step="1000"
+                style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; width:90px;">
+              <span>bis</span>
+              <input type="number" id="fixMax" value="300000" min="1" step="1000"
+                style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; width:90px;">
+            </div>
+          </div>
+        </div>
+
+        <h3>Runden</h3>
+        <div class="flex-row">
+          <div>
+            <label for="mengeRunden">Mengen runden auf:</label>
+            <select id="mengeRunden"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;">
+              <option value="100">100er-Schritte</option>
+              <option value="500" selected>500er-Schritte</option>
+            </select>
+          </div>
+          <div>
+            <label for="fixRunden">Fixkosten runden auf:</label>
+            <select id="fixRunden"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;">
+              <option value="100">100 €</option>
+              <option value="500">500 €</option>
+              <option value="1000" selected>1.000 €</option>
+              <option value="5000">5.000 €</option>
+            </select>
+          </div>
+        </div>
+   <br>
+      <button onclick="generiereAufgabe()">Aufgabe erstellen</button>
+      </div>
+
+   
+
+      <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+        <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+        <div id="button-column" style="width: 180px; flex-shrink: 0;"></div>
+      </div>
+    </div>
+
+    <div w3-include-html="downloads.html"></div>
+
+    <!-- KI-ASSISTENT -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+        </div>
+      </div>
+
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>
+            Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+            Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+          </span>
+        </div>
+
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">📊 Teilkostenrechnung</span>
+          <span class="ki-chip">🧮 Deckungsbeitrag</span>
+          <span class="ki-chip">💰 Preisuntergrenze</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+
+        <div class="ki-actions" style="margin-top: 14px;">
+          <button
+            class="ki-prompt-btn ki-prompt-btn--primary"
+            id="kiPromptKopierenBtn"
+            onclick="kopiereKiPrompt()"
+            title="Prompt in die Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+          <button
+            class="ki-prompt-btn ki-prompt-btn--ghost"
+            id="kiPromptToggleBtn"
+            onclick="toggleKiPromptVorschau()"
+            title="Prompt-Text ein- oder ausblenden">
+            Prompt anzeigen ▼
+          </button>
+        </div>
+
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false" aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- Ende KI-Assistent -->
+
+  </main>
+
+  <script src="js/lb10-4-teilkostenrechnung.js"></script>
+  <script src="js/download.js"></script>
+  <div w3-include-html="footer.html"></div>
+  <script>
+    includeHTML();
+  </script>
+</body>
+
+</html>
