@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- === SEO Core === -->
+    <title>Bestandsveränderungen Werkstoffe – Zufallsaufgaben & Buchungssätze | meinbwr.de BwR</title>
+    <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Preisdifferenzierungen. Ideal für Rechnungswesen-Unterricht Klasse 8 Realschule Bayern, Inventur-Übungen, Klassenarbeiten und Prüfungsvorbereitung.">
+
+    <link rel="canonical" href="https://www.meinbwr.de/lb8-1-preisdifferenzierung.html">
+
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+
+    <!-- === Open Graph (Facebook, Linked, WhatsApp etc.) === -->
+    <meta property="og:title" content="Preisdifferenzierung – Generator">
+    <meta property="og:description" content="Erstelle sofort zufällige Aufgaben zu Preisdifferenzierung. Perfekt für BwR 8 Realschule Bayern – Marketing, Preisdifferenzierung.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.meinbwr.de/lb8-1-preisdifferenzierung.html">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Screenshot: Zufällige Preisdifferenzierung">
+    <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
+    <meta property="og:locale" content="de_DE">
+
+    <!-- === Twitter / X Cards (twitter: Prefix bleibt aktuell korrekt) === -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Preisdifferenzierung Generator BwR – Buchungssätze Werkstoffe">
+    <meta name="twitter:description" content="Zufällige Preisdifferenzierungen  generieren. Ideal für BwR Klasse 8 Realschule Bayern – Marketing.">
+    <meta name="twitter:image:alt" content="BwR Tool: Preisdifferenzierung">
+
+    <!-- === Keywords – Long-Tail für Lehrer-Suchen === -->
+    <meta name="keywords" content="Preisdifferenzierung BwR, Marketing, BwR Realschule, BwR 8 Bayern, zufällige Aufgaben BwR, Rechnungswesen Klasse 8, Prüfungsvorbereitung BwR">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+  <title>Preisdifferenzierung | meinbwr.de BwR</title>
+</head>
+
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+    <h2>Preisdifferenzierung</h2>
+    <div id="generator-container">
+      <div class="box">
+        <p>Sie können hier zufällige Aufgaben zur Preisdifferenzierung generieren. Schüler ordnen jeder Beschreibung den passenden Fachbegriff zu: <strong>personenbezogene, mengenbezogene, zeitbezogene</strong> oder <strong>raumbezogene Preisdifferenzierung</strong>.</p>
+
+        <h3>Unternehmen auswählen</h3>
+        <div class="flex-row">
+          <div>
+            <label for="diffKunde">Unternehmen:</label>
+            <select id="diffKunde" class="meinUnternehmen">
+              <!-- Wird automatisch befüllt -->
+            </select>
+          </div>
+        </div>
+
+        <h3>Preisrahmen festlegen</h3>
+        <p>Die Preise in den Aufgaben werden zufällig aus diesem Bereich gewählt (1 – 99.999 €, Mindestpreis muss kleiner als Höchstpreis sein).</p>
+        <div class="flex-row">
+          <div>
+            <label for="preisMin">Mindestpreis (€):</label>
+            <input type="number" id="preisMin" value="100" min="1" max="99998" step="1"
+              style="width: 110px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;"
+              onblur="validierePreisEingabe()">
+          </div>
+          <div>
+            <label for="preisMax">Höchstpreis (€):</label>
+            <input type="number" id="preisMax" value="1000" min="2" max="99999" step="1"
+              style="width: 110px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;"
+              onblur="validierePreisEingabe()">
+          </div>
+        </div>
+        <div id="preisHinweis" style="display:none; color: #a00; font-size: 0.85rem; margin-top: 6px;"></div>
+
+        <br>
+        <button onclick="zeigeZufaelligePreisdifferenzierung()">Aufgaben erstellen</button>
+
+        <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+          <!-- Exportierbarer Inhalt -->
+          <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+
+          <!-- Buttons daneben – nicht exportiert -->
+          <div id="button-column" style="width: 180px; flex-shrink: 0;"></div>
+        </div>
+      </div>
+
+        <div w3-include-html="downloads.html"></div>
+
+        <!-- ══════════════════════════════════════════════════════════════
+           KI-ASSISTENT PROMPT
+      ══════════════════════════════════════════════════════════════ -->
+      <div class="ki-assistent-box">
+
+        <div class="ki-assistent-header">
+          <span class="ki-icon">🤖</span>
+          <div>
+            <h3>KI-Assistent – System-Prompt</h3>
+            <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+          </div>
+        </div>
+
+        <div class="ki-assistent-body">
+
+          <div class="ki-hinweis">
+            <span class="hinweis-icon">💡</span>
+            <span>
+              Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+              Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+            </span>
+          </div>
+
+          <div class="ki-chips">
+            <span class="ki-chip">📚 BwR Realschule</span>
+            <span class="ki-chip">💰 Preisdifferenzierung</span>
+            <span class="ki-chip">✅ Sokrat. Methode</span>
+            <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+          </div>
+
+          <div class="ki-actions" style="margin-top: 14px;">
+            <button
+              class="ki-prompt-btn ki-prompt-btn--primary"
+              id="kiPromptKopierenBtn"
+              onclick="kopiereKiPrompt()"
+              title="Prompt in die Zwischenablage kopieren"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Prompt kopieren
+            </button>
+
+            <button
+              class="ki-prompt-btn ki-prompt-btn--ghost"
+              id="kiPromptToggleBtn"
+              onclick="toggleKiPromptVorschau()"
+              title="Prompt-Text ein- oder ausblenden"
+            >
+              Prompt anzeigen ▼
+            </button>
+          </div>
+
+          <div class="ki-prompt-vorschau-wrapper">
+            <textarea id="kiPromptVorschau" readonly spellcheck="false" aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+          </div>
+
+        </div>
+      </div>
+      <!-- Ende KI-Assistent -->
+
+  </div>
+  </main>
+
+  <script src="js/download.js"></script>
+    <script src="js/lb8-3-preisdifferenzierung.js"></script>
+  <div w3-include-html="footer.html"></div>
+  <script>
+    includeHTML();
+  </script>
+
+
+</body>
+</html>
