@@ -964,53 +964,82 @@ const mengeZ = Math.max(
     `</table>`;
 
   // ── LÖSUNGSSCHEMA ─────────────────────────────────────────────────────────
-  const loesungsTabelle =
-    `<table style="${S.table}">` +
-      `<thead><tr>` +
-        `<th style="${S.thL}"></th>` +
+ // ============================================================================
+// PATCH v2: generiereZusatzauftrag() – Lösungsschema
+// Ersetze den alten "// ── LÖSUNGSSCHEMA ─────"-Block komplett durch diesen.
+// ============================================================================
+
+// ── LÖSUNGSSCHEMA ─────────────────────────────────────────────────────────
+// Betriebsergebnis mit Zusatzauftrag (für die letzte Zeile der Zusatzspalte)
+const gesamtDB_mit = gesamtDB + dbZgesamt;
+const be_mit       = gesamtDB_mit - fixKosten;
+const be_mit_color = be_mit >= 0 ? '#2a7a2a' : '#a00';
+
+// Trennlinie-Stil: blauer linker Rand markiert die Zusatz-Gesamtspalte
+const thZusNeu = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
+
+const tdZusR   = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
+const tdZusR2  = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fffdf0;`;
+const tdZusDbR = `border:1px solid #aaa; padding:1px 10px; border-top:2px solid #aaa; text-align:right; background:#fff8e1; font-weight:600;`;
+const tdZusFkR = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1; color:#aaa; font-size:0.85em;`;
+const tdZusBeR = `border:1px solid #aaa; border-top:2px solid #555; padding:6px 10px; text-align:right; background:#fff3cc; font-weight:700;`;
+
+const loesungsTabelle =
+  `<table style="${S.table}">` +
+    `<thead>` +
+      `<tr>` +
+        `<th style="${S.thL}" rowspan="2"></th>` +
         `<th style="${S.thR}">„${e.p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge1)} Stk.) in €</span></th>` +
         `<th style="${S.thR}">„${e.p2}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge2)} Stk.) in €</span></th>` +
-        `<th style="${thZusatz}">„${pZ}" Zusatz<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(mengeZ)} Stk.) in €</span></th>` +
-        `<th></th>` +
-      `</tr></thead>` +
-      `<tbody>` +
-        `<tr>` +
-          `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
-          `<td style="${S.tdR}">${fmt(nve1)}</td>` +
-          `<td style="${S.tdR}">${fmt(nve2)}</td>` +
-          `<td style="${tdZgesR}">${fmt(nveZgesamt)}</td>` +
-          `<td></td>` +
-        `</tr>` +
-        `<tr>` +
-          `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
-          `<td style="${S.tdR2}">${fmt(gesamtVK1)}</td>` +
-          `<td style="${S.tdR2}">${fmt(gesamtVK2)}</td>` +
-          `<td style="${tdZgesR} background:#fffdf0;">${fmt(gesamtVKZ)}</td>` +
-          `<td></td>` +
-        `</tr>` +
-        `<tr>` +
-          `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
-          `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
-          `<td style="${S.tdDbR}">${fmt(db2)}</td>` +
-          `<td style="border:1px solid #aaa; border-top:2px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1; font-weight:600; color:${annehmenDB ? '#2a7a2a' : '#a00'};">${fmt(dbZgesamt)}</td>` +
-          `<td style="${S.tdDbR}">${fmt(gesamtDB)}</td>` +
-        `</tr>` +
-        `<tr>` +
-          `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
-          `<td style="${S.tdFkR}"></td>` +
-          `<td style="${S.tdFkR}"></td>` +
-          `<td style="${tdZgesR} color:#aaa; font-size:0.85em;">–</td>` +
-          `<td style="${S.tdFkR}">${fmt(fixKosten)}</td>` +
-        `</tr>` +
-        `<tr>` +
-          `<td style="${S.tdBeL}"><strong>Betriebsergebnis (${istGewinn ? 'Gewinn' : 'Verlust'})</strong></td>` +
-          `<td style="${S.tdBeR}"></td>` +
-          `<td style="${S.tdBeR}"></td>` +
-          `<td style="${S.tdBeR}"></td>` +
-          `<td style="${S.tdBeR} color:${istGewinn ? '#2a7a2a' : '#a00'}; font-weight:700;"><strong>${fmt(be)}</strong></td>` +
-        `</tr>` +
-      `</tbody>` +
-    `</table>`;
+        `<th style="${S.thR}">gesamt<br><span style="font-weight:400; font-size:0.85em;">in €</span></th>` +
+        `<th style="${thZusNeu}">Zusatz „${pZ}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(mengeZ)} Stk.) in €</span></th>` +
+      `</tr>` +
+    `</thead>` +
+    `<tbody>` +
+      /* NVE */
+      `<tr>` +
+        `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
+        `<td style="${S.tdR}">${fmt(nve1)}</td>` +
+        `<td style="${S.tdR}">${fmt(nve2)}</td>` +
+        `<td style="${S.tdR}"></td>` +
+        `<td style="${tdZusR}">${fmt(nveZgesamt)}</td>` +
+      `</tr>` +
+      /* variable Kosten */
+      `<tr>` +
+        `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
+        `<td style="${S.tdR2}">${fmt(gesamtVK1)}</td>` +
+        `<td style="${S.tdR2}">${fmt(gesamtVK2)}</td>` +
+        `<td style="${S.tdR2}"></td>` +
+        `<td style="${tdZusR2}">${fmt(gesamtVKZ)}</td>` +
+      `</tr>` +
+      /* Deckungsbeitrag */
+      `<tr>` +
+        `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
+        `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
+        `<td style="${S.tdDbR}">${fmt(db2)}</td>` +
+        `<td style="${S.tdDbR}">${fmt(gesamtDB)}</td>` +
+        `<td style="${tdZusDbR} color:${annehmenDB ? '#2a7a2a' : '#a00'};">${fmt(dbZgesamt)}</td>` +
+      `</tr>` +
+      /* Fixkosten */
+      `<tr>` +
+        `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
+        `<td style="${S.tdFkR}"></td>` +
+        `<td style="${S.tdFkR}"></td>` +
+        `<td style="${S.tdFkR}">${fmt(fixKosten)}</td>` +
+        `<td style="${tdZusFkR}">–</td>` +
+      `</tr>` +
+      /* Betriebsergebnis Normal */
+      `<tr>` +
+        `<td style="${S.tdBeL}"><strong>Betriebsergebnis (${istGewinn ? 'Gewinn' : 'Verlust'})</strong></td>` +
+        `<td style="${S.tdBeR}"></td>` +
+        `<td style="${S.tdBeR}"></td>` +
+        `<td style="${S.tdBeR} font-weight:700; color:${istGewinn ? '#2a7a2a' : '#a00'};"><strong>${fmt(be)}</strong></td>` +
+        `<td style="${tdZusBeR} color:${be_mit_color};">` +
+          `<strong>${fmt(be_mit)}</strong>` +
+        `</td>` +
+      `</tr>` +
+    `</tbody>` +
+  `</table>`;
 
   // ── KAPAZITÄTSPRÜFUNG ─────────────────────────────────────────────────────
   const kapazitaetBox =
@@ -1051,9 +1080,11 @@ const mengeZ = Math.max(
       `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
       `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
       aufgabeTabelle +
-      `<br><p><strong>Aufgabe</strong></p><p style="margin-top:10px;">${kundeStr} wäre bereit, ${fmtInt(mengeZ)} Einheiten von „${pZ}" ` +
+      `<br><p><strong>Aufgabe</strong></p>` +
+      `<ol><li>Berechnen Sie das Betriebsergebnis.</li>` +
+      `<li>${kundeStr} wäre bereit, ${fmtInt(mengeZ)} Einheiten von „${pZ}" ` +
       `zu einem Rabatt von ${rabattPct} % abzunehmen.` +
-    ` Begründen Sie rechnerisch, ob das Unternehmen den Zusatzauftrag annehmen soll.</p>` +
+    ` Begründen Sie rechnerisch, ob das Unternehmen den Zusatzauftrag annehmen soll.</li></ol>` +
 
     `</div>` +
     `<div style="margin-top:28px;">` +
