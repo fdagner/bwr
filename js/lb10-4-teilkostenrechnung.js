@@ -249,7 +249,7 @@ function generiereBetriebsergebnis() {
       datentabelle(e.p1, e.p2, nvp1, nvp2, vk1, vk2, menge1, menge2, fixKosten) +
     `</div>` +
 
-    `<p style="margin-bottom:6px;"><strong>Aufgabe:</strong> Berechnen Sie das Betriebsergebnis für das ${quartal}.</p>` +
+    `<p style="margin-bottom:6px;"><strong>Aufgabe:</strong>Ermitteln Sie rechnerisch Art und Höhe des gesamten Betriebsergebnisses für das ${quartal}.</p>` +
 
     `<div style="margin-top:28px;">` +
     `<h2 style="${S.h2output}">Lösung</h2>` +
@@ -832,49 +832,22 @@ function generiereZusatzauftrag() {
 
   // Zusatzauftrag: zufälliges Produkt
   const zusatzIstP1 = Math.random() < 0.5;
-  const pZ     = zusatzIstP1 ? e.p1 : e.p2;
-  const nvpZ   = zusatzIstP1 ? nvp1 : nvp2;
-  const vkZ    = zusatzIstP1 ? vk1  : vk2;
+  const pZ       = zusatzIstP1 ? e.p1 : e.p2;
+  const nvpZ     = zusatzIstP1 ? nvp1 : nvp2;
+  const vkZ      = zusatzIstP1 ? vk1  : vk2;
   const dbNormal = nvpZ - vkZ;
 
   // Zusatzmenge
-const mengeZ = Math.max(
-  1000,
-  Math.round(
-    randInt(
-      Math.round(e.mengeMin / 2),
-      Math.round(e.mengeMax / 2),
-      e.mengeStep
-    ) / 1000
-  ) * 1000
-);
-
-  // ── KAPAZITÄT ────────────────────────────────────────────────────────────
-  // Gesamtauslastung normal = menge1 + menge2
-  // Kapazität: in ~30 % der Fälle zu knapp für Zusatzauftrag → nur rein rechnerische Ablehnung
-  const normalAuslastung = menge1 + menge2;
-  const knappeKapazitaet = Math.random() < 0.30;
-
-  let kapazitaet, kapazitaetFrei, kapazitaetReicht;
-  if (knappeKapazitaet) {
-    // Kapazität so wählen, dass freie Kapazität < mengeZ
-    const maxFreiKnapp = Math.max(0, mengeZ - e.mengeStep);
-    const freiKnapp    = randInt(0, maxFreiKnapp, e.mengeStep);
-    kapazitaet         = normalAuslastung + freiKnapp;
-    kapazitaetFrei     = freiKnapp;
-    kapazitaetReicht   = false;
-  } else {
-    // Kapazität so wählen, dass freie Kapazität >= mengeZ
-    const freiAusreichend = randInt(mengeZ, mengeZ + e.mengeMax / 2, e.mengeStep);
-    kapazitaet            = normalAuslastung + freiAusreichend;
-    kapazitaetFrei        = freiAusreichend;
-    kapazitaetReicht      = true;
-  }
+  const mengeZ = Math.max(
+    1000,
+    Math.round(
+      randInt(Math.round(e.mengeMin / 2), Math.round(e.mengeMax / 2), e.mengeStep) / 1000
+    ) * 1000
+  );
 
   // ── RABATT & DB ──────────────────────────────────────────────────────────
-  // Nur wenn Kapazität reicht: Outcome-first 25 % Ablehnung wegen negativem DB
-  // Wenn Kapazität nicht reicht: DB trotzdem berechnen (bleibt oft positiv, aber irrelevant)
-  const sollAblehnenDB = kapazitaetReicht && Math.random() < 0.25;
+  // Zuerst Rabatt berechnen, damit dbZStk bekannt ist
+  const sollAblehnenDB = Math.random() < 0.25;
   let rabattPct, nvpZrabatt, dbZStk;
 
   if (sollAblehnenDB) {
@@ -895,40 +868,43 @@ const mengeZ = Math.max(
   const gesamtVKZ  = vkZ * mengeZ;
   const dbZgesamt  = Math.round(dbZStk * mengeZ * 100) / 100;
 
-  // ── ENTSCHEIDUNGSLOGIK ────────────────────────────────────────────────────
-  // Schritt 1: Kapazität prüfen → Schritt 2: DB prüfen (nur wenn Kap. reicht)
-  const annehmenDB  = dbZStk > 0;
-  const annehmen    = kapazitaetReicht && annehmenDB;
+  // ── DB-ENTSCHEIDUNG (jetzt sicher, da dbZStk bekannt) ────────────────────
+  const annehmenDB = dbZStk > 0;
 
-  let kapazitaetBegr, dbBegr, entscheidText, entscheidColor;
+  // ── KAPAZITÄT JE PRODUKT ──────────────────────────────────────────────────
+  const knappeKapazitaet = Math.random() < 0.30;
+  const mengeZ_normal    = zusatzIstP1 ? menge1 : menge2;
 
-  if (!kapazitaetReicht) {
-    kapazitaetBegr = `Die freie Kapazität beträgt nur ${fmtInt(kapazitaetFrei)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann nicht produziert werden</strong>.`;
-    dbBegr         = `(DB/Stk. wäre ${fmt(dbZStk)} € – rechnerisch ${annehmenDB ? 'positiv' : 'negativ'}, aber irrelevant da keine Kapazität.)`;
-    entscheidText  = `Der Zusatzauftrag <strong>muss abgelehnt werden</strong>, da die Produktionskapazität nicht ausreicht (freie Kapazität: ${fmtInt(kapazitaetFrei)} Stück, benötigt: ${fmtInt(mengeZ)} Stück).`;
-    entscheidColor = '#a00';
-  } else if (!annehmenDB) {
-    kapazitaetBegr = `Die freie Kapazität beträgt ${fmtInt(kapazitaetFrei)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann produziert werden</strong>. ✅`;
-    dbBegr         = `Dennoch ist der Deckungsbeitrag pro Stück negativ (${fmt(dbZStk)} €) – das Unternehmen würde je Einheit einen Verlust erleiden.`;
-    entscheidText  = `Der Zusatzauftrag <strong>soll abgelehnt werden</strong>: Zwar reicht die Kapazität, aber der Deckungsbeitrag pro Stück ist negativ (${fmt(dbZStk)} €).`;
-    entscheidColor = '#a00';
+  let kapazitaet1, kapazitaet2, kapazitaetFreiZ, kapazitaetReicht;
+
+  if (knappeKapazitaet) {
+    const maxFreiKnapp = Math.max(0, mengeZ - e.mengeStep);
+    const freiKnapp    = randInt(0, maxFreiKnapp, e.mengeStep);
+    const kapZ_knapp   = mengeZ_normal + freiKnapp;
+    const kap_andere   = Math.ceil((zusatzIstP1 ? menge2 : menge1) * 1.15 / e.mengeStep) * e.mengeStep;
+    kapazitaet1        = zusatzIstP1 ? kapZ_knapp : kap_andere;
+    kapazitaet2        = zusatzIstP1 ? kap_andere : kapZ_knapp;
+    kapazitaetFreiZ    = freiKnapp;
+    kapazitaetReicht   = false;
   } else {
-    kapazitaetBegr = `Die freie Kapazität beträgt ${fmtInt(kapazitaetFrei)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann produziert werden</strong>. ✅`;
-    dbBegr         = `Der Deckungsbeitrag pro Stück ist positiv (${fmt(dbZStk)} €). Da die Fixkosten bereits gedeckt sind, verbessert jeder positive DB das Betriebsergebnis.`;
-    entscheidText  = `Der Zusatzauftrag <strong>soll angenommen werden</strong>: Kapazität reicht aus und der Deckungsbeitrag pro Stück ist positiv (${fmt(dbZStk)} €).`;
-    entscheidColor = '#2a7a2a';
+    const freiAusreichend = randInt(mengeZ, mengeZ + Math.round(e.mengeMax / 4), e.mengeStep);
+    const kapZ_gut        = mengeZ_normal + freiAusreichend;
+    const kap_andere      = Math.ceil((zusatzIstP1 ? menge2 : menge1) * 1.15 / e.mengeStep) * e.mengeStep;
+    kapazitaet1           = zusatzIstP1 ? kapZ_gut   : kap_andere;
+    kapazitaet2           = zusatzIstP1 ? kap_andere : kapZ_gut;
+    kapazitaetFreiZ       = freiAusreichend;
+    kapazitaetReicht      = true;
   }
 
-  const quartal = zufallsQuartal();
+  const annehmenFinal = kapazitaetReicht && annehmenDB;
+  const kapFarbeFrei  = kapazitaetReicht ? '#2a7a2a' : '#a00';
+
+  const quartal    = zufallsQuartal();
   const kundenarten = ['Ein Geschäftskunde', 'Ein Großhändler', 'Ein Neukunde', 'Ein langjähriger Kunde'];
-  const kundeStr = kundenarten[Math.floor(Math.random() * kundenarten.length)];
+  const kundeStr   = kundenarten[Math.floor(Math.random() * kundenarten.length)];
 
   const container = document.getElementById('Container');
   if (!container) return;
-
-  const thZusatz = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
-  const tdZgesR  = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
-  const kapFarbeFrei = kapazitaetReicht ? '#2a7a2a' : '#a00';
 
   // ── AUFGABENTABELLE ───────────────────────────────────────────────────────
   const aufgabeTabelle =
@@ -955,106 +931,116 @@ const mengeZ = Math.max(
           `<td style="${S.tdR}">${fmtInt(menge2)} Stück</td>` +
         `</tr>` +
         `<tr>` +
-          `<td colspan="4" style="${S.tdL}">Fixkosten gesamt: ${fmt(fixKosten)} €</td>` +
+          `<td style="${S.tdL2}">Produktionskapazität</td>` +
+          `<td style="${S.tdR2}">${fmtInt(kapazitaet1)} Stück</td>` +
+          `<td style="${S.tdR2}">${fmtInt(kapazitaet2)} Stück</td>` +
         `</tr>` +
         `<tr>` +
-          `<td colspan="4" style="${S.tdL}">Produktionskapazität gesamt: ${fmtInt(kapazitaet)} Stück</td>` +
+          `<td colspan="3" style="${S.tdL}">Fixkosten gesamt: ${fmt(fixKosten)} €</td>` +
         `</tr>` +
       `</tbody>` +
     `</table>`;
 
   // ── LÖSUNGSSCHEMA ─────────────────────────────────────────────────────────
- // ============================================================================
-// PATCH v2: generiereZusatzauftrag() – Lösungsschema
-// Ersetze den alten "// ── LÖSUNGSSCHEMA ─────"-Block komplett durch diesen.
-// ============================================================================
+  const gesamtDB_mit = gesamtDB + dbZgesamt;
+  const be_mit       = gesamtDB_mit - fixKosten;
+  const be_mit_color = be_mit >= 0 ? '#2a7a2a' : '#a00';
 
-// ── LÖSUNGSSCHEMA ─────────────────────────────────────────────────────────
-// Betriebsergebnis mit Zusatzauftrag (für die letzte Zeile der Zusatzspalte)
-const gesamtDB_mit = gesamtDB + dbZgesamt;
-const be_mit       = gesamtDB_mit - fixKosten;
-const be_mit_color = be_mit >= 0 ? '#2a7a2a' : '#a00';
+  const thZusNeu = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
+  const tdZusR   = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
+  const tdZusR2  = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fffdf0;`;
+  const tdZusDbR = `border:1px solid #aaa; border-top:2px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1; font-weight:600;`;
+  const tdZusFkR = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1; color:#aaa; font-size:0.85em;`;
+  const tdZusBeR = `border:1px solid #aaa; border-top:2px solid #555; padding:6px 10px; text-align:right; background:#fff3cc; font-weight:700;`;
 
-// Trennlinie-Stil: blauer linker Rand markiert die Zusatz-Gesamtspalte
-const thZusNeu = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
-
-const tdZusR   = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
-const tdZusR2  = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fffdf0;`;
-const tdZusDbR = `border:1px solid #aaa; padding:1px 10px; border-top:2px solid #aaa; text-align:right; background:#fff8e1; font-weight:600;`;
-const tdZusFkR = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1; color:#aaa; font-size:0.85em;`;
-const tdZusBeR = `border:1px solid #aaa; border-top:2px solid #555; padding:6px 10px; text-align:right; background:#fff3cc; font-weight:700;`;
-
-const loesungsTabelle =
-  `<table style="${S.table}">` +
-    `<thead>` +
-      `<tr>` +
-        `<th style="${S.thL}" rowspan="2"></th>` +
-        `<th style="${S.thR}">„${e.p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge1)} Stk.) in €</span></th>` +
-        `<th style="${S.thR}">„${e.p2}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge2)} Stk.) in €</span></th>` +
-        `<th style="${S.thR}">gesamt<br><span style="font-weight:400; font-size:0.85em;">in €</span></th>` +
-        `<th style="${thZusNeu}">Zusatz „${pZ}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(mengeZ)} Stk.) in €</span></th>` +
-      `</tr>` +
-    `</thead>` +
-    `<tbody>` +
-      /* NVE */
-      `<tr>` +
-        `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
-        `<td style="${S.tdR}">${fmt(nve1)}</td>` +
-        `<td style="${S.tdR}">${fmt(nve2)}</td>` +
-        `<td style="${S.tdR}"></td>` +
-        `<td style="${tdZusR}">${fmt(nveZgesamt)}</td>` +
-      `</tr>` +
-      /* variable Kosten */
-      `<tr>` +
-        `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
-        `<td style="${S.tdR2}">${fmt(gesamtVK1)}</td>` +
-        `<td style="${S.tdR2}">${fmt(gesamtVK2)}</td>` +
-        `<td style="${S.tdR2}"></td>` +
-        `<td style="${tdZusR2}">${fmt(gesamtVKZ)}</td>` +
-      `</tr>` +
-      /* Deckungsbeitrag */
-      `<tr>` +
-        `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
-        `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
-        `<td style="${S.tdDbR}">${fmt(db2)}</td>` +
-        `<td style="${S.tdDbR}">${fmt(gesamtDB)}</td>` +
-        `<td style="${tdZusDbR} color:${annehmenDB ? '#2a7a2a' : '#a00'};">${fmt(dbZgesamt)}</td>` +
-      `</tr>` +
-      /* Fixkosten */
-      `<tr>` +
-        `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
-        `<td style="${S.tdFkR}"></td>` +
-        `<td style="${S.tdFkR}"></td>` +
-        `<td style="${S.tdFkR}">${fmt(fixKosten)}</td>` +
-        `<td style="${tdZusFkR}">–</td>` +
-      `</tr>` +
-      /* Betriebsergebnis Normal */
-      `<tr>` +
-        `<td style="${S.tdBeL}"><strong>Betriebsergebnis (${istGewinn ? 'Gewinn' : 'Verlust'})</strong></td>` +
-        `<td style="${S.tdBeR}"></td>` +
-        `<td style="${S.tdBeR}"></td>` +
-        `<td style="${S.tdBeR} font-weight:700; color:${istGewinn ? '#2a7a2a' : '#a00'};"><strong>${fmt(be)}</strong></td>` +
-        `<td style="${tdZusBeR} color:${be_mit_color};">` +
-          `<strong>${fmt(be_mit)}</strong>` +
-        `</td>` +
-      `</tr>` +
-    `</tbody>` +
-  `</table>`;
+  const loesungsTabelle =
+    `<table style="${S.table}">` +
+      `<thead>` +
+        `<tr>` +
+          `<th style="${S.thL}" rowspan="2"></th>` +
+          `<th style="${S.thR}">„${e.p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge1)} Stk.) in €</span></th>` +
+          `<th style="${S.thR}">„${e.p2}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge2)} Stk.) in €</span></th>` +
+          `<th style="${S.thR}">gesamt<br><span style="font-weight:400; font-size:0.85em;">in €</span></th>` +
+          `<th style="${thZusNeu}">Zusatz „${pZ}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(mengeZ)} Stk.) in €</span></th>` +
+        `</tr>` +
+        `<tr>` +
+          `<th colspan="2" style="border:1px solid #aaa; padding:3px 10px; text-align:center; background:#eef2fa; font-size:0.82em; font-weight:600; color:#555;">Normalgeschäft</th>` +
+          `<th style="border:1px solid #aaa; padding:3px 10px; text-align:center; background:#eef2fa; font-size:0.82em; font-weight:600; color:#555;">Normal</th>` +
+          `<th style="${thZusNeu} font-size:0.82em; color:#b07000; text-align:center;">Zusatzauftrag</th>` +
+        `</tr>` +
+      `</thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
+          `<td style="${S.tdR}">${fmt(nve1)}</td>` +
+          `<td style="${S.tdR}">${fmt(nve2)}</td>` +
+          `<td style="${S.tdR}"></td>` +
+          `<td style="${tdZusR}">${fmt(nveZgesamt)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
+          `<td style="${S.tdR2}">${fmt(gesamtVK1)}</td>` +
+          `<td style="${S.tdR2}">${fmt(gesamtVK2)}</td>` +
+          `<td style="${S.tdR2}"></td>` +
+          `<td style="${tdZusR2}">${fmt(gesamtVKZ)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
+          `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
+          `<td style="${S.tdDbR}">${fmt(db2)}</td>` +
+          `<td style="${S.tdDbR}">${fmt(gesamtDB)}</td>` +
+          `<td style="${tdZusDbR} color:${annehmenDB ? '#2a7a2a' : '#a00'};">${fmt(dbZgesamt)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
+          `<td style="${S.tdFkR}"></td>` +
+          `<td style="${S.tdFkR}"></td>` +
+          `<td style="${S.tdFkR}">${fmt(fixKosten)}</td>` +
+          `<td style="${tdZusFkR}">–</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdBeL}"><strong>Betriebsergebnis (${istGewinn ? 'Gewinn' : 'Verlust'})</strong></td>` +
+          `<td style="${S.tdBeR}"></td>` +
+          `<td style="${S.tdBeR}"></td>` +
+          `<td style="${S.tdBeR} font-weight:700; color:${istGewinn ? '#2a7a2a' : '#a00'};"><strong>${fmt(be)}</strong></td>` +
+          `<td style="${tdZusBeR} color:${be_mit_color};"><strong>${fmt(be_mit)}</strong></td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
 
   // ── KAPAZITÄTSPRÜFUNG ─────────────────────────────────────────────────────
   const kapazitaetBox =
     `<div style="margin-top:14px; padding:10px 14px; background:#f5f7fa; border:1px solid #ccc; border-radius:5px; font-size:0.93em;">` +
-      `<strong>Schritt 1 – Kapazitätsprüfung:</strong><br>` +
-      `Aktuelle Auslastung: ${fmtInt(menge1)} + ${fmtInt(menge2)} = ${fmtInt(normalAuslastung)} Stück<br>` +
-      `Freie Kapazität: ${fmtInt(kapazitaet)} − ${fmtInt(normalAuslastung)} = ` +
-      `<strong style="color:${kapFarbeFrei};">${fmtInt(kapazitaetFrei)} Stück</strong><br>` +
+      `<strong>Schritt 1 – Kapazitätsprüfung „${pZ}":</strong><br>` +
+      `Kapazität: ${fmtInt(zusatzIstP1 ? kapazitaet1 : kapazitaet2)} Stück &nbsp;−&nbsp; ` +
+      `Produktion: ${fmtInt(mengeZ_normal)} Stück = ` +
+      `<strong style="color:${kapFarbeFrei};">freie Kapazität: ${fmtInt(kapazitaetFreiZ)} Stück</strong><br>` +
       `Benötigt: <strong>${fmtInt(mengeZ)} Stück</strong> → ` +
       `<strong style="color:${kapFarbeFrei};">${kapazitaetReicht ? 'Kapazität reicht aus ✅' : 'Kapazität reicht NICHT aus ❌'}</strong>` +
     `</div>`;
 
   // ── ENTSCHEIDUNGSBOX ──────────────────────────────────────────────────────
+  let kapazitaetBegr, dbBegr, entscheidText, entscheidColor;
+
+  if (!kapazitaetReicht) {
+    kapazitaetBegr = `Die freie Kapazität für „${pZ}" beträgt nur ${fmtInt(kapazitaetFreiZ)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann nicht produziert werden</strong>.`;
+    dbBegr         = `(DB/Stk. wäre ${fmt(dbZStk)} € – rechnerisch ${annehmenDB ? 'positiv' : 'negativ'}, aber irrelevant da keine Kapazität.)`;
+    entscheidText  = `Der Zusatzauftrag <strong>muss abgelehnt werden</strong>, da die Kapazität für „${pZ}" nicht ausreicht (frei: ${fmtInt(kapazitaetFreiZ)} Stück, benötigt: ${fmtInt(mengeZ)} Stück).`;
+    entscheidColor = '#a00';
+  } else if (!annehmenDB) {
+    kapazitaetBegr = `Die freie Kapazität für „${pZ}" beträgt ${fmtInt(kapazitaetFreiZ)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann produziert werden</strong>. ✅`;
+    dbBegr         = `Dennoch ist der Deckungsbeitrag pro Stück negativ (${fmt(dbZStk)} €) – das Unternehmen würde je Einheit einen Verlust erleiden.`;
+    entscheidText  = `Der Zusatzauftrag <strong>soll abgelehnt werden</strong>: Zwar reicht die Kapazität, aber der Deckungsbeitrag pro Stück ist negativ (${fmt(dbZStk)} €).`;
+    entscheidColor = '#a00';
+  } else {
+    kapazitaetBegr = `Die freie Kapazität für „${pZ}" beträgt ${fmtInt(kapazitaetFreiZ)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann produziert werden</strong>. ✅`;
+    dbBegr         = `Der Deckungsbeitrag pro Stück ist positiv (${fmt(dbZStk)} €). Da die Fixkosten bereits gedeckt sind, verbessert jeder positive DB das Betriebsergebnis.`;
+    entscheidText  = `Der Zusatzauftrag <strong>soll angenommen werden</strong>: Kapazität reicht aus und der Deckungsbeitrag pro Stück ist positiv (${fmt(dbZStk)} €).`;
+    entscheidColor = '#2a7a2a';
+  }
+
   const entscheidungsBox =
-    `<div style="margin-top:10px; padding:10px 14px; border:2px solid ${entscheidColor}; border-radius:5px; background:${annehmen ? '#f0fff0' : '#fff0f0'}; font-size:0.97em;">` +
+    `<div style="margin-top:10px; padding:10px 14px; border:2px solid ${entscheidColor}; border-radius:5px; background:${annehmenFinal ? '#f0fff0' : '#fff0f0'}; font-size:0.97em;">` +
       `<strong style="color:${entscheidColor};">Schritt 2 – Deckungsbeitragsanalyse:</strong><br>` +
       `${kapazitaetBegr}<br>` +
       `${dbBegr}<br><br>` +
@@ -1063,29 +1049,28 @@ const loesungsTabelle =
 
   // ── RECHENWEG ─────────────────────────────────────────────────────────────
   const rechenwegText =
-    `Freie Kap.: ${fmtInt(kapazitaet)} − ${fmtInt(normalAuslastung)} = ${fmtInt(kapazitaetFrei)} Stück ` +
+    `Freie Kap. „${pZ}": ${fmtInt(zusatzIstP1 ? kapazitaet1 : kapazitaet2)} − ${fmtInt(mengeZ_normal)} = ${fmtInt(kapazitaetFreiZ)} Stück ` +
     `(${kapazitaetReicht ? '≥' : '<'} ${fmtInt(mengeZ)} Stück → ${kapazitaetReicht ? 'reicht' : 'reicht nicht'}) &nbsp;|&nbsp; ` +
     (kapazitaetReicht
       ? `NVP Zusatz: ${fmt(nvpZ)} × ${100 - rabattPct} % = ${fmt(nvpZrabatt)} € &nbsp;|&nbsp; ` +
         `DB/Stk.: ${fmt(nvpZrabatt)} − ${fmt(vkZ)} = ${fmt(dbZStk)} € &nbsp;|&nbsp; ` +
         `DB gesamt: ${fmtInt(mengeZ)} × ${fmt(dbZStk)} = ${fmt(dbZgesamt)} € &nbsp;|&nbsp; ` +
-        `→ <strong>${annehmen ? 'annehmen' : 'ablehnen'}</strong>`
+        `→ <strong>${annehmenFinal ? 'annehmen' : 'ablehnen'}</strong>`
       : `→ <strong>ablehnen (keine Kapazität)</strong>`);
 
   // ── AUSGABE ───────────────────────────────────────────────────────────────
   container.innerHTML =
     `<h2 style="${S.h2output}">Aufgabe – Zusatzauftrag</h2>` +
-
     `<div style="${S.aufgabenBox}">` +
       `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
       `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
       aufgabeTabelle +
       `<br><p><strong>Aufgabe</strong></p>` +
-      `<ol><li>Berechnen Sie das Betriebsergebnis.</li>` +
-      `<li>${kundeStr} wäre bereit, ${fmtInt(mengeZ)} Einheiten von „${pZ}" ` +
-      `zu einem Rabatt von ${rabattPct} % abzunehmen.` +
-    ` Begründen Sie rechnerisch, ob das Unternehmen den Zusatzauftrag annehmen soll.</li></ol>` +
-
+      `<ol>` +
+        `<li>Ermitteln Sie rechnerisch Art und Höhe des gesamten Betriebsergebnisses.</li>` +
+        `<li>${kundeStr} wäre bereit, ${fmtInt(mengeZ)} Einheiten von „${pZ}" zu einem Rabatt von ${rabattPct} % abzunehmen. ` +
+        `Begründen Sie rechnerisch, ob das Unternehmen den Zusatzauftrag annehmen soll.</li>` +
+      `</ol>` +
     `</div>` +
     `<div style="margin-top:28px;">` +
     `<h2 style="${S.h2output}">Lösung</h2>` +
@@ -1097,10 +1082,6 @@ const loesungsTabelle =
     `</div>` +
     `</div>`;
 }
-
-
-
-
 
 function zufallsQuartal() {
   const quartale = ['1. Quartal', '2. Quartal', '3. Quartal', '4. Quartal'];
