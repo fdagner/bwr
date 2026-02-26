@@ -6,6 +6,25 @@ let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 
 // ============================================================================
+// EINPRODUKT-MODUS HELPER
+// ============================================================================
+
+function isEinProdukt() {
+  return (document.getElementById('tkProduktAnzahl')?.value || '2') === '1';
+}
+
+// UI-Reaktion auf Produktanzahl-Wechsel
+function onProduktAnzahlChange() {
+  const fieldset = document.getElementById('prod2-fieldset');
+  if (!fieldset) return;
+  if (isEinProdukt()) {
+    fieldset.classList.add('prod2-disabled');
+  } else {
+    fieldset.classList.remove('prod2-disabled');
+  }
+}
+
+// ============================================================================
 // YAML-DATEN LADEN
 // ============================================================================
 
@@ -176,7 +195,6 @@ const S = {
   tdFkR: 'border:1px solid #aaa; padding:6px 10px; text-align:right; color:#555;',
   tdBeL: 'border:1px solid #aaa; border-top:2px solid #555; padding:6px 10px; text-align:left;  background:#d0dff5; font-weight:700;',
   tdBeR: 'border:1px solid #aaa; border-top:2px solid #555; padding:6px 10px; text-align:right; background:#d0dff5;',
-  // Gesuchte Zelle (Preisuntergrenze – hervorgehoben)
   tdGesuchtR: 'border:2px solid #1a56a0; padding:6px 10px; text-align:right; background:#fff8e1; font-weight:600; color:#1a56a0;',
   aufgabenBox: 'border:1px solid #ccc; border-radius:5px; padding:14px 18px; margin-bottom:18px;',
   hinweisBox:  'background:#fff8e1; border:1px solid #f0c040; border-radius:5px; padding:10px 14px; margin:10px 0 14px; font-size:0.92em;',
@@ -193,24 +211,86 @@ function generiereAufgabe() {
   const variante = getVal('tkVariante') || 'betriebsergebnis';
   switch (variante) {
     case 'preisuntergrenze':
-      generierePreisuntergrenze();
+      isEinProdukt() ? generierePreisuntergrenze1P() : generierePreisuntergrenze();
       break;
     case 'nettoverkaufserloes':
-      generiereNettoverkaufserloes();
+      isEinProdukt() ? generiereNettoverkaufserloes1P() : generiereNettoverkaufserloes();
       break;
     case 'fixkosten':
-      generiereFixkosten();
+      isEinProdukt() ? generiereFixkosten1P() : generiereFixkosten();
       break;
     case 'zusatzauftrag':
-      generiereZusatzauftrag();
+      isEinProdukt() ? generiereZusatzauftrag1P() : generiereZusatzauftrag();
       break;
     default:
-      generiereBetriebsergebnis();
+      isEinProdukt() ? generiereBetriebsergebnis1P() : generiereBetriebsergebnis();
   }
 }
 
 // ============================================================================
-// VARIANTE 1 – BETRIEBSERGEBNIS
+// DATENTABELLE – EINPRODUKT (nur Produkt 1, keine P2-Spalte)
+// ============================================================================
+
+function datentabelle1P(p1, nvp1, vk1, menge1, fixKosten) {
+  return `<table style="${S.tableNarrow}">` +
+    `<thead><tr>` +
+      `<th style="${S.thL}">Modell</th>` +
+      `<th style="${S.thR}">„${p1}"</th>` +
+    `</tr></thead>` +
+    `<tbody>` +
+      `<tr>` +
+        `<td style="${S.tdL}">Nettoverkaufspreis pro Stück</td>` +
+        `<td style="${S.tdR}">${fmt(nvp1)} €</td>` +
+      `</tr>` +
+      `<tr>` +
+        `<td style="${S.tdL2}">Variable Kosten pro Stück</td>` +
+        `<td style="${S.tdR2}">${fmt(vk1)} €</td>` +
+      `</tr>` +
+      `<tr>` +
+        `<td style="${S.tdL}">Produktion ≙ Absatz</td>` +
+        `<td style="${S.tdR}">${fmtInt(menge1)} Stück</td>` +
+      `</tr>` +
+      `<tr>` +
+        `<td colspan="2" style="${S.tdL}">Fixkosten gesamt: ${fmt(fixKosten)} €</td>` +
+      `</tr>` +
+    `</tbody>` +
+  `</table>`;
+}
+
+// Lösungsschema Einprodukt (2 Spalten: Produkt 1 + gesamt)
+function loesungsSchema1P(p1, menge1, nve1, gVK1, db1, fixKosten, beLabel, beWert) {
+  return `<table style="${S.table}">` +
+    `<thead><tr>` +
+      `<th style="${S.thL}"></th>` +
+      `<th style="${S.thR}">Modell „${p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge1)} Stück)<br>in €</span></th>` +
+    `</tr></thead>` +
+    `<tbody>` +
+      `<tr>` +
+        `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
+        `<td style="${S.tdR}">${fmt(nve1)}</td>` +
+      `</tr>` +
+      `<tr>` +
+        `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
+        `<td style="${S.tdR2}">${fmt(gVK1)}</td>` +
+      `</tr>` +
+      `<tr>` +
+        `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
+        `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
+      `</tr>` +
+      `<tr>` +
+        `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
+        `<td style="${S.tdFkR}">${fmt(fixKosten)}</td>` +
+      `</tr>` +
+      `<tr>` +
+        `<td style="${S.tdBeL}">${beLabel}</td>` +
+        `<td style="${S.tdBeR}">${beWert}</td>` +
+      `</tr>` +
+    `</tbody>` +
+  `</table>`;
+}
+
+// ============================================================================
+// VARIANTE 1A – BETRIEBSERGEBNIS (Zweiprodukt)
 // ============================================================================
 
 function generiereBetriebsergebnis() {
@@ -277,16 +357,64 @@ function generiereBetriebsergebnis() {
 }
 
 // ============================================================================
-// VARIANTE 2 – LANGFRISTIGE PREISUNTERGRENZE
-// Betriebsergebnis = 0 → Gesamtdeckungsbeitrag = Fixkosten
-// Für ein zufälliges Produkt (gesucht) wird der NVP berechnet.
-// Das andere Produkt (bekannt) hat vollständige Daten inkl. NVP.
+// VARIANTE 1B – BETRIEBSERGEBNIS (Einprodukt)
+// ============================================================================
+
+function generiereBetriebsergebnis1P() {
+  const e = leseEingaben();
+
+  const { nvp: nvp1, vk: vk1 } = erzeugePreisPaar(e.nvpMin, e.nvpMax, e.vkMin, e.vkMax);
+  const menge1    = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
+  const fixKosten = randInt(e.fixMin, e.fixMax, e.fixStep);
+
+  const nve1      = nvp1 * menge1;
+  const gesamtVK1 = vk1 * menge1;
+  const db1       = nve1 - gesamtVK1;
+  const be        = db1 - fixKosten;
+
+  const quartal   = zufallsQuartal();
+  const istGewinn = be >= 0;
+  const beLabel   = istGewinn ? 'Gewinn' : 'Verlust';
+  const beColor   = istGewinn ? '#2a7a2a' : '#a00';
+
+  const container = document.getElementById('Container');
+  if (!container) return;
+
+  container.innerHTML =
+    `<h2 style="${S.h2output}">Aufgabe – Betriebsergebnis</h2>` +
+
+    `<div style="${S.aufgabenBox}">` +
+      `<p style="margin-bottom:10px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
+      `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
+      datentabelle1P(e.p1, nvp1, vk1, menge1, fixKosten) +
+    `</div>` +
+
+    `<p style="margin-bottom:6px;"><strong>Aufgabe:</strong> Ermitteln Sie rechnerisch Art und Höhe des Betriebsergebnisses für das ${quartal}.</p>` +
+
+    `<div style="margin-top:28px;">` +
+    `<h2 style="${S.h2output}">Lösung</h2>` +
+    loesungsSchema1P(
+      e.p1, menge1, nve1, gesamtVK1, db1, fixKosten,
+      `<strong>Betriebsergebnis (${beLabel})</strong>`,
+      `<strong style="color:${beColor};">${fmt(be)}</strong>`
+    ) +
+    `<div style="${S.rechenweg}">` +
+      `<strong>Rechenweg:</strong> ` +
+      `NVE: ${fmtInt(menge1)} × ${fmt(nvp1)} = ${fmt(nve1)} € &nbsp;|&nbsp; ` +
+      `VK: ${fmtInt(menge1)} × ${fmt(vk1)} = ${fmt(gesamtVK1)} € &nbsp;|&nbsp; ` +
+      `DB: ${fmt(nve1)} − ${fmt(gesamtVK1)} = ${fmt(db1)} € &nbsp;|&nbsp; ` +
+      `BE: ${fmt(db1)} − ${fmt(fixKosten)} = <strong>${fmt(be)} €</strong>` +
+    `</div>` +
+    `</div>`;
+}
+
+// ============================================================================
+// VARIANTE 2A – LANGFRISTIGE PREISUNTERGRENZE (Zweiprodukt)
 // ============================================================================
 
 function generierePreisuntergrenze() {
   const e = leseEingaben();
 
-  // Bekanntes Produkt: vollständige Daten inklusive NVP
   const { nvp: nvpB, vk: vkB } = erzeugePreisPaar(e.nvpMin, e.nvpMax, e.vkMin, e.vkMax);
   const mengeB    = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
   const fixKosten = randInt(e.fixMin, e.fixMax, e.fixStep);
@@ -295,37 +423,28 @@ function generierePreisuntergrenze() {
   const gesamtVKB = vkB * mengeB;
   const dbB       = nveB - gesamtVKB;
 
-  // Gesuchtes Produkt: VK und Menge bekannt, NVP gesucht
-  // dbG muss so sein, dass dbB + dbG = fixKosten → dbG = fixKosten - dbB
-  // Außerdem: dbG > 0, damit NVP > VK (sinnvolle Aufgabe)
-  // → wir stellen sicher dass fixKosten > dbB
   let vkG, mengeG, dbG, nveG, nvpG_exakt;
   let tries = 0;
   do {
     vkG    = randInt(e.vkMin, e.vkMax);
     mengeG = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
-    dbG         = fixKosten - dbB;       // benötigter DB des gesuchten Produkts
-    nveG        = vkG * mengeG + dbG;   // NVE des gesuchten Produkts
-    nvpG_exakt  = nveG / mengeG;         // exakter gesuchter NVP
+    dbG         = fixKosten - dbB;
+    nveG        = vkG * mengeG + dbG;
+    nvpG_exakt  = nveG / mengeG;
     tries++;
   } while ((dbG <= 0 || nvpG_exakt <= vkG) && tries < 200);
 
-  // Falls kein sinnvolles Paar gefunden → Fixkosten hochsetzen und nochmal
-  // (Fallback: fixKosten neu würfeln bis dbG > 0)
   if (dbG <= 0 || nvpG_exakt <= vkG) {
-    // Einfacher Fallback: bekanntes Produkt neu mit kleinerem DB
     return generierePreisuntergrenze();
   }
 
-  // Zufällig entscheiden, welches Produkt p1 und welches p2 ist
   const gesuchterIstP1 = Math.random() < 0.5;
 
   const p1    = e.p1;
   const p2    = e.p2;
-  const pGes  = gesuchterIstP1 ? p1 : p2;   // gesuchtes Produkt
-  const pBek  = gesuchterIstP1 ? p2 : p1;   // bekanntes Produkt
+  const pGes  = gesuchterIstP1 ? p1 : p2;
+  const pBek  = gesuchterIstP1 ? p2 : p1;
 
-  // Werte für Ausgabe sortiert nach p1/p2
   const nvp1  = gesuchterIstP1 ? null   : nvpB;
   const nvp2  = gesuchterIstP1 ? nvpB   : null;
   const vk1   = gesuchterIstP1 ? vkG    : vkB;
@@ -333,21 +452,19 @@ function generierePreisuntergrenze() {
   const menge1 = gesuchterIstP1 ? mengeG : mengeB;
   const menge2 = gesuchterIstP1 ? mengeB : mengeG;
 
-  // Berechnungswerte für Lösung
   const nve1_loes    = gesuchterIstP1 ? nveG          : nveB;
   const nve2_loes    = gesuchterIstP1 ? nveB          : nveG;
   const gVK1_loes    = gesuchterIstP1 ? vkG * mengeG  : gesamtVKB;
   const gVK2_loes    = gesuchterIstP1 ? gesamtVKB     : vkG * mengeG;
   const db1_loes     = gesuchterIstP1 ? dbG           : dbB;
   const db2_loes     = gesuchterIstP1 ? dbB           : dbG;
-  const gesamtDB_loes = db1_loes + db2_loes; // = fixKosten
+  const gesamtDB_loes = db1_loes + db2_loes;
 
   const quartal = zufallsQuartal();
 
   const container = document.getElementById('Container');
   if (!container) return;
 
-  // Datentabelle für Aufgabenstellung (NVP des gesuchten Produkts = „?")
   const aufgabeTabelle =
     `<table style="${S.tableNarrow}">` +
       `<thead><tr>` +
@@ -377,17 +494,7 @@ function generierePreisuntergrenze() {
       `</tbody>` +
     `</table>`;
 
-  // Lösungsschema: NVP-Zeile des gesuchten Produkts bleibt leer in der Datentabelle,
-  // dafür eigene Zeile „Langfristige Preisuntergrenze" am Ende
   const loesBE_label = `Betriebsergebnis (= 0, da Preisuntergrenze)`;
-
-  // Lösungstabelle: NVE des gesuchten Produkts hervorgehoben
-  const nveBekannt  = gesuchterIstP1 ? nve2_loes : nve1_loes;
-  const nveGesucht  = gesuchterIstP1 ? nve1_loes : nve2_loes;
-  const gVKBekannt  = gesuchterIstP1 ? gVK2_loes : gVK1_loes;
-  const gVKGesucht  = gesuchterIstP1 ? gVK1_loes : gVK2_loes;
-  const dbBekannt   = gesuchterIstP1 ? db2_loes  : db1_loes;
-  const dbGesucht   = gesuchterIstP1 ? db1_loes  : db2_loes;
 
   const loesungsTabelle =
     `<table style="${S.table}">` +
@@ -431,16 +538,14 @@ function generierePreisuntergrenze() {
       `</tbody>` +
     `</table>`;
 
-  // Ergebnis-Zeile: NVP des gesuchten Produkts
   const ergebnisZeile =
     `<div style="margin-top:14px; padding:10px 14px; background:#e8f0fe; border:1px solid #b0c4ef; border-radius:5px; font-size:0.97em;">` +
       `<strong>Langfristige Preisuntergrenze für „${pGes}":</strong><br>` +
       `NVE<sub>${pGes}</sub> = Gesamtdeckungsbeitrag − DB<sub>${pBek}</sub> + variable Kosten<sub>${pGes}</sub><br>` +
-      `NVE<sub>${pGes}</sub> = ${fmt(fixKosten)} − ${fmt(gesuchterIstP1 ? dbB : dbB)} + ${fmt(vkG * mengeG)} = ${fmt(nveG)} €<br>` +
+      `NVE<sub>${pGes}</sub> = ${fmt(fixKosten)} − ${fmt(dbB)} + ${fmt(vkG * mengeG)} = ${fmt(nveG)} €<br>` +
       `<strong>NVP<sub>${pGes}</sub> = NVE<sub>${pGes}</sub> ÷ Menge = ${fmt(nveG)} ÷ ${fmtInt(mengeG)} = <span style="color:#1a56a0;">${fmt(nvpG_exakt)} €</span></strong>` +
     `</div>`;
 
-  // Rechenweg
   const rechenwegText =
     `NVE ${pBek}: ${fmtInt(mengeB)} × ${fmt(nvpB)} = ${fmt(nveB)} € &nbsp;|&nbsp; ` +
     `VK ${pBek}: ${fmtInt(mengeB)} × ${fmt(vkB)} = ${fmt(gesamtVKB)} € &nbsp;|&nbsp; ` +
@@ -451,15 +556,12 @@ function generierePreisuntergrenze() {
 
   container.innerHTML =
     `<h2 style="${S.h2output}">Aufgabe – Langfristige Preisuntergrenze</h2>` +
-
     `<div style="${S.aufgabenBox}">` +
       `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
       `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
       aufgabeTabelle +
     `</div>` +
-
     `<p style="margin-bottom:6px;"><strong>Aufgabe</strong><br>Berechnen Sie die langfristige Preisuntergrenze für „${pGes}".</p>` +
-
     `<div style="margin-top:28px;">` +
     `<h2 style="${S.h2output}">Lösung</h2>` +
     loesungsTabelle +
@@ -471,48 +573,142 @@ function generierePreisuntergrenze() {
 }
 
 // ============================================================================
-// VARIANTE 3 – NETTOVERKAUFSERLÖSE
-// Betriebsergebnis (Gewinn) ist gegeben.
-// Von einem zufälligen Produkt fehlen die NVE (und damit der NVP/Stk.).
-// Gesucht: NVE gesamt und NVP pro Stück des gesuchten Produkts.
+// VARIANTE 2B – LANGFRISTIGE PREISUNTERGRENZE (Einprodukt)
+// NVP ist unbekannt. Bedingung: BE = 0 → DB = Fixkosten
+// NVE = VKg + Fixkosten; NVP = NVE / Menge
+// ============================================================================
+
+function generierePreisuntergrenze1P() {
+  const e = leseEingaben();
+
+  const vk1       = randInt(e.vkMin, e.vkMax);
+  const menge1    = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
+  const fixKosten = randInt(e.fixMin, e.fixMax, e.fixStep);
+
+  const gesamtVK1 = vk1 * menge1;
+  const nve1      = gesamtVK1 + fixKosten;  // DB = Fixkosten → BE = 0
+  const nvp1_exakt = nve1 / menge1;
+  const db1       = fixKosten;               // DB = Fixkosten
+
+  const quartal   = zufallsQuartal();
+  const container = document.getElementById('Container');
+  if (!container) return;
+
+  // Aufgabentabelle: NVP = ?
+  const aufgabeTabelle =
+    `<table style="${S.tableNarrow}">` +
+      `<thead><tr>` +
+        `<th style="${S.thL}">Modell</th>` +
+        `<th style="${S.thR}">„${e.p1}"</th>` +
+      `</tr></thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufspreis pro Stück</td>` +
+          `<td style="${S.tdGesuchtR}"><strong>?</strong></td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}">Variable Kosten pro Stück</td>` +
+          `<td style="${S.tdR2}">${fmt(vk1)} €</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Produktion ≙ Absatz</td>` +
+          `<td style="${S.tdR}">${fmtInt(menge1)} Stück</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td colspan="2" style="${S.tdL}">Fixkosten gesamt: ${fmt(fixKosten)} €</td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
+
+  const loesungsTabelle =
+    `<table style="${S.table}">` +
+      `<thead><tr>` +
+        `<th style="${S.thL}"></th>` +
+        `<th style="${S.thR}">Modell „${e.p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge1)} Stück)<br>in €</span></th>` +
+      `</tr></thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
+          `<td style="${S.tdGesuchtR}">${fmt(nve1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
+          `<td style="${S.tdR2}">${fmt(gesamtVK1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
+          `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
+          `<td style="${S.tdFkR}">${fmt(fixKosten)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdBeL}"><strong>Betriebsergebnis (= 0, da Preisuntergrenze)</strong></td>` +
+          `<td style="${S.tdBeR} font-weight:700; color:#2a7a2a;"><strong>0,00</strong></td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
+
+  const ergebnisZeile =
+    `<div style="margin-top:14px; padding:10px 14px; background:#e8f0fe; border:1px solid #b0c4ef; border-radius:5px; font-size:0.97em;">` +
+      `<strong>Langfristige Preisuntergrenze für „${e.p1}":</strong><br>` +
+      `Bedingung: BE = 0 → Deckungsbeitrag = Fixkosten = ${fmt(fixKosten)} €<br>` +
+      `NVE = variable Kosten gesamt + Fixkosten = ${fmt(gesamtVK1)} + ${fmt(fixKosten)} = ${fmt(nve1)} €<br>` +
+      `<strong>NVP = NVE ÷ Menge = ${fmt(nve1)} ÷ ${fmtInt(menge1)} = <span style="color:#1a56a0;">${fmt(nvp1_exakt)} €</span></strong>` +
+    `</div>`;
+
+  container.innerHTML =
+    `<h2 style="${S.h2output}">Aufgabe – Langfristige Preisuntergrenze</h2>` +
+    `<div style="${S.aufgabenBox}">` +
+      `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
+      `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
+      aufgabeTabelle +
+    `</div>` +
+    `<p style="margin-bottom:6px;"><strong>Aufgabe</strong><br>Berechnen Sie die langfristige Preisuntergrenze für „${e.p1}".</p>` +
+    `<div style="margin-top:28px;">` +
+    `<h2 style="${S.h2output}">Lösung</h2>` +
+    loesungsTabelle +
+    ergebnisZeile +
+    `<div style="${S.rechenweg}">` +
+      `<strong>Rechenweg:</strong> ` +
+      `VK gesamt: ${fmtInt(menge1)} × ${fmt(vk1)} = ${fmt(gesamtVK1)} € &nbsp;|&nbsp; ` +
+      `NVE = ${fmt(gesamtVK1)} + ${fmt(fixKosten)} = ${fmt(nve1)} € &nbsp;|&nbsp; ` +
+      `NVP = ${fmt(nve1)} ÷ ${fmtInt(menge1)} = <strong>${fmt(nvp1_exakt)} €</strong>` +
+    `</div>` +
+    `</div>`;
+}
+
+// ============================================================================
+// VARIANTE 3A – NETTOVERKAUFSERLÖSE (Zweiprodukt)
 // ============================================================================
 
 function generiereNettoverkaufserloes() {
   const e = leseEingaben();
 
-  // Bekanntes Produkt: vollständige Daten
   const { nvp: nvpB, vk: vkB } = erzeugePreisPaar(e.nvpMin, e.nvpMax, e.vkMin, e.vkMax);
   const mengeB    = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
   const nveB      = nvpB * mengeB;
   const gesamtVKB = vkB * mengeB;
   const dbB       = nveB - gesamtVKB;
 
-  // Gesuchtes Produkt: VK und Menge bekannt, NVE/NVP gesucht
   const vkG    = randInt(e.vkMin, e.vkMax);
   const mengeG = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
   const fixKosten = randInt(e.fixMin, e.fixMax, e.fixStep);
 
-  // Gewinn zufällig wählen (positiv, rund)
   const fixStep = parseInt(getVal('fixRunden')) || 1000;
   const gewinn  = randInt(fixStep, Math.round(fixKosten * 0.4), fixStep);
 
-  // Rückrechnung: NVE gesuchtes Produkt
-  // BE = gesamtDB - fixKosten = gewinn
-  // gesamtDB = gewinn + fixKosten
-  // dbG = gesamtDB - dbB = gewinn + fixKosten - dbB
-  // nveG = dbG + gesamtVKG
   const gesamtDB  = gewinn + fixKosten;
   const dbG       = gesamtDB - dbB;
   const gesamtVKG = vkG * mengeG;
   const nveG      = dbG + gesamtVKG;
   const nvpG      = nveG / mengeG;
 
-  // Prüfen ob sinnvoll (nvpG > vkG, nveG > 0)
   if (dbG <= 0 || nvpG <= vkG) {
     return generiereNettoverkaufserloes();
   }
 
-  // Zufällig welches Produkt p1 / p2 ist
   const gesuchterIstP1 = Math.random() < 0.5;
   const p1 = e.p1;
   const p2 = e.p2;
@@ -534,11 +730,9 @@ function generiereNettoverkaufserloes() {
   const db2_loes   = gesuchterIstP1 ? dbB : dbG;
 
   const quartal = zufallsQuartal();
-
   const container = document.getElementById('Container');
   if (!container) return;
 
-  // Aufgabentabelle: NVE-Zeile fehlt beim gesuchten Produkt (NVP = „?")
   const aufgabeTabelle =
     `<table style="${S.tableNarrow}">` +
       `<thead><tr>` +
@@ -571,7 +765,6 @@ function generiereNettoverkaufserloes() {
       `</tbody>` +
     `</table>`;
 
-  // Lösungsschema
   const loesungsTabelle =
     `<table style="${S.table}">` +
       `<thead><tr>` +
@@ -633,15 +826,12 @@ function generiereNettoverkaufserloes() {
 
   container.innerHTML =
     `<h2 style="${S.h2output}">Aufgabe – Nettoverkaufserlöse</h2>` +
-
     `<div style="${S.aufgabenBox}">` +
       `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
       `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
       aufgabeTabelle +
     `</div>` +
-
     `<p style="margin-bottom:6px;"><strong>Aufgabe</strong><br>Berechnen Sie die Nettoverkaufserlöse sowie den Nettoverkaufspreis pro Stück für „${pGes}".</p>` +
-
     `<div style="margin-top:28px;">` +
     `<h2 style="${S.h2output}">Lösung</h2>` +
     loesungsTabelle +
@@ -653,10 +843,121 @@ function generiereNettoverkaufserloes() {
 }
 
 // ============================================================================
-// VARIANTE 4 – FIXKOSTEN
-// Alle Produktdaten inkl. NVP sind gegeben, Betriebsergebnis (Gewinn/Verlust)
-// ist bekannt. Fixkosten sind unbekannt und sollen berechnet werden.
-// Fixkosten = Gesamtdeckungsbeitrag − Betriebsergebnis
+// VARIANTE 3B – NETTOVERKAUFSERLÖSE (Einprodukt)
+// Gewinn gegeben, NVP gesucht. Nur ein Produkt.
+// NVE = VKg + DB; DB = Gewinn + Fixkosten; NVP = NVE / Menge
+// ============================================================================
+
+function generiereNettoverkaufserloes1P() {
+  const e = leseEingaben();
+
+  const vk1       = randInt(e.vkMin, e.vkMax);
+  const menge1    = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
+  const fixKosten = randInt(e.fixMin, e.fixMax, e.fixStep);
+  const fixStep   = parseInt(getVal('fixRunden')) || 1000;
+  const gewinn    = randInt(fixStep, Math.round(fixKosten * 0.4), fixStep);
+
+  const gesamtVK1 = vk1 * menge1;
+  const db1       = gewinn + fixKosten;
+  const nve1      = db1 + gesamtVK1;
+  const nvp1      = nve1 / menge1;
+
+  if (nvp1 <= vk1) return generiereNettoverkaufserloes1P();
+
+  const quartal   = zufallsQuartal();
+  const container = document.getElementById('Container');
+  if (!container) return;
+
+  const aufgabeTabelle =
+    `<table style="${S.tableNarrow}">` +
+      `<thead><tr>` +
+        `<th style="${S.thL}">Modell</th>` +
+        `<th style="${S.thR}">„${e.p1}"</th>` +
+      `</tr></thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufspreis pro Stück</td>` +
+          `<td style="${S.tdGesuchtR}"><strong>?</strong></td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}">Variable Kosten pro Stück</td>` +
+          `<td style="${S.tdR2}">${fmt(vk1)} €</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Produktion ≙ Absatz</td>` +
+          `<td style="${S.tdR}">${fmtInt(menge1)} Stück</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td colspan="2" style="${S.tdL}">Fixkosten gesamt: ${fmt(fixKosten)} €</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td colspan="2" style="${S.tdL}">Betriebsergebnis (Gewinn): ${fmt(gewinn)} €</td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
+
+  const loesungsTabelle =
+    `<table style="${S.table}">` +
+      `<thead><tr>` +
+        `<th style="${S.thL}"></th>` +
+        `<th style="${S.thR}">Modell „${e.p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge1)} Stück)<br>in €</span></th>` +
+      `</tr></thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
+          `<td style="${S.tdGesuchtR}">${fmt(nve1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
+          `<td style="${S.tdR2}">${fmt(gesamtVK1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
+          `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
+          `<td style="${S.tdFkR}">${fmt(fixKosten)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdBeL}"><strong>Betriebsergebnis (Gewinn)</strong></td>` +
+          `<td style="${S.tdBeR} color:#2a7a2a; font-weight:700;"><strong>${fmt(gewinn)}</strong></td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
+
+  const ergebnisZeile =
+    `<div style="margin-top:14px; padding:10px 14px; background:#e8f0fe; border:1px solid #b0c4ef; border-radius:5px; font-size:0.97em;">` +
+      `<strong>Nettoverkaufspreis pro Stück für „${e.p1}":</strong><br>` +
+      `DB = Gewinn + Fixkosten = ${fmt(gewinn)} + ${fmt(fixKosten)} = ${fmt(db1)} €<br>` +
+      `NVE = DB + variable Kosten gesamt = ${fmt(db1)} + ${fmt(gesamtVK1)} = ${fmt(nve1)} €<br>` +
+      `<strong>NVP = NVE ÷ Menge = ${fmt(nve1)} ÷ ${fmtInt(menge1)} = <span style="color:#1a56a0;">${fmt(nvp1)} €</span></strong>` +
+    `</div>`;
+
+  container.innerHTML =
+    `<h2 style="${S.h2output}">Aufgabe – Nettoverkaufserlöse</h2>` +
+    `<div style="${S.aufgabenBox}">` +
+      `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
+      `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
+      aufgabeTabelle +
+    `</div>` +
+    `<p style="margin-bottom:6px;"><strong>Aufgabe</strong><br>Berechnen Sie die Nettoverkaufserlöse sowie den Nettoverkaufspreis pro Stück für „${e.p1}".</p>` +
+    `<div style="margin-top:28px;">` +
+    `<h2 style="${S.h2output}">Lösung</h2>` +
+    loesungsTabelle +
+    ergebnisZeile +
+    `<div style="${S.rechenweg}">` +
+      `<strong>Rechenweg:</strong> ` +
+      `DB = ${fmt(gewinn)} + ${fmt(fixKosten)} = ${fmt(db1)} € &nbsp;|&nbsp; ` +
+      `VK gesamt: ${fmtInt(menge1)} × ${fmt(vk1)} = ${fmt(gesamtVK1)} € &nbsp;|&nbsp; ` +
+      `NVE = ${fmt(db1)} + ${fmt(gesamtVK1)} = ${fmt(nve1)} € &nbsp;|&nbsp; ` +
+      `NVP = ${fmt(nve1)} ÷ ${fmtInt(menge1)} = <strong>${fmt(nvp1)} €</strong>` +
+    `</div>` +
+    `</div>`;
+}
+
+// ============================================================================
+// VARIANTE 4A – FIXKOSTEN (Zweiprodukt)
 // ============================================================================
 
 function generiereFixkosten() {
@@ -676,25 +977,20 @@ function generiereFixkosten() {
   const db2       = nve2 - gesamtVK2;
   const gesamtDB  = db1 + db2;
 
-  // Betriebsergebnis zufällig – Gewinn oder Verlust, gerundet
   const fixStep   = parseInt(getVal('fixRunden')) || 1000;
-  // BE liegt zwischen -30% und +40% des Gesamt-DB, damit Fixkosten positiv & realistisch
   const beMin     = -Math.round(gesamtDB * 0.3);
   const beMax     =  Math.round(gesamtDB * 0.4);
   const be        = randInt(beMin, beMax, fixStep);
-
-  const fixKosten = gesamtDB - be;   // immer positiv durch obige Grenzen
+  const fixKosten = gesamtDB - be;
 
   const istGewinn = be >= 0;
   const beLabel   = istGewinn ? 'Gewinn' : 'Verlust';
   const beColor   = istGewinn ? '#2a7a2a' : '#a00';
 
   const quartal   = zufallsQuartal();
-
   const container = document.getElementById('Container');
   if (!container) return;
 
-  // Aufgabentabelle: vollständige Produktdaten + BE gegeben, Fixkosten = „?"
   const aufgabeTabelle =
     `<table style="${S.tableNarrow}">` +
       `<thead><tr>` +
@@ -729,7 +1025,6 @@ function generiereFixkosten() {
       `</tbody>` +
     `</table>`;
 
-  // Lösungsschema
   const loesungsTabelle =
     `<table style="${S.table}">` +
       `<thead><tr>` +
@@ -782,15 +1077,12 @@ function generiereFixkosten() {
 
   container.innerHTML =
     `<h2 style="${S.h2output}">Aufgabe – Fixkosten</h2>` +
-
     `<div style="${S.aufgabenBox}">` +
       `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
       `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
       aufgabeTabelle +
     `</div>` +
-
     `<p style="margin-bottom:6px;"><strong>Aufgabe</strong><br>Berechnen Sie die Fixkosten des Unternehmens.</p>` +
-
     `<div style="margin-top:28px;">` +
     `<h2 style="${S.h2output}">Lösung</h2>` +
     loesungsTabelle +
@@ -800,14 +1092,117 @@ function generiereFixkosten() {
     `</div>`;
 }
 
+// ============================================================================
+// VARIANTE 4B – FIXKOSTEN (Einprodukt)
+// ============================================================================
 
+function generiereFixkosten1P() {
+  const e = leseEingaben();
+
+  const { nvp: nvp1, vk: vk1 } = erzeugePreisPaar(e.nvpMin, e.nvpMax, e.vkMin, e.vkMax);
+  const menge1    = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
+
+  const nve1      = nvp1 * menge1;
+  const gesamtVK1 = vk1 * menge1;
+  const db1       = nve1 - gesamtVK1;
+
+  const fixStep   = parseInt(getVal('fixRunden')) || 1000;
+  const beMin     = -Math.round(db1 * 0.3);
+  const beMax     =  Math.round(db1 * 0.4);
+  const be        = randInt(beMin, beMax, fixStep);
+  const fixKosten = db1 - be;
+
+  const istGewinn = be >= 0;
+  const beLabel   = istGewinn ? 'Gewinn' : 'Verlust';
+  const beColor   = istGewinn ? '#2a7a2a' : '#a00';
+
+  const quartal   = zufallsQuartal();
+  const container = document.getElementById('Container');
+  if (!container) return;
+
+  const aufgabeTabelle =
+    `<table style="${S.tableNarrow}">` +
+      `<thead><tr>` +
+        `<th style="${S.thL}">Modell</th>` +
+        `<th style="${S.thR}">„${e.p1}"</th>` +
+      `</tr></thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufspreis pro Stück</td>` +
+          `<td style="${S.tdR}">${fmt(nvp1)} €</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}">Variable Kosten pro Stück</td>` +
+          `<td style="${S.tdR2}">${fmt(vk1)} €</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Produktion ≙ Absatz</td>` +
+          `<td style="${S.tdR}">${fmtInt(menge1)} Stück</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Fixkosten gesamt</td>` +
+          `<td style="${S.tdGesuchtR}"><strong>?</strong></td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Betriebsergebnis (${beLabel})</td>` +
+          `<td style="${S.tdR}">${fmt(be)} €</td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
+
+  const loesungsTabelle =
+    `<table style="${S.table}">` +
+      `<thead><tr>` +
+        `<th style="${S.thL}"></th>` +
+        `<th style="${S.thR}">Modell „${e.p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge1)} Stück)<br>in €</span></th>` +
+      `</tr></thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
+          `<td style="${S.tdR}">${fmt(nve1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
+          `<td style="${S.tdR2}">${fmt(gesamtVK1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
+          `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
+          `<td style="${S.tdGesuchtR}">${fmt(fixKosten)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdBeL}"><strong>Betriebsergebnis (${beLabel})</strong></td>` +
+          `<td style="${S.tdBeR} color:${beColor}; font-weight:700;"><strong>${fmt(be)}</strong></td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
+
+  container.innerHTML =
+    `<h2 style="${S.h2output}">Aufgabe – Fixkosten</h2>` +
+    `<div style="${S.aufgabenBox}">` +
+      `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
+      `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
+      aufgabeTabelle +
+    `</div>` +
+    `<p style="margin-bottom:6px;"><strong>Aufgabe</strong><br>Berechnen Sie die Fixkosten des Unternehmens.</p>` +
+    `<div style="margin-top:28px;">` +
+    `<h2 style="${S.h2output}">Lösung</h2>` +
+    loesungsTabelle +
+    `<div style="${S.rechenweg}">` +
+      `<strong>Rechenweg:</strong> ` +
+      `NVE: ${fmtInt(menge1)} × ${fmt(nvp1)} = ${fmt(nve1)} € &nbsp;|&nbsp; ` +
+      `VK: ${fmtInt(menge1)} × ${fmt(vk1)} = ${fmt(gesamtVK1)} € &nbsp;|&nbsp; ` +
+      `DB: ${fmt(nve1)} − ${fmt(gesamtVK1)} = ${fmt(db1)} € &nbsp;|&nbsp; ` +
+      `Fixkosten: ${fmt(db1)} − ${fmt(be)} = <strong>${fmt(fixKosten)} €</strong>` +
+    `</div>` +
+    `</div>`;
+}
 
 // ============================================================================
-// VARIANTE 5 – ZUSATZAUFTRAG
-// Normales Betriebsergebnis ist gegeben (alle Daten für P1 + P2 + Fixkosten).
-// Ein Geschäftskunde möchte eine zusätzliche Menge von P1 ODER P2 zu einem
-// rabattierten NVP abnehmen. Da die Fixkosten bereits gedeckt sind, reicht
-// ein positiver Deckungsbeitrag pro Stück zur Annahme.
+// VARIANTE 5A – ZUSATZAUFTRAG (Zweiprodukt)
 // ============================================================================
 
 function generiereZusatzauftrag() {
@@ -819,7 +1214,6 @@ function generiereZusatzauftrag() {
   const menge2    = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
   const fixKosten = randInt(e.fixMin, e.fixMax, e.fixStep);
 
-  // Reguläres Betriebsergebnis
   const nve1      = nvp1 * menge1;
   const nve2      = nvp2 * menge2;
   const gesamtVK1 = vk1 * menge1;
@@ -830,14 +1224,12 @@ function generiereZusatzauftrag() {
   const be        = gesamtDB - fixKosten;
   const istGewinn = be >= 0;
 
-  // Zusatzauftrag: zufälliges Produkt
   const zusatzIstP1 = Math.random() < 0.5;
   const pZ       = zusatzIstP1 ? e.p1 : e.p2;
   const nvpZ     = zusatzIstP1 ? nvp1 : nvp2;
   const vkZ      = zusatzIstP1 ? vk1  : vk2;
   const dbNormal = nvpZ - vkZ;
 
-  // Zusatzmenge
   const mengeZ = Math.max(
     1000,
     Math.round(
@@ -845,8 +1237,6 @@ function generiereZusatzauftrag() {
     ) * 1000
   );
 
-  // ── RABATT & DB ──────────────────────────────────────────────────────────
-  // Zuerst Rabatt berechnen, damit dbZStk bekannt ist
   const sollAblehnenDB = Math.random() < 0.25;
   let rabattPct, nvpZrabatt, dbZStk;
 
@@ -867,11 +1257,8 @@ function generiereZusatzauftrag() {
   const nveZgesamt = Math.round(nvpZrabatt * mengeZ * 100) / 100;
   const gesamtVKZ  = vkZ * mengeZ;
   const dbZgesamt  = Math.round(dbZStk * mengeZ * 100) / 100;
-
-  // ── DB-ENTSCHEIDUNG (jetzt sicher, da dbZStk bekannt) ────────────────────
   const annehmenDB = dbZStk > 0;
 
-  // ── KAPAZITÄT JE PRODUKT ──────────────────────────────────────────────────
   const knappeKapazitaet = Math.random() < 0.30;
   const mengeZ_normal    = zusatzIstP1 ? menge1 : menge2;
 
@@ -906,7 +1293,6 @@ function generiereZusatzauftrag() {
   const container = document.getElementById('Container');
   if (!container) return;
 
-  // ── AUFGABENTABELLE ───────────────────────────────────────────────────────
   const aufgabeTabelle =
     `<table style="${S.tableNarrow}">` +
       `<thead><tr>` +
@@ -941,7 +1327,6 @@ function generiereZusatzauftrag() {
       `</tbody>` +
     `</table>`;
 
-  // ── LÖSUNGSSCHEMA ─────────────────────────────────────────────────────────
   const gesamtDB_mit = gesamtDB + dbZgesamt;
   const be_mit       = gesamtDB_mit - fixKosten;
   const be_mit_color = be_mit >= 0 ? '#2a7a2a' : '#a00';
@@ -1008,46 +1393,9 @@ function generiereZusatzauftrag() {
       `</tbody>` +
     `</table>`;
 
-  // ── KAPAZITÄTSPRÜFUNG ─────────────────────────────────────────────────────
-  const kapazitaetBox =
-    `<div style="margin-top:14px; padding:10px 14px; background:#f5f7fa; border:1px solid #ccc; border-radius:5px; font-size:0.93em;">` +
-      `<strong>Schritt 1 – Kapazitätsprüfung „${pZ}":</strong><br>` +
-      `Kapazität: ${fmtInt(zusatzIstP1 ? kapazitaet1 : kapazitaet2)} Stück &nbsp;−&nbsp; ` +
-      `Produktion: ${fmtInt(mengeZ_normal)} Stück = ` +
-      `<strong style="color:${kapFarbeFrei};">freie Kapazität: ${fmtInt(kapazitaetFreiZ)} Stück</strong><br>` +
-      `Benötigt: <strong>${fmtInt(mengeZ)} Stück</strong> → ` +
-      `<strong style="color:${kapFarbeFrei};">${kapazitaetReicht ? 'Kapazität reicht aus ✅' : 'Kapazität reicht NICHT aus ❌'}</strong>` +
-    `</div>`;
+  const kapazitaetBox = _kapazitaetBox(pZ, zusatzIstP1 ? kapazitaet1 : kapazitaet2, mengeZ_normal, kapazitaetFreiZ, mengeZ, kapFarbeFrei, kapazitaetReicht);
+  const entscheidungsBox = _entscheidungsBox(pZ, kapazitaetFreiZ, mengeZ, dbZStk, annehmenDB, annehmenFinal, kapazitaetReicht);
 
-  // ── ENTSCHEIDUNGSBOX ──────────────────────────────────────────────────────
-  let kapazitaetBegr, dbBegr, entscheidText, entscheidColor;
-
-  if (!kapazitaetReicht) {
-    kapazitaetBegr = `Die freie Kapazität für „${pZ}" beträgt nur ${fmtInt(kapazitaetFreiZ)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann nicht produziert werden</strong>.`;
-    dbBegr         = `(DB/Stk. wäre ${fmt(dbZStk)} € – rechnerisch ${annehmenDB ? 'positiv' : 'negativ'}, aber irrelevant da keine Kapazität.)`;
-    entscheidText  = `Der Zusatzauftrag <strong>muss abgelehnt werden</strong>, da die Kapazität für „${pZ}" nicht ausreicht (frei: ${fmtInt(kapazitaetFreiZ)} Stück, benötigt: ${fmtInt(mengeZ)} Stück).`;
-    entscheidColor = '#a00';
-  } else if (!annehmenDB) {
-    kapazitaetBegr = `Die freie Kapazität für „${pZ}" beträgt ${fmtInt(kapazitaetFreiZ)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann produziert werden</strong>. ✅`;
-    dbBegr         = `Dennoch ist der Deckungsbeitrag pro Stück negativ (${fmt(dbZStk)} €) – das Unternehmen würde je Einheit einen Verlust erleiden.`;
-    entscheidText  = `Der Zusatzauftrag <strong>soll abgelehnt werden</strong>: Zwar reicht die Kapazität, aber der Deckungsbeitrag pro Stück ist negativ (${fmt(dbZStk)} €).`;
-    entscheidColor = '#a00';
-  } else {
-    kapazitaetBegr = `Die freie Kapazität für „${pZ}" beträgt ${fmtInt(kapazitaetFreiZ)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann produziert werden</strong>. ✅`;
-    dbBegr         = `Der Deckungsbeitrag pro Stück ist positiv (${fmt(dbZStk)} €). Da die Fixkosten bereits gedeckt sind, verbessert jeder positive DB das Betriebsergebnis.`;
-    entscheidText  = `Der Zusatzauftrag <strong>soll angenommen werden</strong>: Kapazität reicht aus und der Deckungsbeitrag pro Stück ist positiv (${fmt(dbZStk)} €).`;
-    entscheidColor = '#2a7a2a';
-  }
-
-  const entscheidungsBox =
-    `<div style="margin-top:10px; padding:10px 14px; border:2px solid ${entscheidColor}; border-radius:5px; background:${annehmenFinal ? '#f0fff0' : '#fff0f0'}; font-size:0.97em;">` +
-      `<strong style="color:${entscheidColor};">Schritt 2 – Deckungsbeitragsanalyse:</strong><br>` +
-      `${kapazitaetBegr}<br>` +
-      `${dbBegr}<br><br>` +
-      `<strong style="color:${entscheidColor};">Entscheidung: ${entscheidText}</strong>` +
-    `</div>`;
-
-  // ── RECHENWEG ─────────────────────────────────────────────────────────────
   const rechenwegText =
     `Freie Kap. „${pZ}": ${fmtInt(zusatzIstP1 ? kapazitaet1 : kapazitaet2)} − ${fmtInt(mengeZ_normal)} = ${fmtInt(kapazitaetFreiZ)} Stück ` +
     `(${kapazitaetReicht ? '≥' : '<'} ${fmtInt(mengeZ)} Stück → ${kapazitaetReicht ? 'reicht' : 'reicht nicht'}) &nbsp;|&nbsp; ` +
@@ -1058,7 +1406,6 @@ function generiereZusatzauftrag() {
         `→ <strong>${annehmenFinal ? 'annehmen' : 'ablehnen'}</strong>`
       : `→ <strong>ablehnen (keine Kapazität)</strong>`);
 
-  // ── AUSGABE ───────────────────────────────────────────────────────────────
   container.innerHTML =
     `<h2 style="${S.h2output}">Aufgabe – Zusatzauftrag</h2>` +
     `<div style="${S.aufgabenBox}">` +
@@ -1082,6 +1429,241 @@ function generiereZusatzauftrag() {
     `</div>` +
     `</div>`;
 }
+
+// ============================================================================
+// VARIANTE 5B – ZUSATZAUFTRAG (Einprodukt)
+// ============================================================================
+
+function generiereZusatzauftrag1P() {
+  const e = leseEingaben();
+
+  const { nvp: nvp1, vk: vk1 } = erzeugePreisPaar(e.nvpMin, e.nvpMax, e.vkMin, e.vkMax);
+  const menge1    = randInt(e.mengeMin, e.mengeMax, e.mengeStep);
+  const fixKosten = randInt(e.fixMin, e.fixMax, e.fixStep);
+
+  const nve1      = nvp1 * menge1;
+  const gesamtVK1 = vk1 * menge1;
+  const db1       = nve1 - gesamtVK1;
+  const be        = db1 - fixKosten;
+  const istGewinn = be >= 0;
+
+  const dbNormal = nvp1 - vk1;
+
+  const mengeZ = Math.max(
+    1000,
+    Math.round(randInt(Math.round(e.mengeMin / 2), Math.round(e.mengeMax / 2), e.mengeStep) / 1000) * 1000
+  );
+
+  const sollAblehnenDB = Math.random() < 0.25;
+  let rabattPct, nvpZrabatt, dbZStk;
+
+  if (sollAblehnenDB) {
+    const minRabatt = Math.ceil((dbNormal / nvp1) * 100 / 5) * 5 + 5;
+    const maxRabatt = Math.min(minRabatt + 20, 60);
+    rabattPct  = maxRabatt >= minRabatt ? randInt(minRabatt, maxRabatt, 5) : minRabatt;
+    nvpZrabatt = Math.round(nvp1 * (1 - rabattPct / 100) * 100) / 100;
+    dbZStk     = Math.round((nvpZrabatt - vk1) * 100) / 100;
+  } else {
+    const maxSichererRabatt = Math.floor((dbNormal / nvp1) * 100 / 5) * 5 - 5;
+    const rabattMax = Math.max(5, Math.min(maxSichererRabatt, 25));
+    rabattPct  = randInt(5, rabattMax, 5);
+    nvpZrabatt = Math.round(nvp1 * (1 - rabattPct / 100) * 100) / 100;
+    dbZStk     = Math.round((nvpZrabatt - vk1) * 100) / 100;
+  }
+
+  const nveZgesamt = Math.round(nvpZrabatt * mengeZ * 100) / 100;
+  const gesamtVKZ  = vk1 * mengeZ;
+  const dbZgesamt  = Math.round(dbZStk * mengeZ * 100) / 100;
+  const annehmenDB = dbZStk > 0;
+
+  // Kapazität
+  const knappeKapazitaet = Math.random() < 0.30;
+  let kapazitaet1, kapazitaetFreiZ, kapazitaetReicht;
+
+  if (knappeKapazitaet) {
+    const maxFreiKnapp = Math.max(0, mengeZ - e.mengeStep);
+    kapazitaetFreiZ  = randInt(0, maxFreiKnapp, e.mengeStep);
+    kapazitaet1      = menge1 + kapazitaetFreiZ;
+    kapazitaetReicht = false;
+  } else {
+    kapazitaetFreiZ  = randInt(mengeZ, mengeZ + Math.round(e.mengeMax / 4), e.mengeStep);
+    kapazitaet1      = menge1 + kapazitaetFreiZ;
+    kapazitaetReicht = true;
+  }
+
+  const annehmenFinal = kapazitaetReicht && annehmenDB;
+  const kapFarbeFrei  = kapazitaetReicht ? '#2a7a2a' : '#a00';
+
+  const quartal    = zufallsQuartal();
+  const kundenarten = ['Ein Geschäftskunde', 'Ein Großhändler', 'Ein Neukunde', 'Ein langjähriger Kunde'];
+  const kundeStr   = kundenarten[Math.floor(Math.random() * kundenarten.length)];
+
+  const container = document.getElementById('Container');
+  if (!container) return;
+
+  const aufgabeTabelle =
+    `<table style="${S.tableNarrow}">` +
+      `<thead><tr>` +
+        `<th style="${S.thL}">Modell</th>` +
+        `<th style="${S.thR}">„${e.p1}"</th>` +
+      `</tr></thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufspreis pro Stück</td>` +
+          `<td style="${S.tdR}">${fmt(nvp1)} €</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}">Variable Kosten pro Stück</td>` +
+          `<td style="${S.tdR2}">${fmt(vk1)} €</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Produktion ≙ Absatz</td>` +
+          `<td style="${S.tdR}">${fmtInt(menge1)} Stück</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}">Produktionskapazität</td>` +
+          `<td style="${S.tdR2}">${fmtInt(kapazitaet1)} Stück</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td colspan="2" style="${S.tdL}">Fixkosten gesamt: ${fmt(fixKosten)} €</td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
+
+  // Lösungstabelle: Normal + Zusatzspalte (2 Spalten)
+  const thZusNeu = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
+  const tdZusR   = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1;`;
+  const tdZusR2  = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fffdf0;`;
+  const tdZusDbR = `border:1px solid #aaa; border-top:2px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1; font-weight:600;`;
+  const tdZusFkR = `border:1px solid #aaa; padding:6px 10px; text-align:right; background:#fff8e1; color:#aaa; font-size:0.85em;`;
+  const tdZusBeR = `border:1px solid #aaa; border-top:2px solid #555; padding:6px 10px; text-align:right; background:#fff3cc; font-weight:700;`;
+
+  const be_mit       = be + dbZgesamt;
+  const be_mit_color = be_mit >= 0 ? '#2a7a2a' : '#a00';
+
+  const loesungsTabelle =
+    `<table style="${S.table}">` +
+      `<thead>` +
+        `<tr>` +
+          `<th style="${S.thL}" rowspan="2"></th>` +
+          `<th style="${S.thR}">„${e.p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(menge1)} Stk.) in €</span></th>` +
+          `<th style="${thZusNeu}">Zusatz „${e.p1}"<br><span style="font-weight:400; font-size:0.85em;">(${fmtInt(mengeZ)} Stk.) in €</span></th>` +
+        `</tr>` +
+        `<tr>` +
+          `<th style="border:1px solid #aaa; padding:3px 10px; text-align:center; background:#eef2fa; font-size:0.82em; font-weight:600; color:#555;">Normalgeschäft</th>` +
+          `<th style="${thZusNeu} font-size:0.82em; color:#b07000; text-align:center;">Zusatzauftrag</th>` +
+        `</tr>` +
+      `</thead>` +
+      `<tbody>` +
+        `<tr>` +
+          `<td style="${S.tdL}">Nettoverkaufserlöse</td>` +
+          `<td style="${S.tdR}">${fmt(nve1)}</td>` +
+          `<td style="${tdZusR}">${fmt(nveZgesamt)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdL2}"><span style="color:#555; font-size:0.85rem;">–</span> variable Kosten</td>` +
+          `<td style="${S.tdR2}">${fmt(gesamtVK1)}</td>` +
+          `<td style="${tdZusR2}">${fmt(gesamtVKZ)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdDbL}">Deckungsbeitrag</td>` +
+          `<td style="${S.tdDbR}">${fmt(db1)}</td>` +
+          `<td style="${tdZusDbR} color:${annehmenDB ? '#2a7a2a' : '#a00'};">${fmt(dbZgesamt)}</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdFkL}"><span style="font-size:0.85rem;">–</span> Fixkosten</td>` +
+          `<td style="${S.tdFkR}">${fmt(fixKosten)}</td>` +
+          `<td style="${tdZusFkR}">–</td>` +
+        `</tr>` +
+        `<tr>` +
+          `<td style="${S.tdBeL}"><strong>Betriebsergebnis (${istGewinn ? 'Gewinn' : 'Verlust'})</strong></td>` +
+          `<td style="${S.tdBeR} font-weight:700; color:${istGewinn ? '#2a7a2a' : '#a00'};"><strong>${fmt(be)}</strong></td>` +
+          `<td style="${tdZusBeR} color:${be_mit_color};"><strong>${fmt(be_mit)}</strong></td>` +
+        `</tr>` +
+      `</tbody>` +
+    `</table>`;
+
+  const kapazitaetBox = _kapazitaetBox(e.p1, kapazitaet1, menge1, kapazitaetFreiZ, mengeZ, kapFarbeFrei, kapazitaetReicht);
+  const entscheidungsBox = _entscheidungsBox(e.p1, kapazitaetFreiZ, mengeZ, dbZStk, annehmenDB, annehmenFinal, kapazitaetReicht);
+
+  const rechenwegText =
+    `Freie Kap.: ${fmtInt(kapazitaet1)} − ${fmtInt(menge1)} = ${fmtInt(kapazitaetFreiZ)} Stück ` +
+    `(${kapazitaetReicht ? '≥' : '<'} ${fmtInt(mengeZ)} Stück → ${kapazitaetReicht ? 'reicht' : 'reicht nicht'}) &nbsp;|&nbsp; ` +
+    (kapazitaetReicht
+      ? `NVP Zusatz: ${fmt(nvp1)} × ${100 - rabattPct} % = ${fmt(nvpZrabatt)} € &nbsp;|&nbsp; ` +
+        `DB/Stk.: ${fmt(nvpZrabatt)} − ${fmt(vk1)} = ${fmt(dbZStk)} € &nbsp;|&nbsp; ` +
+        `DB gesamt: ${fmtInt(mengeZ)} × ${fmt(dbZStk)} = ${fmt(dbZgesamt)} € &nbsp;|&nbsp; ` +
+        `→ <strong>${annehmenFinal ? 'annehmen' : 'ablehnen'}</strong>`
+      : `→ <strong>ablehnen (keine Kapazität)</strong>`);
+
+  container.innerHTML =
+    `<h2 style="${S.h2output}">Aufgabe – Zusatzauftrag</h2>` +
+    `<div style="${S.aufgabenBox}">` +
+      `<p style="margin-bottom:8px;">Das Unternehmen <strong>„${e.unternehmen}"</strong> stellt ${e.erzArt} her. ` +
+      `Für das <strong>${quartal}</strong> liegen Ihnen folgende Zahlen vor:</p>` +
+      aufgabeTabelle +
+      `<br><p><strong>Aufgabe</strong></p>` +
+      `<ol>` +
+        `<li>Ermitteln Sie rechnerisch Art und Höhe des Betriebsergebnisses.</li>` +
+        `<li>${kundeStr} wäre bereit, ${fmtInt(mengeZ)} Einheiten von „${e.p1}" zu einem Rabatt von ${rabattPct} % abzunehmen. ` +
+        `Begründen Sie rechnerisch, ob das Unternehmen den Zusatzauftrag annehmen soll.</li>` +
+      `</ol>` +
+    `</div>` +
+    `<div style="margin-top:28px;">` +
+    `<h2 style="${S.h2output}">Lösung</h2>` +
+    loesungsTabelle +
+    kapazitaetBox +
+    entscheidungsBox +
+    `<div style="${S.rechenweg}">` +
+      `<strong>Rechenweg:</strong> ` + rechenwegText +
+    `</div>` +
+    `</div>`;
+}
+
+// ── Gemeinsame Box-Helfer für Zusatzauftrag ──────────────────────────────────
+
+function _kapazitaetBox(pZ, kapGesamt, mengeNormal, kapFrei, mengeZ, kapFarbe, reicht) {
+  return `<div style="margin-top:14px; padding:10px 14px; background:#f5f7fa; border:1px solid #ccc; border-radius:5px; font-size:0.93em;">` +
+    `<strong>Schritt 1 – Kapazitätsprüfung „${pZ}":</strong><br>` +
+    `Kapazität: ${fmtInt(kapGesamt)} Stück &nbsp;−&nbsp; ` +
+    `Produktion: ${fmtInt(mengeNormal)} Stück = ` +
+    `<strong style="color:${kapFarbe};">freie Kapazität: ${fmtInt(kapFrei)} Stück</strong><br>` +
+    `Benötigt: <strong>${fmtInt(mengeZ)} Stück</strong> → ` +
+    `<strong style="color:${kapFarbe};">${reicht ? 'Kapazität reicht aus ✅' : 'Kapazität reicht NICHT aus ❌'}</strong>` +
+  `</div>`;
+}
+
+function _entscheidungsBox(pZ, kapFrei, mengeZ, dbZStk, annehmenDB, annehmenFinal, kapReicht) {
+  let kapBegr, dbBegr, entscheidText, entscheidColor;
+
+  if (!kapReicht) {
+    kapBegr       = `Die freie Kapazität für „${pZ}" beträgt nur ${fmtInt(kapFrei)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann nicht produziert werden</strong>.`;
+    dbBegr        = `(DB/Stk. wäre ${fmt(dbZStk)} € – rechnerisch ${annehmenDB ? 'positiv' : 'negativ'}, aber irrelevant da keine Kapazität.)`;
+    entscheidText = `Der Zusatzauftrag <strong>muss abgelehnt werden</strong>, da die Kapazität für „${pZ}" nicht ausreicht (frei: ${fmtInt(kapFrei)} Stück, benötigt: ${fmtInt(mengeZ)} Stück).`;
+    entscheidColor = '#a00';
+  } else if (!annehmenDB) {
+    kapBegr       = `Die freie Kapazität für „${pZ}" beträgt ${fmtInt(kapFrei)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann produziert werden</strong>. ✅`;
+    dbBegr        = `Dennoch ist der Deckungsbeitrag pro Stück negativ (${fmt(dbZStk)} €) – das Unternehmen würde je Einheit einen Verlust erleiden.`;
+    entscheidText = `Der Zusatzauftrag <strong>soll abgelehnt werden</strong>: Zwar reicht die Kapazität, aber der Deckungsbeitrag pro Stück ist negativ (${fmt(dbZStk)} €).`;
+    entscheidColor = '#a00';
+  } else {
+    kapBegr       = `Die freie Kapazität für „${pZ}" beträgt ${fmtInt(kapFrei)} Stück – der Zusatzauftrag über ${fmtInt(mengeZ)} Stück <strong>kann produziert werden</strong>. ✅`;
+    dbBegr        = `Der Deckungsbeitrag pro Stück ist positiv (${fmt(dbZStk)} €). Da die Fixkosten bereits gedeckt sind, verbessert jeder positive DB das Betriebsergebnis.`;
+    entscheidText = `Der Zusatzauftrag <strong>soll angenommen werden</strong>: Kapazität reicht aus und der Deckungsbeitrag pro Stück ist positiv (${fmt(dbZStk)} €).`;
+    entscheidColor = '#2a7a2a';
+  }
+
+  return `<div style="margin-top:10px; padding:10px 14px; border:2px solid ${entscheidColor}; border-radius:5px; background:${annehmenFinal ? '#f0fff0' : '#fff0f0'}; font-size:0.97em;">` +
+    `<strong style="color:${entscheidColor};">Schritt 2 – Deckungsbeitragsanalyse:</strong><br>` +
+    `${kapBegr}<br>` +
+    `${dbBegr}<br><br>` +
+    `<strong style="color:${entscheidColor};">Entscheidung: ${entscheidText}</strong>` +
+  `</div>`;
+}
+
+// ============================================================================
+// HILFSFUNKTIONEN (Quartal, Tabellen-Helfer für Zweiprodukt)
+// ============================================================================
 
 function zufallsQuartal() {
   const quartale = ['1. Quartal', '2. Quartal', '3. Quartal', '4. Quartal'];
@@ -1309,6 +1891,16 @@ document.addEventListener('DOMContentLoaded', () => {
   kundeSelect.addEventListener('change', () => {
     kunde = kundeSelect.value.trim() || '';
   });
+
+  // Produktanzahl-Dropdown: UI-Reaktion + Auto-Generate
+  const produktAnzahlSelect = document.getElementById('tkProduktAnzahl');
+  if (produktAnzahlSelect) {
+    produktAnzahlSelect.addEventListener('change', () => {
+      onProduktAnzahlChange();
+    });
+    // Initialzustand setzen
+    onProduktAnzahlChange();
+  }
 
   if (!loadYamlFromLocalStorage()) {
     loadDefaultYaml();

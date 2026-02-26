@@ -25,15 +25,39 @@
   <script src="js/clipboard.min.js"></script>
   <script src="js/menu.js"></script>
     <title>Teilkostenrechnung | meinbwr.de BwR</title>
+
+  <style>
+    /* Einprodukt-Modus: Produkt-B-Felder ausgrauen */
+    .prod2-disabled {
+      opacity: 0.38;
+      pointer-events: none;
+      filter: grayscale(0.5);
+    }
+    .prod2-disabled label {
+      color: #999;
+    }
+    .prod2-disabled input {
+      background: #f0f0f0;
+      color: #bbb;
+      border-color: #ccc;
+    }
+    .einprodukt-hint {
+      display: none;
+      font-size: 0.82em;
+      color: #888;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    .prod2-disabled .einprodukt-hint {
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
   <main>
     <div w3-include-html="navigation.html"></div>
     <h2>Teilkostenrechnung</h2>
-
-   <!-- ERSETZT den bisherigen div#generator-container Inhalt -->
-<!-- Einbinden in lb10-4-teilkostenrechnung.html -->
 
 <div id="generator-container">
 
@@ -54,6 +78,13 @@
               <option value="nettoverkaufserloes">Nettoverkaufserlöse</option>
               <option value="fixkosten">Fixkosten</option>
               <option value="zusatzauftrag">Zusatzauftrag</option>
+            </select>
+          </div>
+          <div class="form-field" style="margin-top:10px;">
+            <label for="tkProduktAnzahl">Produktanzahl</label>
+            <select id="tkProduktAnzahl">
+              <option value="2" selected>Zweiproduktunternehmen</option>
+              <option value="1">Einproduktunternehmen</option>
             </select>
           </div>
         </fieldset>
@@ -94,12 +125,13 @@
           </div>
         </fieldset>
 
-        <fieldset>
+        <fieldset id="prod2-fieldset">
           <legend>Produkt 2</legend>
           <div class="form-field">
             <label for="prod2">Bezeichnung</label>
             <input type="text" id="prod2" value="Produkt B"
               maxlength="30" placeholder="z. B. Zenzi" />
+            <span class="einprodukt-hint">Wird im Einprodukt-Modus nicht verwendet.</span>
           </div>
         </fieldset>
 
