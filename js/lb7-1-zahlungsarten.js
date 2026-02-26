@@ -431,7 +431,7 @@ function zeigeZufaelligeZahlungsaufgaben() {
 
   // ── 2. Aufgaben ──────────────────────────────────────────────────────────
   let aufgabenHTML = '<h2>Aufgaben</h2>';
-  aufgabenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die folgenden Fallbeispiele. Wähle jeweils eine oder mehrere geeignete Zahlungsarten aus und begründe deine Wahl anhand der Kriterien <strong>Praktikabilität, Gebühren, Sicherheit</strong> und <strong>Datenschutz</strong>.</p>';
+  aufgabenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die folgenden Fallbeispiele. Entscheide dich für eine oder mehrere geeignete Zahlungsarten. Begründe deine Wahl anhand der Kriterien <strong>Praktikabilität, Gebühren, Sicherheit</strong> und <strong>Datenschutz</strong>.</p>';
   aufgabenHTML += '<ol>';
 
   let loesungenHTML = '<h2>Lösungshinweise</h2>';
@@ -443,7 +443,7 @@ function zeigeZufaelligeZahlungsaufgaben() {
     const geeigneteArten = fall.geeignet;
     const wenigerGeeignet = fall.wenigerGeeignet;
 
-    aufgabenHTML += `<li style="margin-bottom: 1.2em;"><strong>${situationstext}</strong></li>`;
+    aufgabenHTML += `<li style="margin-bottom: 1.2em;">${situationstext}</li>`;
 
     // Lösung
     loesungenHTML += `<div style="margin-top: 1.5em; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden;">`;
