@@ -2551,61 +2551,81 @@ function generateMitarbeiterDaten() {
 }
 
 // Lohnsteuer-Berechnung (vereinfacht nach Grundtabelle 2024)
-function berechneLohnsteuer(brutto, steuerklasse, kinderfreibetrag) {
-    // Vereinfachte Berechnung - in Realität viel komplexer
+function berechneLohnsteuer(brutto, steuerklasse, kinderfreibetrag = "0") {
     const jahresbrutto = brutto * 12;
-    let steuersatz = 0;
+
+    function estGrundtarif(zvE) {
+        // Grundfreibetrag
+        const grundfreibetrag = 12096;
+
+        if (zvE <= grundfreibetrag) {
+            return 0;
+        }
+
+        // Progressionszone 1
+        if (zvE <= 17443) {
+            const y = (zvE - grundfreibetrag) / 10000;
+            return (979.18 * y + 1400) * y;
+        }
+
+        // Progressionszone 2
+        if (zvE <= 68480) {
+            const z = (zvE - 17443) / 10000;
+            return (192.59 * z + 2397) * z + 966.53;
+        }
+
+        // Proportionalzone
+        if (zvE <= 277825) {
+            return 0.42 * zvE - 10911.92;
+        }
+
+        // Reichensteuer
+        return 0.45 * zvE - 19246.67;
+    }
+
+    function estSplittingtarif(zvE) {
+        const halb = zvE / 2;
+        return estGrundtarif(halb) * 2;
+    }
+
+    let jahressteuer = 0;
 
     switch (steuerklasse) {
-        case 'I':
-            if (jahresbrutto <= 11604) steuersatz = 0;
-            else if (jahresbrutto <= 17005) steuersatz = 0.14;
-            else if (jahresbrutto <= 66760) steuersatz = 0.24;
-            else if (jahresbrutto <= 277825) steuersatz = 0.42;
-            else steuersatz = 0.45;
+        case "I":
+        case "IV":
+            jahressteuer = estGrundtarif(jahresbrutto);
             break;
-        case 'II':
-            // Ähnlich wie I, aber mit Entlastungsbetrag
-            if (jahresbrutto <= 11604) steuersatz = 0;
-            else if (jahresbrutto <= 17005) steuersatz = 0.12;
-            else if (jahresbrutto <= 66760) steuersatz = 0.22;
-            else if (jahresbrutto <= 277825) steuersatz = 0.40;
-            else steuersatz = 0.43;
+
+        case "II":
+            // Entlastungsbetrag für Alleinerziehende (vereinfacht)
+            const entlastung = 4260;
+            jahressteuer = estGrundtarif(Math.max(0, jahresbrutto - entlastung));
             break;
-        case 'III':
-            if (jahresbrutto <= 23208) steuersatz = 0;
-            else if (jahresbrutto <= 34010) steuersatz = 0.08;
-            else if (jahresbrutto <= 133520) steuersatz = 0.14;
-            else if (jahresbrutto <= 277825) steuersatz = 0.32;
-            else steuersatz = 0.35;
+
+        case "III":
+            jahressteuer = estSplittingtarif(jahresbrutto);
             break;
-        case 'IV':
-            if (jahresbrutto <= 11604) steuersatz = 0;
-            else if (jahresbrutto <= 17005) steuersatz = 0.14;
-            else if (jahresbrutto <= 66760) steuersatz = 0.24;
-            else if (jahresbrutto <= 277825) steuersatz = 0.42;
-            else steuersatz = 0.45;
+
+        case "V":
+            // Näherung: Gegenstück zu III
+            jahressteuer = estGrundtarif(jahresbrutto) * 1.25;
             break;
-        case 'V':
-            if (jahresbrutto <= 11604) steuersatz = 0.14;
-            else if (jahresbrutto <= 17005) steuersatz = 0.24;
-            else if (jahresbrutto <= 66760) steuersatz = 0.32;
-            else if (jahresbrutto <= 277825) steuersatz = 0.42;
-            else steuersatz = 0.45;
-            break;
-        case 'VI':
-            steuersatz = 0.42; // Pauschal höherer Satz für Zweitjob
+
+        case "VI":
+            // Zweitjob ohne Freibeträge
+            jahressteuer = estGrundtarif(jahresbrutto) * 1.1;
             break;
     }
 
-    // Monatliche Lohnsteuer
-    let lohnsteuer = (brutto * steuersatz);
+    // Kinderfreibetrag (vereinfacht monatliche Wirkung)
+    const freibetrag = parseFloat(kinderfreibetrag.replace(",", ".")) || 0;
+    jahressteuer -= freibetrag * 12 * 250;
 
-    // Kinderfreibetrag reduziert Steuer (vereinfacht)
-    const freibetrag = parseFloat(kinderfreibetrag.replace(',', '.'));
-    lohnsteuer = Math.max(0, lohnsteuer - (freibetrag * 20));
+    jahressteuer = Math.max(0, jahressteuer);
 
-    return FormatHelper.roundToTwo(lohnsteuer);
+    const monatlicheLohnsteuer = jahressteuer / 12;
+
+    return FormatHelper.roundToTwo(monatlicheLohnsteuer);
 }
 
 // Firma laden

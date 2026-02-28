@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Prozentrechnen – Diagramm-Aufgaben | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Zufällige Prozentrechnen-Aufgaben mit Diagrammen. Für Wirtschaft-Unterricht Klasse 8 Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb8-prozentrechnen.html">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+  <meta name="keywords" content="Prozentrechnen BwR, Diagramme Realschule, Prozentsatz, BwR 8 Bayern, Liniendiagramm Säulendiagramm Balkendiagramm, Haushaltsrechnung, Prüfungsvorbereitung BwR">
+
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/menu.js"></script>
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/apexcharts.min.js"></script>
+  <title>Prozentrechnen mit Diagramm</title>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+
+  <h2>Prozentrechnen mit Diagramm (beta)</h2>
+
+  <div id="generator-container">
+    <div class="box">
+      <p>
+        Hier können Sie zufällige Aufgaben zur Prozentrechnung mit Diagrammen aus dem
+        Familienhaushalt generieren. Die Schüler lesen Werte aus Diagrammen ab und berechnen
+        absolute und prozentuale Veränderungen. Alle Ergebnisse sind ganzzahlig (Vielfache von 5 oder 10).
+      </p>
+
+      <!-- ── Familienname ── -->
+      <div class="name-row">
+        <label for="familiennameInput">Familienname:</label>
+        <input
+          type="text"
+          id="familiennameInput"
+          value="Müller"
+          maxlength="30"
+          placeholder="z. B. Müller"
+          autocomplete="off"
+        >
+        <span class="name-hint">Der Name erscheint im Diagramm und den Aufgaben.</span>
+      </div>
+
+    <div class="flex-row ">
+      <label for="themaSelect">Thema wählen:</label>
+      <select class="dropdown dropbtn" id="themaSelect" onchange="zeigeZufaelligeProzentAufgaben()">
+        <option value="-1">🔀 Zufälliges Thema</option>
+        <option value="0">🔥 Heizkosten (Okt–Apr)</option>
+        <option value="1">🛒 Monatliche Konsumausgaben</option>
+        <option value="2">✈️ Urlaubsangebote vergleichen</option>
+        <option value="3">🏦 Jährliche Zinseinnahmen</option>
+        <option value="4">⚡ Energieverbrauch nach Monaten</option>
+      </select>
+      <button onclick="zeigeZufaelligeProzentAufgaben()">Neue Aufgabe</button>
+    </div>
+
+    <div style="margin-top: 20px;">
+   <div id="Container" style="min-width: 780px; flex: 1;" contenteditable="true"></div>
+    </div>
+
+  </div>
+    <div w3-include-html="downloads.html"></div> 
+
+  <!-- KI-Assistent -->
+  <div class="ki-assistent-box">
+    <div class="ki-assistent-header">
+      <span class="ki-icon">🤖</span>
+      <div>
+        <h3>KI-Assistent – System-Prompt</h3>
+        <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli&nbsp;…)</p>
+      </div>
+    </div>
+
+    <div class="ki-assistent-body">
+      <div class="ki-hinweis">
+        <span class="hinweis-icon">💡</span>
+        <span>
+          Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+          Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+        </span>
+      </div>
+
+      <div class="ki-chips">
+        <span class="ki-chip">📚 BwR Realschule</span>
+        <span class="ki-chip">📊 Diagrammkompetenz</span>
+        <span class="ki-chip">🔢 Prozentrechnung</span>
+        <span class="ki-chip">✅ Sokrat. Methode</span>
+        <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+      </div>
+
+      <div class="ki-actions">
+        <button
+          class="ki-prompt-btn ki-prompt-btn--primary"
+          id="kiPromptKopierenBtn"
+          onclick="kopiereKiPromptProz()"
+          title="Prompt in die Zwischenablage kopieren"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Prompt kopieren
+        </button>
+
+        <button
+          class="ki-prompt-btn ki-prompt-btn--ghost"
+          id="kiPromptToggleBtn"
+          onclick="toggleKiPromptVorschauProz()"
+        >
+          Prompt anzeigen ▼
+        </button>
+      </div>
+
+      <div class="ki-prompt-vorschau-wrapper">
+        <textarea id="kiPromptVorschau" readonly spellcheck="false"></textarea>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="js/lb7-1-prozentdiagramm.js"></script>
+<script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+  if (typeof includeHTML === 'function') includeHTML();
+</script>
+
+</body>
+</html>
