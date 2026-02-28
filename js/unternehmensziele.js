@@ -32,7 +32,7 @@ const zielVorlagen = {
 
         // Abfall & Verpackung
         "Unser Ziel ist es, bis in drei Jahren alle Einwegverpackungen aus Plastik abzuschaffen und nur noch Verpackungen zu verwenden, die vollständig recycelt oder wiederverwendet werden können.",
-        "in vier Jahren wollen wir die Menge an Abfall, die in unserer Produktion entsteht, um 40 % verringern – durch weniger Ausschuss, bessere Planung und konsequentes Recycling.",
+        "In vier Jahren wollen wir die Menge an Abfall, die in unserer Produktion entsteht, um 40 % verringern – durch weniger Ausschuss, bessere Planung und konsequentes Recycling.",
         "Wir streben an, bis in fünf Jahren für unsere meistverkauften Produkte ein Rücknahmesystem einzuführen, damit alte oder kaputte Produkte repariert, aufgearbeitet oder recycelt werden können.",
         "Bis nächstes Jahr wollen wir dafür sorgen, dass mindestens 80 % unserer Verpackungsmaterialien aus recycelten Rohstoffen hergestellt werden.",
 
@@ -57,21 +57,21 @@ const zielVorlagen = {
         "Unser Ziel ist es, in den nächsten vier Jahren in mindestens drei neuen Ländern unsere Produkte anzubieten und damit neue Kundinnen und Kunden zu gewinnen.",
         "In den kommenden fünf Jahren wollen wir unseren Anteil am Markt in unserem wichtigsten Produktbereich um 10 % erhöhen, indem wir mehr Kunden von unseren Produkten überzeugen als unsere Mitbewerber.",
         "Wir streben an, bis in drei Jahren 20 % unseres Umsatzes mit völlig neuen Produkten zu erzielen, die wir heute noch gar nicht verkaufen.",
-        "in vier Jahren wollen wir unser Onlineangebot so ausbauen, dass mindestens ein Drittel unserer Einnahmen über digitale Kanäle erzielt wird.",
+        "In vier Jahren wollen wir unser Onlineangebot so ausbauen, dass mindestens ein Drittel unserer Einnahmen über digitale Kanäle erzielt wird.",
 
         // Kosten & Effizienz
-        "Unser Ziel ist es, bis in drei Jahren die Herstellungskosten für unsere meistverkauften Produkte um 15 % zu senken – ohne dabei die Qualität zu verschlechtern.",
+        "Unser Ziel ist es, innerhalb von drei Jahren die Herstellungskosten für unsere meistverkauften Produkte um 15 % zu senken – ohne dabei die Qualität zu verschlechtern.",
         "Bis nächstes Jahr wollen wir in unserer Produktion Abläufe so verbessern, dass wir bei gleicher Mitarbeiterzahl 15 % mehr Produkte herstellen können.",
         "Wir wollen in vier Jahren unsere Lagerkosten um 20 % senken, indem wir Materialien und Waren besser planen und weniger auf Vorrat halten.",
-        "Bis in drei Jahren wollen wir die Zeit, die vom Eingang einer Bestellung bis zur Lieferung vergeht, um 30 % verkürzen.",
+        "Innerhalb von drei Jahren wollen wir die Zeit, die vom Eingang einer Bestellung bis zur Lieferung vergeht, um 30 % verkürzen.",
         "Unser Ziel ist es, bis nächstes Jahr alle wiederkehrenden Verwaltungsaufgaben – wie Rechnungen oder Bestellungen – vollständig digital und automatisch zu erledigen.",
 
         // Innovation & neue Produkte
         "Bis in drei Jahren wollen wir jedes Jahr mindestens fünf neue Produkte oder verbesserte Versionen bestehender Produkte auf den Markt bringen.",
         "Wir streben an, in vier Jahren einen eigenen Bereich für Forschung und Entwicklung aufzubauen, in dem unsere Mitarbeitenden gezielt an neuen Ideen und Verbesserungen arbeiten.",
-        "bis in fünf Jahren wollen wir ein digitales Kundenportal einführen, über das Kunden Bestellungen aufgeben, den Lieferstatus verfolgen und den Kundenservice erreichen können.",
+        "Binnen fünf Jahren wollen wir ein digitales Kundenportal einführen, über das Kunden Bestellungen aufgeben, den Lieferstatus verfolgen und den Kundenservice erreichen können.",
         "Wir wollen bis in drei Jahren in unserer Produktion Roboter und automatische Maschinen einsetzen, um gleichbleibend gute Qualität zu sichern und Fehler zu vermeiden.",
-        "in vier Jahren wollen wir Reparatur- und Wartungsservices für unsere Produkte anbieten, damit Kunden ihre Geräte länger nutzen können und wir neue Einnahmequellen erschließen.",
+        "In vier Jahren wollen wir Reparatur- und Wartungsservices für unsere Produkte anbieten, damit Kunden ihre Geräte länger nutzen können und wir neue Einnahmequellen erschließen.",
 
         // Kunden & Bekanntheit
         "Unser Ziel ist es, bis nächstes Jahr die Zufriedenheit unserer Kunden durch schnelleren Service, freundlichere Beratung und bessere Produktqualität spürbar zu steigern.",
@@ -86,7 +86,7 @@ const zielVorlagen = {
         "Wir werden bis in drei Jahren dafür sorgen, dass Frauen und Männer bei uns für gleiche Arbeit auch gleich viel verdienen – und das regelmäßig überprüfen.",
         "Unser Ziel ist es, in vier Jahren den Anteil von Frauen in Führungspositionen auf mindestens 40 % zu erhöhen, indem wir gezielt Frauen fördern und faire Auswahlverfahren sicherstellen.",
         "Bis in drei Jahren wollen wir sicherstellen, dass alle Bewerberinnen und Bewerber – unabhängig von Herkunft, Geschlecht oder Alter – die gleichen Chancen auf eine Stelle in unserem Unternehmen haben.",
-        "Wir streben an, bis in fünf Jahren ein Unternehmen zu sein, in dem Menschen mit ganz unterschiedlichen Hintergründen und Lebensgeschichten arbeiten und sich willkommen fühlen.",
+        "Wir streben an, innerhalb von fünf Jahren ein Unternehmen zu sein, in dem Menschen mit ganz unterschiedlichen Hintergründen und Lebensgeschichten arbeiten und sich willkommen fühlen.",
 
         // Arbeitsbedingungen & Zufriedenheit
         "Bis nächstes Jahr wollen wir allen Mitarbeitenden die Möglichkeit geben, zumindest an zwei Tagen pro Woche von zu Hause oder einem anderen Ort ihrer Wahl zu arbeiten.",
@@ -96,16 +96,16 @@ const zielVorlagen = {
         "Wir streben an, bis in fünf Jahren allen Mitarbeitenden faire Löhne zu zahlen, die deutlich über dem gesetzlichen Mindestlohn liegen und ein gutes Leben ermöglichen.",
 
         // Sicherheit & Gesundheit
-        "Bis in drei Jahren wollen wir die Zahl der Arbeitsunfälle in unserem Betrieb um die Hälfte senken – durch bessere Schutzausrüstung, klare Regeln und regelmäßige Sicherheitstrainings.",
+        "Binnen drei Jahren wollen wir die Zahl der Arbeitsunfälle in unserem Betrieb um die Hälfte senken – durch bessere Schutzausrüstung, klare Regeln und regelmäßige Sicherheitstrainings.",
         "Wir verpflichten uns, bis nächstes Jahr ein Programm einzuführen, das Mitarbeitende bei Stress und psychischen Belastungen unterstützt – zum Beispiel durch Beratungsangebote oder Entspannungskurse.",
         "Unser Ziel ist es, in vier Jahren die Anzahl der Krankheitstage zu senken, indem wir auf gesunde Arbeitsbedingungen achten, zum Beispiel durch ergonomische Stühle, helle Räume und ausreichend Pausen.",
         "In den nächsten fünf Jahren sollen alle unsere Arbeitsplätze so gestaltet sein, dass sie auch für Menschen mit körperlichen Einschränkungen zugänglich und nutzbar sind.",
 
         // Ausbildung & Weiterentwicklung
         "Bis nächstes Jahr wollen wir jedem Mitarbeitenden mindestens fünf Tage im Jahr für Weiterbildungen, Schulungen oder Kurse zur Verfügung stellen – bezahlt vom Unternehmen.",
-        "Wir wollen bis in drei Jahren die Zahl unserer Ausbildungsplätze verdoppeln und damit jungen Menschen einen guten Start ins Berufsleben ermöglichen.",
+        "Wir wollen innerhalb von drei Jahren die Zahl unserer Ausbildungsplätze verdoppeln und damit jungen Menschen einen guten Start ins Berufsleben ermöglichen.",
         "Unser Ziel ist es, in vier Jahren ein Mentoring-Programm einzuführen, bei dem erfahrene Mitarbeitende jüngere Kolleginnen und Kollegen begleiten und bei ihrer Entwicklung unterstützen.",
-        "Bis in drei Jahren wollen wir für alle Mitarbeitenden einen persönlichen Entwicklungsplan erstellen, der zeigt, welche Fähigkeiten sie ausbauen können und welche nächsten Schritte in ihrer Karriere möglich sind.",
+        "Innerhalb von drei Jahren wollen wir für alle Mitarbeitenden einen persönlichen Entwicklungsplan erstellen, der zeigt, welche Fähigkeiten sie ausbauen können und welche nächsten Schritte in ihrer Karriere möglich sind.",
         "Wir streben an, in den nächsten fünf Jahren möglichst viele freie Stellen und Führungspositionen mit Mitarbeitenden zu besetzen, die bereits in unserem Unternehmen arbeiten und intern aufgestiegen sind.",
 
         // Gesellschaft & Gemeinschaft
