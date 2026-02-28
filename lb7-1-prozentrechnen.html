@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Prozentrechnen – Alltagsaufgaben | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Zufällige Prozentrechnen-Aufgaben aus dem Alltag. Für Wirtschaft-Unterricht Klasse 8 Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb7-1-prozentrechnen.html">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+  <meta name="keywords" content="Prozentrechnen BwR, Alltag, Rabatt, Umsatzsteuer, Grundwert, Prozentwert, BwR 8 Bayern, Prüfungsvorbereitung BwR">
+
+  <link rel="stylesheet" href="css/style.css">
+    <script src="js/menu.js"></script>
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+ <title>Prozentrechnen | meinbwr.de BwR</title>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+
+  <h2>Prozentrechnen – Alltagsaufgaben (beta)</h2>
+
+  <div id="generator-container">
+    <div class="box">
+      <p>
+        Hier können Sie zufällige Aufgaben zur Prozentrechnung aus dem wirtschaftlichen Alltag generieren.
+        Wählen Sie aus, welche Aufgabentypen enthalten sein sollen, und legen Sie die Anzahl der Aufgaben fest.
+        Alle Ergebnisse sind ganzzahlig (Vielfache von 5 oder 10) – auch ohne Taschenrechner lösbar.
+        Die Lösungen zeigen den vollständigen Rechenweg mit Dreisatz und Überkreuz-Multiplikation.
+      </p>
+
+      <!-- ── Aufgabentypen ── -->
+      <div class="flex-row">
+        <label>Aufgabentypen:</label>
+        <label><input type="checkbox" id="cb-W"  checked> Prozentwert (W)</label>
+        <label><input type="checkbox" id="cb-G"  checked> Grundwert (G)</label>
+        <label><input type="checkbox" id="cb-p"  checked> Prozentsatz (p&nbsp;%)</label>
+        <label><input type="checkbox" id="cb-Gv" checked> Verminderter Grundwert</label>
+        <label><input type="checkbox" id="cb-Gv_r" checked> G aus verminderten Grundwert</label>
+        <label><input type="checkbox" id="cb-Ge" checked> Vermehrter Grundwert</label>
+        <label><input type="checkbox" id="cb-Ge_r" checked> G aus vermehrten Grundwert</label>
+      </div>
+
+      <!-- ── Anzahl + Generieren ── -->
+      <div class="flex-row">
+        <label for="anzahlSelect">Anzahl der Aufgaben:</label>
+        <select class="dropdown dropbtn" id="anzahlSelect">
+            <option value="1">1 Aufgaben</option>
+            <option value="2">2 Aufgaben</option>
+          <option value="3">3 Aufgaben</option>
+           <option value="4">4 Aufgaben</option>
+          <option value="5" selected>5 Aufgaben</option>
+          <option value="8">8 Aufgaben</option>
+          <option value="10">10 Aufgaben</option>
+          <option value="12">12 Aufgaben</option>
+        </select>
+        <button onclick="generiereAufgaben()">Neue Aufgaben</button>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <div id="Container" contenteditable="true"></div>
+      </div>
+
+    </div>
+    <div w3-include-html="downloads.html"></div>
+
+    <!-- KI-Assistent -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli&nbsp;…)</p>
+        </div>
+      </div>
+
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>
+            Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+            Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+          </span>
+        </div>
+
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">💶 Alltagsrechnen</span>
+          <span class="ki-chip">🔢 Prozentrechnung</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+
+        <div class="ki-actions" style="margin-top:14px;">
+          <button
+            class="ki-prompt-btn ki-prompt-btn--primary"
+            id="kiPromptKopierenBtn"
+            onclick="kopiereKiPrompt()"
+            title="Prompt in die Zwischenablage kopieren"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+
+          <button
+            class="ki-prompt-btn ki-prompt-btn--ghost"
+            id="kiPromptToggleBtn"
+            onclick="toggleKiPromptVorschau()"
+          >
+            Prompt anzeigen ▼
+          </button>
+        </div>
+
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="js/lb7-1-prozentrechnen.js"></script>
+<script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+  if (typeof includeHTML === 'function') includeHTML();
+</script>
+
+</body>
+</html>
