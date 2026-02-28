@@ -409,32 +409,14 @@ function zeigeZufaelligeZahlungsaufgaben() {
   const ausgewaehlte = shuffle(familienSituationen).slice(0, anzahl);
 
   // ── 1. Übersichtstabelle ZUERST ─────────────────────────────────────────
-  let tabelleHTML = `<h2>Überblick: Zahlungsarten im Vergleich</h2>`;
-  tabelleHTML += `<table style="border-collapse: collapse; width: 100%; font-size: 0.88rem; margin-bottom: 2em;">`;
-  tabelleHTML += `<thead><tr style="background: #eee;">`;
-  tabelleHTML += `<th style="border:1px solid #ccc; padding:6px;">Zahlungsart</th>`;
-  tabelleHTML += `<th style="border:1px solid #ccc; padding:6px;">Praktikabilität</th>`;
-  tabelleHTML += `<th style="border:1px solid #ccc; padding:6px;">Gebühren</th>`;
-  tabelleHTML += `<th style="border:1px solid #ccc; padding:6px;">Sicherheit</th>`;
-  tabelleHTML += `<th style="border:1px solid #ccc; padding:6px;">Datenschutz</th>`;
-  tabelleHTML += `</tr></thead><tbody>`;
-  Object.values(zahlungsarten).forEach(z => {
-    tabelleHTML += `<tr>`;
-    tabelleHTML += `<td style="border:1px solid #ccc; padding:5px; font-weight:bold; white-space:nowrap;">${z.emoji} ${z.label}</td>`;
-    tabelleHTML += `<td style="border:1px solid #ccc; padding:5px;">${z.merkmale.praktikabilitaet}</td>`;
-    tabelleHTML += `<td style="border:1px solid #ccc; padding:5px;">${z.merkmale.gebuehren}</td>`;
-    tabelleHTML += `<td style="border:1px solid #ccc; padding:5px;">${z.merkmale.sicherheit}</td>`;
-    tabelleHTML += `<td style="border:1px solid #ccc; padding:5px;">${z.merkmale.datenschutz}</td>`;
-    tabelleHTML += `</tr>`;
-  });
-  tabelleHTML += `</tbody></table>`;
+  let tabelleHTML = ``;
 
   // ── 2. Aufgaben ──────────────────────────────────────────────────────────
   let aufgabenHTML = '<h2>Aufgaben</h2>';
   aufgabenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die folgenden Fallbeispiele. Entscheide dich für eine oder mehrere geeignete Zahlungsarten. Begründe deine Wahl anhand der Kriterien <strong>Praktikabilität, Gebühren, Sicherheit</strong> und <strong>Datenschutz</strong>.</p>';
   aufgabenHTML += '<ol>';
 
-  let loesungenHTML = '<h2>Lösungshinweise</h2>';
+  let loesungenHTML = '<h2>Lösung</h2>';
 
   ausgewaehlte.forEach((fall, idx) => {
     const name = pick(familienNamen);
