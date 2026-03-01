@@ -394,7 +394,7 @@ const faelle = [
     firmenname: 'Friseurmeisterin Zopfinger e. Kfr.',
     _originalVorname: 'Anita', _originalNachname: 'Zopfinger',
     _originalRechtsform: 'e. Kfr.', _originalGeschlecht: 'w',
-    sachverhalt: 'Anita Zopfinger ist ausgebildete Friseurmeisterin und eröffnet in Weilheim einen Friseursalon. Sie möchte ihn <em>„Friseurmeisterin Zopfinger e. Kfr."</em> nennen.',
+    sachverhalt: 'Anita Zopfinger ist Friseurmeister/-in und eröffnet in Weilheim einen Friseursalon. Sie möchte ihn <em>„Friseurmeisterin Zopfinger e. Kfr."</em> nennen.',
     korrekt: true,
     urteil: 'Entspricht den rechtlichen Vorgaben',
     begruendung: 'Der Name enthält die Berufsbezeichnung (Friseurmeisterin) und den Familiennamen, der als individualisierendes Element für ausreichende Unterscheidungskraft sorgt.'
