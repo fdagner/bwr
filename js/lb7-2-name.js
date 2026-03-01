@@ -397,7 +397,7 @@ const faelle = [
     sachverhalt: 'Anita Zopfinger ist ausgebildete Friseurmeisterin und eröffnet in Weilheim einen Friseursalon. Sie möchte ihn <em>„Friseurmeisterin Zopfinger e. Kfr."</em> nennen.',
     korrekt: true,
     urteil: 'Entspricht den rechtlichen Vorgaben',
-    begruendung: 'Der Name enthält die Berufsbezeichnung (Friseurmeisterin) und den Familiennamen (Zopfinger), der als individualisierendes Element für ausreichende Unterscheidungskraft sorgt.'
+    begruendung: 'Der Name enthält die Berufsbezeichnung (Friseurmeisterin) und den Familiennamen, der als individualisierendes Element für ausreichende Unterscheidungskraft sorgt.'
   },
 
   // ── FIRMENAUSSCHLIESSLICHKEIT ────────────────────────────────────────────
