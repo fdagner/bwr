@@ -549,6 +549,7 @@ function zeigeZufaelligeProzentAufgaben() {
     border-radius: 10px;
     overflow: hidden;
     background: white;
+    min-width: 700px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.07);
   `;
 
