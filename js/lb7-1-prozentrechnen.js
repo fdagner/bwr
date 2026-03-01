@@ -168,7 +168,7 @@ const AUFGABEN_DB = [
     textGe: (d) => `Eine Handwerkerleistung kostet netto ${fmtE(d.G)} €. Berechne den Bruttobetrag bei ${d.p} % Umsatzsteuer.`,
  
     textGe_r: (d) => `Eine Handwerkerrechnung beträgt brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettobetrag.`,
-    textGv_r: (d) => `Nach einem Skonto von ${d.p} % beträgt eine Rechnung noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Rechnungsbetrag.`,
+    textGv_r: (d) => `Nach einem Preisnachlass von ${d.p} % beträgt eine Rechnung noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Rechnungsbetrag.`,
   },
   // Ermäßigter Steuersatz 7 %: G × 7 ÷ 100 ganzzahlig → G Vielfaches von 100
   {
