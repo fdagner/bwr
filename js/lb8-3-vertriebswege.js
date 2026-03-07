@@ -256,7 +256,7 @@ const vertriebswege = {
       { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik verdeutlicht er seinen bisherigen Vertriebsweg:`,
+      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
       (u) => `${u} plant, seinen Absatz zu steigern. Im Rahmen der Marketingplanung stellt das Unternehmen seinen aktuellen Vertriebsweg grafisch dar:`,
       (u) => `Im Zuge der Vertriebsanalyse dokumentiert ${u} den Weg seiner Produkte bis zum Kunden in der folgenden Übersicht:`,
     ],
@@ -272,7 +272,7 @@ const vertriebswege = {
       { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik verdeutlicht er seinen bisherigen Vertriebsweg:`,
+      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
       (u) => `Im Rahmen einer Marketinganalyse legt ${u} dar, wie seine Produkte zum Kunden gelangen:`,
       (u) => `${u} hat seinen Vertrieb kürzlich überprüft. Die folgende Grafik zeigt den aktuellen Absatzweg:`,
     ],
@@ -288,7 +288,7 @@ const vertriebswege = {
       { iconKey: 'endverbraucher', bezeichnung: 'Gewerbekunde' },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik verdeutlicht er seinen bisherigen Vertriebsweg:`,
+      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
       (u) => `Zur Vorbereitung auf eine Marketingbesprechung dokumentiert ${u} seinen Vertriebsweg in der folgenden Grafik:`,
       (u) => `${u} überprüft seine Vertriebsstrategie. Die Grafik zeigt, wie das Unternehmen seine Produkte aktuell absetzt:`,
     ],
@@ -304,7 +304,7 @@ const vertriebswege = {
       { iconKey: 'endverbraucher', bezeichnung: 'Gewerbekunde' },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik verdeutlicht er seinen bisherigen Vertriebsweg:`,
+      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
       (u) => `Zur Vorbereitung auf eine Marketingbesprechung dokumentiert ${u} seinen Vertriebsweg in der folgenden Grafik:`,
       (u) => `${u} überprüft seine Vertriebsstrategie. Die Grafik zeigt, wie das Unternehmen seine Produkte aktuell absetzt:`,
     ],
@@ -320,7 +320,7 @@ const vertriebswege = {
       { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik verdeutlicht er seinen bisherigen Vertriebsweg:`,
+      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
       (u) => `Im Rahmen der jährlichen Vertriebsplanung stellt ${u} seinen Absatzweg grafisch dar:`,
       (u) => `${u} analysiert seine Vermarktungsstrategie. Die folgende Grafik zeigt, wie das Unternehmen seine Produkte zum Kunden bringt:`,
     ],
@@ -337,7 +337,7 @@ const vertriebswege = {
       { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik verdeutlicht er seinen bisherigen Vertriebsweg:`,
+      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
       (u) => `Im Rahmen der Vertriebsanalyse zeigt ${u} den Weg seiner Produkte bis zum Endkunden:`,
       (u) => `${u} überarbeitet seine Absatzstrategie und dokumentiert hierzu den bestehenden Vertriebsweg:`,
     ],
@@ -355,7 +355,7 @@ const vertriebswege = {
       { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik verdeutlicht er seinen bisherigen Vertriebsweg:`,
+      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
       (u) => `Im Rahmen der Exportstrategie stellt ${u} dar, wie seine Produkte international zum Endkunden gelangen:`,
       (u) => `${u} importiert Waren aus dem Ausland und verkauft sie über mehrere Stufen. Die Grafik zeigt den vollständigen Absatzweg:`,
     ],
