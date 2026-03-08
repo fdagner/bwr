@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Infografik-Generator | meinbwr.de BwR-Tool</title>
+    <meta name="description" content="Kostenloses BwR-Tool: Erstelle professionelle Infografiken mit Balken-, Säulen-, Linien- und Kreisdiagrammen. Farbschemas, CSV-Import, PNG/SVG-Export.">
+    <link rel="canonical" href="https://www.meinbwr.de/infografik.html">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="meinbwr.de – Unterrichtsmaterial BwR / BWL">
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/menu.js"></script>
+    <script src="js/html2canvas.min.js"></script>
+    <script src="js/apexcharts.min.js"></script>
+  <title>Infografiken-Generator – Fallbeispiele & Aufgaben | meinbwr.de BwR</title>
+</head>
+
+<body>
+    <main>
+        <div w3-include-html="navigation.html"></div>
+        <h2>Infografik-Generator (beta)</h2>
+
+        <!-- ════ EINSTELLUNGEN in der Box ════ -->
+        <div class="box">
+            <p>Erstellen Sie professionelle Infografiken mit verschiedenen Diagrammtypen. Wählen Sie eine Vorlage oder geben Sie eigene Daten ein.</p>
+
+            <div id="ig-controls">
+
+                <!-- Vorlagen -->
+                <div class="ig-full">
+                    <label>Vorlage laden</label>
+                    <select id="inp-template" onchange="loadTemplate(this.value)">
+                        <option value="">— Vorlage wählen —</option>
+                        <optgroup label="Volkswirtschaft">
+                            <option value="bip">BIP ausgewählter Volkswirtschaften</option>
+                            <option value="inflation">Inflationsrate im Vergleich</option>
+                            <option value="arbeitslosigkeit">Arbeitslosenquote nach Ländern</option>
+                        </optgroup>
+                        <optgroup label="Unternehmen">
+                            <option value="umsatz">Quartalsumsatz eines Unternehmens</option>
+                            <option value="marktanteile">Marktanteile nach Wettbewerbern</option>
+                            <option value="kosten">Kostenstruktur eines Betriebs</option>
+                        </optgroup>
+                        <optgroup label="Privathaushalte">
+                            <option value="haushalt">Haushaltsausgaben (2 Personen)</option>
+                            <option value="haushalt_familie">Haushaltsausgaben Familie (4 Personen)</option>
+                            <option value="haushalt_student">Budget Studierende</option>
+                            <option value="haushalt_einnahmen">Einnahmen Privathaushalt</option>
+                            <option value="haushalt_strom">Stromverbrauch Jahresverlauf</option>
+                            <option value="haushalt_sparen">Sparquote Jahresverlauf</option>
+                            <option value="haushalt_schulden">Restschuld Immobilienkredit</option>
+                            <option value="vermoegen">Vermögensaufteilung</option>
+                        </optgroup>
+                        <optgroup label="Schule &amp; Verein">
+                            <option value="noten">Notenverteilung einer Klasse</option>
+                            <option value="mitglieder">Vereinsmitglieder nach Altersgruppe</option>
+                            <option value="schulbuero">Einnahmen Schülermitverwaltung</option>
+                        </optgroup>
+                        <optgroup label="Einkommen">
+    <option value="einkommen_netto">Nettoeinkommen nach Berufsgruppe</option>
+    <option value="einkommen_quellen">Einkommensquellen eines Haushalts</option>
+    <option value="einkommen_entwicklung">Einkommensentwicklung über 10 Jahre</option>
+</optgroup>
+<optgroup label="Ausgaben">
+    <option value="ausgaben_kategorien">Ausgabenkategorien im Überblick</option>
+    <option value="ausgaben_regelmaessig">Regelmäßige monatliche Ausgaben</option>
+    <option value="ausgaben_unregelmaessig">Unregelmäßige Ausgaben im Jahresverlauf</option>
+    <option value="ausgaben_jahresvergleich">Jahresausgaben im Vergleich</option>
+</optgroup>
+<optgroup label="Haushaltsplan">
+    <option value="haushaltsplan_monat">Monatlicher Haushaltsplan</option>
+    <option value="haushaltsplan_einnahmen_ausgaben">Einnahmen vs. Ausgaben (Saldo)</option>
+    <option value="haushaltsplan_anteil">Ausgabenanteile am Einkommen</option>
+</optgroup>
+<optgroup label="Sparen">
+    <option value="sparanteil_einkommen">Sparquote nach Einkommensklasse</option>
+    <option value="sparanteil_ziel">Sparrücklagen nach Verwendungszweck</option>
+    <option value="sparentwicklung">Entwicklung des Ersparten (10 Jahre)</option>
+</optgroup>
+<optgroup label="Verschuldung">
+    <option value="verschuldung_arten">Verschuldungsarten im Vergleich</option>
+    <option value="verschuldung_tilgung">Tilgungsplan Konsumkredit</option>
+    <option value="verschuldung_haushalt">Verschuldungsquote nach Haushaltstyp</option>
+    <option value="verschuldung_kosten">Zinskosten nach Kreditlaufzeit</option>
+</optgroup>
+                    </select>
+                </div>
+
+                <hr style="grid-column:1/-1;border:none;border-top:1px solid #e0e0e0;margin:4px 0;" />
+
+                <!-- Metadaten -->
+                <div class="ig-full">
+                    <label>Titel <span style="color:#aaa;font-weight:normal;">(Pflichtfeld)</span></label>
+                    <div class="ig-field-wrap">
+                        <input type="text" id="inp-title" placeholder="Titel der Infografik" maxlength="80"
+                            oninput="updateCharCounter(this,70);validateField(this,1)" onpaste="sanitizePaste(event, 70)" />
+                        <div style="display:flex;justify-content:space-between;">
+                            <div class="ig-field-error" id="err-title">Bitte einen Titel eingeben.</div>
+                            <div class="ig-char-counter" id="counter-inp-title">0 / 80</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ig-full">
+                    <label>Untertitel</label>
+                    <div class="ig-field-wrap">
+                        <input type="text" id="inp-subtitle" placeholder="Untertitel / Teilüberschrift" maxlength="120"
+                            oninput="updateCharCounter(this,120)" onpaste="sanitizePaste(event, 120)" />
+                        <div class="ig-char-counter" id="counter-inp-subtitle" style="text-align:right;">0 / 120</div>
+                    </div>
+                </div>
+                <div>
+                    <label>Quelle</label>
+                    <div class="ig-field-wrap">
+                        <input type="text" id="inp-source" placeholder="z. B. Statistisches Bundesamt, 2024" maxlength="100"
+                            oninput="updateCharCounter(this,100)" onpaste="sanitizePaste(event, 100)" />
+                        <div class="ig-char-counter" id="counter-inp-source" style="text-align:right;">0 / 100</div>
+                    </div>
+                </div>
+                <div>
+                    <label>Einheit</label>
+                    <div class="ig-field-wrap">
+                        <input type="text" id="inp-unit" placeholder="z. B. Mrd. €" maxlength="30"
+                            oninput="updateCharCounter(this,30)" onpaste="sanitizePaste(event, 30)"  />
+                        <div class="ig-char-counter" id="counter-inp-unit" style="text-align:right;">0 / 30</div>
+                    </div>
+                </div>
+                <div>
+                    <label>Achsenbeschriftung</label>
+                    <input type="text" id="inp-xlabel" placeholder="z. B. Jahr" />
+                </div>
+                <div>
+                    <label>Diagrammart</label>
+                    <select id="inp-charttype">
+                        <option value="bar">Balkendiagramm</option>
+                        <option value="column">Säulendiagramm</option>
+                        <option value="line">Liniendiagramm</option>
+                        <option value="pie">Kreisdiagramm</option>
+                        <option value="donut">Ringdiagramm</option>
+                    </select>
+                </div>
+
+                <!-- Datenpunkte -->
+                <div id="ig-data-section">
+                    <label>Datenpunkte</label>
+
+                    <div class="ig-sort-bar">
+                        <button class="ig-sort-btn" onclick="sortRows('desc')">↓ Absteigend</button>
+                        <button class="ig-sort-btn" onclick="sortRows('asc')">↑ Aufsteigend</button>
+                        <button class="ig-sort-btn" onclick="sortRows('alpha')">A–Z</button>
+                        <button class="ig-sort-btn active" id="sort-manual-btn" onclick="sortRows('manual')">✥ Manuell</button>
+                        <button class="ig-sort-btn" style="margin-left:auto" onclick="openCsvModal()">📂 CSV importieren</button>
+                    </div>
+
+                    <div class="ig-data-header">
+                        <span></span>
+                        <span>Bezeichnung</span>
+                        <span>Wert</span>
+                        <span></span>
+                    </div>
+                    <div id="data-rows"></div>
+                    <button class="ig-btn-add" onclick="addRow()">+ Datenpunkt hinzufügen</button>
+                </div>
+
+                <!-- Datenbeschriftung -->
+                <div>
+                    <label>Datenbeschriftung anzeigen</label>
+                    <select id="inp-datalabel-show">
+                        <option value="yes">Ja</option>
+                        <option value="no">Nein</option>
+                    </select>
+                </div>
+                <div>
+                    <label>1000er-Trennung</label>
+                    <select id="inp-thousand-sep">
+                        <option value="point">Tausenderpunkt (1.234)</option>
+                        <option value="space">Leerzeichen (1 234)</option>
+                        <option value="none">Keine Trennung (1234)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Schriftfarbe</label>
+                    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                        <!-- id="inp-label-auto-wrap" ermöglicht Ein-/Ausblenden per JS -->
+                        <label id="inp-label-auto-wrap" style="display:flex;align-items:center;gap:4px;font-size:.8rem;color:#555;cursor:pointer;">
+                            <input type="checkbox" id="inp-label-auto" checked onchange="toggleLabelColorAuto()"
+                                style="width:auto;accent-color:#1f4e79;" />
+                            Auto (Kontrast)
+                        </label>
+                        <div id="inp-label-color-wrap" style="display:flex;gap:6px;align-items:center;opacity:.35;pointer-events:none;flex:1;">
+                            <input type="color" id="inp-label-color" value="#333333"
+                                style="width:36px;height:32px;padding:2px;border-radius:3px;cursor:pointer;flex-shrink:0;border:1px solid #ccc;" />
+                            <input type="text" id="inp-label-color-hex" value="#333333"
+                                style="flex:1;" placeholder="#333333" oninput="syncColorFromHex()" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label>Position der Beschriftung</label>
+                    <select id="inp-label-position"></select>
+                </div>
+                <div id="ig-xaxis-wrap" style="display:none;">
+                    <label>X-Achse anzeigen</label>
+                    <select id="inp-xaxis-show">
+                        <option value="no">Nein</option>
+                        <option value="yes">Ja</option>
+                    </select>
+                </div>
+
+                <!-- Farbschema -->
+                <div class="ig-full">
+                    <label>Farbschema</label>
+                    <div class="ig-schemes" id="color-schemes"></div>
+                </div>
+
+                <!-- Button -->
+                <div class="ig-full" style="margin-top:4px;">
+                    <button id="generate-chart" onclick="generate()">Infografik erstellen / aktualisieren</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════ INFOGRAFIK-AUSGABE ════ -->
+        <div id="ig-output-area">
+            <div class="ig-chart-card" id="ig-chart-card">
+                <div id="ig-out-title"    class="ig-chart-title"     style="display:none"></div>
+                <div id="ig-out-subtitle" class="ig-chart-subtitle"  style="display:none"></div>
+                <div id="ig-chart-container"></div>
+                <div class="ig-chart-footer" id="ig-chart-footer" style="display:none">
+                    <span id="ig-out-source"></span>
+
+                </div>
+            </div>
+            <p id="ig-placeholder">← Daten eingeben und auf „Infografik erstellen" klicken</p>
+            <div class="ig-export-bar" id="ig-export-bar" style="display:none;">
+
+              
+</div>
+   <div class="exportButtons">
+                <button class="icon" type="button" onclick="exportPng()" data-tooltip="Als PNG herunterladen"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
+        <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/>
+      </svg></button>
+                <button class="icon" type="button" onclick="exportSvg()" data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
+            </svg></button>
+                <button class="icon" type="button" onclick="downloadCsv()" data-tooltip="CSV herunterladen"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512">
+        <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/>
+      </svg></button>
+            </div>
+        </div>
+
+   
+    </main>
+
+    <!-- ════ CSV MODAL ════ -->
+    <div class="ig-modal-overlay" id="csv-modal">
+        <div class="ig-modal">
+            <h3>CSV importieren</h3>
+            <div class="ig-modal-row">
+                <label>CSV-Datei wählen (Trennzeichen: Semikolon)</label>
+                <input type="file" id="csv-file" accept=".csv,.txt"
+                    style="width:100%;padding:5px;font-size:.82rem;border:1px solid #ccc;border-radius:3px;box-sizing:border-box;"
+                    onchange="previewCsv()" />
+            </div>
+            <div class="ig-modal-row">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                    <input type="checkbox" id="csv-skip-header" checked style="width:auto;" />
+                    Erste Zeile als Kopfzeile überspringen
+                </label>
+            </div>
+            <div class="ig-modal-row">
+                <label>Vorschau</label>
+                <div class="ig-csv-preview" id="csv-preview">— noch keine Datei gewählt —</div>
+            </div>
+            <div class="ig-modal-btns">
+                <button class="ig-btn-secondary" onclick="closeCsvModal()">Abbrechen</button>
+                <button class="ig-btn-primary"   onclick="importCsv()">Importieren</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/lb7-1-infografik.js"></script>
+    <div w3-include-html="footer.html"></div>
+    <script>
+        includeHTML();
+    </script>
+</body>
+</html>

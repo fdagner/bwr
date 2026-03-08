@@ -1652,3 +1652,248 @@ select:focus {
         justify-content: center;
       }
     }
+
+    /* Controls-Grid in der Box */
+    #ig-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px 20px;
+        margin-top: 12px;
+    }
+    #ig-controls .ig-full { grid-column: 1 / -1; }
+    #ig-controls label {
+        font-size: .8rem;
+        color: #666;
+        display: block;
+        margin-bottom: 3px;
+    }
+    #ig-controls input[type=text],
+    #ig-controls input[type=number],
+    #ig-controls select,
+    #ig-controls textarea {
+        width: 100%;
+        padding: 6px 9px;
+        font-family: inherit;
+        font-size: .88rem;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+    #ig-controls textarea { resize: vertical; min-height: 54px; }
+
+    /* Datenpunkte */
+    #ig-data-section { grid-column: 1 / -1; }
+    .ig-sort-bar {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+    }
+    .ig-sort-btn {
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        padding: 4px 9px;
+        font-size: .75rem;
+        border-radius: 3px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background .15s;
+    }
+    .ig-sort-btn:hover  { background: #e0e0e0; }
+    .ig-sort-btn.active { background: #1f4e79; color: #fff; border-color: #1f4e79; }
+
+    .ig-data-header {
+        display: grid;
+        grid-template-columns: 16px 1fr 90px 32px;
+        gap: 6px;
+        margin-bottom: 3px;
+    }
+    .ig-data-header span { font-size: .72rem; color: #999; }
+
+    .ig-data-row {
+        display: grid;
+        grid-template-columns: 16px 1fr 90px 32px;
+        gap: 6px;
+        margin-bottom: 5px;
+        align-items: start;
+    }
+    .ig-data-row.dragging  { opacity: .4; }
+    .ig-data-row.drag-over { border-top: 2px solid #1f4e79; }
+    .ig-data-row input {
+        padding: 5px 7px;
+        font-size: .85rem;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        width: 100%;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+    .ig-drag-handle {
+        cursor: grab;
+        color: #aaa;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+    }
+    .ig-drag-handle:active { cursor: grabbing; }
+    .ig-btn-icon {
+        background: #fdecea;
+        border: 1px solid #f5c6c2;
+        color: #c0392b;
+        cursor: pointer;
+        border-radius: 3px;
+        font-size: 1rem;
+        height: 30px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .ig-btn-icon:hover { background: #f5c6c2; }
+
+    .ig-btn-add {
+        width: 100%;
+        margin-top: 3px;
+        background: #f0f8f0;
+        border: 1px dashed #7dba7d;
+        color: #2d7a2d;
+        padding: 5px;
+        cursor: pointer;
+        border-radius: 3px;
+        font-size: .82rem;
+        font-family: inherit;
+    }
+    .ig-btn-add:hover { background: #e0f0e0; }
+
+    /* Farbschemas */
+    .ig-schemes {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+        margin-top: 4px;
+    }
+    .scheme-btn {
+        border: 2px solid transparent;
+        border-radius: 4px;
+        padding: 4px;
+        cursor: pointer;
+        background: #f5f5f5;
+        transition: border-color .15s;
+    }
+    .scheme-btn.active { border-color: #1f4e79; }
+    .scheme-preview {
+        display: flex;
+        height: 16px;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    .scheme-preview span { flex: 1; }
+    .scheme-name {
+        font-size: .6rem;
+        text-align: center;
+        color: #888;
+        margin-top: 2px;
+    }
+
+    /* Validierung */
+    .ig-field-wrap { position: relative; }
+    .ig-field-wrap input.invalid,
+    .ig-field-wrap select.invalid,
+    .ig-field-wrap textarea.invalid { border-color: #c0392b !important; background: #fff8f8; }
+    .ig-field-error {
+        font-size: .72rem;
+        color: #c0392b;
+        margin-top: 2px;
+        display: none;
+    }
+    .ig-field-error.visible { display: block; }
+    .ig-char-counter {
+        font-size: .7rem;
+        color: #aaa;
+        text-align: right;
+        margin-top: 2px;
+        display: none;  
+    }
+    .ig-char-counter.warn  { color: #e06b00; }
+    .ig-char-counter.over  { color: #c0392b; font-weight: bold; }
+
+    /* Infografik-Ausgabe */
+    #ig-output-area { margin-top: 24px; }
+
+    .ig-chart-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-top: 5px solid #1f4e79;
+        padding: 28px 32px 20px;
+        box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    }
+    .ig-chart-title    { font-size: 1.35rem; font-weight: bold; color: #1a1a1a; line-height: 1.25; }
+    .ig-chart-subtitle { font-size: .9rem; color: #666; margin-top: 3px; }
+    .ig-chart-textfield {
+        font-size: .83rem; color: #444; margin-top: 8px;
+        border-left: 3px solid #1f4e79; padding-left: 9px; line-height: 1.5;
+    }
+    .ig-chart-footer {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        font-size: .73rem;
+        color: #999;
+        border-top: 1px solid #eee;
+        padding-top: 8px;
+    }
+    #ig-placeholder { color: #bbb; font-size: .95rem; margin: 30px 0 10px; text-align: center; }
+
+    .ig-export-bar {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+    .ig-btn-export {
+        background: #fff;
+        border: 1px solid #1f4e79;
+        color: #1f4e79;
+        padding: 6px 14px;
+        font-size: .8rem;
+        border-radius: 3px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background .15s;
+    }
+    .ig-btn-export:hover { background: #eef3f8; }
+
+    /* CSV Modal */
+    .ig-modal-overlay {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,.5);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+    }
+    .ig-modal-overlay.open { display: flex; }
+    .ig-modal {
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 22px;
+        width: 400px;
+        box-shadow: 0 8px 32px rgba(0,0,0,.15);
+    }
+    .ig-modal h3 { font-size: .95rem; color: #1f4e79; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+    .ig-modal label { font-size: .82rem; color: #666; display: block; margin-bottom: 3px; }
+    .ig-modal-row { margin-bottom: 10px; }
+    .ig-csv-preview {
+        background: #f8f8f8; border: 1px solid #ddd; padding: 7px;
+        font-size: .73rem; color: #666; max-height: 110px; overflow-y: auto;
+        border-radius: 3px; white-space: pre; font-family: monospace; margin-top: 4px;
+    }
+    .ig-modal-btns { display: flex; gap: 8px; margin-top: 14px; justify-content: flex-end; }
+    .ig-btn-primary   { background: #1f4e79; border: none; color: #fff; padding: 7px 16px; border-radius: 3px; cursor: pointer; font-family: inherit; font-size: .85rem; }
+    .ig-btn-secondary { background: #f0f0f0; border: 1px solid #ccc; color: #555; padding: 7px 16px; border-radius: 3px; cursor: pointer; font-family: inherit; font-size: .85rem; }
+
+    /* ApexCharts Toolbar */
+    .apexcharts-menu { font-family: inherit !important; font-size: .82rem !important; }
