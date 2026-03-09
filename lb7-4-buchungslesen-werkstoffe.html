@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buchungslesen – Werkstoffkonten | BwR</title>
+  <link rel="stylesheet" href="css/style.css">
+      <meta name="keywords" content="Bestandsveränderungen BwR, Werkstoffe Bestandsmehrung, Bestandsminderung Buchungssatz, Inventur BwR Realschule, Lagerbuchungen Werkstoffe, BwR 8 Bayern, Buchungssätze Bestandsveränderung, zufällige Aufgaben BwR, Rechnungswesen Klasse 8, Prüfungsvorbereitung BwR">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+    <script src="js/menu.js"></script>
+</head>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div> 
+  <h2>Buchungslesen – Werkstoffe</h2>
+
+  <div id="generator-container">
+    <div class="box">
+      <p>Hier können Sie eine Aufgabe zum Buchungslesen der Werkstoffkonten generieren. Zu jedem Eintrag im T-Konto ist der Geschäftsfall zu formulieren.</p>
+
+      <p><strong>Konten auswählen:</strong></p>
+      <div class="flex-row">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="cb_AWR" value="AWR" checked> 6000 AWR – Rohstoffe
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="cb_AWF" value="AWF" checked> 6010 AWF – Fremdbauteile
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="cb_AWH" value="AWH" checked> 6020 AWH – Hilfsstoffe
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="cb_AWB" value="AWB" checked> 6030 AWB – Betriebsstoffe
+        </label>
+      </div>
+
+      <p>
+        <label>
+          <strong>Einträge pro Konto:</strong>
+          <select id="anzahlSelect" style="padding:4px 8px;font-size:1em;border:1px solid #ccc;border-radius:4px;">
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+          </select>
+        </label>
+      </p>
+      <p style="margin-top:10px;">
+        <label>
+          <input type="checkbox" id="showKontoNr">
+          Kontonummer im T-Konto anzeigen (z.&nbsp;B. <em>6000 AWR</em> statt nur <em>AWR</em>)
+        </label>
+      </p>
+
+      <button onclick="generiereAufgabe()">Neue Aufgabe erstellen</button>
+    </div>
+
+    <div id="Container" style="max-width:960px;margin:0 auto;" contenteditable="true"></div>
+  </div>
+       <div w3-include-html="downloads.html"></div> 
+</main>
+  <script src="js/lb7-4-buchungslesen-werkstoffe.js"></script>
+  <script src="js/download.js"></script>
+  <div w3-include-html="footer.html"></div> 
+  <script>
+  includeHTML();
+  </script>
+
+</body>
+</html>
