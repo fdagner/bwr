@@ -300,7 +300,7 @@ function zeigeZufaelligeEinkommensaufgaben() {
   html += `</ol>`;
 
   // ── EINE gemeinsame Ausfülltabelle ───────────────────────────────────────
-  html += `<h3>Ausfülltabelle</h3>`;
+  html += `<h3>Tabelle</h3>`;
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:660px;">`;
   html += `<thead><tr style="background:#eee;">
     <th style="border:1px solid #ccc; padding:6px 10px; text-align:center; width:40px;">Nr.</th>
