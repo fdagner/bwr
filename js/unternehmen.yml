@@ -615,7 +615,7 @@
 
 - unternehmen:
     id: "27"
-    branche: "Einzehandel"
+    branche: "Einzelhandel"
     name: "SmartTrade"
     motto: "Einfach, Schnell, Online!"
     bank: "Digital Bank"
@@ -1096,7 +1096,7 @@
 
 - unternehmen:
     id: "46"
-    branche: "Einzehandel"
+    branche: "Einzelhandel"
     name: "SPL Schuhe & Lederwaren"
     motto: "Schuhe und Lederwaren Spenge!"
     bank: "Nürnberg Bank"

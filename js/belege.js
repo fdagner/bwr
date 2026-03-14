@@ -973,7 +973,6 @@ function loadLogo(event) {
             svgContainer.appendChild(image);
         };
         reader.readAsDataURL(file);
-
     }
 }
 
@@ -1502,7 +1501,6 @@ function updateColors() {
 document.addEventListener("DOMContentLoaded", function () {
     let colorPicker = document.getElementById("colorPicker");
     colorPicker.addEventListener("input", updateColors);
-
 });
 
 
@@ -1512,6 +1510,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function applySVGholen() {
     applySVG().then(() => {
         applyOrderData();
+        adjustTextColor();
     });
 }
 
@@ -1686,7 +1685,9 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
         initializeDropdownHandlers();
-        applySVGholen();
+        await applySVG();       // WARTEN bis SVG geladen
+        applyOrderData();
+        loadSupplierData();     // Farben NACH SVG setzen
     } catch (error) {
         console.error("Fehler beim Laden der SVG:", error);
     }
