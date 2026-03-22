@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kostenloses BwR-Tool: Beschaffungsbuchungen für Werkstoffe (AWR, AWF, AWH, AWB). Zufällige Geschäftsfälle mit Eingangsrechnungen – ideal für Rechnungswesen-Unterricht Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb-werkstoffe-buchungen.html">
+  <meta name="robots" content="index, follow">
+  <!-- === Open Graph === -->
+  <meta property="og:title" content="Beschaffungsbuchungen Werkstoffe – BwR Tool">
+  <meta property="og:description" content="Buchungssätze AWR, AWF, AWH, AWB – BwR Realschule Bayern">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb-werkstoffe-buchungen.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
+  <meta property="og:locale" content="de_DE">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+  <title>Einkauf BwR 7 | meinbwr.de</title>
+</head>
+
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+  <h2>Einkauf BwR 7</h2>
+  <div id="generator-container">
+    <div class="box">
+
+      <!-- Einleitung -->
+      <p>
+        Hier können Sie zufällige Einkaufsvorgänge für Werkstoffe generieren, die passenden
+        Buchungssätze ableiten und Eingangsrechnungen als Belege erstellen.
+      </p>
+
+
+          <!-- Anzahl -->
+      <label for="anzahlDropdownW">Anzahl der Geschäftsfälle:</label>
+      <select id="anzahlDropdownW">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5" selected>5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select><br>
+
+      <!-- Optionen -->
+      <h3>Optionen</h3>
+      <div class="flex-row">
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="optMitRabattW">
+          Rabatt einbeziehen
+        </label>
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="optVorstAngegeben">
+          Vorsteuer in der Aufgabe angeben
+        </label>
+      </div>
+
+      <!-- Unternehmen -->
+      <h3>Unternehmen auswählen</h3>
+      <div class="flex-row">
+        <div>
+          <label for="werkstoffeKunde">Unternehmen:</label>
+          <select id="werkstoffeKunde" class="meinUnternehmen">
+            <!-- Wird automatisch befüllt -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Konto-Auswahl -->
+      <div class="konto-auswahl-container">
+        <div class="konto-auswahl-header">
+          <h3>Konten auswählen</h3>
+          <div class="flex-row" id="kontoGridW">
+            <!-- Wird dynamisch befüllt -->
+          </div>
+          <div class="auswahl-buttons">
+            <button type="button" onclick="alleKontenAuswaehlenW()">Alle auswählen</button>
+            <button type="button" onclick="alleKontenAbwaehlenW()">Alle abwählen</button>
+          </div>
+        </div><br>
+        <div class="auswahl-info" id="auswahlInfoW">
+          ℹ️ Keine Konten ausgewählt – es werden alle verfügbaren Geschäftsfälle verwendet
+        </div>
+      </div>
+
+      <br>
+      <button onclick="zeigeZufaelligeGeschaeftsfaelleW()">Aufgaben erstellen</button>
+
+      <!-- Ausgabe -->
+      <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+        <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+        <div id="button-columnW" style="width: 180px; flex-shrink: 0;">
+          <!-- Beleg-Buttons werden hier eingefügt -->
+        </div>
+      </div>
+    </div>
+
+    <div w3-include-html="downloads.html"></div>
+
+    <!-- KI-ASSISTENT PROMPT -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+        </div>
+      </div>
+
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>
+            Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+            Der Bot führt Schülerinnen und Schüler per Rückfragen zur richtigen Lösung – ohne Antworten vorwegzunehmen.
+          </span>
+        </div>
+
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">📦 AWR · AWF · AWH · AWB</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+
+        <div class="ki-actions" style="margin-top: 14px;">
+          <button
+            class="ki-prompt-btn ki-prompt-btn--primary"
+            id="kiPromptKopierenBtn"
+            onclick="kopiereKiPrompt()"
+            title="Prompt in die Zwischenablage kopieren"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+
+          <button
+            class="ki-prompt-btn ki-prompt-btn--ghost"
+            id="kiPromptToggleBtn"
+            onclick="toggleKiPromptVorschau()"
+            title="Prompt-Text ein- oder ausblenden"
+          >
+            Prompt anzeigen ▼
+          </button>
+        </div>
+
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false" aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- Ende KI-Assistent -->
+
+  </div>
+</main>
+
+<script src="js/lb7-4-einkauf.js"></script>
+<script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+  includeHTML();
+</script>
+</body>
+</html>
