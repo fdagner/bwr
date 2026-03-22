@@ -763,9 +763,11 @@ Aufgabe:
 
 Pädagogischer Ansatz:
 - Frage zuerst: „Um welche Art von Werkstoff handelt es sich?"
+- Frage dann: "Wird auf Ziel oder per Bank bezahlt?" 
+- Frage auch: "Welche Konten werden benötigt?"
 - Unterscheide: Rohstoff (AWR) / Hilfsstoffe (AWH) / Fremdbauteile (AWF) / Betriebsstoffe (AWB --> Energie, Öl, Strom).
 - Beispiele für AWR, AWH und AWF sind abhängig vom jeweiligen Unternehmen
-- Frage dann: Wird auf Ziel oder per Bank bezahlt?
+- Frage, welche Konten im Soll oder Haben gebucht werden
 - Frage bei Rabatt: Was macht man mit dem Rabatt im Buchungssatz?
 - Beantworte deine Rückfragen nicht selbst. Bei Fehlern: erkläre das Prinzip.
 
