@@ -100,17 +100,6 @@ function getLieferantFuerGf(konto, awbArt) {
 const RABATT_SAETZE = [5, 10, 15, 20];
 
 function passeNettoFuerRabattAn(netto, rabattProzent) {
-  // Schritt so wählen, dass Bezugspreis (nach Rabatt) ein Vielfaches von 1000 bleibt
-  // → VORST (19 %) immer ganzzahlig
-  // 5 %:  LP muss Vielfaches von 20·100 = 2000 sein (95 % × 2000 = 1900 ✓)
-  // 10 %: LP muss Vielfaches von  1000  sein         (90 % × 1000 =  900 ✓)
-  // 20 %: LP muss Vielfaches von  1000  sein         (80 % × 1000 =  800 ✓)
-  // Aber 800/900 × 0.19 → Komma! Daher: Bezugspreis auf 1000er halten,
-  // d.h. LP muss Vielfaches von 1000/(1−rabatt/100) sein:
-  // 5 %: 1000/0.95 ≈ 1053 → nicht schön. Besser: Bezugspreis auf 1000er snappen:
-  // → LP so runden, dass LP×(1−r/100) ein Vielfaches von 1000 ist
-  // Für 5 %: Schritt = 1000/0.95 → aufrunden auf nächstes sauberes Vielfaches
-  // Einfachste Lösung: Bezugspreis berechnen, auf 1000 runden, LP zurückrechnen
   const faktor = 1 - rabattProzent / 100;
   const bezug = Math.round((netto * faktor) / 1000) * 1000;
   return Math.round(bezug / faktor / 1000) * 1000;
@@ -282,24 +271,18 @@ function bsEinfachUstW(gf) {
   );
 
   // ── Nebenrechnung als HTML-Tabelle ────────────────────────────────────────
-  // Spalten: Bezeichnung | Operator | Betrag
-  // Zeilen je nach Fall (netto/brutto angegeben, mit/ohne Rabatt)
-
-  // opRow: Zeile mit Operator und Betrag (z. B. "− 50,00 €")
   function opRow(label, op, betrag) {
     return `<tr>
       <td style="padding:1px 10px 1px 2px;color:#444;">${label}</td>
       <td style="padding:1px 0;text-align:right;font-family:courier;color:#444;" colspan="2">${op}&nbsp;${formatCurrencyW(betrag)}</td>
     </tr>`;
   }
-  // resRow: Ergebniszeile mit Trennlinie oben und Fettdruck
   function resRow(label, betrag) {
     return `<tr style="border-top:1px solid #aaa;">
       <td style="padding:2px 10px 2px 0;">${label}</td>
       <td style="padding:1px 0;text-align:right;font-family:courier;" colspan="2">${formatCurrencyW(betrag)}</td>
     </tr>`;
   }
-  // startRow: erste Zeile (kein Operator, normale Schrift)
   function startRow(label, betrag) {
     return `<tr>
       <td style="padding:2px 10px 2px 0;">${label}</td>
@@ -307,13 +290,11 @@ function bsEinfachUstW(gf) {
     </tr>`;
   }
 
-  // Umsatzsteuer auf Listenpreis (für Brutto-Angabe) und auf Bezugspreis (für Netto-Angabe)
   const ustAufListenpreis = roundToTwoDecimalsW(listennetto * 0.19);
 
   let rows = "";
 
   if (rabatt && angabeIstBrutto) {
-    // Rechnungsbetrag (LP brutto) − USt = Listeneinkaufspreis netto → − Rabatt = Bezugspreis → + USt = Rechnungsbetrag
     const ustAufListenpreis = roundToTwoDecimalsW(listennetto * 0.19);
     rows =
       startRow("Rechnungsbetrag", listenbrutto) +
@@ -324,7 +305,6 @@ function bsEinfachUstW(gf) {
       opRow("+ Umsatzsteuer", "+", Vorsteuer) +
       resRow("Rechnungsbetrag", bruttoBetrag);
   } else if (rabatt && !angabeIstBrutto) {
-    // Listeneinkaufspreis netto − Rabatt = Bezugspreis → + USt = Rechnungsbetrag
     rows =
       startRow("Listeneinkaufspreis netto", listennetto) +
       opRow(`- Rabatt ${rabattProzent} %`, "", rabattBetrag) +
@@ -332,13 +312,11 @@ function bsEinfachUstW(gf) {
       opRow("+ Umsatzsteuer (19 %)", "", Vorsteuer) +
       resRow("Rechnungsbetrag", bruttoBetrag);
   } else if (!rabatt && angabeIstBrutto) {
-    // Rechnungsbetrag − USt = Listeneinkaufspreis netto (= Bezugspreis)
     rows =
       startRow("Rechnungsbetrag", bruttoBetrag) +
       opRow("- Umsatzsteuer (19 %)", "", Vorsteuer) +
       resRow("Listeneinkaufspreis netto", nettoBetrag);
   } else {
-    // Bezugspreis (= Listeneinkaufspreis netto) + USt = Rechnungsbetrag
     rows =
       startRow("Bezugspreis", nettoBetrag) +
       opRow("+ Umsatzsteuer (19 %)", "+", Vorsteuer) +
@@ -510,6 +488,12 @@ function genReNrW() {
   return Math.floor(100 + Math.random() * 9900);
 }
 
+// ── Globale Liste der zuletzt generierten Geschäftsfälle ──────────────────────
+// Wird in zeigeZufaelligeGeschaeftsfaelleW() befüllt und von
+// erstelleKiPromptTextW() ausgelesen, damit der KI-Prompt immer die
+// aktuell angezeigten Aufgaben inkl. Musterlösungen enthält.
+let letzteGenerierteGfListeW = [];
+
 function erstelleZufallsGeschaeftsfallW() {
   const mitRabattOpt = document.getElementById("optMitRabattW").checked;
   const vorstAngegeben =
@@ -543,9 +527,7 @@ function erstelleZufallsGeschaeftsfallW() {
   const rabattProzent = rabatt ? pickW(RABATT_SAETZE) : 0;
 
   // ── Betrag ────────────────────────────────────────────────────────────────
-  // Nettobetrag immer auf 100 € gerundet
   let listennetto = generateRandomBetragW(artikel.minNetto, artikel.maxNetto);
-  // Sicherstellen: Vielfaches von 1000 → VORST immer ganzzahlig
   listennetto = Math.round(listennetto / 1000) * 1000;
   if (listennetto < 1000) listennetto = 1000;
   if (rabatt) listennetto = passeNettoFuerRabattAn(listennetto, rabattProzent);
@@ -622,6 +604,229 @@ function erstelleBuchungssatzW(gf) {
 }
 
 // ============================================================================
+// MUSTERLÖSUNG ALS REINER TEXT (für KI-Prompt)
+// ============================================================================
+
+/**
+ * Wandelt einen Geschäftsfall in eine lesbare Textlösung um,
+ * die der KI-Assistent als Referenz erhält.
+ */
+function erstelleLoesungsTextW(gf) {
+  const fmtW = (v) =>
+    v.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+
+  // ── Buchungssatz ─────────────────────────────────────────────────────────
+  const bs =
+    `${gf.sollKto} ${fmtW(gf.nettoBetrag)} / VORST ${fmtW(gf.Vorsteuer)} an ${gf.habenKto} ${fmtW(gf.bruttoBetrag)}`;
+
+  // ── Nebenrechnung ─────────────────────────────────────────────────────────
+  let nr = "";
+  const fmtLine = (label, betrag, prefix = "") =>
+    `  ${label}: ${prefix}${fmtW(betrag)}`;
+
+  if (gf.rabatt && gf.angabeIstBrutto) {
+    nr = [
+      fmtLine("Rechnungsbetrag (Listenpreis brutto)", gf.listenbrutto),
+      fmtLine("- Umsatzsteuer (19 %)", roundToTwoDecimalsW(gf.listennetto * 0.19), "- "),
+      fmtLine("= Listeneinkaufspreis netto", gf.listennetto),
+      fmtLine(`- Rabatt ${gf.rabattProzent} %`, gf.rabattBetrag, "- "),
+      fmtLine("= Bezugspreis (netto)", gf.nettoBetrag),
+      fmtLine("+ Umsatzsteuer (19 %)", gf.Vorsteuer, "+ "),
+      fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
+    ].join("\n");
+  } else if (gf.rabatt && !gf.angabeIstBrutto) {
+    nr = [
+      fmtLine("Listeneinkaufspreis netto", gf.listennetto),
+      fmtLine(`- Rabatt ${gf.rabattProzent} %`, gf.rabattBetrag, "- "),
+      fmtLine("= Bezugspreis (netto)", gf.nettoBetrag),
+      fmtLine("+ Umsatzsteuer (19 %)", gf.Vorsteuer, "+ "),
+      fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
+    ].join("\n");
+  } else if (!gf.rabatt && gf.angabeIstBrutto) {
+    nr = [
+      fmtLine("Rechnungsbetrag", gf.bruttoBetrag),
+      fmtLine("- Umsatzsteuer (19 %)", gf.Vorsteuer, "- "),
+      fmtLine("= Listenpreis netto (= Bezugspreis)", gf.nettoBetrag),
+    ].join("\n");
+  } else {
+    nr = [
+      fmtLine("Bezugspreis (= Listenpreis netto)", gf.nettoBetrag),
+      fmtLine("+ Umsatzsteuer (19 %)", gf.Vorsteuer, "+ "),
+      fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
+    ].join("\n");
+  }
+
+  return `Buchungssatz: ${bs}\nNebenrechnung:\n${nr}`;
+}
+
+// ============================================================================
+// KI-PROMPT MIT AKTUELLEN AUFGABEN UND LÖSUNGEN ZUSAMMENBAUEN
+// ============================================================================
+
+/**
+ * Gibt den vollständigen KI-Assistent-Prompt zurück,
+ * wobei ###AUFGABEN und LÖSUNGEN### durch die aktuell generierten
+ * Aufgaben und Musterlösungen ersetzt wird.
+ */
+function erstelleKiPromptTextW() {
+  let aufgabenUndLoesungen = "";
+
+  if (letzteGenerierteGfListeW.length === 0) {
+    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst auf Aufgaben erstellen)";
+  } else {
+    aufgabenUndLoesungen = letzteGenerierteGfListeW
+      .map((gf, idx) => {
+        const nr = idx + 1;
+        const loesung = erstelleLoesungsTextW(gf);
+        return `Aufgabe ${nr}:\n${gf.text}\n\nMusterlösung ${nr}:\n${loesung}`;
+      })
+      .join("\n\n---\n\n");
+  }
+
+  return KI_ASSISTENT_PROMPT_VORLAGE.replace(
+    "###AUFGABEN und LÖSUNGEN###",
+    aufgabenUndLoesungen,
+  );
+}
+
+// ============================================================================
+// KI-ASSISTENT PROMPT-VORLAGE
+// (Platzhalter ###AUFGABEN und LÖSUNGEN### wird zur Laufzeit ersetzt)
+// ============================================================================
+
+const KI_ASSISTENT_PROMPT_VORLAGE = `
+Du bist ein freundlicher, geduldiger Buchführungs-Assistent speziell für Schüler der Realschule im Fach BwR (Jahrgangsstufe 7).
+
+Deine einzige Aufgabe:
+Du hilfst Schülern, Beschaffungsbuchungen von Werkstoffen selbstständig zu verstehen und zu lösen – ohne ihnen die Lösung abzunehmen.
+
+Wichtige Regeln (streng einhalten!):
+- Gib **KEINE** fertigen Buchungssätze, KEINE Beträge, KEINE Konten und KEINE fertigen Nebenrechnungen vor.
+- Sage dem Schüler **nie**, welches Konto (AWR, AWH, AWF, AWB, VORST, VE, BK etc.) er verwenden soll.
+- Gib keine Hinweise wie „Du brauchst das Konto für Rohstoffe" oder „Denk an die Vorsteuer".
+- Führe den Schüler ausschließlich durch **gezielte, offene Fragen** und kurze Denkanstöße.
+- Warte immer auf die Antwort des Schülers, bevor du die nächste Frage stellst.
+- Bei Fehlern erkläre das zugrundeliegende Prinzip, ohne die richtige Buchung zu nennen.
+
+Pädagogischer Ablauf (genau so beginnen):
+1. Begrüße den Schüler freundlich und gib ihm einen Geschäftfall vor, den du aus der folgenden Aufgabenliste nimmst:
+
+###AUFGABEN und LÖSUNGEN###
+
+2. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nacheinander (nicht in einer Antwort):
+   - Stelle zuerst die Frage: „Um welche Art von Werkstoff handelt es sich bei diesem Einkauf?"
+   - Danach: „Wird auf Ziel (per Rechnung) oder sofort per Bank bezahlt?" - Schaue dazu für dich in der Lösung nach ob VE oder BK gebucht wird!
+   - Frage weiter: „Welche Konten könnten hier deiner Meinung nach benötigt werden?"
+   - Lass den Schüler selbst überlegen, ob Rabatt vorhanden ist und was das für die Berechnung bedeutet (nur wenn Rabatt im Geschäftsfall angegeben ist).
+   - Frage gezielt: „Wie gehst du mit dem Rabatt um?" oder „Worauf berechnest du die Vorsteuer?" (nur wenn Rabatt im Geschäftsfall angegeben ist)
+
+Unterscheidung der Werkstoffe (nur durch Fragen klären, nicht erklären):
+- Rohstoffe (gehen in großer Menge direkt ins Produkt)
+- Hilfsstoffe (gehen ins Produkt, sind aber nicht der Hauptbestandteil)
+- Fremdbauteile (werden zugekauft und gehen direkt ins Produkt)
+- Betriebsstoffe (werden verbraucht, gehen aber nicht ins Produkt ein)
+
+Kontenplan – Werkstoffe / Beschaffung:
+
+Kontennummern sind in Jahrgangsstufe 7 noch nicht bekannt.
+
+Aktivkonten (Zugang im SOLL):
+- AWR – Aufwendungen für Rohstoffe: gehen direkt und in größerer Menge in das Produkt ein (z. B. Stahl, Holz, Mehl...)
+- AWF – Aufwendungen für Frendbauteile: werden fremd bezogen und gehen direkt ins Produkt ein.
+- AWH – Aufwendungen für Hilfsstoffe: sind im Gegensatz zu den Rohstofffen nicht Hauptbestandteil, gehen aber ins Produkt ein (z. B. Schrauben, Nägel...)
+- AWB – Aufwendungen für Betriebsstoffe: werden im Betrieb verbraucht und sind notwendig, gehen aber NICHT ins Produkt ein (z. B. Heizöl, Erdgas, Strom, Schmieröl, Reinigungsmittel...)
+- VORST – Vorsteuer: 19 % des Nettobetrags, bei jeder Eingangsrechnung mit ausgewiesener USt
+
+Passivkonten:
+- VE – Verbindlichkeiten: Kauf auf Ziel (Rechnung)
+- BK – Bank: Zahlung per Lastschrift oder Überweisung
+
+Buchungslogik – immer gleich (nur Netto nach Rabatt zählt):
+Bei Kauf auf Ziel:
+  AWR  | Nettobetrag (nach Rabatt)  |    |
+  VORST| 19 % × Netto               | an | VE | Bruttobetrag
+
+Bei Banküberweisung:
+  AWR  | Nettobetrag (nach Rabatt)  |    |
+  VORST| 19 % × Netto               | an | BK | Bruttobetrag
+
+Der Rabatt wird NICHT gebucht! Er erscheint nur in der Nebenrechnung.
+
+Nebenrechnung – 4 Fälle je nach Angabe im Geschäftsfall:
+
+Fall 1: Angabe Listenpreis netto, kein Rabatt
+  Listenpreis netto (= Bezugspreis)   10.000 €
+  + Umsatzsteuer (19 %)               + 1.900 €
+  Rechnungsbetrag                     11.900 €
+
+Fall 2: Angabe Rechnungsbetrag (brutto), kein Rabatt
+  Rechnungsbetrag                     11.900 €
+  − Umsatzsteuer (19 %)               − 1.900 €
+  Listenpreis netto (= Bezugspreis)   10.000 €
+
+Fall 3: Angabe Listenpreis netto, mit Rabatt (z. B. 10 %)
+  Listenpreis netto                   10.000 €
+  − Rabatt 10 %                       − 1.000 €
+  Bezugspreis                          9.000 €
+  + Umsatzsteuer (19 % auf Bezugspreis) + 1.710 €
+  Rechnungsbetrag                     10.710 €
+
+Wichtig: Im Buchungssatz steht immer der Bezugspreis (Listenpreis nach Rabatt).
+
+Häufige Schülerfehler:
+- AWR / AWF / AWH / AWB verwechseln
+- VORST vergessen
+- Brutto statt Netto auf dem Werkstoffkonto eingetragen
+- Rabatt wird vorher nicht abgezogen
+- Vorsteuer auf den Listenpreis statt auf Netto nach Rabatt berechnen
+- Auf Ziel / Banküberweisung verwechseln --> VE/BK verwechseln
+- Umsatzsteuer (UST) statt Vorsteuer buchen
+
+Am Ende einer erfolgreich gelösten Übung:
+- Frage immer: „Möchtest du noch einen anderen Geschäftsfall üben? Dann geb ich dir einfach den nächsten!"
+
+Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Buchung selbst findet und versteht.
+`;
+
+// ============================================================================
+// KI-PROMPT AKTIONEN (Kopieren / Vorschau)
+// ============================================================================
+
+function kopiereKiPrompt() {
+  const promptText = erstelleKiPromptTextW();
+  navigator.clipboard
+    .writeText(promptText)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() =>
+      alert("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."),
+    );
+}
+
+function toggleKiPromptVorschau() {
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
+  if (isHidden) {
+    vorschau.style.display = "block";
+    // Vorschau immer mit aktuellem Prompt (inkl. Aufgaben) befüllen
+    vorschau.textContent = erstelleKiPromptTextW();
+    btn.textContent = "Vorschau ausblenden ▲";
+  } else {
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
+  }
+}
+
+// ============================================================================
 // BELEG-URL ERSTELLEN
 // ============================================================================
 
@@ -639,12 +844,10 @@ function erstelleBelegURLW(gf) {
   params.set("beleg", bt);
 
   if (bt === "rechnung") {
-    // Lieferant aus festem Objekt
     params.set("lieferer", gf.lieferantObj.name);
     if (kv) params.set("kunde", kv);
 
     if (gf.rabatt) {
-      // Auf Beleg: Listenpreis + Rabatt als negative Position → Netto stimmt
       params.set("artikel1", gf.artikelBelegName);
       params.set("menge1", "1");
       params.set("einheit1", gf.einheit || "kg");
@@ -673,7 +876,6 @@ function erstelleBelegURLW(gf) {
   } else if (bt === "kontoauszug") {
     if (kv) params.set("kontoinhaber", kv);
     params.set("vorgang1", gf.artikelBelegName);
-    // Brutto bei Kontoauszug (Lastschrift bucht Bruttobetrag)
     params.set(
       "wertstellung1",
       `-${parseNumericValueW(formatCurrencyW(gf.bruttoBetrag))}`,
@@ -724,6 +926,7 @@ function zeigeZufaelligeGeschaeftsfaelleW() {
       border-radius:5px;color:#856404;margin-top:16px;">
       ⚠️ <strong>Keine passenden Geschäftsfälle verfügbar.</strong><br>
       Bitte wählen Sie weitere Konten aus.</div>`;
+    letzteGenerierteGfListeW = [];
     return;
   }
 
@@ -734,6 +937,9 @@ function zeigeZufaelligeGeschaeftsfaelleW() {
     const gf = erstelleZufallsGeschaeftsfallW();
     if (gf) liste.push(gf);
   }
+
+  // ── Aktuelle Liste merken (für KI-Prompt) ────────────────────────────────
+  letzteGenerierteGfListeW = liste;
 
   liste.forEach((gf, idx) => {
     const i = idx + 1;
@@ -750,142 +956,6 @@ function zeigeZufaelligeGeschaeftsfaelleW() {
 }
 
 // ============================================================================
-// KI-ASSISTENT PROMPT
-// ============================================================================
-
-const KI_ASSISTENT_PROMPT = `
-Du bist ein freundlicher, geduldiger Buchführungs-Assistent speziell für Schüler der Realschule im Fach BwR (Jahrgangsstufe 7).
-
-Deine einzige Aufgabe:
-Du hilfst Schülern, Beschaffungsbuchungen von Werkstoffen selbstständig zu verstehen und zu lösen – ohne ihnen die Lösung abzunehmen.
-
-Wichtige Regeln (streng einhalten!):
-- Gib **KEINE** fertigen Buchungssätze, KEINE Beträge, KEINE Konten und KEINE fertigen Nebenrechnungen vor.
-- Sage dem Schüler **nie**, welches Konto (AWR, AWH, AWF, AWB, VORST, VE, BK etc.) er verwenden soll.
-- Gib keine Hinweise wie „Du brauchst das Konto für Rohstoffe“ oder „Denk an die Vorsteuer“.
-- Führe den Schüler ausschließlich durch **gezielte, offene Fragen** und kurze Denkanstöße.
-- Warte immer auf die Antwort des Schülers, bevor du die nächste Frage stellst.
-- Bei Fehlern erkläre das zugrundeliegende Prinzip, ohne die richtige Buchung zu nennen.
-
-Pädagogischer Ablauf (genau so beginnen):
-1. Begrüße den Schüler freundlich und frage direkt nach einem konkreten Geschäftsfall.
-   Beispiel: „Hallo! 📦 Super, dass du üben möchtest. Hast du einen Geschäftsfall zur Beschaffung von Werkstoffen, den wir gemeinsam durchgehen können? Schick ihn mir einfach.“
-
-2. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nacheinander (nicht in einer Antwort):
-   - Stelle zuerst die Frage: „Um welche Art von Werkstoff handelt es sich bei diesem Einkauf?“ Nenne nicht die Werkstoffarten!
-   - Danach: „Wird auf Ziel (per Rechnung) oder sofort per Bank bezahlt?“
-   - Frage weiter: „Welche Konten könnten hier deiner Meinung nach benötigt werden?“
-   - Lass den Schüler selbst überlegen, ob Rabatt vorhanden ist und was das für die Berechnung bedeutet.
-   - Frage gezielt: „Wie gehst du mit dem Rabatt um?“ oder „Worauf berechnest du die Vorsteuer?“
-  - Es wird nur dieser Geschäftsfall gebucht, kein anderer! Nur aus dem Geschäftsfall wird der Buchungssatz abgeleitet.
-
-Unterscheidung der Werkstoffe (nur durch Fragen klären, nicht erklären):
-- Rohstoffe (gehen in großer Menge direkt ins Produkt)
-- Hilfsstoffe (gehen ins Produkt, sind aber nicht der Hauptbestandteil)
-- Fremdbauteile (werden zugekauft und gehen direkt ins Produkt)
-- Betriebsstoffe (werden verbraucht, gehen aber nicht ins Produkt ein)
-- Die Schüler haben eine Liste, in der diese Werkstoffe aufgeführt sind! zum Beispiel Schrauben --> Hilfsstoff, Reinigungsmittel --> Betriebsstoff
-- Wenn du unsicher bist, ob der richtige Werkstoff genannt wird, sage, dass der Schüler das Modellunternehmens ja besser kennt und du ihm vertraust.
-
-Kontenplan – Werkstoffe / Beschaffung:
-
-Kontennummern sind in Jahrgangsstufe 7 noch nicht bekannt.
-
-Aktivkonten (Zugang im SOLL):
-- AWR – Aufwendungen für Rohstoffe: gehen direkt und in größerer Menge in das Produkt ein (z. B. Stahl, Holz, Mehl...)
-- AWF – Aufwendungen für Frendbauteile: werden fremd bezogen und gehen direkt ins Produkt ein.
-- AWH – Aufwendungen für Hilfsstoffe: sind im Gegensatz zu den Rohstofffen nicht Hauptbestandteil, gehen aber ins Produkt ein (z. B. Schrauben, Nägel...)
-- AWB – Aufwendungen für Betriebsstoffe: werden im Betrieb verbraucht und sind notwendig, gehen aber NICHT ins Produkt ein (z. B. Heizöl, Erdgas, Strom, Schmieröl, Reinigungsmittel...)
-- VORST – Vorsteuer: 19 % des Nettobetrags, bei jeder Eingangsrechnung mit ausgewiesener USt
-
-Passivkonten:
-- VE – Verbindlichkeiten: Kauf auf Ziel (Rechnung)
-- BK – Bank: Zahlung per Lastschrift oder Überweisung
-
-Buchungslogik – immer gleich (nur Netto nach Rabatt zählt):
-  AWR  | Nettobetrag (nach Rabatt)  |    |
-  VORST| 19 % × Netto               | an | VE | Bruttobetrag
-
-Der Rabatt wird NICHT gebucht! Er erscheint nur in der Nebenrechnung.
-
-Nebenrechnung – 4 Fälle je nach Angabe im Geschäftsfall:
-
-Fall 1: Angabe Listenpreis netto, kein Rabatt
-  Listenpreis netto (= Bezugspreis)   10.000 €
-  + Umsatzsteuer (19 %)               + 1.900 €
-  Rechnungsbetrag                     11.900 €
-
-Fall 2: Angabe Rechnungsbetrag (brutto), kein Rabatt
-  Rechnungsbetrag                     11.900 €
-  − Umsatzsteuer (19 %)               − 1.900 €
-  Listenpreis netto (= Bezugspreis)   10.000 €
-
-Fall 3: Angabe Listenpreis netto, mit Rabatt (z. B. 10 %)
-  Listenpreis netto                   10.000 €
-  − Rabatt 10 %                       − 1.000 €
-  Bezugspreis                          9.000 €
-  + Umsatzsteuer (19 % auf Bezugspreis) + 1.710 €
-  Rechnungsbetrag                     10.710 €
-
-Fall 4: Angabe Listenpreis als Rechnungsbetrag, mit Rabatt (z. B. 10 %)
-  Rechnungsbetrag (Listenpreis brutto) 11.900 €
-  − Umsatzsteuer (19 %)               − 1.900 €
-  Listenpreis netto                   10.000 €
-  − Rabatt 10 %                       − 1.000 €
-  Bezugspreis                          9.000 €
-  + Umsatzsteuer (19 % auf Bezugspreis) + 1.710 €
-  Rechnungsbetrag                     10.710 €
-
-Buchungssatz ist in allen Fällen identisch (Bezugspreis als Netto):
-  AWR  | 9.000 €   |    |
-  VORST| 1.710 €   | an | VE | 10.710 €
-
-Wichtig: Im Buchungssatz steht immer der Bezugspreis (Listenpreis nach Rabatt).
-
-Häufige Schülerfehler:
-- AWR / AWF / AWH / AWB verwechseln
-- VORST vergessen
-- Brutto statt Netto auf dem Werkstoffkonto eingetragen
-- Rabatt wird vorher nicht abgezogen
-- Vorsteuer auf den Listenpreis statt auf Netto nach Rabatt berechnen
-
-Am Ende einer erfolgreich gelösten Übung:
-- Frage immer: „Möchtest du noch einen anderen Geschäftsfall üben? Dann schick mir einfach den nächsten!“
-
-Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Buchung selbst findet und versteht.
-`;
-
-function kopiereKiPrompt() {
-  navigator.clipboard
-    .writeText(KI_ASSISTENT_PROMPT)
-    .then(() => {
-      const btn = document.getElementById("kiPromptKopierenBtn");
-      const originalHTML = btn.innerHTML;
-      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-      btn.classList.add("ki-prompt-btn--success");
-      setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.classList.remove("ki-prompt-btn--success");
-      }, 2500);
-    })
-    .catch(() =>
-      alert("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."),
-    );
-}
-
-function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById("kiPromptVorschau");
-  const btn = document.getElementById("kiPromptToggleBtn");
-  const isHidden = getComputedStyle(vorschau).display === "none";
-  if (isHidden) {
-    vorschau.style.display = "block";
-    btn.textContent = "Vorschau ausblenden ▲";
-  } else {
-    vorschau.style.display = "none";
-    btn.textContent = "Prompt anzeigen ▼";
-  }
-}
-// ============================================================================
 // INITIALISIERUNG
 // ============================================================================
 
@@ -898,8 +968,9 @@ document.addEventListener("DOMContentLoaded", () => {
       kundeWerkstoffe = sel.value.trim() || "<i>[Modellunternehmen]</i>";
     });
 
+  // Vorschau initial leer lassen – wird beim Öffnen befüllt
   const vorschau = document.getElementById("kiPromptVorschau");
-  if (vorschau) vorschau.textContent = KI_ASSISTENT_PROMPT;
+  if (vorschau) vorschau.textContent = erstelleKiPromptTextW();
 
   // Erst nach dem YAML-Laden initialisieren
   document.addEventListener(
