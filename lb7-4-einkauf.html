@@ -35,8 +35,7 @@
         Buchungssätze ableiten und Eingangsrechnungen als Belege erstellen.
       </p>
 
-
-          <!-- Anzahl -->
+      <!-- Anzahl -->
       <label for="anzahlDropdownW">Anzahl der Geschäftsfälle:</label>
       <select id="anzahlDropdownW">
         <option value="1">1</option>
@@ -73,6 +72,68 @@
             <!-- Wird automatisch befüllt -->
           </select>
         </div>
+      </div>
+
+      <!-- Werkstoff-Bezeichnungen -->
+      <h3>Werkstoff-Bezeichnungen <span style="font-weight:normal;font-size:0.88em;color:#666;">(optional – Platzhalter werden verwendet, wenn leer)</span></h3>
+      <div class="werkstoff-bezeichnungen-grid">
+
+        <div class="werkstoff-bezeichnung-item">
+          <label for="bezeichnungAWR">
+            <span class="wb-konto-badge wb-awr">AWR</span>
+            Rohstoff-Bezeichnung
+          </label>
+          <input
+            type="text"
+            id="bezeichnungAWR"
+            placeholder="z. B. Holzbretter"
+            maxlength="40"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="werkstoff-bezeichnung-item">
+          <label for="bezeichnungAWF">
+            <span class="wb-konto-badge wb-awf">AWF</span>
+            Fremdbauteil-Bezeichnung
+          </label>
+          <input
+            type="text"
+            id="bezeichnungAWF"
+            placeholder="z. B. Motoren"
+            maxlength="40"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="werkstoff-bezeichnung-item">
+          <label for="bezeichnungAWH">
+            <span class="wb-konto-badge wb-awh">AWH</span>
+            Hilfsstoff-Bezeichnung
+          </label>
+          <input
+            type="text"
+            id="bezeichnungAWH"
+            placeholder="z. B. Schrauben"
+            maxlength="40"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="werkstoff-bezeichnung-item">
+          <label for="bezeichnungAWB">
+            <span class="wb-konto-badge wb-awb">AWB</span>
+            Betriebsstoff-Bezeichnung
+          </label>
+          <input
+            type="text"
+            id="bezeichnungAWB"
+            placeholder="z. B. Heizöl"
+            maxlength="40"
+            autocomplete="off"
+          >
+        </div>
+
       </div>
 
       <!-- Konto-Auswahl -->
@@ -173,5 +234,63 @@
 <script>
   includeHTML();
 </script>
+
+<!-- Inline-Styles für Werkstoff-Bezeichnungen-Grid -->
+<style>
+  .werkstoff-bezeichnungen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px 20px;
+    margin: 10px 0 18px;
+  }
+
+  .werkstoff-bezeichnung-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .werkstoff-bezeichnung-item label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.88em;
+    color: #444;
+    font-weight: 500;
+  }
+
+  .werkstoff-bezeichnung-item input[type="text"] {
+    padding: 6px 9px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.92em;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+  }
+
+  .werkstoff-bezeichnung-item input[type="text"]:focus {
+    outline: none;
+    border-color: #4a90d9;
+    box-shadow: 0 0 0 2px rgba(74,144,217,0.15);
+  }
+
+  /* Konto-Badge neben dem Label */
+  .wb-konto-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.82em;
+    font-weight: 700;
+    font-family: monospace;
+    letter-spacing: 0.02em;
+    color: #fff;
+  }
+  .wb-awr { background: #2e7d32; }
+  .wb-awf { background: #1565c0; }
+  .wb-awh { background: #6a1b9a; }
+  .wb-awb { background: #bf360c; }
+</style>
+
 </body>
 </html>
