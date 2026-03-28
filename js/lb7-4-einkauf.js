@@ -675,9 +675,9 @@ Kontenplan – Werkstoffe / Beschaffung:
 Kontennummern sind in Jahrgangsstufe 7 noch nicht bekannt.
 
 Aktivkonten (Zugang im SOLL):
-- AWR – Aufwendungen für Rohstoffe: gehen direkt und in größerer Menge in das Produkt ein (z. B. Stahl, Holz, Mehl...)
+- AWR – Aufwendungen für Rohstoffe: gehen direkt und in größerer Menge in das Produkt ein
 - AWF – Aufwendungen für Frendbauteile: werden fremd bezogen und gehen direkt ins Produkt ein.
-- AWH – Aufwendungen für Hilfsstoffe: sind im Gegensatz zu den Rohstofffen nicht Hauptbestandteil, gehen aber ins Produkt ein (z. B. Schrauben, Nägel...)
+- AWH – Aufwendungen für Hilfsstoffe: sind im Gegensatz zu den Rohstofffen nicht Hauptbestandteil, gehen aber ins Produkt ein
 - AWB – Aufwendungen für Betriebsstoffe: werden im Betrieb verbraucht und sind notwendig, gehen aber NICHT ins Produkt ein (z. B. Heizöl, Erdgas, Strom, Schmieröl, Reinigungsmittel...)
 - VORST – Vorsteuer: 19 % des Nettobetrags, bei jeder Eingangsrechnung mit ausgewiesener USt
 

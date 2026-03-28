@@ -11,30 +11,19 @@ let yamlDataVerkauf = [];
 
 const RABATT_SAETZE_V = [5, 10, 15, 20];
 
-// Zielverkaufspreis (= Netto nach Rabatt) wird direkt als Vielfaches von 1000 gewählt.
-// UST = Ziel × 0,19 → immer Vielfaches von 190 → leicht im Kopf (z. B. 8.000 × 19% = 1.520)
-// Listenpreis wird rückwärts aus Zielverkaufspreis berechnet und auf 100 gerundet.
 function genZielUndListenpreisV(rabattProzent) {
-  // Listenpreis als Vielfaches von listSchritt wählen → Rabattbetrag ganzzahlig.
-  // listSchritt = 100 / gcd(100, rabatt):
-  //   5%  → 2000er-Schritte  (Liste*0,05 = ganze Zahl)
-  //   10% → 1000er-Schritte
-  //   15% → 2000er-Schritte
-  //   20% →  500er-Schritte  (wir runden auf 1000 für schönere Zahlen)
   const listSchritt = { 5: 2000, 10: 1000, 15: 2000, 20: 1000 };
   const s = listSchritt[rabattProzent] || 1000;
   const minK = Math.ceil(2000 / s);
   const maxK = Math.floor(20000 / s);
   const liste = (minK + Math.floor(Math.random() * (maxK - minK + 1))) * s;
   const faktor = 1 - rabattProzent / 100;
-  // Netto = liste * faktor: ganzzahlig wegen Schrittweiten-Konstruktion
   const netto = Math.round(liste * faktor);
   return { listennetto: liste, nettoBetrag: netto };
 }
 
 // ============================================================================
 // GESCHÄFTSFALL-DEFINITIONEN
-// Nur FO (Verkauf auf Ziel)
 // ============================================================================
 
 const alleGfVerkauf = [
@@ -75,7 +64,6 @@ function parseNumericValueV(value) {
   return value.toString().replace(/[€\s]/g, "").replace(/\./g, "").replace(",", ".");
 }
 
-// Ohne Rabatt: Nettobetrag als Vielfaches von 1000 → UST = N × 190, leicht im Kopf
 function generateNettoOhneRabattV() {
   return (2 + Math.floor(Math.random() * 17)) * 1000; // 2000 … 18000
 }
@@ -144,7 +132,6 @@ function autoSelectMyCompanyV() {
   }
 }
 
-// Liefert zufälligen Eintrag aus YAML, der NICHT das eigene Unternehmen ist
 function getZufaelligenAbnehmer() {
   if (!yamlDataVerkauf?.length) return { name: "Musterhandel GmbH" };
   const myName = document.getElementById("verkaufKunde")?.value?.trim() || "";
@@ -177,9 +164,6 @@ function tableWrapV(rowsHTML) {
 
 // ============================================================================
 // BUCHUNGSSATZ + NEBENRECHNUNG
-//
-//   FO  | Brutto  | an | UEFE | Netto
-//       |         |    | UST  | UST
 // ============================================================================
 
 function bsEinfachUstV(gf) {
@@ -191,13 +175,11 @@ function bsEinfachUstV(gf) {
     angabeIstBrutto,
   } = gf;
 
-  // "an" + UEFE beginnen bereits in Zeile 1
   const bs = tableWrapV(
     `<tr>${tdV(sollKto)}${tdV(formatCurrencyV(bruttoBetrag), "right")}${tdCV("an")}${tdV(habenKto)}${tdV(formatCurrencyV(nettoBetrag), "right")}</tr>` +
     `<tr>${tdV("")}${tdV("", "right")}${tdCV("")}${tdV("UST")}${tdV(formatCurrencyV(Umsatzsteuer), "right")}</tr>`,
   );
 
-  // ── Nebenrechnung ─────────────────────────────────────────────────────────
   function opRow(label, op, betrag) {
     return `<tr>
       <td style="padding:1px 10px 1px 2px;color:#444;">${label}</td>
@@ -260,6 +242,9 @@ function getProduktbezeichnung() {
   return val || "Fertigerzeugnisse";
 }
 
+// Zuletzt generierte GF-Liste (für KI-Prompt)
+let letzteGenerierteGfListeV = [];
+
 function erstelleZufallsGeschaeftsfallV() {
   const mitRabattOpt = document.getElementById("optMitRabattV").checked;
   const ustAngegeben = document.getElementById("optUstAngegeben")?.checked ?? false;
@@ -268,31 +253,26 @@ function erstelleZufallsGeschaeftsfallV() {
   const produktname = getProduktbezeichnung();
   const abnehmerObj = getZufaelligenAbnehmer();
 
-  // ── Betrag ────────────────────────────────────────────────────────────────
-  // Zielverkaufspreis immer Vielfaches von 1000 → UST = Ziel × 190 (leicht im Kopf, z. B. 8.000 × 19 % = 1.520)
   const mitRabatt = mitRabattOpt;
   const rabattProzent = mitRabatt ? pickV(RABATT_SAETZE_V) : 0;
 
   let listennetto, nettoBetrag;
   if (mitRabatt) {
-    // Zielverkaufspreis direkt wählen, Listenpreis rückwärts berechnen
     const betraege = genZielUndListenpreisV(rabattProzent);
     listennetto = betraege.listennetto;
     nettoBetrag = betraege.nettoBetrag;
   } else {
-    // Ohne Rabatt: Netto direkt als Vielfaches von 1000
     nettoBetrag = generateNettoOhneRabattV();
     listennetto = nettoBetrag;
   }
 
   const rabattBetrag = listennetto - nettoBetrag;
-  const Umsatzsteuer = nettoBetrag * 19 / 100; // ganzzahlig: 1000er * 0,19 = x10
+  const Umsatzsteuer = nettoBetrag * 19 / 100;
   const bruttoBetrag = nettoBetrag + Umsatzsteuer;
   const listenbrutto = listennetto + Math.round(listennetto * 0.19);
 
-  // Bei Rabatt: immer Netto-Angabe (Brutto+Rabatt-Kombination wäre didaktisch verwirrend)
-  // Ohne Rabatt: zufällig netto oder brutto
   const angabeIstBrutto = mitRabatt ? false : Math.random() < 0.5;
+
   const rabattFormulierungen = [
     `${formatCurrencyV(listennetto)} netto, mit einem Rabatt von ${rabattProzent}\u00a0%`,
     `netto ${formatCurrencyV(listennetto)}. Es wird ein Rabatt von ${rabattProzent}\u00a0% gewährt`,
@@ -314,9 +294,7 @@ function erstelleZufallsGeschaeftsfallV() {
   if (mitRabatt) {
     betragText = pickV(rabattFormulierungen);
   } else {
-    betragText = angabeIstBrutto
-      ? pickV(bruttoFormulierungen)
-      : pickV(nettoFormulierungen);
+    betragText = angabeIstBrutto ? pickV(bruttoFormulierungen) : pickV(nettoFormulierungen);
   }
 
   const ustFormulierungen = [
@@ -331,15 +309,13 @@ function erstelleZufallsGeschaeftsfallV() {
     .replace("{kunde}", kundeVerkauf)
     .replace("{artikel}", produktname);
 
-  // Variation der Betragseinleitung
   const betragsEinleitungen = [
     "in Höhe von",
     "zum Betrag von",
     "mit einem Gesamtbetrag von",
     "mit einem Betrag von",
-    "in Höhe von",   // doppelt gewichtet, da am natürlichsten
+    "in Höhe von",
   ];
-  // "mit einem Rechnungsbetrag von" passt nicht bei netto-Angabe → nur bei brutto oder ohne Rabatt
   const nurBrutto = angabeIstBrutto && !mitRabatt;
   const einleitungPool = nurBrutto
     ? betragsEinleitungen
@@ -378,90 +354,70 @@ function erstelleBuchungssatzV(gf) {
 }
 
 // ============================================================================
-// BELEG-URL + BUTTON
+// MUSTERLÖSUNG ALS REINER TEXT (für KI-Prompt)
 // ============================================================================
 
-function erstelleBelegURL(gf) {
-  const params = new URLSearchParams();
-  const now = new Date();
-  const tag   = String(now.getDate()).padStart(2, "0");
-  const monat = String(now.getMonth() + 1).padStart(2, "0");
-  const jahr  = String(now.getFullYear());
-  const kv = document.getElementById("verkaufKunde")?.value?.trim() || "";
+function erstelleLoesungsTextV(gf) {
+  const fmtV = (v) =>
+    v.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
-  params.set("beleg", "rechnung");
-  if (kv) params.set("lieferer", kv);
-  params.set("kunde", gf.abnehmerObj.name);
+  // Buchungssatz: FO Brutto an UEFE Netto / UST UST-Betrag
+  const bs =
+    `${gf.sollKto} ${fmtV(gf.bruttoBetrag)} an ${gf.habenKto} ${fmtV(gf.nettoBetrag)} / UST ${fmtV(gf.Umsatzsteuer)}`;
 
+  const fmtLine = (label, betrag, prefix = "") =>
+    `  ${label}: ${prefix}${fmtV(betrag)}`;
+
+  let nr = "";
   if (gf.rabatt) {
-    params.set("artikel1",    gf.artikelBelegName);
-    params.set("menge1",      "1");
-    params.set("einheit1",    gf.einheit || "Stk");
-    params.set("einzelpreis1", parseNumericValueV(formatCurrencyV(gf.listennetto)));
-    params.set("rabatt",      gf.rabattProzent);
+    nr = [
+      fmtLine("Listenverkaufspreis netto", gf.listennetto),
+      fmtLine(`- Rabatt ${gf.rabattProzent} %`, gf.rabattBetrag, "- "),
+      fmtLine("= Zielverkaufspreis (netto)", gf.nettoBetrag),
+      fmtLine("+ Umsatzsteuer (19 %)", gf.Umsatzsteuer, "+ "),
+      fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
+    ].join("\n");
+  } else if (gf.angabeIstBrutto) {
+    nr = [
+      fmtLine("Rechnungsbetrag", gf.bruttoBetrag),
+      fmtLine("- Umsatzsteuer (19 %)", gf.Umsatzsteuer, "- "),
+      fmtLine("= Verkaufspreis netto", gf.nettoBetrag),
+    ].join("\n");
   } else {
-    params.set("artikel1",    gf.artikelBelegName);
-    params.set("menge1",      "1");
-    params.set("einheit1",    gf.einheit || "Stk");
-    params.set("einzelpreis1", parseNumericValueV(formatCurrencyV(gf.nettoBetrag)));
+    nr = [
+      fmtLine("Verkaufspreis netto", gf.nettoBetrag),
+      fmtLine("+ Umsatzsteuer (19 %)", gf.Umsatzsteuer, "+ "),
+      fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
+    ].join("\n");
   }
 
-  params.set("umsatzsteuer", "19");
-  params.set("tag",          tag);
-  params.set("monat",        monat);
-  params.set("jahr",         jahr);
-  params.set("zahlungsziel", "30");
-  params.set("skonto",       "2");
-  params.set("skontofrist",  "20");
-
-  return `belege.html?${params.toString()}`;
-}
-
-function erstelleBelegButtonV(nummer, gf) {
-  const url = erstelleBelegURL(gf);
-  return `<button class="geschaeftsfall-beleg-button"
-    onclick="window.open('${url}', '_blank')"
-    title="Ausgangsrechnung für Aufgabe ${nummer} erstellen"
-    style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
-    📄 ${nummer}. Ausgangsrechnung erstellen</button>`;
+  return `Buchungssatz: ${bs}\nNebenrechnung:\n${nr}`;
 }
 
 // ============================================================================
-// HAUPTFUNKTION
+// KI-PROMPT MIT AKTUELLEN AUFGABEN UND LÖSUNGEN
 // ============================================================================
 
-function zeigeZufaelligeGeschaeftsfaelleV() {
-  const anzahl = parseInt(document.getElementById("anzahlDropdownV").value);
-  const container   = document.getElementById("Container");
-  const buttonColumn = document.getElementById("button-columnV");
-  if (!container || !buttonColumn) return;
-  container.innerHTML   = "";
-  buttonColumn.innerHTML = "";
-
-  let aufgabenHTML  = "<h2>Aufgaben</h2><ol>";
-  let loesungenHTML = "<h2>Lösung</h2>";
-  const liste = [];
-  for (let i = 0; i < anzahl; i++) liste.push(erstelleZufallsGeschaeftsfallV());
-
-  liste.forEach((gf, idx) => {
-    const i = idx + 1;
-    aufgabenHTML  += `<li>${gf.text}</li>`;
-    loesungenHTML += `<div style="margin-top:1.5em"><strong>${i}.</strong><br>${erstelleBuchungssatzV(gf)}</div>`;
-    const div = document.createElement("div");
-    div.style.margin = "12px 0";
-    div.innerHTML = erstelleBelegButtonV(i, gf);
-    buttonColumn.appendChild(div);
-  });
-
-  aufgabenHTML += "</ol>";
-  container.innerHTML = aufgabenHTML + loesungenHTML;
+function erstelleKiPromptTextV() {
+  let aufgabenUndLoesungen = "";
+  if (letzteGenerierteGfListeV.length === 0) {
+    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+  } else {
+    aufgabenUndLoesungen = letzteGenerierteGfListeV
+      .map((gf, idx) => {
+        const nr = idx + 1;
+        return `Aufgabe ${nr}:\n${gf.text}\n\nMusterlösung ${nr}:\n${erstelleLoesungsTextV(gf)}`;
+      })
+      .join("\n\n---\n\n");
+  }
+  return KI_ASSISTENT_PROMPT_VORLAGE_V.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
 }
 
 // ============================================================================
-// KI-ASSISTENT PROMPT
+// KI-ASSISTENT PROMPT-VORLAGE
 // ============================================================================
 
-const KI_ASSISTENT_PROMPT = `
+const KI_ASSISTENT_PROMPT_VORLAGE_V = `
 Du bist ein freundlicher, geduldiger Buchführungs-Assistent speziell für Schüler der Realschule im Fach BwR (Jahrgangsstufe 7).
 
 Deine einzige Aufgabe:
@@ -470,23 +426,21 @@ Du hilfst Schülern, Absatzbuchungen (Verkäufe) selbstständig zu verstehen und
 Wichtige Regeln (streng einhalten!):
 - Gib **KEINE** fertigen Buchungssätze, KEINE Beträge, KEINE Konten und KEINE fertigen Nebenrechnungen vor.
 - Sage dem Schüler **nie**, welches Konto (FO, UEFE, UST etc.) er verwenden soll.
-- Gib keine Hinweise wie „Denk an die Umsatzsteuer“ oder „FO kommt ins Soll“.
+- Gib keine Hinweise wie „Denk an die Umsatzsteuer" oder „FO kommt ins Soll".
 - Führe den Schüler ausschließlich durch **gezielte, offene Fragen** und kurze Denkanstöße.
-- Warte immer auf die Antwort des Schülers, bevor du die nächste Frage stellst.
+- Warte immer auf die richtige Antwort des Schülers, bevor du die nächste Frage stellst.
 - Bei Fehlern erkläre das zugrundeliegende Prinzip, ohne die richtige Buchung zu nennen oder vorzurechnen.
 
 Pädagogischer Ablauf (genau so beginnen):
-1. Begrüße den Schüler freundlich und frage direkt nach einem konkreten Geschäftsfall.
-   Beispiel: „Hallo! ✅ Toll, dass du den Verkauf üben möchtest. Hast du einen Geschäftsfall zum Absatz / Verkauf, den wir gemeinsam durchgehen können? Schick ihn mir einfach.“
+1. Begrüße den Schüler freundlich und gib ihm einen Geschäftfall vor, den du aus der folgenden Aufgabenliste nimmst:
 
-2. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nacheinander (nicht in einer Antwort):
-   - Stelle zuerst die Frage: „Um was für einen Verkauf handelt es sich? (z. B. Verkauf von Fertigerzeugnissen)“
-   - Frage dann: „Wird auf Ziel (per Rechnung) verkauft oder sofort bar/per Bank?“
-   - Frage weiter: „Welche Konten könnten hier deiner Meinung nach benötigt werden?“
-   - Lass den Schüler selbst entscheiden, welche Konten ins Soll und welche ins Haben kommen.
-   - Frage gezielt nach Rabatt: „Gibt es einen Rabatt? Was machst du mit dem Rabatt bei der Berechnung?“
-   - Stelle Fragen zu den Berechnungen: „Worauf berechnest du die Umsatzsteuer?“ oder „Welchen Betrag trägst du bei den Umsatzerlösen ein?“
-   - Es wird nur dieser Geschäftsfall gebucht, kein anderer! Nur aus dem Geschäftsfall wird der Buchungssatz abgeleitet.
+###AUFGABEN und LÖSUNGEN###
+
+2. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nacheinander (nicht in einer Antwort). Schreibe nie die Lösung in deine Antwort, wenn der Schüler falsch antwortet. Bevor du die nächste Frage stellst, sollte die aktuelle Frage richtig beantwortet sein.
+   - Frage : „Welche Konten werden benötigt?"  Prüfe, ob die Schülerlösung stimmt. Schaue dazu für dich in der Musterlösung nach welche Konten gebucht werden! Sage dann, ob der Schüler falsch liegt oder ob es richtig ist.
+   - Lass den Schüler überlegen, ob Rabatt vorhanden ist und was das für die Berechnung bedeutet (nur wenn Rabatt im Geschäftsfall angegeben ist).
+   - Frage gezielt: „Wie gehst du mit dem Rabatt um?" oder „Worauf berechnest du die Vorsteuer?" (nur wenn Rabatt im Geschäftsfall angegeben ist)
+   - Frage weiter "Bilde nun den vollständigen Buchungssatz"
 
 Konten (nur durch Fragen klären, nicht nennen oder erklären):
 - FO – Forderungen aus Lieferungen und Leistungen (Verkauf auf Ziel)
@@ -500,13 +454,13 @@ Rabatt wird NICHT gebucht – er wird nur in der Nebenrechnung abgezogen. Immer 
 Tonalität:
 - Sehr freundlich, motivierend und kurz (max. 1–2 Sätze pro Nachricht)
 - Verwende gelegentlich passende Emojis: 📦 ✅ ❓ 👍 💰
-- Sprich den Schüler direkt an („du“)
-- Loben, wenn er etwas gut gemacht hat: „Genau richtig überlegt!“ oder „Super Ansatz!“
+- Sprich den Schüler direkt an („du")
+- Loben, wenn er etwas gut gemacht hat: „Genau richtig überlegt!" oder „Super Ansatz!"
 
 Wichtige Verbote:
 - Nenne niemals selbst einen Buchungssatz oder Teile davon.
 - Rechne keine Beträge vor und gib keine fertigen Nebenrechnungen.
-- Korrigiere Fehler nicht direkt, sondern stelle eine Frage, die den Schüler zum Nachdenken bringt (z. B. „Warum hast du den Bruttobetrag bei den Erlösen eingetragen? Worauf wird die Umsatzsteuer eigentlich berechnet?“).
+- Korrigiere Fehler nicht direkt, sondern stelle eine Frage, die den Schüler zum Nachdenken bringt (z. B. „Warum hast du den Bruttobetrag bei den Erlösen eingetragen? Worauf wird die Umsatzsteuer eigentlich berechnet?").
 - Verwechsle niemals VORST (Einkauf) mit UST (Verkauf) – falls der Schüler das tut, lenke durch Fragen zurück.
 
 Kontenplan – Absatz / Verkauf:
@@ -554,19 +508,25 @@ Häufige Schülerfehler:
 - Brutto statt Netto bei UEFE eintragen
 - Rabatt nicht abziehen, bevor UST berechnet wird
 - Vorsteuer und Umsatzsteuer verwechseln (VORST = Einkauf, UST = Verkauf)
+- FO mit VE verwechseln (Verkauf mit Einkauf verwechseln)
 
 Tonalität: freundlich, kurz (1–2 Sätze), gelegentlich Emojis 📦✅❓
-Nenne den fertigen Buchungssatz erst, wenn der Schüler selbst darauf gekommen ist.
+Nenne den fertigen Buchungssatz erst, wenn der Schüler selbst darauf gekommen ist. Verbessere am Schluss dann auch Formfehler, zum Beispiel Großschreibung der Konten (VE statt Ve) und weise darauf hin die DIN 5008 zu beachten: Tausenderpunkt bei den Beträgen mit zwei Nachkommastellen und €-Zeichen: z. B. 12.000,00 €
 
 Am Ende einer erfolgreich gelösten Übung:
-- Frage immer: „Möchtest du noch einen anderen Geschäftsfall zum Verkauf üben? Dann schick mir einfach den nächsten!“
+- Frage immer: „Möchtest du noch einen anderen Geschäftsfall üben? Dann geb ich dir einfach den nächsten!"
 
 Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Buchung selbst findet und versteht.
 `;
 
+// ============================================================================
+// KI-PROMPT AKTIONEN
+// ============================================================================
+
 function kopiereKiPromptV() {
+  const promptText = erstelleKiPromptTextV();
   navigator.clipboard
-    .writeText(KI_ASSISTENT_PROMPT)
+    .writeText(promptText)
     .then(() => {
       const btn = document.getElementById("kiPromptKopierenBtnV");
       const originalHTML = btn.innerHTML;
@@ -586,11 +546,95 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
     vorschau.style.display = "block";
+    vorschau.textContent = erstelleKiPromptTextV();
     btn.textContent = "Vorschau ausblenden ▲";
   } else {
     vorschau.style.display = "none";
     btn.textContent = "Prompt anzeigen ▼";
   }
+}
+
+// ============================================================================
+// BELEG-URL + BUTTON
+// ============================================================================
+
+function erstelleBelegURL(gf) {
+  const params = new URLSearchParams();
+  const now = new Date();
+  const tag   = String(now.getDate()).padStart(2, "0");
+  const monat = String(now.getMonth() + 1).padStart(2, "0");
+  const jahr  = String(now.getFullYear());
+  const kv = document.getElementById("verkaufKunde")?.value?.trim() || "";
+
+  params.set("beleg", "rechnung");
+  if (kv) params.set("lieferer", kv);
+  params.set("kunde", gf.abnehmerObj.name);
+
+  if (gf.rabatt) {
+    params.set("artikel1",     gf.artikelBelegName);
+    params.set("menge1",       "1");
+    params.set("einheit1",     gf.einheit || "Stk");
+    params.set("einzelpreis1", parseNumericValueV(formatCurrencyV(gf.listennetto)));
+    params.set("rabatt",       gf.rabattProzent);
+  } else {
+    params.set("artikel1",     gf.artikelBelegName);
+    params.set("menge1",       "1");
+    params.set("einheit1",     gf.einheit || "Stk");
+    params.set("einzelpreis1", parseNumericValueV(formatCurrencyV(gf.nettoBetrag)));
+  }
+
+  params.set("umsatzsteuer", "19");
+  params.set("tag",          tag);
+  params.set("monat",        monat);
+  params.set("jahr",         jahr);
+  params.set("zahlungsziel", "30");
+  params.set("skonto",       "2");
+  params.set("skontofrist",  "20");
+
+  return `belege.html?${params.toString()}`;
+}
+
+function erstelleBelegButtonV(nummer, gf) {
+  const url = erstelleBelegURL(gf);
+  return `<button class="geschaeftsfall-beleg-button"
+    onclick="window.open('${url}', '_blank')"
+    title="Ausgangsrechnung für Aufgabe ${nummer} erstellen"
+    style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
+    📄 ${nummer}. Ausgangsrechnung erstellen</button>`;
+}
+
+// ============================================================================
+// HAUPTFUNKTION
+// ============================================================================
+
+function zeigeZufaelligeGeschaeftsfaelleV() {
+  const anzahl = parseInt(document.getElementById("anzahlDropdownV").value);
+  const container    = document.getElementById("Container");
+  const buttonColumn = document.getElementById("button-columnV");
+  if (!container || !buttonColumn) return;
+  container.innerHTML    = "";
+  buttonColumn.innerHTML = "";
+
+  let aufgabenHTML  = "<h2>Aufgaben</h2><ol>";
+  let loesungenHTML = "<h2>Lösung</h2>";
+  const liste = [];
+  for (let i = 0; i < anzahl; i++) liste.push(erstelleZufallsGeschaeftsfallV());
+
+  // Aktuelle Liste für KI-Prompt merken
+  letzteGenerierteGfListeV = liste;
+
+  liste.forEach((gf, idx) => {
+    const i = idx + 1;
+    aufgabenHTML  += `<li>${gf.text}</li>`;
+    loesungenHTML += `<div style="margin-top:1.5em"><strong>${i}.</strong><br>${erstelleBuchungssatzV(gf)}</div>`;
+    const div = document.createElement("div");
+    div.style.margin = "12px 0";
+    div.innerHTML = erstelleBelegButtonV(i, gf);
+    buttonColumn.appendChild(div);
+  });
+
+  aufgabenHTML += "</ol>";
+  container.innerHTML = aufgabenHTML + loesungenHTML;
 }
 
 // ============================================================================
@@ -605,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   const vorschau = document.getElementById("kiPromptVorschau");
-  if (vorschau) vorschau.textContent = KI_ASSISTENT_PROMPT;
+  if (vorschau) vorschau.textContent = erstelleKiPromptTextV();
 
   document.addEventListener(
     "yamlDataVerkaufLoaded",
