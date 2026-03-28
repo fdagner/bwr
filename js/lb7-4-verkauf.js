@@ -486,6 +486,7 @@ Pädagogischer Ablauf (genau so beginnen):
    - Lass den Schüler selbst entscheiden, welche Konten ins Soll und welche ins Haben kommen.
    - Frage gezielt nach Rabatt: „Gibt es einen Rabatt? Was machst du mit dem Rabatt bei der Berechnung?“
    - Stelle Fragen zu den Berechnungen: „Worauf berechnest du die Umsatzsteuer?“ oder „Welchen Betrag trägst du bei den Umsatzerlösen ein?“
+   - Es wird nur dieser Geschäftsfall gebucht, kein anderer!
 
 Konten (nur durch Fragen klären, nicht nennen oder erklären):
 - FO – Forderungen aus Lieferungen und Leistungen (Verkauf auf Ziel)

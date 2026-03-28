@@ -777,6 +777,7 @@ Pädagogischer Ablauf (genau so beginnen):
    - Frage weiter: „Welche Konten könnten hier deiner Meinung nach benötigt werden?“
    - Lass den Schüler selbst überlegen, ob Rabatt vorhanden ist und was das für die Berechnung bedeutet.
    - Frage gezielt: „Wie gehst du mit dem Rabatt um?“ oder „Worauf berechnest du die Vorsteuer?“
+  - Es wird nur dieser Geschäftsfall gebucht, kein anderer! Nur aus dem Geschäftsfall wird der Buchungssatz abgeleitet.
 
 Unterscheidung der Werkstoffe (nur durch Fragen klären, nicht erklären):
 - Rohstoffe (gehen in großer Menge direkt ins Produkt)
