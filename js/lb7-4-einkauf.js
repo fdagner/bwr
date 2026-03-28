@@ -9,7 +9,6 @@ let yamlDataWerkstoffe = [];
 // KONTEN-DEFINITIONEN
 // ============================================================================
 
-// Nur Werkstoffkonten wählbar — VE und BK sind immer aktiv, aber nicht als Option
 const kontenWerkstoffe = {
   AWR: { beschreibung: "" },
   AWF: { beschreibung: "" },
@@ -18,38 +17,18 @@ const kontenWerkstoffe = {
 };
 
 // ============================================================================
-// WERKSTOFF-ARTIKEL
+// STANDARD-WERKSTOFF-ARTIKEL (Fallback wenn kein eigener Name eingegeben)
 // ============================================================================
 
-const werkstoffArtikel = {
-  AWR: {
-    belegName: "Rohstoffe",
-    einheit: "PAL",
-    minNetto: 2000,
-    maxNetto: 20000,
-  },
-  AWF: {
-    belegName: "Fremdbauteile",
-    einheit: "PAL",
-    minNetto: 1000,
-    maxNetto: 5000,
-  },
-  AWH: {
-    belegName: "Hilfsstoffe",
-    einheit: "PAL",
-    minNetto: 1000,
-    maxNetto: 5000,
-  },
-  AWB: {
-    belegName: "Betriebsstoffe",
-    einheit: "CO",
-    minNetto: 1000,
-    maxNetto: 15000,
-  },
+const werkstoffArtikelDefaults = {
+  AWR: { belegName: "Rohstoffe",      einheit: "PAL", minNetto: 2000,  maxNetto: 20000 },
+  AWF: { belegName: "Fremdbauteile",  einheit: "PAL", minNetto: 1000,  maxNetto: 5000  },
+  AWH: { belegName: "Hilfsstoffe",    einheit: "PAL", minNetto: 1000,  maxNetto: 5000  },
+  AWB: { belegName: "Betriebsstoffe", einheit: "CO",  minNetto: 1000,  maxNetto: 15000 },
 };
 
-// AWB-Bezeichnungen – Energie und Betriebsstoffe
-const awbBezeichnungen = [
+// AWB-Bezeichnungen – Fallback wenn kein eigener Name eingegeben
+const awbBezeichnungenDefault = [
   "Heizöl",
   "Erdgas",
   "Schmieröl",
@@ -58,10 +37,42 @@ const awbBezeichnungen = [
 ];
 
 // ============================================================================
+// BEZEICHNUNGEN AUS DEN INPUTFELDERN AUSLESEN
+// ============================================================================
+
+/**
+ * Gibt das benutzerdefinierte Werkstoff-Objekt für das angegebene Konto zurück.
+ * Wenn das Inputfeld leer ist, wird der Default-Wert verwendet.
+ */
+function getWerkstoffArtikel(konto) {
+  const defaults = werkstoffArtikelDefaults[konto] || werkstoffArtikelDefaults["AWR"];
+  const inputId = `bezeichnung${konto}`;
+  const userInput = document.getElementById(inputId)?.value?.trim() || "";
+
+  if (!userInput) return defaults;
+
+  // Benutzerdefinierter Name: belegName ersetzen, Rest übernehmen
+  return {
+    ...defaults,
+    belegName: userInput,
+  };
+}
+
+/**
+ * Gibt die AWB-Bezeichnung zurück:
+ * - Wenn ein eigener Name im AWB-Inputfeld steht → immer dieser Name
+ * - Sonst → zufällig aus der Default-Liste
+ */
+function getAwbBezeichnung() {
+  const userInput = document.getElementById("bezeichnungAWB")?.value?.trim() || "";
+  if (userInput) return userInput;
+  return pickW(awbBezeichnungenDefault);
+}
+
+// ============================================================================
 // FESTE LIEFERANTEN FÜR BELEGE
 // ============================================================================
 
-// Hilfsfunktion: Lieferant per Name aus YAML-Daten holen
 function getLieferantAusYaml(name) {
   if (!yamlDataWerkstoffe?.length) return null;
   const eintrag = yamlDataWerkstoffe.find((e) => e.unternehmen?.name === name);
@@ -87,9 +98,7 @@ function getLieferantFuerGf(konto, awbArt) {
     if (awbArt === "Strom") return getLieferantAusYaml("EcoEnergie");
     if (["Heizöl", "Erdgas", "Schmieröl"].includes(awbArt))
       return getLieferantAusYaml("EcoFuel");
-    // Reinigungsmittel → Werkstoffunion
   }
-  // AWR, AWF, AWH → Werkstoffunion
   return getLieferantAusYaml("Werkstoffunion");
 }
 
@@ -107,11 +116,9 @@ function passeNettoFuerRabattAn(netto, rabattProzent) {
 
 // ============================================================================
 // GESCHÄFTSFALL-DEFINITIONEN
-// Nur einfache GF: AWR/AWF/AWH → VE; AWB → VE oder BK (nie beides)
 // ============================================================================
 
 const alleGfWerkstoffe = [
-  // ── AWR: auf Ziel → VE ───────────────────────────────────────────────────
   {
     id: "awr_kauf_ve",
     typ: "einfach_ust",
@@ -120,13 +127,13 @@ const alleGfWerkstoffe = [
     haben: "VE",
     kontFilter: ["AWR", "VE"],
     belegtyp: "rechnung",
+    // {werkstoff} wird zur Laufzeit durch den benutzerdefinierten Namen ersetzt
     vorlagen: [
-      "{kunde} kauft Rohstoffe, es geht eine Eingangsrechnung ein",
-      "Von {kunde} werden Rohstoffe beschafft, eine Rechnung liegt vor",
-      "{kunde} bezieht Rohstoffe gegen Rechnung",
+      "{kunde} kauft {werkstoff}, es geht eine Eingangsrechnung ein",
+      "Von {kunde} werden {werkstoff} beschafft, eine Rechnung liegt vor",
+      "{kunde} bezieht {werkstoff} gegen Rechnung",
     ],
   },
-  // ── AWF: auf Ziel → VE ───────────────────────────────────────────────────
   {
     id: "awf_kauf_ve",
     typ: "einfach_ust",
@@ -136,12 +143,11 @@ const alleGfWerkstoffe = [
     kontFilter: ["AWF", "VE"],
     belegtyp: "rechnung",
     vorlagen: [
-      "Von {kunde} werden Fremdbauteile gekauft, es geht eine Eingangsrechnung ein",
-      "{kunde} beschafft Fremdbauteile gegen Rechnung",
-      "{kunde} bezieht Fremdbauteile, Rechnung liegt vor",
+      "Von {kunde} werden {werkstoff} gekauft, es geht eine Eingangsrechnung ein",
+      "{kunde} beschafft {werkstoff} gegen Rechnung",
+      "{kunde} bezieht {werkstoff}, Rechnung liegt vor",
     ],
   },
-  // ── AWH: auf Ziel → VE ───────────────────────────────────────────────────
   {
     id: "awh_kauf_ve",
     typ: "einfach_ust",
@@ -151,12 +157,11 @@ const alleGfWerkstoffe = [
     kontFilter: ["AWH", "VE"],
     belegtyp: "rechnung",
     vorlagen: [
-      "{kunde} kauft Hilfsstoffe, eine Eingangsrechnung geht ein",
-      "{kunde} beschafft Hilfsstoffe auf Ziel",
-      "Von {kunde} werden Hilfsstoffe bezogen, eine Rechnung liegt vor",
+      "{kunde} kauft {werkstoff}, eine Eingangsrechnung geht ein",
+      "{kunde} beschafft {werkstoff} auf Ziel",
+      "Von {kunde} werden {werkstoff} bezogen, eine Rechnung liegt vor",
     ],
   },
-  // ── AWB: Rechnung → VE ───────────────────────────────────────────────────
   {
     id: "awb_kauf_ve",
     typ: "einfach_ust",
@@ -166,12 +171,11 @@ const alleGfWerkstoffe = [
     kontFilter: ["AWB", "VE"],
     belegtyp: "rechnung",
     vorlagen: [
-      "{kunde} erhält eine Rechnung über {awbArt}",
-      "Für {kunde} geht eine Rechnung über {awbArt} ein",
-      "{kunde} beschafft {awbArt} auf Ziel, eine Rechnung liegt vor",
+      "{kunde} erhält eine Rechnung über {werkstoff}",
+      "Für {kunde} geht eine Rechnung über {werkstoff} ein",
+      "{kunde} beschafft {werkstoff} auf Ziel, eine Rechnung liegt vor",
     ],
   },
-  // ── AWB: Lastschrift/Überweisung → BK ────────────────────────────────────
   {
     id: "awb_kauf_bk",
     typ: "einfach_ust",
@@ -181,9 +185,9 @@ const alleGfWerkstoffe = [
     kontFilter: ["AWB", "BK"],
     belegtyp: "kontoauszug",
     vorlagen: [
-      "{kunde} wird mit {awbArt} beliefert, der Betrag wird per Lastschrift abgebucht",
-      "{kunde} bezahlt {awbArt} per Banküberweisung",
-      "{kunde} erhält {awbArt}, der Rechnungsbetrag wird per Lastschrift vom Bankkonto abgebucht",
+      "{kunde} wird mit {werkstoff} beliefert, der Betrag wird per Lastschrift abgebucht",
+      "{kunde} bezahlt {werkstoff} per Banküberweisung",
+      "{kunde} erhält {werkstoff}, der Rechnungsbetrag wird per Lastschrift vom Bankkonto abgebucht",
     ],
   },
 ];
@@ -198,24 +202,14 @@ function formatCurrencyW(value) {
 function roundToTwoDecimalsW(num) {
   return Math.round(num * 100) / 100;
 }
-function roundToW(val, s) {
-  return Math.round(val / s) * s;
-}
 function pickW(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
-
 function parseNumericValueW(value) {
   if (!value) return "0";
-  return value
-    .toString()
-    .replace(/[€\s]/g, "")
-    .replace(/\./g, "")
-    .replace(",", ".");
+  return value.toString().replace(/[€\s]/g, "").replace(/\./g, "").replace(",", ".");
 }
-
 function generateRandomBetragW(min, max) {
-  // Immer 1000er-Schritte → VORST (19 %) immer ganzzahlig, leicht im Kopf
   const s = 1000;
   const minR = Math.ceil(min / s) * s;
   const steps = Math.max(1, Math.floor((max - minR) / s));
@@ -242,35 +236,20 @@ function tableWrapW(rowsHTML) {
 
 function bsEinfachW(sollKto, betrag, habenKto) {
   const b = formatCurrencyW(betrag);
-  return (
-    tableWrapW(
-      `<tr>${tdW(sollKto)}${tdW(b, "right")}${tdCW("an")}${tdW(habenKto)}${tdW(b, "right")}</tr>`,
-    ) + "<br>"
-  );
+  return tableWrapW(
+    `<tr>${tdW(sollKto)}${tdW(b, "right")}${tdCW("an")}${tdW(habenKto)}${tdW(b, "right")}</tr>`,
+  ) + "<br>";
 }
 
-// Buchungssatz — Rabatt erscheint NICHT im Buchungssatz, sondern in der Nebenrechnung
 function bsEinfachUstW(gf) {
-  const {
-    sollKto,
-    habenKto,
-    nettoBetrag,
-    Vorsteuer,
-    bruttoBetrag,
-    rabatt,
-    rabattProzent,
-    listennetto,
-    listenbrutto,
-    rabattBetrag,
-    angabeIstBrutto,
-  } = gf;
+  const { sollKto, habenKto, nettoBetrag, Vorsteuer, bruttoBetrag,
+          rabatt, rabattProzent, listennetto, listenbrutto, rabattBetrag, angabeIstBrutto } = gf;
 
   const bs = tableWrapW(
     `<tr>${tdW(sollKto)}${tdW(formatCurrencyW(nettoBetrag), "right")}${tdCW("")}${tdW("")}${tdW("", "right")}</tr>` +
-      `<tr>${tdW("VORST")}${tdW(formatCurrencyW(Vorsteuer), "right")}${tdCW("an")}${tdW(habenKto)}${tdW(formatCurrencyW(bruttoBetrag), "right")}</tr>`,
+    `<tr>${tdW("VORST")}${tdW(formatCurrencyW(Vorsteuer), "right")}${tdCW("an")}${tdW(habenKto)}${tdW(formatCurrencyW(bruttoBetrag), "right")}</tr>`,
   );
 
-  // ── Nebenrechnung als HTML-Tabelle ────────────────────────────────────────
   function opRow(label, op, betrag) {
     return `<tr>
       <td style="padding:1px 10px 1px 2px;color:#444;">${label}</td>
@@ -290,15 +269,12 @@ function bsEinfachUstW(gf) {
     </tr>`;
   }
 
-  const ustAufListenpreis = roundToTwoDecimalsW(listennetto * 0.19);
-
   let rows = "";
-
   if (rabatt && angabeIstBrutto) {
-    const ustAufListenpreis = roundToTwoDecimalsW(listennetto * 0.19);
+    const ustLP = roundToTwoDecimalsW(listennetto * 0.19);
     rows =
       startRow("Rechnungsbetrag", listenbrutto) +
-      opRow("- Umsatzsteuer (19 %)", "", ustAufListenpreis) +
+      opRow("- Umsatzsteuer (19 %)", "", ustLP) +
       resRow("Listeneinkaufspreis netto", listennetto) +
       opRow(`Rabatt ${rabattProzent} %`, "", rabattBetrag) +
       resRow("Bezugspreis", nettoBetrag) +
@@ -342,9 +318,7 @@ function initializeKontoAuswahlW() {
   if (!grid) return;
   grid.innerHTML = "";
   const used = new Set();
-  alleGfWerkstoffe.forEach((t) =>
-    (t.kontFilter || []).forEach((k) => used.add(k)),
-  );
+  alleGfWerkstoffe.forEach((t) => (t.kontFilter || []).forEach((k) => used.add(k)));
   Object.entries(kontenWerkstoffe).forEach(([kto, info]) => {
     if (!used.has(kto)) return;
     const item = document.createElement("div");
@@ -380,35 +354,26 @@ function updateAuswahlInfoW() {
   const n = Array.from(cbs).filter((c) => c.checked).length;
   if (n === 0) {
     el.textContent = "⚠️ Keine Konten ausgewählt – es werden alle verwendet";
-    el.style.background = "#fff3cd";
-    el.style.color = "#856404";
+    el.style.background = "#fff3cd"; el.style.color = "#856404";
   } else if (n === cbs.length) {
     el.textContent = "✓ Alle Konten ausgewählt";
-    el.style.background = "#d4edda";
-    el.style.color = "#155724";
+    el.style.background = "#d4edda"; el.style.color = "#155724";
   } else {
     el.textContent = `✓ ${n} von ${cbs.length} Konten ausgewählt`;
-    el.style.background = "#d1ecf1";
-    el.style.color = "#0c5460";
+    el.style.background = "#d1ecf1"; el.style.color = "#0c5460";
   }
 }
 
 function alleKontenAuswaehlenW() {
-  document
-    .querySelectorAll("#kontoGridW input")
-    .forEach((c) => (c.checked = true));
+  document.querySelectorAll("#kontoGridW input").forEach((c) => (c.checked = true));
   updateAuswahlInfoW();
 }
 function alleKontenAbwaehlenW() {
-  document
-    .querySelectorAll("#kontoGridW input")
-    .forEach((c) => (c.checked = false));
+  document.querySelectorAll("#kontoGridW input").forEach((c) => (c.checked = false));
   updateAuswahlInfoW();
 }
 function getAusgewaehlteKontenW() {
-  return Array.from(document.querySelectorAll("#kontoGridW input:checked")).map(
-    (c) => c.value,
-  );
+  return Array.from(document.querySelectorAll("#kontoGridW input:checked")).map((c) => c.value);
 }
 
 // ============================================================================
@@ -424,9 +389,7 @@ function ladeYamlWerkstoffe() {
       yamlDataWerkstoffe = JSON.parse(saved);
       document.dispatchEvent(new Event("yamlDataWerkstoffeLoaded"));
       return true;
-    } catch (e) {
-      /* ignorieren */
-    }
+    } catch (e) { /* ignorieren */ }
   }
   fetch("js/unternehmen.yml")
     .then((r) => (r.ok ? r.text() : Promise.reject()))
@@ -443,17 +406,14 @@ function fillCompanyDropdownW() {
   const select = document.getElementById("werkstoffeKunde");
   if (!select) return;
   const sorted = [...yamlDataWerkstoffe].sort((a, b) => {
-    const bA = a.unternehmen?.branche || "",
-      bB = b.unternehmen?.branche || "";
+    const bA = a.unternehmen?.branche || "", bB = b.unternehmen?.branche || "";
     if (bA !== bB) return bA.localeCompare(bB);
     return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
   select.innerHTML = "";
   const ph = document.createElement("option");
-  ph.value = "";
-  ph.text = "— bitte Unternehmen auswählen —";
-  ph.disabled = true;
-  ph.selected = true;
+  ph.value = ""; ph.text = "— bitte Unternehmen auswählen —";
+  ph.disabled = true; ph.selected = true;
   select.appendChild(ph);
   sorted.forEach((c) => {
     const u = c.unternehmen;
@@ -488,19 +448,14 @@ function genReNrW() {
   return Math.floor(100 + Math.random() * 9900);
 }
 
-// ── Globale Liste der zuletzt generierten Geschäftsfälle ──────────────────────
-// Wird in zeigeZufaelligeGeschaeftsfaelleW() befüllt und von
-// erstelleKiPromptTextW() ausgelesen, damit der KI-Prompt immer die
-// aktuell angezeigten Aufgaben inkl. Musterlösungen enthält.
+// Zuletzt generierte GF-Liste (für KI-Prompt)
 let letzteGenerierteGfListeW = [];
 
 function erstelleZufallsGeschaeftsfallW() {
   const mitRabattOpt = document.getElementById("optMitRabattW").checked;
-  const vorstAngegeben =
-    document.getElementById("optVorstAngegeben")?.checked ?? false;
+  const vorstAngegeben = document.getElementById("optVorstAngegeben")?.checked ?? false;
   const ausgewaehlteKonten = getAusgewaehlteKontenW();
 
-  // Nur Werkstoffkonten filtern — VE und BK sind immer aktiv
   const werkstoffKonten = ["AWR", "AWF", "AWH", "AWB"];
   const verfuegbar = alleGfWerkstoffe.filter((t) => {
     if (ausgewaehlteKonten.length > 0) {
@@ -515,14 +470,18 @@ function erstelleZufallsGeschaeftsfallW() {
 
   const typ = pickW(verfuegbar);
   const konto = typ.konto;
-  const artikel = werkstoffArtikel[konto] || werkstoffArtikel["AWR"];
-  const awbArt = pickW(awbBezeichnungen);
 
-  // Fester Lieferant je nach Konto und AWB-Art
+  // ── Werkstoff-Artikel und Bezeichnung aus Inputfeldern holen ─────────────
+  const artikel = getWerkstoffArtikel(konto);
+  const awbArt = konto === "AWB" ? getAwbBezeichnung() : pickW(awbBezeichnungenDefault);
+
+  // Bezeichnung für Aufgabentext: AWB nutzt awbArt, alle anderen belegName
+  const werkstoffBezeichnung = konto === "AWB" ? awbArt : artikel.belegName;
+
+  // Fester Lieferant
   const lieferantObj = getLieferantFuerGf(konto, awbArt);
-  const lieferantName = lieferantObj.name;
 
-  // ── Rabatt: nur bei einfach_ust ──────────────────────────────────────────
+  // ── Rabatt ────────────────────────────────────────────────────────────────
   const rabatt = mitRabattOpt && typ.typ === "einfach_ust";
   const rabattProzent = rabatt ? pickW(RABATT_SAETZE) : 0;
 
@@ -532,20 +491,17 @@ function erstelleZufallsGeschaeftsfallW() {
   if (listennetto < 1000) listennetto = 1000;
   if (rabatt) listennetto = passeNettoFuerRabattAn(listennetto, rabattProzent);
 
-  const rabattBetrag = rabatt
-    ? Math.round((listennetto * rabattProzent) / 100)
-    : 0;
+  const rabattBetrag = rabatt ? Math.round((listennetto * rabattProzent) / 100) : 0;
   const nettoBetrag = listennetto - rabattBetrag;
   const Vorsteuer = roundToTwoDecimalsW(nettoBetrag * 0.19);
   const bruttoBetrag = roundToTwoDecimalsW(nettoBetrag + Vorsteuer);
 
-  // ── Text ─────────────────────────────────────────────────────────────────
+  // ── Aufgabentext ──────────────────────────────────────────────────────────
   const vorlagenIdx = Math.floor(Math.random() * typ.vorlagen.length);
   let textVorlage = typ.vorlagen[vorlagenIdx]
     .replace("{kunde}", kundeWerkstoffe)
-    .replace("{awbArt}", awbArt);
+    .replace("{werkstoff}", werkstoffBezeichnung);  // einheitlicher Platzhalter
 
-  // Angabe: zufällig Listenpreis netto oder Rechnungsbetrag (brutto)
   const angabeIstBrutto = Math.random() < 0.5;
   let betragText;
   if (rabatt) {
@@ -566,19 +522,25 @@ function erstelleZufallsGeschaeftsfallW() {
 
   const listenbrutto = roundToTwoDecimalsW(listennetto * 1.19);
 
+  // ── Belegname ─────────────────────────────────────────────────────────────
+  // AWB + BK: Rechnungsnummer anhängen; sonst einfach der belegName / awbArt
+  let artikelBelegName;
+  if (konto === "AWB" && typ.haben === "BK") {
+    artikelBelegName = `${awbArt} Re.Nr. ${genReNrW()}`;
+  } else if (konto === "AWB") {
+    artikelBelegName = awbArt;
+  } else {
+    artikelBelegName = artikel.belegName;  // benutzerdef. Name auch auf dem Beleg
+  }
+
   return {
     text: geschaeftsfallText,
     typ,
     lieferantObj,
-    lieferantName,
-    artikelBelegName:
-      konto === "AWB" && typ.haben === "BK"
-        ? `${awbArt} Re.Nr. ${genReNrW()}`
-        : konto === "AWB"
-          ? awbArt
-          : artikel.belegName,
+    artikelBelegName,
     einheit: artikel.einheit,
     awbArt,
+    werkstoffBezeichnung,
     sollKto: typ.soll,
     habenKto: typ.haben,
     rabatt,
@@ -607,23 +569,16 @@ function erstelleBuchungssatzW(gf) {
 // MUSTERLÖSUNG ALS REINER TEXT (für KI-Prompt)
 // ============================================================================
 
-/**
- * Wandelt einen Geschäftsfall in eine lesbare Textlösung um,
- * die der KI-Assistent als Referenz erhält.
- */
 function erstelleLoesungsTextW(gf) {
   const fmtW = (v) =>
     v.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
-  // ── Buchungssatz ─────────────────────────────────────────────────────────
-  const bs =
-    `${gf.sollKto} ${fmtW(gf.nettoBetrag)} / VORST ${fmtW(gf.Vorsteuer)} an ${gf.habenKto} ${fmtW(gf.bruttoBetrag)}`;
+  const bs = `${gf.sollKto} ${fmtW(gf.nettoBetrag)} / VORST ${fmtW(gf.Vorsteuer)} an ${gf.habenKto} ${fmtW(gf.bruttoBetrag)}`;
 
-  // ── Nebenrechnung ─────────────────────────────────────────────────────────
-  let nr = "";
   const fmtLine = (label, betrag, prefix = "") =>
     `  ${label}: ${prefix}${fmtW(betrag)}`;
 
+  let nr = "";
   if (gf.rabatt && gf.angabeIstBrutto) {
     nr = [
       fmtLine("Rechnungsbetrag (Listenpreis brutto)", gf.listenbrutto),
@@ -660,38 +615,26 @@ function erstelleLoesungsTextW(gf) {
 }
 
 // ============================================================================
-// KI-PROMPT MIT AKTUELLEN AUFGABEN UND LÖSUNGEN ZUSAMMENBAUEN
+// KI-PROMPT MIT AKTUELLEN AUFGABEN UND LÖSUNGEN
 // ============================================================================
 
-/**
- * Gibt den vollständigen KI-Assistent-Prompt zurück,
- * wobei ###AUFGABEN und LÖSUNGEN### durch die aktuell generierten
- * Aufgaben und Musterlösungen ersetzt wird.
- */
 function erstelleKiPromptTextW() {
   let aufgabenUndLoesungen = "";
-
   if (letzteGenerierteGfListeW.length === 0) {
-    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst auf Aufgaben erstellen)";
+    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
   } else {
     aufgabenUndLoesungen = letzteGenerierteGfListeW
       .map((gf, idx) => {
         const nr = idx + 1;
-        const loesung = erstelleLoesungsTextW(gf);
-        return `Aufgabe ${nr}:\n${gf.text}\n\nMusterlösung ${nr}:\n${loesung}`;
+        return `Aufgabe ${nr}:\n${gf.text}\n\nMusterlösung ${nr}:\n${erstelleLoesungsTextW(gf)}`;
       })
       .join("\n\n---\n\n");
   }
-
-  return KI_ASSISTENT_PROMPT_VORLAGE.replace(
-    "###AUFGABEN und LÖSUNGEN###",
-    aufgabenUndLoesungen,
-  );
+  return KI_ASSISTENT_PROMPT_VORLAGE.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
 }
 
 // ============================================================================
 // KI-ASSISTENT PROMPT-VORLAGE
-// (Platzhalter ###AUFGABEN und LÖSUNGEN### wird zur Laufzeit ersetzt)
 // ============================================================================
 
 const KI_ASSISTENT_PROMPT_VORLAGE = `
@@ -713,9 +656,9 @@ Pädagogischer Ablauf (genau so beginnen):
 
 ###AUFGABEN und LÖSUNGEN###
 
-2. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nacheinander (nicht in einer Antwort):
-   - Stelle zuerst die Frage: „Um welche Art von Werkstoff handelt es sich bei diesem Einkauf?" Prüfe, ob die Schülerlösung stimmt. Schaue dazu für dich in der Musterlösung nach welcher Werkstoff gebucht wird! Sage dann, ob der Schüler falsch liegt oder ob es richtig ist.
-   - Danach: „Wird auf Ziel (per Rechnung) oder sofort per Bank bezahlt?" - Prüfe, ob die Schülerlösung stimmt. Schaue dazu für dich in der Lösung nach ob VE oder BK gebucht wird! Sage dann, ob der Schüler falsch liegt oder ob es richtig ist.
+2. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nacheinander (nicht in einer Antwort). Schreibe nie die Lösung in deine Antwort, wenn der Schüler falsch antwortet. Bevor du die nächste Frage stellst, sollte die aktuelle Frage richtig beantwortet sein.
+   - Stelle zuerst die Frage: „Um welche Art von Werkstoff handelt es sich bei diesem Einkauf?" Prüfe, ob die Schülerlösung stimmt. Schaue dazu für dich in der Musterlösung nach welcher Werkstoff gebucht wird! Sage dann, ob der Schüler falsch liegt oder ob es richtig ist.   
+   - Danach: „Wird auf Ziel (per Rechnung) oder sofort per Bank bezahlt?" - Prüfe, ob die Schülerlösung stimmt. Schaue dazu für dich in der Lösung nach ob VE oder BK gebucht wird! Sage dann, ob der Schüler falsch liegt oder ob es richtig ist. 
    - Frage weiter: „Welche Konten könnten hier deiner Meinung nach benötigt werden?" Prüfe, ob die Schülerlösung stimmt. Schaue dazu für dich in der Musterlösung nach welche Konten gebucht werden! Sage dann, ob der Schüler falsch liegt oder ob es richtig ist.
    - Lass den Schüler selbst überlegen, ob Rabatt vorhanden ist und was das für die Berechnung bedeutet (nur wenn Rabatt im Geschäftsfall angegeben ist).
    - Frage gezielt: „Wie gehst du mit dem Rabatt um?" oder „Worauf berechnest du die Vorsteuer?" (nur wenn Rabatt im Geschäftsfall angegeben ist)
@@ -791,9 +734,8 @@ Am Ende einer erfolgreich gelösten Übung:
 
 Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Buchung selbst findet und versteht.
 `;
-
 // ============================================================================
-// KI-PROMPT AKTIONEN (Kopieren / Vorschau)
+// KI-PROMPT AKTIONEN
 // ============================================================================
 
 function kopiereKiPrompt() {
@@ -810,9 +752,7 @@ function kopiereKiPrompt() {
         btn.classList.remove("ki-prompt-btn--success");
       }, 2500);
     })
-    .catch(() =>
-      alert("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."),
-    );
+    .catch(() => alert("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."));
 }
 
 function toggleKiPromptVorschau() {
@@ -821,7 +761,6 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
     vorschau.style.display = "block";
-    // Vorschau immer mit aktuellem Prompt (inkl. Aufgaben) befüllen
     vorschau.textContent = erstelleKiPromptTextW();
     btn.textContent = "Vorschau ausblenden ▲";
   } else {
@@ -840,9 +779,9 @@ function erstelleBelegURLW(gf) {
   const params = new URLSearchParams();
   const bt = gf.typ.belegtyp;
   const now = new Date();
-  const tag = String(now.getDate()).padStart(2, "0");
+  const tag   = String(now.getDate()).padStart(2, "0");
   const monat = String(now.getMonth() + 1).padStart(2, "0");
-  const jahr = String(now.getFullYear());
+  const jahr  = String(now.getFullYear());
   const kv = document.getElementById("werkstoffeKunde")?.value?.trim() || "";
 
   params.set("beleg", bt);
@@ -850,26 +789,14 @@ function erstelleBelegURLW(gf) {
   if (bt === "rechnung") {
     params.set("lieferer", gf.lieferantObj.name);
     if (kv) params.set("kunde", kv);
-
-    if (gf.rabatt) {
-      params.set("artikel1", gf.artikelBelegName);
-      params.set("menge1", "1");
-      params.set("einheit1", gf.einheit || "kg");
-      params.set(
-        "einzelpreis1",
-        parseNumericValueW(formatCurrencyW(gf.listennetto)),
-      );
-      params.set('rabatt', gf.rabattProzent);
-    } else {
-      params.set("artikel1", gf.artikelBelegName);
-      params.set("menge1", "1");
-      params.set("einheit1", gf.einheit || "kg");
-      params.set(
-        "einzelpreis1",
-        parseNumericValueW(formatCurrencyW(gf.nettoBetrag)),
-      );
-    }
-
+    params.set("artikel1", gf.artikelBelegName);
+    params.set("menge1", "1");
+    params.set("einheit1", gf.einheit || "Stk");
+    params.set(
+      "einzelpreis1",
+      parseNumericValueW(formatCurrencyW(gf.rabatt ? gf.listennetto : gf.nettoBetrag)),
+    );
+    if (gf.rabatt) params.set("rabatt", gf.rabattProzent);
     params.set("umsatzsteuer", "19");
     params.set("tag", tag);
     params.set("monat", monat);
@@ -942,7 +869,6 @@ function zeigeZufaelligeGeschaeftsfaelleW() {
     if (gf) liste.push(gf);
   }
 
-  // ── Aktuelle Liste merken (für KI-Prompt) ────────────────────────────────
   letzteGenerierteGfListeW = liste;
 
   liste.forEach((gf, idx) => {
@@ -972,11 +898,9 @@ document.addEventListener("DOMContentLoaded", () => {
       kundeWerkstoffe = sel.value.trim() || "<i>[Modellunternehmen]</i>";
     });
 
-  // Vorschau initial leer lassen – wird beim Öffnen befüllt
   const vorschau = document.getElementById("kiPromptVorschau");
   if (vorschau) vorschau.textContent = erstelleKiPromptTextW();
 
-  // Erst nach dem YAML-Laden initialisieren
   document.addEventListener(
     "yamlDataWerkstoffeLoaded",
     () => {
@@ -989,7 +913,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ladeYamlWerkstoffe();
 
-  // Falls YAML synchron aus localStorage geladen wurde
   if (yamlDataWerkstoffe?.length) {
     fillCompanyDropdownW();
     setTimeout(autoSelectMyCompanyW, 100);
