@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kostenloses BwR-Tool: Vordrucke für Ausgangsrechnungen – Schüler vervollständigen Verkaufsbelege für Fertigerzeugnisse. BwR Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb-verkauf-vordruck.html">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Vordruck Ausgangsrechnung – BwR Tool">
+  <meta property="og:description" content="Ausgangsrechnung ausfüllen – BwR Realschule Bayern">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb-verkauf-vordruck.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
+  <meta property="og:locale" content="de_DE">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+  <title>Vordruck Ausgangsrechnung BwR 7 | meinbwr.de</title>
+
+  <style>
+    /* ── Druckstil ──────────────────────────────────────────────── */
+    @media print {
+      body > *:not(main) { display: none !important; }
+      .no-print { display: none !important; }
+      #vordruck-ausgabe {
+        padding: 0 !important;
+      }
+      .vordruck-seite {
+        page-break-after: always;
+        box-shadow: none !important;
+        border: 1px solid #aaa !important;
+        margin: 0 0 0 0 !important;
+        padding: 16mm 18mm !important;
+      }
+      .vordruck-seite:last-child { page-break-after: avoid; }
+      .leer-feld {
+        border-bottom: 1px solid #555 !important;
+        background: transparent !important;
+      }
+    }
+
+    /* ── Vordrucke Wrapper ──────────────────────────────────────── */
+    #vordruck-ausgabe {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-top: 20px;
+    }
+
+    /* ── einzelner Vordruck ─────────────────────────────────────── */
+    .vordruck-seite {
+      background: #fff;
+      border: 1px solid #d0cfc8;
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      padding: 22px 26px 26px;
+      max-width: 720px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+      position: relative;
+    }
+
+    .vordruck-aufgaben-nr {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 11px;
+      color: #999;
+      font-style: italic;
+    }
+
+    /* ── Kopfzeile ──────────────────────────────────────────────── */
+    .vordruck-kopf {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 20px;
+    }
+    .vordruck-absender {
+      font-size: 11px;
+      color: #555;
+      line-height: 1.55;
+    }
+    .vordruck-absender strong {
+      font-size: 13px;
+      color: #1a1a1a;
+      display: block;
+      margin-bottom: 1px;
+    }
+    .vordruck-rechts {
+      text-align: right;
+    }
+    .vordruck-rechts h2 {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      color: #1a1a1a;
+    }
+    .vordruck-meta {
+      font-size: 11px;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    /* ── Empfänger ──────────────────────────────────────────────── */
+    .vordruck-empfaenger {
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: 7px 11px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      line-height: 1.6;
+      min-height: 56px;
+    }
+    .vordruck-empfaenger-label {
+      font-size: 10px;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 2px;
+    }
+
+    /* ── Positionstabelle ───────────────────────────────────────── */
+    .pos-tabelle {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0;
+    }
+    .pos-tabelle th {
+      background: #f0efe9;
+      border-bottom: 2px solid #c8c6be;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #444;
+      white-space: nowrap;
+    }
+    .pos-tabelle th.r, .pos-tabelle td.r { text-align: right; }
+    .pos-tabelle td {
+      padding: 8px 9px;
+      border-bottom: 1px solid #eee;
+      font-size: 13px;
+    }
+    .pos-tabelle tr:last-child td { border-bottom: none; }
+    .mono { font-family: 'Courier New', monospace; }
+
+    /* ── Summenblock ────────────────────────────────────────────── */
+    .summen-block {
+      margin-top: 10px;
+      border-top: 2px solid #c8c6be;
+      padding-top: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .summen-zeile {
+      display: flex;
+      justify-content: flex-end;
+      width: 340px;
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+      gap: 0;
+    }
+    .summen-zeile:last-child { border-bottom: none; }
+    .summen-label {
+      flex: 1;
+      font-size: 12px;
+      color: #444;
+      padding-right: 10px;
+    }
+    .summen-label em { font-size: 11px; color: #888; font-style: normal; }
+    .summen-wert {
+      width: 130px;
+      text-align: right;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+    /* Leerfeld zum Ausfüllen */
+    .leer-feld {
+      display: inline-block;
+      width: 118px;
+      border-bottom: 1.5px solid #888;
+      height: 16px;
+      background: #fafaf7;
+      vertical-align: bottom;
+    }
+    /* Rechnungsbetrag – fett + Doppellinie */
+    .summen-zeile.rechnungsbetrag {
+      border-top: 2px solid #555;
+      padding-top: 8px;
+      margin-top: 2px;
+    }
+    .summen-zeile.rechnungsbetrag .summen-label {
+      font-weight: 700;
+      font-size: 13px;
+      color: #1a1a1a;
+    }
+    .summen-zeile.rechnungsbetrag .leer-feld {
+      width: 118px;
+      border-bottom: 2px solid #555;
+    }
+  </style>
+</head>
+
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+  <h2>Vordruck Ausgangsrechnung – BwR 7</h2>
+
+  <div id="generator-container">
+    <div class="box">
+
+      <p>
+        Hier können Sie Vordrucke für Ausgangsrechnungen generieren.
+        Artikel, Menge und Einzelpreis sind vorgegeben – die Schülerinnen und Schüler
+        berechnen und tragen Nettobetrag, Rabatt, Umsatzsteuer und Rechnungsbetrag ein.
+        Die Vordrucke können direkt ausgedruckt oder digital ausgefüllt werden.
+      </p>
+
+      <!-- Anzahl -->
+      <label for="anzahlDropdownVD">Anzahl der Vordrucke:</label>
+      <select id="anzahlDropdownVD">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3" selected>3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select><br>
+
+      <!-- Optionen -->
+      <h3>Optionen</h3>
+      <div class="flex-row">
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="optMitRabattVD">
+          Rabatt einbeziehen
+        </label>
+      </div>
+
+      <!-- Unternehmen + Produkt -->
+      <h3>Unternehmen auswählen</h3>
+      <div class="flex-row" style="gap: 24px; flex-wrap: wrap; align-items: flex-end;">
+        <div>
+          <label for="vdKunde">Unternehmen:</label>
+          <select id="vdKunde" class="meinUnternehmen">
+            <!-- Wird automatisch befüllt -->
+          </select>
+        </div>
+        <div>
+          <label for="vdProdukt">Bezeichnung des Fertigerzeugnisses:</label>
+          <input
+            type="text"
+            id="vdProdukt"
+            placeholder="z. B. Mountainbikes"
+            style="padding:6px 10px;font-size:14px;border:1px solid #ccc;border-radius:4px;min-width:220px;"
+          >
+        </div>
+      </div>
+
+      <br>
+      <button onclick="erstelleVordrucke()">Vordrucke erstellen</button>
+
+      <!-- Ausgabe -->
+      <div id="vordruck-ausgabe"></div>
+
+    </div><!-- /.box -->
+
+    <div w3-include-html="downloads.html"></div>
+
+    <!-- KI-ASSISTENT PROMPT -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+        </div>
+      </div>
+
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>
+            Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+            Der Bot führt Schülerinnen und Schüler per Rückfragen zur richtigen Lösung – ohne Antworten vorwegzunehmen.
+          </span>
+        </div>
+
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">🧾 Ausgangsrechnung</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+
+        <div class="ki-actions" style="margin-top: 14px;">
+          <button
+            class="ki-prompt-btn ki-prompt-btn--primary"
+            id="kiPromptKopierenBtnVD"
+            onclick="kopiereKiPromptVD()"
+            title="Prompt in die Zwischenablage kopieren"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+
+          <button
+            class="ki-prompt-btn ki-prompt-btn--ghost"
+            id="kiPromptToggleBtnVD"
+            onclick="toggleKiPromptVorschauVD()"
+            title="Prompt-Text ein- oder ausblenden"
+          >
+            Prompt anzeigen ▼
+          </button>
+        </div>
+
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschauVD" readonly spellcheck="false"
+            aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- Ende KI-Assistent -->
+
+  </div><!-- /#generator-container -->
+</main>
+
+<script src="js/lb7-4-vordruck.js"></script>
+<script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+  includeHTML();
+</script>
+</body>
+</html>
