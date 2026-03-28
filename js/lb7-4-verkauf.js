@@ -398,7 +398,7 @@ function erstelleLoesungsTextV(gf) {
 // KI-PROMPT MIT AKTUELLEN AUFGABEN UND LÖSUNGEN
 // ============================================================================
 
-function erstelleKiPromptTextV() {
+function erstelleKiPromptText() {
   let aufgabenUndLoesungen = "";
   if (letzteGenerierteGfListeV.length === 0) {
     aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
@@ -410,14 +410,14 @@ function erstelleKiPromptTextV() {
       })
       .join("\n\n---\n\n");
   }
-  return KI_ASSISTENT_PROMPT_VORLAGE_V.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+  return KI_ASSISTENT_PROMPT_VORLAGE.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
 }
 
 // ============================================================================
 // KI-ASSISTENT PROMPT-VORLAGE
 // ============================================================================
 
-const KI_ASSISTENT_PROMPT_VORLAGE_V = `
+const KI_ASSISTENT_PROMPT_VORLAGE = `
 Du bist ein freundlicher, geduldiger Buchführungs-Assistent speziell für Schüler der Realschule im Fach BwR (Jahrgangsstufe 7).
 
 Deine einzige Aufgabe:
@@ -524,12 +524,12 @@ Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel i
 // KI-PROMPT AKTIONEN
 // ============================================================================
 
-function kopiereKiPromptV() {
-  const promptText = erstelleKiPromptTextV();
+function kopiereKiPrompt() {
+  const promptText = erstelleKiPromptText();
   navigator.clipboard
     .writeText(promptText)
     .then(() => {
-      const btn = document.getElementById("kiPromptKopierenBtnV");
+      const btn = document.getElementById("kiPromptKopierenBtn");
       const originalHTML = btn.innerHTML;
       btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
       btn.classList.add("ki-prompt-btn--success");
@@ -547,7 +547,7 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
     vorschau.style.display = "block";
-    vorschau.textContent = erstelleKiPromptTextV();
+    vorschau.textContent = erstelleKiPromptText();
     btn.textContent = "Vorschau ausblenden ▲";
   } else {
     vorschau.style.display = "none";
@@ -636,6 +636,10 @@ function zeigeZufaelligeGeschaeftsfaelleV() {
 
   aufgabenHTML += "</ol>";
   container.innerHTML = aufgabenHTML + loesungenHTML;
+  const vorschau = document.getElementById("kiPromptVorschau");
+if (vorschau && vorschau.style.display !== "none") {
+  vorschau.textContent = erstelleKiPromptText();
+}
 }
 
 // ============================================================================
@@ -650,7 +654,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   const vorschau = document.getElementById("kiPromptVorschau");
-  if (vorschau) vorschau.textContent = erstelleKiPromptTextV();
+  if (vorschau) vorschau.textContent = erstelleKiPromptText();
 
   document.addEventListener(
     "yamlDataVerkaufLoaded",

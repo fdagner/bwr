@@ -883,6 +883,10 @@ function zeigeZufaelligeGeschaeftsfaelleW() {
 
   aufgabenHTML += "</ol>";
   container.innerHTML = aufgabenHTML + loesungenHTML;
+  const vorschau = document.getElementById("kiPromptVorschau");
+if (vorschau && vorschau.style.display !== "none") {
+  vorschau.textContent = erstelleKiPromptTextW();
+}
 }
 
 // ============================================================================
