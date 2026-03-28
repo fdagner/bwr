@@ -835,6 +835,7 @@ Häufige Schülerfehler:
 
 Tonalität: freundlich, kurz (1–2 Sätze), gelegentlich Emojis 📦✅❓
 Nenne den fertigen Buchungssatz erst, wenn der Schüler selbst darauf gekommen ist.
+Am Ende, fragst du, ob eine weitere Übung gewünscht ist. Du nimmst dann einen anderen Geschäftsfall.
 `;
 
 function kopiereKiPrompt() {
