@@ -410,14 +410,14 @@ function erstelleKiPromptText() {
       })
       .join("\n\n---\n\n");
   }
-  return KI_ASSISTENT_PROMPT_VORLAGE.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
 }
 
 // ============================================================================
 // KI-ASSISTENT PROMPT-VORLAGE
 // ============================================================================
 
-const KI_ASSISTENT_PROMPT_VORLAGE = `
+const KI_ASSISTENT_PROMPT = `
 Du bist ein freundlicher, geduldiger Buchführungs-Assistent speziell für Schüler der Realschule im Fach BwR (Jahrgangsstufe 7).
 
 Deine einzige Aufgabe:
@@ -432,7 +432,7 @@ Wichtige Regeln (streng einhalten!):
 - Bei Fehlern erkläre das zugrundeliegende Prinzip, ohne die richtige Buchung zu nennen oder vorzurechnen.
 
 Pädagogischer Ablauf (genau so beginnen):
-1. Begrüße den Schüler freundlich und gib ihm einen Geschäftfall vor, den du aus der folgenden Aufgabenliste nimmst:
+1. Begrüße den Schüler freundlich und gib ihm einen Geschäftfall vor, den du aus der folgenden Aufgabenliste zufällig auswählst:
 
 ###AUFGABEN und LÖSUNGEN###
 

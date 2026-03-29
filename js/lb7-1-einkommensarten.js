@@ -287,15 +287,20 @@ function zeigeZufaelligeEinkommensaufgaben() {
   const ausgewaehlte = shuffle(pool).slice(0, Math.min(anzahl, pool.length));
   const namen = ausgewaehlte.map(() => pick(familienNamen));
 
+ letzteGenerierteAufgaben = ausgewaehlte.map((fall, idx) => ({
+  fall,
+  name: namen[idx],
+  text: fall.beschreibung(namen[idx]), 
+}));
+
   // ── Aufgabenstellung ─────────────────────────────────────────────────────
   let html = `<h2>Aufgaben</h2>`;
   html += `<p style="font-style:italic; color:#555; font-size:0.95rem;">Lies die folgenden Fallbeispiele. Trage Akteur, Einkommensart und Einkommensquelle in die Tabelle unten ein.</p>`;
   html += `<ol>`;
 
-  ausgewaehlte.forEach((fall, idx) => {
-    const text = fall.beschreibung(namen[idx]);
-    html += `<li style="margin-bottom:1.4em;">${text}</li>`;
-  });
+letzteGenerierteAufgaben.forEach(({ text }, idx) => {
+  html += `<li>${text}</li>`;  // derselbe "Stefan Müller..." wie im Prompt
+});
 
   html += `</ol>`;
 
@@ -354,7 +359,41 @@ function zeigeZufaelligeEinkommensaufgaben() {
 
   html += `</tbody></table>`;
   container.innerHTML = html;
+    const vorschau = document.getElementById('kiPromptVorschau');
+  if (vorschau && vorschau.style.display !== 'none') {
+    vorschau.textContent = erstelleKiPromptText();
+  }
 }
+
+let letzteGenerierteAufgaben = []; // { fall, name } pro Aufgabe
+
+function erstelleLoesungsTextV(fall, name) {
+  return fall.quellen
+    .map(q =>
+      `Akteur: ${q.akteur} | Einkommensart: ${q.einkommensart} | Einkommensquelle: ${q.quelle}`
+    )
+    .join('\n');
+}
+
+
+function erstelleKiPromptText() {
+  let aufgabenUndLoesungen = "";
+
+  if (letzteGenerierteAufgaben.length === 0) {
+    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+  } else {
+    aufgabenUndLoesungen = letzteGenerierteAufgaben
+      .map(({ fall, name, text }, idx) => {
+        const nr = idx + 1;
+        return `Aufgabe ${nr}:\n${text}\n\nMusterlösung ${nr}:\n${erstelleLoesungsTextV(fall, name)}`;
+      })
+      .join("\n\n---\n\n");
+  }
+
+  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+}
+
+
 
 // ============================================================================
 // KI-ASSISTENT PROMPT
@@ -378,6 +417,13 @@ Pädagogischer Ansatz:
 - Beantworte deine Rückfragen nicht selbst.
 - Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
 - Erst wenn der Schüler selbst auf den richtigen Begriff kommt, bestätige ihn.
+
+Begrüße den Schüler freundlich und gib ihm eine Aufgabe vor, die du aus der folgenden Aufgabenliste zufällig auswählst.
+Arbeitsauftrag: "Lies das Fallbeispiel. Nenne dazu Akteur, Einkommensart und Einkommensquelle."
+
+Aufgabenliste:
+
+###AUFGABEN und LÖSUNGEN###
 
 Methodik bei Rückfragen:
 - Ist die Person bei jemandem angestellt oder arbeitet sie auf eigene Rechnung?
@@ -413,19 +459,28 @@ Tonalität:
 Was du NICHT tust:
 - Nenne die Einkommensart nicht direkt, bevor der Schüler selbst argumentiert hat
 - Gib keine Lösungen auf Anfragen wie „sag mir einfach die Antwort"
+
+Am Ende einer erfolgreich gelösten Übung:
+- Frage immer: „Möchtest du noch eine andere Aufgabe üben? Dann geb ich dir einfach die nächste!"
+
+Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Lösung selbst findet und versteht.
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(() => alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
+  const promptText = erstelleKiPromptText();
+  navigator.clipboard
+    .writeText(promptText)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() => alert("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."));
 }
 
 function toggleKiPromptVorschau() {
@@ -434,6 +489,7 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === 'none';
   if (isHidden) {
     vorschau.style.display = 'block';
+    vorschau.textContent = erstelleKiPromptText();  // ← neu befüllen
     btn.textContent = 'Vorschau ausblenden ▲';
   } else {
     vorschau.style.display = 'none';
@@ -445,15 +501,9 @@ function toggleKiPromptVorschau() {
 // INITIALISIERUNG
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (!loadYamlFromLocalStorage()) loadDefaultYaml();
-
-  const vorschauEl = document.getElementById('kiPromptVorschau');
-  if (vorschauEl) vorschauEl.textContent = KI_ASSISTENT_PROMPT;
-});
 
 document.addEventListener('DOMContentLoaded', function () {
   setTimeout(function () {
-    zeigeZufaelligeEinkommensaufgaben();
+    zeigeZufaelligeEinkommensaufgaben(); // 
   }, 500);
 });

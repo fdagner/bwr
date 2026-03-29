@@ -510,6 +510,47 @@ const faelle = [
   },
 ];
 
+
+// ============================================================================
+// GLOBALE VARIABLE FÜR ZULETZT GENERIERTE AUFGABEN
+// ============================================================================
+
+let letzteGenerierteAufgaben = [];
+
+// ============================================================================
+// MUSTERLÖSUNG ALS REINER TEXT (für KI-Prompt)
+// ============================================================================
+
+function erstelleLoesungsText(fall, person) {
+  const begruendung = ersetzeText(fall.begruendung, fall, person);
+  const urteil = fall.korrekt
+    ? 'Entspricht den rechtlichen Vorgaben'
+    : `Verstoß gegen: ${grundsatzLabel(fall.grundsatz)}`;
+
+  return `Urteil: ${urteil}\nBegründung: ${begruendung}`;
+}
+
+// ============================================================================
+// KI-PROMPT MIT AKTUELLEN AUFGABEN UND LÖSUNGEN
+// ============================================================================
+
+function erstelleKiPromptText() {
+  let aufgabenUndLoesungen = "";
+
+  if (letzteGenerierteAufgaben.length === 0) {
+    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+  } else {
+    aufgabenUndLoesungen = letzteGenerierteAufgaben
+      .map(({ fall, person, firmenname, sachverhalt }, idx) => {
+        const nr = idx + 1;
+        return `Aufgabe ${nr}:\nFirma: ${firmenname}\n${sachverhalt}\n\nMusterlösung ${nr}:\n${erstelleLoesungsText(fall, person)}`;
+      })
+      .join("\n\n---\n\n");
+  }
+
+  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+}
+
 // ============================================================================
 // KI-ASSISTENT PROMPT
 // ============================================================================
@@ -530,6 +571,13 @@ Pädagogischer Ansatz:
 - Beantworte deine Rückfragen nicht selbst, hake bei falschen Antworten nach.
 - Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
 - Erst wenn der Schüler den richtigen Grundsatz und das richtige Urteil erarbeitet hat, bestätige es.
+
+Begrüße den Schüler freundlich und gib ihm eine Aufgabe vor, die du aus der folgenden Aufgabenliste zufällig auswählst.
+Arbeitsauftrag: "Entscheide, ob der Firmenname den rechtlichen Vorgaben entspricht. Nenne den betroffenen Grundsatz und begründe deine Entscheidung."
+
+Aufgabenliste:
+
+###AUFGABEN und LÖSUNGEN###
 
 Methodik bei Rückfragen:
 - Schau dir den Namen genau an – was steht da drin?
@@ -574,6 +622,11 @@ Tonalität:
 Was du NICHT tust:
 - Nenne den betroffenen Grundsatz nicht, bevor der Schüler ihn selbst erarbeitet hat
 - Gib keine fertigen Urteile auf Anfragen wie „sag mir einfach die Antwort" – erkläre, dass das Ziel das eigene Verstehen ist
+
+Am Ende einer erfolgreich gelösten Übung:
+- Frage immer: „Möchtest du noch eine andere Aufgabe üben? Dann geb ich dir einfach die nächste!"
+
+Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Lösung selbst findet und versteht.
 `;
 
 // ============================================================================
@@ -643,23 +696,29 @@ function generiereAufgaben() {
 
   const verwendeteNachname = [];
 
+  // ── Aufgaben einmalig erzeugen und speichern ─────────────────────────────
+  letzteGenerierteAufgaben = ausgewaehlt.map((fall) => {
+    const person = zufallsname(verwendeteNachname);
+    verwendeteNachname.push(person.nachname);
+    return {
+      fall,
+      person,
+      firmenname:  ersetzeText(fall.firmenname,  fall, person),
+      sachverhalt: ersetzeText(fall.sachverhalt, fall, person),
+      begruendung: ersetzeText(fall.begruendung, fall, person),
+    };
+  });
+
   let aufgabenHTML  = '<h2>Aufgaben</h2><p><strong>Arbeitsauftrag:</strong> Entscheide jeweils, ob der Firmenname den rechtlichen Vorgaben entspricht. Nenne den betroffenen Grundsatz und begründe deine Entscheidung.</p><ol>';
   let loesungenHTML = '<h2>Lösungen</h2>';
 
-  ausgewaehlt.forEach((fall, idx) => {
-    const person = zufallsname(verwendeteNachname);
-    verwendeteNachname.push(person.nachname);
-
-    const firmenname  = ersetzeText(fall.firmenname,  fall, person);
-    const sachverhalt = ersetzeText(fall.sachverhalt, fall, person);
-    const begruendung = ersetzeText(fall.begruendung, fall, person);
-
-    const infoBox = `<div>
-      <strong>Firma:</strong> <em>${firmenname}</em><br>
-      ${sachverhalt}
-    </div>`;
-
-    aufgabenHTML += `<li style="margin-bottom: 1.4em;">${infoBox}</li>`;
+  letzteGenerierteAufgaben.forEach(({ fall, firmenname, sachverhalt, begruendung }, idx) => {
+    aufgabenHTML += `<li style="margin-bottom: 1.4em;">
+      <div>
+        <strong>Firma:</strong> <em>${firmenname}</em><br>
+        ${sachverhalt}
+      </div>
+    </li>`;
 
     const typFarbe = fall.korrekt ? '#2a7a2a' : '#a00';
     const typLabel = fall.korrekt
@@ -678,6 +737,11 @@ function generiereAufgaben() {
 
   aufgabenHTML += '</ol>';
   container.innerHTML = aufgabenHTML + loesungenHTML;
+
+  const vorschau = document.getElementById('kiPromptVorschau');
+  if (vorschau && vorschau.style.display !== 'none') {
+    vorschau.textContent = erstelleKiPromptText();
+  }
 }
 
 // ============================================================================
@@ -685,19 +749,20 @@ function generiereAufgaben() {
 // ============================================================================
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(err => {
-    console.error('Fehler beim Kopieren:', err);
-    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  const promptText = erstelleKiPromptText();
+  navigator.clipboard
+    .writeText(promptText)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() => alert("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."));
 }
 
 function toggleKiPromptVorschau() {
@@ -706,13 +771,13 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === 'none';
   if (isHidden) {
     vorschau.style.display = 'block';
+    vorschau.textContent = erstelleKiPromptText();  // ← neu befüllen
     btn.textContent = 'Vorschau ausblenden ▲';
   } else {
     vorschau.style.display = 'none';
     btn.textContent = 'Prompt anzeigen ▼';
   }
 }
-
 // ============================================================================
 // INITIALISIERUNG
 // ============================================================================
