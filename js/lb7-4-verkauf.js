@@ -4,6 +4,27 @@
 
 let kundeVerkauf = "<i>[Modellunternehmen]</i>";
 let yamlDataVerkauf = [];
+function getUserCompanies() {
+  const stored = localStorage.getItem('userCompanies');
+  return stored ? JSON.parse(stored) : [];
+}
+
+function mergeUserCompaniesIntoYamlDataVerkauf() {
+  const userCompanies = getUserCompanies();
+  
+  if (userCompanies.length > 0) {
+    yamlDataVerkauf = [...yamlDataVerkauf, ...userCompanies];
+    
+    yamlDataVerkauf.sort((a, b) => {
+      const brancheA = a.unternehmen?.branche || '';
+      const brancheB = b.unternehmen?.branche || '';
+      return brancheA.localeCompare(brancheB);
+    });
+    
+    console.log(`${userCompanies.length} Benutzerunternehmen zu yamlDataVerkauf hinzugefügt. Gesamt: ${yamlDataVerkauf.length}`);
+  }
+}
+
 
 // ============================================================================
 // RABATT
@@ -79,6 +100,7 @@ function ladeYamlVerkauf() {
   if (saved) {
     try {
       yamlDataVerkauf = JSON.parse(saved);
+      mergeUserCompaniesIntoYamlDataVerkauf(); // ← NEU
       document.dispatchEvent(new Event("yamlDataVerkaufLoaded"));
       return true;
     } catch (e) { /* ignorieren */ }
@@ -87,6 +109,7 @@ function ladeYamlVerkauf() {
     .then((r) => (r.ok ? r.text() : Promise.reject()))
     .then((txt) => {
       yamlDataVerkauf = jsyaml.load(txt) || [];
+      mergeUserCompaniesIntoYamlDataVerkauf(); // ← korrigiert (war: mergeUserCompaniesIntoYamlData)
       document.dispatchEvent(new Event("yamlDataVerkaufLoaded"));
     })
     .catch(() => {});

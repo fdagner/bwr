@@ -82,53 +82,41 @@
         </div>
       </div>
 
-      <!-- Werkstoff-Bezeichnungen -->
-      <h3>Werkstoff-Bezeichnungen <span style="font-weight:normal;font-size:0.88em;color:#666;">(optional – Platzhalter werden verwendet, wenn leer)</span></h3>
-      <div class="werkstoff-bezeichnungen-grid">
+<!-- Werkstoff-Bezeichnungen -->
+<h3>Werkstoff-Bezeichnungen <span style="font-weight:normal;font-size:0.88em;color:#666;">(optional)</span></h3>
+<div class="werkstoff-bezeichnungen-grid">
 
-        <div class="werkstoff-bezeichnung-item">
-          <label for="bezeichnungAWR">
-            <span class="wb-konto-badge wb-awr">AWR</span>
-            Rohstoff-Bezeichnung
-          </label>
-          <input
-            type="text"
-            id="bezeichnungAWR"
-            placeholder="z. B. Holzbretter"
-            maxlength="40"
-            autocomplete="off"
-          >
-        </div>
+  <div class="werkstoff-bezeichnung-item">
+    <label>
+      <span class="wb-konto-badge wb-awr">AWR</span>
+      Rohstoff-Bezeichnungen
+    </label>
+    <input type="text" id="bezeichnungAWR_0" placeholder="z. B. Holzbretter" maxlength="40" autocomplete="off">
+    <input type="text" id="bezeichnungAWR_1" placeholder="z. B. Stahlbleche" maxlength="40" autocomplete="off">
+    <input type="text" id="bezeichnungAWR_2" placeholder="z. B. Aluminiumprofile" maxlength="40" autocomplete="off">
+  </div>
 
-        <div class="werkstoff-bezeichnung-item">
-          <label for="bezeichnungAWF">
-            <span class="wb-konto-badge wb-awf">AWF</span>
-            Fremdbauteil-Bezeichnung
-          </label>
-          <input
-            type="text"
-            id="bezeichnungAWF"
-            placeholder="z. B. Motoren"
-            maxlength="40"
-            autocomplete="off"
-          >
-        </div>
+  <div class="werkstoff-bezeichnung-item">
+    <label>
+      <span class="wb-konto-badge wb-awf">AWF</span>
+      Fremdbauteil-Bezeichnungen
+    </label>
+    <input type="text" id="bezeichnungAWF_0" placeholder="z. B. Motoren" maxlength="40" autocomplete="off">
+    <input type="text" id="bezeichnungAWF_1" placeholder="z. B. Steuergeräte" maxlength="40" autocomplete="off">
+    <input type="text" id="bezeichnungAWF_2" placeholder="z. B. Getriebe" maxlength="40" autocomplete="off">
+  </div>
 
-        <div class="werkstoff-bezeichnung-item">
-          <label for="bezeichnungAWH">
-            <span class="wb-konto-badge wb-awh">AWH</span>
-            Hilfsstoff-Bezeichnung
-          </label>
-          <input
-            type="text"
-            id="bezeichnungAWH"
-            placeholder="z. B. Schrauben"
-            maxlength="40"
-            autocomplete="off"
-          >
-        </div>
+  <div class="werkstoff-bezeichnung-item">
+    <label>
+      <span class="wb-konto-badge wb-awh">AWH</span>
+      Hilfsstoff-Bezeichnungen
+    </label>
+    <input type="text" id="bezeichnungAWH_0" placeholder="z. B. Schrauben" maxlength="40" autocomplete="off">
+    <input type="text" id="bezeichnungAWH_1" placeholder="z. B. Klebstoff" maxlength="40" autocomplete="off">
+    <input type="text" id="bezeichnungAWH_2" placeholder="z. B. Dichtungen" maxlength="40" autocomplete="off">
+  </div>
 
-      </div>
+</div>
 
       <!-- Konto-Auswahl -->
       <div class="konto-auswahl-container">
@@ -234,10 +222,14 @@
 <style>
   .werkstoff-bezeichnungen-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 12px 20px;
     margin: 10px 0 18px;
   }
+
+  .werkstoff-bezeichnung-item input[type="text"] + input[type="text"] {
+  margin-top: 4px;
+}
 
   .werkstoff-bezeichnung-item {
     display: flex;

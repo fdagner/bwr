@@ -4,6 +4,25 @@
 
 let kundeWerkstoffe = "<i>[Modellunternehmen]</i>";
 let yamlDataWerkstoffe = [];
+function getUserCompanies() {
+  const stored = localStorage.getItem('userCompanies');
+  return stored ? JSON.parse(stored) : [];
+}
+
+function mergeUserCompaniesIntoYamlDataWerkstoffe() {
+  const userCompanies = getUserCompanies();
+  if (userCompanies.length === 0) return;
+
+  yamlDataWerkstoffe = [...yamlDataWerkstoffe, ...userCompanies];
+
+  yamlDataWerkstoffe.sort((a, b) => {
+    const brancheA = a.unternehmen?.branche || '';
+    const brancheB = b.unternehmen?.branche || '';
+    return brancheA.localeCompare(brancheB);
+  });
+
+  console.log(`${userCompanies.length} Benutzerunternehmen zu yamlDataWerkstoffe hinzugefügt. Gesamt: ${yamlDataWerkstoffe.length}`);
+}
 
 // ============================================================================
 // KONTEN-DEFINITIONEN
@@ -39,6 +58,29 @@ const awbBezeichnungenDefault = [
 // ============================================================================
 // BEZEICHNUNGEN AUS DEN INPUTFELDERN AUSLESEN
 // ============================================================================
+function fillBezeichnungsfelder(unternehmensName) {
+ 
+  if (!unternehmensName || !yamlDataWerkstoffe?.length) {
+    return;
+  }
+  
+  const eintrag = yamlDataWerkstoffe.find(e => e.unternehmen?.name === unternehmensName);
+  const werkstoffe = eintrag?.unternehmen?.werkstoffe;
+ 
+  if (!werkstoffe) {
+    return;
+  }
+
+  ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
+    const liste = werkstoffe[konto];
+    if (!Array.isArray(liste)) return;
+    [0, 1, 2].forEach(i => {
+      const el = document.getElementById(`bezeichnung${konto}_${i}`);
+      if (el) el.value = liste[i] ?? "";
+    });
+  });
+}
+
 
 /**
  * Gibt das benutzerdefinierte Werkstoff-Objekt für das angegebene Konto zurück.
@@ -46,17 +88,29 @@ const awbBezeichnungenDefault = [
  */
 function getWerkstoffArtikel(konto) {
   const defaults = werkstoffArtikelDefaults[konto] || werkstoffArtikelDefaults["AWR"];
-  const inputId = `bezeichnung${konto}`;
-  const userInput = document.getElementById(inputId)?.value?.trim() || "";
 
-  if (!userInput) return defaults;
+  // 1. Aus YAML des gewählten Unternehmens lesen
+  const selectedName = document.getElementById("werkstoffeKunde")?.value?.trim();
+  if (selectedName && yamlDataWerkstoffe?.length) {
+    const eintrag = yamlDataWerkstoffe.find(e => e.unternehmen?.name === selectedName);
+    const yamlListe = eintrag?.unternehmen?.werkstoffe?.[konto];
+    if (Array.isArray(yamlListe) && yamlListe.length > 0) {
+      // Inputfelder damit vorbelegen (einmalig, nur wenn noch leer)
+      // → wird in fillBezeichnungsfelder() gemacht (s. u.)
+    }
+  }
 
-  // Benutzerdefinierter Name: belegName ersetzen, Rest übernehmen
-  return {
-    ...defaults,
-    belegName: userInput,
-  };
+  // 2. Inputfelder auslesen (können manuell oder per YAML befüllt sein)
+  const kandidaten = [0, 1, 2]
+    .map(i => document.getElementById(`bezeichnung${konto}_${i}`)?.value?.trim() || "")
+    .filter(v => v.length > 0);
+
+  if (kandidaten.length > 0) return { ...defaults, belegName: pickW(kandidaten) };
+
+  return defaults;
 }
+
+
 
 /**
  * Gibt die AWB-Bezeichnung zurück:
@@ -64,8 +118,11 @@ function getWerkstoffArtikel(konto) {
  * - Sonst → zufällig aus der Default-Liste
  */
 function getAwbBezeichnung() {
-  const userInput = document.getElementById("bezeichnungAWB")?.value?.trim() || "";
-  if (userInput) return userInput;
+  // Alle drei AWB-Felder auslesen, leere ignorieren
+  const kandidaten = [0, 1, 2]
+    .map(i => document.getElementById(`bezeichnungAWB_${i}`)?.value?.trim() || "")
+    .filter(v => v.length > 0);
+  if (kandidaten.length > 0) return pickW(kandidaten);
   return pickW(awbBezeichnungenDefault);
 }
 
@@ -387,6 +444,7 @@ function ladeYamlWerkstoffe() {
   if (saved) {
     try {
       yamlDataWerkstoffe = JSON.parse(saved);
+      mergeUserCompaniesIntoYamlDataWerkstoffe(); // ← NEU
       document.dispatchEvent(new Event("yamlDataWerkstoffeLoaded"));
       return true;
     } catch (e) { /* ignorieren */ }
@@ -395,6 +453,7 @@ function ladeYamlWerkstoffe() {
     .then((r) => (r.ok ? r.text() : Promise.reject()))
     .then((txt) => {
       yamlDataWerkstoffe = jsyaml.load(txt) || [];
+      mergeUserCompaniesIntoYamlDataWerkstoffe(); // ← NEU
       document.dispatchEvent(new Event("yamlDataWerkstoffeLoaded"));
     })
     .catch(() => {});
@@ -429,15 +488,20 @@ function fillCompanyDropdownW() {
 
 function autoSelectMyCompanyW() {
   const name = localStorage.getItem("myCompany");
-  if (!name) return;
-  const sel = document.getElementById("werkstoffeKunde");
-  if (!sel) return;
-  const opt = Array.from(sel.options).find((o) => o.value === name);
-  if (opt) {
-    sel.value = name;
-    kundeWerkstoffe = name;
-    sel.dispatchEvent(new Event("change", { bubbles: true }));
+  if (!name) {
+    return;
   }
+  
+  const sel = document.getElementById("werkstoffeKunde");
+ 
+  const opt = Array.from(sel?.options || []).find(o => o.value === name);
+  
+  if (!opt) {
+    return;
+  }
+  sel.value = name;
+  kundeWerkstoffe = name;
+  fillBezeichnungsfelder(name);
 }
 
 // ============================================================================
@@ -898,28 +962,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const sel = document.getElementById("werkstoffeKunde");
   if (sel)
-    sel.addEventListener("change", () => {
-      kundeWerkstoffe = sel.value.trim() || "<i>[Modellunternehmen]</i>";
+sel.addEventListener("change", () => {
+  kundeWerkstoffe = sel.value.trim() || "<i>[Modellunternehmen]</i>";
+  
+  // Felder immer erst leeren
+  ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
+    [0, 1, 2].forEach(i => {
+      const el = document.getElementById(`bezeichnung${konto}_${i}`);
+      if (el) el.value = "";
     });
+  });
+  
+  // Dann neu befüllen falls YAML-Daten vorhanden
+  if (sel.value.trim()) fillBezeichnungsfelder(sel.value.trim());
+});
 
   const vorschau = document.getElementById("kiPromptVorschau");
   if (vorschau) vorschau.textContent = erstelleKiPromptTextW();
 
-  document.addEventListener(
-    "yamlDataWerkstoffeLoaded",
-    () => {
-      fillCompanyDropdownW();
-      setTimeout(autoSelectMyCompanyW, 100);
-      setTimeout(zeigeZufaelligeGeschaeftsfaelleW, 200);
-    },
-    { once: true },
-  );
-
-  ladeYamlWerkstoffe();
-
-  if (yamlDataWerkstoffe?.length) {
+document.addEventListener(
+  "yamlDataWerkstoffeLoaded",
+  () => {
     fillCompanyDropdownW();
-    setTimeout(autoSelectMyCompanyW, 100);
-    setTimeout(zeigeZufaelligeGeschaeftsfaelleW, 200);
-  }
+    autoSelectMyCompanyW();
+    zeigeZufaelligeGeschaeftsfaelleW();
+  },
+  { once: true },
+);
+
+ladeYamlWerkstoffe();
+
+// Fallback: falls YAML schon im localStorage war und Event bereits gefeuert
+if (yamlDataWerkstoffe?.length) {
+  fillCompanyDropdownW();
+  autoSelectMyCompanyW();
+  zeigeZufaelligeGeschaeftsfaelleW();
+}
 });

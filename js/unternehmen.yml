@@ -21,6 +21,23 @@
     bic: "COBADEFFXXX"
     inhaber: "Erna Kistner"
     akzent: "#7db9f5"
+    werkstoffe:
+      AWR:
+        - "Aluminiumrohre"
+        - "Stahlrahmenprofile"
+        - "Carbonfasergewebe"
+      AWF:
+        - "Schaltwerke"
+        - "Bremssättel"
+        - "Tretlager"
+      AWH:
+        - "Schrauben"
+        - "Kabelhüllen"
+        - "Klebstoffe"
+      AWB:
+        - "Strom"
+        - "Kettenöle"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "2"
@@ -90,6 +107,23 @@
     bic: "COBADEFFXXX"
     inhaber: "Martin Eichler"
     akzent: "#f5f5f5"
+    werkstoffe:
+      AWR:
+        - "Eichenholzplatten"
+        - "Fichtenholzbretter"
+        - "Sperrholzplatten"
+      AWF:
+        - "Metallbeschläge"
+        - "Schubladenführungen"
+        - "Scharniere"
+      AWH:
+        - "Holzleime"
+        - "Schrauben"
+        - "Dübel"
+      AWB:
+        - "Strom"
+        - "Maschinenöle"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "5"
@@ -420,6 +454,23 @@
     bic: "COBADEFFXXX"
     inhaber: "Sandra Sonnemann"
     akzent: "#FFD700"
+    werkstoffe:
+      AWR:
+        - "Solarzellenwafer"
+        - "Aluminiumrahmenprofile"
+        - "Verbundfolien"
+      AWF:
+        - "Wechselrichter"
+        - "Anschlussdosen"
+        - "Kabelstecker"
+      AWH:
+        - "Laminierfolien"
+        - "Dichtmassen"
+        - "Isolierbänder"
+      AWB:
+        - "Strom"
+        - "Druckluftmengen"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "19"
@@ -492,6 +543,23 @@
     bic: "COBADEFFXXX"
     inhaber: "Alex Bergmann"
     akzent: "#1E90FF"
+    werkstoffe:
+      AWR:
+        - "Holzkerne"
+        - "Carbonfaserlagen"
+        - "Glasfasergewebe"
+      AWF:
+        - "Skibindungen"
+        - "Stahlkanten"
+        - "Dämpfungselemente"
+      AWH:
+        - "Epoxidharze"
+        - "Schleifpapiere"
+        - "Klebstoffe"
+      AWB:
+        - "Strom"
+        - "Druckluftmengen"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "22"
@@ -564,6 +632,23 @@
     bic: "COBADEFFXXX"
     inhaber: "Helena Hartmann"
     akzent: "#9932CC"
+    werkstoffe:
+      AWR:
+        - "Fichtenholzdecken"
+        - "Ahornholzböden"
+        - "Ebenholzgriffbretter"
+      AWF:
+        - "Mechaniken"
+        - "Saitensets"
+        - "Stege"
+      AWH:
+        - "Holzleime"
+        - "Schellacklösungen"
+        - "Schleifpapiere"
+      AWB:
+        - "Strom"
+        - "Maschinenöle"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "25"
@@ -805,6 +890,23 @@
     bic: "GENODEF1HEZ"
     inhaber: "Roswitha Zachhuber"
     akzent: "#f5f5f5"
+    werkstoffe:
+      AWR:
+        - "Eichenholzbretter"
+        - "Buchenholzplatten"
+        - "Furnierstämme"
+      AWF:
+        - "Scharniere"
+        - "Schubladenführungen"
+        - "Türgriffe"
+      AWH:
+        - "Holzleime"
+        - "Schrauben"
+        - "Dübel"
+      AWB:
+        - "Strom"
+        - "Maschinenöle"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "35"
@@ -829,6 +931,23 @@
     bic: "GENODEF1HEZ"
     inhaber: "Wanda Berg"
     akzent: "#b7d5ac"
+    werkstoffe:
+      AWR:
+        - "Funktionsstoffe"
+        - "Membranlaminatgewebe"
+        - "Fleecematerialien"
+      AWF:
+        - "Reißverschlüsse"
+        - "Druckknöpfe"
+        - "Klettverschlüsse"
+      AWH:
+        - "Nähgarne"
+        - "Thermobänder"
+        - "Klebebänder"
+      AWB:
+        - "Strom"
+        - "Dampfmengen"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "36"
@@ -853,6 +972,23 @@
     bic: "GENODEF1HEZ"
     inhaber: "Rudi Platt"
     akzent: "#f5f5f5"
+    werkstoffe:
+      AWR:
+        - "Naturkautschuke"
+        - "Synthetikkautschuke"
+        - "Kunstlederbahnen"
+      AWF:
+        - "Ventile"
+        - "Bladder-Innenblasen"
+        - "Nylongewebe"
+      AWH:
+        - "Klebstoffe"
+        - "Nähgarne"
+        - "Vulkanisierungsmittel"
+      AWB:
+        - "Strom"
+        - "Druckluftmengen"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "37"
@@ -879,7 +1015,7 @@
     akzent: "#000000"
 
 - unternehmen:
-    id: "37"
+    id: "37b"
     branche: "Handwerk"
     name: "Lisa Kehrer"
     motto: "Schornsteinfegermeisterin"
@@ -925,6 +1061,23 @@
     bic: "GENODEF1NGB"
     inhaber: "Isabella Sprezzatura"
     akzent: "#6b14b8"
+    werkstoffe:
+      AWR:
+        - "Rindsleder"
+        - "Ziegenleder"
+        - "Kunstleder"
+      AWF:
+        - "Reißverschlüsse"
+        - "Schnallen"
+        - "Karabinerhaken"
+      AWH:
+        - "Lederklebstoffe"
+        - "Nähgarne"
+        - "Kantenlacke"
+      AWB:
+        - "Strom"
+        - "Maschinenöle"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "39"
@@ -1634,6 +1787,23 @@
     bic: "BYSTDEL2SBK"
     inhaber: "Vincent Mayer"
     akzent: "#4b4534"
+    werkstoffe:
+      AWR:
+        - "Eichenhölzer"
+        - "Fichtenhölzer"
+        - "Buchenhölzer"
+      AWF:
+        - "Aluminiumtischbeine"
+        - "Schließzylinder "
+        - "Scharniere"
+      AWH:
+        - "Schrauben"
+        - "Holzleime"
+        - "Dübel"
+      AWB:
+        - "Strom"
+        - "Schmierstoffe"
+        - "Reinigungsmittel"
 
 - unternehmen:
     id: "69"

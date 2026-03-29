@@ -401,6 +401,17 @@ function handleAddCompanyForm(event) {
     const rawUstID = document.getElementById('newCompanyUstID').value;
     const rawSteuernummer = document.getElementById('newCompanySteuernummer').value;
     const akzent = document.getElementById('newCompanyAkzent').value;
+
+    function textareaToArray(id) {
+    const val = document.getElementById(id)?.value || '';
+    return val.split('\n').map(s => s.trim()).filter(Boolean);
+}
+const werkstoffe = {
+    AWR: textareaToArray('newCompanyAWR'),
+    AWF: textareaToArray('newCompanyAWF'),
+    AWH: textareaToArray('newCompanyAWH'),
+    AWB: textareaToArray('newCompanyAWB'),
+};
     
     // Erste Sicherheitsschicht: Prüfe auf gefährliche Zeichen
     const allInputs = [
@@ -652,7 +663,8 @@ function handleAddCompanyForm(event) {
             bic: bic,
             ust_id: ustId,
             steuernummer: steuernummer,
-            akzent: akzent
+            akzent: akzent,
+            werkstoffe: werkstoffe,
         },
         _permanentlyValid: true,
     };
@@ -696,6 +708,8 @@ populateAllCompaniesDropdown();
 
 // Formular zurücksetzen
 form.reset();
+['newCompanyAWR','newCompanyAWF','newCompanyAWH','newCompanyAWB']
+ .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
 delete form.dataset.editIndex;
 uploadedLogoBase64 = null;
 document.getElementById('logoPreview').innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
@@ -835,6 +849,17 @@ const userCompanies = getUserCompanies();
     document.getElementById('newCompanyUstID').value = u.ust_id;
     document.getElementById('newCompanySteuernummer').value = u.steuernummer;
     document.getElementById('newCompanyAkzent').value = u.akzent;
+
+    // Werkstoffe ins Formular laden
+function arrayToTextarea(id, arr) {
+    const el = document.getElementById(id);
+    if (el) el.value = Array.isArray(arr) ? arr.join('\n') : '';
+}
+const w = company.werkstoffe || {};
+arrayToTextarea('newCompanyAWR', w.AWR);
+arrayToTextarea('newCompanyAWF', w.AWF);
+arrayToTextarea('newCompanyAWH', w.AWH);
+arrayToTextarea('newCompanyAWB', w.AWB);
     
     // Setze das Logo
    uploadedLogoBase64 = u.logo;

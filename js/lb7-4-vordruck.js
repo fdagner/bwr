@@ -2,8 +2,29 @@
 // VORDRUCK – AUSGANGSRECHNUNG (BwR 7)
 // ============================================================================
 
-let vdYamlData = [];
+let yamlData = [];
 let vdUnternehmen = "";
+
+function getUserCompanies() {
+  const stored = localStorage.getItem('userCompanies');
+  return stored ? JSON.parse(stored) : [];
+}
+
+function mergeUserCompaniesIntoYamlData() {
+  const userCompanies = getUserCompanies();
+  
+  if (userCompanies.length > 0) {
+    yamlData = [...yamlData, ...userCompanies];
+    
+    yamlData.sort((a, b) => {
+      const brancheA = a.unternehmen?.branche || '';
+      const brancheB = b.unternehmen?.branche || '';
+      return brancheA.localeCompare(brancheB);
+    });
+    
+    console.log(`${userCompanies.length} Benutzerunternehmen zu yamlData hinzugefügt. Gesamt: ${yamlData.length}`);
+  }
+}
 
 // ============================================================================
 // HILFSFUNKTIONEN
@@ -63,21 +84,30 @@ function genNettoOhneRabattVD() {
 function ladeYamlVD() {
   const saved =
     localStorage.getItem("uploadedYamlCompanyData") ||
-    localStorage.getItem("standardYamlData");
+    localStorage.getItem("standardYamlData");  // ← Tippfehler korrigiert
   if (saved) {
-    try { vdYamlData = JSON.parse(saved); fuellDropdownVD(); return; }
-    catch (e) { /* ignorieren */ }
+    try {
+      yamlData = JSON.parse(saved);             // ← yamlDataVerkauf → yamlData
+      mergeUserCompaniesIntoYamlData();
+      document.dispatchEvent(new Event("yamlDataLoaded"));
+      return true;
+    } catch (e) { /* ignorieren */ }
   }
   fetch("js/unternehmen.yml")
     .then((r) => (r.ok ? r.text() : Promise.reject()))
-    .then((txt) => { vdYamlData = jsyaml.load(txt) || []; fuellDropdownVD(); })
+    .then((txt) => {
+      yamlData = jsyaml.load(txt) || [];        // ← yamlDataVerkauf → yamlData
+      mergeUserCompaniesIntoYamlData();
+      document.dispatchEvent(new Event("yamlDataLoaded"));
+    })
     .catch(() => {});
+  return false;
 }
 
 function fuellDropdownVD() {
   const sel = document.getElementById("vdKunde");
-  if (!sel || !vdYamlData.length) return;
-  const sorted = [...vdYamlData].sort((a, b) =>
+  if (!sel || !yamlData.length) return;
+  const sorted = [...yamlData].sort((a, b) =>
     (a.unternehmen?.branche || "").localeCompare(b.unternehmen?.branche || "") ||
     (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "")
   );
@@ -104,8 +134,8 @@ function fuellDropdownVD() {
 }
 
 function getUnternehmenInfoVD(name) {
-  if (!vdYamlData.length || !name) return null;
-  const e = vdYamlData.find((e) => e.unternehmen?.name === name);
+  if (!yamlData.length || !name) return null;
+  const e = yamlData.find((e) => e.unternehmen?.name === name);
   if (!e) return null;
   const u = e.unternehmen;
   return {
@@ -120,8 +150,8 @@ function getUnternehmenInfoVD(name) {
 }
 
 function getZufaelligenKaeuferVD(verkaeufername) {
-  if (!vdYamlData.length) return { name: "Musterhandel GmbH", strasse: "", plz: "", ort: "" };
-  const andere = vdYamlData.filter(
+  if (!yamlData.length) return { name: "Musterhandel GmbH", strasse: "", plz: "", ort: "" };
+  const andere = yamlData.filter(
     (e) => e.unternehmen?.name && e.unternehmen.name !== verkaeufername
   );
   if (!andere.length) return { name: "Musterhandel GmbH", strasse: "", plz: "", ort: "" };
@@ -169,10 +199,16 @@ const VARIANTEN_MIT_RABATT = [
 // ============================================================================
 
 
+// ============================================================================
+// VORDRUCK – AUSGANGSRECHNUNG (BwR 7)
+// erstelleVordruck() komplett auf Tabellen-Layout umgestellt
+// → Word-kompatibler Copy-Paste
+// ============================================================================
+
 function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
   const kaeufer = getZufaelligenKaeuferVD(verkName);
 
-  // Beträge
+  // ── Beträge ──────────────────────────────────────────────────────────────
   const rabattProzent = mitRabatt ? pickVD(RABATT_SAETZE_VD) : 0;
   let listennetto, nettoBetrag;
   if (mitRabatt) {
@@ -184,7 +220,7 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
     listennetto = nettoBetrag;
   }
   const rabattBetrag = listennetto - nettoBetrag;
-  const ust   = Math.round(nettoBetrag * 0.19);
+  const ust    = Math.round(nettoBetrag * 0.19);
   const brutto = nettoBetrag + ust;
 
   const mengePool   = [1, 2, 4, 5, 10].filter((m) => listennetto % m === 0);
@@ -197,82 +233,72 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
   const jahr = now.getFullYear();
   const reNr = 1000 + Math.floor(Math.random() * 8999);
 
-  const absName    = verkInfo ? verkInfo.name : (verkName || "[Unternehmen]");
-  const absAdresse = verkInfo ? `${verkInfo.strasse} · ${verkInfo.plz} ${verkInfo.ort}` : "";
+  const absName    = verkInfo ? verkInfo.name    : (verkName || "[Unternehmen]");
+  const absAdresse = verkInfo ? `${verkInfo.strasse}, ${verkInfo.plz} ${verkInfo.ort}` : "";
   const absKontakt = verkInfo ? [verkInfo.telefon, verkInfo.email].filter(Boolean).join(" · ") : "";
   const absUst     = verkInfo?.ust_id ? `USt-IdNr.: ${verkInfo.ust_id}` : "";
 
-  const varianten  = mitRabatt ? VARIANTEN_MIT_RABATT : VARIANTEN_OHNE_RABATT;
-  const variante   = pickVD(varianten);
-  const leerFelder = variante.felder;
+  const varianten   = mitRabatt ? VARIANTEN_MIT_RABATT : VARIANTEN_OHNE_RABATT;
+  const variante    = pickVD(varianten);
+  const leerFelder  = variante.felder;
   const rueckwaerts = variante.rueckwaerts;
 
-  // Ob Cloze-Modus aktiv
   const clozeAktiv = document.getElementById("optClozeVD")?.checked ?? false;
 
-  // Inline-Styles
-  const S = {
-    mono:       `font-family:'Courier New',monospace;`,
-    leerFeld:   `display:inline-block;width:130px;height:22px;border-bottom:1.5px solid #999;background:#fafaf7;vertical-align:bottom;`,
-    leerFett:   `display:inline-block;width:130px;height:22px;border-bottom:2px solid #444;background:#fafaf7;vertical-align:bottom;`,
-    cloze:      `display:inline-block;font-family:'Courier New',monospace;font-size:10.5px;color:#1a5276;background:#eaf4fb;border:1px dashed #5dade2;border-radius:3px;padding:1px 5px;line-height:1.4;vertical-align:middle;word-break:break-all;`,
-    summenBlock:`margin-top:10px;border-top:2px solid #c8c6be;padding-top:4px;display:flex;flex-direction:column;align-items:flex-end;`,
-    summenZeile:`display:flex;justify-content:flex-end;width:360px;padding:5px 0;border-bottom:1px solid #eee;`,
-    summenZeileLetzte:`display:flex;justify-content:flex-end;width:360px;padding:5px 0;`,
-    summenZeileRb:`display:flex;justify-content:flex-end;width:360px;padding:8px 0 5px;border-top:2px solid #555;margin-top:2px;`,
-    summenLabel:`flex:1;font-size:12px;color:#444;padding-right:10px;display:flex;align-items:center;`,
-    summenLabelRb:`flex:1;font-size:13px;font-weight:700;color:#1a1a1a;padding-right:10px;display:flex;align-items:center;`,
-    summenWert: `width:140px;text-align:right;font-family:'Courier New',monospace;font-size:13px;display:flex;align-items:center;justify-content:flex-end;`,
-    em:         `font-size:11px;color:#888;font-style:normal;margin-left:3px;`,
-  };
+  // ── Hilfsfunktionen ──────────────────────────────────────────────────────
+  const mono     = `font-family:'Courier New',monospace;`;
+  const leerFeld = `display:inline-block;width:130px;height:20px;border-bottom:1.5px solid #999;background:#fafaf7;vertical-align:bottom;`;
+  const clozeSpan = `font-family:'Courier New',monospace;font-size:10.5px;color:#1a5276;background:#eaf4fb;border:1px dashed #5dade2;border-radius:3px;padding:1px 5px;`;
 
-  // Zelle: entweder Leerfeld, Cloze-Syntax oder Betrag
-  function zelle(feldname, wert, fett = false) {
+  function zelle(feldname, wert) {
     if (!leerFelder.has(feldname)) {
-      return `<span style="${S.mono}">${fmtVD(wert)}</span>`;
+      return `<span style="font-size:13px;${mono}">${fmtVD(wert)}</span>`;
     }
     if (clozeAktiv) {
-      return `<span style="${S.cloze}" title="Moodle Cloze">${clozeInline(wert)}</span>`;
+      return `<span style="${clozeSpan}">${clozeInline(wert)}</span>`;
     }
-    return `<span style="${fett ? S.leerFett : S.leerFeld}"></span>`;
+    return `<span style="${leerFeld}"></span>`;
   }
 
   const gesamtpreisZelle = leerFelder.has("gesamtpreis")
     ? (clozeAktiv
-        ? `<td style="text-align:right"><span style="${S.cloze}" title="Moodle Cloze">${clozeInline(listennetto)}</span></td>`
-        : `<td style="text-align:right"><span style="${S.leerFeld}"></span></td>`)
-    : `<td style="text-align:right;${S.mono}">${fmtVD(listennetto)}</td>`;
+        ? `<td style="text-align:right;padding:8px 9px;border-bottom:1px solid #eee;${mono}"><span style="${clozeSpan}">${clozeInline(listennetto)}</span></td>`
+        : `<td style="text-align:right;padding:8px 9px;border-bottom:1px solid #eee;"><span style="${leerFeld}"></span></td>`)
+    : `<td style="text-align:right;padding:8px 9px;border-bottom:1px solid #eee;"><span style="font-size:13px;${mono}">${fmtVD(listennetto)}</span></td>`;
 
-  // Summenzeile-Helper
-  function summenZeile(label, wertHTML, istRechnungsbetrag = false, istLetzte = false) {
-    const zStyle = istRechnungsbetrag ? S.summenZeileRb : (istLetzte ? S.summenZeileLetzte : S.summenZeile);
-    const lStyle = istRechnungsbetrag ? S.summenLabelRb : S.summenLabel;
-    return `
-      <div style="${zStyle}">
-        <div style="${lStyle}">${label}</div>
-        <div style="${S.summenWert}">${wertHTML}</div>
-      </div>`;
+  // Summenzeile als <tr> – mit leerer Spalte links für Word-Rechtsausrichtung
+  function sumZeile(label, wertHTML, opts = {}) {
+    const { fett = false, doppelLinie = false, letzte = false } = opts;
+    const bTop       = doppelLinie ? "border-top:2px solid #555;" : "border-top:1px solid #eee;";
+    const bBot       = letzte ? "" : "border-bottom:1px solid #eee;";
+    const tdBase     = "padding:5px 9px;font-size:12px;" + bTop + bBot;
+    const labelStyle = fett ? "font-weight:700;font-size:13px;" : "color:#444;";
+    const spanLabel = "font-size:12px;" + labelStyle + "white-space:nowrap;";
+    const spanWert  = "font-size:13px;" + mono + "white-space:nowrap;";
+    return (
+      "<tr>" +
+        "<td style=\"" + bTop + bBot + "\"></td>" +
+        "<td style=\"" + tdBase + "width:180px;\"><span style=\"" + spanLabel + "\">" + label + "</span></td>" +
+        "<td style=\"" + tdBase + "text-align:right;width:150px;\"><span style=\"" + spanWert + "\">" + wertHTML + "</span></td>" +
+      "</tr>"
+    );
   }
 
-  // Summenblock
-  let summen = `<div style="${S.summenBlock}">`;
+  // ── Summenblock ──────────────────────────────────────────────────────────
+  let summenRows = "";
   if (mitRabatt) {
-    summen += summenZeile(`Nettobetrag (Listenpreis)`, zelle("nettobetrag", listennetto));
-    summen += summenZeile(`Rabatt <span style="${S.em}">${rabattProzent}&nbsp;%</span>`, zelle("rabatt", rabattBetrag));
-    summen += summenZeile(`Zielverkaufspreis`, zelle("ziel", nettoBetrag));
+    summenRows += sumZeile("Nettobetrag (Listenpreis)",                            zelle("nettobetrag", listennetto));
+    summenRows += sumZeile(`Rabatt <span style="font-size:11px;color:#888;">${rabattProzent}&nbsp;%</span>`, zelle("rabatt", rabattBetrag));
+    summenRows += sumZeile("Zielverkaufspreis",                                    zelle("ziel", nettoBetrag));
   } else {
-    summen += summenZeile(`Nettobetrag`, zelle("nettobetrag", listennetto));
+    summenRows += sumZeile("Nettobetrag",                                          zelle("nettobetrag", listennetto));
   }
-  summen += summenZeile(`Umsatzsteuer <span style="${S.em}">19&nbsp;%</span>`, zelle("ust", ust));
-  summen += summenZeile(`Rechnungsbetrag`, zelle("brutto", brutto, true), true);
-  summen += `</div>`;
+  summenRows += sumZeile(`Umsatzsteuer <span style="font-size:11px;color:#888;">19&nbsp;%</span>`, zelle("ust", ust));
+  summenRows += sumZeile("Rechnungsbetrag",                                        zelle("brutto", brutto), { fett: true, doppelLinie: true, letzte: true });
 
-  // Lösung (ohne Cloze-Block – Syntax ist jetzt direkt im Vordruck)
+  // ── Lösungsblock ─────────────────────────────────────────────────────────
   let loesungHTML = "<strong>Lösung:</strong><br>";
-
-  if (rueckwaerts) {
-    loesungHTML += `<em>Rückwärtsrechnung – Rechnungsbetrag ist gegeben:</em><br>`;
-  }
+  if (rueckwaerts) loesungHTML += `<em>Rückwärtsrechnung – Rechnungsbetrag ist gegeben:</em><br>`;
 
   if (leerFelder.has("gesamtpreis")) loesungHTML += `Menge ${menge} × Einzelpreis ${fmtVD(einzelpreis)} = <strong>Gesamtpreis ${fmtVD(listennetto)}</strong><br>`;
 
@@ -313,62 +339,85 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
     if (leerFelder.has("brutto")) loesungHTML += `Rechnungsbetrag: ${fmtVD(nettoBetrag)} + ${fmtVD(ust)} = <strong>${fmtVD(brutto)}</strong>`;
   }
 
+  // ── Haupt-HTML (komplett tabellenbasiert) ─────────────────────────────────
   return `
 <div style="background:#fff;border:1px solid #d0cfc8;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,0.07);padding:22px 26px;max-width:700px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#1a1a1a;">
 
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:20px;">
-    <div style="font-size:14px;color:#555;line-height:1.6;">
-      <strong style="font-size:28px;color:#1a1a1a;display:block;margin-bottom:2px;">${absName}</strong>
-      ${absAdresse ? absAdresse + "<br>" : ""}
-      ${absKontakt ? absKontakt + "<br>" : ""}
-      ${absUst}
-    </div>
-    <div style="text-align:right;">
-      <h2 style="font-size:20px;font-weight:700;margin:0 0 4px;color:#1a1a1a;">Rechnung</h2>
-      <div style="font-size:12px;color:#555;line-height:1.7;">
-        Rechnungsnummer: ${reNr}<br>
-        Datum: ${tag}.${mon}.${jahr}<br>
-        Zahlungsziel: 30 Tage
-      </div>
-    </div>
-  </div>
+  <!-- ① Kopfzeile: Absender links | Rechnungstitel rechts -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+    <tr>
+      <td style="vertical-align:top;">
+        <span style="font-size:24px;color:#1a1a1a;display:block;margin-bottom:4px;font-weight: bold">${absName}</span><br>
+        <span style="font-size:13px;color:#555;line-height:1.7;">
+          ${absAdresse ? absAdresse + "<br>" : ""}
+          ${absKontakt ? absKontakt + "<br>" : ""}
+          ${absUst}
+        </span>
+      </td>
+      <td style="vertical-align:top;text-align:right;white-space:nowrap;">
+        <span style="font-size:20px;display:block;margin-bottom:4px;font-weight: bold">Rechnung</span><br>
+        <span style="font-size:12px;color:#555;line-height:1.7;">
+          Rechnungsnummer: ${reNr}<br>
+          Datum: ${tag}.${mon}.${jahr}<br>
+          Zahlungsziel: 30 Tage
+        </span>
+      </td>
+    </tr>
+  </table>
 
-  <div style="border:1px solid #ddd;border-radius:3px;padding:7px 11px;margin-bottom:16px;font-size:12px;line-height:1.6;min-height:56px;">
-    <div style="font-size:12px;color:#bbb;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">Rechnungsempfänger</div>
-    <strong>${kaeufer.name}</strong><br>
-    ${kaeufer.strasse}<br>
-    ${kaeufer.plz} ${kaeufer.ort}
-  </div>
+  <!-- ② Empfängerblock -->
+  <table width="100%" cellpadding="0" cellspacing="0"
+    style="border:1px solid #ddd;border-radius:3px;margin-bottom:16px;">
+    <tr>
+      <td style="padding:7px 11px;">
+        <span style="font-size:11px;color:#bbb;text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:2px;">Rechnungsempfänger</span>
+        <span style="font-size:12px;line-height:1.6;display:block;"><strong>${kaeufer.name}</strong><br>
+        ${kaeufer.strasse}<br>
+        ${kaeufer.plz} ${kaeufer.ort}</span>
+      </td>
+    </tr>
+  </table>
 
-  <table style="width:100%;border-collapse:collapse;margin-bottom:0;">
+  <!-- ③ Positionstabelle -->
+  <table width="100%" cellpadding="0" cellspacing="0"
+    style="border-collapse:collapse;margin-bottom:0;">
     <thead>
-      <tr>
-        <th style="width:36px;background:#f0efe9;border-bottom:2px solid #c8c6be;padding:5px 9px;font-size:11px;font-weight:600;color:#444;white-space:nowrap;text-align:left;">Pos.</th>
-        <th style="background:#f0efe9;border-bottom:2px solid #c8c6be;padding:5px 9px;font-size:11px;font-weight:600;color:#444;text-align:left;">Bezeichnung</th>
-        <th style="width:56px;background:#f0efe9;border-bottom:2px solid #c8c6be;padding:5px 9px;font-size:11px;font-weight:600;color:#444;text-align:right;">Menge</th>
-        <th style="width:130px;background:#f0efe9;border-bottom:2px solid #c8c6be;padding:5px 9px;font-size:11px;font-weight:600;color:#444;text-align:right;">Einzelpreis</th>
-        <th style="width:130px;background:#f0efe9;border-bottom:2px solid #c8c6be;padding:5px 9px;font-size:11px;font-weight:600;color:#444;text-align:right;">Gesamtpreis</th>
+      <tr style="background:#f0efe9;border-bottom:2px solid #c8c6be;">
+        <th style="width:36px;padding:5px 9px;text-align:left;"><span style="font-size:11px;font-weight:600;color:#444;">Pos.</span></th>
+        <th style="padding:5px 9px;text-align:left;"><span style="font-size:11px;font-weight:600;color:#444;">Bezeichnung</span></th>
+        <th style="width:56px;padding:5px 9px;text-align:right;"><span style="font-size:11px;font-weight:600;color:#444;">Menge</span></th>
+        <th style="width:130px;padding:5px 9px;text-align:right;"><span style="font-size:11px;font-weight:600;color:#444;">Einzelpreis</span></th>
+        <th style="width:130px;padding:5px 9px;text-align:right;"><span style="font-size:11px;font-weight:600;color:#444;">Gesamtpreis</span></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td style="padding:9px;border-bottom:1px solid #eee;font-size:13px;">1</td>
-        <td style="padding:9px;border-bottom:1px solid #eee;font-size:13px;">${produkt}</td>
-        <td style="padding:9px;border-bottom:1px solid #eee;font-size:13px;text-align:right;">${menge}</td>
-        <td style="padding:9px;border-bottom:1px solid #eee;font-size:13px;text-align:right;${S.mono}">${fmtVD(einzelpreis)}</td>
+        <td style="padding:8px 9px;border-bottom:1px solid #eee;"><span style="font-size:13px;">1</span></td>
+        <td style="padding:8px 9px;border-bottom:1px solid #eee;"><span style="font-size:13px;">${produkt}</span></td>
+        <td style="padding:8px 9px;border-bottom:1px solid #eee;text-align:right;"><span style="font-size:13px;">${menge}</span></td>
+        <td style="padding:8px 9px;border-bottom:1px solid #eee;text-align:right;"><span style="font-size:13px;${mono}">${fmtVD(einzelpreis)}</span></td>
         ${gesamtpreisZelle}
       </tr>
     </tbody>
   </table>
 
-  ${summen}
+  <!-- ④ Summenblock – rechtsbündig via voller Breite + leere linke Spalte -->
+  <table width="100%" cellpadding="0" cellspacing="0"
+    style="margin-top:10px;border-top:2px solid #c8c6be;">
+    ${summenRows}
+  </table>
 
-  <div style="display:flex;align-items:center;margin-top:20px;gap:6px;color:#aaa;font-size:16px;">
-    <span>✂</span>
-    <span style="flex:1;border-top:1.5px dashed #bbb;"></span>
-  </div>
+  <!-- ⑤ Trennlinie -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
+    <tr>
+      <td style="font-size:16px;color:#aaa;width:18px;">✂</td>
+      <td style="border-top:1.5px dashed #bbb;"></td>
+    </tr>
+  </table>
+
 </div>
 
+<!-- ⑥ Lösungsblock -->
 <div style="max-width:700px;margin-top:10px;">
   <div style="background:#f8f7f4;border:1px solid #ddd;border-radius:4px;padding:10px 14px;font-size:13px;line-height:1.9;color:#333;">
     ${loesungHTML}
@@ -475,6 +524,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const vorschau = document.getElementById("kiPromptVorschau");
   if (vorschau) vorschau.textContent = KI_ASSISTENT_PROMPT;
 
+  document.addEventListener("yamlDataLoaded", () => {    // ← NEU
+    fuellDropdownVD();
+    setTimeout(erstelleVordrucke, 150);
+  }, { once: true });
+
   ladeYamlVD();
-  if (vdYamlData.length) setTimeout(erstelleVordrucke, 150);
+
+  // Fallback falls YAML bereits synchron geladen
+  if (yamlData.length) {
+    fuellDropdownVD();
+    setTimeout(erstelleVordrucke, 150);
+  }
 });

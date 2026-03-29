@@ -52,7 +52,6 @@ function loadYamlFromLocalStorage() {
   return false;
 }
 
-  // Versuch 2: Standard-Datei laden
 // Versuch 2: Standard-Datei laden
 function loadDefaultYaml() {
   fetch('js/unternehmen.yml')
