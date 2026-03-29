@@ -59,17 +59,14 @@ const awbBezeichnungenDefault = [
 // BEZEICHNUNGEN AUS DEN INPUTFELDERN AUSLESEN
 // ============================================================================
 function fillBezeichnungsfelder(unternehmensName) {
- 
-  if (!unternehmensName || !yamlDataWerkstoffe?.length) {
-    return;
-  }
-  
+  if (!unternehmensName || !yamlDataWerkstoffe?.length) return;
+
   const eintrag = yamlDataWerkstoffe.find(e => e.unternehmen?.name === unternehmensName);
-  const werkstoffe = eintrag?.unternehmen?.werkstoffe;
- 
-  if (!werkstoffe) {
-    return;
-  }
+  if (!eintrag) return;
+
+  // Werkstoffe unter unternehmen.werkstoffe (YAML) ODER Top-Level (manuell hinzugefügt)
+  const werkstoffe = eintrag.unternehmen?.werkstoffe ?? eintrag.werkstoffe;
+  if (!werkstoffe) return;
 
   ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
     const liste = werkstoffe[konto];
@@ -93,7 +90,7 @@ function getWerkstoffArtikel(konto) {
   const selectedName = document.getElementById("werkstoffeKunde")?.value?.trim();
   if (selectedName && yamlDataWerkstoffe?.length) {
     const eintrag = yamlDataWerkstoffe.find(e => e.unternehmen?.name === selectedName);
-    const yamlListe = eintrag?.unternehmen?.werkstoffe?.[konto];
+    const yamlListe = (eintrag?.unternehmen?.werkstoffe ?? eintrag?.werkstoffe)?.[konto];
     if (Array.isArray(yamlListe) && yamlListe.length > 0) {
       // Inputfelder damit vorbelegen (einmalig, nur wenn noch leer)
       // → wird in fillBezeichnungsfelder() gemacht (s. u.)
