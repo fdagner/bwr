@@ -843,12 +843,12 @@ function deleteUserCompany(index) {
 
 // Funktion zum Bearbeiten eines benutzerdefinierten Unternehmens
 function editUserCompany(index) {
-const userCompanies = getUserCompanies();
+    const userCompanies = getUserCompanies();
     const company = userCompanies[index];
-    const u = company.unternehmen;
+    const u = company.unternehmen;           // ← wichtig: u = unternehmen-Objekt
     const isObsolete = company._obsolete === true;
-  
-    // Fülle das Formular mit den aktuellen Daten
+
+    // === Grunddaten ins Formular laden ===
     document.getElementById('newCompanyName').value = u.name;
     document.getElementById('newCompanyRechtsform').value = u.rechtsform;
     document.getElementById('newCompanyBranche').value = u.branche;
@@ -867,19 +867,21 @@ const userCompanies = getUserCompanies();
     document.getElementById('newCompanySteuernummer').value = u.steuernummer;
     document.getElementById('newCompanyAkzent').value = u.akzent;
 
-    // Werkstoffe ins Formular laden
-function arrayToTextarea(id, arr) {
-    const el = document.getElementById(id);
-    if (el) el.value = Array.isArray(arr) ? arr.join('\n') : '';
-}
-const w = company.werkstoffe || {};
-arrayToTextarea('newCompanyAWR', w.AWR);
-arrayToTextarea('newCompanyAWF', w.AWF);
-arrayToTextarea('newCompanyAWH', w.AWH);
-arrayToTextarea('newCompanyAWB', w.AWB);
-    
-    // Setze das Logo
-   uploadedLogoBase64 = u.logo;
+    // === WERKSTOFFE ins Formular laden (JETZT KORREKT!) ===
+    function arrayToTextarea(id, arr) {
+        const el = document.getElementById(id);
+        if (el) el.value = Array.isArray(arr) ? arr.join('\n') : '';
+    }
+
+    const w = u.werkstoffe || {};        // ← HIER WAR DER FEHLER (früher: company.werkstoffe)
+
+    arrayToTextarea('newCompanyAWR', w.AWR);
+    arrayToTextarea('newCompanyAWF', w.AWF);
+    arrayToTextarea('newCompanyAWH', w.AWH);
+    arrayToTextarea('newCompanyAWB', w.AWB);
+
+    // === Logo laden ===
+    uploadedLogoBase64 = u.logo || null;
     const preview = document.getElementById('logoPreview');
     if (u.logo) {
         preview.innerHTML = `
@@ -890,61 +892,40 @@ arrayToTextarea('newCompanyAWB', w.AWB);
         preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
     }
 
+    // Bearbeiten-Modus aktivieren
     const form = document.getElementById('addCompanyForm');
     const submitButton = form.querySelector('button[type="submit"]');
 
     if (isObsolete) {
         submitButton.textContent = '→ Wieder hinzufügen';
-        submitButton.style.background = '#fd7e14';      // orange / warnfarbe
+        submitButton.style.background = '#fd7e14';
         submitButton.style.color = 'white';
-        submitButton.title = 'Unternehmen wieder in die aktuelle Datenbasis aufnehmen';
     } else {
         submitButton.textContent = '✓ Änderungen speichern';
-        submitButton.style.background = '#ffc107';      // gelb (wie bisher)
+        submitButton.style.background = '#ffc107';
         submitButton.style.color = 'black';
     }
 
-    // Wichtig: Merken, dass wir im Bearbeiten-Modus sind + Index
     form.dataset.editIndex = index;
 
+    // Hinweis für obsolete Unternehmen
     let hint = document.getElementById('editHint');
-    
-
-if (!hint) {
-    hint = document.createElement('p');
-    hint.id = 'editHint';
-    hint.style.color = '#dc3545';
-    hint.style.margin = '0 0 12px 0';
-    hint.style.padding = '8px 12px';
-    hint.style.background = '#fff5f5';
-    hint.style.borderLeft = '4px solid #dc3545';
-    hint.style.borderRadius = '3px';
-    
-    // Sicher als erstes Kind ins Formular einfügen
-    form.prepend(hint);
-}
-
-if (isObsolete) {
-    hint.textContent = '⚠ Dieses Unternehmen fehlt in der aktuellen Quelldatei. ' +
-                       'Bearbeiten Sie es und klicken Sie auf „Wieder hinzufügen“, um es wieder aufzunehmen.';
-    hint.style.display = 'block';
-} else {
-    hint.style.display = 'none';
-}
-    
-    // Scrolle zum Formular
-    const detailsElement = document.querySelector('details[open]');
-    if (detailsElement) {
-        detailsElement.scrollIntoView({ behavior: 'smooth' });
-    } else {
-        // Öffne das Details-Element, falls geschlossen
-        const addCompanyDetails = document.querySelector('details summary:contains("Eigenes Unternehmen hinzufügen")');
-        if (addCompanyDetails && addCompanyDetails.parentElement) {
-            addCompanyDetails.parentElement.open = true;
-            addCompanyDetails.parentElement.scrollIntoView({ behavior: 'smooth' });
-        }
+    if (!hint) {
+        hint = document.createElement('p');
+        hint.id = 'editHint';
+        hint.style.cssText = 'color:#dc3545; margin:0 0 12px 0; padding:8px 12px; background:#fff5f5; border-left:4px solid #dc3545; border-radius:3px;';
+        form.prepend(hint);
     }
-    
+
+    if (isObsolete) {
+        hint.textContent = '⚠ Dieses Unternehmen fehlt in der aktuellen Quelldatei. Bearbeiten Sie es und klicken Sie auf „Wieder hinzufügen“.';
+        hint.style.display = 'block';
+    } else {
+        hint.style.display = 'none';
+    }
+
+    // Zum Formular scrollen
+    form.scrollIntoView({ behavior: 'smooth' });
 }
 
 // Funktion zum Laden der Standard-YAML-Daten
