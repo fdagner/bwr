@@ -2817,7 +2817,7 @@
 - unternehmen:
     id: "501"
     branche: "Familie"
-    name: "Maier"
+    name: "Herr"
     motto: ""
     bank: "Sparbank Nürnberg"
     rechtsform: ""
@@ -2841,7 +2841,7 @@
 - unternehmen:
     id: "502"
     branche: "Familie"
-    name: "Özdemir"
+    name: "Frau"
     motto: ""
     bank: "Sparbank Fürth"
     rechtsform: ""
@@ -2865,7 +2865,7 @@
 - unternehmen:
     id: "503"
     branche: "Familie"
-    name: "Huber"
+    name: "Frau"
     motto: ""
     bank: "Privatbank Erlangen"
     rechtsform: ""
