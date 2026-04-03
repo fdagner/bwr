@@ -12,7 +12,7 @@ function generateRandomSaldo(min, max, round = 100) {
 // ── Nachlässe-Unterkonten ─────────────────────────────────────────────────
 
 const BEZUGSKOSTEN_MAP = {
-  '6000 AWR': { nr: '6001 NR', label: 'Nachlässe für Rohstoffe',      hauptkonto: '6000 AWR' },
+  '6000 AWR': { nr: '6002 NR', label: 'Nachlässe für Rohstoffe',      hauptkonto: '6000 AWR' },
   '6010 AWF': { nr: '6012 NF', label: 'Nachlässe für Fremdbauteile',  hauptkonto: '6010 AWF' },
   '6020 AWH': { nr: '6022 NH', label: 'Nachlässe für Hilfsstoffe',    hauptkonto: '6020 AWH' },
   '6030 AWB': { nr: '6032 NB', label: 'Nachlässe für Betriebsstoffe', hauptkonto: '6030 AWB' },
