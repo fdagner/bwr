@@ -328,12 +328,12 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="flex-row">
                 <div class="form-field">
                     <label for="datenLieferer">Lieferer</label>
-                    <select id="datenLieferer" class="meinUnternehmen"></select>
+                    <select id="datenLieferer" class="meinUnternehmen" onchange="applySVGholen()"></select>
                 </div>
                 
                 <div class="form-field">
                     <label for="datenKunde">Empfänger</label>
-                    <select id="datenKunde" class="meinUnternehmen"></select>
+                    <select id="datenKunde" class="meinUnternehmen" onchange="applySVGholen()"></select>
                 </div>
             </div>
             
@@ -1510,7 +1510,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         window.onload = updateFields;
                     </script>
                 </div><br>
-                <label for="datenBescheid">Unternehmen: </label><select id="datenBescheid" class="meinUnternehmen">
+                <label for="datenBescheid">Unternehmen: </label><select id="datenBescheid" class="meinUnternehmen" onchange="bescheidApplySVGholen()">
                 </select><br>
                 <br><br><button onclick="bescheidApplySVGholen()">Bescheid erstellen / aktualisieren</button><br>
             </div>

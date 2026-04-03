@@ -137,7 +137,12 @@ const BELEG_FIELD_MAPPING = {
             // Nummer
             const nummer = document.getElementById('bescheidNummer');
             if (nummer) nummer.textContent = FormatHelper.roundToTwo(randomNum / 3);
+
+            if (data.unternehmen?.branche?.trim() === "Familie") {
+            SafeDOM.setAttr('bescheidName', 'transform', 'translate(0, 20)');
         }
+    }
+
     },
     email: {
         fields: {
@@ -2205,6 +2210,7 @@ const BELEG_APPLY_CONFIG = {
             if (abfallbezeichnungElem) abfallbezeichnungElem.textContent = abfallbezeichnung;
 
             loadBescheidData();
+
         }
     },
     // HINZUFÜGEN nach bescheid (in BELEG_APPLY_CONFIG):
