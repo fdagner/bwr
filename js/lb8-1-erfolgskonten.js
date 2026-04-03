@@ -9,13 +9,13 @@ function generateRandomSaldo(min, max, round = 100) {
   return Math.round((Math.random() * (max - min) + min) / round) * round;
 }
 
-// ── Bezugskosten-Unterkonten ─────────────────────────────────────────────────
+// ── Nachlässe-Unterkonten ─────────────────────────────────────────────────
 
 const BEZUGSKOSTEN_MAP = {
-  '6000 AWR': { nr: '6001 BZKR', label: 'Bezugskosten Rohstoffe',      hauptkonto: '6000 AWR' },
-  '6010 AWF': { nr: '6011 BZKF', label: 'Bezugskosten Fremdbauteile',  hauptkonto: '6010 AWF' },
-  '6020 AWH': { nr: '6021 BZKH', label: 'Bezugskosten Hilfsstoffe',    hauptkonto: '6020 AWH' },
-  '6030 AWB': { nr: '6031 BZKB', label: 'Bezugskosten Betriebsstoffe', hauptkonto: '6030 AWB' },
+  '6000 AWR': { nr: '6001 NR', label: 'Nachlässe für Rohstoffe',      hauptkonto: '6000 AWR' },
+  '6010 AWF': { nr: '6012 NF', label: 'Nachlässe für Fremdbauteile',  hauptkonto: '6010 AWF' },
+  '6020 AWH': { nr: '6022 NH', label: 'Nachlässe für Hilfsstoffe',    hauptkonto: '6020 AWH' },
+  '6030 AWB': { nr: '6032 NB', label: 'Nachlässe für Betriebsstoffe', hauptkonto: '6030 AWB' },
 };
 
 function erzeugeBzkBuchungen(hauptTyp) {
@@ -543,10 +543,10 @@ Aufwandskonten:
 - 6030 AWB – Aufwendungen für Betriebsstoffe
 
 Bezugskostenkonten (Unterkonten, optional):
-- 6001 BZKR – Bezugskosten Rohstoffe → wird über 6000 AWR abgeschlossen
-- 6011 BZKF – Bezugskosten Fremdbauteile → wird über 6010 AWF abgeschlossen
-- 6021 BZKH – Bezugskosten Hilfsstoffe → wird über 6020 AWH abgeschlossen
-- 6031 BZKB – Bezugskosten Betriebsstoffe → wird über 6030 AWB abgeschlossen
+- 6002 NR– Nachlässe Rohstoffe → wird über 6000 AWR abgeschlossen
+- 6012 NF– Nachlässe Fremdbauteile → wird über 6010 AWF abgeschlossen
+- 6022 NH– Nachlässe Hilfsstoffe → wird über 6020 AWH abgeschlossen
+- 6032 NB– Nachlässe Betriebsstoffe → wird über 6030 AWB abgeschlossen
 
 Ertragskonto:
 - 5000 UEFE – Umsatzerlöse aus Fertigerzeugnissen
@@ -572,11 +572,11 @@ METHODIK BEI RÜCKFRAGEN:
 
 BUCHUNGSSÄTZE – SCHRITT FÜR SCHRITT
 
-Schritt 0 (nur wenn Bezugskosten vorhanden) – Vorabschluss Bezugskostenkonten:
-  6001 BZKR an 6000 AWR | Saldo
-  6011 BZKF an 6010 AWF | Saldo
-  6021 BZKH an 6020 AWH | Saldo
-  6031 BZKB an 6030 AWB | Saldo
+Schritt 0 (nur wenn Nachlässe vorhanden) – Vorabschluss Bezugskostenkonten:
+  6002 NR an 6000 AWR | Saldo
+  6012 NF an 6010 AWF | Saldo
+  6022 NH an 6020 AWH | Saldo
+  6032 NB an 6030 AWB | Saldo
   → Der Saldo des BZK-Kontos erscheint im Hauptkonto auf der Haben-Seite.
 
 Schritt 1 – Saldo der Aufwandskonten ermitteln:
@@ -603,7 +603,7 @@ HÄUFIGE SCHÜLERFEHLER:
 - Summe und Saldo verwechselt
 - EK bei Gewinn auf falscher Seite eingetragen
 - Summen im T-Konto stimmen nicht überein
-- Bezugskostenkonten direkt über GuV abgeschlossen (statt Vorabschluss über Hauptkonto)
+- Nachlässe direkt über GuV abgeschlossen (statt Vorabschluss über Hauptkonto)
 - BZK-Saldo nicht zum Hauptkonto-Saldo addiert
 
 ---
