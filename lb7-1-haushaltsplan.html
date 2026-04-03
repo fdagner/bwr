@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Haushaltsplan – Fallbeispiele & Aufgaben | meinbwr.de BwR</title>
+  <meta name="description"
+    content="Kostenloses BwR-Tool: Zufällige Haushaltsplan-Fallbeispiele mit Einnahmen, Ausgaben und Saldo. Ideal für Klasse 7/8 Realschule Bayern.">
+
+  <link rel="canonical" href="https://www.meinbwr.de/lb7-haushaltsplan.html">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+
+  <meta property="og:title" content="Haushaltsplan – Fallbeispiele Generator">
+  <meta property="og:description"
+    content="Zufällige Haushaltsplan-Aufgaben mit Einnahmen, Ausgaben und Saldo. Perfekt für BwR Realschule Bayern.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb7-haushaltsplan.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
+  <meta property="og:locale" content="de_DE">
+
+  <meta name="keywords"
+    content="Haushaltsplan BwR, Einnahmen Ausgaben Saldo, BwR Realschule Bayern, Haushalt Klasse 7 8">
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+
+  <style>
+    /* ── Kleine Anpassungen speziell für diese Seite ── */
+    #Container table {
+      margin-bottom: 4px;
+    }
+    #Container h3 {
+      margin-top: 1.4em;
+      margin-bottom: 0.4em;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div w3-include-html="navigation.html"></div>
+
+    <h2>Haushaltsplan erstellen und analysieren</h2>
+
+    <div id="generator-container">
+      <div class="box">
+        <p>Hier werden zufällige Fallbeispiele für Familien-Haushaltspläne erstellt. Im Fließtext werden Einnahmen und Ausgaben genannt – diese müssen in den Haushaltsplan übertragen und berechnet werden.</p>
+        <h3>Einstellungen</h3>
+        <div class="flex-row">
+          <div>
+            <label for="anzahlAufgaben">Anzahl der Aufgaben:</label>
+            <select id="anzahlAufgaben"
+              style="padding:6px 10px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem;">
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div>
+            <label for="typFilter">Familientyp:</label>
+            <select id="typFilter"
+              style="padding:6px 10px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem;">
+              <option value="alle">Alle Familientypen (zufällig)</option>
+              <option value="familie_jung">Junge Familie</option>
+              <option value="familie_allein">Alleinerziehend</option>
+              <option value="familie_rente">Rentnerpaar</option>
+              <option value="familie_gross">Großfamilie</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="optClozeHP" onchange="aktualisiereClozeAnzeige()">
+              Moodle-Cloze-Syntax einbinden
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <br>
+      <button onclick="zeigeZufaelligeHaushaltsplaene()">Aufgaben erstellen</button>
+
+      <div class="output-wrapper" style="display:flex; gap:20px; margin-top:20px;">
+        <div id="Container" style="min-width:780px; flex:1;" contenteditable="true"></div>
+        <div id="button-column" style="width:180px; flex-shrink:0;"></div>
+      </div>
+
+    </div><!-- /generator-container -->
+
+    <div w3-include-html="downloads.html"></div>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+       KI-ASSISTENT PROMPT
+    ══════════════════════════════════════════════════════════════════════ -->
+    <div class="ki-assistent-box">
+
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli&nbsp;…)</p>
+        </div>
+      </div>
+
+      <div class="ki-assistent-body">
+
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>
+            Kopiere den Prompt und füge ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+            Der Bot hilft mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+          </span>
+        </div>
+
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">🏠 Haushaltsplan</span>
+          <span class="ki-chip">❓ Aufgaben integriert</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+
+        <div class="ki-actions" style="margin-top:14px;">
+          <button class="ki-prompt-btn ki-prompt-btn--primary" id="kiPromptKopierenBtn" onclick="kopiereKiPrompt()"
+            title="Prompt in die Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+
+          <button class="ki-prompt-btn ki-prompt-btn--ghost" id="kiPromptToggleBtn" onclick="toggleKiPromptVorschau()"
+            title="Prompt-Text ein- oder ausblenden">
+            Prompt anzeigen ▼
+          </button>
+        </div>
+
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false"
+            aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+        </div>
+
+      </div>
+    </div>
+    <!-- Ende KI-Assistent -->
+
+  </main>
+
+  <script src="js/lb7-1-haushaltsplan.js"></script>
+  <script src="js/download.js"></script>
+  <div w3-include-html="footer.html"></div>
+  <script>
+    includeHTML();
+  </script>
+
+</body>
+
+</html>

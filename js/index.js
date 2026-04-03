@@ -147,14 +147,31 @@ document.getElementById('allCompaniesDropdown')?.addEventListener('change', func
         const myCompanyBadge = isMyCompany 
             ? '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;">★ Modellunternehmen</span>' 
             : '';
+
+            let werkstoffeHTML = '–';
+if (company.unternehmen.werkstoffe && typeof company.unternehmen.werkstoffe === 'object') {
+    werkstoffeHTML = Object.entries(company.unternehmen.werkstoffe)
+        .map(([kategorie, liste]) => {
+            if (Array.isArray(liste) && liste.length > 0) {
+                return `<b>${kategorie}:</b> ${liste.join(', ')}`;
+            }
+            return '';
+        })
+        .filter(line => line !== '')           // leere Zeilen entfernen
+        .join('<br>');
+}
+
         
         previewDiv.innerHTML = `
         ${myCompanyBadge}
             <h4>   <img src="${company.unternehmen.logo}" style="width: 50px;vertical-align: middle"> ${company.unternehmen.name} ${company.unternehmen.rechtsform}</h4>
-            Motto: ${company.unternehmen.motto}<br>
-            Branche: ${company.unternehmen.branche}<br>
-            Ort: ${company.unternehmen.adresse.plz} ${company.unternehmen.adresse.ort}<br>
-            E-Mail: ${company.unternehmen.kontakt.email || '–'}<br>
+            <b>Motto:</b> ${company.unternehmen.motto}<br>
+            <b>Branche:</b> ${company.unternehmen.branche}<br>
+            <b>Inhaber/Verantwortlicher:</b> ${company.unternehmen.inhaber}<br>
+            <b>Adresse:</b> ${company.unternehmen.adresse.strasse}, ${company.unternehmen.adresse.plz} ${company.unternehmen.adresse.ort}<br>
+            <b>E-Mail:</b> ${company.unternehmen.kontakt.email || '–'}<br>
+            <b>Werkstoffe:</b><br>${werkstoffeHTML}<br>
+            <b>Bank:</b> ${company.unternehmen.bank}<br>
         `;
     }
 });
