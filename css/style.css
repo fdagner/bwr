@@ -167,6 +167,10 @@ input {
   transition: all 0.3s ease;
 }
 
+.ig-full input {
+  width: 100%;
+}
+
 select {
   padding: 10px 14px;
   border: 2px solid var(--border-light);

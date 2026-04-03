@@ -695,14 +695,7 @@ const TEMPLATES = {
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Einnahmen gesamt",3850],["Fixkosten",1480],["Lebensmittel & Alltag",530],["Mobilität",260],["Freizeit",190],["Sonstiges",145],["Sparanteil",400],["Freies Einkommen",845]]
   },
-  haushaltsplan_einnahmen_ausgaben: {
-    title: "Einnahmen vs. Ausgaben im Jahresverlauf",
-    subtitle: "Monatlicher Saldo in Euro, Beispielhaushalt",
-    source: "Quelle: Fiktive Beispieldaten",
-    unit: "€", xlabel: "Monat",
-    chartType: "column", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
-    data: [["Jan",380],["Feb",420],["Mär",190],["Apr",450],["Mai",-120],["Jun",-380],["Jul",-890],["Aug",210],["Sep",340],["Okt",490],["Nov",310],["Dez",-560]]
-  },
+
   haushaltsplan_anteil: {
     title: "Haushaltsplan nach Ausgabenanteilen",
     subtitle: "Prozentualer Anteil der Ausgabenkategorien am Nettoeinkommen",
@@ -771,7 +764,188 @@ const TEMPLATES = {
     chartType: "column", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["12 Monate",136],["24 Monate",268],["36 Monate",402],["48 Monate",541],["60 Monate",684]]
   },
+  abschreibung_maschine: {
+    title: "Jährliche Restbuchwerte nach linearer Abschreibung einer Maschine",
+    subtitle: `Restbuchwert in Euro, Anschaffungswert 120.000 €, Nutzungsdauer 8 Jahre, ${PY}`,
+    source: `Quelle: Interne Buchhaltung, ${CY}`,
+    unit: "€",
+    xlabel: "Jahr",
+    chartType: "column",
+    labelPos: "top",
+    showLabels: "yes",
+    thousandSep: "point",
+    xaxis: "no",
+    data: [["Jahr 0",120000],["Jahr 1",105000],["Jahr 2",90000],["Jahr 3",75000],["Jahr 4",60000],["Jahr 5",45000],["Jahr 6",30000],["Jahr 7",15000],["Jahr 8",0]]
+  },
+
+  preisentwicklung_gold: {
+    title: "Preisentwicklung von Edelmetallen – GOLD",
+    subtitle: `Schlusskurse am Monatsende in USD pro Feinunze, ${PY}`,
+    source: `Quelle: Fiktive Marktdaten / LBMA, ${CY}`,
+    unit: "USD/oz",
+    xlabel: "Monat",
+    chartType: "line",
+    labelPos: "top",
+    showLabels: "yes",
+    thousandSep: "point",
+    xaxis: "no",
+    data: [["Jan",2650],["Feb",2720],["Mär",2810],["Apr",2950],["Mai",3080],["Jun",3150],["Jul",3220],["Aug",3380],["Sep",3550],["Okt",3720],["Nov",3910],["Dez",4150]]
+  },
+
+  gewinn_unternehmen: {
+    title: "Jährlicher Gewinn in unserem Unternehmen",
+    subtitle: `Jahresüberschuss nach Steuern in Tsd. Euro, ${PY-4}–${PY}`,
+    source: `Quelle: Interne Unternehmensstatistik, ${CY}`,
+    unit: "Tsd. €",
+    xlabel: "Geschäftsjahr",
+    chartType: "column",
+    labelPos: "top",
+    showLabels: "yes",
+    thousandSep: "point",
+    xaxis: "no",
+    data: [["2022",1840],["2023",2210],["2024",1970],["2025",2650],["2026",3120]]
+  },
+
+  beschaeftigte_unternehmen: {
+    title: "Beschäftigte im Unternehmen",
+    subtitle: `Mitarbeiterinnen und Mitarbeiter nach Abteilung, Stand ${CY}`,
+    source: "Quelle: Interne Personalstatistik",
+    unit: "Mitarbeiter",
+    xlabel: "",
+    chartType: "bar",
+    labelPos: "center",
+    showLabels: "yes",
+    thousandSep: "none",
+    xaxis: "no",
+    data: [["Fertigung",68],["Absatz",24],["Beschaffung",12],["Verwaltung",19]]
+  },
+
+  werkstoffverbrauch: {
+    title: "Werkstoffverbrauch",
+    subtitle: `Anteile am Gesamtverbrauch in Prozent, Geschäftsjahr ${PY}`,
+    source: `Quelle: Interne Materialwirtschaft, ${CY}`,
+    unit: "%",
+    xlabel: "",
+    chartType: "pie",
+    labelPos: "inside",
+    showLabels: "yes",
+    thousandSep: "none",
+    xaxis: "no",
+    data: [["Rohstoffe",48],["Fremdbauteile",26],["Hilfsstoffe",17],["Betriebsstoffe",9]]
+  },
+
+  rechtsformen_deutschland: {
+    title: "Verteilung der Rechtsformen deutscher Unternehmen",
+    subtitle: `Rechtliche Einheiten nach Rechtsform, Deutschland ${PY}`,
+    source: "Quelle: Statistisches Bundesamt (Destatis), Unternehmensregister",
+    unit: "%",
+    xlabel: "",
+    chartType: "donut",
+    labelPos: "inside",
+    showLabels: "yes",
+    thousandSep: "none",
+    xaxis: "no",
+    data: [["Einzelunternehmer",58],["Kapitalgesellschaften",24],["Personengesellschaften",12],["Sonstige",6]]
+  },
+ };
+
+ // ═══════════════════════════════════════════
+// VORLAGEN-GRUPPEN (automatischer Dropdown)
+// ═══════════════════════════════════════════
+const TEMPLATE_GROUPS = {
+  // Volkswirtschaft
+  bip:                    "Volkswirtschaft",
+  inflation:              "Volkswirtschaft",
+  arbeitslosigkeit:       "Volkswirtschaft",
+  rechtsformen_deutschland: "Volkswirtschaft",
+
+  // Unternehmen
+  umsatz:                 "Unternehmen",
+  marktanteile:           "Unternehmen",
+  kosten:                 "Unternehmen",
+  gewinn_unternehmen:     "Unternehmen",
+  beschaeftigte_unternehmen: "Unternehmen",
+
+  // Controlling & Produktion
+  abschreibung_maschine:  "Controlling & Produktion",
+  werkstoffverbrauch:     "Controlling & Produktion",
+
+  // Finanzmärkte
+  preisentwicklung_gold:  "Finanzmärkte",
+
+  // Privathaushalte
+  haushalt:               "Privathaushalte",
+  haushalt_familie:       "Privathaushalte",
+  haushalt_student:       "Privathaushalte",
+  haushalt_einnahmen:     "Privathaushalte",
+  haushalt_strom:         "Privathaushalte",
+  haushalt_sparen:        "Privathaushalte",
+  haushalt_schulden:      "Privathaushalte",
+  vermoegen:              "Privathaushalte",
+
+  // Schule & Verein
+  noten:                  "Schule & Verein",
+  mitglieder:             "Schule & Verein",
+  schulbuero:             "Schule & Verein",
+
+  // Einkommen
+  einkommen_netto:        "Einkommen",
+  einkommen_quellen:      "Einkommen",
+  einkommen_entwicklung:  "Einkommen",
+
+  // Ausgaben
+  ausgaben_kategorien:      "Ausgaben",
+  ausgaben_regelmaessig:    "Ausgaben",
+  ausgaben_unregelmaessig:  "Ausgaben",
+  ausgaben_jahresvergleich: "Ausgaben",
+
+  // Haushaltsplan
+  haushaltsplan_monat:               "Haushaltsplan",
+  haushaltsplan_anteil:              "Haushaltsplan",
+
+  // Sparen
+  sparanteil_einkommen: "Sparen",
+  sparanteil_ziel:      "Sparen",
+  sparentwicklung:      "Sparen",
+
+  // Verschuldung
+  verschuldung_arten:    "Verschuldung",
+  verschuldung_tilgung:  "Verschuldung",
+  verschuldung_haushalt: "Verschuldung",
+  verschuldung_kosten:   "Verschuldung",
 };
+
+// ═══════════════════════════════════════════
+// DYNAMISCHEN DROPDOWN BEFÜLLEN
+// ═══════════════════════════════════════════
+function populateTemplateDropdown() {
+  const select = document.getElementById("inp-template");
+  if (!select) return;
+
+  // Gruppen sammeln und sortieren
+  const groups = {};
+  Object.keys(TEMPLATES).forEach(key => {
+    const groupName = TEMPLATE_GROUPS[key] || "Sonstige";
+    if (!groups[groupName]) groups[groupName] = [];
+    groups[groupName].push(key);
+  });
+
+  // Optgroups erstellen
+  Object.keys(groups).sort().forEach(groupName => {
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = groupName;
+
+    groups[groupName].forEach(key => {
+      const t = TEMPLATES[key];
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = t.title;           // schöner Titel aus der Vorlage
+      optgroup.appendChild(option);
+    });
+
+    select.appendChild(optgroup);
+  });
+}
 
 function loadTemplate(key) {
   if (!key) return;
@@ -1115,6 +1289,7 @@ const xlabel   = sanitizeText(document.getElementById("inp-xlabel").value);
 
   currentChart = new ApexCharts(document.getElementById("ig-chart-container"), opts);
   currentChart.render();
+   populateTemplateDropdown();
 }
 
 // Start
