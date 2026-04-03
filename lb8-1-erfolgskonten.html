@@ -33,13 +33,13 @@
     <meta name="twitter:image:alt" content="BwR Tool: Abschluss Erfolgskonten & GuV Vorschau">
 
     <!-- === Keywords – stark prüfungsorientiert === -->
-    <meta name="keywords" content="Abschluss Erfolgskonten BwR, GuV-Konto Aufgabe, Aufwandskonten abschließen, Gewinn- und Verlustrechnung BwR, BwR 8 Realschule Bayern, Buchführungsabschluss Klasse 8, Erfolgskonten Buchung, GuV Zufallsaufgabe, Prüfung BwR Gewinnermittlung, Rechnungswesen Jahrgangsstufe 8">
-  <title>Abschluss Aufwandskonten</title>
+    <meta name="keywords" content="Abschluss Erfolgskonten BwR, GuV-Konto Aufgabe, Aufwandskonten abschließen, Gewinn- und Verlustrechnung BwR, BwR 8 Realschule Bayern, Buchführungsabschluss Klasse 8, Erfolgskonten Buchung, GuV Zufallsaufgabe, Prüfung BwR Gewinnermittlung, Rechnungswesen Jahrgangsstufe 8, Bezugskosten BwR, Vorabschluss Bezugskostenkonten">
+
+  <title>Abschluss Erfolgskonten & GuV | meinbwr.de BwR</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/clipboard.min.js"></script>
   <script src="js/menu.js"></script>
-  <title>Abschluss Erfolgskonten & GuV | meinbwr.de BwR</title>
 </head>
 <body>
 <main>
@@ -50,6 +50,23 @@
   <div id="generator-container">
     <div class="box">
       <p>Hier können Sie eine Aufgabe zum Abschluss der Erfolgskonten und das GUV-Konto generieren.</p>
+
+      <!-- Bezugskosten-Option -->
+      <div style="margin:10px 0 14px;display:flex;align-items:center;gap:10px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.97em;user-select:none;">
+          <input
+            type="checkbox"
+            id="toggleBezugskosten"
+            style="width:17px;height:17px;cursor:pointer;accent-color:#1a6eb5;"
+            onchange="zeigeZufaelligenBestandsabschluss()"
+          >
+          <span>
+            Mit Unterkonten
+            <span style="color:#555;font-size:0.9em;">(6001 BZKR, 6011 BZKF, 6021 BZKH, 6031 BZKB </span>
+          </span>
+        </label>
+      </div>
+
       <button onclick="zeigeZufaelligenBestandsabschluss()">Neue Aufgabe erstellen</button>
     </div>
 
