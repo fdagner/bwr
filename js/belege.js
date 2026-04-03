@@ -150,22 +150,27 @@ const BELEG_FIELD_MAPPING = {
             loadLogoToSVG(data.unternehmen.logo, 'emailSVG', 'logo-placeholderEmail');
         }
     },
-    kunde: {
-        fields: {
-            'nameKunde': (data) => `${data.unternehmen.name} ${data.unternehmen.rechtsform}`,
-            'inhaberKunde': 'unternehmen.inhaber',
-            'strasseKunde': 'unternehmen.adresse.strasse',
-            'plzKunde': (data) => `${data.unternehmen.adresse.plz} ${data.unternehmen.adresse.ort}`
-        },
-        customLogic: (data) => {
-            const rechnungsNummer = Math.floor(Math.random() * 900) + 100;
-            const element = document.getElementById('rechnungsNummer');
-            if (element) element.textContent = rechnungsNummer;
-
-            // Setze globale Variable für andere Berechnungen
-            window.nummerKunde = data.unternehmen.id;
-        }
+kunde: {
+    fields: {
+        'nameKunde': (data) => `${data.unternehmen.name} ${data.unternehmen.rechtsform}`,
+        'inhaberKunde': 'unternehmen.inhaber',
+        'strasseKunde': 'unternehmen.adresse.strasse',
+        'plzKunde': (data) => `${data.unternehmen.adresse.plz} ${data.unternehmen.adresse.ort}`
     },
+    customLogic: (data) => {
+        // Bestehende Logik (unverändert)
+        const rechnungsNummer = Math.floor(Math.random() * 900) + 100;
+        const element = document.getElementById('rechnungsNummer');
+        if (element) element.textContent = rechnungsNummer;
+
+        window.nummerKunde = data.unternehmen.id;
+
+        // === NEU: Bei Branche "Familie" → nameKunde 20 Einheiten nach unten ===
+        if (data.unternehmen?.branche?.trim() === "Familie") {
+            SafeDOM.setAttr('nameKunde', 'transform', 'translate(0, 20)');
+        }
+    }
+},
     kundeQuittung: {
         fields: {
             'quittungNameKunde': (data) => `${data.unternehmen.inhaber}, ${data.unternehmen.name}`
