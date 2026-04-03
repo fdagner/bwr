@@ -372,7 +372,7 @@ function zeigeZufaelligenBestandsabschluss() {
 
   if (mitBezugskosten) {
     html += `<p>Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
-      <strong>Schließe alle Konten ab: Zuerst die Bezugskostenkonten über die jeweiligen Hauptkonten (Vorabschlussbuchung), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong></p>`;
+      <strong>Schließe alle Konten ab: Zuerst die Nachlasskonten über die jeweiligen Hauptkonten (Vorabschlussbuchung), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong></p>`;
   } else {
     html += `<p>Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
       <strong>Schließe alle Konten ab und ermittle Art und Höhe des Unternehmenserfolgs.</strong></p>`;
