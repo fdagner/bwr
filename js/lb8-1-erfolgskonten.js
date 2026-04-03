@@ -9,6 +9,14 @@ function generateRandomSaldo(min, max, round = 100) {
   return Math.round((Math.random() * (max - min) + min) / round) * round;
 }
 
+// ── Buchungstyp-Bezeichnungen ────────────────────────────────────────────────
+
+const BUCHUNGSTYP_LABEL = {
+  'VE': '4400 VE',
+  'BK': '2800 BK',
+  'KA': '2880 KA',
+};
+
 // ── Nachlässe-Unterkonten (Haben-Buchungen → mindern Aufwand) ──────────────
 
 const NACHLASS_MAP = {
@@ -31,7 +39,7 @@ const BZK_UNTERKONTO_MAP = {
 
 function erzeugeNachlassBuchungen(hauptTyp) {
   const rahmen = {
-    AWR: [1000, 2000],
+    AWR: [1000, 8000],
     AWF: [100,   800],
     AWH: [20,    200],
     AWB: [30,    300],
@@ -51,10 +59,10 @@ function erzeugeNachlassBuchungen(hauptTyp) {
 
 function erzeugeBzkUnterkontoBuchungen(hauptTyp) {
   const rahmen = {
-    AWR: [500, 1000],
-    AWF: [50,   200],
-    AWH: [10,   100],
-    AWB: [20,   100],
+    AWR: [500, 5000],
+    AWF: [50,   500],
+    AWH: [10,   150],
+    AWB: [20,   200],
   };
   const [min, max] = rahmen[hauptTyp];
   const anzahl = 1 + Math.floor(Math.random() * 2);
@@ -176,7 +184,7 @@ function renderTKontoAufgabe(kontoNr, buchungen) {
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
@@ -200,7 +208,7 @@ function renderTKontoNachlassAufgabe(bzkNr, buchungen) {
     html += `<tr style="border-top:2px solid #ccc;">
       <td style="padding:3px 2px;white-space:nowrap;">&nbsp;</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">&nbsp;</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
     </tr>`;
   }
@@ -220,7 +228,7 @@ function renderTKontoBzkUnterkontoAufgabe(bzkNr, buchungen) {
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
@@ -244,7 +252,7 @@ function renderTKontoUEFEAufgabe(buchungen) {
     html += `<tr style="border-top:2px solid #ccc;">
       <td style="padding:3px 2px;white-space:nowrap;">&nbsp;</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">&nbsp;</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
     </tr>`;
   }
@@ -270,7 +278,7 @@ function renderTKontoNachlassLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
     html += `<tr style="border-top:2px solid #ccc;">
       <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ` ${hauptkontoNr}` : ''}</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ''}</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
     </tr>`;
   }
@@ -298,7 +306,7 @@ function renderTKontoBzkUnterkontoLoesung(bzkNr, hauptkontoNr, buchungen, saldo)
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${i === 0 ? ` ${hauptkontoNr}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${i === 0 ? formatBetrag(saldo) : '&nbsp;'}</td>
@@ -327,7 +335,7 @@ function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkS
   const gesamtSollSumme = eigenSaldo + (bzkSaldo || 0);
 
   // Soll-Zeilen: eigene Buchungen, dann BZK-Übertrag
-  const sollZeilen = [...buchungen.map(b => ({ label: `${b.nr}. ${b.typ}`, betrag: b.betrag }))];
+  const sollZeilen = [...buchungen.map(b => ({ label: `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}`, betrag: b.betrag }))];
   if (bzkSaldo) {
     const bzkNr = BZK_UNTERKONTO_MAP[kontoNr]?.nr || '';
     sollZeilen.push({ label: ` ${bzkNr}`, betrag: bzkSaldo });
@@ -385,7 +393,7 @@ function renderTKontoUEFELoesung(buchungen, saldo) {
     html += `<tr style="border-top:2px solid #ccc;">
       <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ' 8020 GUV' : ''}</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ''}</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
     </tr>`;
   }
