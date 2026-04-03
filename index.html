@@ -315,33 +315,59 @@
                   pattern="[a-zA-Z0-9\.\:\-]*" title="Nur Buchstaben, Zahlen und . - :">
               </div>
 
-              <div>
-                <h4>Finanz- & Steuerdaten</h4>
-                <label for="newCompanyBank">Bank: *</label><br>
-                <input type="text" id="newCompanyBank" required placeholder="z.B. BavarianBank" maxlength="50"
-                  pattern="[a-zA-Z0-9äöüÄÖÜß\s\.\-]*" title="Buchstaben, Zahlen und gängige Sonderzeichen erlaubt"><br>
+<div>
+  <h4>Finanz- & Steuerdaten</h4>
 
-                <label for="newCompanyIBAN">IBAN: *</label><br>
-                <input type="text" id="newCompanyIBAN" required placeholder="z.B. DE89 3704 0044 0532 0130 00"
-                  maxlength="34" pattern="[A-Z]{2}[0-9\s]{2,32}" title="Format: DE + Zahlen (Leerzeichen erlaubt)"
-                  style="text-transform: uppercase"><br>
+  <label for="newCompanyBank">Bank: *</label><br>
+  <input type="text" id="newCompanyBank" required placeholder="z.B. BavarianBank" maxlength="50"
+         pattern="[a-zA-Z0-9äöüÄÖÜß\s\.\-]*"><br>
 
-                <label for="newCompanyBIC">BIC: *</label><br>
-                <input type="text" id="newCompanyBIC" required placeholder="z.B. COBADEFFXXX" maxlength="11"
-                  title="8 oder 11 Zeichen (Buchstaben und Zahlen)" style="text-transform: uppercase"><br>
+  <!-- IBAN -->
+  <label for="newCompanyIBAN">IBAN: *</label><br>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <input type="text" id="newCompanyIBAN" required placeholder="DE89370400440532013000" maxlength="34"
+           style="flex:1; text-transform:uppercase">
+    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;">
+      <input type="checkbox" id="randomIBAN" onchange="generateRandomField('iban')"> 
+      🎲
+    </label>
+  </div><br>
 
-                <label for="newCompanyUstID">USt-IdNr.: *</label><br>
-                <input type="text" id="newCompanyUstID" required placeholder="z.B. DE123456789" maxlength="25"
-                  title="Format: DE + Ziffern" style="text-transform: uppercase"><br>
+  <!-- BIC -->
+  <label for="newCompanyBIC">BIC: *</label><br>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <input type="text" id="newCompanyBIC" required placeholder="COBADEFFXXX" maxlength="11"
+           style="flex:1; text-transform:uppercase">
+    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;">
+      <input type="checkbox" id="randomBIC" onchange="generateRandomField('bic')"> 
+      🎲
+    </label>
+  </div><br>
 
-                <label for="newCompanySteuernummer">Steuernummer: *</label><br>
-                <input type="text" id="newCompanySteuernummer" required
-                  placeholder="z.B. 181/001/11111 oder 143/123/45678" maxlength="20"
-                  title="Nur Zahlen, Schrägstriche (/) und Bindestriche (-) erlaubt.&#10;Beispiel: 181/001/11111 oder 143-123-45678"><br>
+  <!-- USt-IdNr. -->
+  <label for="newCompanyUstID">USt-IdNr.: *</label><br>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <input type="text" id="newCompanyUstID" required placeholder="DE123456789" maxlength="25"
+           style="flex:1; text-transform:uppercase">
+    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;">
+      <input type="checkbox" id="randomUstID" onchange="generateRandomField('ustid')"> 
+      🎲
+    </label>
+  </div><br>
 
-                <label for="newCompanyAkzent">Akzentfarbe: *</label><br>
-                <input type="color" id="newCompanyAkzent" required value="#7db9f5">
-              </div>
+  <!-- Steuernummer -->
+  <label for="newCompanySteuernummer">Steuernummer: *</label><br>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <input type="text" id="newCompanySteuernummer" required placeholder="181/001/11111" maxlength="20">
+    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;">
+      <input type="checkbox" id="randomSteuernummer" onchange="generateRandomField('steuernummer')"> 
+      🎲
+    </label>
+  </div><br>
+
+  <label for="newCompanyAkzent">Akzentfarbe: *</label><br>
+  <input type="color" id="newCompanyAkzent" required value="#7db9f5">
+</div>
 <div style="margin-top: 10px;width: 400px">
   <h4>Werkstoffe</h4>
   <p style="color:#666; font-size:0.9rem; margin-bottom:12px;">

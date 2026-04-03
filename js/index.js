@@ -1251,3 +1251,43 @@ function autoSelectMyCompany() {
         }
     });
 }
+
+// Zufällige gültige Werte erzeugen
+function generateRandomField(type) {
+    switch (type) {
+        case 'iban':
+            const ibanCheck = document.getElementById('randomIBAN');
+            if (!ibanCheck.checked) return;
+            let ibanDigits = '';
+            for (let i = 0; i < 20; i++) ibanDigits += Math.floor(Math.random() * 10);
+            document.getElementById('newCompanyIBAN').value = 'DE' + ibanDigits;
+            break;
+
+        case 'bic':
+            const bicCheck = document.getElementById('randomBIC');
+            if (!bicCheck.checked) return;
+            const banks = ['COBA', 'DEUT', 'HYVE', 'INGD', 'BYLA', 'DRES', 'UNCR'];
+            const suffix = Math.random() > 0.5 ? 'FFXXX' : 'DBXXX';
+            document.getElementById('newCompanyBIC').value = 
+                banks[Math.floor(Math.random() * banks.length)] + 'DE' + suffix;
+            break;
+
+        case 'ustid':
+            const ustCheck = document.getElementById('randomUstID');
+            if (!ustCheck.checked) return;
+            let ustDigits = '';
+            for (let i = 0; i < 9; i++) ustDigits += Math.floor(Math.random() * 10);
+            document.getElementById('newCompanyUstID').value = 'DE' + ustDigits;
+            break;
+
+        case 'steuernummer':
+            const steuerCheck = document.getElementById('randomSteuernummer');
+            if (!steuerCheck.checked) return;
+            const fa = Math.floor(100 + Math.random() * 900);   // 100-999
+            const nr = Math.floor(1000 + Math.random() * 9000); // 1000-9999
+            const suffixx = Math.floor(10000 + Math.random() * 90000);
+            document.getElementById('newCompanySteuernummer').value = 
+                `${fa}/${nr}/${suffixx}`;
+            break;
+    }
+}
