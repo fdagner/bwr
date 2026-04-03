@@ -782,14 +782,14 @@ const TEMPLATES = {
     title: "Preisentwicklung von Edelmetallen – GOLD",
     subtitle: `Schlusskurse am Monatsende in USD pro Feinunze, ${PY}`,
     source: `Quelle: Fiktive Marktdaten / LBMA, ${CY}`,
-    unit: "USD/oz",
+    unit: "",
     xlabel: "Monat",
     chartType: "line",
     labelPos: "top",
     showLabels: "yes",
     thousandSep: "point",
     xaxis: "no",
-    data: [["Jan",2650],["Feb",2720],["Mär",2810],["Apr",2950],["Mai",3080],["Jun",3150],["Jul",3220],["Aug",3380],["Sep",3550],["Okt",3720],["Nov",3910],["Dez",4150]]
+    data: [["Jan",2650],["Feb",2720],["Mär",2810],["Apr",2950],["Mai",3080],["Jun",3150],["Jul",3220],["Aug",3380]]
   },
 
   gewinn_unternehmen: {
