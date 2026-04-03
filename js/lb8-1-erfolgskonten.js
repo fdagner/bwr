@@ -9,21 +9,52 @@ function generateRandomSaldo(min, max, round = 100) {
   return Math.round((Math.random() * (max - min) + min) / round) * round;
 }
 
-// ── Nachlässe-Unterkonten ─────────────────────────────────────────────────
+// ── Nachlässe-Unterkonten (Haben-Buchungen → mindern Aufwand) ──────────────
 
-const BEZUGSKOSTEN_MAP = {
+const NACHLASS_MAP = {
   '6000 AWR': { nr: '6002 NR', label: 'Nachlässe für Rohstoffe',      hauptkonto: '6000 AWR' },
   '6010 AWF': { nr: '6012 NF', label: 'Nachlässe für Fremdbauteile',  hauptkonto: '6010 AWF' },
   '6020 AWH': { nr: '6022 NH', label: 'Nachlässe für Hilfsstoffe',    hauptkonto: '6020 AWH' },
   '6030 AWB': { nr: '6032 NB', label: 'Nachlässe für Betriebsstoffe', hauptkonto: '6030 AWB' },
 };
 
-function erzeugeBzkBuchungen(hauptTyp) {
+// ── Bezugskosten-Unterkonten (Soll-Buchungen → erhöhen Aufwand) ────────────
+
+const BZK_UNTERKONTO_MAP = {
+  '6000 AWR': { nr: '6001 BZKR', label: 'Bezugskosten für Rohstoffe',      hauptkonto: '6000 AWR' },
+  '6010 AWF': { nr: '6011 BZKF', label: 'Bezugskosten für Fremdbauteile',  hauptkonto: '6010 AWF' },
+  '6020 AWH': { nr: '6021 BZKH', label: 'Bezugskosten für Hilfsstoffe',    hauptkonto: '6020 AWH' },
+  '6030 AWB': { nr: '6031 BZKB', label: 'Bezugskosten für Betriebsstoffe', hauptkonto: '6030 AWB' },
+};
+
+// ── Buchungen für Nachlässe (Haben-Buchungen im Unterkonto) ─────────────────
+
+function erzeugeNachlassBuchungen(hauptTyp) {
   const rahmen = {
-    AWR: [1000, 8000],
+    AWR: [1000, 2000],
     AWF: [100,   800],
     AWH: [20,    200],
     AWB: [30,    300],
+  };
+  const [min, max] = rahmen[hauptTyp];
+  const anzahl = 1 + Math.floor(Math.random() * 2);
+  const buchungen = [];
+  for (let i = 0; i < anzahl; i++) {
+    const betrag = generateRandomSaldo(min, max, hauptTyp === 'AWR' ? 100 : 10);
+    buchungen.push({ typ: 'VE', nr: i + 1, betrag });
+  }
+  const saldo = buchungen.reduce((s, b) => s + b.betrag, 0);
+  return { buchungen, saldo };
+}
+
+// ── Buchungen für BZK-Unterkonten (Soll-Buchungen im Unterkonto) ────────────
+
+function erzeugeBzkUnterkontoBuchungen(hauptTyp) {
+  const rahmen = {
+    AWR: [500, 1000],
+    AWF: [50,   200],
+    AWH: [10,   100],
+    AWB: [20,   100],
   };
   const [min, max] = rahmen[hauptTyp];
   const anzahl = 1 + Math.floor(Math.random() * 2);
@@ -79,7 +110,7 @@ function erzeugeUefeBuchungen() {
 
 // ── Gesamtdaten zusammenstellen ──────────────────────────────────────────────
 
-function erstelleZufaelligenBestandsabschluss(mitBezugskosten) {
+function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten) {
   const kontenTypen = {
     '6000 AWR': 'AWR',
     '6010 AWF': 'AWF',
@@ -88,42 +119,47 @@ function erstelleZufaelligenBestandsabschluss(mitBezugskosten) {
   };
 
   const konten = {};
-  const bezugskosten = {};
+  const nachlaesse = {};    // Haben-seitige Unterkonten (mindern Aufwand)
+  const bzkUnterkonten = {}; // Soll-seitige Unterkonten (erhöhen Aufwand)
 
   for (const [nr, typ] of Object.entries(kontenTypen)) {
     const kDaten = erzeugeKontoBuchungen(typ);
+    let nachlassSaldo = 0;
+    let bzkSaldo = 0;
 
-    if (mitBezugskosten) {
-      const bzkDaten = erzeugeBzkBuchungen(typ);
-      bezugskosten[nr] = bzkDaten;
-      konten[nr] = {
-        buchungen:  kDaten.buchungen,
-        eigenSaldo: kDaten.saldo,              // nur eigene Soll-Buchungen
-        saldo:      kDaten.saldo + bzkDaten.saldo, // gesamtSaldo inkl. BZK (für T-Konto-Summe)
-      };
-    } else {
-      konten[nr] = {
-        buchungen:  kDaten.buchungen,
-        eigenSaldo: kDaten.saldo,
-        saldo:      kDaten.saldo,
-      };
+    if (mitNachlaesse) {
+      const nDaten = erzeugeNachlassBuchungen(typ);
+      nachlaesse[nr] = nDaten;
+      nachlassSaldo = nDaten.saldo;
     }
+
+    if (mitBzkUnterkonten) {
+      const bDaten = erzeugeBzkUnterkontoBuchungen(typ);
+      bzkUnterkonten[nr] = bDaten;
+      bzkSaldo = bDaten.saldo;
+    }
+
+    // eigenSaldo = Summe der eigenen Buchungen im Hauptkonto
+    // guvSaldo   = eigenSaldo − nachlassSaldo + bzkSaldo
+    //   (Nachlässe stehen im Haben → mindern; BZK-Unterkonten werden auf Soll übertragen → erhöhen)
+    konten[nr] = {
+      buchungen:   kDaten.buchungen,
+      eigenSaldo:  kDaten.saldo,
+      nachlassSaldo,
+      bzkSaldo,
+      guvSaldo:    kDaten.saldo - nachlassSaldo + bzkSaldo,
+    };
   }
 
   const uefeDaten = erzeugeUefeBuchungen();
   const uefe      = uefeDaten.saldo;
 
-  // Gesamtaufwand für GuV = Summe der GUV-Saldos je Hauptkonto
-  // GUV-Saldo = eigenSaldo − bzkSaldo (BZK steht im Haben des Hauptkontos)
-  const gesamtAufwand = Object.entries(konten).reduce((s, [nr, k]) => {
-    const bzk = mitBezugskosten && bezugskosten[nr] ? bezugskosten[nr].saldo : 0;
-    return s + k.eigenSaldo - bzk;
-  }, 0);
+  const gesamtAufwand = Object.values(konten).reduce((s, k) => s + k.guvSaldo, 0);
   const erfolg        = uefe - gesamtAufwand;
   const erfolgArt     = erfolg >= 0 ? 'Gewinn' : 'Verlust';
   const erfolgHoehe   = Math.abs(erfolg);
 
-  return { konten, bezugskosten, uefeDaten, uefe, gesamtAufwand, erfolg, erfolgArt, erfolgHoehe };
+  return { konten, nachlaesse, bzkUnterkonten, uefeDaten, uefe, gesamtAufwand, erfolg, erfolgArt, erfolgHoehe };
 }
 
 // ── T-Konto Renderer ─────────────────────────────────────────────────────────
@@ -150,8 +186,8 @@ function renderTKontoAufgabe(kontoNr, buchungen) {
   return html;
 }
 
-// Bezugskostenkonto AUFGABE – Haben-Einträge (VE-Buchungen), Soll leer
-function renderTKontoBzkAufgabe(bzkNr, buchungen) {
+// Nachlasskonto AUFGABE – Haben-Einträge (Soll leer)
+function renderTKontoNachlassAufgabe(bzkNr, buchungen) {
   const alleZeilen = Math.max(buchungen.length, 3) + 2;
   let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
     <thead><tr>
@@ -166,6 +202,28 @@ function renderTKontoBzkAufgabe(bzkNr, buchungen) {
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">&nbsp;</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+    </tr>`;
+  }
+  html += `</tbody></table>`;
+  return html;
+}
+
+// BZK-Unterkonto AUFGABE – Soll-Einträge (Haben leer) – wie normales Aufwandskonto
+function renderTKontoBzkUnterkontoAufgabe(bzkNr, buchungen) {
+  const alleZeilen = Math.max(buchungen.length, 3) + 2;
+  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+    <thead><tr>
+      <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
+      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${bzkNr}</span></th>
+      <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
+    </tr></thead><tbody>`;
+  for (let i = 0; i < alleZeilen; i++) {
+    const b = buchungen[i];
+    html += `<tr style="border-top:2px solid #ccc;">
+      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
     </tr>`;
   }
   html += `</tbody></table>`;
@@ -194,11 +252,12 @@ function renderTKontoUEFEAufgabe(buchungen) {
   return html;
 }
 
-// Bezugskostenkonto LÖSUNG
-// Soll: Gegenbuchung → Hauptkonto (= bzkSaldo)
+// ── Lösungs-T-Konten ──────────────────────────────────────────────────────────
+
+// Nachlasskonto LÖSUNG
+// Soll: Gegenbuchung → Hauptkonto (= nachlassSaldo)
 // Haben: eigene VE-Buchungen
-// Summe Soll = Summe Haben = bzkSaldo ✓
-function renderTKontoBzkLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
+function renderTKontoNachlassLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
   const alleZeilen = Math.max(buchungen.length, 3);
   let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
     <thead><tr>
@@ -208,11 +267,9 @@ function renderTKontoBzkLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
     </tr></thead><tbody>`;
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
-    const sollLabel  = i === 0 ? ` ${hauptkontoNr}` : '';
-    const sollBetrag = i === 0 ? formatBetrag(saldo) : '';
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${sollLabel}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${sollBetrag}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ` ${hauptkontoNr}` : ''}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ''}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
     </tr>`;
@@ -227,26 +284,64 @@ function renderTKontoBzkLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
   return html;
 }
 
+// BZK-Unterkonto LÖSUNG
+// Soll: eigene VE-Buchungen
+// Haben: Gegenbuchung → Hauptkonto (= bzkSaldo) → Abschluss auf Haben-Seite
+function renderTKontoBzkUnterkontoLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
+  const alleZeilen = Math.max(buchungen.length, 3);
+  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+    <thead><tr>
+      <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
+      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${bzkNr}</span></th>
+      <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
+    </tr></thead><tbody>`;
+  for (let i = 0; i < alleZeilen; i++) {
+    const b = buchungen[i];
+    html += `<tr style="border-top:2px solid #ccc;">
+      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${i === 0 ? ` ${hauptkontoNr}` : '&nbsp;'}</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">${i === 0 ? formatBetrag(saldo) : '&nbsp;'}</td>
+    </tr>`;
+  }
+  html += `<tr style="border-top:2px solid #888;border-bottom:4px double #888;">
+    <td style="padding:3px 2px;"></td>
+    <td style="text-align:right;padding:3px 4px;border-right:2px solid #999;font-weight:700;">${formatBetrag(saldo)}</td>
+    <td style="padding:3px 2px 3px 6px;"></td>
+    <td style="text-align:right;padding:3px 2px;font-weight:700;">${formatBetrag(saldo)}</td>
+  </tr>`;
+  html += `</tbody></table>`;
+  return html;
+}
+
 // Aufwandskonto LÖSUNG
 //
-// BZK-Saldo erscheint im HABEN des Hauptkontos (Gegenbuchung zum Vorabschluss).
+// Soll-Seite: eigene Buchungen + ggf. BZK-Übertrag (Soll)
+// Haben-Seite: ggf. Nachlass-Übertrag (Haben) + GUV-Abschluss
 //
-// Soll-Seite:  eigene Buchungen                      → Summe = eigenSaldo
-// Haben-Seite: BZK-Übertrag (bzkSaldo)
-//              GUV-Abschluss (eigenSaldo − bzkSaldo)
-//              Summe Haben = bzkSaldo + (eigenSaldo − bzkSaldo) = eigenSaldo ✓
-//
-// GUV-Saldo = Soll-Summe − Haben-BZK = eigenSaldo − bzkSaldo
-function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, bzkSaldo) {
-  const guvSaldo   = eigenSaldo - (bzkSaldo || 0);
-  const alleZeilen = Math.max(buchungen.length + (bzkSaldo ? 1 : 0), 3);
+// guvSaldo = eigenSaldo - nachlassSaldo + bzkSaldo
+// Soll-Summe = eigenSaldo + bzkSaldo
+// Haben-Summe = nachlassSaldo + guvSaldo = nachlassSaldo + eigenSaldo - nachlassSaldo + bzkSaldo = eigenSaldo + bzkSaldo ✓
+function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkSaldo) {
+  const guvSaldo = eigenSaldo - (nachlassSaldo || 0) + (bzkSaldo || 0);
+  const gesamtSollSumme = eigenSaldo + (bzkSaldo || 0);
 
-  const habenZeilen = [];
+  // Soll-Zeilen: eigene Buchungen, dann BZK-Übertrag
+  const sollZeilen = [...buchungen.map(b => ({ label: `${b.nr}. ${b.typ}`, betrag: b.betrag }))];
   if (bzkSaldo) {
-    const bzkNr = BEZUGSKOSTEN_MAP[kontoNr]?.nr || '';
-    habenZeilen.push({ label: bzkNr,       betrag: bzkSaldo  });
+    const bzkNr = BZK_UNTERKONTO_MAP[kontoNr]?.nr || '';
+    sollZeilen.push({ label: ` ${bzkNr}`, betrag: bzkSaldo });
   }
-  habenZeilen.push(  { label: ' 8020 GUV', betrag: guvSaldo });
+
+  // Haben-Zeilen: Nachlass-Übertrag, dann GUV-Abschluss
+  const habenZeilen = [];
+  if (nachlassSaldo) {
+    const nachlassNr = NACHLASS_MAP[kontoNr]?.nr || '';
+    habenZeilen.push({ label: nachlassNr, betrag: nachlassSaldo });
+  }
+  habenZeilen.push({ label: ' 8020 GUV', betrag: guvSaldo });
+
+  const alleZeilen = Math.max(sollZeilen.length, habenZeilen.length);
 
   let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
     <thead><tr>
@@ -256,22 +351,21 @@ function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, bzkSaldo) {
     </tr></thead><tbody>`;
 
   for (let i = 0; i < alleZeilen; i++) {
-    const b = buchungen[i];
+    const s = sollZeilen[i];
     const h = habenZeilen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${s ? s.label : '&nbsp;'}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${s ? formatBetrag(s.betrag) : '&nbsp;'}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${h ? h.label : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${h ? formatBetrag(h.betrag) : '&nbsp;'}</td>
     </tr>`;
   }
 
-  // Summe Soll = Summe Haben = eigenSaldo ✓
   html += `<tr style="border-top:2px solid #888;border-bottom:4px double #888;">
     <td style="padding:3px 2px;"></td>
-    <td style="text-align:right;padding:3px 4px;border-right:2px solid #999;font-weight:700;">${formatBetrag(eigenSaldo)}</td>
+    <td style="text-align:right;padding:3px 4px;border-right:2px solid #999;font-weight:700;">${formatBetrag(gesamtSollSumme)}</td>
     <td style="padding:3px 2px 3px 6px;"></td>
-    <td style="text-align:right;padding:3px 2px;font-weight:700;">${formatBetrag(eigenSaldo)}</td>
+    <td style="text-align:right;padding:3px 2px;font-weight:700;">${formatBetrag(gesamtSollSumme)}</td>
   </tr>`;
   html += `</tbody></table>`;
   return html;
@@ -288,11 +382,9 @@ function renderTKontoUEFELoesung(buchungen, saldo) {
     </tr></thead><tbody>`;
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
-    const sollLabel  = i === 0 ? ' 8020 GUV' : '';
-    const sollBetrag = i === 0 ? formatBetrag(saldo) : '';
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${sollLabel}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${sollBetrag}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ' 8020 GUV' : ''}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ''}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
     </tr>`;
@@ -308,7 +400,6 @@ function renderTKontoUEFELoesung(buchungen, saldo) {
 }
 
 // GuV-T-Konto LÖSUNG
-// guvSaldos: { '6000 AWR': eigenSaldo, ... } – nur die eigenSaldos fließen ins GuV
 function renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt) {
   const gesamtAufwand = Object.values(guvSaldos).reduce((s, v) => s + v, 0);
   const isGewinn = erfolgArt === 'Gewinn';
@@ -362,49 +453,65 @@ function zeigeZufaelligenBestandsabschluss() {
   if (!container) return;
   container.innerHTML = '';
 
-  const mitBezugskosten = document.getElementById('toggleBezugskosten')?.checked || false;
+  const mitNachlaesse    = document.getElementById('toggleNachlaesse')?.checked || false;
+  const mitBzkUnterkonten = document.getElementById('toggleBzkUnterkonten')?.checked || false;
 
-  const { konten, bezugskosten, uefeDaten, uefe, gesamtAufwand, erfolg, erfolgArt, erfolgHoehe } =
-    erstelleZufaelligenBestandsabschluss(mitBezugskosten);
+  const { konten, nachlaesse, bzkUnterkonten, uefeDaten, uefe, gesamtAufwand, erfolg, erfolgArt, erfolgHoehe } =
+    erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten);
+
+  const hatUnterkonten = mitNachlaesse || mitBzkUnterkonten;
 
   // ── AUFGABE ────────────────────────────────────────────────────────────────
   let html = '<h2>Aufgabe</h2>';
 
-  if (mitBezugskosten) {
-    html += `<p>Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
-      <strong>Schließe alle Konten ab: Zuerst die Nachlasskonten über die jeweiligen Hauptkonten (Vorabschlussbuchung), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong></p>`;
+  let aufgabentext = '';
+  if (mitNachlaesse && mitBzkUnterkonten) {
+    aufgabentext = `Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
+      <strong>Schließe alle Konten ab: Zuerst die Bezugskosten- und Nachlasskonten über die jeweiligen Hauptkonten (Vorabschlussbuchungen), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong>`;
+  } else if (mitNachlaesse) {
+    aufgabentext = `Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
+      <strong>Schließe alle Konten ab: Zuerst die Nachlasskonten über die jeweiligen Hauptkonten (Vorabschlussbuchung), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong>`;
+  } else if (mitBzkUnterkonten) {
+    aufgabentext = `Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
+      <strong>Schließe alle Konten ab: Zuerst die Bezugskostenunterkonten über die jeweiligen Hauptkonten (Vorabschlussbuchung), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong>`;
   } else {
-    html += `<p>Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
-      <strong>Schließe alle Konten ab und ermittle Art und Höhe des Unternehmenserfolgs.</strong></p>`;
+    aufgabentext = `Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
+      <strong>Schließe alle Konten ab und ermittle Art und Höhe des Unternehmenserfolgs.</strong>`;
+  }
+  html += `<p>${aufgabentext}</p>`;
+
+  html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin:1.5em 0 2em;">`;
+
+  if (hatUnterkonten) {
+    // BZK-Unterkonten (Soll-seitig) zuerst
+    if (mitBzkUnterkonten) {
+      Object.entries(konten).forEach(([nr]) => {
+        const bzkU = BZK_UNTERKONTO_MAP[nr];
+        const bzkDaten = bzkUnterkonten[nr];
+        if (bzkU && bzkDaten) {
+          html += `<div>${renderTKontoBzkUnterkontoAufgabe(bzkU.nr, bzkDaten.buchungen)}</div>`;
+        }
+      });
+    }
+    // Nachlässe (Haben-seitig) danach
+    if (mitNachlaesse) {
+      Object.entries(konten).forEach(([nr]) => {
+        const nl = NACHLASS_MAP[nr];
+        const nlDaten = nachlaesse[nr];
+        if (nl && nlDaten) {
+          html += `<div>${renderTKontoNachlassAufgabe(nl.nr, nlDaten.buchungen)}</div>`;
+        }
+      });
+    }
   }
 
-  if (mitBezugskosten) {
-    html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin:1.5em 0 2em;">`;
+  // Hauptkonten
+  Object.entries(konten).forEach(([nr, data]) => {
+    html += `<div>${renderTKontoAufgabe(nr, data.buchungen)}</div>`;
+  });
 
-    // Erst alle BZK-Unterkonten
-    Object.entries(konten).forEach(([nr]) => {
-      const bzk     = BEZUGSKOSTEN_MAP[nr];
-      const bzkDaten = bezugskosten[nr];
-      if (bzk && bzkDaten) {
-        html += `<div>${renderTKontoBzkAufgabe(bzk.nr, bzkDaten.buchungen)}</div>`;
-      }
-    });
-
-    // Dann alle Hauptkonten
-    Object.entries(konten).forEach(([nr, data]) => {
-      html += `<div>${renderTKontoAufgabe(nr, data.buchungen)}</div>`;
-    });
-
-    html += `<div>${renderTKontoUEFEAufgabe(uefeDaten.buchungen)}</div>`;
-    html += `</div>`;
-  } else {
-    html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin:1.5em 0 2em;">`;
-    Object.entries(konten).forEach(([nr, data]) => {
-      html += `<div>${renderTKontoAufgabe(nr, data.buchungen)}</div>`;
-    });
-    html += `<div>${renderTKontoUEFEAufgabe(uefeDaten.buchungen)}</div>`;
-    html += `</div>`;
-  }
+  html += `<div>${renderTKontoUEFEAufgabe(uefeDaten.buchungen)}</div>`;
+  html += `</div>`;
 
   // ── LÖSUNG ─────────────────────────────────────────────────────────────────
   html += `<h2 style="margin-top:2.5em">Lösung</h2>`;
@@ -413,33 +520,53 @@ function zeigeZufaelligenBestandsabschluss() {
   html += `<strong>Buchungssätze:</strong>
   <table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:700px;"><tbody>`;
 
-  if (mitBezugskosten) {
-    html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">Schritt 1: Vorabschluss – Bezugskostenkonten über Hauptkonten abschließen</td></tr>`;
+  // Schritt 1: BZK-Unterkonten über Hauptkonten (erhöhen Aufwand: AWR an BZKR)
+  if (mitBzkUnterkonten) {
+    html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">Schritt 1a: Vorabschluss – Bezugskostenunterkonten über Hauptkonten abschließen</td></tr>`;
     Object.entries(konten).forEach(([nr]) => {
-      const bzk     = BEZUGSKOSTEN_MAP[nr];
-      const bzkDaten = bezugskosten[nr];
-      if (bzk && bzkDaten) {
+      const bzkU = BZK_UNTERKONTO_MAP[nr];
+      const bzkDaten = bzkUnterkonten[nr];
+      if (bzkU && bzkDaten) {
         html += `<tr>
-          <td style="padding:2px 10px 2px 0;white-space:nowrap;">${bzk.nr}</td>
+          <td style="padding:2px 10px 2px 0;white-space:nowrap;">${nr}</td>
           <td style="padding:2px 10px;text-align:center;">an</td>
-          <td style="padding:2px 10px;white-space:nowrap;">${nr}</td>
+          <td style="padding:2px 10px;white-space:nowrap;">${bzkU.nr}</td>
           <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(bzkDaten.saldo)} €</td>
         </tr>`;
       }
     });
     html += `<tr><td colspan="4" style="padding:6px 0;"></td></tr>`;
-    html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">Schritt 2: Aufwandskonten über GuV abschließen</td></tr>`;
   }
 
-  // Buchungssatz GUV an Hauptkonto: Betrag = eigenSaldo − bzkSaldo
+  // Schritt 1b: Nachlasskonten über Hauptkonten (mindern Aufwand: NR an AWR)
+  if (mitNachlaesse) {
+    const schrittLabel = mitBzkUnterkonten ? 'Schritt 1b' : 'Schritt 1';
+    html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">${schrittLabel}: Vorabschluss – Nachlasskonten über Hauptkonten abschließen</td></tr>`;
+    Object.entries(konten).forEach(([nr]) => {
+      const nl = NACHLASS_MAP[nr];
+      const nlDaten = nachlaesse[nr];
+      if (nl && nlDaten) {
+        html += `<tr>
+          <td style="padding:2px 10px 2px 0;white-space:nowrap;">${nl.nr}</td>
+          <td style="padding:2px 10px;text-align:center;">an</td>
+          <td style="padding:2px 10px;white-space:nowrap;">${nr}</td>
+          <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(nlDaten.saldo)} €</td>
+        </tr>`;
+      }
+    });
+    html += `<tr><td colspan="4" style="padding:6px 0;"></td></tr>`;
+  }
+
+  const schrittGUV = hatUnterkonten ? 'Schritt 2' : 'Schritt 1';
+  html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">${schrittGUV}: Aufwandskonten über GuV abschließen</td></tr>`;
+
+  // GUV-Buchungssatz je Hauptkonto mit korrektem guvSaldo
   Object.entries(konten).forEach(([nr, data]) => {
-    const bzkS = mitBezugskosten && bezugskosten[nr] ? bezugskosten[nr].saldo : 0;
-    const guvS = data.eigenSaldo - bzkS;
     html += `<tr>
       <td style="padding:2px 10px 2px 0;white-space:nowrap;">8020 GUV</td>
       <td style="padding:2px 10px;text-align:center;">an</td>
       <td style="padding:2px 10px;white-space:nowrap;">${nr}</td>
-      <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(guvS)} €</td>
+      <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(data.guvSaldo)} €</td>
     </tr>`;
   });
 
@@ -474,35 +601,37 @@ function zeigeZufaelligenBestandsabschluss() {
   html += `<br>`;
   html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin-bottom:2em;">`;
 
-  if (mitBezugskosten) {
-    // Erst alle BZK-Konten
+  if (mitBzkUnterkonten) {
     Object.entries(konten).forEach(([nr]) => {
-      const bzk     = BEZUGSKOSTEN_MAP[nr];
-      const bzkDaten = bezugskosten[nr];
-      if (bzk && bzkDaten) {
-        html += `<div>${renderTKontoBzkLoesung(bzk.nr, nr, bzkDaten.buchungen, bzkDaten.saldo)}</div>`;
+      const bzkU = BZK_UNTERKONTO_MAP[nr];
+      const bzkDaten = bzkUnterkonten[nr];
+      if (bzkU && bzkDaten) {
+        html += `<div>${renderTKontoBzkUnterkontoLoesung(bzkU.nr, nr, bzkDaten.buchungen, bzkDaten.saldo)}</div>`;
       }
     });
+  }
 
-    // Dann alle Hauptkonten: eigenSaldo + bzkSaldo übergeben
-    Object.entries(konten).forEach(([nr, data]) => {
-      const bzkDaten = bezugskosten[nr];
-      html += `<div>${renderTKontoLoesung(nr, data.buchungen, data.eigenSaldo, bzkDaten ? bzkDaten.saldo : 0)}</div>`;
-    });
-  } else {
-    Object.entries(konten).forEach(([nr, data]) => {
-      html += `<div>${renderTKontoLoesung(nr, data.buchungen, data.eigenSaldo, 0)}</div>`;
+  if (mitNachlaesse) {
+    Object.entries(konten).forEach(([nr]) => {
+      const nl = NACHLASS_MAP[nr];
+      const nlDaten = nachlaesse[nr];
+      if (nl && nlDaten) {
+        html += `<div>${renderTKontoNachlassLoesung(nl.nr, nr, nlDaten.buchungen, nlDaten.saldo)}</div>`;
+      }
     });
   }
+
+  Object.entries(konten).forEach(([nr, data]) => {
+    html += `<div>${renderTKontoLoesung(nr, data.buchungen, data.eigenSaldo, data.nachlassSaldo, data.bzkSaldo)}</div>`;
+  });
 
   html += `<div>${renderTKontoUEFELoesung(uefeDaten.buchungen, uefeDaten.saldo)}</div>`;
   html += `</div>`;
 
-  // GuV-Konto: GUV-Saldo = eigenSaldo − bzkSaldo je Hauptkonto
+  // GuV-Konto
   const guvSaldos = {};
   Object.entries(konten).forEach(([nr, data]) => {
-    const bzkS = mitBezugskosten && bezugskosten[nr] ? bezugskosten[nr].saldo : 0;
-    guvSaldos[nr] = data.eigenSaldo - bzkS;
+    guvSaldos[nr] = data.guvSaldo;
   });
 
   html += `<br>`;
@@ -534,7 +663,7 @@ Pädagogischer Ansatz:
 
 ---
 
-THEMA: ABSCHLUSS DER AUFWANDSKONTEN ÜBER DAS GUV-KONTO (ggf. mit Bezugskostenkonten)
+THEMA: ABSCHLUSS DER AUFWANDSKONTEN ÜBER DAS GUV-KONTO (ggf. mit Bezugskosten- und/oder Nachlassunterkonten)
 
 Aufwandskonten:
 - 6000 AWR – Aufwendungen für Rohstoffe
@@ -542,11 +671,25 @@ Aufwandskonten:
 - 6020 AWH – Aufwendungen für Hilfsstoffe
 - 6030 AWB – Aufwendungen für Betriebsstoffe
 
-Bezugskostenkonten (Unterkonten, optional):
-- 6002 NR– Nachlässe Rohstoffe → wird über 6000 AWR abgeschlossen
-- 6012 NF– Nachlässe Fremdbauteile → wird über 6010 AWF abgeschlossen
-- 6022 NH– Nachlässe Hilfsstoffe → wird über 6020 AWH abgeschlossen
-- 6032 NB– Nachlässe Betriebsstoffe → wird über 6030 AWB abgeschlossen
+Bezugskosten-Unterkonten (Soll-Buchungen → ERHÖHEN den Aufwand):
+- 6001 BZKR – Bezugskosten Rohstoffe → wird über 6000 AWR abgeschlossen
+- 6011 BZKF – Bezugskosten Fremdbauteile → wird über 6010 AWF abgeschlossen
+- 6021 BZKH – Bezugskosten Hilfsstoffe → wird über 6020 AWH abgeschlossen
+- 6031 BZKB – Bezugskosten Betriebsstoffe → wird über 6030 AWB abgeschlossen
+- Buchungsweg: Buchungen stehen im SOLL des BZK-Unterkontos
+  Vorabschluss: Hauptkonto (z. B. 6000 AWR) an BZK-Unterkonto (6001 BZKR)
+  → Saldo erscheint im HABEN des BZK-Unterkontos, im SOLL des Hauptkontos
+  → Erhöht den Saldo (und damit den GuV-Betrag) des Hauptkontos
+
+Nachlass-Unterkonten (Haben-Buchungen → MINDERN den Aufwand):
+- 6002 NR – Nachlässe Rohstoffe → wird über 6000 AWR abgeschlossen
+- 6012 NF – Nachlässe Fremdbauteile → wird über 6010 AWF abgeschlossen
+- 6022 NH – Nachlässe Hilfsstoffe → wird über 6020 AWH abgeschlossen
+- 6032 NB – Nachlässe Betriebsstoffe → wird über 6030 AWB abgeschlossen
+- Buchungsweg: Buchungen stehen im HABEN des Nachlasskontos
+  Vorabschluss: Nachlasskonto (z. B. 6002 NR) an Hauptkonto (6000 AWR)
+  → Saldo erscheint im SOLL des Nachlasskontos, im HABEN des Hauptkontos
+  → Mindert den Saldo (und damit den GuV-Betrag) des Hauptkontos
 
 Ertragskonto:
 - 5000 UEFE – Umsatzerlöse aus Fertigerzeugnissen
@@ -566,32 +709,38 @@ METHODIK BEI RÜCKFRAGEN:
 - Wohin wird der Saldo übertragen – ins Soll oder ins Haben des GuV?
 - Wie ermittle ich den Unternehmenserfolg aus dem GuV-Konto?
 - Wohin geht der Erfolg (Gewinn/Verlust) beim Abschluss des GuV?
-- Warum werden Bezugskostenkonten zuerst (Vorabschlussbuchung) über das Hauptkonto abgeschlossen?
+- Warum werden BZK-Unterkonten zuerst (Vorabschlussbuchung) über das Hauptkonto abgeschlossen?
+- Was ist der Unterschied zwischen Bezugskosten-Unterkonten (Soll-seitig) und Nachlass-Unterkonten (Haben-seitig)?
 
 ---
 
 BUCHUNGSSÄTZE – SCHRITT FÜR SCHRITT
 
-Schritt 0 (nur wenn Nachlässe vorhanden) – Vorabschluss Bezugskostenkonten:
-  6002 NR an 6000 AWR | Saldo
+Schritt 1a (nur wenn BZK-Unterkonten vorhanden) – Vorabschluss Bezugskosten:
+  6000 AWR an 6001 BZKR | Saldo  (Saldo erscheint im Soll des Hauptkontos)
+  6010 AWF an 6011 BZKF | Saldo
+  6020 AWH an 6021 BZKH | Saldo
+  6030 AWB an 6031 BZKB | Saldo
+
+Schritt 1b (nur wenn Nachlasskonten vorhanden) – Vorabschluss Nachlässe:
+  6002 NR an 6000 AWR | Saldo  (Saldo erscheint im Haben des Hauptkontos)
   6012 NF an 6010 AWF | Saldo
   6022 NH an 6020 AWH | Saldo
   6032 NB an 6030 AWB | Saldo
-  → Der Saldo des BZK-Kontos erscheint im Hauptkonto auf der Haben-Seite.
 
-Schritt 1 – Saldo der Aufwandskonten ermitteln:
-  Saldo = Summe aller Soll-Buchungen (inkl. übertragener BZK-Salden)
+Schritt 2 – GuV-Saldo je Hauptkonto ermitteln:
+  GuV-Saldo = eigenSaldo + bzkSaldo − nachlassSaldo
 
-Schritt 2 – Aufwandskonten abschließen (je ein Buchungssatz pro Konto):
-  8020 GUV an 6000 AWR | eigenSaldo (nur eigene Buchungen, ohne BZK)
-  8020 GUV an 6010 AWF | eigenSaldo
-  8020 GUV an 6020 AWH | eigenSaldo
-  8020 GUV an 6030 AWB | eigenSaldo
+Schritt 3 – Aufwandskonten abschließen:
+  8020 GUV an 6000 AWR | GuV-Saldo
+  8020 GUV an 6010 AWF | GuV-Saldo
+  8020 GUV an 6020 AWH | GuV-Saldo
+  8020 GUV an 6030 AWB | GuV-Saldo
 
-Schritt 3 – Ertragskonto abschließen:
+Schritt 4 – Ertragskonto abschließen:
   5000 UEFE an 8020 GUV | Betrag
 
-Schritt 4 – GuV abschließen:
+Schritt 5 – GuV abschließen:
   Gewinn → 8020 GUV an 3000 EK | Gewinnbetrag
   Verlust → 3000 EK an 8020 GUV | Verlustbetrag
 
@@ -603,8 +752,9 @@ HÄUFIGE SCHÜLERFEHLER:
 - Summe und Saldo verwechselt
 - EK bei Gewinn auf falscher Seite eingetragen
 - Summen im T-Konto stimmen nicht überein
-- Nachlässe direkt über GuV abgeschlossen (statt Vorabschluss über Hauptkonto)
-- BZK-Saldo nicht zum Hauptkonto-Saldo addiert
+- BZK-Unterkonten falsch abgeschlossen (Buchungsrichtung verwechselt)
+- Nachlässe wie BZK-Unterkonten behandelt (Soll/Haben vertauscht)
+- GuV-Saldo nicht korrekt um BZK und Nachlässe bereinigt
 
 ---
 

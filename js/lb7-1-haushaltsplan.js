@@ -462,51 +462,62 @@ function labelFuerKey(key) {
 
 // ============================================================================
 // RENDER-FUNKTION
+// Struktur: ALLE AUFGABEN zuerst, danach ALLE LÖSUNGEN
+// Cloze-Syntax ausschließlich in der Lösung
 // ============================================================================
 function renderHaushaltsplanBlock(hp, nr, gesamt) {
-  const titel = gesamt > 1 ? `Aufgabe ${nr}` : 'Aufgabe';
   const clozeAktiv = document.getElementById('optClozeHP')?.checked ?? false;
+  const tdE   = `border:1px solid #ccc; padding:7px 12px;`;
+  const tdSep = `border:1px solid #ccc; padding:7px 12px; border-left:3px solid #999;`;
+
+  // Hilfsdaten für Zusatzaufgaben
+  const aw            = hp.ausgabenwunsch;
+  const wunschBetragText = aw.einmalig ? `einmalig ${formatEuro(aw.betrag)}` : `${formatEuro(aw.betrag)} pro Monat`;
+  const regelAusgaben   = hp.ausgaben.filter(a => a.art === 'regelmaessig').map(a => a.label);
+  const unregelAusgaben = hp.ausgaben.filter(a => a.art === 'unregelmaessig').map(a => a.label);
+
+  // Nummerierung der Teilaufgaben
+  const praefix   = gesamt > 1 ? `${nr}` : '';
+  const aufgaTitel = gesamt > 1 ? `Aufgabe ${nr}a` : 'Aufgabe a';
+  const aufgbTitel = gesamt > 1 ? `Aufgabe ${nr}b` : 'Aufgabe b';
+  const aufgcTitel = gesamt > 1 ? `Aufgabe ${nr}c` : 'Aufgabe c';
+  const loesungTitel = gesamt > 1 ? `Lösung ${nr}` : 'Lösung';
+
   let html = '';
 
-  html += `<h2 style="margin-top:${nr > 1 ? '2.5em' : '0'};">${titel}</h2>`;
-  html += `<p style="font-style:italic; color:#555; font-size:0.95rem;">
+  // ══════════════════════════════════════════════════════════════════════════
+  // AUFGABENTEIL
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── Fallbeispiel-Kasten ──────────────────────────────────────────────────
+  html += `<h2 style="margin-top:${nr > 1 ? '2.5em' : '0'};">${aufgaTitel} – Haushaltsplan erstellen</h2>`;
+  html += `<p style="font-style:italic; color:#555; font-size:0.95rem; max-width:680px;">
     Lies das folgende Fallbeispiel sorgfältig durch.
-    Übertrage anschließend alle <strong>Einnahmen</strong> und <strong>Ausgaben</strong> in den Haushaltsplan.
-    Berechne die <strong>Summen</strong> sowie den <strong>monatlichen Überschuss bzw. das Defizit</strong>.
   </p>`;
 
-  // Fallbeispiel-Kasten
-  html += `<div style="border:1px solid #ccc; border-left:5px solid #1a237e; border-radius:6px; padding:20px 24px; margin:16px 0; background:#fafafa; max-width:680px;">`;
+  html += `<div style="border:1px solid #ccc; border-left:5px solid #1a237e; border-radius:6px; padding:20px 24px; margin:12px 0 16px; background:#fafafa; max-width:680px;">`;
   html += `<h3 style="margin-bottom:4px; color:#1a237e;">${hp.name}</h3>`;
   html += `<p style="color:#546e7a; font-size:0.85rem; margin-bottom:14px; font-style:italic;">Familientyp: ${hp.profil}</p>`;
-
   html += `<p style="margin-bottom:12px;">${hp.intro}</p>`;
-
   html += `<p style="margin-bottom:10px;"><strong>Einnahmen:</strong> `;
   html += hp.einnahmen.map(e => e.satz).join(' ');
   html += `</p>`;
-
   const allAusgabenSaetze = shuffle(hp.ausgaben.map(a => a.satz).filter(Boolean));
   html += `<p style="margin-bottom:10px;"><strong>Ausgaben:</strong> `;
   html += allAusgabenSaetze.join(' ');
   html += `</p>`;
-
   html += `<p style="margin-top:14px; font-style:italic; color:#546e7a;">${hp.abschluss}</p>`;
   html += `</div>`;
 
-  // ── Cloze-Hinweis ──
-  if (clozeAktiv) {
-    html += `<p style="font-size:0.82rem; color:#1a5276; background:#eaf4fb; border:1px dashed #5dade2; border-radius:4px; padding:6px 12px; max-width:680px; margin-bottom:8px;">
-      🔵 <strong>Moodle-Cloze aktiv:</strong> Die markierten Felder enthalten SHORTANSWER-Lücken – akzeptiert werden Beträge mit und ohne €-Zeichen.
-    </p>`;
-  }
+  // Aufgabenstellung a
+  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2; margin-bottom:0;">
+    <li>Ermittle alle Einnahmen und Ausgaben aus dem Fallbeispiel und trage sie in den Haushaltsplan ein.</li>
+    <li>Berechne die Summe der Einnahmen und die Summe der Ausgaben.</li>
+    <li>Ermittle den monatlichen Überschuss bzw. das monatliche Defizit.</li>
+  </ol>`;
 
-  // ── AUFGABEN-TABELLE: Einnahmen ──
-  const tabTitel = gesamt > 1 ? `Haushaltsplan ${nr} – zum Ausfüllen` : 'Haushaltsplan – zum Ausfüllen';
-  html += `<h3>${tabTitel}</h3>`;
-
-  const tdE = `border:1px solid #ccc; padding:7px 12px;`;
-  const tdSep = `border:1px solid #ccc; padding:7px 12px; border-left:3px solid #999;`;
+  // ── Aufgabentabelle Einnahmen (leere Zeilen zum Ausfüllen) ───────────────
+  html += `<h3 style="margin-top:1.2em;">Haushaltsplan – zum Ausfüllen</h3>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
@@ -514,57 +525,104 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:30%;">Betrag (€)</th>
     <th style="border-left:3px solid #999; width:0%;"></th>
   </tr></thead><tbody>`;
-
-  hp.einnahmen.forEach(e => {
+  hp.einnahmen.forEach(() => {
     html += `<tr>
       <td style="${tdE} height:32px;">&nbsp;</td>
-      <td style="${tdE} text-align:right;">${zelleHP(e.betrag, clozeAktiv)}</td>
+      <td style="${tdE} text-align:right;">&nbsp;</td>
       <td style="${tdSep}">&nbsp;</td>
     </tr>`;
   });
-
-  // Summe Einnahmen
   html += `<tr style="background:#e8eaf6; font-weight:bold;">
     <td style="${tdE}">Summe Einnahmen</td>
-    <td style="${tdE} text-align:right;">${zelleHP(hp.gesamtEinnahmen, clozeAktiv)}</td>
+    <td style="${tdE} text-align:right;">&nbsp;</td>
     <td style="${tdSep}">&nbsp;</td>
-  </tr>`;
-  html += `</tbody></table>`;
+  </tr></tbody></table>`;
 
-  // ── AUFGABEN-TABELLE: Ausgaben ──
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
   html += `<thead><tr style="background:#fce4ec;">
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:55%;">Ausgaben</th>
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:30%;">Betrag (€)</th>
     <th style="border-left:3px solid #999; width:0%;"></th>
   </tr></thead><tbody>`;
-
-  hp.ausgaben.forEach(a => {
+  hp.ausgaben.forEach(() => {
     html += `<tr>
-      <td style="${tdE}">&nbsp;</td>
-      <td style="${tdE} text-align:right;">${zelleHP(a.betrag, clozeAktiv)}</td>
+      <td style="${tdE} height:32px;">&nbsp;</td>
+      <td style="${tdE} text-align:right;">&nbsp;</td>
       <td style="${tdSep}">&nbsp;</td>
     </tr>`;
   });
-
   html += `<tr style="background:#fce4ec; font-weight:bold;">
     <td style="${tdE}">Summe Ausgaben</td>
-    <td style="${tdE} text-align:right;">${zelleHP(hp.gesamtAusgaben, clozeAktiv)}</td>
+    <td style="${tdE} text-align:right;">&nbsp;</td>
     <td style="${tdSep}">&nbsp;</td>
-  </tr>`;
-  html += `</tbody></table>`;
+  </tr></tbody></table>`;
 
-  // ── Saldo-Zeile ──
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
   html += `<tbody><tr style="background:#f3e5f5; font-weight:bold;">
     <td style="${tdE} width:55%;">Monatlicher Überschuss / Defizit<br><span style="font-weight:400; font-size:0.82rem;">(Summe Einnahmen − Summe Ausgaben)</span></td>
-    <td style="${tdE} text-align:right; width:30%;">${zelleHP(hp.saldo, clozeAktiv)}</td>
+    <td style="${tdE} text-align:right; width:30%;">&nbsp;</td>
     <td style="${tdSep} width:0%;">&nbsp;</td>
   </tr></tbody></table>`;
 
-  // ── LÖSUNGSTABELLE (immer mit Klarwerten) ──
-  const loesungTitel = gesamt > 1 ? `Lösung ${nr}` : 'Lösung';
-  html += `<h2 style="margin-top:2em;">${loesungTitel}</h2>`;
+  // ── Aufgabe b: Ausgabenwunsch ────────────────────────────────────────────
+  html += `<h2 style="margin-top:2em;">${aufgbTitel} – Ausgabenwunsch bewerten</h2>`;
+
+  const awBg     = aw.bewertung === 'kritisch' ? '#fff8e1' : '#f1f8e9';
+  const awBorder = aw.bewertung === 'kritisch' ? '#f9a825' : '#558b2f';
+  html += `<div style="border:1px solid ${awBorder}; border-left:5px solid ${awBorder}; border-radius:6px; padding:16px 20px; margin:12px 0; background:${awBg}; max-width:680px;">`;
+  html += `<p style="margin:0; font-size:0.95rem;"><strong>${aw.person}</strong> von ${hp.name} wünscht sich <strong>${aw.wunsch}</strong>.<br>
+    <span style="font-size:0.88rem; color:#555;">Kosten: <strong>${wunschBetragText}</strong>${aw.einmalig ? ' (einmalige Ausgabe)' : ' (laufende monatliche Ausgabe)'}</span></p>`;
+  html += `</div>`;
+
+  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
+    <li>Beurteile den Ausgabenwunsch: Ordne ihn als <strong>vertretbar</strong> oder <strong>kritisch</strong> ein und begründe deine Einschätzung.</li>
+    <li>Ermittle die Auswirkung dieser Ausgabe auf den Saldo des Haushaltsplans von ${hp.name}.${aw.einmalig ? ' (Hinweis: einmalige Ausgabe)' : ' (Hinweis: monatlich wiederkehrende Ausgabe)'}</li>
+    <li>Definiere den Begriff <strong>Überschuldung</strong>.</li>
+    <li>Nenne zwei Maßnahmen, mit denen ${hp.name} einer Überschuldung entgegenwirken kann.</li>
+  </ol>`;
+
+  // ── Aufgabe c: Regelm. / Unregelm. Ausgaben ─────────────────────────────
+  html += `<h2 style="margin-top:2em;">${aufgcTitel} – Regelmäßige und unregelmäßige Ausgaben</h2>`;
+  html += `<p style="font-style:italic; color:#555; font-size:0.95rem; max-width:680px;">
+    Beziehe dich auf den Haushaltsplan von ${hp.name}.
+  </p>`;
+
+  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
+    <li>Erkläre den Unterschied zwischen <strong>regelmäßigen</strong> und <strong>unregelmäßigen</strong> Ausgaben.</li>
+    <li>Ordne alle Ausgaben aus dem Haushaltsplan von ${hp.name} in die untenstehende Tabelle ein.</li>
+    <li>Nenne je zwei weitere Beispiele für regelmäßige und unregelmäßige Ausgaben, die nicht im Haushaltsplan enthalten sind.</li>
+    <li>Begründe, weshalb es sinnvoll ist, auch für unregelmäßige Ausgaben monatlich einen Betrag zurückzulegen.</li>
+  </ol>`;
+
+  // Ausfülltabelle (leer – Schüler füllen aus)
+  const maxZeilenC = Math.max(regelAusgaben.length, unregelAusgaben.length) + 2;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
+  html += `<thead><tr style="background:#e8eaf6;">
+    <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:50%;">Regelmäßige Ausgaben</th>
+    <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:50%;">Unregelmäßige Ausgaben</th>
+  </tr></thead><tbody>`;
+  for (let i = 0; i < maxZeilenC; i++) {
+    html += `<tr>
+      <td style="${tdE} height:30px;">&nbsp;</td>
+      <td style="${tdE} height:30px;">&nbsp;</td>
+    </tr>`;
+  }
+  html += `</tbody></table>`;
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // LÖSUNGSTEIL  (Cloze nur hier)
+  // ══════════════════════════════════════════════════════════════════════════
+  html += `<h2 style="margin-top:2.5em;">${loesungTitel}</h2>`;
+
+  // ── Cloze-Hinweis (nur wenn aktiv) ──
+  if (clozeAktiv) {
+    html += `<p style="font-size:0.82rem; color:#1a5276; background:#eaf4fb; border:1px dashed #5dade2; border-radius:4px; padding:6px 12px; max-width:680px; margin-bottom:12px;">
+      🔵 <strong>Moodle-Cloze aktiv:</strong> Die markierten Felder enthalten SHORTANSWER-Lücken – akzeptiert werden Beträge mit und ohne €-Zeichen.
+    </p>`;
+  }
+
+  // ── Lösung a: Haushaltsplan mit Werten ───────────────────────────────────
+  html += `<h3 style="margin-top:0;">${loesungTitel}a – Haushaltsplan</h3>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
@@ -574,12 +632,12 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   hp.einnahmen.forEach(e => {
     html += `<tr>
       <td style="border:1px solid #ccc; padding:6px 12px;">${e.label}</td>
-      <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${formatEuro(e.betrag)}</td>
+      <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${clozeAktiv ? zelleHP(e.betrag, true) : formatEuro(e.betrag)}</td>
     </tr>`;
   });
   html += `<tr style="background:#e8eaf6; font-weight:bold;">
     <td style="border:1px solid #ccc; padding:6px 12px;">Summe Einnahmen</td>
-    <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${formatEuro(hp.gesamtEinnahmen)}</td>
+    <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${clozeAktiv ? zelleHP(hp.gesamtEinnahmen, true) : formatEuro(hp.gesamtEinnahmen)}</td>
   </tr></tbody></table>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
@@ -590,120 +648,68 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   hp.ausgaben.forEach(a => {
     html += `<tr>
       <td style="border:1px solid #ccc; padding:6px 12px;">${a.label}</td>
-      <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${formatEuro(a.betrag)}</td>
+      <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${clozeAktiv ? zelleHP(a.betrag, true) : formatEuro(a.betrag)}</td>
     </tr>`;
   });
   html += `<tr style="background:#fce4ec; font-weight:bold;">
     <td style="border:1px solid #ccc; padding:6px 12px;">Summe Ausgaben</td>
-    <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${formatEuro(hp.gesamtAusgaben)}</td>
+    <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${clozeAktiv ? zelleHP(hp.gesamtAusgaben, true) : formatEuro(hp.gesamtAusgaben)}</td>
   </tr></tbody></table>`;
 
   const saldoFarbe = hp.saldo >= 0 ? '#2e7d32' : '#c62828';
-  const saldoBg   = hp.saldo >= 0 ? '#e8f5e9' : '#ffebee';
+  const saldoBg    = hp.saldo >= 0 ? '#e8f5e9' : '#ffebee';
   const saldoLabel = hp.saldo >= 0 ? 'Überschuss' : 'Defizit';
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
   html += `<tbody><tr style="background:${saldoBg}; font-weight:bold; color:${saldoFarbe};">
     <td style="border:1px solid #ccc; padding:8px 12px; width:60%;">Monatlicher ${saldoLabel}</td>
-    <td style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:40%;">${formatEuro(hp.saldo)}</td>
+    <td style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:40%;">${clozeAktiv ? zelleHP(hp.saldo, true) : formatEuro(hp.saldo)}</td>
   </tr></tbody></table>`;
 
-  // ── ZUSATZAUFGABE A: Ausgabenwunsch bewerten ──────────────────────────────
-  const aw = hp.ausgabenwunsch;
-  const aufgANr = gesamt > 1 ? `Aufgabe ${nr}b` : 'Aufgabe b';
-  const saldoText = hp.saldo >= 0
-    ? `einem monatlichen Überschuss von <strong>${formatEuro(hp.saldo)}</strong>`
-    : `einem monatlichen Defizit von <strong>${formatEuro(Math.abs(hp.saldo))}</strong>`;
-  const wunschBetragText = aw.einmalig
-    ? `einmalig ${formatEuro(aw.betrag)}`
-    : `${formatEuro(aw.betrag)} pro Monat`;
+  // ── Lösung b: Ausgabenwunsch ─────────────────────────────────────────────
+  html += `<h3 style="margin-top:1.6em;">${loesungTitel}b – Ausgabenwunsch</h3>`;
 
-  html += `<h2 style="margin-top:2.5em;">${aufgANr} – Ausgabenwunsch kritisch bewerten</h2>`;
-  html += `<p style="font-style:italic; color:#555; font-size:0.95rem;">
-    ${hp.name} hat ${saldoText}. 
-    Lies den folgenden Ausgabenwunsch und beantworte die Fragen.
-  </p>`;
-
-  // Szenario-Kasten
-  const awBg = aw.bewertung === 'kritisch' ? '#fff8e1' : '#f1f8e9';
-  const awBorder = aw.bewertung === 'kritisch' ? '#f9a825' : '#558b2f';
-  html += `<div style="border:1px solid ${awBorder}; border-left:5px solid ${awBorder}; border-radius:6px; padding:16px 20px; margin:12px 0; background:${awBg}; max-width:680px;">`;
-  html += `<p style="margin:0; font-size:0.95rem;"><strong>${aw.person}</strong> von ${hp.name} wünscht sich <strong>${aw.wunsch}</strong> (Kosten: <strong>${wunschBetragText}</strong>).</p>`;
-  html += `</div>`;
-
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:1.9;">
-    <li>Ist dieser Ausgabenwunsch aus deiner Sicht <strong>vertretbar oder kritisch</strong>? Begründe deine Meinung.</li>
-    <li>Welche Auswirkung hätte diese Ausgabe auf den Haushaltsplan von ${hp.name}?
-      ${aw.einmalig ? '(Hinweis: Es handelt sich um eine <em>einmalige</em> Ausgabe.)' : '(Hinweis: Diese Ausgabe würde <em>monatlich</em> anfallen.)'}
-    </li>
-    <li>Was versteht man unter <strong>Überschuldung</strong>? Erkläre den Begriff in eigenen Worten.</li>
-    <li>Nenne zwei Maßnahmen, die ${hp.name} ergreifen könnte, um eine Überschuldung zu vermeiden.</li>
-  </ol>`;
-
-  // Lösung A
-  const bewIcon = aw.bewertung === 'kritisch' ? '⚠️' : '✅';
+  const bewIcon  = aw.bewertung === 'kritisch' ? '⚠️' : '✅';
   const bewFarbe = aw.bewertung === 'kritisch' ? '#c62828' : '#2e7d32';
-  const bewBg    = aw.bewertung === 'kritisch' ? '#ffebee' : '#e8f5e9';
-  html += `<div style="background:${bewBg}; border:1px solid ${bewFarbe}; border-radius:4px; padding:10px 16px; max-width:680px; font-size:0.88rem; line-height:1.8; margin-top:10px;">`;
-  html += `<strong>Musterlösung ${aufgANr}:</strong><br>`;
-  html += `${bewIcon} <strong>Bewertung: ${aw.bewertung === 'kritisch' ? 'Kritisch' : 'Vertretbar'}</strong><br>`;
+  const bewBg2   = aw.bewertung === 'kritisch' ? '#ffebee' : '#e8f5e9';
+  html += `<div style="background:${bewBg2}; border:1px solid ${bewFarbe}; border-radius:4px; padding:10px 16px; max-width:680px; font-size:0.88rem; line-height:1.9;">`;
+  html += `<strong>1. Beurteilung:</strong> ${bewIcon} <strong>${aw.bewertung === 'kritisch' ? 'Kritisch' : 'Vertretbar'}</strong><br>`;
   html += `${aw.begruendung}<br><br>`;
+
   if (!aw.einmalig) {
     const neuerSaldo = hp.saldo - aw.betrag;
-    const neuerSaldoText = neuerSaldo >= 0 ? `Überschuss von ${formatEuro(neuerSaldo)}` : `Defizit von ${formatEuro(Math.abs(neuerSaldo))}`;
-    html += `<strong>Auswirkung auf den Haushaltsplan:</strong> Die monatlichen Ausgaben steigen um ${formatEuro(aw.betrag)}. Der neue Saldo wäre: ${neuerSaldoText}.<br>`;
+    const neuerText  = neuerSaldo >= 0 ? `Überschuss von ${formatEuro(neuerSaldo)}` : `Defizit von ${formatEuro(Math.abs(neuerSaldo))}`;
+    html += `<strong>2. Auswirkung auf den Saldo:</strong> Summe Ausgaben steigt um ${formatEuro(aw.betrag)} → neuer Saldo: <strong>${neuerText}</strong><br><br>`;
   } else {
-    html += `<strong>Auswirkung auf den Haushaltsplan:</strong> Die einmalige Ausgabe von ${formatEuro(aw.betrag)} kann aus dem Überschuss oder aus Ersparnissen gedeckt werden – sofern diese vorhanden sind.<br>`;
+    html += `<strong>2. Auswirkung auf den Saldo:</strong> Die einmalige Ausgabe von ${formatEuro(aw.betrag)} verringert den Überschuss bzw. die Rücklagen einmalig um diesen Betrag.<br><br>`;
   }
-  html += `<strong>Überschuldung</strong> liegt vor, wenn jemand seine fälligen Schulden dauerhaft nicht mehr bezahlen kann, auch wenn er sein Vermögen verkauft.<br>`;
-  html += `<strong>Maßnahmen gegen Überschuldung:</strong> z. B. Haushaltsbuch führen, Ausgaben reduzieren, keine Ratenkäufe eingehen, Schuldnerberatung aufsuchen.`;
+  html += `<strong>3. Überschuldung:</strong> Überschuldung liegt vor, wenn eine Person oder ein Haushalt die fälligen Schulden dauerhaft nicht mehr begleichen kann – auch nicht durch den Verkauf von Vermögen.<br><br>`;
+  html += `<strong>4. Maßnahmen:</strong> z. B. Haushaltsbuch führen und Ausgaben reduzieren · Ratenkäufe und Konsumkredite vermeiden · Rücklagen für unvorhergesehene Ausgaben bilden · Schuldnerberatung aufsuchen.`;
   html += `</div>`;
 
-  // ── ZUSATZAUFGABE B: Regelm. vs. unregelm. Ausgaben ──────────────────────
-  const aufgBNr = gesamt > 1 ? `Aufgabe ${nr}c` : 'Aufgabe c';
+  // ── Lösung c: Regelm. / Unregelm. – ausgefüllte Tabelle ─────────────────
+  html += `<h3 style="margin-top:1.6em;">${loesungTitel}c – Regelmäßige und unregelmäßige Ausgaben</h3>`;
+  html += `<div style="background:#f8f7f4; border:1px solid #ddd; border-radius:4px; padding:10px 16px; max-width:680px; font-size:0.88rem; line-height:1.9; margin-bottom:10px;">`;
+  html += `<strong>1. Definition:</strong> <em>Regelmäßige Ausgaben</em> fallen jeden Monat in gleicher oder ähnlicher Höhe an (z. B. Miete, Versicherungen). <em>Unregelmäßige Ausgaben</em> entstehen nur gelegentlich oder schwankend (z. B. Kleidung, Reparaturen).<br><br>`;
+  html += `<strong>3. Weitere Beispiele:</strong><br>`;
+  html += `Regelmäßig: <em>${regelmaessigBeispiele.filter(b => !regelAusgaben.includes(b)).slice(0, 2).join(', ')}</em><br>`;
+  html += `Unregelmäßig: <em>${unregelmaessigBeispiele.filter(b => !unregelAusgaben.includes(b)).slice(0, 2).join(', ')}</em><br><br>`;
+  html += `<strong>4. Begründung:</strong> Unregelmäßige Ausgaben sind zeitlich und in ihrer Höhe unvorhersehbar. Wer monatlich einen festen Betrag zurücklegt, kann diese Ausgaben begleichen, ohne Schulden machen zu müssen.`;
+  html += `</div>`;
 
-  // Ausgaben aus dem Fallbeispiel nach Art sortieren
-  const regelAusgaben   = hp.ausgaben.filter(a => a.art === 'regelmaessig').map(a => a.label);
-  const unregelAusgaben = hp.ausgaben.filter(a => a.art === 'unregelmaessig').map(a => a.label);
-
-  html += `<h2 style="margin-top:2.5em;">${aufgBNr} – Regelmäßige und unregelmäßige Ausgaben</h2>`;
-  html += `<p style="font-style:italic; color:#555; font-size:0.95rem;">
-    Schau dir den Haushaltsplan von ${hp.name} nochmals an.
-  </p>`;
-
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:1.9;">
-    <li>Erkläre den Unterschied zwischen <strong>regelmäßigen</strong> und <strong>unregelmäßigen</strong> Ausgaben.</li>
-    <li>Ordne alle Ausgaben aus dem Haushaltsplan von ${hp.name} in die folgende Tabelle ein.</li>
-    <li>Nenne je zwei weitere Beispiele für regelmäßige und unregelmäßige Ausgaben, die <em>nicht</em> im Haushaltsplan stehen.</li>
-    <li>Warum ist es wichtig, auch für unregelmäßige Ausgaben zu sparen?</li>
-  </ol>`;
-
-  // Ausfülltabelle
-  const maxB = Math.max(regelAusgaben.length, unregelAusgaben.length) + 2;
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
+  // Ausgefüllte Tabelle (Lösung 2)
+  const maxZeilenLsg = Math.max(regelAusgaben.length, unregelAusgaben.length);
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:50%;">Regelmäßige Ausgaben</th>
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:50%;">Unregelmäßige Ausgaben</th>
   </tr></thead><tbody>`;
-  for (let i = 0; i < maxB; i++) {
+  for (let i = 0; i < maxZeilenLsg; i++) {
     html += `<tr>
-      <td style="border:1px solid #ccc; padding:7px 12px; height:30px;">&nbsp;</td>
-      <td style="border:1px solid #ccc; padding:7px 12px; height:30px;">&nbsp;</td>
+      <td style="${tdE} height:30px;">${regelAusgaben[i] ? regelAusgaben[i] : '&nbsp;'}</td>
+      <td style="${tdE} height:30px;">${unregelAusgaben[i] ? unregelAusgaben[i] : '&nbsp;'}</td>
     </tr>`;
   }
   html += `</tbody></table>`;
-
-  // Lösung B
-  html += `<div style="background:#f8f7f4; border:1px solid #ddd; border-radius:4px; padding:10px 16px; max-width:680px; font-size:0.88rem; line-height:1.8; margin-top:10px;">`;
-  html += `<strong>Musterlösung ${aufgBNr}:</strong><br>`;
-  html += `<strong>Regelmäßige Ausgaben</strong> fallen jeden Monat in gleicher oder ähnlicher Höhe an (z. B. Miete, Versicherungen). <strong>Unregelmäßige Ausgaben</strong> entstehen nur gelegentlich oder in unterschiedlicher Höhe (z. B. Kleidung, Reparaturen).<br><br>`;
-  html += `<strong>Aus dem Haushaltsplan von ${hp.name}:</strong><br>`;
-  html += `Regelmäßig: <em>${regelAusgaben.join(', ') || '–'}</em><br>`;
-  html += `Unregelmäßig: <em>${unregelAusgaben.join(', ') || '–'}</em><br><br>`;
-  html += `<strong>Weitere Beispiele:</strong><br>`;
-  html += `Regelmäßig: ${regelmaessigBeispiele.filter(b => !regelAusgaben.includes(b)).slice(0, 2).join(', ')}<br>`;
-  html += `Unregelmäßig: ${unregelmaessigBeispiele.filter(b => !unregelAusgaben.includes(b)).slice(0, 2).join(', ')}<br><br>`;
-  html += `<strong>Warum für Unregelmäßiges sparen?</strong> Unregelmäßige Ausgaben sind oft schwer planbar. Wer nicht vorsorgt, muss im Notfall Schulden machen oder auf wichtige Anschaffungen verzichten.`;
-  html += `</div>`;
 
   return html;
 }

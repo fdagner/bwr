@@ -51,21 +51,32 @@
     <div class="box">
       <p>Hier können Sie eine Aufgabe zum Abschluss der Erfolgskonten und das GUV-Konto generieren.</p>
 
-      <!-- Bezugskosten-Option -->
-      <div style="margin:10px 0 14px;display:flex;align-items:center;gap:10px;">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.97em;user-select:none;">
-          <input
-            type="checkbox"
-            id="toggleBezugskosten"
-            style="width:17px;height:17px;cursor:pointer;accent-color:#1a6eb5;"
-            onchange="zeigeZufaelligenBestandsabschluss()"
-          >
-          <span>
-            Nachlasskonten berücksichtigen (Einkauf)
-            <span style="color:#555;font-size:0.9em;"></span>
-          </span>
-        </label>
-      </div>
+   <div class="flex-row">
+  <label>
+    <input
+      type="checkbox"
+      id="toggleBzkUnterkonten"
+      style="width:17px;height:17px;cursor:pointer;accent-color:#1a6eb5;"
+      onchange="zeigeZufaelligenBestandsabschluss()"
+    >
+    <span>
+      Bezugskosten-Unterkonten berücksichtigen
+      <span style="color:#555;font-size:0.9em;">(6001 BZKR, 6011 BZKF, 6021 BZKH, 6031 BZKB – erhöhen Aufwand)</span>
+    </span>
+  </label>
+  <label>
+    <input
+      type="checkbox"
+      id="toggleNachlaesse"
+      style="width:17px;height:17px;cursor:pointer;accent-color:#1a6eb5;"
+      onchange="zeigeZufaelligenBestandsabschluss()"
+    >
+    <span>
+      Nachlasskonten berücksichtigen
+      <span style="color:#555;font-size:0.9em;">(6002 NR, 6012 NF, 6022 NH, 6032 NB – mindern Aufwand)</span>
+    </span>
+  </label>
+</div>
 
       <button onclick="zeigeZufaelligenBestandsabschluss()">Neue Aufgabe erstellen</button>
     </div>
