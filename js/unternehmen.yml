@@ -2817,7 +2817,7 @@
 - unternehmen:
     id: "501"
     branche: "Familie"
-    name: "Herr"
+    name: "Ingo Maier"
     motto: ""
     bank: "Sparbank Nürnberg"
     rechtsform: ""
@@ -2835,13 +2835,13 @@
     steuernummer: "123/133/74531"
     iban: "DE89678400111238765234"
     bic: "GENODZO1NUE"
-    inhaber: "Ingo Maier"
+    inhaber: ""
     akzent: "#f5f5f5"
 
 - unternehmen:
     id: "502"
     branche: "Familie"
-    name: "Frau"
+    name: "Ayla Özdemir"
     motto: ""
     bank: "Sparbank Fürth"
     rechtsform: ""
@@ -2859,13 +2859,13 @@
     steuernummer: "123/133/22531"
     iban: "DE89678222311238765234"
     bic: "GENODZO5FUE"
-    inhaber: "Ayla Özdemir"
+    inhaber: ""
     akzent: "#f5f5f5"
 
 - unternehmen:
     id: "503"
     branche: "Familie"
-    name: "Frau"
+    name: "Anna Huber"
     motto: ""
     bank: "Privatbank Erlangen"
     rechtsform: ""
@@ -2883,5 +2883,5 @@
     steuernummer: "123/134/73451"
     iban: "DE89678345611238765234"
     bic: "GENODZO2ERL"
-    inhaber: "Anna Huber"
+    inhaber: ""
     akzent: "#f5f5f5"
