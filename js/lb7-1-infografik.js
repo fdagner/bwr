@@ -775,7 +775,7 @@ const TEMPLATES = {
     showLabels: "yes",
     thousandSep: "point",
     xaxis: "no",
-    data: [["Jahr 0",120000],["Jahr 1",105000],["Jahr 2",90000],["Jahr 3",75000],["Jahr 4",60000],["Jahr 5",45000],["Jahr 6",30000],["Jahr 7",15000],["Jahr 8",0]]
+    data: [["Jahr 1",105000],["Jahr 2",90000],["Jahr 3",75000],["Jahr 4",60000],["Jahr 5",45000],["Jahr 6",30000],["Jahr 7",15000],["Jahr 8",1]]
   },
 
   preisentwicklung_gold: {
@@ -867,8 +867,8 @@ const TEMPLATE_GROUPS = {
   beschaeftigte_unternehmen: "Unternehmen",
 
   // Controlling & Produktion
-  abschreibung_maschine:  "Controlling & Produktion",
-  werkstoffverbrauch:     "Controlling & Produktion",
+  abschreibung_maschine:  "Unternehmen",
+  werkstoffverbrauch:     "Unternehmen",
 
   // Finanzmärkte
   preisentwicklung_gold:  "Finanzmärkte",
