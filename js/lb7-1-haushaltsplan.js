@@ -20,12 +20,21 @@ const familienProfile = [
   {
     id: 'familie_allein',
     label: 'Alleinerziehend',
-    namen: ['Familie Huber', 'Familie Klein', 'Familie Richter', 'Familie Wolf', 'Familie Braun'],
+    personen: [
+      { name: 'Sandra Huber',   geschlecht: 'w', familienname: 'Huber'    },
+      { name: 'Thomas Klein',   geschlecht: 'm', familienname: 'Klein'    },
+      { name: 'Nicole Richter', geschlecht: 'w', familienname: 'Richter'  },
+      { name: 'Andreas Wolf',   geschlecht: 'm', familienname: 'Wolf'     },
+      { name: 'Sabine Braun',   geschlecht: 'w', familienname: 'Braun'    },
+      { name: 'Stefan Gruber',  geschlecht: 'm', familienname: 'Gruber'   },
+    ],
     intro: [
-      '{name} ist eine alleinerziehende Mutter mit einem Kind im Teenageralter. Sie arbeitet halbtags und erhält zusätzliche staatliche Unterstützung.',
+      '{name} ist alleinerziehende Mutter eines Kindes im Teenageralter. Sie arbeitet halbtags und erhält zusätzliche staatliche Unterstützung.',
       '{name} lebt als alleinerziehender Vater mit seinem Kind in einer kleinen Mietwohnung. Neben dem Gehalt aus seiner Teilzeitstelle erhält er regelmäßige Unterhaltszahlungen.',
       '{name} zieht ihr Kind allein groß und ist auf ihre Arbeit sowie staatliche Unterstützung angewiesen, um den Alltag zu finanzieren.',
+      '{name} ist alleinerziehender Vater und kümmert sich neben seiner Berufstätigkeit allein um sein Kind.',
     ],
+    introGeschlecht: { w: [0, 2], m: [1, 3] },
   },
   {
     id: 'familie_rente',
@@ -64,7 +73,7 @@ const einnahmenBausteine = {
     'Als weiteres Einkommen bringt {person2} monatlich {betrag} Euro netto ein.',
   ],
   kindergeld: [
-    'Für {anzahlKinder} {kinderWort} erhalten sie monatlich {betrag} Euro Kindergeld (je 259 Euro pro Kind).',
+    'Für {anzahlKinder} {kinderWort} beträgt das Kindergeld {betrag} Euro (je 259 Euro pro Kind).',
     'Das Familieneinkommen wird durch {betrag} Euro Kindergeld pro Monat ergänzt ({anzahlKinder} {kinderWort} × 259 Euro).',
     'Zusätzlich fließen {betrag} Euro Kindergeld monatlich in die Haushaltskasse – für {anzahlKinder} {kinderWort}.',
   ],
@@ -78,7 +87,7 @@ const einnahmenBausteine = {
   ],
   unterhalt: [
     'Außerdem fließen monatlich {betrag} Euro Unterhalt in den Haushalt.',
-    'An Unterhaltszahlungen erhält die Familie monatlich {betrag} Euro.',
+    'An Unterhaltszahlungen erhält der Haushalt monatlich {betrag} Euro.',
   ],
   sozialhilfe: [
     'Vom Staat erhält die Familie monatlich {betrag} Euro als finanzielle Unterstützung.',
@@ -106,7 +115,7 @@ const ausgabenBausteine = {
   ],
   lebensmittel: [
     'Der Lebensmitteleinkauf kostet die Familie im Monat etwa {betrag} Euro.',
-    'Für Lebensmittel und Grundbedarf gibt die Familie monatlich {betrag} Euro aus.',
+    'Für Lebensmittel und Grundbedarf gibt der Haushalt monatlich {betrag} Euro aus.',
     'Rund {betrag} Euro fließen jeden Monat in den Lebensmitteleinkauf.',
   ],
   versicherungen: [
@@ -148,7 +157,7 @@ const ausgabenBausteine = {
     'Für schulische Ausgaben (Bücher, Fahrten, Nachhilfe) fallen monatlich {betrag} Euro an.',
   ],
   haushalt: [
-    'Haushaltsartikel und Reinigungsmittel kosten die Familie monatlich {betrag} Euro.',
+    'Haushaltsartikel und Reinigungsmittel kosten monatlich {betrag} Euro.',
     'Für Haushaltsmittel und kleinere Anschaffungen gibt die Familie {betrag} Euro im Monat aus.',
   ],
   abonnements: [
@@ -260,33 +269,33 @@ const ausgabenArt = {
 // ============================================================================
 const ausgabenwuenschePool = {
   familie_jung: [
-    { person: 'Vater', wunsch: 'ein neues Smartphone der neuesten Generation', betrag: 1200, einmalig: true,  bewertung: 'kritisch',   begruendung: 'Der Kaufpreis entspricht einem erheblichen Teil des Monatseinkommens. Da das bestehende Gerät noch funktioniert, sollte der Kauf aufgeschoben oder durch ein günstigeres Modell ersetzt werden.' },
-    { person: 'Mutter', wunsch: 'einen Wochenend-Kurzurlaub für die Familie', betrag: 400, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Bei einem positiven Saldo ist ein geplanter Kurzurlaub vertretbar, sofern er aus dem Überschuss bezahlt wird und kein Kredit aufgenommen werden muss.' },
-    { person: 'Kind', wunsch: 'eine Spielekonsole', betrag: 500, einmalig: true,  bewertung: 'kritisch',   begruendung: 'Eine Spielekonsole ist ein Luxusartikel. Bei einem knappen Budget sollte dieser Wunsch zurückgestellt oder aus einem angesparten Betrag finanziert werden.' },
-    { person: 'Vater', wunsch: 'ein neues Fahrrad auf Raten (50 € / Monat)', betrag: 50, einmalig: false, bewertung: 'vertretbar', begruendung: 'Wenn der Saldo positiv ist und die Ratenzahlung dauerhaft tragbar bleibt, ist dieser Wunsch vertretbar – jedoch sollte man Ratenkäufe grundsätzlich kritisch prüfen.' },
-    { person: 'Mutter', wunsch: 'ein Abonnement für einen Online-Fitness-Kurs', betrag: 40, einmalig: false, bewertung: 'vertretbar', begruendung: 'Ein monatlicher Beitrag von 40 € für Gesundheit und Wohlbefinden ist vertretbar, wenn er im Haushaltsplan eingeplant wird.' },
-    { person: 'Kind', wunsch: 'täglich Süßigkeiten und Fast Food', betrag: 80, einmalig: false, bewertung: 'kritisch',   begruendung: 'Regelmäßige Ausgaben für Fast Food und Süßigkeiten belasten das Budget dauerhaft und sind zudem gesundheitlich bedenklich.' },
+    { person: 'Der Vater', wunsch: 'ein neues Smartphone der neuesten Generation', betrag: 1200, einmalig: true,  bewertung: 'kritisch',   begruendung: 'Der Kaufpreis entspricht einem erheblichen Teil des Monatseinkommens. Da das bestehende Gerät noch funktioniert, sollte der Kauf aufgeschoben oder durch ein günstigeres Modell ersetzt werden.' },
+    { person: 'Die Mutter', wunsch: 'einen Wochenend-Kurzurlaub für die Familie', betrag: 400, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Bei einem positiven Saldo ist ein geplanter Kurzurlaub vertretbar, sofern er aus dem Überschuss bezahlt wird und kein Kredit aufgenommen werden muss.' },
+    { person: 'Das Kind', wunsch: 'eine Spielekonsole', betrag: 500, einmalig: true,  bewertung: 'kritisch',   begruendung: 'Eine Spielekonsole ist ein Luxusartikel. Bei einem knappen Budget sollte dieser Wunsch zurückgestellt oder aus einem angesparten Betrag finanziert werden.' },
+    { person: 'Der Vater', wunsch: 'ein neues Fahrrad auf Raten (50 € / Monat)', betrag: 50, einmalig: false, bewertung: 'vertretbar', begruendung: 'Wenn der Saldo positiv ist und die Ratenzahlung dauerhaft tragbar bleibt, ist dieser Wunsch vertretbar – jedoch sollte man Ratenkäufe grundsätzlich kritisch prüfen.' },
+    { person: 'Die Mutter', wunsch: 'ein Abonnement für einen Online-Fitness-Kurs', betrag: 40, einmalig: false, bewertung: 'vertretbar', begruendung: 'Ein monatlicher Beitrag von 40 € für Gesundheit und Wohlbefinden ist vertretbar, wenn er im Haushaltsplan eingeplant wird.' },
+    { person: 'Das Kind', wunsch: 'täglich Süßigkeiten und Fast Food', betrag: 80, einmalig: false, bewertung: 'kritisch',   begruendung: 'Regelmäßige Ausgaben für Fast Food und Süßigkeiten belasten das Budget dauerhaft und sind zudem gesundheitlich bedenklich.' },
   ],
   familie_allein: [
-    { person: 'Mutter / Vater', wunsch: 'ein neues Sofa auf Raten (60 € / Monat)', betrag: 60, einmalig: false, bewertung: 'kritisch',   begruendung: 'Bei einem ohnehin knappen Budget erhöhen Ratenzahlungen die monatliche Belastung dauerhaft. Die Gefahr der Überschuldung steigt, wenn weitere unvorhergesehene Ausgaben dazukommen.' },
-    { person: 'Kind', wunsch: 'ein Schulausflug ins Kletterpark (einmalig)', betrag: 25, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Ein einmaliger Betrag von 25 € für einen Schulausflug ist sozial wichtig und bei entsprechendem Überschuss vertretbar.' },
-    { person: 'Mutter / Vater', wunsch: 'ein Konsumkredit über 3.000 € für Möbel', betrag: 150, einmalig: false, bewertung: 'kritisch',   begruendung: 'Ein Konsumkredit führt zu dauerhaften Zinsbelastungen. Gerade bei Alleinerziehenden mit geringem Puffer ist dies ein erhebliches Überschuldungsrisiko.' },
-    { person: 'Mutter / Vater', wunsch: 'ein Kursangebot zur Weiterbildung', betrag: 80, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Investitionen in Weiterbildung können langfristig das Einkommen erhöhen und sind daher sinnvoll – sofern der Betrag einmalig und planbar ist.' },
-    { person: 'Kind', wunsch: 'ein Markenturnschuh-Paar (einmalig)', betrag: 180, einmalig: true,  bewertung: 'kritisch',   begruendung: 'Markenschuhe sind ein Luxuswunsch. Bei knappem Budget sollte auf günstigere Alternativen zurückgegriffen werden.' },
+    { person: '{elternteil}', wunsch: 'ein neues Sofa auf Raten (60 € / Monat)', betrag: 60, einmalig: false, bewertung: 'kritisch',   begruendung: 'Bei einem ohnehin knappen Budget erhöhen Ratenzahlungen die monatliche Belastung dauerhaft. Die Gefahr der Überschuldung steigt, wenn weitere unvorhergesehene Ausgaben dazukommen.' },
+    { person: 'Das Kind',    wunsch: 'ein Schulausflug ins Kletterpark (einmalig)', betrag: 25, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Ein einmaliger Betrag von 25 € für einen Schulausflug ist sozial wichtig und bei entsprechendem Gewinn vertretbar.' },
+    { person: '{elternteil}', wunsch: 'ein Konsumkredit über 3.000 € für Möbel', betrag: 150, einmalig: false, bewertung: 'kritisch',   begruendung: 'Ein Konsumkredit führt zu dauerhaften Zinsbelastungen. Gerade bei Alleinerziehenden mit geringem Puffer ist dies ein erhebliches Überschuldungsrisiko.' },
+    { person: '{elternteil}', wunsch: 'ein Kursangebot zur Weiterbildung', betrag: 80, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Investitionen in Weiterbildung können langfristig das Einkommen erhöhen und sind daher sinnvoll – sofern der Betrag einmalig und planbar ist.' },
+    { person: 'Das Kind',       wunsch: 'ein Markenturnschuh-Paar (einmalig)', betrag: 180, einmalig: true,  bewertung: 'kritisch',   begruendung: 'Markenschuhe sind ein Luxuswunsch. Bei knappem Budget sollte auf günstigere Alternativen zurückgegriffen werden.' },
   ],
   familie_rente: [
-    { person: 'Rentner/in', wunsch: 'eine Kreuzfahrt auf Kredit', betrag: 200, einmalig: false, bewertung: 'kritisch',   begruendung: 'Im Rentenalter sind die Einnahmen fest und steigen nicht mehr. Kreditfinanzierte Urlaubsreisen gefährden die finanzielle Sicherheit und können zu Überschuldung führen.' },
-    { person: 'Rentner/in', wunsch: 'ein neues Lesegerät (E-Reader)', betrag: 120, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Ein einmaliger Kauf von 120 € ist bei einem positiven Saldo vertretbar, da er aus Ersparnissen oder dem Überschuss gedeckt werden kann.' },
-    { person: 'Rentner/in', wunsch: 'monatlicher Beitrag für einen Seniorensportverein', betrag: 30, einmalig: false, bewertung: 'vertretbar', begruendung: 'Ein Vereinsbeitrag von 30 € monatlich fördert Gesundheit und soziale Teilhabe – das ist bei ausreichend Überschuss klar vertretbar.' },
-    { person: 'Rentner/in', wunsch: 'ein neuer Fernseher auf 0 %-Finanzierung (36 Monate)', betrag: 55, einmalig: false, bewertung: 'kritisch',   begruendung: 'Auch „0 %"-Finanzierungen binden monatlich Geld und verleiten zu weiteren Käufen auf Pump. Im Alter ist ein schuldenfreier Haushalt besonders wichtig.' },
+    { person: 'Das Paar', wunsch: 'eine Kreuzfahrt auf Kredit', betrag: 200, einmalig: false, bewertung: 'kritisch',   begruendung: 'Im Rentenalter sind die Einnahmen fest und steigen nicht mehr. Kreditfinanzierte Urlaubsreisen gefährden die finanzielle Sicherheit und können zu Überschuldung führen.' },
+    { person: 'Das Paar', wunsch: 'ein neues Lesegerät (E-Reader)', betrag: 120, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Ein einmaliger Kauf von 120 € ist bei einem positiven Saldo vertretbar, da er aus Ersparnissen oder dem Überschuss gedeckt werden kann.' },
+    { person: 'Das Paar', wunsch: 'monatlichen Beitrag für einen Seniorensportverein', betrag: 30, einmalig: false, bewertung: 'vertretbar', begruendung: 'Ein Vereinsbeitrag von 30 € monatlich fördert Gesundheit und soziale Teilhabe – das ist bei ausreichend Überschuss klar vertretbar.' },
+    { person: 'Das Paar', wunsch: 'ein neuen Fernseher auf 0 %-Finanzierung (36 Monate)', betrag: 55, einmalig: false, bewertung: 'kritisch',   begruendung: 'Auch „0 %"-Finanzierungen binden monatlich Geld und verleiten zu weiteren Käufen auf Pump. Im Alter ist ein schuldenfreier Haushalt besonders wichtig.' },
   ],
   familie_gross: [
-    { person: 'Vater', wunsch: 'ein neues Auto auf Kredit (250 € / Monat)', betrag: 250, einmalig: false, bewertung: 'kritisch',   begruendung: 'Eine monatliche Kreditrate von 250 € ist eine erhebliche Dauerbelastung. Bei drei Kindern und laufenden Ausgaben steigt das Risiko der Überschuldung deutlich.' },
-    { person: 'Kind', wunsch: 'Mitgliedschaft im Fußballverein', betrag: 20, einmalig: false, bewertung: 'vertretbar', begruendung: 'Ein Vereinsbeitrag von 20 € monatlich fördert Sport und soziale Entwicklung und ist bei ausreichendem Überschuss klar vertretbar.' },
-    { person: 'Mutter', wunsch: 'ein neuer Kühlschrank (einmalig, Ersatz für defektes Gerät)', betrag: 500, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Der Ersatz eines defekten Haushaltsgeräts ist keine Luxusausgabe, sondern notwendig. Wenn möglich aus Rücklagen finanzieren.' },
-    { person: 'Kind', wunsch: 'Nachhilfestunden (monatlich)', betrag: 80, einmalig: false, bewertung: 'vertretbar', begruendung: 'Investitionen in Bildung sind grundsätzlich sinnvoll. 80 € monatlich für Nachhilfe sind vertretbar, wenn sie dauerhaft im Budget eingeplant werden.' },
-    { person: 'Vater', wunsch: 'Ratenkauf für eine Spielekonsole für alle Kinder (30 € / Monat)', betrag: 30, einmalig: false, bewertung: 'kritisch',   begruendung: 'Auch kleine Ratenzahlungen summieren sich. Bei mehreren laufenden Verpflichtungen erhöhen weitere Raten das Überschuldungsrisiko.' },
-    { person: 'Mutter', wunsch: 'ein Familienurlaub im Ausland (einmalig)', betrag: 1800, einmalig: true,  bewertung: 'kritisch',   begruendung: 'Ein Auslandsurlaub für eine Großfamilie ist teuer. Wenn dafür ein Kredit aufgenommen werden müsste, ist er finanziell nicht vertretbar.' },
+    { person: 'Der Vater', wunsch: 'ein neues Auto auf Kredit (250 € / Monat)', betrag: 250, einmalig: false, bewertung: 'kritisch',   begruendung: 'Eine monatliche Kreditrate von 250 € ist eine erhebliche Dauerbelastung. Bei drei Kindern und laufenden Ausgaben steigt das Risiko der Überschuldung deutlich.' },
+    { person: 'Das Kind', wunsch: 'Mitgliedschaft im Fußballverein', betrag: 20, einmalig: false, bewertung: 'vertretbar', begruendung: 'Ein Vereinsbeitrag von 20 € monatlich fördert Sport und soziale Entwicklung und ist bei ausreichendem Überschuss klar vertretbar.' },
+    { person: 'Die Mutter', wunsch: 'ein neuer Kühlschrank (einmalig, Ersatz für defektes Gerät)', betrag: 500, einmalig: true,  bewertung: 'vertretbar', begruendung: 'Der Ersatz eines defekten Haushaltsgeräts ist keine Luxusausgabe, sondern notwendig. Wenn möglich aus Rücklagen finanzieren.' },
+    { person: 'Das Kind', wunsch: 'Nachhilfestunden (monatlich)', betrag: 80, einmalig: false, bewertung: 'vertretbar', begruendung: 'Investitionen in Bildung sind grundsätzlich sinnvoll. 80 € monatlich für Nachhilfe sind vertretbar, wenn sie dauerhaft im Budget eingeplant werden.' },
+    { person: 'Der Vater', wunsch: 'Ratenkauf für eine Spielekonsole für alle Kinder (30 € / Monat)', betrag: 30, einmalig: false, bewertung: 'kritisch',   begruendung: 'Auch kleine Ratenzahlungen summieren sich. Bei mehreren laufenden Verpflichtungen erhöhen weitere Raten das Überschuldungsrisiko.' },
+    { person: 'Die Mutter', wunsch: 'ein Familienurlaub im Ausland (einmalig)', betrag: 1800, einmalig: true,  bewertung: 'kritisch',   begruendung: 'Ein Auslandsurlaub für eine Großfamilie ist teuer. Wenn dafür ein Kredit aufgenommen werden müsste, ist er finanziell nicht vertretbar.' },
   ],
 };
 
@@ -300,8 +309,22 @@ const unregelmaessigBeispiele = ['Kleidung', 'Arztbesuch / Zuzahlungen', 'Schula
 // AUFGABE GENERIEREN
 // ============================================================================
 function erstelleHaushaltsplan(profil) {
-  const name = pick(profil.namen);
-  const intro = fuelleSatz(pick(profil.intro), { name });
+  let name, intro, familienName, alleinerziehendGeschlecht;
+
+  if (profil.id === 'familie_allein') {
+    // Alleinerziehend: echte Person mit Vor- und Nachname
+    const person = pick(profil.personen);
+    name = person.name;
+    familienName = person.familienname;
+    alleinerziehendGeschlecht = person.geschlecht;
+    // Wähle passenden Intro-Text je nach Geschlecht
+    const introIndizes = profil.introGeschlecht[person.geschlecht];
+    intro = fuelleSatz(profil.intro[pick(introIndizes)], { name });
+  } else {
+    name = pick(profil.namen);
+    familienName = name.replace('Familie ', '');
+    intro = fuelleSatz(pick(profil.intro), { name });
+  }
 
   const person1 = pick(personenNamen.weiblich);
   const person2 = pick(personenNamen.maennlich);
@@ -320,7 +343,7 @@ function erstelleHaushaltsplan(profil) {
     const uh = randGlatt(200, 500);
     const soz = randGlatt(100, 400);
     const kg = 259; // 1 Kind
-    einnahmen.push({ label: `Gehalt`, betrag: g1, satz: fuelleSatz(pick(einnahmenBausteine.gehalt1), { person1, betrag: formatEuro(g1) }) });
+    einnahmen.push({ label: 'Gehalt', betrag: g1, satz: fuelleSatz(pick(einnahmenBausteine.gehalt1), { person1: name, betrag: formatEuro(g1) }) });
     einnahmen.push({ label: 'Kindergeld (1 Kind)', betrag: kg, satz: fuelleSatz(pick(einnahmenBausteine.kindergeld), { betrag: formatEuro(kg), anzahlKinder: 1, kinderWort: 'Kind' }) });
     einnahmen.push({ label: 'Unterhalt', betrag: uh, satz: fuelleSatz(pick(einnahmenBausteine.unterhalt), { betrag: formatEuro(uh) }) });
     einnahmen.push({ label: 'Staatliche Unterstützung', betrag: soz, satz: fuelleSatz(pick(einnahmenBausteine.sozialhilfe), { betrag: formatEuro(soz) }) });
@@ -428,6 +451,8 @@ function erstelleHaushaltsplan(profil) {
     profil: profil.label,
     profilId: profil.id,
     name,
+    familienName,
+    alleinerziehendGeschlecht: alleinerziehendGeschlecht || null,
     intro,
     person1,
     person2,
@@ -478,10 +503,18 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   // Nummerierung der Teilaufgaben
   const praefix   = gesamt > 1 ? `${nr}` : '';
-  const aufgaTitel = gesamt > 1 ? `Aufgabe ${nr}a` : 'Aufgabe a';
-  const aufgbTitel = gesamt > 1 ? `Aufgabe ${nr}b` : 'Aufgabe b';
-  const aufgcTitel = gesamt > 1 ? `Aufgabe ${nr}c` : 'Aufgabe c';
-  const loesungTitel = gesamt > 1 ? `Lösung ${nr}` : 'Lösung';
+  const aufgaTitel = gesamt > 1 ? `Aufgabe ${nr}A` : 'Aufgabe A';
+  const aufgbTitel = gesamt > 1 ? `Aufgabe ${nr}B` : 'Aufgabe B';
+  const aufgcTitel = gesamt > 1 ? `Aufgabe ${nr}C` : 'Aufgabe C';
+  const loesungTitel = gesamt > 1 ? `Lösung ${nr}` : 'Lösung ';
+
+  // Elternteil-Bezeichnung für Alleinerziehend
+  const elternteil = hp.alleinerziehendGeschlecht === 'm' ? `Der Vater (${hp.name})` : `Die Mutter (${hp.name})`;
+  const elternteilKurz = hp.alleinerziehendGeschlecht === 'm' ? `Der Vater` : `Die Mutter`;
+
+  // Ausgabenwunsch person auflösen
+  const awPersonRoh = hp.ausgabenwunsch.person;
+  const awPerson = awPersonRoh === '{elternteil}' ? elternteil : awPersonRoh;
 
   let html = '';
 
@@ -513,83 +546,76 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2; margin-bottom:0;">
     <li>Ermittle alle Einnahmen und Ausgaben aus dem Fallbeispiel und trage sie in den Haushaltsplan ein.</li>
     <li>Berechne die Summe der Einnahmen und die Summe der Ausgaben.</li>
-    <li>Ermittle den monatlichen Überschuss bzw. das monatliche Defizit.</li>
+    <li>Ermittle den monatlichen Gewinn bzw. Verlust.</li>
   </ol>`;
 
   // ── Aufgabentabelle Einnahmen (leere Zeilen zum Ausfüllen) ───────────────
-  html += `<h3 style="margin-top:1.2em;">Haushaltsplan – zum Ausfüllen</h3>`;
+  html += `<h3 style="margin-top:1.2em;">Haushaltsplan</h3>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
-    <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:55%;">Einnahmen</th>
-    <th style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:30%;">Betrag (€)</th>
-    <th style="border-left:3px solid #999; width:0%;"></th>
+    <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:65%;">Einnahmen</th>
+    <th style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:35%;">Betrag (€)</th>
   </tr></thead><tbody>`;
   hp.einnahmen.forEach(() => {
     html += `<tr>
       <td style="${tdE} height:32px;">&nbsp;</td>
       <td style="${tdE} text-align:right;">&nbsp;</td>
-      <td style="${tdSep}">&nbsp;</td>
     </tr>`;
   });
   html += `<tr style="background:#e8eaf6; font-weight:bold;">
     <td style="${tdE}">Summe Einnahmen</td>
     <td style="${tdE} text-align:right;">&nbsp;</td>
-    <td style="${tdSep}">&nbsp;</td>
   </tr></tbody></table>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
   html += `<thead><tr style="background:#fce4ec;">
-    <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:55%;">Ausgaben</th>
-    <th style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:30%;">Betrag (€)</th>
-    <th style="border-left:3px solid #999; width:0%;"></th>
+    <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:65%;">Ausgaben</th>
+    <th style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:35%;">Betrag (€)</th>
   </tr></thead><tbody>`;
   hp.ausgaben.forEach(() => {
     html += `<tr>
       <td style="${tdE} height:32px;">&nbsp;</td>
       <td style="${tdE} text-align:right;">&nbsp;</td>
-      <td style="${tdSep}">&nbsp;</td>
     </tr>`;
   });
   html += `<tr style="background:#fce4ec; font-weight:bold;">
     <td style="${tdE}">Summe Ausgaben</td>
     <td style="${tdE} text-align:right;">&nbsp;</td>
-    <td style="${tdSep}">&nbsp;</td>
   </tr></tbody></table>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
   html += `<tbody><tr style="background:#f3e5f5; font-weight:bold;">
-    <td style="${tdE} width:55%;">Monatlicher Überschuss / Defizit<br><span style="font-weight:400; font-size:0.82rem;">(Summe Einnahmen − Summe Ausgaben)</span></td>
-    <td style="${tdE} text-align:right; width:30%;">&nbsp;</td>
-    <td style="${tdSep} width:0%;">&nbsp;</td>
+    <td style="${tdE} width:65%;">Monatlicher Gewinn / Verlust<br><span style="font-weight:400; font-size:0.82rem;">(Summe Einnahmen − Summe Ausgaben)</span></td>
+    <td style="${tdE} text-align:right; width:35%;">&nbsp;</td>
   </tr></tbody></table>`;
 
-  // ── Aufgabe b: Ausgabenwunsch ────────────────────────────────────────────
+  // ── Aufgabe B: Ausgabenwunsch ────────────────────────────────────────────
   html += `<h2 style="margin-top:2em;">${aufgbTitel} – Ausgabenwunsch bewerten</h2>`;
 
   const awBg     = aw.bewertung === 'kritisch' ? '#fff8e1' : '#f1f8e9';
   const awBorder = aw.bewertung === 'kritisch' ? '#f9a825' : '#558b2f';
   html += `<div style="border:1px solid ${awBorder}; border-left:5px solid ${awBorder}; border-radius:6px; padding:16px 20px; margin:12px 0; background:${awBg}; max-width:680px;">`;
-  html += `<p style="margin:0; font-size:0.95rem;"><strong>${aw.person}</strong> von ${hp.name} wünscht sich <strong>${aw.wunsch}</strong>.<br>
+  html += `<p style="margin:0; font-size:0.95rem;"><strong>${awPerson}</strong> von der Familie ${hp.familienName} wünscht sich <strong>${aw.wunsch}</strong>.<br>
     <span style="font-size:0.88rem; color:#555;">Kosten: <strong>${wunschBetragText}</strong>${aw.einmalig ? ' (einmalige Ausgabe)' : ' (laufende monatliche Ausgabe)'}</span></p>`;
   html += `</div>`;
 
   html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
     <li>Beurteile den Ausgabenwunsch: Ordne ihn als <strong>vertretbar</strong> oder <strong>kritisch</strong> ein und begründe deine Einschätzung.</li>
-    <li>Ermittle die Auswirkung dieser Ausgabe auf den Saldo des Haushaltsplans von ${hp.name}.${aw.einmalig ? ' (Hinweis: einmalige Ausgabe)' : ' (Hinweis: monatlich wiederkehrende Ausgabe)'}</li>
+    <li>Ermittle die Auswirkung dieser Ausgabe auf den Gewinn / Verlust des Haushaltsplans von der Familie ${hp.familienName}.${aw.einmalig ? ' (Hinweis: einmalige Ausgabe)' : ' (Hinweis: monatlich wiederkehrende Ausgabe)'}</li>
     <li>Definiere den Begriff <strong>Überschuldung</strong>.</li>
-    <li>Nenne zwei Maßnahmen, mit denen ${hp.name} einer Überschuldung entgegenwirken kann.</li>
+    <li>Nenne zwei Maßnahmen, mit denen die Familie ${hp.familienName} einer Überschuldung entgegenwirken kann.</li>
   </ol>`;
 
-  // ── Aufgabe c: Regelm. / Unregelm. Ausgaben ─────────────────────────────
+  // ── Aufgabe C: Regelm. / Unregelm. Ausgaben ─────────────────────────────
   html += `<h2 style="margin-top:2em;">${aufgcTitel} – Regelmäßige und unregelmäßige Ausgaben</h2>`;
   html += `<p style="font-style:italic; color:#555; font-size:0.95rem; max-width:680px;">
-    Beziehe dich auf den Haushaltsplan von ${hp.name}.
+    Beziehe dich auf den Haushaltsplan von der Familie ${hp.familienName}.
   </p>`;
 
   html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
     <li>Erkläre den Unterschied zwischen <strong>regelmäßigen</strong> und <strong>unregelmäßigen</strong> Ausgaben.</li>
-    <li>Ordne alle Ausgaben aus dem Haushaltsplan von ${hp.name} in die untenstehende Tabelle ein.</li>
+    <li>Ordne alle Ausgaben aus dem Haushaltsplan von der Familie ${hp.familienName} in die untenstehende Tabelle ein.</li>
     <li>Nenne je zwei weitere Beispiele für regelmäßige und unregelmäßige Ausgaben, die nicht im Haushaltsplan enthalten sind.</li>
     <li>Begründe, weshalb es sinnvoll ist, auch für unregelmäßige Ausgaben monatlich einen Betrag zurückzulegen.</li>
   </ol>`;
@@ -614,15 +640,9 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   // ══════════════════════════════════════════════════════════════════════════
   html += `<h2 style="margin-top:2.5em;">${loesungTitel}</h2>`;
 
-  // ── Cloze-Hinweis (nur wenn aktiv) ──
-  if (clozeAktiv) {
-    html += `<p style="font-size:0.82rem; color:#1a5276; background:#eaf4fb; border:1px dashed #5dade2; border-radius:4px; padding:6px 12px; max-width:680px; margin-bottom:12px;">
-      🔵 <strong>Moodle-Cloze aktiv:</strong> Die markierten Felder enthalten SHORTANSWER-Lücken – akzeptiert werden Beträge mit und ohne €-Zeichen.
-    </p>`;
-  }
 
   // ── Lösung a: Haushaltsplan mit Werten ───────────────────────────────────
-  html += `<h3 style="margin-top:0;">${loesungTitel}a – Haushaltsplan</h3>`;
+  html += `<h3 style="margin-top:0;">${loesungTitel}A – Haushaltsplan</h3>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
@@ -658,15 +678,15 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   const saldoFarbe = hp.saldo >= 0 ? '#2e7d32' : '#c62828';
   const saldoBg    = hp.saldo >= 0 ? '#e8f5e9' : '#ffebee';
-  const saldoLabel = hp.saldo >= 0 ? 'Überschuss' : 'Defizit';
+  const saldoLabel = hp.saldo >= 0 ? 'Gewinn' : 'Verlust';
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
   html += `<tbody><tr style="background:${saldoBg}; font-weight:bold; color:${saldoFarbe};">
     <td style="border:1px solid #ccc; padding:8px 12px; width:60%;">Monatlicher ${saldoLabel}</td>
     <td style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:40%;">${clozeAktiv ? zelleHP(hp.saldo, true) : formatEuro(hp.saldo)}</td>
   </tr></tbody></table>`;
 
-  // ── Lösung b: Ausgabenwunsch ─────────────────────────────────────────────
-  html += `<h3 style="margin-top:1.6em;">${loesungTitel}b – Ausgabenwunsch</h3>`;
+  // ── Lösung B: Ausgabenwunsch ─────────────────────────────────────────────
+  html += `<h3 style="margin-top:1.6em;">${loesungTitel}B – Ausgabenwunsch</h3>`;
 
   const bewIcon  = aw.bewertung === 'kritisch' ? '⚠️' : '✅';
   const bewFarbe = aw.bewertung === 'kritisch' ? '#c62828' : '#2e7d32';
@@ -677,17 +697,18 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   if (!aw.einmalig) {
     const neuerSaldo = hp.saldo - aw.betrag;
-    const neuerText  = neuerSaldo >= 0 ? `Überschuss von ${formatEuro(neuerSaldo)}` : `Defizit von ${formatEuro(Math.abs(neuerSaldo))}`;
-    html += `<strong>2. Auswirkung auf den Saldo:</strong> Summe Ausgaben steigt um ${formatEuro(aw.betrag)} → neuer Saldo: <strong>${neuerText}</strong><br><br>`;
+    const neuerLabel = neuerSaldo >= 0 ? 'Gewinn' : 'Verlust';
+    const neuerText  = `${neuerLabel} von ${formatEuro(Math.abs(neuerSaldo))}`;
+    html += `<strong>2. Auswirkung auf den Gewinn / Verlust:</strong> Summe Ausgaben steigt um ${formatEuro(aw.betrag)} → neuer ${neuerText}.<br><br>`;
   } else {
-    html += `<strong>2. Auswirkung auf den Saldo:</strong> Die einmalige Ausgabe von ${formatEuro(aw.betrag)} verringert den Überschuss bzw. die Rücklagen einmalig um diesen Betrag.<br><br>`;
+    html += `<strong>2. Auswirkung auf den Gewinn / Verlust:</strong> Die einmalige Ausgabe von ${formatEuro(aw.betrag)} verringert den Gewinn bzw. die Rücklagen einmalig um diesen Betrag.<br><br>`;
   }
   html += `<strong>3. Überschuldung:</strong> Überschuldung liegt vor, wenn eine Person oder ein Haushalt die fälligen Schulden dauerhaft nicht mehr begleichen kann – auch nicht durch den Verkauf von Vermögen.<br><br>`;
   html += `<strong>4. Maßnahmen:</strong> z. B. Haushaltsbuch führen und Ausgaben reduzieren · Ratenkäufe und Konsumkredite vermeiden · Rücklagen für unvorhergesehene Ausgaben bilden · Schuldnerberatung aufsuchen.`;
   html += `</div>`;
 
-  // ── Lösung c: Regelm. / Unregelm. – ausgefüllte Tabelle ─────────────────
-  html += `<h3 style="margin-top:1.6em;">${loesungTitel}c – Regelmäßige und unregelmäßige Ausgaben</h3>`;
+  // ── Lösung C: Regelm. / Unregelm. – ausgefüllte Tabelle ─────────────────
+  html += `<h3 style="margin-top:1.6em;">${loesungTitel}C – Regelmäßige und unregelmäßige Ausgaben</h3>`;
   html += `<div style="background:#f8f7f4; border:1px solid #ddd; border-radius:4px; padding:10px 16px; max-width:680px; font-size:0.88rem; line-height:1.9; margin-bottom:10px;">`;
   html += `<strong>1. Definition:</strong> <em>Regelmäßige Ausgaben</em> fallen jeden Monat in gleicher oder ähnlicher Höhe an (z. B. Miete, Versicherungen). <em>Unregelmäßige Ausgaben</em> entstehen nur gelegentlich oder schwankend (z. B. Kleidung, Reparaturen).<br><br>`;
   html += `<strong>3. Weitere Beispiele:</strong><br>`;
@@ -806,7 +827,7 @@ function erstelleKiPromptText() {
       const nr = idx + 1;
       const einnahmenText = hp.einnahmen.map(e => `  - ${e.label}: ${formatEuro(e.betrag)}`).join('\n');
       const ausgabenText = hp.ausgaben.map(a => `  - ${a.label}: ${formatEuro(a.betrag)}`).join('\n');
-      const saldoLabel = hp.saldo >= 0 ? 'Überschuss' : 'Defizit';
+      const saldoLabel = hp.saldo >= 0 ? 'Gewinn' : 'Verlust';
       return `--- Aufgabe ${nr}: ${hp.name} (${hp.profil}) ---
 Fallbeispiel: ${hp.intro}
 
