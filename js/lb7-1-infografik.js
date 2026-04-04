@@ -493,7 +493,7 @@ const TEMPLATES = {
   bip: {
     title: "BIP ausgewählter Volkswirtschaften",
     subtitle: `Bruttoinlandsprodukt in Mrd. US-Dollar, ${PY}`,
-    source: `Quelle: Fiktive Beispieldate, ${CY}`,
+    source: `Quelle: Interne Auswertung, ${CY}`,
     unit: " ", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Deutschland",4072],["USA",25463],["China",17963],["Japan",4231],["Frankreich",2782]]
@@ -501,7 +501,7 @@ const TEMPLATES = {
   inflation: {
     title: "Inflationsrate im Vergleich",
     subtitle: `Jährliche Veränderung des Verbraucherpreisindex, ${PY}`,
-    source: `Quelle: Fiktive Beispieldate, ${CY}`,
+    source: `Quelle: Interne Auswertung, ${CY}`,
     unit: "%", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "none", xaxis: "no",
     data: [["Deutschland",5.9],["Frankreich",5.7],["Italien",5.9],["Spanien",3.5],["Polen",10.9],["Ungarn",17.6]]
@@ -509,7 +509,7 @@ const TEMPLATES = {
   arbeitslosigkeit: {
     title: "Arbeitslosenquote ausgewählter Länder",
     subtitle: `Anteil der Arbeitslosen an der Erwerbsbevölkerung, ${PY}`,
-    source: `Quelle: Fiktive Beispieldate, ${CY}`,
+    source: `Quelle: Interne Auswertung, ${CY}`,
     unit: "%", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "none", xaxis: "no",
     data: [["Deutschland",3.0],["USA",3.7],["Frankreich",7.3],["Spanien",12.1],["Italien",7.0],["Japan",2.5]]
@@ -525,7 +525,7 @@ const TEMPLATES = {
   marktanteile: {
     title: "Marktanteile Sportartikelmarkt",
     subtitle: `Anteil am Gesamtmarkt in Prozent, Deutschland ${PY}`,
-    source: `Quelle: Fiktive Beispieldate, ${CY}`,
+    source: `Quelle: Interne Auswertung, ${CY}`,
     unit: "%", xlabel: "",
     chartType: "pie", labelPos: "inside", showLabels: "yes", thousandSep: "none", xaxis: "no",
     data: [["Unternehmen A",34],["Unternehmen B",28],["Unternehmen C",19],["Sonstige",19]]
@@ -541,7 +541,7 @@ const TEMPLATES = {
   haushalt: {
     title: "Monatliche Haushaltsausgaben",
     subtitle: "Durchschnittlicher Haushalt mit 2 Personen, in Euro",
-    source: `Quelle: Fiktive Beispieldate, ${PY}`,
+    source: `Quelle: Interne Auswertung, ${PY}`,
     unit: "€", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Miete & Nebenkosten",980],["Lebensmittel",420],["Mobilität",230],["Freizeit",180],["Versicherungen",145],["Bekleidung",90],["Sonstiges",155]]
@@ -549,7 +549,7 @@ const TEMPLATES = {
   haushalt_familie: {
     title: "Monatsausgaben Familie mit 2 Kindern",
     subtitle: "Durchschnittliche Ausgaben in Euro pro Monat",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Miete & Nebenkosten",1340],["Lebensmittel",680],["Kita / Schule",290],["Mobilität",310],["Freizeit & Hobbys",240],["Versicherungen",195],["Kleidung",160],["Sonstiges",185]]
@@ -557,7 +557,7 @@ const TEMPLATES = {
   haushalt_student: {
     title: "Monatliches Budget Studierende",
     subtitle: "Durchschnittliche Ausgaben in Euro, Beispiel WG-Zimmer",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "", xlabel: "",
     chartType: "donut", labelPos: "inside", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Miete & Nebenkosten",550],["Lebensmittel",210],["Semesterbeitrag",60],["Mobilität",85],["Freizeit",90],["Kleidung",45],["Sonstiges",60]]
@@ -565,7 +565,7 @@ const TEMPLATES = {
   haushalt_einnahmen: {
     title: "Monatliche Einnahmen Privathaushalt",
     subtitle: "Nettoeinkommen nach Herkunft, Beispielhaushalt",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "pie", labelPos: "inside", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Gehalt Person 1",2800],["Gehalt Person 2",1950],["Kindergeld",250],["Mieteinnahmen",480],["Sonstiges",120]]
@@ -573,7 +573,7 @@ const TEMPLATES = {
   haushalt_strom: {
     title: "Stromverbrauch im Jahresverlauf",
     subtitle: "Verbrauch in kWh pro Monat, Beispielhaushalt",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "", xlabel: "Monat",
     chartType: "line", labelPos: "top", showLabels: "yes", thousandSep: "none", xaxis: "no",
     data: [["Jan",385],["Feb",350],["Mär",290],["Apr",240],["Mai",195],["Jun",175],["Jul",170],["Aug",178],["Sep",205],["Okt",265],["Nov",320],["Dez",390]]
@@ -581,7 +581,7 @@ const TEMPLATES = {
   haushalt_sparen: {
     title: "Sparquote im Jahresverlauf",
     subtitle: "Monatlich zurückgelegter Betrag in Euro",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "", xlabel: "Monat",
     chartType: "column", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Jan",180],["Feb",220],["Mär",150],["Apr",300],["Mai",270],["Jun",90],["Jul",50],["Aug",120],["Sep",200],["Okt",310],["Nov",260],["Dez",0]]
@@ -589,7 +589,7 @@ const TEMPLATES = {
   haushalt_schulden: {
     title: "Restschuld Immobilienkredit",
     subtitle: "Entwicklung der Restschuld über 10 Jahre, in Euro",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "", xlabel: "Jahr",
     chartType: "line", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Jahr 1",195000],["Jahr 2",188400],["Jahr 3",181500],["Jahr 4",174300],["Jahr 5",166700],["Jahr 6",158700],["Jahr 7",150200],["Jahr 8",141200],["Jahr 9",131600],["Jahr 10",121400]]
@@ -597,7 +597,7 @@ const TEMPLATES = {
   vermoegen: {
     title: "Vermögensaufteilung Privathaushalt",
     subtitle: `Anteile am Gesamtvermögen, Beispielhaushalt ${PY}`,
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "donut", labelPos: "inside", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Immobilien",280000],["Aktien & Fonds",45000],["Tagesgeld",18000],["Rentenversicherung",62000],["Sonstiges",9000]]
@@ -630,15 +630,15 @@ const TEMPLATES = {
   einkommen_netto: {
     title: "Nettoeinkommen nach Berufsgruppe",
     subtitle: `Durchschnittliches monatliches Nettoeinkommen in Euro, Deutschland ${PY}`,
-    source: `Quelle: Fiktive Beispieldaten, ${CY}`,
-    unit: "€", xlabel: "",
+    source: `Quelle: Interne Auswertung, ${CY}`,
+    unit: "", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Handwerk",2180],["Einzelhandel",1850],["Pflege & Soziales",2050],["Verwaltung",2640],["IT & Technik",3480],["Ingenieurwesen",3820],["Medizin",4950],["Management",5600]]
   },
   einkommen_quellen: {
     title: "Einkommensquellen eines Haushalts",
     subtitle: "Monatliche Bruttoeinkünfte nach Herkunft, Beispielhaushalt",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "donut", labelPos: "inside", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Gehalt (Vollzeit)",3400],["Gehalt (Teilzeit)",1200],["Kindergeld",250],["Mieteinnahmen",650],["Zinsen & Dividenden",120],["Nebentätigkeit",280]]
@@ -646,8 +646,8 @@ const TEMPLATES = {
   einkommen_entwicklung: {
     title: "Einkommensentwicklung über 10 Jahre",
     subtitle: "Jährliches Nettoeinkommen in Euro, Beispielperson",
-    source: "Quelle: Fiktive Beispieldaten",
-    unit: "€", xlabel: "Jahr",
+    source: "Quelle: Interne Auswertung",
+    unit: "", xlabel: "Jahr",
     chartType: "line", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Jahr 1",22400],["Jahr 2",23100],["Jahr 3",23800],["Jahr 4",25200],["Jahr 5",26500],["Jahr 6",27900],["Jahr 7",29400],["Jahr 8",31000],["Jahr 9",32600],["Jahr 10",34500]]
   },
@@ -656,7 +656,7 @@ const TEMPLATES = {
   ausgaben_kategorien: {
     title: "Ausgabenkategorien im Überblick",
     subtitle: "Monatliche Ausgaben nach Kategorie, Beispielhaushalt 2 Personen",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Wohnen",1050],["Ernährung",430],["Mobilität",260],["Kommunikation",85],["Freizeit & Kultur",190],["Gesundheit",110],["Kleidung",95],["Bildung",60],["Sonstiges",140]]
@@ -664,24 +664,24 @@ const TEMPLATES = {
   ausgaben_regelmaessig: {
     title: "Regelmäßige monatliche Ausgaben",
     subtitle: "Feste, planbare Ausgaben eines Musterhaushalts in Euro",
-    source: "Quelle: Fiktive Beispieldaten",
-    unit: "€", xlabel: "",
+    source: "Quelle: Interne Auswertung",
+    unit: "", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
-    data: [["Kaltmiete",820],["Strom & Gas",95],["Internet & Telefon",50],["GEZ / Rundfunk",18],["KFZ-Versicherung",74],["Krankenversicherung",120],["Lebensversicherung",85],["Ratenzahlung Kredit",210],["Abonnements",35]]
+    data: [["Kaltmiete",820],["Strom & Gas",95],["Internet & Telefon",50],["KFZ-Versicherung",74],["Krankenversicherung",120],["Lebensversicherung",85],["Ratenzahlung Kredit",210],["Abonnements",35]]
   },
   ausgaben_unregelmaessig: {
     title: "Unregelmäßige Ausgaben im Jahresverlauf",
     subtitle: "Einmalige oder saisonale Ausgaben in Euro, Beispielhaushalt",
-    source: "Quelle: Fiktive Beispieldaten",
-    unit: "€", xlabel: "Monat",
+    source: "Quelle: Interne Auswertung",
+    unit: "", xlabel: "Monat",
     chartType: "column", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Jan",120],["Feb",60],["Mär",240],["Apr",85],["Mai",380],["Jun",450],["Jul",890],["Aug",320],["Sep",160],["Okt",95],["Nov",280],["Dez",740]]
   },
   ausgaben_jahresvergleich: {
     title: "Jahresausgaben im Vergleich",
     subtitle: `Gesamtausgaben nach Kategorie, ${PY} vs. ${PY - 1}, in Euro`,
-    source: "Quelle: Fiktive Beispieldaten",
-    unit: "€", xlabel: "",
+    source: "Quelle: Interne Auswertung",
+    unit: "", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Wohnen",12600],["Ernährung",5160],["Mobilität",3120],["Urlaub",2800],["Gesundheit",1320],["Freizeit",2280],["Kleidung",1140],["Sonstiges",1680]]
   },
@@ -690,7 +690,7 @@ const TEMPLATES = {
   haushaltsplan_monat: {
     title: "Monatlicher Haushaltsplan",
     subtitle: "Gegenüberstellung Einnahmen und Ausgaben, Beispielhaushalt",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Einnahmen gesamt",3850],["Fixkosten",1480],["Lebensmittel & Alltag",530],["Mobilität",260],["Freizeit",190],["Sonstiges",145],["Sparanteil",400],["Freies Einkommen",845]]
@@ -699,7 +699,7 @@ const TEMPLATES = {
   haushaltsplan_anteil: {
     title: "Haushaltsplan nach Ausgabenanteilen",
     subtitle: "Prozentualer Anteil der Ausgabenkategorien am Nettoeinkommen",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "%", xlabel: "",
     chartType: "donut", labelPos: "inside", showLabels: "yes", thousandSep: "none", xaxis: "no",
     data: [["Wohnen",34],["Ernährung",14],["Mobilität",9],["Freizeit",6],["Versicherungen",8],["Sparanteil",10],["Sonstiges",9],["Freies Einkommen",10]]
@@ -709,7 +709,7 @@ const TEMPLATES = {
   sparanteil_einkommen: {
     title: "Sparquote nach Einkommensklasse",
     subtitle: `Anteil des Einkommens der gespart wird, in Prozent, Deutschland ${PY}`,
-    source: `Quelle: Fiktive Beispieldaten, ${CY}`,
+    source: `Quelle: Interne Auswertung, ${CY}`,
     unit: "%", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "none", xaxis: "no",
     data: [["unter 1.500 € netto",2.1],["1.500–2.000 €",4.8],["2.000–2.500 €",7.3],["2.500–3.500 €",11.6],["3.500–5.000 €",16.4],["über 5.000 €",24.9]]
@@ -717,33 +717,25 @@ const TEMPLATES = {
   sparanteil_ziel: {
     title: "Sparziele eines Musterhaushalts",
     subtitle: "Monatliche Sparrücklagen nach Verwendungszweck, in Euro",
-    source: "Quelle: Fiktive Beispieldaten",
-    unit: "€", xlabel: "",
+    source: "Quelle: Interne Auswertung",
+    unit: "", xlabel: "",
     chartType: "pie", labelPos: "inside", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Notfallreserve",100],["Altersvorsorge",150],["Urlaub",80],["Auto-Rücklage",60],["Wohneigentum",200],["Sonstige Rücklagen",50]]
   },
   sparentwicklung: {
     title: "Entwicklung des Ersparten",
     subtitle: "Kumuliertes Erspartes über 10 Jahre bei 400 €/Monat, in Euro",
-    source: "Quelle: Fiktive Beispieldaten",
-    unit: "€", xlabel: "Jahr",
+    source: "Quelle: Interne Auswertung",
+    unit: "", xlabel: "Jahr",
     chartType: "line", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["Jahr 1",4800],["Jahr 2",9700],["Jahr 3",14900],["Jahr 4",20200],["Jahr 5",25900],["Jahr 6",32000],["Jahr 7",38500],["Jahr 8",45400],["Jahr 9",52800],["Jahr 10",60700]]
   },
 
   // ── Verschuldung ──
-  verschuldung_arten: {
-    title: "Verschuldungsarten privater Haushalte",
-    subtitle: `Durchschnittliche Restschuld nach Kreditart in Euro, Deutschland ${PY}`,
-    source: `Quelle: Fiktive Beispieldaten, ${CY}`,
-    unit: "€", xlabel: "",
-    chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "point", xaxis: "no",
-    data: [["Immobilienkredit",186000],["KFZ-Kredit",8400],["Ratenkredit (Konsum)",4200],["Dispokredit",1850],["Kreditkartenkredit",980],["Studienkredit",12600]]
-  },
   verschuldung_tilgung: {
     title: "Tilgungsplan Konsumkredit",
     subtitle: "Restschuld bei 5.000 € Kredit, 5 % Zinsen, 24 Monate Laufzeit",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "Monat",
     chartType: "line", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["M1",4800],["M2",4598],["M3",4394],["M4",4188],["M5",3980],["M6",3770],["M9",3130],["M12",2462],["M15",1773],["M18",1060],["M21",322],["M24",0]]
@@ -751,7 +743,7 @@ const TEMPLATES = {
   verschuldung_haushalt: {
     title: "Verschuldungsquote nach Haushaltstyp",
     subtitle: `Anteil verschuldeter Haushalte in Prozent, Deutschland ${PY}`,
-    source: `Quelle: Fiktive Beispieldaten, ${CY}`,
+    source: `Quelle: Interne Auswertung, ${CY}`,
     unit: "%", xlabel: "",
     chartType: "bar", labelPos: "center", showLabels: "yes", thousandSep: "none", xaxis: "no",
     data: [["Single unter 35",42],["Paar ohne Kinder",38],["Familie mit Kindern",61],["Alleinerziehend",55],["Rentnerhaushalt",18]]
@@ -759,7 +751,7 @@ const TEMPLATES = {
   verschuldung_kosten: {
     title: "Gesamtkosten eines Ratenkredits",
     subtitle: "5.000 € Kredit – Vergleich Zinskosten nach Laufzeit",
-    source: "Quelle: Fiktive Beispieldaten",
+    source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "column", labelPos: "top", showLabels: "yes", thousandSep: "point", xaxis: "no",
     data: [["12 Monate",136],["24 Monate",268],["36 Monate",402],["48 Monate",541],["60 Monate",684]]
@@ -796,7 +788,7 @@ const TEMPLATES = {
     title: "Jährlicher Gewinn in unserem Unternehmen",
     subtitle: `Jahresüberschuss nach Steuern in Tsd. Euro, ${PY-4}–${PY}`,
     source: `Quelle: Interne Unternehmensstatistik, ${CY}`,
-    unit: "Tsd. €",
+    unit: "",
     xlabel: "Geschäftsjahr",
     chartType: "column",
     labelPos: "top",
