@@ -306,7 +306,7 @@ letzteGenerierteAufgaben.forEach(({ text }, idx) => {
 
   // ── EINE gemeinsame Ausfülltabelle ───────────────────────────────────────
   html += `<h3>Tabelle</h3>`;
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:660px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:650px;">`;
   html += `<thead><tr style="background:#eee;">
     <th style="border:1px solid #ccc; padding:6px 10px; text-align:center; width:40px;">Nr.</th>
     <th style="border:1px solid #ccc; padding:6px 10px; text-align:left;">Akteur (Geldgeber)</th>
@@ -332,7 +332,7 @@ letzteGenerierteAufgaben.forEach(({ text }, idx) => {
 
   // ── Lösungstabelle ───────────────────────────────────────────────────────
   html += `<h2 style="margin-top:2em;">Lösung</h2>`;
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:660px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:650px;">`;
   html += `<thead><tr style="background:#eee;">
     <th style="border:1px solid #ccc; padding:6px 10px; text-align:center; width:40px;">Nr.</th>
     <th style="border:1px solid #ccc; padding:6px 10px; text-align:left;">Akteur (Geldgeber)</th>
