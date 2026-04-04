@@ -405,7 +405,7 @@
     iban: "DE89370400000532000077"
     bic: "COBADEFFXXX"
     inhaber: "Thorsten Fiedler"
-    akzent: "#778899"
+    akzent: "#f5f5f5"
 
 - unternehmen:
     id: "17"
