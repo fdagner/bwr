@@ -60,8 +60,8 @@
       onchange="zeigeZufaelligenBestandsabschluss()"
     >
     <span>
-      Bezugskosten-Unterkonten berücksichtigen
-      <span style="color:#555;font-size:0.9em;">(6001 BZKR, 6011 BZKF, 6021 BZKH, 6031 BZKB – erhöhen Aufwand)</span>
+      Bezugskosten berücksichtigen
+      <span style="color:#555;font-size:0.9em;">: 6001 BZKR, 6011 BZKF, 6021 BZKH, 6031 BZKB</span>
     </span>
   </label>
   <label>
@@ -72,19 +72,24 @@
       onchange="zeigeZufaelligenBestandsabschluss()"
     >
     <span>
-      Nachlasskonten berücksichtigen
-      <span style="color:#555;font-size:0.9em;">(6002 NR, 6012 NF, 6022 NH, 6032 NB – mindern Aufwand)</span>
+      Nachlässe berücksichtigen
+      <span style="color:#555;font-size:0.9em;">: 6002 NR, 6012 NF, 6022 NH, 6032 NB</span>
     </span>
   </label>
 </div>
-
+<div class="flex-row">
       <button onclick="zeigeZufaelligenBestandsabschluss()">Neue Aufgabe erstellen</button>
+
+          <button onclick="drucken()">
+  📄 T-Konten-Blatt drucken
+</button>
+</div>
+
     </div>
 
     <div id="Container" style="max-width:960px;margin:0 auto;" contenteditable="true"></div>
 
     <div w3-include-html="downloads.html"></div>
-
     <!-- KI-ASSISTENT -->
     <div class="ki-assistent-box">
       <div class="ki-assistent-header">

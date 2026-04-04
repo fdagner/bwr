@@ -127,8 +127,8 @@ function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten) 
   };
 
   const konten = {};
-  const nachlaesse = {};    // Haben-seitige Unterkonten (mindern Aufwand)
-  const bzkUnterkonten = {}; // Soll-seitige Unterkonten (erhöhen Aufwand)
+  const nachlaesse = {};
+  const bzkUnterkonten = {};
 
   for (const [nr, typ] of Object.entries(kontenTypen)) {
     const kDaten = erzeugeKontoBuchungen(typ);
@@ -147,9 +147,6 @@ function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten) 
       bzkSaldo = bDaten.saldo;
     }
 
-    // eigenSaldo = Summe der eigenen Buchungen im Hauptkonto
-    // guvSaldo   = eigenSaldo − nachlassSaldo + bzkSaldo
-    //   (Nachlässe stehen im Haben → mindern; BZK-Unterkonten werden auf Soll übertragen → erhöhen)
     konten[nr] = {
       buchungen:   kDaten.buchungen,
       eigenSaldo:  kDaten.saldo,
@@ -170,12 +167,18 @@ function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten) 
   return { konten, nachlaesse, bzkUnterkonten, uefeDaten, uefe, gesamtAufwand, erfolg, erfolgArt, erfolgHoehe };
 }
 
+// ── Hilfsfunktion: maximale Buchungsanzahl einer Gruppe ermitteln ─────────────
+
+function maxBuchungsanzahl(buchungsArrays) {
+  return Math.max(...buchungsArrays.map(b => b.length));
+}
+
 // ── T-Konto Renderer ─────────────────────────────────────────────────────────
 
 // Aufwandskonto AUFGABE – Soll-Einträge, Haben leer
-function renderTKontoAufgabe(kontoNr, buchungen) {
-  const alleZeilen = Math.max(buchungen.length, 3) + 2;
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+function renderTKontoAufgabe(kontoNr, buchungen, minZeilen) {
+  const alleZeilen = Math.max(buchungen.length, minZeilen || 3) + 2;
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${kontoNr}</span></th>
@@ -195,11 +198,11 @@ function renderTKontoAufgabe(kontoNr, buchungen) {
 }
 
 // Nachlasskonto AUFGABE – Haben-Einträge (Soll leer)
-function renderTKontoNachlassAufgabe(bzkNr, buchungen) {
-  const alleZeilen = Math.max(buchungen.length, 3) + 2;
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+function renderTKontoNachlassAufgabe(bzkNr, buchungen, minZeilen) {
+  const alleZeilen = Math.max(buchungen.length, minZeilen || 3) + 2;
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
-      <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
+      <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;min-width:80px;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${bzkNr}</span></th>
       <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
     </tr></thead><tbody>`;
@@ -216,10 +219,10 @@ function renderTKontoNachlassAufgabe(bzkNr, buchungen) {
   return html;
 }
 
-// BZK-Unterkonto AUFGABE – Soll-Einträge (Haben leer) – wie normales Aufwandskonto
-function renderTKontoBzkUnterkontoAufgabe(bzkNr, buchungen) {
-  const alleZeilen = Math.max(buchungen.length, 3) + 2;
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+// BZK-Unterkonto AUFGABE – Soll-Einträge (Haben leer)
+function renderTKontoBzkUnterkontoAufgabe(bzkNr, buchungen, minZeilen) {
+  const alleZeilen = Math.max(buchungen.length, minZeilen || 3) + 2;
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${bzkNr}</span></th>
@@ -239,11 +242,11 @@ function renderTKontoBzkUnterkontoAufgabe(bzkNr, buchungen) {
 }
 
 // UEFE AUFGABE – Haben-Einträge, Soll leer
-function renderTKontoUEFEAufgabe(buchungen) {
-  const alleZeilen = Math.max(buchungen.length, 3) + 2;
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+function renderTKontoUEFEAufgabe(buchungen, minZeilen) {
+  const alleZeilen = Math.max(buchungen.length, minZeilen || 3) + 2;
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
-      <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
+      <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;min-width:80px;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">5000 UEFE</span></th>
       <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
     </tr></thead><tbody>`;
@@ -260,14 +263,36 @@ function renderTKontoUEFEAufgabe(buchungen) {
   return html;
 }
 
+// GUV AUFGABE – komplett leer, aber mit genug Zeilen für alle Hauptkonten + UEFE + Erfolg
+function renderTKontoGUVAufgabe(minZeilen) {
+  // Soll-Seite: 4 Aufwandskonten + ggf. Gewinn → mindestens 5 Zeilen
+  // Haben-Seite: UEFE + ggf. Verlust → mindestens 2 Zeilen
+  // Wir nehmen das Maximum beider Seiten + 2 Puffer
+  const alleZeilen = Math.max(minZeilen || 6, 6) + 2;
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
+    <thead><tr>
+      <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
+      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">8020 GUV</span></th>
+      <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
+    </tr></thead><tbody>`;
+  for (let i = 0; i < alleZeilen; i++) {
+    html += `<tr style="border-top:2px solid #ccc;">
+      <td style="padding:3px 2px;white-space:nowrap;">&nbsp;</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">&nbsp;</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
+    </tr>`;
+  }
+  html += `</tbody></table>`;
+  return html;
+}
+
 // ── Lösungs-T-Konten ──────────────────────────────────────────────────────────
 
 // Nachlasskonto LÖSUNG
-// Soll: Gegenbuchung → Hauptkonto (= nachlassSaldo)
-// Haben: eigene VE-Buchungen
-function renderTKontoNachlassLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
-  const alleZeilen = Math.max(buchungen.length, 3);
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+function renderTKontoNachlassLoesung(bzkNr, hauptkontoNr, buchungen, saldo, minZeilen) {
+  const alleZeilen = Math.max(buchungen.length, minZeilen || 3);
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${bzkNr}</span></th>
@@ -293,11 +318,9 @@ function renderTKontoNachlassLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
 }
 
 // BZK-Unterkonto LÖSUNG
-// Soll: eigene VE-Buchungen
-// Haben: Gegenbuchung → Hauptkonto (= bzkSaldo) → Abschluss auf Haben-Seite
-function renderTKontoBzkUnterkontoLoesung(bzkNr, hauptkontoNr, buchungen, saldo) {
-  const alleZeilen = Math.max(buchungen.length, 3);
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+function renderTKontoBzkUnterkontoLoesung(bzkNr, hauptkontoNr, buchungen, saldo, minZeilen) {
+  const alleZeilen = Math.max(buchungen.length, minZeilen || 3);
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${bzkNr}</span></th>
@@ -323,25 +346,16 @@ function renderTKontoBzkUnterkontoLoesung(bzkNr, hauptkontoNr, buchungen, saldo)
 }
 
 // Aufwandskonto LÖSUNG
-//
-// Soll-Seite: eigene Buchungen + ggf. BZK-Übertrag (Soll)
-// Haben-Seite: ggf. Nachlass-Übertrag (Haben) + GUV-Abschluss
-//
-// guvSaldo = eigenSaldo - nachlassSaldo + bzkSaldo
-// Soll-Summe = eigenSaldo + bzkSaldo
-// Haben-Summe = nachlassSaldo + guvSaldo = nachlassSaldo + eigenSaldo - nachlassSaldo + bzkSaldo = eigenSaldo + bzkSaldo ✓
-function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkSaldo) {
+function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkSaldo, minZeilen) {
   const guvSaldo = eigenSaldo - (nachlassSaldo || 0) + (bzkSaldo || 0);
   const gesamtSollSumme = eigenSaldo + (bzkSaldo || 0);
 
-  // Soll-Zeilen: eigene Buchungen, dann BZK-Übertrag
   const sollZeilen = [...buchungen.map(b => ({ label: `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}`, betrag: b.betrag }))];
   if (bzkSaldo) {
     const bzkNr = BZK_UNTERKONTO_MAP[kontoNr]?.nr || '';
     sollZeilen.push({ label: ` ${bzkNr}`, betrag: bzkSaldo });
   }
 
-  // Haben-Zeilen: Nachlass-Übertrag, dann GUV-Abschluss
   const habenZeilen = [];
   if (nachlassSaldo) {
     const nachlassNr = NACHLASS_MAP[kontoNr]?.nr || '';
@@ -349,9 +363,9 @@ function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkS
   }
   habenZeilen.push({ label: ' 8020 GUV', betrag: guvSaldo });
 
-  const alleZeilen = Math.max(sollZeilen.length, habenZeilen.length);
+  const alleZeilen = Math.max(sollZeilen.length, habenZeilen.length, minZeilen || 3);
 
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${kontoNr}</span></th>
@@ -379,10 +393,10 @@ function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkS
   return html;
 }
 
-// UEFE LÖSUNG – Haben-Einträge + Saldo im Soll
-function renderTKontoUEFELoesung(buchungen, saldo) {
-  const alleZeilen = Math.max(buchungen.length, 3);
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+// UEFE LÖSUNG
+function renderTKontoUEFELoesung(buchungen, saldo, minZeilen) {
+  const alleZeilen = Math.max(buchungen.length, minZeilen || 3);
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">5000 UEFE</span></th>
@@ -427,7 +441,7 @@ function renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt) {
   const sollSumme  = isGewinn ? gesamtAufwand + erfolgHoehe : gesamtAufwand;
   const habenSumme = isGewinn ? uefe : uefe + erfolgHoehe;
 
-  let html = `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">8020 GUV</span></th>
@@ -469,66 +483,91 @@ function zeigeZufaelligenBestandsabschluss() {
 
   const hatUnterkonten = mitNachlaesse || mitBzkUnterkonten;
 
+  // ── Gleichmäßige Zeilenzahlen pro Gruppe ermitteln ────────────────────────
+
+  // BZK-Unterkonten Aufgabe: alle auf gleiche Länge
+  const bzkBuchungsArrays = Object.keys(konten).map(nr => bzkUnterkonten[nr]?.buchungen || []);
+  const maxBzkAufgabe = mitBzkUnterkonten ? maxBuchungsanzahl(bzkBuchungsArrays) : 0;
+
+  // BZK-Unterkonten Lösung: Soll = eigene Buchungen, Haben = 1 Gegenbuchung → max(buchungen, 1)
+  const maxBzkLoesung = mitBzkUnterkonten
+    ? Math.max(...Object.keys(konten).map(nr => Math.max((bzkUnterkonten[nr]?.buchungen || []).length, 1)))
+    : 0;
+
+  // Nachlasskonten Aufgabe: alle auf gleiche Länge
+  const nlBuchungsArrays = Object.keys(konten).map(nr => nachlaesse[nr]?.buchungen || []);
+  const maxNlAufgabe = mitNachlaesse ? maxBuchungsanzahl(nlBuchungsArrays) : 0;
+
+  // Nachlasskonten Lösung: Haben = eigene Buchungen, Soll = 1 Gegenbuchung → max(buchungen, 1)
+  const maxNlLoesung = mitNachlaesse
+    ? Math.max(...Object.keys(konten).map(nr => Math.max((nachlaesse[nr]?.buchungen || []).length, 1)))
+    : 0;
+
+  // Hauptkonten (Aufgabe): alle auf gleiche Länge
+  const hauptBuchungsArrays = Object.values(konten).map(k => k.buchungen);
+  const maxHaupt = maxBuchungsanzahl(hauptBuchungsArrays);
+
+  // Hauptkonten (Lösung): Soll = buchungen + ggf. BZK-Übertrag, Haben = ggf. Nachlass-Übertrag + GUV
+  // Beide Seiten müssen gleich lang sein → nimm das Max beider Seiten über alle Konten
+  const maxHauptLoesung = Math.max(...Object.values(konten).map(k => {
+    const sollZeilen = k.buchungen.length + (k.bzkSaldo ? 1 : 0);
+    const habenZeilen = (k.nachlassSaldo ? 1 : 0) + 1; // +1 für GUV-Abschlussbuchung
+    return Math.max(sollZeilen, habenZeilen);
+  }));
+
+  // UEFE Aufgabe/Lösung: eigene Buchungsanzahl (nur 1 Konto, kein Gruppenabgleich nötig)
+  const uefeBuchungenAnzahl = uefeDaten.buchungen.length;
+
+  // GUV Aufgabe: großzügig leer (4 AWs + UEFE + Erfolg + Puffer)
+  const guvAufgabeZeilen = 6;
+
   // ── AUFGABE ────────────────────────────────────────────────────────────────
   let html = '<h2>Aufgabe</h2>';
 
-  let aufgabentext = '';
-  if (mitNachlaesse && mitBzkUnterkonten) {
-    aufgabentext = `Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
-      <strong>Schließe alle Konten ab: Zuerst die Bezugskosten- und Nachlasskonten über die jeweiligen Hauptkonten (Vorabschlussbuchungen), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong>`;
-  } else if (mitNachlaesse) {
-    aufgabentext = `Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
-      <strong>Schließe alle Konten ab: Zuerst die Nachlasskonten über die jeweiligen Hauptkonten (Vorabschlussbuchung), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong>`;
-  } else if (mitBzkUnterkonten) {
-    aufgabentext = `Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
-      <strong>Schließe alle Konten ab: Zuerst die Bezugskostenunterkonten über die jeweiligen Hauptkonten (Vorabschlussbuchung), dann alle Erfolgskonten über das GuV-Konto. Ermittle Art und Höhe des Unternehmenserfolgs.</strong>`;
-  } else {
-    aufgabentext = `Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>
-      <strong>Schließe alle Konten ab und ermittle Art und Höhe des Unternehmenserfolgs.</strong>`;
-  }
+  let aufgabentext = 'Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>Schließe alle Konten ordnungsgemäß ab und bilde die Buchungssätze.';
   html += `<p>${aufgabentext}</p>`;
 
-  html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin:1.5em 0 2em;">`;
+  // Aufgabe: 2-Spalten-Grid für den Druck
+  html += `<div class="tkonto-grid">`;
 
   if (hatUnterkonten) {
-    // BZK-Unterkonten (Soll-seitig) zuerst
     if (mitBzkUnterkonten) {
       Object.entries(konten).forEach(([nr]) => {
         const bzkU = BZK_UNTERKONTO_MAP[nr];
         const bzkDaten = bzkUnterkonten[nr];
         if (bzkU && bzkDaten) {
-          html += `<div>${renderTKontoBzkUnterkontoAufgabe(bzkU.nr, bzkDaten.buchungen)}</div>`;
+          html += `<div class="tkonto-cell">${renderTKontoBzkUnterkontoAufgabe(bzkU.nr, bzkDaten.buchungen, maxBzkAufgabe)}</div>`;
         }
       });
     }
-    // Nachlässe (Haben-seitig) danach
     if (mitNachlaesse) {
       Object.entries(konten).forEach(([nr]) => {
         const nl = NACHLASS_MAP[nr];
         const nlDaten = nachlaesse[nr];
         if (nl && nlDaten) {
-          html += `<div>${renderTKontoNachlassAufgabe(nl.nr, nlDaten.buchungen)}</div>`;
+          html += `<div class="tkonto-cell">${renderTKontoNachlassAufgabe(nl.nr, nlDaten.buchungen, maxNlAufgabe)}</div>`;
         }
       });
     }
   }
 
-  // Hauptkonten
   Object.entries(konten).forEach(([nr, data]) => {
-    html += `<div>${renderTKontoAufgabe(nr, data.buchungen)}</div>`;
+    html += `<div class="tkonto-cell">${renderTKontoAufgabe(nr, data.buchungen, maxHaupt)}</div>`;
   });
 
-  html += `<div>${renderTKontoUEFEAufgabe(uefeDaten.buchungen)}</div>`;
-  html += `</div>`;
+  html += `<div class="tkonto-cell">${renderTKontoUEFEAufgabe(uefeDaten.buchungen, uefeBuchungenAnzahl)}</div>`;
+
+  html += `</div>`; // end tkonto-grid
+
+  html += `<div class="tkonto-fullwidth">${renderTKontoGUVAufgabe(guvAufgabeZeilen)}</div>`;
 
   // ── LÖSUNG ─────────────────────────────────────────────────────────────────
-  html += `<h2 style="margin-top:2.5em">Lösung</h2>`;
+  html += `<h2 class="loesung" style="margin-top:2.5em">Lösung</h2>`;
 
   // Buchungssätze
   html += `<strong>Buchungssätze:</strong>
   <table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:700px;"><tbody>`;
 
-  // Schritt 1: BZK-Unterkonten über Hauptkonten (erhöhen Aufwand: AWR an BZKR)
   if (mitBzkUnterkonten) {
     html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">Schritt 1a: Vorabschluss – Bezugskostenunterkonten über Hauptkonten abschließen</td></tr>`;
     Object.entries(konten).forEach(([nr]) => {
@@ -546,7 +585,6 @@ function zeigeZufaelligenBestandsabschluss() {
     html += `<tr><td colspan="4" style="padding:6px 0;"></td></tr>`;
   }
 
-  // Schritt 1b: Nachlasskonten über Hauptkonten (mindern Aufwand: NR an AWR)
   if (mitNachlaesse) {
     const schrittLabel = mitBzkUnterkonten ? 'Schritt 1b' : 'Schritt 1';
     html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">${schrittLabel}: Vorabschluss – Nachlasskonten über Hauptkonten abschließen</td></tr>`;
@@ -568,7 +606,6 @@ function zeigeZufaelligenBestandsabschluss() {
   const schrittGUV = hatUnterkonten ? 'Schritt 2' : 'Schritt 1';
   html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">${schrittGUV}: Aufwandskonten über GuV abschließen</td></tr>`;
 
-  // GUV-Buchungssatz je Hauptkonto mit korrektem guvSaldo
   Object.entries(konten).forEach(([nr, data]) => {
     html += `<tr>
       <td style="padding:2px 10px 2px 0;white-space:nowrap;">8020 GUV</td>
@@ -607,14 +644,14 @@ function zeigeZufaelligenBestandsabschluss() {
 
   // Abgeschlossene T-Konten
   html += `<br>`;
-  html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin-bottom:2em;">`;
+  html += `<div class="tkonto-grid">`;
 
   if (mitBzkUnterkonten) {
     Object.entries(konten).forEach(([nr]) => {
       const bzkU = BZK_UNTERKONTO_MAP[nr];
       const bzkDaten = bzkUnterkonten[nr];
       if (bzkU && bzkDaten) {
-        html += `<div>${renderTKontoBzkUnterkontoLoesung(bzkU.nr, nr, bzkDaten.buchungen, bzkDaten.saldo)}</div>`;
+        html += `<div class="tkonto-cell">${renderTKontoBzkUnterkontoLoesung(bzkU.nr, nr, bzkDaten.buchungen, bzkDaten.saldo, maxBzkLoesung)}</div>`;
       }
     });
   }
@@ -624,26 +661,27 @@ function zeigeZufaelligenBestandsabschluss() {
       const nl = NACHLASS_MAP[nr];
       const nlDaten = nachlaesse[nr];
       if (nl && nlDaten) {
-        html += `<div>${renderTKontoNachlassLoesung(nl.nr, nr, nlDaten.buchungen, nlDaten.saldo)}</div>`;
+        html += `<div class="tkonto-cell">${renderTKontoNachlassLoesung(nl.nr, nr, nlDaten.buchungen, nlDaten.saldo, maxNlLoesung)}</div>`;
       }
     });
   }
 
   Object.entries(konten).forEach(([nr, data]) => {
-    html += `<div>${renderTKontoLoesung(nr, data.buchungen, data.eigenSaldo, data.nachlassSaldo, data.bzkSaldo)}</div>`;
+    html += `<div class="tkonto-cell">${renderTKontoLoesung(nr, data.buchungen, data.eigenSaldo, data.nachlassSaldo, data.bzkSaldo, maxHauptLoesung)}</div>`;
   });
 
-  html += `<div>${renderTKontoUEFELoesung(uefeDaten.buchungen, uefeDaten.saldo)}</div>`;
-  html += `</div>`;
+  html += `<div class="tkonto-cell">${renderTKontoUEFELoesung(uefeDaten.buchungen, uefeDaten.saldo, Math.max(uefeBuchungenAnzahl, maxHauptLoesung))}</div>`;
 
-  // GuV-Konto
+  // GUV-Konto in der Lösung ebenfalls in das Grid
   const guvSaldos = {};
   Object.entries(konten).forEach(([nr, data]) => {
     guvSaldos[nr] = data.guvSaldo;
   });
+  // GUV Lösung: Soll hat 4 AWs (+ ggf. EK Gewinn), Haben hat UEFE (+ ggf. EK Verlust)
+  // maxZeilen wird intern berechnet – kein minZeilen-Parameter nötig
+  html += `<div class="tkonto-cell">${renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt)}</div>`;
 
-  html += `<br>`;
-  html += renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt);
+  html += `</div>`; // end tkonto-grid
 
   html += `<p style="font-size:1.15em;font-weight:bold;margin-top:1.8em;">
     Unternehmenserfolg: ${erfolgArt} in Höhe von ${formatBetrag(erfolgHoehe)} €
@@ -804,8 +842,106 @@ function toggleKiPromptVorschau() {
   }
 }
 
+// ── DRUCK-FUNKTION ───────────────────────────────────────────────────────────
+function drucken() {
+  window.print();
+}
+
+function addPrintCSS() {
+  const style = document.createElement('style');
+  style.innerHTML = `
+    /* ── Bildschirm: flexibles Grid ──────────────────────────────────────── */
+    .tkonto-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin: 1.5em 0 2em;
+    }
+    .tkonto-cell {
+      width: 580px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .tkonto-fullwidth {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      margin: 1em 0 2em;
+    }
+
+    /* ── Druck: exakt 2 Konten pro Zeile ─────────────────────────────────── */
+    @media print {
+      body * { visibility: hidden; }
+      #Container, #Container * { visibility: visible; }
+      #Container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+
+      /* Aufgabe und Lösung sauber trennen */
+      #Container h2:first-of-type {
+        page-break-after: avoid;
+      }
+      #Container h2.loesung {
+        page-break-before: always !important;
+        margin-top: 60px !important;
+      }
+
+      /* Grid: 2 gleichbreite Spalten */
+      .tkonto-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 12px 20px !important;
+        width: 100% !important;
+        margin: 0.8em 0 1.2em !important;
+      }
+
+      /* Jede Zelle füllt ihre Spalte */
+      .tkonto-cell {
+        width: 100% !important;
+        max-width: 100% !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      /* Vollbreites Konto (GUV Aufgabe) – überspannt beide Spalten */
+      .tkonto-fullwidth {
+        width: 100% !important;
+        max-width: 100% !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin: 0.8em 0 1em !important;
+      }
+
+      /* T-Konten-Tabellen füllen die Zelle */
+      .tkonto-cell table,
+      .tkonto {
+        width: 100% !important;
+        font-size: 0.85em !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      @page {
+        margin: 1.5cm 0.8cm;
+      }
+
+      h2 { page-break-after: avoid; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// Sofort beim Laden ausführen
 document.addEventListener('DOMContentLoaded', function () {
   zeigeZufaelligenBestandsabschluss();
+  addPrintCSS();
+
   const vorschauEl = document.getElementById('kiPromptVorschau');
-  if (vorschauEl) vorschauEl.textContent = KI_ASSISTENT_PROMPT;
+  if (vorschauEl) {
+    vorschauEl.value = KI_ASSISTENT_PROMPT;
+    vorschauEl.style.display = 'none';
+  }
 });
