@@ -65,7 +65,7 @@ const einnahmenBausteine = {
   gehalt1: [
     'Das monatliche Netto-Gehalt von {person1} beträgt {betrag} Euro.',
     '{person1} verdient monatlich {betrag} Euro netto.',
-    'Aus seiner / ihrer Berufstätigkeit erhält {person1} jeden Monat {betrag} Euro netto.',
+    'Aus der Berufstätigkeit erhält {person1} jeden Monat {betrag} Euro netto.',
   ],
   gehalt2: [
     'Dazu kommt das Gehalt von {person2} in Höhe von {betrag} Euro.',
@@ -524,11 +524,11 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   // ── Fallbeispiel-Kasten ──────────────────────────────────────────────────
   html += `<h2 style="margin-top:${nr > 1 ? '2.5em' : '0'};">${aufgaTitel} – Haushaltsplan erstellen</h2>`;
-  html += `<p style="font-style:italic; color:#555; font-size:0.95rem; max-width:680px;">
+  html += `<p style="font-style:italic; color:#555; font-size:0.95rem; max-width:600px;">
     Lies das folgende Fallbeispiel sorgfältig durch.
   </p>`;
 
-  html += `<div style="border:1px solid #ccc; border-left:5px solid #1a237e; border-radius:6px; padding:20px 24px; margin:12px 0 16px; background:#fafafa; max-width:680px;">`;
+  html += `<div style="border:1px solid #ccc; border-left:5px solid #1a237e; border-radius:6px; padding:20px 24px; margin:12px 0 16px; background:#fafafa; max-width:600px;">`;
   html += `<h3 style="margin-bottom:4px; color:#1a237e;">${hp.name}</h3>`;
   html += `<p style="color:#546e7a; font-size:0.85rem; margin-bottom:14px; font-style:italic;">Familientyp: ${hp.profil}</p>`;
   html += `<p style="margin-bottom:12px;">${hp.intro}</p>`;
@@ -543,7 +543,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   html += `</div>`;
 
   // Aufgabenstellung a
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2; margin-bottom:0;">
+  html += `<ol style="max-width:600px; font-size:0.9rem; line-height:2; margin-bottom:0;">
     <li>Ermittle alle Einnahmen und Ausgaben aus dem Fallbeispiel und trage sie in den Haushaltsplan ein.</li>
     <li>Berechne die Summe der Einnahmen und die Summe der Ausgaben.</li>
     <li>Ermittle den monatlichen Gewinn bzw. Verlust.</li>
@@ -552,7 +552,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   // ── Aufgabentabelle Einnahmen (leere Zeilen zum Ausfüllen) ───────────────
   html += `<h3 style="margin-top:1.2em;">Haushaltsplan</h3>`;
 
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:600px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:65%;">Einnahmen</th>
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:35%;">Betrag (€)</th>
@@ -568,7 +568,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
     <td style="${tdE} text-align:right;">&nbsp;</td>
   </tr></tbody></table>`;
 
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:600px; margin-top:8px;">`;
   html += `<thead><tr style="background:#fce4ec;">
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:65%;">Ausgaben</th>
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:35%;">Betrag (€)</th>
@@ -584,7 +584,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
     <td style="${tdE} text-align:right;">&nbsp;</td>
   </tr></tbody></table>`;
 
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:600px; margin-top:8px;">`;
   html += `<tbody><tr style="background:#f3e5f5; font-weight:bold;">
     <td style="${tdE} width:65%;">Monatlicher Gewinn / Verlust<br><span style="font-weight:400; font-size:0.82rem;">(Summe Einnahmen − Summe Ausgaben)</span></td>
     <td style="${tdE} text-align:right; width:35%;">&nbsp;</td>
@@ -595,12 +595,12 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   const awBg     = aw.bewertung === 'kritisch' ? '#fff8e1' : '#f1f8e9';
   const awBorder = aw.bewertung === 'kritisch' ? '#f9a825' : '#558b2f';
-  html += `<div style="border:1px solid ${awBorder}; border-left:5px solid ${awBorder}; border-radius:6px; padding:16px 20px; margin:12px 0; background:${awBg}; max-width:680px;">`;
+  html += `<div style="border:1px solid ${awBorder}; border-left:5px solid ${awBorder}; border-radius:6px; padding:16px 20px; margin:12px 0; background:${awBg}; max-width:600px;">`;
   html += `<p style="margin:0; font-size:0.95rem;"><strong>${awPerson}</strong> von der Familie ${hp.familienName} wünscht sich <strong>${aw.wunsch}</strong>.<br>
     <span style="font-size:0.88rem; color:#555;">Kosten: <strong>${wunschBetragText}</strong>${aw.einmalig ? ' (einmalige Ausgabe)' : ' (laufende monatliche Ausgabe)'}</span></p>`;
   html += `</div>`;
 
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
+  html += `<ol style="max-width:600px; font-size:0.9rem; line-height:2;">
     <li>Beurteile den Ausgabenwunsch: Ordne ihn als <strong>vertretbar</strong> oder <strong>kritisch</strong> ein und begründe deine Einschätzung.</li>
     <li>Ermittle die Auswirkung dieser Ausgabe auf den Gewinn / Verlust des Haushaltsplans von der Familie ${hp.familienName}.${aw.einmalig ? ' (Hinweis: einmalige Ausgabe)' : ' (Hinweis: monatlich wiederkehrende Ausgabe)'}</li>
     <li>Definiere den Begriff <strong>Überschuldung</strong>.</li>
@@ -609,11 +609,11 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   // ── Aufgabe C: Regelm. / Unregelm. Ausgaben ─────────────────────────────
   html += `<h2 style="margin-top:2em;">${aufgcTitel} – Regelmäßige und unregelmäßige Ausgaben</h2>`;
-  html += `<p style="font-style:italic; color:#555; font-size:0.95rem; max-width:680px;">
+  html += `<p style="font-style:italic; color:#555; font-size:0.95rem; max-width:600px;">
     Beziehe dich auf den Haushaltsplan von der Familie ${hp.familienName}.
   </p>`;
 
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
+  html += `<ol style="max-width:600px; font-size:0.9rem; line-height:2;">
     <li>Erkläre den Unterschied zwischen <strong>regelmäßigen</strong> und <strong>unregelmäßigen</strong> Ausgaben.</li>
     <li>Ordne alle Ausgaben aus dem Haushaltsplan von der Familie ${hp.familienName} in die untenstehende Tabelle ein.</li>
     <li>Nenne je zwei weitere Beispiele für regelmäßige und unregelmäßige Ausgaben, die nicht im Haushaltsplan enthalten sind.</li>
@@ -622,7 +622,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   // Ausfülltabelle (leer – Schüler füllen aus)
   const maxZeilenC = Math.max(regelAusgaben.length, unregelAusgaben.length) + 2;
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:600px; margin-top:8px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:50%;">Regelmäßige Ausgaben</th>
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:50%;">Unregelmäßige Ausgaben</th>
@@ -644,7 +644,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   // ── Lösung a: Haushaltsplan mit Werten ───────────────────────────────────
   html += `<h3 style="margin-top:0;">${loesungTitel}A – Haushaltsplan</h3>`;
 
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:600px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
     <th style="border:1px solid #ccc; padding:7px 12px; text-align:left; width:60%;">Einnahmen</th>
     <th style="border:1px solid #ccc; padding:7px 12px; text-align:right; width:40%;">Betrag</th>
@@ -660,7 +660,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
     <td style="border:1px solid #ccc; padding:6px 12px; text-align:right;">${clozeAktiv ? zelleHP(hp.gesamtEinnahmen, true) : formatEuro(hp.gesamtEinnahmen)}</td>
   </tr></tbody></table>`;
 
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:600px; margin-top:8px;">`;
   html += `<thead><tr style="background:#fce4ec;">
     <th style="border:1px solid #ccc; padding:7px 12px; text-align:left; width:60%;">Ausgaben</th>
     <th style="border:1px solid #ccc; padding:7px 12px; text-align:right; width:40%;">Betrag</th>
@@ -679,7 +679,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   const saldoFarbe = hp.saldo >= 0 ? '#2e7d32' : '#c62828';
   const saldoBg    = hp.saldo >= 0 ? '#e8f5e9' : '#ffebee';
   const saldoLabel = hp.saldo >= 0 ? 'Gewinn' : 'Verlust';
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px; margin-top:8px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:600px; margin-top:8px;">`;
   html += `<tbody><tr style="background:${saldoBg}; font-weight:bold; color:${saldoFarbe};">
     <td style="border:1px solid #ccc; padding:8px 12px; width:60%;">Monatlicher ${saldoLabel}</td>
     <td style="border:1px solid #ccc; padding:8px 12px; text-align:right; width:40%;">${clozeAktiv ? zelleHP(hp.saldo, true) : formatEuro(hp.saldo)}</td>
@@ -691,7 +691,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   const bewIcon  = aw.bewertung === 'kritisch' ? '⚠️' : '✅';
   const bewFarbe = aw.bewertung === 'kritisch' ? '#c62828' : '#2e7d32';
   const bewBg2   = aw.bewertung === 'kritisch' ? '#ffebee' : '#e8f5e9';
-  html += `<div style="background:${bewBg2}; border:1px solid ${bewFarbe}; border-radius:4px; padding:10px 16px; max-width:680px; font-size:0.88rem; line-height:1.9;">`;
+  html += `<div style="background:${bewBg2}; border:1px solid ${bewFarbe}; border-radius:4px; padding:10px 16px; max-width:600px; font-size:0.88rem; line-height:1.9;">`;
   html += `<strong>1. Beurteilung:</strong> ${bewIcon} <strong>${aw.bewertung === 'kritisch' ? 'Kritisch' : 'Vertretbar'}</strong><br>`;
   html += `${aw.begruendung}<br><br>`;
 
@@ -709,7 +709,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   // ── Lösung C: Regelm. / Unregelm. – ausgefüllte Tabelle ─────────────────
   html += `<h3 style="margin-top:1.6em;">${loesungTitel}C – Regelmäßige und unregelmäßige Ausgaben</h3>`;
-  html += `<div style="background:#f8f7f4; border:1px solid #ddd; border-radius:4px; padding:10px 16px; max-width:680px; font-size:0.88rem; line-height:1.9; margin-bottom:10px;">`;
+  html += `<div style="background:#f8f7f4; border:1px solid #ddd; border-radius:4px; padding:10px 16px; max-width:600px; font-size:0.88rem; line-height:1.9; margin-bottom:10px;">`;
   html += `<strong>1. Definition:</strong> <em>Regelmäßige Ausgaben</em> fallen jeden Monat in gleicher oder ähnlicher Höhe an (z. B. Miete, Versicherungen). <em>Unregelmäßige Ausgaben</em> entstehen nur gelegentlich oder schwankend (z. B. Kleidung, Reparaturen).<br><br>`;
   html += `<strong>3. Weitere Beispiele:</strong><br>`;
   html += `Regelmäßig: <em>${regelmaessigBeispiele.filter(b => !regelAusgaben.includes(b)).slice(0, 2).join(', ')}</em><br>`;
@@ -719,7 +719,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
 
   // Ausgefüllte Tabelle (Lösung 2)
   const maxZeilenLsg = Math.max(regelAusgaben.length, unregelAusgaben.length);
-  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:600px;">`;
   html += `<thead><tr style="background:#e8eaf6;">
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:50%;">Regelmäßige Ausgaben</th>
     <th style="border:1px solid #ccc; padding:8px 12px; text-align:left; width:50%;">Unregelmäßige Ausgaben</th>
