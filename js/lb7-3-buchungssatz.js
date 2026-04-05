@@ -4,6 +4,7 @@
 
 // Globale Variable für ausgewähltes Unternehmen
 let kunde = '<i>[Modellunternehmen]</i>';
+let letzteGenerierteGeschaeftsfaelle = [];
 
 // YAML-Daten
 let yamlData = [];
@@ -1222,11 +1223,12 @@ function zeigeZufaelligeGeschaeftsfaelle() {
   let aufgabenHTML  = '<h2>Aufgaben</h2><ol>';
   let loesungenHTML = '<h2>Lösung</h2>';
 
-  const geschaeftsfaelle = [testGf];
-  for (let i = 1; i < anzahl; i++) {
-    const gf = erstelleZufallsGeschaeftsfall();
-    if (gf) geschaeftsfaelle.push(gf);
-  }
+letzteGenerierteGeschaeftsfaelle = [testGf];
+for (let i = 1; i < anzahl; i++) {
+  const gf = erstelleZufallsGeschaeftsfall();
+  if (gf) letzteGenerierteGeschaeftsfaelle.push(gf);
+}
+const geschaeftsfaelle = letzteGenerierteGeschaeftsfaelle;
 
   geschaeftsfaelle.forEach((gf, idx) => {
     const i = idx + 1;
@@ -1242,6 +1244,10 @@ function zeigeZufaelligeGeschaeftsfaelle() {
 
   aufgabenHTML += '</ol>';
   container.innerHTML = aufgabenHTML + loesungenHTML;
+    const vorschau = document.getElementById("kiPromptVorschau");
+if (vorschau && vorschau.style.display !== "none") {
+  vorschau.textContent = erstelleKiPromptText();
+}
 }
 
 // ============================================================================
@@ -1262,6 +1268,15 @@ Pädagogischer Ansatz:
 - Beantworte deine Rückfragen nicht selbst, hake bei falschen Antworten nach.
 - Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
 - Erst wenn alle Teilschritte richtig beantwortet wurden, bestätige den vollständigen Buchungssatz.
+
+A. Begrüße den Schüler freundlich mit "Hallo" und gib ihm einen Geschäftfall vor, den du zufällig aus der folgenden Aufgabenliste auswählst:
+Arbeitsauftrag: "Bilde den Buchungssatz zum Geschäftsfall."
+
+###AUFGABEN und LÖSUNGEN###
+
+B. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nacheinander (nicht in einer Antwort). Schreibe nie die Lösung in deine Antwort, wenn der Schüler falsch antwortet. Bevor du die nächste Frage stellst, sollte die aktuelle Frage richtig beantwortet sein.
+   - Frage: „Welche Konten werden benötigt?" Prüfe, ob die Schülerlösung stimmt. Schaue dazu für dich in der Musterlösung nach welche Konten gebucht werden! Sage dann, ob der Schüler falsch liegt oder ob es richtig ist.
+   - Frage weiter "Bilde nun den vollständigen Buchungssatz"
 
 Kontenplan – Bestandskonten:
 
@@ -1322,10 +1337,74 @@ Was du NICHT tust:
 - Nenne den fertigen Buchungssatz nicht, bevor der Schüler selbst darauf gekommen ist
 - Rechne nicht vor, bevor gefragt wurde
 - Gib keine Lösungen auf direkte Anfrage
+
+Nenne den fertigen Buchungssatz erst, wenn der Schüler selbst darauf gekommen ist. Verbessere am Schluss dann auch Formfehler, zum Beispiel Großschreibung der Konten (VE statt Ve) und weise darauf hin die DIN 5008 zu beachten: Tausenderpunkt bei den Beträgen mit zwei Nachkommastellen und €-Zeichen: z. B. 12.000,00 €
+Gib ganz am Ende den Buchungssatz mit einer Tabellenstruktur in html aus (falls HTML zugelassen ist und gerendert wird), Vorlage:<br /><table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:700px;"><tbody><tr><td style="white-space:nowrap;width:150px;max-width:150px;">Beispielkonto</td><td style="text-align:right;white-space:nowrap;width:160px;max-width:160px;">2.000,00 €</td><td style="text-align:center;white-space:nowrap;width:80px;"><br /></td><td style="white-space:nowrap;width:150px;max-width:150px;"><br /></td><td style="white-space:nowrap;width:160px;max-width:160px;text-align:right;"><br /></td></tr><tr><td style="white-space:nowrap;width:150px;max-width:150px;">VORST</td><td style="text-align:right;white-space:nowrap;width:160px;max-width:160px;">380,00 €</td><td style="text-align:center;white-space:nowrap;width:80px;">an</td><td style="white-space:nowrap;width:150px;max-width:150px;">VE</td><td style="white-space:nowrap;width:160px;max-width:160px;text-align:right;">2.000,00 €</td></tr></tbody></table><br />
+Am Ende einer erfolgreich gelösten Übung:
+- Frage immer: „Möchtest du noch einen anderen Geschäftsfall üben? Dann geb ich dir einfach den nächsten!" Dann wähle wieder einen zufälligen aus, der noch nicht dran war.
+Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Buchung selbst findet und versteht.
 `;
 
+function erstelleKiPromptText() {
+  let inhalt = '';
+  if (letzteGenerierteGeschaeftsfaelle.length === 0) {
+    inhalt = '(Noch keine Aufgaben generiert. Bitte zuerst Geschäftsfälle erstellen.)';
+  } else {
+    inhalt = letzteGenerierteGeschaeftsfaelle.map((gf, idx) => {
+      const nr = idx + 1;
+      const bs = erstelleBuchungssatzText(gf); // Klartext, kein HTML
+      return `--- Aufgabe ${nr} ---\n${gf.text}\n\nMusterlösung ${nr}:\n${bs}`;
+    }).join('\n\n');
+  }
+  return KI_ASSISTENT_PROMPT.replace('###AUFGABEN und LÖSUNGEN###', inhalt);
+}
+
+function erstelleBuchungssatzText(gf) {
+  const t = gf.typ;
+  const f = v => v.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+
+  switch (t.typ) {
+    case 'einfach':
+      return `${t.soll} ${f(gf.nettoBetrag)} an ${t.haben} ${f(gf.nettoBetrag)}`;
+
+    case 'einfach_ust':
+      return `${t.soll} ${f(gf.nettoBetrag)}\nVORST ${f(gf.Vorsteuer)} an ${t.haben} ${f(gf.bruttoBetrag)}`;
+
+    case 'verkauf_ust':
+      return `${t.soll} ${f(gf.bruttoBetrag)} an ${t.haben} ${f(gf.nettoBetrag)}\n                    USt ${f(gf.Vorsteuer)}`;
+
+    case 'zusammengesetzt':
+      return erstelleZusammengesetztenBSText(gf);
+
+    default:
+      return `${t.soll} ${f(gf.nettoBetrag)} an ${t.haben} ${f(gf.nettoBetrag)}`;
+  }
+}
+
+function erstelleZusammengesetztenBSText(gf) {
+  const t = gf.typ;
+  const f = v => v.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+
+  switch (t.id) {
+    case 'kauf_lw_ka_ve':
+    case 'kauf_lw_bk_ve': {
+      const bar = t.id === 'kauf_lw_ka_ve' ? 'KA' : 'BK';
+      return `FP ${f(gf.nettoBetrag)}\nVORST ${f(gf.Vorsteuer)} an ${bar} ${f(gf.anteil1)}\n                    VE ${f(gf.anteil2)}`;
+    }
+    case 'kauf_ma_bk_ve':
+      return `MA ${f(gf.nettoBetrag)}\nVORST ${f(gf.Vorsteuer)} an BK ${f(gf.anteil1)}\n                    VE ${f(gf.anteil2)}`;
+    case 'verkauf_bm_ka_bk':
+      return `KA ${f(gf.anteil1)}\nBK ${f(gf.anteil2)} an BM ${f(gf.nettoBetrag)}\n                    USt ${f(gf.Vorsteuer)}`;
+    case 'tilgung_ve_ka_bk':
+      return `VE ${f(gf.nettoBetrag)} an KA ${f(gf.anteil1)}\n                    BK ${f(gf.anteil2)}`;
+    default:
+      return '(Buchungssatz nicht darstellbar)';
+  }
+}
+
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
+    const promptText = erstelleKiPromptText();
+  navigator.clipboard.writeText(promptText).then(() => {
     const btn = document.getElementById('kiPromptKopierenBtn');
     const originalHTML = btn.innerHTML;
     btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
@@ -1343,6 +1422,7 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === 'none';
   if (isHidden) {
     vorschau.style.display = 'block';
+    vorschau.textContent = erstelleKiPromptText(); // dynamisch
     btn.textContent = 'Vorschau ausblenden ▲';
   } else {
     vorschau.style.display = 'none';
