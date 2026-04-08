@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kostenloses BwR-Tool: Gewerbesteuer-Aufgaben für BwR Realschule Bayern. Berechnung Gewerbesteuer, Messbetrag, Hebesatz – mit Modellunternehmen aus YAML.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb8-6-gewerbesteuer.html">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Gewerbesteuer – BwR Tool">
+  <meta property="og:description" content="Gewerbesteuer berechnen – BwR Realschule Bayern">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb8-6-gewerbesteuer.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
+  <meta property="og:locale" content="de_DE">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+  <title>Gewerbesteuer berechnen | meinbwr.de</title>
+
+</head>
+
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+  <h2>Gewerbesteuer berechnen</h2>
+  <div id="generator-container">
+    <div class="box">
+
+      <!-- Einleitung -->
+      <p>
+        Hier können Sie eine zufällige Gewerbesteuer-Aufgabe generieren – mit Modellunternehmen,
+        Hebesatz und Standortfaktoren. Alle Werte sind per Eingabefeld anpassbar.
+      </p>
+
+      <!-- Unternehmen -->
+      <h3>Unternehmen auswählen</h3>
+      <div class="flex-row">
+        <div>
+          <label for="gstKunde">Unternehmen:</label>
+          <select id="gstKunde" class="meinUnternehmen">
+            <!-- Wird automatisch befüllt -->
+          </select>
+        </div>
+      </div>
+
+      <h3>Daten</h3>
+<div class="grid3">
+
+      <fieldset class="preisanpassung-gruppe">
+      <legend>Unternehmensdaten</legend>
+        <div class="form-field">
+          <label for="inputGewerbeertrag">Gewerbeertrag (€)</label>
+          <input type="text" id="inputGewerbeertrag" placeholder="z. B. 275.400" autocomplete="off" inputmode="numeric">
+        </div>
+
+        <div class="form-field">
+          <label for="inputFreibetrag">Freibetrag (€)</label>
+          <input type="text" id="inputFreibetrag" placeholder="z. B. 24.500" autocomplete="off" inputmode="numeric">
+        </div>
+        
+        <div class="form-field">
+          <label for="inputOrt">Ort / Stadt</label>
+          <input type="text" id="inputOrt" placeholder="z. B. München" maxlength="60" autocomplete="off">
+        </div>
+</fieldset>
+        <fieldset class="artikel-gruppe">
+              <legend>Gewerbesteuer</legend>
+        <div class="form-field">
+          <label for="inputSteuermesszahl">Steuermesszahl (%)</label>
+          <input type="text" id="inputSteuermesszahl" value="3,5" autocomplete="off" inputmode="decimal">
+        </div>
+
+        <div class="form-field">
+          <label for="inputHebesatz">Hebesatz (%)</label>
+          <input type="text" id="inputHebesatz" placeholder="z. B. 370" autocomplete="off" inputmode="numeric">
+        </div>
+
+</fieldset>
+      <fieldset class="vorlage-gruppe">
+              <legend>Grundsteuer</legend>
+               <div class="form-field">
+  <label for="inputGrundsteuerA">Grundsteuer A (%)</label>
+  <input type="text" id="inputGrundsteuerA" value="340" autocomplete="off" inputmode="numeric">
+</div>
+ 
+<div class="form-field">
+  <label for="inputGrundsteuerB">Grundsteuer B (%)</label>
+  <input type="text" id="inputGrundsteuerB" value="340" autocomplete="off" inputmode="numeric">
+</div>
+ </fieldset>
+
+</div>
+<br>
+       <button class="btn-zufall" style="margin-left:12px;" type="button"
+          onclick="setzeZufallswerte(); clearValidationError();" title="Zufällige Werte neu würfeln">
+          🎲 Neue Zufallswerte (Ertrag und Hebesatz)
+        </button>
+
+  <h3>Standortfaktoren</h3>
+<div id="standortCheckboxContainer">
+  <!-- Wird per JS befüllt (renderCheckboxUI) -->
+</div>
+ 
+
+      <!-- Validierungsfehler -->
+      <div id="gstValidationError" class="gst-validation-error"></div>
+
+      <br>
+      <button onclick="zeigeGewerbesteuerAufgaben()">Aufgaben erstellen</button>
+
+  </div>
+
+
+  <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+          <!-- Exportierbarer Inhalt -->
+          <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+          </div>
+
+
+    </div>
+
+    <div w3-include-html="downloads.html"></div>
+
+    
+
+           <!-- ══════════════════════════════════════════════════════════════
+           KI-ASSISTENT PROMPT
+      ══════════════════════════════════════════════════════════════ -->
+      <div class="ki-assistent-box">
+
+        <div class="ki-assistent-header">
+          <span class="ki-icon">🤖</span>
+          <div>
+            <h3>KI-Assistent – System-Prompt</h3>
+            <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+          </div>
+        </div>
+
+        <div class="ki-assistent-body">
+
+          <div class="ki-hinweis">
+            <span class="hinweis-icon">💡</span>
+            <span>
+              Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+              Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+            </span>
+          </div>
+
+          <div class="ki-chips">
+            <span class="ki-chip">📚 BwR Realschule</span>
+            <span class="ki-chip">🧮 Gewerbesteuer</span>
+            <span class="ki-chip">❓Aufgabe integriert</span>
+            <span class="ki-chip">✅ Sokrat. Methode</span>
+            <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+          </div>
+
+          <div class="ki-actions" style="margin-top: 14px;">
+            <button
+              class="ki-prompt-btn ki-prompt-btn--primary"
+              id="kiPromptKopierenBtn"
+              onclick="kopiereKiPrompt()"
+              title="Prompt in die Zwischenablage kopieren"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Prompt kopieren
+            </button>
+
+            <button
+              class="ki-prompt-btn ki-prompt-btn--ghost"
+              id="kiPromptToggleBtn"
+              onclick="toggleKiPromptVorschau()"
+              title="Prompt-Text ein- oder ausblenden"
+            >
+              Prompt anzeigen ▼
+            </button>
+          </div>
+
+          <div class="ki-prompt-vorschau-wrapper">
+            <textarea id="kiPromptVorschau" readonly spellcheck="false" aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+          </div>
+
+        </div>
+      </div>
+      <!-- Ende KI-Assistent -->
+</main>
+
+<script src="js/lb8-6-gewerbesteuer.js"></script>
+  <script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+  includeHTML();
+
+  // Container sichtbar machen nach erster Generierung
+  const _origZeige = zeigeGewerbesteuerAufgaben;
+  window.zeigeGewerbesteuerAufgaben = function() {
+    _origZeige();
+    const c = document.getElementById("gstContainer");
+    if (c && c.innerHTML.trim()) c.style.display = "block";
+  };
+</script>
+
+</body>
+</html>
