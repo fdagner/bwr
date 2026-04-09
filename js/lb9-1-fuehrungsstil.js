@@ -56,7 +56,7 @@ const faelle = [
   {
     stil: 'autoritativ',
     situation: 'Anweisungen & Kontrolle',
-    sachverhalt: '{vorname} {nachname} leitet die Produktion in einer Metallfabrik. {Er_Sie} gibt {seinen_ihren} Mitarbeitern klare und detaillierte Arbeitsanweisungen und erwartet, dass diese präzise umgesetzt werden. Verbesserungsvorschläge der Belegschaft werden von {ihm_ihr} nicht aufgegriffen, da {er_sie} die Verantwortung für die Abläufe trägt.',
+    sachverhalt: '{vorname} {nachname} leitet die Produktion in einer Metallfabrik. {Er_Sie} gibt {seinen_ihren} Mitarbeitern klare und detaillierte Arbeitsanweisungen und erwartet, dass diese präzise umgesetzt werden. Verbesserungsvorschläge der Belegschaft werden nicht aufgegriffen, da {er_sie} die Verantwortung für die Abläufe trägt.',
     begruendung: 'Typisch autoritativer Führungsstil: Die Führungskraft trifft Entscheidungen allein, erteilt klare Anweisungen und lässt wenig Raum für Diskussion. Die Mitarbeiter haben begrenzten Entscheidungsspielraum.'
   },
   {
@@ -149,6 +149,102 @@ const faelle = [
     sachverhalt: '{vorname} {nachname} bespricht mit neuen Mitarbeitern in der ersten Woche ausführlich deren Stärken, Ziele und Erwartungen. {Er_Sie} fragt: „Was brauchst du, um gut starten zu können?“ und passt den Einarbeitungsplan gemeinsam an.',
     begruendung: 'Die Führungskraft geht individuell auf die Bedürfnisse neuer Mitarbeiter ein und gestaltet die Einarbeitung gemeinsam. Das stärkt das Vertrauen und den Einstieg ins Unternehmen.'
   },
+  {
+  stil: 'autoritativ',
+  situation: 'Kundenreklamation',
+  sachverhalt: '{vorname} {nachname} erhält eine Beschwerde eines wichtigen Kunden. {Er_Sie} entscheidet sofort allein über die Entschädigung und die weitere Vorgehensweise. Das Team wird lediglich per E-Mail informiert, wie die Reklamation zu bearbeiten ist – Rückfragen oder alternative Vorschläge sind nicht erwünscht.',
+  begruendung: 'Typisch autoritativer Führungsstil: Die Führungskraft trifft schnelle, eigenständige Entscheidungen und kommuniziert sie top-down. Das Team hat keinen Einfluss auf den Lösungsweg.'
+},
+{
+  stil: 'autoritativ',
+  situation: 'Budgetverteilung',
+  sachverhalt: 'Bei der jährlichen Budgetplanung legt {vorname} {nachname} die Mittelverteilung für alle Abteilungen allein fest. Die Teamleiter erhalten eine fertige Aufstellung mit genauen Beträgen und dürfen keine Änderungswünsche einbringen, da {er_sie} die Gesamtverantwortung trägt.',
+  begruendung: 'Entscheidungen über Ressourcen werden zentral und ohne Beteiligung der Betroffenen getroffen. Das unterstreicht die klare Hierarchie und Kontrolle der Führungskraft.'
+},
+{
+  stil: 'autoritativ',
+  situation: 'Prozessoptimierung',
+  sachverhalt: 'In der Logistikabteilung von {vorname} {nachname} sollen Arbeitsabläufe beschleunigt werden. {Er_Sie} analysiert die Prozesse allein und gibt detaillierte neue Arbeitsanweisungen heraus. Vorschläge aus dem Team werden mit dem Hinweis abgelehnt, dass die Verantwortung beim Vorgesetzten liegt.',
+  begruendung: 'Die Führungskraft behält die volle Kontrolle über Veränderungen und lässt wenig Raum für Input von unten. Typisch für autoritative Führung, bei der Effizienz durch klare Vorgaben erreicht werden soll.'
+},
+{
+  stil: 'autoritativ',
+  situation: 'Leistungsbeurteilung',
+  sachverhalt: '{vorname} {nachname} führt die jährlichen Mitarbeitergespräche allein auf Basis {seiner_ihrer} Beobachtungen durch. Die Mitarbeiter erhalten eine fertige Bewertung und konkrete Verbesserungsauflagen. Eigene Einschätzungen oder Selbstbewertungen werden nicht abgefragt.',
+  begruendung: 'Beurteilungen und Konsequenzen werden einseitig von der Führungskraft festgelegt. Es gibt keine gemeinsame Reflexion oder Mitsprache.'
+},
+{
+  stil: 'kooperativ',
+  situation: 'Kundenreklamation',
+  sachverhalt: 'Bei einer Kundenbeschwerde lädt {vorname} {nachname} das betroffene Team zu einer kurzen Runde ein. Gemeinsam werden die Ursachen analysiert, mögliche Lösungen diskutiert und eine einvernehmliche Entschädigung sowie Präventionsmaßnahmen erarbeitet.',
+  begruendung: 'Die Führungskraft nutzt das Wissen des Teams und bezieht es aktiv in die Problemlösung ein. Das fördert Akzeptanz und bessere, nachhaltigere Lösungen.'
+},
+{
+  stil: 'kooperativ',
+  situation: 'Budgetverteilung',
+  sachverhalt: 'Vor der Budgetplanung holt {vorname} {nachname} die Teamleiter zusammen. Jede Abteilung kann ihren Bedarf begründen, Prioritäten diskutieren und gemeinsam wird ein ausgewogener Verteilungsplan erarbeitet, den alle mittragen.',
+  begruendung: 'Ressourcenentscheidungen werden partizipativ getroffen. Das schafft Transparenz, Verständnis und höhere Motivation bei der Umsetzung.'
+},
+{
+  stil: 'kooperativ',
+  situation: 'Prozessoptimierung',
+  sachverhalt: 'Um die Logistikprozesse zu verbessern, organisiert {vorname} {nachname} Workshops mit dem gesamten Team. Die Mitarbeiter bringen ihre Alltagserfahrungen ein, entwickeln gemeinsam Verbesserungsvorschläge und entscheiden mit, welche Maßnahmen zuerst umgesetzt werden.',
+  begruendung: 'Kooperativer Führungsstil: Das praktische Wissen der Ausführenden wird wertgeschätzt und in die Optimierung einbezogen. Das führt meist zu praxisnäheren und akzeptierteren Lösungen.'
+},
+{
+  stil: 'kooperativ',
+  situation: 'Leistungsbeurteilung',
+  sachverhalt: 'In den Mitarbeitergesprächen lässt {vorname} {nachname} die Mitarbeiter zuerst eine Selbstbewertung abgeben. Anschließend wird gemeinsam über Stärken, Entwicklungsfelder und konkrete Ziele gesprochen. Die finale Beurteilung entsteht im Dialog.',
+  begruendung: 'Feedback und Beurteilung erfolgen auf Augenhöhe. Das stärkt das Vertrauen, die Eigenreflexion und die Verbindlichkeit der vereinbarten Ziele.'
+},
+{
+  stil: 'autoritativ',
+  situation: 'Strategische Neuausrichtung',
+  sachverhalt: '{vorname} {nachname} hat sich intensiv mit der Marktentwicklung beschäftigt und präsentiert dem Team in einer ausführlichen Präsentation die neue Strategie für die kommenden zwei Jahre. {Er_Sie} erklärt detailliert die Gründe, die Vorteile und was sich konkret ändern wird. Auf Nachfragen antwortet {er_sie} geduldig und sachlich, nimmt aber keine grundlegenden Änderungen am Konzept vor.',
+  begruendung: 'Die Führungskraft trifft die strategische Entscheidung allein auf Basis ihrer Expertise und kommuniziert sie transparent und überzeugend. Es gibt Erklärung und Raum für Verständnisfragen, aber keine echte Mitgestaltung – typisch für einen autoritativen Stil, der Klarheit und Richtung vorgibt.'
+},
+{
+  stil: 'autoritativ',
+  situation: 'Wahl des neuen Team-Tools',
+  sachverhalt: '{vorname} {nachname} hat drei Tools intensiv getestet und entscheidet sich für Tool X. In der Teamsitzung stellt {er_sie} die Vor- und Nachteile aller drei Optionen vor und begründet ausführlich, warum Tool X die beste Wahl ist. Das Team darf Fragen stellen und Bedenken äußern, die {er_sie} ernst nimmt und adressiert – die Entscheidung selbst bleibt jedoch unverändert.',
+  begruendung: 'Es wirkt partizipativ, weil informiert und diskutiert wird. Dennoch trifft die Führungskraft die Entscheidung allein und lässt keine echte Mitentscheidung zu. Der Unterschied zum Kooperativen liegt in der fehlenden gemeinsamen Bewertung und Abstimmung.'
+},
+{
+  stil: 'autoritativ',
+  situation: 'Reorganisation der Abteilung',
+  sachverhalt: 'Nach langer Analyse legt {vorname} {nachname} eine neue Aufbauorganisation fest. In mehreren Workshops erklärt {er_sie} die neue Struktur, die Rollen und die Vorteile für das Gesamtergebnis. Die Mitarbeiter können ihre Sorgen und Anpassungswünsche äußern, die {er_sie} wohlwollend anhört und wo möglich kleinere Anpassungen vornimmt – das Grundkonzept bleibt jedoch bestehen.',
+  begruendung: 'Die Führungskraft zeigt Wertschätzung und Transparenz, wirkt dadurch nicht hart oder distanziert. Dennoch wird die wesentliche Entscheidung top-down getroffen und nicht gemeinsam erarbeitet.'
+},
+{
+  stil: 'kooperativ',
+  situation: 'Strategische Neuausrichtung',
+  sachverhalt: '{vorname} {nachname} hat erste Überlegungen zur Marktentwicklung gemacht und bringt diese als Diskussionsgrundlage ins Team ein. Gemeinsam werden die Annahmen hinterfragt, weitere Aspekte ergänzt und mehrere Strategie-Optionen entwickelt. Am Ende einigt sich das Team unter Moderation von {vorname} {nachname} auf eine gemeinsame Richtung.',
+  begruendung: 'Die Führungskraft bringt eigene Expertise ein, lässt aber echte Mitgestaltung und gemeinsame Weiterentwicklung zu. Die endgültige Ausrichtung entsteht im Dialog – auch wenn die Führungskraft die Diskussion lenkt.'
+},
+{
+  stil: 'kooperativ',
+  situation: 'Wahl des neuen Team-Tools',
+  sachverhalt: '{vorname} {nachname} hat drei Tools vorab getestet und stellt sie dem Team vor. Anschließend bewertet das gesamte Team die Kriterien (Kosten, Bedienfreundlichkeit, Integration etc.) gemeinsam in einer Matrix. Nach offener Diskussion entscheidet sich die Gruppe mehrheitlich für Tool Y – auch wenn {vorname} {nachname} selbst Tool X bevorzugt hätte.',
+  begruendung: 'Die Führungskraft gibt Input und Rahmen, überlässt die finale Bewertung und Entscheidung aber weitgehend dem Team. Das ist kooperativ, auch wenn die Führungskraft die Diskussion moderiert und nicht komplett neutral ist.'
+},
+{
+  stil: 'kooperativ',
+  situation: 'Reorganisation der Abteilung',
+  sachverhalt: '{vorname} {nachname} sieht Handlungsbedarf bei der Aufbauorganisation und lädt das Team zu mehreren Workshops ein. Gemeinsam werden Probleme der aktuellen Struktur gesammelt, verschiedene Modelle skizziert und Vor- und Nachteile diskutiert. Am Ende wird eine neue Struktur erarbeitet, die breite Zustimmung findet – auch wenn {er_sie} eigene Präferenzen einbringt.',
+  begruendung: 'Die wesentliche Lösung entsteht durch gemeinsame Arbeit. Die Führungskraft steuert den Prozess und bringt Expertise ein, ohne die Entscheidung vorwegzunehmen.'
+},
+{
+  stil: 'autoritativ',
+  situation: 'Team-Ziele für das Quartal festlegen',
+  sachverhalt: '{vorname} {nachname} hat klare Vorstellungen von den Quartalszielen und präsentiert sie dem Team mit detaillierter Begründung. {Er_Sie} fragt aktiv nach Feedback zu Machbarkeit und möglichen Hindernissen. Auf Basis der Rückmeldungen passt {er_sie} einzelne Teilziele leicht an, behält aber die Gesamtausrichtung und Gewichtung bei.',
+  begruendung: 'Es gibt offenes Feedback und kleine Anpassungen – dennoch trifft die Führungskraft die Kernentscheidung allein. Der Unterschied zum Kooperativen liegt darin, dass das Team nicht mitentscheidet, sondern nur beratend wirkt.'
+},
+{
+  stil: 'kooperativ',
+  situation: 'Festlegung von Team-Zielen',
+  sachverhalt: '{vorname} {nachname} bringt eigene Zielvorschläge als Ausgangsbasis mit. Im Workshop diskutiert das Team gemeinsam die Prioritäten, Machbarkeit und Ressourcen. Am Ende werden die Ziele gemeinsam formuliert und verabschiedet – wobei {vorname} {nachname} bei Konflikten moderierend eingreift und auf strategische Rahmenbedingungen hinweist.',
+  begruendung: 'Die Ziele entstehen im echten Dialog. Die Führungskraft gibt Richtung vor, aber die konkrete Ausgestaltung und Verabschiedung erfolgt partizipativ.'
+}
 ];
 
 let letzteGenerierteAufgaben = [];
