@@ -310,12 +310,13 @@ function inputChangeCategory() {
     }
   } else {
     kontenZahlung = {
-      "in bar": "2880 KA",
       "per Barzahlung": "2880 KA",
       "per Banküberweisung": "2800 BK",
       "gegen Rechnung": "4400 VE",
       "auf Rechnung": "4400 VE",
       "auf Ziel": "4400 VE",
+      "per Eingangsrechnung": "4400 VE",
+      "per Rechnung": "4400 VE",
     }
   }
 }
@@ -635,57 +636,63 @@ function extractWerkstoffName(kontoCode) {
   return werkstoffe[kontoCode] || 'Werkstoffe';
 }
 
+function getBelegtypAusKonto(konto_2) {
+  if (konto_2 === "2880 KA") return "quittung";
+  if (konto_2 === "2800 BK") return "kontoauszug";
+  return "rechnung"; // 4400 VE → Eingangsrechnung
+}
+
 function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isGutschrift = false) {
   const params = new URLSearchParams();
 
-  // Immer fix: beleg=rechnung (Basis-Parameter, falls benötigt)
-  params.set('beleg', 'rechnung');
+  // Belegtyp aus konto_2 ableiten
+  const belegtyp = isGutschrift ? 'gutschrift' : (typ !== 'rechnung' && typ !== 'angebot' ? typ : getBelegtypAusKonto(geschaeftsfallDaten.konto_2 || ''));
+  params.set('beleg', belegtyp);
 
-  // Vorlage nur setzen, wenn explizit gewünscht
-  let vorlage = null;
-  if (typ === 'angebot') {
-    vorlage = 'angebot1.svg';
-  } else if (isGutschrift || typ === 'gutschrift') {
-    vorlage = 'gutschrift2.svg';
-  }
-  // Für normale Rechnung → bewusst KEIN vorlage-Parameter
-
-  if (vorlage) {
-    params.set('vorlage', vorlage);
-  }
-
-  // ── alle anderen Parameter ──────────────────────────────────────────────
-  if (geschaeftsfallDaten.listeneinkaufspreis) {
-    params.set('einzelpreis1', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
-  }
-  if (geschaeftsfallDaten.rabattSatz) {
-    params.set('rabatt', geschaeftsfallDaten.rabattSatz);
-  }
-  if (geschaeftsfallDaten.bezugskostenWert) {
-    params.set('bezugskosten', parseNumericValue(geschaeftsfallDaten.bezugskostenWert));
-  }
-  if (geschaeftsfallDaten.skontoSatz) {
-    params.set('skonto', geschaeftsfallDaten.skontoSatz);
-  }
-  if (geschaeftsfallDaten.werkstoff) {
-    params.set('artikel1', geschaeftsfallDaten.werkstoff);
-  }
+  if (typ === 'angebot') params.set('vorlage', 'angebot1.svg');
+  if (isGutschrift || typ === 'gutschrift') params.set('vorlage', 'gutschrift2.svg');
 
   const kaeuferSelect = document.getElementById('einkaufKaeufer');
   const liefererSelect = document.getElementById('einkaufLieferer');
-  if (kaeuferSelect?.value) params.set('kunde', kaeuferSelect.value.trim());
-  if (liefererSelect?.value) params.set('lieferer', liefererSelect.value.trim());
-
-  params.set('menge1', '1');
-  params.set('einheit1', 'PAL');
-  params.set('umsatzsteuer', '19');
   const now = new Date();
-  params.set('tag', now.getDate().toString().padStart(2, '0'));
-  params.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
+  const tag   = now.getDate().toString().padStart(2, '0');
+  const monat = (now.getMonth() + 1).toString().padStart(2, '0');
 
-  // Falls Gutschrift → Menge ggf. negativ (optional, je nach deiner Vorlage)
-  if (isGutschrift) {
-    // params.set('menge1', '-1');   // ← nur wenn du das wirklich brauchst
+  if (belegtyp === 'kontoauszug') {
+    if (kaeuferSelect?.value) params.set('kontoinhaber', kaeuferSelect.value.trim());
+    params.set('vorgang1', geschaeftsfallDaten.werkstoff || 'Werkstoffe');
+    if (geschaeftsfallDaten.bruttoBetrag) {
+      params.set('wertstellung1', `-${parseNumericValue(geschaeftsfallDaten.bruttoBetrag)}`);
+    }
+    params.set('tag', tag);
+    params.set('monat', monat);
+
+  } else if (belegtyp === 'quittung') {
+    if (kaeuferSelect?.value) params.set('kunde', kaeuferSelect.value.trim());
+    params.set('zweck', geschaeftsfallDaten.werkstoff || 'Werkstoffe');
+    if (geschaeftsfallDaten.listeneinkaufspreis) {
+      params.set('netto', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
+    }
+    params.set('ust', '19');
+    params.set('tag', tag);
+    params.set('monat', monat);
+
+  } else {
+    // rechnung, angebot, gutschrift
+    if (geschaeftsfallDaten.listeneinkaufspreis)
+      params.set('einzelpreis1', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
+    if (geschaeftsfallDaten.rabattSatz) params.set('rabatt', geschaeftsfallDaten.rabattSatz);
+    if (geschaeftsfallDaten.bezugskostenWert)
+      params.set('bezugskosten', parseNumericValue(geschaeftsfallDaten.bezugskostenWert));
+    if (geschaeftsfallDaten.skontoSatz) params.set('skonto', geschaeftsfallDaten.skontoSatz);
+    if (geschaeftsfallDaten.werkstoff) params.set('artikel1', geschaeftsfallDaten.werkstoff);
+    if (kaeuferSelect?.value) params.set('kunde', kaeuferSelect.value.trim());
+    if (liefererSelect?.value) params.set('lieferer', liefererSelect.value.trim());
+    params.set('menge1', '1');
+    params.set('einheit1', 'PAL');
+    params.set('umsatzsteuer', '19');
+    params.set('tag', tag);
+    params.set('monat', monat);
   }
 
   return `belege.html?${params.toString()}`;
@@ -694,24 +701,20 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
 function erstelleGeschaeftsfallButton(nummer, daten, isGutschrift = false) {
   const url = erzeugeURLFuerGeschaeftsfall(daten, isGutschrift ? 'gutschrift' : 'rechnung', isGutschrift);
 
-  let buttonText = `📄 ${nummer}. Eingangsrechnung erstellen`;
-  let titleText = `Eingangsrechnung für Aufgabe ${nummer} als SVG-Beleg öffnen`;
+  const belegtyp = isGutschrift ? 'gutschrift' : getBelegtypAusKonto(daten.konto_2 || '');
+  const namen = {
+    rechnung:    '📄 Eingangsrechnung',
+    kontoauszug: '🏦 Kontoauszug',
+    quittung:    '🧾 Quittung',
+    gutschrift:  '📄 Gutschrift (Rücksendung)',
+  };
+  const name = namen[belegtyp] || '📄 Beleg';
 
-  if (isGutschrift) {
-    buttonText = `📄 ${nummer}. Beleg für Rücksendung erstellen`;
-    titleText = `Gutschrift für Rücksendung Aufgabe ${nummer} erstellen`;
-  }
-
-  return `
-        <button
-            class="geschaeftsfall-beleg-button ${isGutschrift ? 'gutschrift-button' : ''}"
-            onclick="window.open('${url}', '_blank')"
-            title="${titleText}"
-            style="width: 100%; padding: 10px 12px; font-size: 14px;"
-        >
-            ${buttonText}
-        </button>
-    `;
+  return `<button class="geschaeftsfall-beleg-button"
+    onclick="window.open('${url}', '_blank')"
+    style="width:100%;padding:10px 12px;font-size:14px;">
+    ${name} ${nummer} erstellen
+  </button>`;
 }
 
 function erstelleAngebotButton(nummer, daten) {
@@ -856,13 +859,15 @@ letzteGenerierteGfListeEinkauf.push({ aufgabe: aufgabeText, loesung: loesungText
 
 
     // Rechnungs-Button immer
-    const geschaeftsfallDaten = {
-      listeneinkaufspreis: listeneinkaufspreis,
-      rabattSatz: antwort_rabattSatz,
-      bezugskostenWert: antwort_bezugskostenWert,
-      skontoSatz: antwort_skontoSatz,
-      werkstoff: werkstoffAnzeigeName,
-    };
+const geschaeftsfallDaten = {
+  listeneinkaufspreis: listeneinkaufspreis,
+  rabattSatz: antwort_rabattSatz,
+  bezugskostenWert: antwort_bezugskostenWert,
+  skontoSatz: antwort_skontoSatz,
+  werkstoff: werkstoffAnzeigeName,
+  konto_2: konto_2,         
+  bruttoBetrag: betrag_2,     
+};
 
     const buttonDiv = document.createElement('div');
     buttonDiv.style.margin = '12px 0';
