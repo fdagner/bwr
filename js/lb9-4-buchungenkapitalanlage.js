@@ -730,5 +730,5 @@ function autoSelectMyCompany() {
 
 document.addEventListener('DOMContentLoaded', function () {
   setTimeout(autoSelectMyCompany, 100);
-  zeigeZufaelligeGeschaeftsfaelle()
+  setTimeout(zeigeZufaelligeGeschaeftsfaelle, 500)
 });
