@@ -74,7 +74,7 @@
                         <!-- Dropdown-Optionen werden hier dynamisch hinzugefügt -->
                     </select>
                 </div>
-                <div><label for="year">Jahr für den Schlusswert (nur bei Monate):</label>
+                <div style="display: none"><label for="year">Jahr für den Schlusswert (nur bei Monate):</label>
                     <input type="number" id="year" min="1900" max="2100">
                 </div>
                 <div class="flex-row">
@@ -83,11 +83,10 @@
                         <input type="number" id="period" value="8" min="3" max="13">
                     </div>
                     <div>
-                        <label for="timeframe">Einheit:</label><br>
+                        <label for="timeframe">Einheit:</label>
                         <select id="timeframe">
                             <option value="days">Tage</option>
-                            <option value="months">Monate</option>
-
+   
                         </select>
                     </div>
                 </div>
