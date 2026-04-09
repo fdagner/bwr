@@ -4,6 +4,7 @@
 // Globale Variablen
 let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
+let letzteGenerierteGeschaeftsfaelle = [];
 
 // Konten-Definitionen
 const kontenDefinitionen = {
@@ -420,6 +421,15 @@ function erstelleBuchungssatz(geschaeftsfall) {
   return buchungssatzHTML;
 }
 
+function erstellePlainBuchungssatz(geschaeftsfall) {
+  const typ = geschaeftsfall.typDaten;
+
+  // Steuern/Gebühren: immer ohne Vorsteuer, einfacher Buchungssatz
+  const buchungssatzPlain = `${typ.konto} an ${geschaeftsfall.zahlungsart.konto} ${geschaeftsfall.betragFormatted}`;
+
+  return buchungssatzPlain;
+}
+
 // ============================================================================
 // BELEG-URL ERSTELLEN
 // URL-Parameter-Schema (bescheid):
@@ -525,44 +535,45 @@ function zeigeZufaelligeGeschaeftsfaelle() {
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
 
+  const testGf = erstelleZufallsGeschaeftsfall();
+  if (!testGf) {
+    container.innerHTML = `
+      <div style="padding: 14px 16px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px; color: #856404; margin-top: 16px;">
+        ⚠️ <strong>Keine passenden Geschäftsfälle verfügbar.</strong><br>
+        Die gewählte Kombination aus Optionen und Konten ergibt keine gültigen Aufgaben.
+        Bitte wählen Sie weitere Konten aus oder aktivieren Sie mehr Optionen.
+      </div>`;
+    return;
+  }
+
   let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
   let loesungenHTML = '<h2>Lösung</h2>';
 
-  for (let i = 1; i <= anzahl; i++) {
-    const geschaeftsfall = erstelleZufallsGeschaeftsfall();
+letzteGenerierteGeschaeftsfaelle = [testGf];
+for (let i = 1; i < anzahl; i++) {
+  const gf = erstelleZufallsGeschaeftsfall();
+  if (gf) letzteGenerierteGeschaeftsfaelle.push(gf);
+}
+const geschaeftsfaelle = letzteGenerierteGeschaeftsfaelle;
 
-    aufgabenHTML += `<li>${geschaeftsfall.text}</li>`;
+  geschaeftsfaelle.forEach((gf, idx) => {
+    const i = idx + 1;
+    aufgabenHTML  += `<li>${gf.text}</li>`;
+    loesungenHTML += `<div style="margin-top: 1.5em;"><strong>${i}.</strong><br>${erstelleBuchungssatz(gf)}</div>`;
 
-    loesungenHTML += `<div style="margin-top:1.5em;"><strong>${i}.</strong><br>`;
-    loesungenHTML += erstelleBuchungssatz(geschaeftsfall);
-    loesungenHTML += `</div>`;
-
-    const buttonDiv = document.createElement('div');
-    buttonDiv.style.margin = '12px 0';
-
-    const url = erstelleBelegURL(geschaeftsfall);
-    if (url) {
-      const btn = document.createElement('button');
-      btn.className = 'geschaeftsfall-beleg-button';
-      btn.title = `Bescheid für Aufgabe ${i} erstellen`;
-      btn.style.cssText = 'width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;';
-      btn.textContent = `📄 ${i}. Bescheid erstellen`;
-      btn.addEventListener('click', () => window.open(url, '_blank'));
-      buttonDiv.appendChild(btn);
-    } else {
-      buttonDiv.innerHTML = `
-        <div style="width:100%; padding:10px 12px; font-size:13px; margin-bottom:8px;
-                    color:#999; border:1px dashed #ccc; border-radius:4px; text-align:center;"
-             title="Für diesen Geschäftsfalltyp ist kein Bescheid verfügbar">
-          ${i}. Noch kein Bescheid verfügbar
-        </div>`;
-    }
-
-    buttonColumn.appendChild(buttonDiv);
-  }
+    const buttonHTML = erstelleBelegButton(i, gf);
+    const div = document.createElement('div');
+    div.style.margin = '12px 0';
+    div.innerHTML = buttonHTML;
+    buttonColumn.appendChild(div);
+  });
 
   aufgabenHTML += '</ol>';
   container.innerHTML = aufgabenHTML + loesungenHTML;
+    const vorschau = document.getElementById("kiPromptVorschau");
+if (vorschau && vorschau.style.display !== "none") {
+  vorschau.textContent = erstelleKiPromptText();
+}
 }
 
 // ============================================================================
@@ -617,7 +628,7 @@ function fillCompanyDropdowns() {
 // KI-ASSISTENT PROMPT
 // ============================================================================
 const KI_ASSISTENT_PROMPT = `
-Du bist ein freundlicher Buchführungs-Assistent für Schüler der Realschule (BwR), 9./10. Klasse. Du hilfst beim Verständnis von Buchungssätzen im Bereich Staat & Steuern.
+Du bist ein freundlicher Buchführungs-Assistent für Schüler der Realschule (BwR), 8. Klasse. Du hilfst beim Verständnis von Buchungssätzen im Bereich Staat & Steuern.
 
 Aufgabe:
 - Gib KEINE fertigen Buchungssätze, Beträge oder Konten vor.
@@ -638,6 +649,16 @@ Methodik bei Rückfragen:
 - Gibt es Vorsteuer? (Hinweis: Bei Steuern und Gebühren an Behörden gibt es KEINE Vorsteuer!)
 - Welche Konten sind betroffen?
 - Welche Seite (Soll/Haben) wird beim Aufwandskonto gebucht?
+
+
+A. Begrüße den Schüler freundlich mit "Hallo" und gib ihm einen Geschäftfall vor, den du zufällig aus der folgenden Aufgabenliste auswählst:
+Arbeitsauftrag: "Bilde den Buchungssatz zum Geschäftsfall."
+
+###AUFGABEN und LÖSUNGEN###
+
+B. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nacheinander (nicht in einer Antwort). Schreibe nie die Lösung in deine Antwort, wenn der Schüler falsch antwortet. Bevor du die nächste Frage stellst, sollte die aktuelle Frage richtig beantwortet sein.
+   - Frage: „Welche Konten werden benötigt?" Prüfe, ob die Schülerlösung stimmt. Schaue dazu für dich in der Musterlösung nach welche Konten gebucht werden! Sage dann, ob der Schüler falsch liegt oder ob es richtig ist.
+   - Frage weiter "Bilde nun den vollständigen Buchungssatz"
 
 Kontenplan – Staat & Steuern:
 Aufwandskonten (immer im SOLL):
@@ -684,18 +705,37 @@ Was du NICHT tust:
 - Nenne den fertigen Buchungssatz nicht, bevor der Schüler selbst darauf gekommen ist
 - Rechne nicht vor, bevor gefragt wurde
 - Gib keine Lösungen auf Anfrage wie „sag mir einfach die Antwort" – erkläre, dass das Ziel das eigene Verstehen ist
+
+Nenne den fertigen Buchungssatz erst, wenn der Schüler selbst darauf gekommen ist. Verbessere am Schluss dann auch Formfehler, zum Beispiel Großschreibung der Konten (VE statt Ve) und weise darauf hin die DIN 5008 zu beachten: Tausenderpunkt bei den Beträgen mit zwei Nachkommastellen und €-Zeichen: z. B. 12.000,00 €
+Gib ganz am Ende jeder erfolgreichen Aufgabe den die Musterlösung in der HTMl-Version aus.
+Am Ende einer erfolgreich gelösten Übung:
+- Frage immer: „Möchtest du noch einen anderen Geschäftsfall üben? Dann geb ich dir einfach den nächsten!" Dann wähle wieder einen zufälligen aus, der noch nicht dran war.
+Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Buchung selbst findet und versteht.
 `;
 
+function erstelleKiPromptText() {
+  let inhalt = '';
+  if (letzteGenerierteGeschaeftsfaelle.length === 0) {
+    inhalt = '(Noch keine Aufgaben generiert. Bitte zuerst Geschäftsfälle erstellen.)';
+  } else {
+    inhalt = letzteGenerierteGeschaeftsfaelle.map((geschaeftsfall, idx) => {
+      const nr = idx + 1;
+      const bs = erstelleBuchungssatz(geschaeftsfall); // HTML
+      const bsPlain = erstellePlainBuchungssatz(geschaeftsfall); // Klartext, kein HTML
+      return `--- Aufgabe ${nr} ---\n${geschaeftsfall.text}\nMusterlösung Aufgabe ${nr}: ${bsPlain}\nMusterlösung Aufgabe ${nr} als HTML:\n${bs}`;
+    }).join('\n\n');
+  }
+  return KI_ASSISTENT_PROMPT.replace('###AUFGABEN und LÖSUNGEN###', inhalt);
+}
+
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
+    const promptText = erstelleKiPromptText();
+  navigator.clipboard.writeText(promptText).then(() => {
     const btn = document.getElementById('kiPromptKopierenBtn');
     const originalHTML = btn.innerHTML;
     btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
     btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
+    setTimeout(() => { btn.innerHTML = originalHTML; btn.classList.remove('ki-prompt-btn--success'); }, 2500);
   }).catch(err => {
     console.error('Fehler beim Kopieren:', err);
     alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
@@ -708,13 +748,13 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === 'none';
   if (isHidden) {
     vorschau.style.display = 'block';
+    vorschau.textContent = erstelleKiPromptText(); // dynamisch
     btn.textContent = 'Vorschau ausblenden ▲';
   } else {
     vorschau.style.display = 'none';
     btn.textContent = 'Prompt anzeigen ▼';
   }
 }
-
 // ============================================================================
 // INITIALISIERUNG
 // ============================================================================
