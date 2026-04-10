@@ -252,7 +252,7 @@ Abschreibungssatz: <span class="val">${prozent}&nbsp;%</span>`
     // 4 – Erinnerungswert
   {
       text: `Erkläre die Bedeutung des der Erinnerungswerts von 1&nbsp;€ am Ende der Nutzungsdauer!`,
-      loesung: `Am Ende der Nutzungsdauer bleibt ein symbolischer <strong>Erinnerungswert von 1,00&nbsp;€</strong>, falls das Anlagegut weiterhin im Betrieb genutzt wird. Im letzten Jahr wird daher nur ${formatEuro(letzteAfa)} statt ${formatEuro(afaBetrag)} abgeschrieben.<br>`,
+      loesung: `Am Ende der Nutzungsdauer bleibt ein symbolischer <strong>Erinnerungswert von 1,00&nbsp;€</strong>, falls das Anlagegut weiterhin im Betrieb genutzt wird. Im letzten Jahr werden daher nur ${formatEuro(letzteAfa)} statt ${formatEuro(afaBetrag)} abgeschrieben.<br>`,
     },
     // 5 – AfA-Tabelle
     {
