@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lineare Abschreibung – Diagramm-Aufgaben | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Zufällige Aufgaben zur linearen Abschreibung mit Diagrammen. Für BwR-Unterricht Klasse 9/10 Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb-abschreibung-linear.html">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+  <meta name="keywords" content="Abschreibung BwR, lineare Abschreibung, AfA-Tabelle, Restbuchwert, BwR 9 Bayern, Sachanlagen, Realschule">
+
+ <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/apexcharts.min.js"></script>
+
+</head>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+
+  <div class="afa-generator-wrap">
+    <h2>Lineare Abschreibung – mit Diagramm (beta)</h2>
+
+    <div class="box">
+      <p>
+        Hier können Sie zufällige Aufgaben zur <strong>linearen Abschreibung von Sachanlagen</strong>
+        generieren. Die Anschaffung ist jeweils im Januar, zeitanteilige Abschreibung wird hier nicht berücksichtigt.
+      </p>
+
+      <div class="flex-row">
+        <label for="anlageSelect">Anlage:</label>
+        <select class="dropdown" id="anlageSelect" onchange="zeigeZufaelligeAbschreibungsAufgabe()">
+          <option value="-1">🔀 Zufällig (MA oder FP)</option>
+          <option value="0">🏭 Maschinen (MA)</option>
+          <option value="1">🚚 Fuhrpark (FP)</option>
+        </select> 
+            <label for="marketingKunde">Unternehmen:</label>
+            <select id="marketingKunde" class="meinUnternehmen">
+              <!-- Wird automatisch befüllt -->
+            </select>
+      </div>
+      <!-- Manuelle Eingabe -->
+        <div class="flex-row">
+          <div>
+            <label for="akInput">Anschaffungskosten (€)</label>
+            <input type="number" id="akInput" placeholder="z. B. 70000" min="1000" max="500000" step="1000">
+          </div>
+          <div>
+            <label for="ndInput">Nutzungsdauer (Jahre)</label>
+            <input type="number" id="ndInput" placeholder="z. B. 9" min="1" max="50" step="1">
+          </div>
+        <p style="font-size:12px;color:#888;margin:8px 0 0;">
+          Leer lassen = zufällige Werte. Die AK werden ggf. minimal angepasst, damit die AfA ganzzahlig ist.
+        </p>
+    </div>
+        <br>
+         <button class="primary-btn" onclick="zeigeAbschreibungMitManuellen()">Neue Aufgabe</button>
+
+  </div><!-- /.afa-generator-wrap -->
+
+    <!-- Diagramm -->
+    <div id="afaChartWrapper" class="chart-wrapper" style="display:none;">
+      <div class="chart-header" id="afaChartHeader">Abschreibungsverlauf</div>
+      <div class="chart-inner" id="afaChartInner"></div>
+    </div>
+
+    <!-- Aufgaben & Lösung -->
+     <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+          <!-- Exportierbarer Inhalt -->
+          <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+
+          <!-- Buttons daneben – nicht exportiert -->
+          <div id="button-column" style="width: 180px; flex-shrink: 0;">
+            <!-- Hier kommen später die Buttons rein -->
+          </div>
+        </div>
+      </div>
+        <div w3-include-html="downloads.html"></div> 
+    <!-- KI-Assistent -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli&nbsp;…)</p>
+        </div>
+      </div>
+
+      <div class="ki-hinweis">
+        <span class="hinweis-icon">💡</span>
+        <span>
+          Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+          Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+        </span>
+      </div>
+
+      <div class="ki-chips">
+        <span class="ki-chip">📚 BwR Realschule</span>
+        <span class="ki-chip">📊 Abschreibungskompetenz</span>
+        <span class="ki-chip">🔢 Buchungssätze</span>
+        <span class="ki-chip">✅ Sokratische Methode</span>
+        <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+      </div>
+
+      <div class="ki-actions" style="margin-top:14px;">
+        <button class="ki-prompt-btn ki-prompt-btn--primary" id="kiPromptKopierenBtn"
+                onclick="kopiereKiPromptAfa()" title="Prompt kopieren">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Prompt kopieren
+        </button>
+        <button class="ki-prompt-btn ki-prompt-btn--ghost" id="kiPromptToggleBtn"
+                onclick="toggleKiPromptVorschauAfa()">
+          Prompt anzeigen ▼
+        </button>
+      </div>
+
+      <div class="ki-prompt-vorschau-wrapper">
+        <textarea id="kiPromptVorschau" readonly spellcheck="false"></textarea>
+      </div>
+    </div>
+
+
+</main>
+
+<script src="js/lb9-2-abschreibungen.js"></script>
+  <script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+  if (typeof includeHTML === 'function') includeHTML();
+</script>
+</body>
+</html>
