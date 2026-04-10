@@ -148,7 +148,6 @@ const afaTabelle = {
     { bezeichnung: 'PKW / Kombi',             nd:  6, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚗' },
     { bezeichnung: 'Transporter',             nd:  6, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚐' },
     { bezeichnung: 'Anhänger / Auflieger',    nd: 10, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚛' },
-    { bezeichnung: 'Gabelstapler',            nd:  8, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🏗️' },
   ],
 };
 
