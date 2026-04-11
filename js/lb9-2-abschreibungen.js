@@ -242,7 +242,7 @@ Abschreibungssatz: <span class="val">${prozent}&nbsp;%</span>`
     },
     // 3 – Restbuchwert
    {
-      text: `Bestimme den Restbuchwert am Ende des ${nd - 1}. Nutzungsjahres rechnerisch.`,
+      text: `Berechne den Restbuchwert am Ende des ${nd - 1}. Nutzungsjahres.`,
       loesung: `Restbuchwert Ende Jahr ${nd-1}:<br>
 = AK − (${nd-1} × Jahres-AfA)<br>
 = ${formatEuro(ak)} − (${nd-1} × ${formatEuro(afaBetrag)})<br>
@@ -901,7 +901,7 @@ const kundeSelect = document.getElementById('marketingKunde');
   }
   setTimeout(function() {
     autoSelectMyCompany();
-  }, 100);
+  }, 250);
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) vorschauEl.textContent = KI_BASE_PROMPT.replace('###AUFGABEN###', '(Noch keine Aufgabe generiert.)');
   setTimeout(zeigeZufaelligeAbschreibungsAufgabe, 300);

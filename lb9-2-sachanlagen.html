@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kauf hochwertiger Sachanlagen – BwR</title>
+  <meta name="description" content="BwR-Tool: Aufgaben zum Kauf hochwertiger Sachanlagen mit Anschaffungskosten, Buchungssätzen und zeitanteiliger Abschreibung. Realschule Bayern Klasse 9/10.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb-sachanlagen-kauf.html">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+  <meta name="keywords" content="Sachanlagen Kauf BwR, Anschaffungskosten, lineare Abschreibung zeitanteilig, Buchungssatz, BwR 9 Bayern, Realschule">
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+</head>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+
+  <div class="afa-generator-wrap">
+    <h2>Kauf hochwertiger Sachanlagen (beta)</h2>
+
+    <div class="box">
+      <p>
+        Hier können Sie zufällige Aufgaben zum <strong>Kauf hochwertiger Sachanlagen</strong> generieren.
+        Die Aufgaben umfassen die Berechnung der Anschaffungskosten, den Buchungssatz zum Kauf
+        sowie die ggf. zeitanteilige lineare Abschreibung im ersten Nutzungsjahr.
+      </p>
+
+      <div class="flex-row">
+        <label for="anlageSelect">Anlage:</label>
+        <select class="dropdown" id="anlageSelect" onchange="zeigeZufaelligeAufgabe()">
+          <option value="-1">🔀 Zufällig</option>
+          <option value="MA">🏭 Maschinen &amp; Anlagen</option>
+          <option value="FP">🚗 Fuhrpark</option>
+          <option value="BM">🖥️ Büromaschinen</option>
+          <option value="BGA">🪑 Büromöbel &amp; Geschäftsausstattung</option>
+        </select>
+
+        <label for="marketingKunde">Unternehmen:</label>
+        <select id="marketingKunde" class="meinUnternehmen">
+          <!-- Wird automatisch befüllt -->
+        </select>
+      </div>
+
+      <!-- Manuelle Eingabe -->
+  <div class="flex-row" style="flex-wrap:wrap; gap:12px; margin-top:12px;">
+          <div>
+            <label for="akInput">Anschaffungspreis (€, netto)</label>
+            <input type="number" id="akInput" placeholder="z. B. 42000" min="800" max="500000" step="100">
+          </div>
+          <div>
+            <label for="rabattInput">Rabatt (%)</label>
+            <input type="number" id="rabattInput" placeholder="z. B. 10" min="0" max="50" step="1">
+          </div>
+          <div>
+            <label for="bezugskostenInput">Anschaffungsnebenkosten (€)</label>
+            <input type="number" id="bezugskostenInput" placeholder="z. B. 800" min="0" max="20000" step="50">
+          </div>
+          <div>
+            <label for="kaufMonatInput">Kaufmonat (1–12)</label>
+            <input type="number" id="kaufMonatInput" placeholder="z. B. 4 (April)" min="1" max="12" step="1">
+          </div>
+          <div>
+            <label for="ndInput">Nutzungsdauer (Jahre)</label>
+            <input type="number" id="ndInput" placeholder="laut AfA-Tabelle" min="1" max="50" step="1">
+          </div>
+        </div>
+        <p style="font-size:12px; color:#888; margin:8px 0 0;">
+          Werte nach Wunsch anpassen. Rabatt ist ein Prozentwert (z.&nbsp;B. 10 für 10&nbsp;%).
+          0 bei Rabatt oder Nebenkosten = kein Abzug / keine Nebenkosten.
+        </p>
+ 
+        <br>
+        <!-- ▼▼▼ ZWEI BUTTONS ▼▼▼ -->
+        <button class="primary-btn" onclick="zeigeZufaelligeAufgabe()" style="margin-right:10px;">
+          🔀 Zufällige Werte
+        </button>
+        <button class="primary-btn" onclick="zeigeAbschreibungMitManuellen()">
+          ▶ Aufgabe aktualisieren
+        </button>
+ 
+
+    <!-- Aufgaben & Lösung -->
+    <div class="output-wrapper" style="display:flex; gap:20px; margin-top:20px;">
+      <!-- Exportierbarer Inhalt -->
+      <div id="Container" style="min-width:580px; flex:1;" contenteditable="true"></div>
+
+      <!-- Beleg-Buttons daneben – nicht exportiert -->
+      <div id="button-column" style="width:180px; flex-shrink:0;"></div>
+    </div>
+
+    <div w3-include-html="downloads.html"></div>
+
+    <!-- KI-Assistent -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli&nbsp;…)</p>
+        </div>
+      </div>
+
+      <div class="ki-hinweis">
+        <span class="hinweis-icon">💡</span>
+        <span>
+          Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+          Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+        </span>
+      </div>
+
+      <div class="ki-chips">
+        <span class="ki-chip">📚 BwR Realschule</span>
+        <span class="ki-chip">🏭 Sachanlagen</span>
+        <span class="ki-chip">📉 Abschreibung</span>
+        <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+      </div>
+
+      <div class="ki-actions" style="margin-top:14px;">
+        <button class="ki-prompt-btn ki-prompt-btn--primary" id="kiPromptKopierenBtn"
+                onclick="kopiereKiPromptKauf()" title="Prompt kopieren">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Prompt kopieren
+        </button>
+        <button class="ki-prompt-btn ki-prompt-btn--ghost" id="kiPromptToggleBtn"
+                onclick="toggleKiPromptVorschauKauf()">
+          Prompt anzeigen ▼
+        </button>
+      </div>
+
+      <div class="ki-prompt-vorschau-wrapper">
+        <textarea id="kiPromptVorschau" readonly spellcheck="false"></textarea>
+      </div>
+    </div>
+
+  </div><!-- /.afa-generator-wrap -->
+</main>
+
+<script src="js/lb9-2-sachanlagen.js"></script>
+<script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+  if (typeof includeHTML === 'function') includeHTML();
+</script>
+</body>
+</html>
