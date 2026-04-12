@@ -110,44 +110,125 @@ async function handleBelegImport() {
         updateBelegImportStatus('Belegtyp wird erkannt...', 'info');
         
         // Erkenne Belegtyp
-        const belegType = detectBelegType(svgDoc);
-        
-        if (!belegType) {
-            updateBelegImportStatus('Belegtyp konnte nicht erkannt werden', 'error');
-            return;
-        }
-        
-        updateBelegImportStatus(`${belegType.toUpperCase()} erkannt, Daten werden extrahiert...`, 'info');
-        
-        // Extrahiere Daten
-        const extractedData = extractBelegData(svgDoc, belegType);
-        
-        console.log('Extrahierte Daten:', extractedData);
-        
-        // Öffne entsprechenden Tab
-        const tabName = TAB_MAPPING[belegType] || belegType;
-        const tabOpened = openTabFromURL(tabName);
-        
-        if (!tabOpened) {
-            updateBelegImportStatus(`Tab für ${belegType} konnte nicht geöffnet werden`, 'error');
-            return;
-        }
-        
-        // Warte kurz, bis Tab geladen ist
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Befülle Formular (async - wartet bis SVG geladen ist)
-        await fillFormWithExtractedData(belegType, extractedData);
-        
-        updateBelegImportStatus(`✓ Beleg erfolgreich importiert (${belegType.toUpperCase()})`, 'success');
-        
-        // Scroll zum Tab
-        document.querySelector('.tab').scrollIntoView({ behavior: 'smooth' });
+  const belegType = detectBelegType(svgDoc);
+
+if (!belegType) {
+    updateBelegImportStatus('Belegtyp konnte nicht erkannt werden', 'error');
+    return;
+}
+
+updateBelegImportStatus(`${belegType.toUpperCase()} erkannt, Daten werden extrahiert...`, 'info');
+
+const extractedData = extractBelegData(svgDoc, belegType);
+window._lastImportData = extractedData;
+
+console.log('Extrahierte Daten:', extractedData);
+
+// tabName VOR showImportSummary berechnen
+const tabName = TAB_MAPPING[belegType] || belegType;
+
+showImportSummary(belegType, extractedData, tabName);
         
     } catch (error) {
         console.error('Fehler beim Import:', error);
         updateBelegImportStatus(`Fehler: ${error.message}`, 'error');
     }
+}
+
+function showImportSummary(belegType, extractedData, tabName) {
+    const statusEl = document.getElementById('belegImportStatus');
+    
+    // Relevante Felder je Belegtyp für die Vorschau
+    const SUMMARY_FIELDS = {
+        rechnung:     ['nameLieferer', 'nameKunde', 'rechnungsDatum', 'aktuellesJahr', 'artikel1', 'rechnungsbetrag'],
+        kontoauszug:  ['kontoauszugName', 'kontoauszugDatum', 'aktuellesJahrKontoauszug', 'kontoauszugNummer', 'kontoauszugKontostand_neu'],
+        quittung:     ['quittungName', 'quittungTag', 'quittungMonat', 'quittungZweck', 'quittungSumme'],
+        kassenbon:    ['kassenbonName', 'kassenbonTag', 'kassenbonMonat', 'kassenbonZweck'],
+        anlagenkarte: ['anlagenkarteName', 'anlagenkarteTag', 'anlagenkarteMonat', 'anlagenkarteBezeichnung', 'anlagenkarteAnschaffungskosten'],
+        wertpapiere:  ['wertpapiereName', 'wertpapiereTag', 'wertpapiereMonat', 'wertpapiereBezeichnung', 'wertpapiereISIN', 'wertpapiereStueckkurs'],
+        bescheid:     ['bescheidName', 'bescheidTag', 'bescheidMonat', 'bescheidMessbetrag', 'bescheidJahressteuer'],
+        lohnjournal:  ['lohnjournalName', 'lohnjournalMonat'],
+        lohnabrechnung: ['lohnabrechnungFirmaName', 'lohnabrechnungMonat', 'lohnabrechnungBrutto', 'lohnabrechnungNetto'],
+        email:        ['emailName', 'emailSubject']
+    };
+
+    // Lesbare Labels
+    const FIELD_LABELS = {
+        nameLieferer: 'Lieferer', nameKunde: 'Kunde',
+        rechnungsDatum: 'Datum', aktuellesJahr: 'Jahr',
+        aktuellesJahrKontoauszug: 'Jahr',
+        artikel1: 'Artikel', rechnungsbetrag: 'Rechnungsbetrag',
+        kontoauszugDatum: 'Datum', kontoauszugNummer: 'Auszug-Nr.',
+        kontoauszugKontostand_neu: 'Neuer Kontostand',
+        quittungTag: 'Tag', quittungMonat: 'Monat',
+        quittungZweck: 'Zweck', quittungSumme: 'Summe',
+        kassenbonTag: 'Tag', kassenbonMonat: 'Monat', kassenbonZweck: 'Artikel',
+        anlagenkarteTag: 'Tag', anlagenkarteMonat: 'Monat',
+        anlagenkarteBezeichnung: 'Bezeichnung', anlagenkarteAnschaffungskosten: 'Anschaffungskosten',
+        wertpapiereTag: 'Tag', wertpapiereMonat: 'Monat',
+        wertpapiereBezeichnung: 'Bezeichnung', wertpapiereISIN: 'ISIN', wertpapiereStueckkurs: 'Stückkurs',
+        bescheidTag: 'Tag', bescheidMonat: 'Monat',
+        bescheidMessbetrag: 'Messbetrag', bescheidJahressteuer: 'Jahressteuer',
+        lohnjournalMonat: 'Monat', lohnabrechnungMonat: 'Monat',
+        lohnabrechnungBrutto: 'Brutto', lohnabrechnungNetto: 'Netto',
+        emailSubject: 'Betreff'
+    };
+
+    const BELEG_LABELS = {
+        rechnung: 'Rechnung', kontoauszug: 'Kontoauszug', quittung: 'Quittung',
+        kassenbon: 'Kassenbon', anlagenkarte: 'Anlagenkarte', wertpapiere: 'Wertpapiere',
+        bescheid: 'Bescheid', lohnjournal: 'Lohnjournal', lohnabrechnung: 'Lohnabrechnung', email: 'E-Mail'
+    };
+
+    // Baue Tabelle der erkannten Felder
+    const fields = SUMMARY_FIELDS[belegType] || [];
+    let rows = '';
+    let foundCount = 0;
+
+    fields.forEach(key => {
+        const val = extractedData[key];
+        if (val && val.trim() !== '') {
+            const label = FIELD_LABELS[key] || key;
+            rows += `<tr>
+                <td style="padding:3px 10px 3px 0;color:#555;font-size:13px;">${label}</td>
+                <td style="padding:3px 0;font-size:13px;font-weight:bold;">${val}</td>
+            </tr>`;
+            foundCount++;
+        }
+    });
+
+    if (rows === '') {
+        rows = `<tr><td colspan="2" style="color:#888;font-size:13px;">Keine Vorschaudaten verfügbar</td></tr>`;
+    }
+
+    const belegLabel = BELEG_LABELS[belegType] || belegType;
+
+    statusEl.style.backgroundColor = '#e8f5e9';
+  statusEl.innerHTML = `
+    <div style="margin-bottom:8px;">
+        <strong>✓ ${belegLabel} erfolgreich erkannt</strong> 
+    </div>
+    <table style="border-collapse:collapse;margin-bottom:10px;">
+        ${rows}
+    </table>
+    <button onclick="jumpToBeleg('${belegType}', '${tabName}')" 
+            style="background:#4caf50;color:#fff;border:none;padding:7px 18px;border-radius:4px;cursor:pointer;font-size:14px;">
+        → Zum ${belegLabel} springen und Felder übernehmen
+    </button>
+`;
+}
+
+async function jumpToBeleg(belegType, tabName) {
+    const tabOpened = openTabFromURL(tabName);
+    if (!tabOpened) return;
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const fieldsSet = await fillFormWithExtractedData(belegType, window._lastImportData);
+    
+    // Status aktualisieren
+    updateBelegImportStatus(`✓ ${fieldsSet} Felder importiert`, 'success');
+    
+    document.querySelector('.tab').scrollIntoView({ behavior: 'smooth' });
 }
 
 /**
@@ -207,32 +288,65 @@ function detectBelegType(svgDoc) {
 function extractBelegData(svgDoc, belegType) {
     const data = {};
     
-    // Hole alle text/tspan Elemente mit IDs
     const textElements = svgDoc.querySelectorAll('[id]');
-    
     textElements.forEach(element => {
         const id = element.id;
-        let textContent = element.textContent || '';
+        let textContent = element.textContent?.trim() || '';
         
-        // Bereinige Text
-        textContent = textContent.trim();
-        
-        if (textContent && textContent !== '') {
-            data[id] = textContent;
-        }
+        // Überspringen wenn leer
+        if (textContent === '') return;
+
+        // Überspringen wenn identisch mit Placeholder des Ziel-Inputs
+        const targetInput = document.getElementById(id + 'Input') || document.getElementById(id);
+        if (targetInput && targetInput.placeholder && targetInput.placeholder === textContent) return;
+
+        data[id] = textContent;
     });
     
-    // Hole auch Input-Werte (falls vorhanden)
+    // Input-Werte
     const inputElements = svgDoc.querySelectorAll('input[id]');
     inputElements.forEach(input => {
         if (input.value) {
             data[input.id] = input.value;
         }
     });
-    
+
+    const classFields = [
+        // Rechnung / Kontoauszug
+        { class: 'rechnungsDatum',            key: 'rechnungsDatum' },
+        { class: 'aktuellesJahr',             key: 'aktuellesJahr' },
+        { class: 'kontoauszugDatum',          key: 'kontoauszugDatum' },
+        { class: 'aktuellesJahrKontoauszug',  key: 'aktuellesJahrKontoauszug' },
+        // Quittung
+        { class: 'aktuellesJahrQuittung',     key: 'aktuellesJahrQuittung' },
+        // Kassenbon
+        { class: 'aktuellesJahrKassenbon',    key: 'aktuellesJahrKassenbon' },
+        { class: 'kassenbonBrutto',           key: 'kassenbonBrutto' },
+        // Anlagenkarte
+        { class: 'aktuellesJahrAnlagenkarte', key: 'aktuellesJahrAnlagenkarte' },
+        // Wertpapiere
+        { class: 'aktuellesJahrWertpapiere',  key: 'aktuellesJahrWertpapiere' },
+        // Bescheid
+        { class: 'aktuellesJahrBescheid',     key: 'aktuellesJahrBescheid' },
+        { class: 'bescheidOrt',               key: 'bescheidOrt' },
+        { class: 'bescheidStrasse',           key: 'bescheidStrasse' },
+        { class: 'bescheidOrtInhaber',        key: 'bescheidOrtInhaber' },
+        // Lohnabrechnung
+        { class: 'aktuellesJahrLohnabrechnung', key: 'aktuellesJahrLohnabrechnung' },
+    ];
+
+    classFields.forEach(({ class: cls, key }) => {
+        const el = svgDoc.querySelector('.' + cls);
+        if (el) {
+            const text = el.textContent?.trim() || '';
+            if (text !== '') {
+                data[key] = text;
+            }
+        }
+    });
+
     return data;
 }
-
 /**
  * Finde Unternehmen im YAML anhand von Name, Adresse oder anderen Merkmalen
  */
@@ -397,6 +511,68 @@ async function fillFormWithExtractedData(belegType, extractedData) {
         }
     }
     
+// Datum-Felder direkt setzen (da sie über Klassen kommen, nicht IDs)
+const datumMappings = {
+    rechnung: {
+        raw:   'rechnungsDatum',   // "15.03."
+        jahr:  'aktuellesJahr',
+        tagId: 'tag', monatId: 'monat', jahrId: 'jahr'
+    },
+    kontoauszug: {
+        raw:   'kontoauszugDatum',
+        jahr:  'aktuellesJahrKontoauszug',
+        tagId: 'tagKontoauszug', monatId: 'monatKontoauszug', jahrId: 'jahrKontoauszug'
+    },
+    quittung: {
+        tagId: 'tagQuittung',    tagKey: 'quittungTag',
+        monatId: 'monatQuittung', monatKey: 'quittungMonat',
+        jahrId: 'jahrQuittung',  jahrKey: 'aktuellesJahrQuittung'
+    },
+    kassenbon: {
+        tagId: 'tagKassenbon',    tagKey: 'kassenbonTag',
+        monatId: 'monatKassenbon', monatKey: 'kassenbonMonat',
+        jahrId: 'jahrKassenbon',  jahrKey: 'aktuellesJahrKassenbon'
+    },
+    anlagenkarte: {
+        tagId: 'tagAnlagenkarte',    tagKey: 'anlagenkarteTag',
+        monatId: 'monatAnlagenkarte', monatKey: 'anlagenkarteMonat',
+        jahrId: 'jahrAnlagenkarte',  jahrKey: 'aktuellesJahrAnlagenkarte'
+    },
+    wertpapiere: {
+        tagId: 'tagWertpapiereInput',    tagKey: 'wertpapiereTag',
+        monatId: 'monatWertpapiereInput', monatKey: 'wertpapiereMonat',
+        jahrId: 'jahrWertpapiere',        jahrKey: 'aktuellesJahrWertpapiere'
+    },
+    bescheid: {
+        tagId: 'tagBescheid',    tagKey: 'bescheidTag',
+        monatId: 'monatBescheid', monatKey: 'bescheidMonat',
+        jahrId: 'jahrBescheid',  jahrKey: 'aktuellesJahrBescheid'
+    }
+};
+
+const dm = datumMappings[belegType];
+if (dm) {
+    if (dm.raw && extractedData[dm.raw]) {
+    const parts = extractedData[dm.raw].split('.');
+    if (parts.length >= 2) {
+        const tag   = parts[0].padStart(2, '0');  // "1" → "01"
+        const monat = parts[1].padStart(2, '0');  // "3" → "03"
+        setFieldValue(dm.tagId,   tag,   'select');
+        setFieldValue(dm.monatId, monat, 'select');
+    }
+} else if (dm.tagKey && extractedData[dm.tagKey]) {
+        // Andere Belege: Tag/Monat stehen direkt als eigene IDs
+        setFieldValue(dm.tagId,   extractedData[dm.tagKey],   'select');
+        setFieldValue(dm.monatId, extractedData[dm.monatKey], 'select');
+    }
+    // Jahr
+    if (dm.jahrKey && extractedData[dm.jahrKey]) {
+        setFieldValue(dm.jahrId, extractedData[dm.jahrKey], 'input');
+    } else if (dm.jahr && extractedData[dm.jahr]) {
+        setFieldValue(dm.jahrId, extractedData[dm.jahr], 'input');
+    }
+}
+
     let fieldsSet = 0;
     
     // Durchlaufe alle möglichen Felder für diesen Belegtyp
@@ -428,40 +604,30 @@ async function fillFormWithExtractedData(belegType, extractedData) {
             }
         }
         
-        if (!valueFound) {
-            // Versuche auch direkte Matches in extractedData
-            for (const [dataKey, dataValue] of Object.entries(extractedData)) {
-                if (dataKey.toLowerCase().includes(paramName.toLowerCase()) ||
-                    paramName.toLowerCase().includes(dataKey.toLowerCase())) {
-                    // Bereinige Wert vor dem Setzen (mit elementId für YAML-Suche)
-                    let cleanedValue = cleanValueForInput(dataValue, paramConfig.type, paramConfig.elementId);
-                    
-                    const success = setFieldValue(paramConfig.elementId, cleanedValue, paramConfig.type);
-                    if (success) {
-                        fieldsSet++;
-                        console.log(`✓ Setze ${paramConfig.elementId} = ${cleanedValue} (fuzzy match)`);
-                        break;
-                    }
-                }
+       if (!valueFound) {
+    for (const [dataKey, dataValue] of Object.entries(extractedData)) {
+        
+        // Jahr-Felder NIEMALS fuzzy matchen - nur exakter Match erlaubt
+        if (paramConfig.elementId.startsWith('jahr')) continue;
+
+        const keyLower   = dataKey.toLowerCase();
+        const paramLower = paramName.toLowerCase();
+
+        if (keyLower.includes(paramLower) || paramLower.includes(keyLower)) {
+            let cleanedValue = cleanValueForInput(dataValue, paramConfig.type, paramConfig.elementId);
+            const success = setFieldValue(paramConfig.elementId, cleanedValue, paramConfig.type);
+            if (success) {
+                fieldsSet++;
+                console.log(`✓ Setze ${paramConfig.elementId} = ${cleanedValue} (fuzzy match)`);
+                break;
             }
         }
     }
+}
+    }
     
     console.log(`${fieldsSet} Felder wurden befüllt`);
-    
-    // Trigger Apply-Funktion NACH dem SVG-Laden
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const applyFunction = APPLY_FUNCTIONS[belegType];
-    if (applyFunction && typeof window[applyFunction] === 'function') {
-        console.log(`Führe Apply-Funktion aus: ${applyFunction}`);
-        try {
-            window[applyFunction]();
-            console.log(`✓ Apply-Funktion erfolgreich ausgeführt`);
-        } catch (error) {
-            console.warn(`⚠ Fehler in Apply-Funktion (kann ignoriert werden):`, error.message);
-        }
-    }
+    return fieldsSet;
 }
 
 /**

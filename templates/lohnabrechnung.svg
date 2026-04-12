@@ -1,4 +1,4 @@
-<svg id="kontoauszugSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 760 760" style="background-color:#fff;padding:0px;width:100%;max-width:760px" onload="SVGonLoadKontoauszug()">
+<svg id="lohnabrechnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 760 760" style="background-color:#fff;padding:0px;width:100%;max-width:760px">
    <defs id="customDefsLohnabrechnung">
   </defs>
 
