@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angebotsvergleich – BwR Generator | meinbwr.de</title>
+  <meta name="description"
+    content="Kostenloses BwR-Tool: Generiere zufällige Angebotsvergleiche mit Einkaufskalkulation. Ideal für BwR Jahrgangsstufe 8 Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb8-1-einkauf.html">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+  <meta property="og:title" content="Angebotsvergleich mit Einkaufskalkulation – BwR Realschule Bayern">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb8-1-angebotsvergleich.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="keywords"
+    content="Angebotsvergleich BwR, Einkaufskalkulation, Buchungssatz Einkauf, BwR 8 Realschule Bayern">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/kontenplan.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+
+
+</head>
+<main>
+  <div w3-include-html="navigation.html"></div>
+  <h2>Einkauf – Angebotsvergleich (beta)</h2>
+  <br>
+  <div id="generator-container">
+    <div class="box">
+      <p>Sie können hier zufällige Angebotsvergleiche mit Einkaufskalkulation generieren, Buchungssätze ausleiten und
+        passende Belege erstellen.</p>
+
+      <h3>Unternehmen auswählen</h3>
+      <div class="flex-row">
+        <div>
+          <label for="einkaufKaeufer">Käufer (Modellunternehmen):</label>
+          <select id="einkaufKaeufer" class="meinUnternehmen"></select>
+        </div>
+        <div>
+          <label for="einkaufLiefererA">Lieferant A:</label>
+          <select id="einkaufLiefererA"></select>
+        </div>
+        <div>
+          <label for="einkaufLiefererB">Lieferant B:</label>
+          <select id="einkaufLiefererB"></select>
+        </div>
+      </div>
+
+      <h3>Werkstoff-Bezeichnungen</h3>
+      <div class="werkstoff-bezeichnungen-grid">
+        <div class="werkstoff-bezeichnung-item">
+          <label><span class="wb-konto-badge wb-awr">AWR</span> Rohstoff</label>
+          <input type="text" id="bezeichnungAWR_0" placeholder="z. B. Holzbretter" maxlength="40" autocomplete="off">
+          <input type="text" id="bezeichnungAWR_1" placeholder="z. B. Stahlbleche" maxlength="40" autocomplete="off">
+          <input type="text" id="bezeichnungAWR_2" placeholder="z. B. Aluminiumprofile" maxlength="40"
+            autocomplete="off">
+        </div>
+        <div class="werkstoff-bezeichnung-item">
+          <label><span class="wb-konto-badge wb-awf">AWF</span> Fremdbauteil</label>
+          <input type="text" id="bezeichnungAWF_0" placeholder="z. B. Motoren" maxlength="40" autocomplete="off">
+          <input type="text" id="bezeichnungAWF_1" placeholder="z. B. Steuergeräte" maxlength="40" autocomplete="off">
+          <input type="text" id="bezeichnungAWF_2" placeholder="z. B. Getriebe" maxlength="40" autocomplete="off">
+        </div>
+        <div class="werkstoff-bezeichnung-item">
+          <label><span class="wb-konto-badge wb-awh">AWH</span> Hilfsstoff</label>
+          <input type="text" id="bezeichnungAWH_0" placeholder="z. B. Schrauben" maxlength="40" autocomplete="off">
+          <input type="text" id="bezeichnungAWH_1" placeholder="z. B. Klebstoff" maxlength="40" autocomplete="off">
+          <input type="text" id="bezeichnungAWH_2" placeholder="z. B. Dichtungen" maxlength="40" autocomplete="off">
+        </div>
+        <div class="werkstoff-bezeichnung-item">
+          <label><span class="wb-konto-badge wb-awb">AWB</span> Betriebsstoff</label>
+          <input type="text" id="bezeichnungAWB_0" placeholder="z. B. Strom" maxlength="40" autocomplete="off">
+          <input type="text" id="bezeichnungAWB_1" placeholder="z. B. Schmierstoffe" maxlength="40" autocomplete="off">
+          <input type="text" id="bezeichnungAWB_2" placeholder="z. B. Reinigungsmittel" maxlength="40"
+            autocomplete="off">
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════
+           ANGEBOTSVERGLEICH – EINSTELLUNGEN
+      ════════════════════════════════════════════════════════════ -->
+      <hr class="av-section-hr">
+      <h3 style="margin-bottom:10px;">⚖️ Angebotsvergleich – Einstellungen</h3>
+      <div class="flex-row" style="gap: 10px">
+        <div style="margin-bottom:12px;">
+          <label for="avWerkstoffTyp">Zu beschaffender Werkstoff:</label>
+
+          <select id="avWerkstoffTyp">
+            <option value="AWR">Rohstoffe (AWR)</option>
+            <option value="AWF">Fremdbauteile (AWF)</option>
+            <option value="AWH">Hilfsstoffe (AWH)</option>
+            <option value="AWB">Betriebsstoffe (AWB)</option>
+          </select>
+          <span id="avWerkstoffName"></span>
+        </div>
+
+
+        <!-- Mengeneinheit – gilt für beide Angebote -->
+        <div>
+          <label for="avEinheit">Mengeneinheit</label>
+          <select id="avEinheit">
+            <option value="Einh.">Einh. – Einheiten</option>
+            <option value="Stk.">Stk. – Stück</option>
+            <option value="Pal.">Pal. – Paletten</option>
+            <option value="kg">kg – Kilogramm</option>
+            <option value="t">t – Tonnen</option>
+            <option value="l">l – Liter</option>
+            <option value="m">m – Meter</option>
+            <option value="m²">m² – Quadratmeter</option>
+            <option value="m³">m³ – Kubikmeter</option>
+            <option value="Pkg.">Pkg. – Pakete</option>
+            <option value="Rol.">Rol. – Rollen</option>
+            <option value="Krt.">Krt. – Kartons</option>
+            <option value="lfm.">lfm. – laufende Meter</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label class="av-keine-konten-label">
+          <input type="checkbox" id="avOhneKontonummern">
+          Buchungssatz ohne Kontonummern (Jahrgangsst. 7)
+        </label>
+      </div>
+
+
+
+      <!-- ── Angebot A ─────────────────────────────────────────── -->
+      <h3>
+        Angebot A – vorgegeben
+      </h3>
+
+      <div class="flex-row">
+        <div>
+          <label for="avMengeA">Menge A</label>
+          <input type="number" id="avMengeA" min="1" max="10000" step="1" placeholder="zufällig">
+        </div>
+        <div>
+          <label for="avEinzelpreisA">Einzelpreis A (€)</label>
+          <input type="number" id="avEinzelpreisA" min="0.01" max="50000" step="0.01" placeholder="zufällig">
+        </div>
+        <div>
+          <label for="avRabattA">Rabatt A (%)</label>
+          <input type="number" id="avRabattA" min="0" max="40" step="1" placeholder="zufällig">
+        </div>
+        <div>
+          <label for="avSkontoA">Skonto A (%)</label>
+          <input type="number" id="avSkontoA" min="0" max="5" step="0.5" placeholder="zufällig">
+        </div>
+        <div>
+          <label for="avBzkA">Bezugskosten A (€)</label>
+          <input type="number" id="avBzkA" min="25" max="500" step="5" placeholder="zufällig">
+        </div>
+      </div>
+      <!-- ── Angebot B ─────────────────────────────────────────── -->
+      <h3>
+        Angebot B – Schüler berechnet
+      </h3>
+
+      <div class="flex-row">
+        <div>
+          <label for="avMengeB">Menge B</label>
+          <input type="number" id="avMengeB" min="1" max="10000" step="1" placeholder="zufällig">
+        </div>
+        <div>
+          <label for="avEinzelpreisB">Einzelpreis B (€)</label>
+          <input type="number" id="avEinzelpreisB" min="0.01" max="50000" step="0.01" placeholder="zufällig">
+        </div>
+        <div>
+          <label for="avRabattB">Rabatt B (%)</label>
+          <input type="number" id="avRabattB" min="0" max="40" step="1" placeholder="zufällig">
+        </div>
+        <div>
+          <label for="avSkontoB">Skonto B (%)</label>
+          <input type="number" id="avSkontoB" min="0" max="5" step="0.5" placeholder="zufällig">
+        </div>
+        <div>
+          <label for="avBzkB">Bezugskosten B (€)</label>
+          <input type="number" id="avBzkB" min="25" max="500" step="5" placeholder="zufällig">
+        </div>
+      </div>
+      <br>
+      <button onclick="zeigeZufaelligenSatz()">Aufgabe erstellen</button>
+    </div>
+    <div class="output-wrapper" style="display: flex; gap: 20px;">
+      <div id="Container" style="min-width: 780px; flex: 1;" contenteditable="true"></div>
+      <div id="button-column" style="width: 180px; flex-shrink: 0;"></div>
+    </div>
+
+
+    <div w3-include-html="downloads.html"></div>
+
+    <!-- KI-ASSISTENT PROMPT -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, telli...)</p>
+        </div>
+      </div>
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+            Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.</span>
+        </div>
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">⚖️ Angebotsvergleich</span>
+          <span class="ki-chip">🧮 Einkaufskalkulation</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+        <div class="ki-actions" style="margin-top: 14px;">
+          <button class="ki-prompt-btn ki-prompt-btn--primary" id="kiPromptKopierenBtn" onclick="kopiereKiPrompt()"
+            title="Prompt in die Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+          <button class="ki-prompt-btn ki-prompt-btn--ghost" id="kiPromptToggleBtn"
+            onclick="toggleKiPromptVorschau()">Prompt anzeigen ▼</button>
+        </div>
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="js/lb8-2-angebotsvergleich.js"></script>
+<script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>includeHTML();</script>
+</body>
+
+</html>
