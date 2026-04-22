@@ -303,6 +303,22 @@ function extractBelegData(svgDoc, belegType) {
         data[id] = textContent;
     });
     
+    // Menge und Einheit aus kombiniertem SVG-Text trennen (z.B. "100 Stück" → menge + einheit)
+if (data['menge1']) {
+    const mengeMatch = data['menge1'].match(/^([\d\s]+(?:\.\d+)?)\s*(.*)$/);
+    if (mengeMatch) {
+        // Zahl: Leerzeichen (Tausendertrenner) entfernen, dann normalisieren
+        data['_mengeRaw'] = mengeMatch[1].replace(/\s/g, '');
+        data['_einheitRaw'] = mengeMatch[2].trim();
+    }
+}
+if (data['menge2']) {
+    const mengeMatch2 = data['menge2'].match(/^([\d\s]+(?:\.\d+)?)\s*(.*)$/);
+    if (mengeMatch2) {
+        data['_menge2Raw'] = mengeMatch2[1].replace(/\s/g, '');
+        data['_einheit2Raw'] = mengeMatch2[2].trim();
+    }
+}
     // Input-Werte
     const inputElements = svgDoc.querySelectorAll('input[id]');
     inputElements.forEach(input => {
@@ -493,7 +509,7 @@ async function fillFormWithExtractedData(belegType, extractedData) {
     const config = URL_PARAM_CONFIG[belegType];
     if (!config) {
         console.warn(`Keine Konfiguration für ${belegType} gefunden`);
-        return;
+        return 0;
     }
     
     // WICHTIG: Zuerst SVG-Template laden, bevor Daten gesetzt werden
@@ -502,86 +518,109 @@ async function fillFormWithExtractedData(belegType, extractedData) {
     
     if (needsSVGLoad.includes(belegType)) {
         console.log(`⏳ Lade SVG-Template für ${belegType}...`);
-        
-        // Lade SVG-Template
         if (typeof window.applySVGholen === 'function') {
             await window.applySVGholen();
-            // Warte bis SVG geladen ist
             await new Promise(resolve => setTimeout(resolve, 800));
         }
     }
     
-// Datum-Felder direkt setzen (da sie über Klassen kommen, nicht IDs)
-const datumMappings = {
-    rechnung: {
-        raw:   'rechnungsDatum',   // "15.03."
-        jahr:  'aktuellesJahr',
-        tagId: 'tag', monatId: 'monat', jahrId: 'jahr'
-    },
-    kontoauszug: {
-        raw:   'kontoauszugDatum',
-        jahr:  'aktuellesJahrKontoauszug',
-        tagId: 'tagKontoauszug', monatId: 'monatKontoauszug', jahrId: 'jahrKontoauszug'
-    },
-    quittung: {
-        tagId: 'tagQuittung',    tagKey: 'quittungTag',
-        monatId: 'monatQuittung', monatKey: 'quittungMonat',
-        jahrId: 'jahrQuittung',  jahrKey: 'aktuellesJahrQuittung'
-    },
-    kassenbon: {
-        tagId: 'tagKassenbon',    tagKey: 'kassenbonTag',
-        monatId: 'monatKassenbon', monatKey: 'kassenbonMonat',
-        jahrId: 'jahrKassenbon',  jahrKey: 'aktuellesJahrKassenbon'
-    },
-    anlagenkarte: {
-        tagId: 'tagAnlagenkarte',    tagKey: 'anlagenkarteTag',
-        monatId: 'monatAnlagenkarte', monatKey: 'anlagenkarteMonat',
-        jahrId: 'jahrAnlagenkarte',  jahrKey: 'aktuellesJahrAnlagenkarte'
-    },
-    wertpapiere: {
-        tagId: 'tagWertpapiereInput',    tagKey: 'wertpapiereTag',
-        monatId: 'monatWertpapiereInput', monatKey: 'wertpapiereMonat',
-        jahrId: 'jahrWertpapiere',        jahrKey: 'aktuellesJahrWertpapiere'
-    },
-    bescheid: {
-        tagId: 'tagBescheid',    tagKey: 'bescheidTag',
-        monatId: 'monatBescheid', monatKey: 'bescheidMonat',
-        jahrId: 'jahrBescheid',  jahrKey: 'aktuellesJahrBescheid'
-    }
-};
+    // Datum-Felder direkt setzen (da sie über Klassen kommen, nicht IDs)
+    const datumMappings = {
+        rechnung: {
+            raw:   'rechnungsDatum',
+            jahr:  'aktuellesJahr',
+            tagId: 'tag', monatId: 'monat', jahrId: 'jahr'
+        },
+        kontoauszug: {
+            raw:   'kontoauszugDatum',
+            jahr:  'aktuellesJahrKontoauszug',
+            tagId: 'tagKontoauszug', monatId: 'monatKontoauszug', jahrId: 'jahrKontoauszug'
+        },
+        quittung: {
+            tagId: 'tagQuittung',    tagKey: 'quittungTag',
+            monatId: 'monatQuittung', monatKey: 'quittungMonat',
+            jahrId: 'jahrQuittung',  jahrKey: 'aktuellesJahrQuittung'
+        },
+        kassenbon: {
+            tagId: 'tagKassenbon',    tagKey: 'kassenbonTag',
+            monatId: 'monatKassenbon', monatKey: 'kassenbonMonat',
+            jahrId: 'jahrKassenbon',  jahrKey: 'aktuellesJahrKassenbon'
+        },
+        anlagenkarte: {
+            tagId: 'tagAnlagenkarte',    tagKey: 'anlagenkarteTag',
+            monatId: 'monatAnlagenkarte', monatKey: 'anlagenkarteMonat',
+            jahrId: 'jahrAnlagenkarte',  jahrKey: 'aktuellesJahrAnlagenkarte'
+        },
+        wertpapiere: {
+            tagId: 'tagWertpapiereInput',    tagKey: 'wertpapiereTag',
+            monatId: 'monatWertpapiereInput', monatKey: 'wertpapiereMonat',
+            jahrId: 'jahrWertpapiere',        jahrKey: 'aktuellesJahrWertpapiere'
+        },
+        bescheid: {
+            tagId: 'tagBescheid',    tagKey: 'bescheidTag',
+            monatId: 'monatBescheid', monatKey: 'bescheidMonat',
+            jahrId: 'jahrBescheid',  jahrKey: 'aktuellesJahrBescheid'
+        }
+    };
 
-const dm = datumMappings[belegType];
-if (dm) {
-    if (dm.raw && extractedData[dm.raw]) {
-    const parts = extractedData[dm.raw].split('.');
-    if (parts.length >= 2) {
-        const tag   = parts[0].padStart(2, '0');  // "1" → "01"
-        const monat = parts[1].padStart(2, '0');  // "3" → "03"
-        setFieldValue(dm.tagId,   tag,   'select');
-        setFieldValue(dm.monatId, monat, 'select');
+    const dm = datumMappings[belegType];
+    if (dm) {
+        if (dm.raw && extractedData[dm.raw]) {
+            const parts = extractedData[dm.raw].split('.');
+            if (parts.length >= 2) {
+                const tag   = parts[0].padStart(2, '0');
+                const monat = parts[1].padStart(2, '0');
+                setFieldValue(dm.tagId,   tag,   'select');
+                setFieldValue(dm.monatId, monat, 'select');
+            }
+        } else if (dm.tagKey && extractedData[dm.tagKey]) {
+            setFieldValue(dm.tagId,   extractedData[dm.tagKey],   'select');
+            setFieldValue(dm.monatId, extractedData[dm.monatKey], 'select');
+        }
+        // Jahr
+        if (dm.jahrKey && extractedData[dm.jahrKey]) {
+            setFieldValue(dm.jahrId, extractedData[dm.jahrKey], 'input');
+        } else if (dm.jahr && extractedData[dm.jahr]) {
+            setFieldValue(dm.jahrId, extractedData[dm.jahr], 'input');
+        }
     }
-} else if (dm.tagKey && extractedData[dm.tagKey]) {
-        // Andere Belege: Tag/Monat stehen direkt als eigene IDs
-        setFieldValue(dm.tagId,   extractedData[dm.tagKey],   'select');
-        setFieldValue(dm.monatId, extractedData[dm.monatKey], 'select');
-    }
-    // Jahr
-    if (dm.jahrKey && extractedData[dm.jahrKey]) {
-        setFieldValue(dm.jahrId, extractedData[dm.jahrKey], 'input');
-    } else if (dm.jahr && extractedData[dm.jahr]) {
-        setFieldValue(dm.jahrId, extractedData[dm.jahr], 'input');
-    }
-}
 
     let fieldsSet = 0;
-    
+
+    // Explizites Direkt-Mapping für Rechnung
+    // (Felder die durch possibleKeys/fuzzy nicht zuverlässig gefunden werden)
+    if (belegType === 'rechnung') {
+        const direktMapping = {
+            'artikelInput':      extractedData['artikel1'],
+            'artikelInput2':     extractedData['artikel2'],
+            'mengeInput':        extractedData['_mengeRaw'],
+            'einheitInput':      extractedData['_einheitRaw'],
+            'mengeInput2':       extractedData['_menge2Raw'],
+            'einheitInput2':     extractedData['_einheit2Raw'],
+            'einzelpreisInput':  extractedData['einzelpreis1']
+                ? extractedData['einzelpreis1'].replace(/[€\s]/g, '').replace(',', '.')
+                : undefined,
+            'einzelpreisInput2': extractedData['einzelpreis2']
+                ? extractedData['einzelpreis2'].replace(/[€\s]/g, '').replace(',', '.')
+                : undefined,
+        };
+        for (const [inputId, val] of Object.entries(direktMapping)) {
+            if (val !== undefined && val !== '') {
+                const el = document.getElementById(inputId);
+                if (el) {
+                    el.value = val;
+                    fieldsSet++;
+                    console.log(`✓ Direkt-Mapping: ${inputId} = ${val}`);
+                }
+            }
+        }
+    }
+
     // Durchlaufe alle möglichen Felder für diesen Belegtyp
     for (const [paramName, paramConfig] of Object.entries(config)) {
-        // Suche nach passenden Daten in extractedData
         const possibleKeys = [
-            paramConfig.elementId,  // Direkte ID
-            paramName,              // Parameter-Name
-            // Konstruiere mögliche SVG-IDs (z.B. 'artikel1' für 'artikelInput')
+            paramConfig.elementId,
+            paramName,
             paramConfig.elementId.replace('Input', ''),
             paramConfig.elementId.replace('Input', '1'),
             belegType + paramName.charAt(0).toUpperCase() + paramName.slice(1)
@@ -591,9 +630,7 @@ if (dm) {
         
         for (const key of possibleKeys) {
             if (extractedData[key] !== undefined && extractedData[key] !== '') {
-                // Bereinige Wert vor dem Setzen (mit elementId für YAML-Suche)
                 let cleanedValue = cleanValueForInput(extractedData[key], paramConfig.type, paramConfig.elementId);
-                
                 const success = setFieldValue(paramConfig.elementId, cleanedValue, paramConfig.type);
                 if (success) {
                     fieldsSet++;
@@ -604,32 +641,30 @@ if (dm) {
             }
         }
         
-       if (!valueFound) {
-    for (const [dataKey, dataValue] of Object.entries(extractedData)) {
-        
-        // Jahr-Felder NIEMALS fuzzy matchen - nur exakter Match erlaubt
-        if (paramConfig.elementId.startsWith('jahr')) continue;
+        if (!valueFound) {
+            for (const [dataKey, dataValue] of Object.entries(extractedData)) {
+                // Jahr-Felder NIEMALS fuzzy matchen
+                if (paramConfig.elementId.startsWith('jahr')) continue;
 
-        const keyLower   = dataKey.toLowerCase();
-        const paramLower = paramName.toLowerCase();
+                const keyLower   = dataKey.toLowerCase();
+                const paramLower = paramName.toLowerCase();
 
-        if (keyLower.includes(paramLower) || paramLower.includes(keyLower)) {
-            let cleanedValue = cleanValueForInput(dataValue, paramConfig.type, paramConfig.elementId);
-            const success = setFieldValue(paramConfig.elementId, cleanedValue, paramConfig.type);
-            if (success) {
-                fieldsSet++;
-                console.log(`✓ Setze ${paramConfig.elementId} = ${cleanedValue} (fuzzy match)`);
-                break;
+                if (keyLower.includes(paramLower) || paramLower.includes(keyLower)) {
+                    let cleanedValue = cleanValueForInput(dataValue, paramConfig.type, paramConfig.elementId);
+                    const success = setFieldValue(paramConfig.elementId, cleanedValue, paramConfig.type);
+                    if (success) {
+                        fieldsSet++;
+                        console.log(`✓ Setze ${paramConfig.elementId} = ${cleanedValue} (fuzzy match)`);
+                        break;
+                    }
+                }
             }
         }
-    }
-}
     }
     
     console.log(`${fieldsSet} Felder wurden befüllt`);
     return fieldsSet;
 }
-
 /**
  * Hilfsfunktion: Lese Datei als Text
  */
