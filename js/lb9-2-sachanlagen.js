@@ -288,18 +288,42 @@ function schreibeZufaelligeWerteInInputs() {
   const conf   = anlagenKonfig[katKey];
   const anlage = pick(conf.positionen);
 
-  const ap          = rnd(conf.preisRange.min, conf.preisRange.max, 500);
-  const rbtProzent  = (Math.random() < 0.7) ? pick(conf.rabattProzent) : 0;
-  const nbk         = (Math.random() < 0.8) ? rnd(conf.nebenkosten.min, conf.nebenkosten.max, 50) : 0;
-  const monat       = Math.ceil(Math.random() * 12);
-  const nd          = anlage.nd;
+  const rbtProzent = (Math.random() < 0.7) ? pick(conf.rabattProzent.filter(Boolean)) : 0;
+  const nbk        = (Math.random() < 0.8) ? rnd(conf.nebenkosten.min, conf.nebenkosten.max, 50) : 0;
+  const monat      = Math.ceil(Math.random() * 12);
+  const nd         = anlage.nd;
 
-  document.getElementById('akInput').value          = ap;
-  document.getElementById('rabattInput').value      = rbtProzent;   // Prozentwert, z. B. 10
+  // AP so wählen, dass (ap - rbt + nbk) durch nd teilbar ist
+  // → ap muss Vielfaches von snapUnit UND von nd sein (wenn kein nbk, sonst trial & error)
+  let ap;
+  if (rbtProzent > 0) {
+    const snapUnit = Math.round(100 / rbtProzent);
+    // ap als Vielfaches von kgV(snapUnit, nd) → AK immer glatt durch nd teilbar
+    const kgv = lcm(snapUnit, nd);
+    const minSteps = Math.ceil(conf.preisRange.min / kgv);
+    const maxSteps = Math.floor(conf.preisRange.max / kgv);
+    const step = minSteps + Math.floor(Math.random() * (maxSteps - minSteps + 1));
+    ap = step * kgv;
+  } else {
+    // Ohne Rabatt: (ap + nbk) muss durch nd teilbar sein
+    // → ap = nd*k - nbk, gerundet auf 500er
+    ap = rnd(conf.preisRange.min, conf.preisRange.max, 500);
+    const basis = ap + nbk;
+    ap = Math.round(basis / nd) * nd - nbk;
+    if (ap < conf.preisRange.min) ap += nd;
+  }
+
+  document.getElementById('akInput').value           = ap;
+  document.getElementById('rabattInput').value       = rbtProzent;
   document.getElementById('bezugskostenInput').value = nbk;
-  document.getElementById('kaufMonatInput').value   = monat;
-  document.getElementById('ndInput').value          = nd;
+  document.getElementById('kaufMonatInput').value    = monat;
+  document.getElementById('ndInput').value           = nd;
 }
+
+// Hilfsfunktion: kleinstes gemeinsames Vielfaches
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+function lcm(a, b) { return (a * b) / gcd(a, b); }
+
 
 // ============================================================================
 // HAUPTGENERATOR
@@ -343,32 +367,39 @@ function zeigeAufgabeMitInputs() {
 
   // === Eingaben auslesen ===
   let ap = akIn ? parseFloat(akIn) : rnd(conf.preisRange.min, conf.preisRange.max, 500);
-  
+
   const rbtProzent = (rbtIn !== '') ? parseFloat(rbtIn) : 0;
   const nbk        = nbkIn ? parseInt(nbkIn) : 0;
   const monat      = (monatIn && parseInt(monatIn) >= 1 && parseInt(monatIn) <= 12)
-                       ? parseInt(monatIn) 
+                       ? parseInt(monatIn)
                        : Math.ceil(Math.random() * 12);
-  
+
   let nd = ndIn ? parseInt(ndIn) : anlage.nd;
 
   // =============================================
-  // NEUER TEIL: AK immer Vielfaches von nd machen
+  // AK-Rundung: AP anpassen, Rabatt korrekt halten
   // =============================================
 
-  // 1. Zuerst den "Netto-Preis vor Anpassung" berechnen (AP - Rabatt + Nebenkosten)
-  let basis = ap - (ap * rbtProzent / 100) + nbk;
+let rbt = 0;
 
-  // 2. AK so anpassen, dass AK % nd === 0  (also AK teilbar durch nd)
-  //    Wir runden auf die nächste Zahl, die durch nd teilbar ist
-  let ak = Math.round(basis / nd) * nd;
+if (rbtProzent > 0) {
+  // snapUnit stellt sicher, dass ap × rbtProzent/100 immer ganzzahlig ist
+  // 10% → snap auf 10er | 5% → snap auf 20er | 20% → snap auf 5er | 15% → snap auf 20er
+  const snapUnit = Math.round(100 / rbtProzent);
+  ap  = Math.round(ap / snapUnit) * snapUnit;
+  rbt = ap * rbtProzent / 100;   // garantiert ganzzahlig
+}
 
-  // Optional: Mindestwert sicherstellen (z.B. nicht unter 1000 € oder so)
-  // ak = Math.max(ak, 1000);   // falls gewünscht
+// AK direkt berechnen – kein zweites Runden mehr
+let ak = ap - rbt + nbk;
 
-  // 3. Rabatt nachträglich anpassen, damit alles konsistent bleibt
-  //    (alternativ könntest du auch den Rabatt-Prozentsatz anpassen)
-  const rbt = Math.round((ap + nbk - ak) * 100) / 100;   // Rabatt wird angepasst
+// AK auf Vielfaches von nd runden NUR wenn kein Rabatt,
+// weil sonst rbt wieder schief wird.
+// Mit Rabatt: ap wurde bereits so gewählt, dass ak "schön" ist.
+if (rbtProzent === 0) {
+  ak = Math.round(ak / nd) * nd;
+}
+
 
   // =============================================
 
@@ -378,7 +409,7 @@ function zeigeAufgabeMitInputs() {
 
   // Abschreibung zeitanteilig
   const monate        = 13 - monat;
-  const afaJahr       = ak / nd;                    // jetzt immer ganzzahlig!
+  const afaJahr       = ak / nd;                    // jetzt immer ganzzahlig
   const afaErstesJahr = Math.round(afaJahr * monate / 12 * 100) / 100;
 
   const lieferant = getLieferantFuer(katKey);
