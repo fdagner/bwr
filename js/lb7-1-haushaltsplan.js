@@ -528,7 +528,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
     Lies das folgende Fallbeispiel sorgfältig durch.
   </p>`;
 
-  html += `<div style="border:1px solid #ccc; border-left:5px solid #1a237e; border-radius:6px; padding:20px 24px; margin:12px 0 16px; background:#fafafa; max-width:600px;">`;
+  html += `<div style="border:1px solid #ccc; border-left:5px solid #1a237e; border-radius:6px; padding:20px 24px; margin:12px 0 16px; background:#fafafa; max-width:700px;">`;
   html += `<h3 style="margin-bottom:4px; color:#1a237e;">${hp.name}</h3>`;
   html += `<p style="color:#546e7a; font-size:0.85rem; margin-bottom:14px; font-style:italic;">Familientyp: ${hp.profil}</p>`;
   html += `<p style="margin-bottom:12px;">${hp.intro}</p>`;
@@ -543,7 +543,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   html += `</div>`;
 
   // Aufgabenstellung a
-  html += `<ol style="max-width:600px; font-size:0.9rem; line-height:2; margin-bottom:0;">
+  html += `<ol>
     <li>Ermittle alle Einnahmen und Ausgaben aus dem Fallbeispiel und trage sie in den Haushaltsplan ein.</li>
     <li>Berechne die Summe der Einnahmen und die Summe der Ausgaben.</li>
     <li>Ermittle den monatlichen Gewinn bzw. Verlust.</li>
@@ -600,7 +600,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
     <span style="font-size:0.88rem; color:#555;">Kosten: <strong>${wunschBetragText}</strong>${aw.einmalig ? ' (einmalige Ausgabe)' : ' (laufende monatliche Ausgabe)'}</span></p>`;
   html += `</div>`;
 
-  html += `<ol style="max-width:600px; font-size:0.9rem; line-height:2;">
+  html += `<ol >
     <li>Beurteile den Ausgabenwunsch: Ordne ihn als <strong>vertretbar</strong> oder <strong>kritisch</strong> ein und begründe deine Einschätzung.</li>
     <li>Ermittle die Auswirkung dieser Ausgabe auf den Gewinn / Verlust des Haushaltsplans von der Familie ${hp.familienName}.${aw.einmalig ? ' (Hinweis: einmalige Ausgabe)' : ' (Hinweis: monatlich wiederkehrende Ausgabe)'}</li>
     <li>Definiere den Begriff <strong>Überschuldung</strong>.</li>
@@ -613,7 +613,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
     Beziehe dich auf den Haushaltsplan von der Familie ${hp.familienName}.
   </p>`;
 
-  html += `<ol style="max-width:600px; font-size:0.9rem; line-height:2;">
+  html += `<ol >
     <li>Erkläre den Unterschied zwischen <strong>regelmäßigen</strong> und <strong>unregelmäßigen</strong> Ausgaben.</li>
     <li>Ordne alle Ausgaben aus dem Haushaltsplan von der Familie ${hp.familienName} in die untenstehende Tabelle ein.</li>
     <li>Nenne je zwei weitere Beispiele für regelmäßige und unregelmäßige Ausgaben, die nicht im Haushaltsplan enthalten sind.</li>

@@ -323,9 +323,6 @@ letzteGenerierteAufgaben.forEach(({ text }, idx) => {
         <td style="border:1px solid #ccc; padding:6px 10px; height:32px;">&nbsp;</td>
       </tr>`;
     });
-    if (idx < ausgewaehlte.length - 1) {
-      html += `<tr><td colspan="4" style="border-left:1px solid #ccc; border-right:1px solid #ccc; border-top:2px solid #999; padding:0; height:0;"></td></tr>`;
-    }
   });
 
   html += `</tbody></table>`;
@@ -352,9 +349,6 @@ letzteGenerierteAufgaben.forEach(({ text }, idx) => {
         </td>
       </tr>`;
     });
-    if (idx < ausgewaehlte.length - 1) {
-      html += `<tr><td colspan="4" style="border-left:1px solid #ccc; border-right:1px solid #ccc; border-top:2px solid #999; padding:0; height:0;"></td></tr>`;
-    }
   });
 
   html += `</tbody></table>`;

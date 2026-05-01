@@ -519,10 +519,10 @@ function renderKonsumaufgabeBlock(data, nr, gesamt) {
   html += situationsHTML;
   html += `</div>`;
 
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2; margin-bottom:0;">
-    <li><strong>Ermittle</strong> alle Einnahmen von ${person.name} aus dem Fallbeispiel und trage sie vollständig in die folgende Tabelle ein. Berechne die monatliche Gesamteinnahme.</li>
-    <li><strong>Ermittle</strong> alle Ausgaben von ${person.name} aus dem Fallbeispiel und ergänze sie in der Ausgabentabelle. Berechne die Summe der Ausgaben.</li>
-    <li><strong>Berechne</strong>, wie viel Geld ${person.name} nach Abzug aller Ausgaben monatlich frei verfügbar hat.${einmEin.length > 0 ? ' Gib außerdem den einmalig verfügbaren Betrag (Ersparnisse) an.' : ''}</li>
+  html += `<ol>
+    <li>Ermittle alle Einnahmen von ${person.name} aus dem Fallbeispiel und trage sie vollständig in die folgende Tabelle ein. Berechne die monatliche Gesamteinnahmen.</li>
+    <li>Ermittle alle Ausgaben von ${person.name} aus dem Fallbeispiel und ergänze sie in der Ausgabentabelle. Berechne die Summe der Ausgaben.</li>
+    <li>Berechne, wie viel Geld ${person.name} nach Abzug aller Ausgaben monatlich frei verfügbar hat.${einmEin.length > 0 ? ' Gib außerdem den einmalig verfügbaren Betrag (Ersparnisse) an.' : ''}</li>
   </ol>`;
 
   // Einnahmen-Tabelle (leer)
@@ -574,11 +574,11 @@ function renderKonsumaufgabeBlock(data, nr, gesamt) {
     <span style="font-size:0.88rem; color:#555;">Preis: <strong>${preisBez}</strong> &nbsp;·&nbsp; Kategorie: ${szenario.kategorie} &nbsp;·&nbsp; ${szenario.einmalig ? 'Einmalige Ausgabe' : 'Laufende monatliche Ausgabe'}</span></p>
   </div>`;
 
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
-    <li><strong>Fülle</strong> die Bewertungstabelle für diese Kaufentscheidung vollständig aus (++ sehr wichtig | + wichtig | – weniger wichtig | – – unwichtig).</li>
-    <li><strong>Beurteile</strong>, ob der Kauf für ${person.name} finanziell <strong>vertretbar</strong> oder <strong>kritisch</strong> ist. <strong>Begründe</strong> deine Einschätzung anhand von mindestens zwei Kriterien aus der Tabelle.</li>
-    <li><strong>Nenne</strong> eine günstigere oder nachhaltigere Alternative zu diesem Kauf.</li>
-    <li><strong>Erkläre</strong>, welche Rolle Werbung und soziales Umfeld bei dieser Kaufentscheidung spielen könnten.</li>
+  html += `<ol>
+    <li>Fülle die Bewertungstabelle für diese Kaufentscheidung vollständig aus<br>(++ sehr wichtig | + wichtig | – weniger wichtig | – – unwichtig).</li>
+    <li>Beurteile, ob der Kauf für ${person.name} finanziell vertretbar oder kritisch ist. Begründe deine Einschätzung anhand von mindestens zwei Kriterien aus der Tabelle.</li>
+    <li>Nenne eine günstigere oder nachhaltigere Alternative zu diesem Kauf.</li>
+    <li>Erkläre, welche Rolle Werbung und soziales Umfeld bei dieser Kaufentscheidung spielen könnten.</li>
   </ol>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">
@@ -602,22 +602,22 @@ function renderKonsumaufgabeBlock(data, nr, gesamt) {
 
   // ── C: Sparplan ───────────────────────────────────────────────────────────
   html += `<h2 style="margin-top:2em;">${cL} – Sparplan</h2>`;
-  html += `<p style="font-size:0.9rem; max-width:680px; margin-bottom:10px;">${person.name} entscheidet sich, den Kauf erst dann zu tätigen, wenn ${vars.vNom} genug Geld angespart hat. Dafür legt ${vars.vNom} jeden Monat einen festen Betrag zur Seite.</p>`;
+  html += `<p>${person.name} entscheidet sich, den Kauf erst dann zu tätigen, wenn ${vars.vNom} genug Geld angespart hat. Dafür legt ${vars.vNom} jeden Monat einen festen Betrag zur Seite.</p>`;
 
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
-    <li><strong>Berechne</strong>, nach wie vielen Monaten ${person.name} das Sparziel von <strong>${fmt(sparZiel)} Euro</strong> erreicht, wenn ${vars.vNom} monatlich <strong>${fmt(sparrate)} Euro</strong> zurücklegt.</li>
-    <li><strong>Begründe</strong>, weshalb es sinnvoll ist, größere Anschaffungen durch Sparen zu finanzieren, anstatt sofort zu kaufen oder sich Geld zu leihen.</li>
+  html += `<ol>
+    <li>Berechne, nach wie vielen Monaten ${person.name} das Sparziel von <strong>${fmt(sparZiel)} Euro</strong> erreicht, wenn ${vars.vNom} monatlich <strong>${fmt(sparrate)} Euro</strong> zurücklegt.</li>
+    <li>Begründe, weshalb es sinnvoll ist, größere Anschaffungen durch Sparen zu finanzieren, anstatt sofort zu kaufen oder sich Geld zu leihen.</li>
   </ol>`;
 
   html += `<p style="font-size:0.9rem; max-width:680px; margin-top:4px;">Rechenweg: _______ Euro ÷ _______ Euro/Monat = _______ Monate</p>`;
 
   // ── D: Eigene Reflexion ───────────────────────────────────────────────────
   html += `<h2 style="margin-top:2em;">${dL} – Eigene Konsumgewohnheiten reflektieren</h2>`;
-  html += `<ol style="max-width:680px; font-size:0.9rem; line-height:2;">
-    <li><strong>Nenne</strong> ein Produkt, das du im letzten Monat gekauft hast, und <strong>fülle</strong> die folgende Bewertungstabelle aus.</li>
-    <li><strong>Vergleiche</strong> deine Kaufmotive mit denen von ${person.name}: <strong>Stelle</strong> Gemeinsamkeiten und Unterschiede heraus.</li>
-    <li><strong>Leite</strong> aus deiner Analyse drei konkrete Maßnahmen ab, mit denen du deinen eigenen Konsum verantwortungsvoller gestalten kannst.</li>
-    <li><strong>Erkläre</strong> in eigenen Worten, was unter dem Begriff „verantwortungsvoller Konsum" zu verstehen ist.</li>
+  html += `<ol>
+    <li>Nenne ein Produkt, das du im letzten Monat gekauft hast, und fülle die folgende Bewertungstabelle aus.</li>
+    <li>Vergleiche deine Kaufmotive mit denen von ${person.name}: Stelle Gemeinsamkeiten und Unterschiede heraus.</li>
+    <li>Leite aus deiner Analyse drei konkrete Maßnahmen ab, mit denen du deinen eigenen Konsum verantwortungsvoller gestalten kannst.</li>
+    <li>Erkläre in eigenen Worten, was unter dem Begriff „verantwortungsvoller Konsum" zu verstehen ist.</li>
   </ol>`;
 
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">
@@ -827,33 +827,78 @@ function erstelleKiPromptText() {
     inhalt = '(Noch keine Aufgaben generiert. Bitte zuerst Aufgaben erstellen.)';
   } else {
     inhalt = letzteGenerierteKonsumaufgaben.map((data, idx) => {
-      const { person, lfdEin, ausPosten, gesamtEin, gesamtAus, freiVerfuegbar, szenario, preisBez, sparrate, sparZiel, monate } = data;
+      const {
+        person, lfdEin, einmEin, ausPosten,
+        gesamtEin, gesamtAus, freiVerfuegbar, ersparnisse,
+        szenario, preisBez, situationsHTML, konsequenz,
+        sparrate, sparZiel, monate,
+      } = data;
+
+      // Situationstext: HTML-Tags entfernen für lesbaren Klartext
+      const situationKlartext = situationsHTML
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
       const einStr = lfdEin.map(e => `  - ${e.label}: ${fmt(e.betrag)} €`).join('\n');
+      const einmStr = einmEin.length > 0
+        ? `\nErsparnisse (einmalig): ${fmt(ersparnisse)} €`
+        : '';
       const ausStr = ausPosten.map(a => `  - ${a.label}: ${fmt(a.betrag)} €`).join('\n');
-      return `--- Aufgabe ${idx + 1}: ${person.name} (${person.typ}) ---
-Persona: ${person.typ}
 
-Einnahmen:
-${einStr}
-  Gesamt: ${fmt(gesamtEin)} €
+      // Bewertungstabelle als Text
+      const bewStr = kriterienReihenfolge
+        .map(k => `  - ${kriterienLabel[k]}: ${szenario.kriterien[k] || '-'}`)
+        .join('\n');
 
-Ausgaben:
+      return `=== Aufgabe ${idx + 1}: ${person.name} (${person.typ}) ===
+
+--- FALLBESCHREIBUNG (Aufgabenteil A) ---
+${situationKlartext}
+
+--- LÖSUNG A: EINNAHMEN & AUSGABEN ---
+Einnahmen (monatlich):
+${einStr}${einmStr}
+  Gesamteinnahmen: ${fmt(gesamtEin)} €
+
+Ausgaben (monatlich):
 ${ausStr}
-  Gesamt: ${fmt(gesamtAus)} €
+  Summe Ausgaben: ${fmt(gesamtAus)} €
   Frei verfügbar: ${fmt(freiVerfuegbar)} €
 
-Kaufszenario: ${szenario.produkt} (${preisBez})
+--- LÖSUNG B: KAUFENTSCHEIDUNG ---
+Kaufszenario: ${szenario.produkt}
+Preis: ${preisBez}
 Kategorie: ${szenario.kategorie}
-Bewertung: ${szenario.bewertung.toUpperCase()}
+Art: ${szenario.einmalig ? 'Einmalige Ausgabe' : 'Laufende monatliche Ausgabe'}
+
+Bewertungstabelle (++ / + / – / ––):
+${bewStr}
+
+Beurteilung: ${szenario.bewertung.toUpperCase()}
 Begründung: ${szenario.begruendung}
 Alternative: ${szenario.alternative}
+Werbung/soziales Umfeld: Werbung erzeugt über Bilder von Zugehörigkeit, Status und Anerkennung künstliche Bedürfnisse. Das soziale Umfeld verstärkt diesen Druck – eine bewusste Kaufentscheidung hinterfragt, ob ein Wunsch wirklich aus eigenem Bedürfnis entsteht oder durch äußeren Druck.
 
-Sparplan:
-  Sparrate: ${fmt(sparrate)} €/Monat
-  Sparziel: ${fmt(sparZiel)} €
-  Dauer: ${monate} Monate`;
+--- LÖSUNG C: SPARPLAN ---
+Rechenweg: ${fmt(sparZiel)} € ÷ ${fmt(sparrate)} €/Monat = ${monate} Monat${monate !== 1 ? 'e' : ''}
+Konsequenz ohne Sparen: ${konsequenz}
+${person.minderjaehrig
+  ? 'Hinweis: Minderjährige dürfen rechtlich keine Kreditverträge abschließen.'
+  : 'Hinweis: Wer sich Geld leiht, muss es zurückzahlen – häufig mit Zinsen, was den Kauf insgesamt verteuert.'}
+
+--- LÖSUNG D: REFLEXION (Musterschema) ---
+Verantwortungsvoller Konsum bedeutet, Kaufentscheidungen bewusst, informiert und abwägend zu treffen. Dabei werden Notwendigkeit, finanzielle Möglichkeiten, Qualität und ökologische Auswirkungen berücksichtigt.
+Mögliche Maßnahmen:
+  1. Vor jedem Kauf fragen: „Brauche ich das wirklich?" und „Kann ich es mir leisten?"
+  2. Die 24-Stunden-Regel anwenden: Größere Anschaffungen einen Tag aufschieben.
+  3. Monatlich einen festen Sparbetrag zurücklegen, bevor Geld für Konsum ausgegeben wird.
+  4. Laufende Abonnements regelmäßig prüfen und nicht genutzte kündigen.
+  5. Gebrauchte oder nachhaltige Alternativen prüfen, bevor ein Neukauf getätigt wird.`;
     }).join('\n\n');
   }
+
   return KI_SYSTEM_PROMPT.replace('###AUFGABEN###', inhalt);
 }
 
