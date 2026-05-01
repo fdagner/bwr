@@ -2885,3 +2885,27 @@
     bic: "GENODZO2ERL"
     inhaber: ""
     akzent: "#f5f5f5"
+
+- unternehmen:
+    id: "504"
+    branche: "Familie"
+    name: "Thomas Müller"
+    motto: ""
+    bank: "Privatbank Nürnberg"
+    rechtsform: ""
+    logo: ""
+    adresse:
+      strasse: "Hauptstr. 23"
+      plz: "90743"
+      ort: "Nürnberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 911 222366"
+      email: "tmueller@email.de"
+      internet: ""
+    ust_id: "DE904573390"
+    steuernummer: "123/122/73451"
+    iban: "DE89678345628376465234"
+    bic: "GENODZO2ERL"
+    inhaber: ""
+    akzent: "#f5f5f5"
