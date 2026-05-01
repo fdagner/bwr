@@ -628,6 +628,7 @@ function zeigeZufaelligeProzentAufgaben() {
       ...aufgabe.chartOptions,
       chart: {
         ...aufgabe.chartOptions.chart,
+        background: '#ffffff',
         toolbar: {
           ...TOOLBAR,
           export: {
