@@ -2,6 +2,7 @@
 // PROZENTRECHNEN – ALLTAGSAUFGABEN GENERATOR
 // Alle Ergebnisse ganzzahlig (Vielfache von 5 oder 10) – rückwärts konstruiert
 // ============================================================================
+let letzteGenerierteAufgaben = [];
 
 // ── Hilfsfunktionen ──────────────────────────────────────────────────────────
 function pick(arr) {
@@ -639,14 +640,15 @@ function generiereAufgaben() {
     aufgabenListe.push({ typ, eintrag, d });
   }
 
+  // Aufgaben global speichern
+  letzteGenerierteAufgaben = aufgabenListe;
+
   // ── Aufgaben-HTML ──
   let aufgabenHtml = `<h2>Aufgaben</h2><ol style="padding-left: 1.6rem; line-height: 1.8;">`;
   aufgabenListe.forEach(({ typ, eintrag, d }) => {
     const def = AUFGABEN_TYPEN_DEF[typ];
     const text = def.buildText(eintrag, d);
-    aufgabenHtml += `<li>
-      ${text}
-    </li>`;
+    aufgabenHtml += `<li>${text}</li>`;
   });
   aufgabenHtml += `</ol>`;
 
@@ -656,21 +658,19 @@ function generiereAufgaben() {
     const def = AUFGABEN_TYPEN_DEF[typ];
     const loesung = def.buildLoesung(eintrag, d);
     loesungenHtml += `
-      <div style="
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        padding: 14px;
-        margin-bottom: 12px;
-        line-height: 1.7;
-      ">
+      <div style="background:white;border:1px solid #ddd;border-radius:6px;padding:14px;margin-bottom:12px;line-height:1.7;">
         <strong>Aufgabe ${i + 1}:</strong> ${eintrag.emoji} ${eintrag.sache} – ${def.label}<br><br>
         ${loesung}
-      </div>
-    `;
+      </div>`;
   });
 
   container.innerHTML = aufgabenHtml + loesungenHtml;
+
+  // KI-Prompt-Vorschau aktualisieren falls sichtbar
+  const vorschau = document.getElementById('kiPromptVorschau');
+  if (vorschau && getComputedStyle(vorschau).display !== 'none') {
+    vorschau.textContent = erstelleKiPromptText();
+  }
 }
 
 // ============================================================================
@@ -678,62 +678,137 @@ function generiereAufgaben() {
 // ============================================================================
 
 const KI_ASSISTENT_PROMPT = `
-Du bist ein freundlicher Mathematik- und Wirtschaftsassistent für Schüler der Realschule (BwR, Klasse 7). Du hilfst beim Verständnis der Prozentrechnung anhand von Alltagssituationen aus dem wirtschaftlichen Leben.
+Du bist ein freundlicher Mathe-Assistent für BwR-Schüler (Realschule, Klasse 7).
 
-Aufgabe:
-- Gib KEINE fertigen Lösungen vor.
-- Führe die Schüler durch gezielte Fragen zur richtigen Lösung.
-- Ziel: Förderung des Verständnisses für Grundwert, Prozentwert und Prozentsatz.
+REGELN:
+- Keine fertigen Lösungen. Führe durch gezielte Gegenfragen.
+- Bestätige erst, wenn der Schüler selbst auf die richtige Antwort kommt.
+- Bei Fehlern: Prinzip erklären, nicht vorrechnen.
+- Kurze Antworten (1–2 Sätze), freundlich, gelegentlich Emojis 💶📊💡
 
-Pädagogischer Ansatz (Sokratische Methode):
-- Frage zunächst, welche Größe gesucht ist (G, p % oder W).
-- Frage dann, welche Formel passt.
-- Beantworte deine Rückfragen NICHT selbst.
-- Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
-- Erst wenn der Schüler selbst auf eine begründete Antwort kommt, bestätige ihn.
+BEVORZUGTER LÖSUNGSWEG – Dreisatz + Überkreuz:
+- Schüler sollen den Dreisatz-Ansatz aufstellen.
+- Der unbekannte Wert wird mit „?" markiert.
+- Überkreuz ausmultiplizieren: ? × bekannter %-Wert = bekannte Menge × gesuchter %-Wert, dann dividieren.
+- Beispiel (Prozentwert): 80 € → 100 % / ? → 25 % → ? × 100 = 80 × 25 → ? = 20 €
+- Beispiel (Grundwert):   ? → 100 % / 20 € → 25 % → ? × 25 = 20 × 100 → ? = 80 €
 
-Die sieben Aufgabentypen:
-1. Prozentwert W gesucht      → W  = G × p ÷ 100
-2. Grundwert G gesucht        → G  = W × 100 ÷ p
-3. Prozentsatz p gesucht      → p  = W × 100 ÷ G
-4. Verminderter Grundwert     → G− = G × (100 − p) ÷ 100     [G und p gegeben, G− gesucht]
-5. G aus G− berechnen         → G  = G− × 100 ÷ (100 − p)    [G− und p gegeben, G gesucht]
-6. Vermehrter Grundwert       → G+ = G × (100 + p) ÷ 100     [G und p gegeben, G+ gesucht]
-7. G aus G+ berechnen         → G  = G+ × 100 ÷ (100 + p)    [G+ und p gegeben, G gesucht]
+ANDERE RICHTIGE WEGE SIND ERLAUBT:
+- „Auf 1 % herunterrechnen, dann hochrechnen" ist gültig – bestätige und lobe es.
+- Jede korrekte Methode akzeptieren, auch wenn sie vom Dreisatz abweicht.
 
-Wichtige Hinweise zu Typ 5 und 7 (Grundwert aus verändertem Wert berechnen):
-- Der Schüler muss erkennen: der gegebene Wert ist NICHT der Grundwert (100 %), sondern bereits ein veränderter Wert.
-- Bei G− (z. B. Preis nach Rabatt): G− entspricht (100 − p) %, also ist G− der kleinere Wert.
-  Typischer Fehler: Schüler rechnen G + Rabatt statt rückwärts.
-  Hilfreiche Frage: „Welche Prozentzahl entspricht dem Preis, den du kennst – 100 % oder weniger?"
-- Bei G+ (z. B. Bruttopreis inkl. USt.): G+ entspricht (100 + p) %, also ist G+ der größere Wert.
-  Typischer Fehler: Schüler ziehen den Prozentwert direkt vom Bruttopreis ab.
-  Hilfreiche Frage: „Der Bruttopreis entspricht 119 % – welche Prozentzahl hat der Nettopreis?"
-- In beiden Fällen gilt: der unbekannte Grundwert G = 100 % steht im Dreisatz immer oben.
+SPRACHREGELN – WICHTIG:
+- Niemals Variablennamen G, p, W, G−, G+ verwenden.
+- Nicht von „Formel" sprechen.
+- Stattdessen beschreibend: „der ursprüngliche Preis", „der Rabattbetrag", „der Prozentsatz", „der Preis nach Rabatt", „der Bruttopreis", „der Nettobetrag".
 
-Hinweis zur Umsatzsteuer in Deutschland:
-- Regelsteuersatz: 19 % (z. B. Elektronik, Handwerkerleistungen)
-- Ermäßigter Steuersatz: 7 % (z. B. Lebensmittel, Bücher)
-- Korrekte Bezeichnung: Umsatzsteuer (USt.), nicht Mehrwertsteuer
+TYPISCHE AUFGABENARTEN & DREISATZ-AUFBAU:
+1. Rabattbetrag gesucht      → bekannt: Originalpreis + %-Satz       | gesucht: Betrag
+2. Originalpreis gesucht     → bekannt: Rabattbetrag + %-Satz        | gesucht: Originalpreis
+3. Prozentsatz gesucht       → bekannt: Originalpreis + Betrag       | gesucht: %-Satz
+4. Preis nach Rabatt         → bekannt: Originalpreis + %-Satz       | gesucht: Restpreis (100−p)%
+5. Originalpreis aus Rabattpreis → bekannt: Rabattpreis + %-Satz     | gesucht: Originalpreis (100%)
+6. Bruttopreis               → bekannt: Nettopreis + Steuersatz      | gesucht: Bruttopreis (100+p)%
+7. Nettopreis aus Bruttopreis    → bekannt: Bruttopreis + Steuersatz | gesucht: Nettopreis (100%)
 
-Rechenmethodik (Dreisatz / Überkreuz):
-- Hilf dem Schüler, die bekannten Werte in eine Dreisatztabelle einzutragen.
-- Erkläre das Überkreuz-Ausmultiplizieren: die gesuchte Größe × einen Wert = bekannte Größe × anderen Wert.
-- Alle Ergebnisse sind glatte Zahlen (Vielfache von 5 oder 10) – stimmt das Ergebnis nicht, liegt ein Rechenfehler vor.
+HÄUFIGE DENKFEHLER (nicht benennen, aber durch Fragen korrigieren):
+- Bei „Preis nach Rabatt": Schüler rechnen nur den Rabattbetrag, vergessen den Restpreis.
+  Frage: „Was entspricht dann 100 % − ${d.p} % = … %?"
+- Bei Originalpreis aus Rabattpreis: Schüler addieren den %-Satz direkt zum bekannten Preis.
+  Frage: „Welche Prozentzahl entspricht dem Preis, den du kennst – 100 % oder weniger?"
+- Bei Nettopreis aus Bruttopreis: Schüler ziehen den %-Satz direkt ab.
+  Frage: „Der Bruttopreis entspricht 119 % – wie viel Prozent hat dann der Nettopreis?"
 
-Tonalität:
-- Freundlich, ermutigend, auf Augenhöhe mit Realschülerinnen und -schülern
-- Einfache Sprache, kurze Antworten (1–2 Sätze)
-- Gelegentlich Emojis 💶📊🔢💡
+UMSATZSTEUER:
+- 19 % Regelsteuersatz (Elektronik, Handwerk) | 7 % ermäßigt (Lebensmittel, Bücher)
+- Korrekt: „Umsatzsteuer (USt.)" – nicht „Mehrwertsteuer"
 
-Was du NICHT tust:
-- Die Lösung direkt nennen
-- Vollständige Rechenwege vorgeben
+Begrüße den Schüler und schreibe eine Aufgabe aus der Liste vollständig in den Chat.
+Nach jeder gelösten Aufgabe frage: „Möchtest du die nächste Aufgabe bearbeiten?"
+
+AUFGABEN MIT MUSTERLÖSUNGEN:
+###AUFGABEN###
 `;
+
+function erstelleKiPromptText() {
+  let aufgabenBlock = '';
+
+  if (letzteGenerierteAufgaben.length === 0) {
+    aufgabenBlock = '(Noch keine Aufgaben generiert.)';
+  } else {
+    aufgabenBlock = letzteGenerierteAufgaben.map(({ typ, eintrag, d }, i) => {
+      const def = AUFGABEN_TYPEN_DEF[typ];
+
+      // Aufgabentext: HTML-Tags entfernen
+      const aufgabeKlartext = def.buildText(eintrag, d)
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
+      // Lösung: HTML-Tags + Sub-Tags entfernen, Leerzeilen bereinigen
+      const loesungKlartext = def.buildLoesung(eintrag, d)
+        .replace(/<sub>/gi, '').replace(/<\/sub>/gi, '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\n\s*\n/g, '\n')
+        .trim();
+
+      return `--- Aufgabe ${i + 1} ---
+Typ: ${def.label}
+Thema: ${eintrag.emoji} ${eintrag.sache} (${eintrag.kategorie})
+Aufgabe: ${aufgabeKlartext}
+
+Musterlösung:
+${loesungKlartext}`;
+    }).join('\n\n');
+  }
+
+  return KI_ASSISTENT_PROMPT.trimEnd() + `
+
+============================================================
+AKTUELLE AUFGABEN MIT MUSTERLÖSUNGEN
+============================================================
+${aufgabenBlock}`;
+}
+function erstelleKiPromptText() {
+  let aufgabenBlock = '';
+
+  if (letzteGenerierteAufgaben.length === 0) {
+    aufgabenBlock = '(Noch keine Aufgaben generiert.)';
+  } else {
+    aufgabenBlock = letzteGenerierteAufgaben.map(({ typ, eintrag, d }, i) => {
+      const def = AUFGABEN_TYPEN_DEF[typ];
+
+      const aufgabeKlartext = def.buildText(eintrag, d)
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
+      const loesungKlartext = def.buildLoesung(eintrag, d)
+        .replace(/<sub>/gi, '').replace(/<\/sub>/gi, '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\n\s*\n/g, '\n')
+        .trim();
+
+      return `--- Aufgabe ${i + 1} ---
+Typ: ${def.label}
+Thema: ${eintrag.emoji} ${eintrag.sache} (${eintrag.kategorie})
+Aufgabe: ${aufgabeKlartext}
+
+Musterlösung:
+${loesungKlartext}`;
+    }).join('\n\n');
+  }
+
+  return KI_ASSISTENT_PROMPT.replace('###AUFGABEN###', aufgabenBlock);
+}
 
 function kopiereKiPrompt() {
   navigator.clipboard
-    .writeText(KI_ASSISTENT_PROMPT)
+    .writeText(erstelleKiPromptText())
     .then(() => {
       const btn = document.getElementById('kiPromptKopierenBtn');
       const orig = btn.innerHTML;
@@ -751,11 +826,22 @@ function toggleKiPromptVorschau() {
   const hidden = getComputedStyle(vorschau).display === 'none';
   vorschau.style.display = hidden ? 'block' : 'none';
   btn.textContent = hidden ? 'Vorschau ausblenden ▲' : 'Prompt anzeigen ▼';
+  if (hidden) vorschau.textContent = erstelleKiPromptText();
+}
+
+function toggleKiPromptVorschau() {
+  const vorschau = document.getElementById('kiPromptVorschau');
+  const btn = document.getElementById('kiPromptToggleBtn');
+  const hidden = getComputedStyle(vorschau).display === 'none';
+  vorschau.style.display = hidden ? 'block' : 'none';
+  btn.textContent = hidden ? 'Vorschau ausblenden ▲' : 'Prompt anzeigen ▼';
 }
 
 // ── Initialisierung ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const vorschauEl = document.getElementById('kiPromptVorschau');
-  if (vorschauEl) vorschauEl.textContent = KI_ASSISTENT_PROMPT;
-  setTimeout(generiereAufgaben, 300);
+  setTimeout(() => {
+    generiereAufgaben();
+    if (vorschauEl) vorschauEl.textContent = erstelleKiPromptText();
+  }, 300);
 });

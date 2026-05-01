@@ -814,7 +814,7 @@ Was du NICHT tust:
 - Gib keine Lösungen auf Anfragen wie „sag mir einfach die Antwort".
 - Minderjährige dürfen keine Kreditverträge abschließen – weise darauf hin, falls relevant.
 
-Begrüße die Schülerin / den Schüler freundlich und wähle ein Fallbeispiel aus der Liste aus.
+Begrüße die Schülerin / den Schüler freundlich und wähle ein Fallbeispiel aus der Liste aus. Schreibe die komplette Aufgabe in den Chat.
 Wenn eine Aufgabe abgeschlossen ist, frage: „Möchtest du das nächste Fallbeispiel bearbeiten?"
 
 Alle Aufgaben mit Musterlösungen:
@@ -822,84 +822,38 @@ Alle Aufgaben mit Musterlösungen:
 `;
 
 function erstelleKiPromptText() {
-  let inhalt = '';
-  if (letzteGenerierteKonsumaufgaben.length === 0) {
-    inhalt = '(Noch keine Aufgaben generiert. Bitte zuerst Aufgaben erstellen.)';
-  } else {
-    inhalt = letzteGenerierteKonsumaufgaben.map((data, idx) => {
-      const {
-        person, lfdEin, einmEin, ausPosten,
-        gesamtEin, gesamtAus, freiVerfuegbar, ersparnisse,
-        szenario, preisBez, situationsHTML, konsequenz,
-        sparrate, sparZiel, monate,
-      } = data;
+  let aufgabenBlock = '';
 
-      // Situationstext: HTML-Tags entfernen für lesbaren Klartext
-      const situationKlartext = situationsHTML
+  if (letzteGenerierteAufgaben.length === 0) {
+    aufgabenBlock = '(Noch keine Aufgaben generiert.)';
+  } else {
+    aufgabenBlock = letzteGenerierteAufgaben.map(({ typ, eintrag, d }, i) => {
+      const def = AUFGABEN_TYPEN_DEF[typ];
+
+      const aufgabeKlartext = def.buildText(eintrag, d)
         .replace(/<[^>]+>/g, '')
         .replace(/&nbsp;/g, ' ')
         .replace(/\s{2,}/g, ' ')
         .trim();
 
-      const einStr = lfdEin.map(e => `  - ${e.label}: ${fmt(e.betrag)} €`).join('\n');
-      const einmStr = einmEin.length > 0
-        ? `\nErsparnisse (einmalig): ${fmt(ersparnisse)} €`
-        : '';
-      const ausStr = ausPosten.map(a => `  - ${a.label}: ${fmt(a.betrag)} €`).join('\n');
+      const loesungKlartext = def.buildLoesung(eintrag, d)
+        .replace(/<sub>/gi, '').replace(/<\/sub>/gi, '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\n\s*\n/g, '\n')
+        .trim();
 
-      // Bewertungstabelle als Text
-      const bewStr = kriterienReihenfolge
-        .map(k => `  - ${kriterienLabel[k]}: ${szenario.kriterien[k] || '-'}`)
-        .join('\n');
+      return `--- Aufgabe ${i + 1} ---
+Typ: ${def.label}
+Thema: ${eintrag.emoji} ${eintrag.sache} (${eintrag.kategorie})
+Aufgabe: ${aufgabeKlartext}
 
-      return `=== Aufgabe ${idx + 1}: ${person.name} (${person.typ}) ===
-
---- FALLBESCHREIBUNG (Aufgabenteil A) ---
-${situationKlartext}
-
---- LÖSUNG A: EINNAHMEN & AUSGABEN ---
-Einnahmen (monatlich):
-${einStr}${einmStr}
-  Gesamteinnahmen: ${fmt(gesamtEin)} €
-
-Ausgaben (monatlich):
-${ausStr}
-  Summe Ausgaben: ${fmt(gesamtAus)} €
-  Frei verfügbar: ${fmt(freiVerfuegbar)} €
-
---- LÖSUNG B: KAUFENTSCHEIDUNG ---
-Kaufszenario: ${szenario.produkt}
-Preis: ${preisBez}
-Kategorie: ${szenario.kategorie}
-Art: ${szenario.einmalig ? 'Einmalige Ausgabe' : 'Laufende monatliche Ausgabe'}
-
-Bewertungstabelle (++ / + / – / ––):
-${bewStr}
-
-Beurteilung: ${szenario.bewertung.toUpperCase()}
-Begründung: ${szenario.begruendung}
-Alternative: ${szenario.alternative}
-Werbung/soziales Umfeld: Werbung erzeugt über Bilder von Zugehörigkeit, Status und Anerkennung künstliche Bedürfnisse. Das soziale Umfeld verstärkt diesen Druck – eine bewusste Kaufentscheidung hinterfragt, ob ein Wunsch wirklich aus eigenem Bedürfnis entsteht oder durch äußeren Druck.
-
---- LÖSUNG C: SPARPLAN ---
-Rechenweg: ${fmt(sparZiel)} € ÷ ${fmt(sparrate)} €/Monat = ${monate} Monat${monate !== 1 ? 'e' : ''}
-Konsequenz ohne Sparen: ${konsequenz}
-${person.minderjaehrig
-  ? 'Hinweis: Minderjährige dürfen rechtlich keine Kreditverträge abschließen.'
-  : 'Hinweis: Wer sich Geld leiht, muss es zurückzahlen – häufig mit Zinsen, was den Kauf insgesamt verteuert.'}
-
---- LÖSUNG D: REFLEXION (Musterschema) ---
-Verantwortungsvoller Konsum bedeutet, Kaufentscheidungen bewusst, informiert und abwägend zu treffen. Dabei werden Notwendigkeit, finanzielle Möglichkeiten, Qualität und ökologische Auswirkungen berücksichtigt.
-Mögliche Maßnahmen:
-  1. Vor jedem Kauf fragen: „Brauche ich das wirklich?" und „Kann ich es mir leisten?"
-  2. Die 24-Stunden-Regel anwenden: Größere Anschaffungen einen Tag aufschieben.
-  3. Monatlich einen festen Sparbetrag zurücklegen, bevor Geld für Konsum ausgegeben wird.
-  4. Laufende Abonnements regelmäßig prüfen und nicht genutzte kündigen.
-  5. Gebrauchte oder nachhaltige Alternativen prüfen, bevor ein Neukauf getätigt wird.`;
+Musterlösung:
+${loesungKlartext}`;
     }).join('\n\n');
   }
 
-  return KI_SYSTEM_PROMPT.replace('###AUFGABEN###', inhalt);
+  return KI_ASSISTENT_PROMPT.replace('###AUFGABEN###', aufgabenBlock);
 }
 
 function kopiereKiPrompt() {
