@@ -2815,6 +2815,82 @@
     akzent: "#f5f2ed"
 
 - unternehmen:
+    id: "111"
+    branche: "Modellunternehmen"
+    name: "Fanni Striedinger E-Scooter"
+    motto: "Powering the Future"
+    bank: "Arber-Bank"
+    rechtsform: "e. Kfr."
+    logo: "media/pic/fast.svg"
+    adresse:
+      strasse: "Hollerithweg 3"
+      plz: "93155"
+      ort: "Hemau"
+      land: "Deutschland"
+    kontakt:
+      telefon: "09491 22445"
+      email: "info@fast-scooter.de"
+      internet: "fast-scooter.de"
+    ust_id: "DE543210345"
+    steuernummer: "123/122/18181"
+    iban: "DE22700712000012847895"
+    bic: "BAYADEF1BXX"
+    inhaber: "Fanni Striedinger"
+    akzent: "#FFD700"
+    werkstoffe:
+      AWR:
+        - "Aluminiumbleche"
+        - "Carbongewebe"
+      AWF:
+        - "Elektromotoren"
+        - "Lithium-Akkus"
+      AWH:
+        - "Schrauben"
+        - "Lacke"
+      AWB:
+        - "Schmierstoffe"
+        - "Strom"
+        - "Gas"
+
+- unternehmen:
+    id: "112"
+    branche: "Modellunternehmen"
+    name: "Paumay Tischtennis"
+    motto: ""
+    bank: "Sparbank"
+    rechtsform: "e. Kfr."
+    logo: "media/pic/paumay.svg"
+    adresse:
+      strasse: "Am Wald 90"
+      plz: "85560"
+      ort: "Ebersberg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "08092 123-0"
+      email: "info@paumay.de"
+      internet: "paumay.de"
+    ust_id: "DE543310987"
+    steuernummer: "123/012/13451"
+    iban: "DE22700712000012847895"
+    bic: "BAYADHE1BXX"
+    inhaber: "Paula Mayer"
+    akzent: "#c4e4ff"
+    werkstoffe:
+      AWR:
+        - "Metallrohre"
+        - "Holzfaserplatten"
+      AWF:
+        - "Räder"
+        - "Tischtennisnetze"
+      AWH:
+        - "Klebstoff"
+        - "Schrauben"
+      AWB:
+        - "Strom"
+        - "Benzin"
+        - "Schmieröl "
+
+- unternehmen:
     id: "501"
     branche: "Familie"
     name: "Ingo Maier"
