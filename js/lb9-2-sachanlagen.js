@@ -493,18 +493,18 @@ function renderAufgaben() {
   let l2 = `
 <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
   <tr>
-    <td style="min-width:160px;">${conf.konto}</td>
-    <td style="text-align:right;min-width:145px;">${formatEuro(ak)}</td>
-    <td style="text-align:center;min-width:50px;"></td>
-    <td style="min-width:90px;"></td>
-    <td style="min-width:145px;"></td>
+    <td style="border-with:0;min-width:160px;">${conf.konto}</td>
+    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(ak)}</td>
+    <td style="border-with:0;text-align:center;min-width:50px;"></td>
+    <td style="border-with:0;min-width:90px;"></td>
+    <td style="border-with:0;min-width:145px;"></td>
   </tr>
   <tr>
     <td>2600 VORST</td>
-    <td style="text-align:right;">${formatEuro(gesamtVorst)}</td>
-    <td style="text-align:center;">an</td>
-    <td>4400 VE</td>
-    <td style="text-align:right;">${formatEuro(gesamtBrutto)}</td>
+    <td style="border-with:0;text-align:right;">${formatEuro(gesamtVorst)}</td>
+    <td style="border-with:0;text-align:center;">an</td>
+    <td style="border-with:0;">4400 VE</td>
+    <td style="border-with:0;text-align:right;">${formatEuro(gesamtBrutto)}</td>
   </tr>
 </table>`;
   // ── Lösung 3 – zeitanteilige Abschreibung + Buchungssatz AfA ─────────────
@@ -514,11 +514,11 @@ function renderAufgaben() {
   l3 += `
 <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
   <tr>
-    <td style="min-width:160px;">6520 ABSA</td>
-    <td style="text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
-    <td style="text-align:center;min-width:50px;">an</td>
-    <td>${conf.konto}</td>
-    <td style="text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
+    <td style="border-with:0;min-width:160px;">6520 ABSA</td>
+    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
+    <td style="border-with:0;text-align:center;min-width:50px;">an</td>
+    <td style="border-with:0;">${conf.konto}</td>
+    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
   </tr>
 </table>`;
   const loesungen = [l1, l2, l3];

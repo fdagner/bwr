@@ -272,18 +272,18 @@ Abschreibungssatz: <span class="val">${prozent}&nbsp;%</span>`
       loesung: `
 <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
   <tr>
-    <td style="min-width:160px;">${kontoHaben}</td>
-    <td style="text-align:right;min-width:145px;">${formatEuro(ak)}</td>
-    <td style="text-align:center;min-width:50px;"></td>
-    <td style="min-width:90px;"></td>
-    <td style="min-width:145px;"></td>
+    <td style="border-with:0;min-width:160px;">${kontoHaben}</td>
+    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(ak)}</td>
+    <td style="border-with:0;text-align:center;min-width:50px;"></td>
+    <td style="border-with:0;min-width:90px;"></td>
+    <td style="border-with:0;min-width:145px;"></td>
   </tr>
   <tr>
     <td>2600 VORST</td>
-    <td style="text-align:right;">${formatEuro(kaufVorst)}</td>
-    <td style="text-align:center;">an</td>
-    <td>4400 VE</td>
-    <td style="text-align:right;">${formatEuro(kaufBrutto)}</td>
+    <td style="border-with:0;text-align:right;">${formatEuro(kaufVorst)}</td>
+    <td style="border-with:0;text-align:center;">an</td>
+    <td style="border-with:0;">4400 VE</td>
+    <td style="border-with:0;text-align:right;">${formatEuro(kaufBrutto)}</td>
   </tr>
 </table>
 Netto (AK): ${formatEuro(ak)} &nbsp;|&nbsp; Vorsteuer 19&nbsp;%: ${formatEuro(kaufVorst)} &nbsp;|&nbsp; Brutto: ${formatEuro(kaufBrutto)}`,
@@ -294,11 +294,11 @@ Netto (AK): ${formatEuro(ak)} &nbsp;|&nbsp; Vorsteuer 19&nbsp;%: ${formatEuro(ka
       loesung: `
 <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
   <tr>
-    <td style="min-width:160px;">6520 ABSA</td>
-    <td style="text-align:right;min-width:145px;">${formatEuro(afaBetrag)}</td>
-    <td style="text-align:center;min-width:50px;">an</td>
-    <td style="min-width:120px;">${kontoHaben}</td>
-    <td style="text-align:right;min-width:145px;">${formatEuro(afaBetrag)}</td>
+    <td style="border-with:0;min-width:160px;">6520 ABSA</td>
+    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(afaBetrag)}</td>
+    <td style="border-with:0;text-align:center;min-width:50px;">an</td>
+    <td style="border-with:0;min-width:120px;">${kontoHaben}</td>
+    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(afaBetrag)}</td>
   </tr>
 </table>`,
     },

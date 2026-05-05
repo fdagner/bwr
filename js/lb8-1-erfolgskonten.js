@@ -575,10 +575,10 @@ function zeigeZufaelligenBestandsabschluss() {
       const bzkDaten = bzkUnterkonten[nr];
       if (bzkU && bzkDaten) {
         html += `<tr>
-          <td style="padding:2px 10px 2px 0;white-space:nowrap;">${nr}</td>
-          <td style="padding:2px 10px;text-align:center;">an</td>
-          <td style="padding:2px 10px;white-space:nowrap;">${bzkU.nr}</td>
-          <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(bzkDaten.saldo)} €</td>
+          <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${nr}</td>
+          <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
+          <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${bzkU.nr}</td>
+          <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(bzkDaten.saldo)} €</td>
         </tr>`;
       }
     });
@@ -593,10 +593,10 @@ function zeigeZufaelligenBestandsabschluss() {
       const nlDaten = nachlaesse[nr];
       if (nl && nlDaten) {
         html += `<tr>
-          <td style="padding:2px 10px 2px 0;white-space:nowrap;">${nl.nr}</td>
-          <td style="padding:2px 10px;text-align:center;">an</td>
-          <td style="padding:2px 10px;white-space:nowrap;">${nr}</td>
-          <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(nlDaten.saldo)} €</td>
+          <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${nl.nr}</td>
+          <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
+          <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${nr}</td>
+          <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(nlDaten.saldo)} €</td>
         </tr>`;
       }
     });
@@ -608,36 +608,36 @@ function zeigeZufaelligenBestandsabschluss() {
 
   Object.entries(konten).forEach(([nr, data]) => {
     html += `<tr>
-      <td style="padding:2px 10px 2px 0;white-space:nowrap;">8020 GUV</td>
-      <td style="padding:2px 10px;text-align:center;">an</td>
-      <td style="padding:2px 10px;white-space:nowrap;">${nr}</td>
-      <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(data.guvSaldo)} €</td>
+      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">8020 GUV</td>
+      <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
+      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${nr}</td>
+      <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(data.guvSaldo)} €</td>
     </tr>`;
   });
 
   html += `<tr><td colspan="4" style="padding:4px 0;"></td></tr>`;
   html += `<tr>
-    <td style="padding:2px 10px 2px 0;white-space:nowrap;">5000 UEFE</td>
-    <td style="padding:2px 10px;text-align:center;">an</td>
-    <td style="padding:2px 10px;white-space:nowrap;">8020 GUV</td>
-    <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(uefe)} €</td>
+    <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">5000 UEFE</td>
+    <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
+    <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">8020 GUV</td>
+    <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(uefe)} €</td>
   </tr>`;
 
   html += `<tr><td colspan="4" style="padding:4px 0;"></td></tr>`;
 
   if (erfolg >= 0) {
     html += `<tr style="font-weight:700;">
-      <td style="padding:2px 10px 2px 0;white-space:nowrap;">8020 GUV</td>
-      <td style="padding:2px 10px;text-align:center;">an</td>
-      <td style="padding:2px 10px;white-space:nowrap;">3000 EK</td>
-      <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
+      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">8020 GUV</td>
+      <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
+      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">3000 EK</td>
+      <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
     </tr>`;
   } else {
     html += `<tr style="font-weight:700;">
-      <td style="padding:2px 10px 2px 0;white-space:nowrap;">3000 EK</td>
-      <td style="padding:2px 10px;text-align:center;">an</td>
-      <td style="padding:2px 10px;white-space:nowrap;">8020 GUV</td>
-      <td style="padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
+      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">3000 EK</td>
+      <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
+      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">8020 GUV</td>
+      <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
     </tr>`;
   }
   html += `</tbody></table>`;

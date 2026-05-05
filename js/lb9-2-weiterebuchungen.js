@@ -400,15 +400,15 @@ function erstelleBuchungssatz(gf) {
     <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
       <tbody>
         <tr>
-          <td style="white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${typ.konto}</td>
-          <td style="text-align:right; white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${gf.nettoFormatted}</td>
-          <td rowspan="2" style="text-align:center; width:40px; vertical-align:top;" tabindex="1">an</td>
-          <td rowspan="2" style="text-align:left; white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${gf.zahlungsart.konto}</td>
-          <td rowspan="2" style="text-align:right; white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${gf.betragFormatted}</td>
+          <td style="border-with:0;white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${typ.konto}</td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${gf.nettoFormatted}</td>
+          <td rowspan="2" style="border-with:0;text-align:center; width:40px; vertical-align:top;" tabindex="1">an</td>
+          <td rowspan="2" style="border-with:0;text-align:left; white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${gf.zahlungsart.konto}</td>
+          <td rowspan="2" style="border-with:0;text-align:right; white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${gf.betragFormatted}</td>
         </tr>
         <tr>
-          <td style="text-align:left; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${typ.vstKonto}</td>
-          <td style="text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${gf.vstFormatted}</td>
+          <td style="border-with:0;text-align:left; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${typ.vstKonto}</td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${gf.vstFormatted}</td>
         </tr>
       </tbody>
     </table><br>`;
@@ -419,11 +419,11 @@ function erstelleBuchungssatz(gf) {
     <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
       <tbody>
         <tr>
-          <td style="white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${typ.konto}</td>
-          <td style="text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${gf.betragFormatted}</td>
-          <td style="text-align:center; width:100px; min-width:40px;" tabindex="1">an</td>
-          <td style="text-align:left; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${gf.zahlungsart.konto}</td>
-          <td style="text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${gf.betragFormatted}</td>
+          <td style="border-with:0;white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${typ.konto}</td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${gf.betragFormatted}</td>
+          <td style="border-with:0;text-align:center; width:100px; min-width:40px;" tabindex="1">an</td>
+          <td style="border-with:0;text-align:left; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${gf.zahlungsart.konto}</td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${gf.betragFormatted}</td>
         </tr>
       </tbody>
     </table><br>`;

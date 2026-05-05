@@ -336,15 +336,15 @@ function erstelleBuchungssatz(geschaeftsfall) {
     <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
       <tbody>
         <tr>
-          <td rowspan="2" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
-          <td rowspan="2" style="text-align:right; white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${geschaeftsfall.betragFormatted}</td>
-          <td rowspan="2" style="text-align:center; width:40px; vertical-align:top;" tabindex="1">an</td>
-          <td style="text-align:left; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${typ.konto}</td>
-          <td style="text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${geschaeftsfall.nettoFormatted}</td>
+          <td rowspan="2" style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
+          <td rowspan="2" style="border-with:0;text-align:right; white-space:nowrap; max-width:140px; min-width:140px; vertical-align:top;" tabindex="1">${geschaeftsfall.betragFormatted}</td>
+          <td rowspan="2" style="border-with:0;text-align:center; width:40px; vertical-align:top;" tabindex="1">an</td>
+          <td style="border-with:0;text-align:left; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${typ.konto}</td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${geschaeftsfall.nettoFormatted}</td>
         </tr>
         <tr>
-          <td style="text-align:left; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${typ.ustKonto}</td>
-          <td style="text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${geschaeftsfall.ustFormatted}</td>
+          <td style="border-with:0;text-align:left; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${typ.ustKonto}</td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; max-width:140px; min-width:140px;" tabindex="1">${geschaeftsfall.ustFormatted}</td>
         </tr>
       </tbody>
     </table><br>`;
@@ -355,11 +355,11 @@ function erstelleBuchungssatz(geschaeftsfall) {
     <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
       <tbody>
         <tr>
-          <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
-          <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.betragFormatted}</td>
-          <td style="text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
-          <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
-          <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.betragFormatted}</td>
+          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.betragFormatted}</td>
+          <td style="border-with:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
+          <td style="border-with:0;text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.betragFormatted}</td>
         </tr>
       </tbody>
     </table><br>`;
