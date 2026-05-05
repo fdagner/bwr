@@ -2915,6 +2915,43 @@
     akzent: "#00bfff"
 
 - unternehmen:
+    id: "114"
+    branche: "Modellunternehmen"
+    name: "Lothar Urlaub Rucksäcke"
+    motto: ""
+    bank: "Digibank"
+    rechtsform: "e. K."
+    logo: "media/pic/lur.svg"
+    adresse:
+      strasse: "Mainuferweg 1"
+      plz: "97072"
+      ort: "Würzburg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "09312 4455-0"
+      email: "info@luraub.de"
+      internet: "lurlaub.de"
+    ust_id: "DE542340987"
+    steuernummer: "123/012/13451"
+    iban: "DE82700105505410152025"
+    bic: "DBNKDEFFXXX"
+    inhaber: "Lothar Urlaub"
+    akzent: "#e2afa3"
+    werkstoffe:
+      AWR:
+        - "Nylongewebe"
+        - "Polyestergewebe"
+      AWF:
+        - "Reißverschlüsse"
+        - "Powerbanks"
+      AWH:
+        - "Fäden"
+        - "Textilkleber"
+      AWB:
+        - "Schmierstoffe"
+        - "Strom"
+
+- unternehmen:
     id: "501"
     branche: "Familie"
     name: "Ingo Maier"
