@@ -551,6 +551,16 @@ function copyToClipboard(containerId) {
     });
 }
 
+function copyHTMLToClipboard(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const html = container.innerHTML.replace(/&nbsp;/g, ' ');
+    navigator.clipboard.writeText(html).then(() => {
+        alert('HTML wurde in die Zwischenablage kopiert');
+    }).catch(err => {
+        console.error('Fehler beim Kopieren:', err);
+    });
+}
 
 
 
@@ -1741,15 +1751,26 @@ function exportDokument(typ, format) {
 
     const filename = `${config.name}.${format === 'clipboard' ? 'svg' : format}`;
 
+    // HTML-Typen, die kein SVG haben
+    const htmlTypes = ['email', 'newspaper', 'lohnjournalBS'];
+
     switch (format) {
         case 'png':
-            exportPNG(config.id, filename);
+            exportPNG(config.id, `${config.name}.png`);
             break;
         case 'svg':
-            exportSVG(config.id, filename);
+            if (htmlTypes.includes(typ)) {
+                copyHTMLToClipboard(config.id);
+            } else {
+                exportSVG(config.id, filename);
+            }
             break;
         case 'clipboard':
-            copyToClipboard(config.id);
+            if (htmlTypes.includes(typ)) {
+                copyHTMLToClipboard(config.id);
+            } else {
+                copyToClipboard(config.id);
+            }
             break;
         default:
             console.error('Unbekanntes Format:', format);
