@@ -279,7 +279,7 @@ function verkaufErstelleZufallssatz() {
   const verkaufAntwortSkontobuchungssatz = kontenUmsatzserloese[verkaufRandomFertigerzeugnis]?.Nachlasskonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Nachlasskonto;
   const verkaufRandomSkontobuchungssatz = verkaufArray_Subjekt_5[Math.floor(Math.random() * verkaufArray_Subjekt_5.length)];
   const verkaufRandomDifferenzkalkulation = verkaufArray_Subjekt_6[Math.floor(Math.random() * verkaufArray_Subjekt_6.length)];
-  const verkaufNettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
+ const verkaufNettoOderBrutto = verkaufMitRabatt.checked ? 'Netto' : (Math.random() < 0.5 ? 'Netto' : 'Brutto');
   let verkaufWert = generateRandomNettoWert();
   const verkaufRandomZahlung = verkaufArray_Zahlung[Math.floor(Math.random() * verkaufArray_Zahlung.length)];
   const verkaufAntwortZahlung = verkaufKontenZahlung[verkaufRandomZahlung]
