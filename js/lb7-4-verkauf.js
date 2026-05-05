@@ -205,20 +205,20 @@ function bsEinfachUstV(gf) {
 
   function opRow(label, op, betrag) {
     return `<tr>
-      <td style="padding:1px 10px 1px 2px;color:#444;">${label}</td>
-      <td style="padding:1px 0;text-align:right;font-family:courier;color:#444;" colspan="2">${op}&nbsp;${formatCurrencyV(betrag)}</td>
+      <td style="border-width: 0;padding:1px 10px 1px 2px;color:#444;">${label}</td>
+      <td style="border-width: 0;padding:1px 0;text-align:right;font-family:courier;color:#444;" colspan="2">${op}&nbsp;${formatCurrencyV(betrag)}</td>
     </tr>`;
   }
   function resRow(label, betrag) {
     return `<tr style="border-top:1px solid #aaa;">
-      <td style="padding:2px 10px 2px 0;">${label}</td>
-      <td style="padding:1px 0;text-align:right;font-family:courier;" colspan="2">${formatCurrencyV(betrag)}</td>
+      <td style="border-width: 0;padding:2px 10px 2px 0;">${label}</td>
+      <td style="border-width: 0;padding:1px 0;text-align:right;font-family:courier;" colspan="2">${formatCurrencyV(betrag)}</td>
     </tr>`;
   }
   function startRow(label, betrag) {
     return `<tr>
       <td style="padding:2px 10px 2px 0;">${label}</td>
-      <td style="padding:1px 0;text-align:right;font-family:courier;" colspan="2">${formatCurrencyV(betrag)}</td>
+      <td style="border-width: 0;padding:1px 0;text-align:right;font-family:courier;" colspan="2">${formatCurrencyV(betrag)}</td>
     </tr>`;
   }
 
