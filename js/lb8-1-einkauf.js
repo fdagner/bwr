@@ -378,7 +378,7 @@ function erstelleZufallssatz() {
   const antwortBezugskosten = kontenWerkstoffe[randomWerkstoff]?.Unterkonto || kontenWerkstoffe_2[randomWerkstoff]?.Unterkonto;
   const antwortSkontobuchungssatz = kontenWerkstoffe[randomWerkstoff]?.Nachlasskonto || kontenWerkstoffe_2[randomWerkstoff]?.Nachlasskonto;
   const randomSkontobuchungssatz = array_Subjekt_5[Math.floor(Math.random() * array_Subjekt_5.length)];
-  const nettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
+  const nettoOderBrutto = mitRabatt.checked ? 'Netto' : (Math.random() < 0.5 ? 'Netto' : 'Brutto');
   const Wert = generateRandomNettoWert();
   const nettoWert = formatCurrency(Wert);
   let bruttoWert = formatCurrency(Math.round(Wert * 0.19 + Wert));
