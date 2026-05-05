@@ -2952,6 +2952,30 @@
         - "Strom"
 
 - unternehmen:
+    id: "115"
+    branche: "Werkstoffe"
+    name: "Polytex Burghausen"
+    motto: "Präzision, Flexibilität und Verlässlichkeit"
+    bank: "Salzachbank "
+    rechtsform: "GmbH"
+    logo: "media/pic/polytex.svg"
+    adresse:
+      strasse: "Alzstraße 100"
+      plz: "84489"
+      ort: "Burghausen"
+      land: "Deutschland"
+    kontakt:
+      telefon: "08677 0488555"
+      email: "info@polytex.xyz"
+      internet: "polytex.xyz"
+    ust_id: "DE811807660"
+    steuernummer: "106/257/00559"
+    iban: "DE5171151020252550"
+    bic: "SBNKDEF1SON"
+    inhaber: "Dr. Elias Wolf"
+    akzent: "#ffb6c1"
+
+- unternehmen:
     id: "501"
     branche: "Familie"
     name: "Ingo Maier"
