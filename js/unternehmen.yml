@@ -2888,7 +2888,31 @@
       AWB:
         - "Strom"
         - "Benzin"
-        - "Schmieröl "
+        - "Schmieröl"
+
+- unternehmen:
+    id: "113"
+    branche: "Maschinen"
+    name: "Elektro-Motorenwerke"
+    motto: "-EMW-"
+    bank: "Kindlbank"
+    rechtsform: "AG"
+    logo: "media/pic/machine2.svg"
+    adresse:
+      strasse: "Marktstr. 25"
+      plz: "93047"
+      ort: "Regensburg"
+      land: "Deutschland"
+    kontakt:
+      telefon: "0941 04001"
+      email: "info@emwerk.de"
+      internet: "emwerk.de"
+    ust_id: "DE874356844"
+    steuernummer: "244/873/40021"
+    iban: "DE89370400440532013013"
+    bic: "COBADEFFXXX"
+    inhaber: "Barbara Engel"
+    akzent: "#00bfff"
 
 - unternehmen:
     id: "501"
