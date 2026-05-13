@@ -145,28 +145,6 @@ const kaufSzenarienPool = [
     },
   },
   {
-    id: 'streaming',
-    kategorie: 'Technik & Medien',
-    produkt: 'drei Streaming-Abonnements',
-    einmalig: false,
-    minderjaehrigOk: true,
-    preis: 38,
-    preisBeschreibung: '3 Dienste × 12–13 Euro = 38,00 Euro pro Monat (= 456,00 Euro im Jahr)',
-    kriterien: { Notwendigkeit: '-', Prestige: '-', Trend: '+', Kosten: '-', Qualität: '+', Nachhaltigkeit: '+' },
-    bewertung: 'kritisch',
-    begruendung: 'Einzeln betrachtet wirken die Abos günstig – zusammen ergeben sie 38,00 Euro monatlich bzw. 456,00 Euro jährlich. Nicht alle Dienste werden regelmäßig genutzt. Laufende Verträge sind psychologisch schwerer zu kündigen als einmalige Ausgaben.',
-    alternative: 'Genau prüfen, welche Dienste wirklich täglich genutzt werden. Nicht genutzte Abos sofort kündigen – das spart 12–25 Euro monatlich.',
-    situationFn(p, e, a) {
-      return `<p><span class="fb-absatz-titel">Zur Person:</span> ${p.name} (${p.alter} Jahre) ist ${p.typ}. ${e.einnahmenText}</p>
-<p><span class="fb-absatz-titel">Ausgaben:</span> ${a.ausgabenText}</p>
-<p><span class="fb-absatz-titel">Situation:</span> ${p.name} hat im letzten Jahr schrittweise drei Streaming-Dienste abonniert: einen für Musik (11,99 Euro/Monat), einen für Serien und Filme (12,99 Euro/Monat) und einen für Hörbücher und Podcasts (13,00 Euro/Monat). Zusammen werden monatlich <strong>37,98 Euro</strong> vom Konto abgebucht – im Jahr sind das <strong>455,76 Euro</strong>.</p>
-<p><span class="fb-absatz-titel">Überlegung:</span> Beim Blick auf den aktuellen Kontoauszug bemerkt ${p.name}, wie viel die Abos insgesamt kosten. Den Musik-Dienst nutzt ${p.vars.vNom} täglich. Die Serien-Plattform wird nur gelegentlich geöffnet. Den Hörbuch-Dienst hat ${p.vars.vNom} seit drei Monaten kaum mehr benutzt.</p>`;
-    },
-    konsequenzFn(p) {
-      return `Behält ${p.name} alle drei Abos, zahlt ${p.vars.vNom} im Jahr 455,76 Euro allein für Streaming. Kündigt ${p.vars.vNom} den selten genutzten Hörbuch-Dienst, spart ${p.vars.vNom} 156,00 Euro pro Jahr – Geld, das für ${p.vars.sparziel} genutzt werden könnte.`;
-    },
-  },
-  {
     id: 'fastfood',
     kategorie: 'Essen & Freizeit',
     produkt: 'Fast Food täglich nach der Schule',
