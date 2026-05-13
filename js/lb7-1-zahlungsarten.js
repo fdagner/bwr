@@ -153,6 +153,8 @@ function einPreis() {
   return zufallsPreisInBereich(min, max);
 }
 
+
+
 // ============================================================================
 // ZAHLUNGSARTEN – DEFINITIONEN
 // ============================================================================
@@ -171,18 +173,31 @@ const zahlungsarten = {
     nachteile: ['Diebstahlgefahr bei größeren Beträgen', 'Kassenbeleg kann verloren gehen – kein automatischer Nachweis wie bei Kontoauszug', 'Unpraktisch bei großen Summen', 'Keine Möglichkeit bei Online-Käufen'],
     empfehlung: 'Geeignet für kleine Alltagseinkäufe und wenn Anonymität gewünscht ist.'
   },
+  ec_karte: {
+    label: 'EC-Karte / Debitkarte (Girocard)',
+    emoji: '💳',
+    merkmale: {
+      praktikabilitaet: 'Weit verbreitet, kontaktlos oder mit PIN, sofort verfügbar',
+      gebuehren: 'Meist kostenlos für Verbraucher; Händler zahlt geringe Gebühr',
+      sicherheit: 'PIN-gesichert; bei Verlust sofort sperrbar; Haftung bei grober Fahrlässigkeit',
+      datenschutz: 'Transaktionen bei der Bank gespeichert, kein anonymer Kauf',
+    },
+    vorteile: ['Sehr weit verbreitet im stationären Handel', 'Kontaktloses Zahlen möglich', 'Keine Jahresgebühr', 'Sofortige Kontobelastung – kein Überschuldungsrisiko'],
+    nachteile: ['Nur bei ausreichender Kontodeckung nutzbar', 'Nicht überall im Ausland akzeptiert', 'Kein Käuferschutz wie bei Kreditkarte', 'Datenspur bei der Bank'],
+    empfehlung: 'Ideal für alltägliche Einkäufe im stationären Handel in Deutschland.'
+  },
   ueberweisung: {
     label: 'Überweisung',
     emoji: '🏦',
     merkmale: {
-      praktikabilitaet: 'Einfach per Online-Banking, dauert 1–2 Tage (SEPA)',
+      praktikabilitaet: 'Einfach per Online-Banking; Standard-SEPA dauert 1–2 Tage, Echtzeit-SEPA sofort',
       gebuehren: 'In der Regel kostenlos bei Inlandsüberweisungen',
       sicherheit: 'Sicher mit TAN-Verfahren, nachvollziehbar',
       datenschutz: 'Daten bei der Bank gespeichert',
     },
-    vorteile: ['Sicher durch TAN-Verfahren', 'Guter Zahlungsnachweis durch Kontoauszug', 'Kostenlos im SEPA-Raum', 'Für größere Beträge geeignet'],
-    nachteile: ['Nicht sofort verfügbar (Bearbeitungszeit)', 'Benötigt Internetverbindung / Bankfiliale', 'IBAN des Empfängers nötig', 'Rückbuchung nur eingeschränkt möglich'],
-    empfehlung: 'Ideal für regelmäßige Zahlungen, Rechnungen und größere Beträge.'
+    vorteile: ['Sicher durch TAN-Verfahren', 'Guter Zahlungsnachweis durch Kontoauszug', 'Kostenlos im SEPA-Raum', 'Echtzeit-SEPA ermöglicht sofortige Zahlung'],
+    nachteile: ['Standard-SEPA nicht sofort verfügbar (1–2 Tage)', 'Benötigt Internetverbindung / Bankfiliale', 'IBAN des Empfängers nötig', 'Rückbuchung nur eingeschränkt möglich'],
+    empfehlung: 'Ideal für regelmäßige Zahlungen, Rechnungen und größere Beträge. Bei Zeitdruck: Echtzeit-SEPA nutzen.'
   },
   lastschrift: {
     label: 'Lastschrift (SEPA)',
@@ -202,228 +217,220 @@ const zahlungsarten = {
     emoji: '💳',
     merkmale: {
       praktikabilitaet: 'International einsetzbar, online und stationär',
-      gebuehren: 'Jahresgebühr, ggf. Fremdwährungsgebühren',
+      gebuehren: 'Jahresgebühr möglich; ggf. Fremdwährungsgebühren',
       sicherheit: '3D-Secure, Chargeback-Möglichkeit',
-      datenschutz: 'Kartendaten beim Händler und Anbieter',
+      datenschutz: 'Kartendaten beim Händler und Anbieter gespeichert',
     },
-    vorteile: ['Weltweit einsetzbar', 'Käuferschutz durch Chargeback', 'Auf Rechnung – Zahlungsziel bis Monatsende', 'Auch für große Beträge geeignet'],
-    nachteile: ['Jahresgebühr bei manchen Karten', 'Missbrauchsgefahr bei Datenverlust', 'Verleitet zu Überschuldung', 'Kartendaten werden gespeichert'],
-    empfehlung: 'Geeignet für Reisen, Online-Shopping und internationale Käufe.'
+    vorteile: ['Weltweit einsetzbar', 'Käuferschutz durch Chargeback', 'Zahlungsziel bis Monatsende', 'Auch für große Beträge und Reisebuchungen geeignet'],
+    nachteile: ['Jahresgebühr bei manchen Karten', 'Missbrauchsgefahr bei Datenverlust', 'Kann zu Überschuldung verleiten', 'Kartendaten werden gespeichert'],
+    empfehlung: 'Geeignet für Reisen, Online-Shopping, internationale Käufe und wenn Käuferschutz wichtig ist.'
   },
   paypal: {
     label: 'Online-Bezahldienst (z. B. PayPal)',
     emoji: '🅿️',
     merkmale: {
       praktikabilitaet: 'Schnell, weit verbreitet im Online-Handel',
-      gebuehren: 'Kostenlos für Käufer, Gebühren für Händler',
+      gebuehren: 'Kostenlos für Käufer; Gebühren für Händler',
       sicherheit: 'Käuferschutz bei Nichtlieferung',
-      datenschutz: 'Viele Nutzerdaten beim US-Anbieter',
+      datenschutz: 'Umfangreiche Nutzerdaten beim US-Anbieter',
     },
-    vorteile: ['Schnell und einfach', 'Käuferschutz bei vielen Transaktionen', 'Bankdaten bleiben beim Händler unbekannt', 'Weit verbreitet im Online-Handel'],
+    vorteile: ['Schnell und einfach', 'Käuferschutz bei vielen Transaktionen', 'Bankdaten bleiben dem Händler unbekannt', 'Weit verbreitet im Online-Handel'],
     nachteile: ['Umfangreiche Datenweitergabe an US-Konzern', 'Konto kann eingefroren werden', 'Nicht überall verfügbar', 'Keine vollständige Anonymität'],
     empfehlung: 'Praktisch für Online-Käufe, wenn Käuferschutz gewünscht ist.'
-  },
-  giropay: {
-    label: 'Giropay / Sofortüberweisung',
-    emoji: '⚡',
-    merkmale: {
-      praktikabilitaet: 'Sofortige Zahlung per Online-Banking',
-      gebuehren: 'Für Verbraucher meist kostenlos',
-      sicherheit: 'TAN-gesichert, direkt über Hausbank',
-      datenschutz: 'Daten über Drittanbieter weitergeleitet',
-    },
-    vorteile: ['Sofortbestätigung für Händler', 'Direkt mit Bankkonto verknüpft', 'TAN-gesichert', 'Keine Kreditkarte nötig'],
-    nachteile: ['Kein Rückruf nach Zahlung möglich', 'Drittanbieter erhält Zugangsdaten (Sofortüberweisung)', 'Nicht alle Banken unterstützen es', 'Verbraucherschützer kritisieren Sofortüberweisung'],
-    empfehlung: 'Geeignet, wenn sofortige Zahlungsbestätigung gewünscht ist, aber auf Anbieter achten.'
   },
   mobilepay: {
     label: 'Mobile Payment (Apple Pay / Google Pay)',
     emoji: '📱',
     merkmale: {
-      praktikabilitaet: 'Schnell per Smartphone oder Smartwatch',
+      praktikabilitaet: 'Sehr schnell per Smartphone oder Smartwatch, kontaktlos',
       gebuehren: 'Keine direkten Gebühren für Verbraucher',
-      sicherheit: 'Tokenisierung, keine echten Kartendaten übertragen',
-      datenschutz: 'Nutzungsdaten bei Apple / Google',
+      sicherheit: 'Tokenisierung – echte Kartendaten werden nicht übertragen',
+      datenschutz: 'Nutzungsdaten bei Apple bzw. Google',
     },
-    vorteile: ['Sehr schnell und kontaktlos', 'Echte Kartendaten werden nicht übermittelt', 'Hygienisch (kein Bargeld, kein Pin-Pad)', 'Im stationären Handel weit verbreitet'],
+    vorteile: ['Sehr schnell und kontaktlos', 'Echte Kartendaten werden nicht übermittelt', 'Im stationären Handel weit verbreitet', 'Auch ohne physische Karte nutzbar'],
     nachteile: ['Abhängig von Smartphone-Akku und NFC', 'Nutzungsdaten bei Tech-Konzernen', 'Nicht überall akzeptiert', 'Gerät muss entsperrt sein'],
-    empfehlung: 'Praktisch für Alltagseinkäufe im stationären Handel.'
+    empfehlung: 'Praktisch für schnelle Alltagseinkäufe im stationären Handel.'
   },
   nachnahme: {
     label: 'Zahlung per Nachnahme',
     emoji: '📦',
     merkmale: {
-      praktikabilitaet: 'Zahlung bei Lieferung, kein Vorauszahlungsrisiko',
-      gebuehren: 'Zuschlag von ca. 3–5 € durch Paketdienstleister',
-      sicherheit: 'Ware vor Zahlung prüfbar (von außen)',
+      praktikabilitaet: 'Zahlung bei Lieferung – kein Vorauszahlungsrisiko',
+      gebuehren: 'Nachnahmegebühr ca. 3–5 € durch Paketdienstleister',
+      sicherheit: 'Kein Vorleistungsrisiko; Ware wird erst bei Zahlung übergeben',
       datenschutz: 'Daten beim Händler und Paketdienstleister',
     },
-    vorteile: ['Kein Vorauszahlungsrisiko', 'Keine Bankdaten nötig', 'Geeignet ohne Online-Banking', 'Betrug durch unseriöse Händler schwerer'],
+    vorteile: ['Kein Vorauszahlungsrisiko', 'Keine Bankdaten nötig', 'Geeignet ohne Online-Banking', 'Schutz vor unseriösen Händlern'],
     nachteile: ['Nachnahmegebühr fällt an', 'Paket muss persönlich entgegengenommen werden', 'Ware kann bei Lieferung nicht vollständig geprüft werden', 'Kaum noch üblich, nicht überall möglich'],
-    empfehlung: 'Sinnvoll bei unbekannten Online-Händlern, wenn kein PayPal oder Kreditkarte vorhanden.'
+    empfehlung: 'Sinnvoll bei unbekannten Online-Händlern ohne PayPal oder Kreditkarte.'
   },
   ratenkauf: {
     label: 'Ratenkauf / Kauf auf Rechnung',
     emoji: '📋',
     merkmale: {
-      praktikabilitaet: 'Ware sofort, Zahlung später oder in Raten',
-      gebuehren: 'Zinsen bei Ratenkauf, Rechnung meist kostenlos',
-      sicherheit: 'Ware kann vor Zahlung geprüft werden',
-      datenschutz: 'Bonitätsprüfung nötig, Daten bei Auskunfteien',
+      praktikabilitaet: 'Ware sofort erhalten, Zahlung später oder in Raten',
+      gebuehren: 'Zinsen beim Ratenkauf; Rechnung meist kostenlos',
+      sicherheit: 'Ware kann vor Zahlung geprüft werden (bei Rechnung)',
+      datenschutz: 'Bonitätsprüfung nötig; Daten bei Auskunfteien (SCHUFA)',
     },
-    vorteile: ['Ware kann vor Zahlung geprüft werden (Rechnung)', 'Große Anschaffungen ohne sofortiges Kapital möglich', 'Konsumentenschutz durch gesetzliche Rücktrittsrechte', 'Weit verbreitet im Online-Handel'],
+    vorteile: ['Ware kann vor Zahlung geprüft werden (Rechnung)', 'Große Anschaffungen ohne sofortiges Kapital möglich', 'Gesetzliche Rücktrittsrechte', 'Weit verbreitet im Online-Handel'],
     nachteile: ['Zinsen beim Ratenkauf können erheblich sein', 'Überschuldungsrisiko', 'Bonitätsprüfung durch SCHUFA', 'Verantwortungsvoller Umgang erforderlich'],
-    empfehlung: 'Rechnung: Ideal für Online-Käufe. Ratenkauf: Nur bei sorgfältiger Finanzplanung.'
-  }
+    empfehlung: 'Rechnung: ideal für Online-Käufe. Ratenkauf: nur bei sorgfältiger Finanzplanung sinnvoll.'
+  },
 };
 
 // ============================================================================
 // FALLBEISPIELE – FAMILIÄRE SITUATIONEN
 // ============================================================================
 
-// Jedes Fallbeispiel hat einen festen, realistischen Preisbereich
-// preisGen() gibt einen passenden Betrag zurück (kein globaler Preisregler nötig)
 const familienSituationen = [
   {
     situation: (name, preis) => `Familie ${name} kauft beim Bäcker um die Ecke frische Brötchen und Kuchen für insgesamt ${preis} €.`,
     kontext: 'Alltäglicher Kauf beim lokalen Händler, kleiner Betrag',
     preisGen: () => pick([16, 18, 20, 22, 24, 28, 32, 36, 38]),
-    geeignet: ['barzahlung', 'mobilepay'],
+    geeignet: ['barzahlung', 'ec_karte', 'mobilepay'],
     wenigerGeeignet: ['ratenkauf', 'kreditkarte', 'nachnahme'],
   },
   {
-    situation: (name, preis) => `Familie ${name} möchte online ein neues Fahrrad für ${preis} € bestellen. Der Händler ist noch unbekannt und es gibt keine Bewertungen im Internet.`,
+    situation: (name, preis) => `Familie ${name} möchte online ein neues Fahrrad für ${preis} € bestellen. Der Händler ist noch unbekannt und hat kaum Bewertungen im Internet.`,
     kontext: 'Online-Kauf bei unbekanntem Händler, mittlerer Betrag',
     preisGen: () => pick([400, 500, 550, 650, 750, 800, 850, 900]),
-    geeignet: ['nachnahme', 'paypal', 'kreditkarte', 'ratenkauf'],
-    wenigerGeeignet: ['barzahlung', 'giropay'],
+    geeignet: ['nachnahme', 'paypal', 'kreditkarte'],
+    wenigerGeeignet: ['barzahlung', 'ueberweisung', 'ec_karte'],
   },
   {
-    situation: (name, preis) => `Herr ${name} bucht für seine Familie einen Sommerurlaub in Spanien für ${preis} €. Er möchte auch im Ausland sicher zahlen können.`,
-    kontext: 'Reisebuchung, großer Betrag, internationaler Kontext',
+    situation: (name, preis) => `Herr ${name} bucht für seine Familie einen Sommerurlaub in Spanien für ${preis} €. Er möchte auch im Ausland sicher zahlen können und legt Wert auf Stornoschutz.`,
+    kontext: 'Reisebuchung, großer Betrag, internationaler Kontext, Stornoschutz wichtig',
     preisGen: () => pick([3000, 3200, 3500, 3600, 3800, 4000]),
-    geeignet: ['kreditkarte', 'ueberweisung', 'paypal'],
-    wenigerGeeignet: ['barzahlung', 'lastschrift', 'nachnahme'],
+    geeignet: ['kreditkarte', 'ueberweisung'],
+    wenigerGeeignet: ['barzahlung', 'lastschrift', 'nachnahme', 'ec_karte'],
   },
   {
     situation: (name, preis) => `Frau ${name} schließt einen Vertrag für einen Streaming-Dienst ab. Monatlich werden ${preis} € fällig. Sie möchte nichts vergessen und den Ablauf automatisieren.`,
     kontext: 'Monatliche Abo-Zahlung, Automatisierung gewünscht',
     preisGen: () => pick([15, 20, 25, 30]),
     geeignet: ['lastschrift', 'kreditkarte', 'paypal'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'giropay'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte'],
   },
   {
     situation: (name, preis) => `Tochter ${name} (16 Jahre) möchte im Schulausflug-Café bezahlen. Ihr Anteil beträgt ${preis} €. Sie hat kein eigenes Konto.`,
     kontext: 'Jugendliche ohne Bankkonto, kleiner Betrag, sofort',
     preisGen: () => pick([5, 6, 7, 8, 9, 10]),
     geeignet: ['barzahlung'],
-    wenigerGeeignet: ['kreditkarte', 'ueberweisung', 'giropay', 'mobilepay'],
+    wenigerGeeignet: ['kreditkarte', 'ueberweisung', 'ratenkauf', 'nachnahme'],
   },
   {
-    situation: (name, preis) => `Familie ${name} kauft beim lokalen Möbelhändler ein neues Sofa für ${preis} €. Der Händler nimmt keine Karten an.`,
+    situation: (name, preis) => `Familie ${name} kauft beim lokalen Möbelhändler ein neues Sofa für ${preis} €. Der Händler akzeptiert nur Barzahlung oder Überweisung.`,
     kontext: 'Stationärer Kauf, großer Betrag, eingeschränkte Zahlungsmittel',
     preisGen: () => pick([600, 700, 750, 800, 900, 1000]),
     geeignet: ['barzahlung', 'ueberweisung'],
-    wenigerGeeignet: ['paypal', 'mobilepay', 'nachnahme'],
+    wenigerGeeignet: ['paypal', 'mobilepay', 'nachnahme', 'ec_karte'],
   },
   {
-    situation: (name, preis) => `Herr ${name} möchte seiner Tochter schnell ${preis} € überweisen, damit sie an der Klassenfahrt teilnehmen kann. Die Zahlung muss bis morgen beim Veranstalter eingehen.`,
-    kontext: 'Eilige Überweisung, Zeitdruck',
+    situation: (name, preis) => `Herr ${name} möchte seiner Tochter schnell ${preis} € schicken, damit sie an der Klassenfahrt teilnehmen kann. Die Zahlung muss bis morgen früh beim Veranstalter eingehen.`,
+    kontext: 'Eilige Überweisung, Zeitdruck, Zahlung muss sofort ankommen',
     preisGen: () => pick([80, 100, 120, 150]),
-    geeignet: ['ueberweisung', 'giropay', 'paypal'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift'],
+    geeignet: ['ueberweisung'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift', 'ec_karte'],
   },
   {
     situation: (name, preis) => `Frau ${name} tankt ihr Auto für ${preis} € an einer Autobahntankstelle und möchte schnell und kontaktlos zahlen.`,
     kontext: 'Schnellzahlung, stationär, kontaktlos gewünscht',
     preisGen: () => pick([55, 60, 65, 70, 75, 80, 90, 100]),
-    geeignet: ['mobilepay', 'kreditkarte', 'barzahlung'],
-    wenigerGeeignet: ['nachnahme', 'ratenkauf', 'giropay'],
+    geeignet: ['mobilepay', 'kreditkarte', 'ec_karte'],
+    wenigerGeeignet: ['nachnahme', 'ratenkauf', 'barzahlung'],
   },
   {
     situation: (name, preis) => `Familie ${name} kauft ein neues Smartphone für ${preis} €. Sie haben nicht genug Erspartes, möchten das Gerät aber sofort haben.`,
     kontext: 'Große Anschaffung, Liquiditätsengpass',
     preisGen: () => pick([500, 600, 700, 800, 900, 1000]),
     geeignet: ['ratenkauf', 'kreditkarte'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'giropay'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte'],
   },
   {
-    situation: (name, preis) => `Opa ${name} möchte einen Online-Einkauf bei einem Versandhaus über ${preis} € tätigen. Er hat kein Smartphone und möchte seine Bankdaten nicht online eingeben.`,
+    situation: (name, preis) => `Opa ${name} möchte einen Online-Einkauf bei einem bekannten Versandhaus über ${preis} € tätigen. Er hat kein Smartphone und möchte seine Bankdaten nicht online eingeben.`,
     kontext: 'Älterer Nutzer, Datenschutzbedenken, Online-Kauf',
     preisGen: () => pick([30, 40, 50, 60, 70, 80]),
     geeignet: ['nachnahme', 'ueberweisung', 'ratenkauf'],
-    wenigerGeeignet: ['mobilepay', 'paypal', 'giropay'],
+    wenigerGeeignet: ['mobilepay', 'paypal', 'ec_karte'],
   },
   {
     situation: (name, preis) => `Frau ${name} kauft auf einem Wochenmarkt frisches Gemüse und Käse für ${preis} €. Der Marktstand hat kein Kartenterminal.`,
     kontext: 'Wochenmarkt, kein Kartenterminal, kleiner Betrag',
     preisGen: () => pick([14, 15, 18, 20, 22, 24, 26, 28]),
     geeignet: ['barzahlung'],
-    wenigerGeeignet: ['kreditkarte', 'paypal', 'ueberweisung', 'mobilepay'],
+    wenigerGeeignet: ['kreditkarte', 'paypal', 'ueberweisung', 'mobilepay', 'ec_karte'],
   },
   {
-    situation: (name, preis) => `Familie ${name} mietet für den Urlaub ein Ferienhaus und soll ${preis} € Anzahlung leisten. Der Vermieter möchte einen Zahlungsnachweis.`,
+    situation: (name, preis) => `Familie ${name} mietet für den Urlaub ein Ferienhaus und soll ${preis} € Anzahlung leisten. Der Vermieter möchte einen schriftlichen Zahlungsnachweis.`,
     kontext: 'Mietanzahlung, Nachweis gewünscht, größerer Betrag',
     preisGen: () => pick([500, 750, 1000, 1250, 1500]),
     geeignet: ['ueberweisung', 'kreditkarte'],
     wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift'],
   },
   {
-  situation: (name, preis) => `Familie ${name} bestellt Essen bei einem Lieferdienst (z. B. Lieferando) für ${preis} €. Die Lieferung kommt in ca. 30–40 Minuten.`,
-  kontext: 'Essenslieferung, Online-Bestellung, Trinkgeld möglich, mittlerer Betrag',
-  preisGen: () => pick([28, 35, 42, 48, 55, 62]),
-  geeignet: ['paypal', 'kreditkarte', 'mobilepay', 'giropay'],
-  wenigerGeeignet: ['barzahlung', 'nachnahme', 'ueberweisung'],
-},
-{
-  situation: (name, preis) => `Herr ${name} repariert seine Waschmaschine – der Handwerker verlangt ${preis} € bar auf die Hand, gibt aber eine ordentliche Rechnung.`,
-  kontext: 'Handwerker vor Ort, klassische Barzahlung, mittlerer Betrag',
-  preisGen: () => pick([180, 220, 260, 290, 340, 380]),
-  geeignet: ['barzahlung', 'ueberweisung'],
-  wenigerGeeignet: ['paypal', 'lastschrift', 'ratenkauf', 'nachnahme'],
-},
-{
-  situation: (name, preis) => `Familie ${name} spendet ${preis} € an eine gemeinnützige Organisation (z. B. Tafel, Tierheim, Katastrophenhilfe) und möchte eine Spendenquittung.`,
-  kontext: 'Spende, Nachweis für Steuer wichtig, meist kleiner bis mittlerer Betrag',
-  preisGen: () => pick([50, 75, 100, 120, 150, 200, 250]),
-  geeignet: ['ueberweisung', 'lastschrift', 'paypal', 'kreditkarte'],
-  wenigerGeeignet: ['barzahlung', 'nachnahme', 'giropay'],
-},
-{
-  situation: (name, preis) => `Tochter ${name} (19) bucht sich mit Freundinnen zusammen ein Festival-Ticket für ${preis} € pro Person. Die Tickets sind nur online verfügbar.`,
-  kontext: 'Festival-/Konzerte-Ticket, junges Publikum, Online-Kauf',
-  preisGen: () => pick([89, 109, 129, 149, 169, 189]),
-  geeignet: ['kreditkarte', 'paypal', 'giropay', 'ratenkauf'],
-  wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift'],
-},
-{
-  situation: (name, preis) => `Familie ${name} kauft im Baumarkt Material für den Garten (Terrassenplatten, Erde, Pflanzen) im Wert von ${preis} € und möchte alles sofort mitnehmen.`,
-  kontext: 'Großer Einkauf im stationären Fachhandel, oft schwere Ware',
-  preisGen: () => pick([320, 380, 450, 520, 580, 650]),
-  geeignet: ['kreditkarte', 'mobilepay', 'ueberweisung', 'barzahlung'],
-  wenigerGeeignet: ['paypal', 'nachnahme', 'lastschrift'],
-},
-{
-  situation: (name, preis) => `Frau ${name} muss kurzfristig einen Flug innerhalb Deutschlands für morgen buchen – Ticket kostet ${preis} €. Sie möchte maximale Flexibilität bei Stornierung.`,
-  kontext: 'Last-Minute-Flugbuchung, Stornierungsoption wichtig',
-  preisGen: () => pick([180, 220, 260, 310, 360, 420]),
-  geeignet: ['kreditkarte', 'paypal'],
-  wenigerGeeignet: ['barzahlung', 'nachnahme', 'giropay', 'lastschrift'],
-},
-{
-  situation: (name, preis) => `Oma ${name} lässt sich vom Taxi nach Hause fahren (Arztbesuch). Die Fahrt kostet ${preis} € und sie hat nur Bargeld dabei.`,
-  kontext: 'Taxi / Kleinbetrieb, ältere Person, meist Barzahlung üblich',
-  preisGen: () => pick([18, 22, 26, 32, 38, 45]),
-  geeignet: ['barzahlung'],
-  wenigerGeeignet: ['ueberweisung', 'paypal', 'ratenkauf', 'nachnahme'],
-},
-{
-  situation: (name, preis) => `Familie ${name} finanziert den Führerschein der Tochter (Theorie + Praxis + Prüfung) über ${preis} €. Das Geld wird in Raten an die Fahrschule gezahlt.`,
-  kontext: 'Ausbildungskosten, mittelgroßer bis großer Betrag, Ratenzahlung üblich',
-  preisGen: () => pick([2100, 2400, 2700, 3000, 3400]),
-  geeignet: ['ratenkauf', 'kreditkarte', 'lastschrift', 'ueberweisung'],
-  wenigerGeeignet: ['barzahlung', 'nachnahme', 'giropay'],
-},
+    situation: (name, preis) => `Familie ${name} bestellt Essen bei einem Lieferdienst für ${preis} €. Die Lieferung kommt in ca. 30–40 Minuten.`,
+    kontext: 'Essenslieferung, Online-Bestellung, mittlerer Betrag',
+    preisGen: () => pick([28, 35, 42, 48, 55, 62]),
+    geeignet: ['paypal', 'kreditkarte', 'mobilepay'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ueberweisung'],
+  },
+  {
+    situation: (name, preis) => `Herr ${name} lässt seine Waschmaschine reparieren – der Handwerker verlangt ${preis} € und gibt eine ordentliche Rechnung aus.`,
+    kontext: 'Handwerker vor Ort, mittlerer Betrag, Rechnung vorhanden',
+    preisGen: () => pick([180, 220, 260, 290, 340, 380]),
+    geeignet: ['barzahlung', 'ueberweisung', 'ec_karte'],
+    wenigerGeeignet: ['paypal', 'lastschrift', 'ratenkauf', 'nachnahme'],
+  },
+  {
+    situation: (name, preis) => `Familie ${name} spendet ${preis} € an eine gemeinnützige Organisation und möchte eine Spendenquittung für die Steuererklärung.`,
+    kontext: 'Spende, Nachweis für Steuer wichtig',
+    preisGen: () => pick([50, 75, 100, 120, 150, 200, 250]),
+    geeignet: ['ueberweisung', 'lastschrift', 'kreditkarte'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme'],
+  },
+  {
+    situation: (name, preis) => `Tochter ${name} (19) bucht sich mit Freundinnen ein Festival-Ticket für ${preis} € pro Person. Die Tickets sind nur online erhältlich.`,
+    kontext: 'Online-Ticketkauf, junges Publikum, mittlerer Betrag',
+    preisGen: () => pick([89, 109, 129, 149, 169, 189]),
+    geeignet: ['kreditkarte', 'paypal'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift'],
+  },
+  {
+    situation: (name, preis) => `Familie ${name} kauft im Baumarkt Terrassenplatten, Erde und Pflanzen im Wert von ${preis} € und möchte alles sofort mitnehmen.`,
+    kontext: 'Großer Einkauf im stationären Fachhandel',
+    preisGen: () => pick([320, 380, 450, 520, 580, 650]),
+    geeignet: ['ec_karte', 'kreditkarte', 'mobilepay', 'barzahlung'],
+    wenigerGeeignet: ['paypal', 'nachnahme', 'lastschrift'],
+  },
+  {
+    situation: (name, preis) => `Frau ${name} muss kurzfristig einen Flug innerhalb Deutschlands für morgen buchen – das Ticket kostet ${preis} €. Sie möchte maximale Flexibilität bei einer möglichen Stornierung.`,
+    kontext: 'Last-Minute-Flugbuchung, Stornierungsoption wichtig',
+    preisGen: () => pick([180, 220, 260, 310, 360, 420]),
+    geeignet: ['kreditkarte', 'paypal'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift', 'ec_karte'],
+  },
+  {
+    situation: (name, preis) => `Oma ${name} lässt sich vom Taxi nach Hause fahren. Die Fahrt kostet ${preis} € und sie hat nur Bargeld dabei.`,
+    kontext: 'Taxi, ältere Person, Barzahlung üblich',
+    preisGen: () => pick([18, 22, 26, 32, 38, 45]),
+    geeignet: ['barzahlung'],
+    wenigerGeeignet: ['ueberweisung', 'paypal', 'ratenkauf', 'nachnahme'],
+  },
+  {
+    situation: (name, preis) => `Familie ${name} finanziert den Führerschein der Tochter (Theorie + Praxis + Prüfung) für insgesamt ${preis} €. Das Geld wird in Raten an die Fahrschule überwiesen.`,
+    kontext: 'Ausbildungskosten, großer Betrag, Ratenzahlung vereinbart',
+    preisGen: () => pick([2100, 2400, 2700, 3000, 3400]),
+    geeignet: ['ueberweisung', 'lastschrift', 'ratenkauf'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte'],
+  },
+  {
+    situation: (name, preis) => `Herr ${name} kauft im Supermarkt den Wocheneinkauf für die Familie – Gesamtbetrag ${preis} €. Er möchte schnell und unkompliziert an der Kasse zahlen.`,
+    kontext: 'Supermarkt, mittlerer Betrag, schnelle Abwicklung',
+    preisGen: () => pick([45, 55, 65, 75, 85, 95, 110]),
+    geeignet: ['ec_karte', 'mobilepay', 'barzahlung'],
+    wenigerGeeignet: ['ueberweisung', 'nachnahme', 'ratenkauf'],
+  },
 ];
 
 // ============================================================================
