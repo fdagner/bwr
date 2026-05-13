@@ -264,19 +264,6 @@ const zahlungsarten = {
     nachteile: ['Nachnahmegebühr fällt an', 'Paket muss persönlich entgegengenommen werden', 'Ware kann bei Lieferung nicht vollständig geprüft werden', 'Kaum noch üblich, nicht überall möglich'],
     empfehlung: 'Sinnvoll bei unbekannten Online-Händlern ohne PayPal oder Kreditkarte.'
   },
-  ratenkauf: {
-    label: 'Ratenkauf / Kauf auf Rechnung',
-    emoji: '📋',
-    merkmale: {
-      praktikabilitaet: 'Ware sofort erhalten, Zahlung später oder in Raten',
-      gebuehren: 'Zinsen beim Ratenkauf; Rechnung meist kostenlos',
-      sicherheit: 'Ware kann vor Zahlung geprüft werden (bei Rechnung)',
-      datenschutz: 'Bonitätsprüfung nötig; Daten bei Auskunfteien (SCHUFA)',
-    },
-    vorteile: ['Ware kann vor Zahlung geprüft werden (Rechnung)', 'Große Anschaffungen ohne sofortiges Kapital möglich', 'Gesetzliche Rücktrittsrechte', 'Weit verbreitet im Online-Handel'],
-    nachteile: ['Zinsen beim Ratenkauf können erheblich sein', 'Überschuldungsrisiko', 'Bonitätsprüfung durch SCHUFA', 'Verantwortungsvoller Umgang erforderlich'],
-    empfehlung: 'Rechnung: ideal für Online-Käufe. Ratenkauf: nur bei sorgfältiger Finanzplanung sinnvoll.'
-  },
 };
 
 // ============================================================================
@@ -289,7 +276,7 @@ const familienSituationen = [
     kontext: 'Alltäglicher Kauf beim lokalen Händler, kleiner Betrag',
     preisGen: () => pick([16, 18, 20, 22, 24, 28, 32, 36, 38]),
     geeignet: ['barzahlung', 'ec_karte', 'mobilepay'],
-    wenigerGeeignet: ['ratenkauf', 'kreditkarte', 'nachnahme'],
+    wenigerGeeignet: ['kreditkarte', 'nachnahme', 'ueberweisung'],
   },
   {
     situation: (name, preis) => `Familie ${name} möchte online ein neues Fahrrad für ${preis} € bestellen. Der Händler ist noch unbekannt und hat kaum Bewertungen im Internet.`,
@@ -317,7 +304,7 @@ const familienSituationen = [
     kontext: 'Jugendliche ohne Bankkonto, kleiner Betrag, sofort',
     preisGen: () => pick([5, 6, 7, 8, 9, 10]),
     geeignet: ['barzahlung'],
-    wenigerGeeignet: ['kreditkarte', 'ueberweisung', 'ratenkauf', 'nachnahme'],
+    wenigerGeeignet: ['kreditkarte', 'ueberweisung', 'nachnahme', 'ec_karte'],
   },
   {
     situation: (name, preis) => `Familie ${name} kauft beim lokalen Möbelhändler ein neues Sofa für ${preis} €. Der Händler akzeptiert nur Barzahlung oder Überweisung.`,
@@ -328,7 +315,7 @@ const familienSituationen = [
   },
   {
     situation: (name, preis) => `Herr ${name} möchte seiner Tochter schnell ${preis} € schicken, damit sie an der Klassenfahrt teilnehmen kann. Die Zahlung muss bis morgen früh beim Veranstalter eingehen.`,
-    kontext: 'Eilige Überweisung, Zeitdruck, Zahlung muss sofort ankommen',
+    kontext: 'Eilige Zahlung, Zeitdruck, muss sofort ankommen',
     preisGen: () => pick([80, 100, 120, 150]),
     geeignet: ['ueberweisung'],
     wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift', 'ec_karte'],
@@ -338,20 +325,20 @@ const familienSituationen = [
     kontext: 'Schnellzahlung, stationär, kontaktlos gewünscht',
     preisGen: () => pick([55, 60, 65, 70, 75, 80, 90, 100]),
     geeignet: ['mobilepay', 'kreditkarte', 'ec_karte'],
-    wenigerGeeignet: ['nachnahme', 'ratenkauf', 'barzahlung'],
+    wenigerGeeignet: ['nachnahme', 'barzahlung', 'ueberweisung'],
   },
   {
-    situation: (name, preis) => `Familie ${name} kauft ein neues Smartphone für ${preis} €. Sie haben nicht genug Erspartes, möchten das Gerät aber sofort haben.`,
-    kontext: 'Große Anschaffung, Liquiditätsengpass',
+    situation: (name, preis) => `Familie ${name} kauft ein neues Smartphone für ${preis} €. Sie haben nicht genug Erspartes, möchten das Gerät aber sofort haben und in Raten zahlen.`,
+    kontext: 'Große Anschaffung, Ratenzahlung gewünscht – Zahlung selbst per Lastschrift oder Überweisung',
     preisGen: () => pick([500, 600, 700, 800, 900, 1000]),
-    geeignet: ['ratenkauf', 'kreditkarte'],
+    geeignet: ['kreditkarte', 'lastschrift'],
     wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte'],
   },
   {
     situation: (name, preis) => `Opa ${name} möchte einen Online-Einkauf bei einem bekannten Versandhaus über ${preis} € tätigen. Er hat kein Smartphone und möchte seine Bankdaten nicht online eingeben.`,
     kontext: 'Älterer Nutzer, Datenschutzbedenken, Online-Kauf',
     preisGen: () => pick([30, 40, 50, 60, 70, 80]),
-    geeignet: ['nachnahme', 'ueberweisung', 'ratenkauf'],
+    geeignet: ['nachnahme', 'ueberweisung'],
     wenigerGeeignet: ['mobilepay', 'paypal', 'ec_karte'],
   },
   {
@@ -380,7 +367,7 @@ const familienSituationen = [
     kontext: 'Handwerker vor Ort, mittlerer Betrag, Rechnung vorhanden',
     preisGen: () => pick([180, 220, 260, 290, 340, 380]),
     geeignet: ['barzahlung', 'ueberweisung', 'ec_karte'],
-    wenigerGeeignet: ['paypal', 'lastschrift', 'ratenkauf', 'nachnahme'],
+    wenigerGeeignet: ['paypal', 'lastschrift', 'nachnahme'],
   },
   {
     situation: (name, preis) => `Familie ${name} spendet ${preis} € an eine gemeinnützige Organisation und möchte eine Spendenquittung für die Steuererklärung.`,
@@ -415,21 +402,21 @@ const familienSituationen = [
     kontext: 'Taxi, ältere Person, Barzahlung üblich',
     preisGen: () => pick([18, 22, 26, 32, 38, 45]),
     geeignet: ['barzahlung'],
-    wenigerGeeignet: ['ueberweisung', 'paypal', 'ratenkauf', 'nachnahme'],
+    wenigerGeeignet: ['ueberweisung', 'paypal', 'nachnahme'],
   },
   {
-    situation: (name, preis) => `Familie ${name} finanziert den Führerschein der Tochter (Theorie + Praxis + Prüfung) für insgesamt ${preis} €. Das Geld wird in Raten an die Fahrschule überwiesen.`,
-    kontext: 'Ausbildungskosten, großer Betrag, Ratenzahlung vereinbart',
-    preisGen: () => pick([2100, 2400, 2700, 3000, 3400]),
-    geeignet: ['ueberweisung', 'lastschrift', 'ratenkauf'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte'],
+    situation: (name, preis) => `Familie ${name} richtet für den Sohn einen Dauerauftrag ein, um monatlich ${preis} € Vereinsbeitrag an den Fußballverein zu überweisen.`,
+    kontext: 'Wiederkehrende Zahlung, Dauerauftrag, kleiner bis mittlerer Betrag',
+    preisGen: () => pick([15, 20, 25, 30, 35, 40]),
+    geeignet: ['ueberweisung', 'lastschrift'],
+    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte', 'mobilepay'],
   },
   {
     situation: (name, preis) => `Herr ${name} kauft im Supermarkt den Wocheneinkauf für die Familie – Gesamtbetrag ${preis} €. Er möchte schnell und unkompliziert an der Kasse zahlen.`,
     kontext: 'Supermarkt, mittlerer Betrag, schnelle Abwicklung',
     preisGen: () => pick([45, 55, 65, 75, 85, 95, 110]),
     geeignet: ['ec_karte', 'mobilepay', 'barzahlung'],
-    wenigerGeeignet: ['ueberweisung', 'nachnahme', 'ratenkauf'],
+    wenigerGeeignet: ['ueberweisung', 'nachnahme', 'kreditkarte'],
   },
 ];
 
