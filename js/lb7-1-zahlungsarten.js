@@ -174,7 +174,7 @@ const zahlungsarten = {
     empfehlung: 'Geeignet für kleine Alltagseinkäufe und wenn Anonymität gewünscht ist.'
   },
   ec_karte: {
-    label: 'EC-Karte / Debitkarte (Girocard)',
+    label: 'Girocard / Debitkarte',
     emoji: '💳',
     merkmale: {
       praktikabilitaet: 'Weit verbreitet, kontaktlos oder mit PIN, sofort verfügbar',
@@ -542,7 +542,7 @@ Die acht Zahlungsarten:
    - Kein Konto, keine Technik nötig, anonym
    - Diebstahlgefahr, kein automatischer Nachweis
 
-2. EC-Karte / Debitkarte (Girocard)
+2. Girocard / Debitkarte (Girocard)
    - Weit verbreitet im stationären Handel, kontaktlos oder PIN, keine Jahresgebühr
    - Nur bei Kontodeckung nutzbar, kein Käuferschutz wie bei Kreditkarte
 
