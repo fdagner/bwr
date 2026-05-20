@@ -90,7 +90,9 @@
   </g>
 <!--Gruppe für Zahlungsbedingungen-->
   <g id="Zahlungsbedingungen" text-anchor="start" font-family="Arial" font-size="16" fill="#333">
-    <text x="20" y="800">Zahlbar innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen rein netto.</text>
+    <g id="zahlungszielSatz">
+    <text x="350" y="860">Zahlbar innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
+  </g>
     <text id="skontotext" x="20" y="820">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto.</text>
     <text x="20" y="840">Wir liefern in <tspan id="angebotLieferzeit"></tspan> Tagen <tspan id="bezugskostenBedingung"></tspan><tspan id="Eigentumsvorbehalt"> unter Eigentumsvorbehalt</tspan>.</text>
 
