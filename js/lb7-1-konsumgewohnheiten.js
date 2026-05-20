@@ -189,50 +189,6 @@ const kaufSzenarienPool = [
       return `${p.name} gibt bewusst mehr für Körperpflege aus, weil Nachhaltigkeit und Gesundheit ${p.vars.vDat} wichtig sind. Da die Ausgabe langfristig geplant und ins Budget integriert ist, entstehen keine finanziellen Engpässe.`;
     },
   },
-  {
-    id: 'fitnessstudio',
-    kategorie: 'Sport & Hobby',
-    produkt: 'Fitnessstudio-Mitgliedschaft (12 Monate)',
-    einmalig: false,
-    minderjaehrigOk: false,
-    preis: 30,
-    preisBeschreibung: '30,00 Euro pro Monat bei 12 Monaten Mindestlaufzeit (Gesamtkosten: 360,00 Euro)',
-    kriterien: { Notwendigkeit: '+', Prestige: '+', Trend: '+', Kosten: '-', Qualität: '++', Nachhaltigkeit: '+' },
-    bewertung: 'kritisch',
-    begruendung: 'Sport ist sinnvoll – die Mindestlaufzeit von 12 Monaten bindet jedoch dauerhaft Geld. Wird das Studio nach einigen Monaten weniger besucht, entstehen hohe Fixkosten ohne echten Nutzen. Günstigere, flexiblere Alternativen existieren.',
-    alternative: 'Outdoor-Sport (Joggen, Radfahren, Schwimmbad) ist nahezu kostenlos. Alternativ: ein Kurz-Abo ohne Mindestlaufzeit testen, bevor eine langfristige Bindung eingegangen wird.',
-    situationFn(p, e, a) {
-      return `<p><span class="fb-absatz-titel">Zur Person:</span> ${p.name} (${p.alter} Jahre) ist ${p.typ}. ${e.einnahmenText}</p>
-<p><span class="fb-absatz-titel">Ausgaben:</span> ${a.ausgabenText}</p>
-<p><span class="fb-absatz-titel">Situation:</span> ${p.name} hat sich im Januar vorgenommen, regelmäßig Sport zu treiben. Ein Fitnessstudio in der Nähe bietet eine Mitgliedschaft für <strong>30,00 Euro pro Monat</strong> mit <strong>12 Monaten Mindestlaufzeit</strong> an – also Gesamtkosten von <strong>360,00 Euro</strong>, unabhängig davon, wie oft das Studio besucht wird. ${p.vars.vPoss} Freund/Freundin ${p.vars.vorname2} hat eine ähnliche Mitgliedschaft abgeschlossen und geht mittlerweile kaum noch hin – zahlt aber trotzdem weiter.</p>
-<p><span class="fb-absatz-titel">Überlegung:</span> ${p.name} ist in diesem Moment sehr motiviert. ${p.vars.vNom} überlegt aber auch: Wird die Motivation in drei oder sechs Monaten noch genauso stark sein?</p>`;
-    },
-    konsequenzFn(p) {
-      return `Wird das Fitnessstudio nach drei Monaten nur noch selten besucht, zahlt ${p.name} trotzdem weitere 9 Monate – das sind 270,00 Euro für kaum genutzten Service. Günstigere Alternativen wie Outdoor-Sport wären deutlich flexibler und kostengünstiger.`;
-    },
-  },
-  {
-    id: 'sportverein',
-    kategorie: 'Sport & Hobby',
-    produkt: 'Vereinsmitgliedschaft (Fußball)',
-    einmalig: false,
-    minderjaehrigOk: true,
-    preis: 15,
-    preisBeschreibung: '15,00 Euro pro Monat (Vereinsbeitrag, jederzeit kündbar mit 1 Monat Frist)',
-    kriterien: { Notwendigkeit: '+', Prestige: '-', Trend: '-', Kosten: '++', Qualität: '++', Nachhaltigkeit: '++' },
-    bewertung: 'vertretbar',
-    begruendung: 'Ein Vereinsbeitrag von 15,00 Euro monatlich ist erschwinglich und fördert sportliche Aktivität, Teamgeist und soziale Bindungen. Die Ausgabe ist dauerhaft planbar und im Budget klar vertretbar.',
-    alternative: 'Falls der Beitrag zu hoch erscheint, bieten viele Vereine Ermäßigungen an. Schulsport-AGs sind eine kostenfreie Alternative.',
-    situationFn(p, e, a) {
-      return `<p><span class="fb-absatz-titel">Zur Person:</span> ${p.name} (${p.alter} Jahre) ist ${p.typ}. ${e.einnahmenText}</p>
-<p><span class="fb-absatz-titel">Ausgaben:</span> ${a.ausgabenText}</p>
-<p><span class="fb-absatz-titel">Situation:</span> ${p.name} spielt seit Jahren leidenschaftlich Fußball. ${p.vars.vPoss} Schule hat zwar eine Fußball-AG, aber ${p.vars.vNom} möchte in einem richtigen Verein trainieren und an Meisterschaften teilnehmen. Der örtliche Fußballverein bietet Jugendmitgliedschaften für <strong>15,00 Euro pro Monat</strong> an, kündbar mit einem Monat Frist. Die Trainingszeiten passen gut in ${p.vars.vPossLow} Stundenplan, und ${p.vars.vPossLow} Eltern befürworten die Mitgliedschaft ausdrücklich.</p>
-<p><span class="fb-absatz-titel">Überlegung:</span> ${p.name} ist begeistert und überzeugt, dass ${p.vars.vNom} regelmäßig zum Training gehen wird. Die flexible Kündigung gibt ${p.vars.vDat} Sicherheit, falls sich die Situation ändern sollte.</p>`;
-    },
-    konsequenzFn(p) {
-      return `${p.name} tritt dem Verein bei. Die 15,00 Euro monatlich sind gut angelegt: ${p.vars.vNom} treibt regelmäßig Sport, knüpft neue Freundschaften und entwickelt Teamfähigkeit. Die flexible Kündigungsmöglichkeit verhindert eine langfristige finanzielle Falle.`;
-    },
-  },
 ];
 
 // ============================================================================
