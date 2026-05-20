@@ -85,7 +85,9 @@
     
 <!--Gruppe für Zahlungsbedingungen-->
   <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Arial" font-size="20" fill="#333">
-    <text x="525" y="615" text-anchor="middle">Zahlung fällig in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
+  <g id="zahlungszielSatz">
+    <text x="350" y="860">Zahlung fällig in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
+  </g>
     <text id="skontotext" x="525" y="640" text-anchor="middle"><tspan id="skonto"> </tspan> % Skonto bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen</text>
     <text id="Eigentumsvorbehalt" x="525" y="665" text-anchor="middle">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
     <text id="" x="525" y="690" font-family="Arial" font-size="20" text-anchor="middle"  fill="#333" ><tspan id="bankLieferer"> </tspan> - <tspan id="ibanLieferer"> </tspan> - <tspan id="bicLieferer"> </tspan></text>

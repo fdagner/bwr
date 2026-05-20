@@ -1029,7 +1029,8 @@ function applyOrderData() {
     }
 
     // Fälligkeitsdatum
-    const zahlungszielInput = getNumericValue('zahlungszielInput');
+    const zahlungszielRaw = document.getElementById('zahlungszielInput')?.value?.trim();
+    const zahlungszielInput = parseFloat(zahlungszielRaw) || 0;
     const elementsWithClassZiel = document.getElementById('rechnungDatumZiel');
     if (elementsWithClassZiel) {
         const currentYear = new Date().getFullYear();
@@ -1152,10 +1153,19 @@ function applyOrderData() {
         angebotLieferzeitSVG.textContent = angebotLieferzeit;
     }
 
-    const elemZahlungsziel = document.getElementById('zahlungsziel');
-    if (elemZahlungsziel) {
-        document.getElementById('zahlungsziel').textContent = zahlungszielInput;
-    } else { }
+const elemZahlungsziel = document.getElementById('zahlungsziel');
+if (elemZahlungsziel) {
+    if (zahlungszielRaw === '') {
+        // Leer → ganzen Satz entfernen
+        SafeDOM.remove('zahlungszielSatz');
+    } else if (zahlungszielInput === 0) {
+        // 0 eingetragen → Text anpassen
+        const satz = document.getElementById('zahlungszielSatz');
+        if (satz) satz.querySelector('text').textContent = 'Zahlung fällig sofort';
+    } else {
+        elemZahlungsziel.textContent = zahlungszielInput;
+    }
+}
 
     const elemSkonto = document.getElementById('skonto');
     if (elemSkonto) {

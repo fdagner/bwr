@@ -79,7 +79,9 @@
   </g>
 <!--Gruppe für Zahlungsbedingungen-->
   <g id="Zahlungsbedingungen" text-anchor="start" font-family="Calibri" font-size="16" fill="#333">
-    <text x="20" y="860">Bitte überweisen Sie den Betrag rein netto innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen.</text>
+     <g id="zahlungszielSatz">
+    <text x="350" y="860">Bitte überweisen Sie den Betrag rein netto innerhalb von <tspan id="zahlungsziel"> </tspan> Tagen</text>
+  </g>
     <text id="skontotext" x="20" y="890">Bei Zahlung innerhalb von <tspan id="skontofrist"> </tspan> Tagen gewähren wir <tspan id="skonto"> </tspan> % Skonto.</text>
     <text id="Eigentumsvorbehalt" x="20" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum.</text>
   </g>
