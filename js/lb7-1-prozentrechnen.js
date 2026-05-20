@@ -713,7 +713,7 @@ TYPISCHE AUFGABENARTEN & DREISATZ-AUFBAU:
 
 HÄUFIGE DENKFEHLER (nicht benennen, aber durch Fragen korrigieren):
 - Bei „Preis nach Rabatt": Schüler rechnen nur den Rabattbetrag, vergessen den Restpreis.
-  Frage: „Was entspricht dann 100 % − ${d.p} % = … %?"
+  Frage: „Was entspricht dann 100 % − p % = … %?"
 - Bei Originalpreis aus Rabattpreis: Schüler addieren den %-Satz direkt zum bekannten Preis.
   Frage: „Welche Prozentzahl entspricht dem Preis, den du kennst – 100 % oder weniger?"
 - Bei Nettopreis aus Bruttopreis: Schüler ziehen den %-Satz direkt ab.
