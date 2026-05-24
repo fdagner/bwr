@@ -2,45 +2,60 @@
 <html lang="de">
 
 <head>
-   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eigenfertigung oder Fremdbezug – Make-or-Buy | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Aufgaben zur Entscheidung Eigenfertigung oder Fremdbezug (Make-or-Buy). Ideal für BwR Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/fremdbezug.html">
+  <meta name="robots" content="index, follow">
 
-    <!-- === SEO Core === -->
-    <title>Eigenfertigung oder Fremdbezug – Make-or-Buy BwR | meinbwr.de</title>
-    <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Aufgaben zur Entscheidung Eigenfertigung oder Fremdbezug (Make-or-Buy). Drei Problemtypen, automatische Berechnung, Kostenvergleich und Diagramm (ApexCharts). Ideal für BwR Realschule Bayern (meist Klasse 9/10), Beschaffungs- & Fertigungsplanung, Prüfungsvorbereitung. Mit KI-Prompt für lernfördernden Chatbot.">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Eigenfertigung oder Fremdbezug – Make-or-Buy | meinbwr.de">
+  <meta property="og:description" content="Zufällige Aufgaben Eigenfertigung vs. Fremdbezug: Berechne Kosten, vergleiche Varianten und sieh das Diagramm. Drei Problemtypen wählbar. Perfekt für BwR Klasse 9/10 Realschule Bayern.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/fremdbezug.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
+  <meta property="og:locale" content="de_DE">
 
-    <link rel="canonical" href="https://www.meinbwr.de/fremdbezug.html">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Eigenfertigung oder Fremdbezug – Make-or-Buy | meinbwr.de">
+  <meta name="twitter:description" content="Zufällige Aufgaben zur Eigenfertigung/Fremdbezug-Entscheidung mit Berechnung, Kostenvergleich und Diagramm.">
 
-    <meta name="robots" content="index, follow">
-    <meta name="author" content="meinbwr.de – BwR Unterrichtsmaterial Realschule Bayern">
+  <!-- Theme -->
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="color-scheme" content="light">
 
-    <!-- === Open Graph === -->
-    <meta property="og:title" content="Eigenfertigung oder Fremdbezug – Make-or-Buy Generator BwR">
-    <meta property="og:description" content="Zufällige Aufgaben Eigenfertigung vs. Fremdbezug: Berechne Kosten, vergleiche Varianten und sieh das Diagramm. Drei Problemtypen wählbar. Perfekt für BwR Klasse 9/10 Realschule Bayern – Beschaffung, Fertigung, Kostenrechnung, Abschlussprüfung. Inkl. Export & KI-Prompt.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.meinbwr.de/fremdbezug.html">
-    <meta property="og:image" content="https://www.meinbwr.de/images/fremdbezug-tool-vorschau.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Screenshot: Make-or-Buy Aufgabe mit Kostenvergleich und Diagramm (ApexCharts) BwR">
-    <meta property="og:site_name" content="meinbwr.de – BwR Realschule">
-    <meta property="og:locale" content="de_DE">
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Eigenfertigung oder Fremdbezug",
+    "description": "Kostenloses BwR-Tool: Generiere zufällige Aufgaben zur Entscheidung Eigenfertigung oder Fremdbezug (Make-or-Buy). Ideal für BwR Realschule Bayern.",
+    "url": "https://www.meinbwr.de/fremdbezug.html",
+    "inLanguage": "de-DE",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "meinbwr.de – BwR Realschule Bayern",
+      "url": "https://www.meinbwr.de/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 2, "name": "BwR 10", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 3, "name": "Eigenfertigung oder Fremdbezug", "item": "https://www.meinbwr.de/fremdbezug.html" }
+      ]
+    }
+  }
+  </script>
 
-    <!-- === Twitter / X Cards === -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Make-or-Buy Generator BwR – Eigenfertigung vs. Fremdbezug">
-    <meta name="twitter:description" content="Zufällige Aufgaben zur Eigenfertigung/Fremdbezug-Entscheidung mit Berechnung, Kostenvergleich und Diagramm. Ideal für BwR Realschule Bayern (Klasse 9/10).">
-    <meta name="twitter:image" content="https://www.meinbwr.de/images/fremdbezug-tool-vorschau.jpg">
-    <meta name="twitter:image:alt" content="BwR Tool: Fremdbezug / Eigenfertigung Diagramm Vorschau">
-
-    <!-- === Keywords – prüfungs- & lehrplanrelevant === -->
-    <meta name="keywords" content="Eigenfertigung Fremdbezug BwR, Make or Buy Entscheidung, Eigenfertigung oder Fremdbezug, BwR Realschule Bayern, Beschaffungsplanung Klasse 9 10, Kostenvergleich Eigenfertigung, Fremdbezug Aufgabe, BwR Prüfung Eigenfertigung, Fertigungs- oder Einkaufsentscheidung, ApexCharts BwR">
-    <link rel="stylesheet" href="css/style.css" />
-    <script src="js/apexcharts.min.js"></script>
-    <script src="js/menu.js"></script>
-    <script src="js/html2canvas.min.js"></script>
-    <script src="js/clipboard.min.js"></script>
-<title>Eigenfertigung oder Fremdbezug | meinbwr.de BwR</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/apexcharts.min.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
 </head>
 
 <body>

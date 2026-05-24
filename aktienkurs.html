@@ -2,49 +2,61 @@
 <html lang="de">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aktienkurs-Generator mit Diagramm &amp; fertiger Aufgabe | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Erzeuge realistische zufällige Aktienkursverläufe (Tage oder Monate) ab einem Wunschdatum, erstelle fertige Kauf-/Verkaufsaufgaben mit Belegen und Diagramm (ApexCharts).">
+  <link rel="canonical" href="https://www.meinbwr.de/aktienkurs.html">
+  <meta name="robots" content="index, follow">
 
-    <!-- === SEO Core === -->
-    <title>Zufälligen Aktienkurs erstellen + Diagramm & Aufgabe | meinbwr.de BwR-Tool</title>
-    <meta name="description" content="Kostenloses BwR-Tool: Erzeuge realistische zufällige Aktienkursverläufe (Tage oder Monate) ab einem Wunschdatum, erstelle fertige Kauf-/Verkaufsaufgaben mit Belegen und Diagramm (ApexCharts). Ideal für Rechnungswesen-Unterricht, Klassenarbeiten, Prüfungen und Leistungsnachweise an Realschulen und Gymnasien.">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Aktienkurs-Generator mit Diagramm &amp; fertiger Aufgabe | meinbwr.de">
+  <meta property="og:description" content="Sofort nutzbares Tool für den BwR-Unterricht: Zufälliger Aktienkursverlauf (DAX-ähnlich), interaktives Diagramm, Kauf- oder Verkaufsaufgabe erstellen, Beleg-Buttons und Download-Funktion.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/aktienkurs.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
+  <meta property="og:locale" content="de_DE">
 
-    <link rel="canonical" href="https://www.meinbwr.de/aktienkurs.html">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Aktienkurs-Generator mit Diagramm &amp; fertiger Aufgabe | meinbwr.de">
+  <meta name="twitter:description" content="Erstelle in Sekunden realistische Aktienkurse mit Diagramm und passender Kauf-/Verkaufsaufgabe. Download, Beleg-Buttons, ideal für Rechnungswesen an Realschulen.">
 
-    <meta name="robots" content="index, follow">
-    <meta name="author" content="meinbwr.de – Unterrichtsmaterial BwR / BWL">
+  <!-- Theme -->
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="color-scheme" content="light">
 
-    <!-- === Open Graph (Facebook, LinkedIn, WhatsApp, Messenger, iMessage …) === -->
-    <meta property="og:title" content="Aktienkurs-Generator mit Diagramm & fertiger Aufgabe – BwR Tool">
-    <meta property="og:description" content="Sofort nutzbares Tool für den BwR-Unterricht: Zufälliger Aktienkursverlauf (DAX-ähnlich), interaktives Diagramm, Kauf- oder Verkaufsaufgabe erstellen, Beleg-Buttons und Download-Funktion. Perfekt für Realschule, Mittelschule und Gymnasium.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.meinbwr.de/aktienkurs.html">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Screenshot: Zufälliger Aktienkurs mit Diagramm und BwR-Aufgabe">
-    <meta property="og:site_name" content="meinbwr.de – BwR & BWL Material">
-    <meta property="og:locale" content="de_DE">
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Aktienkurs-Generator mit Diagramm",
+    "description": "Kostenloses BwR-Tool: Erzeuge realistische zufällige Aktienkursverläufe (Tage oder Monate) ab einem Wunschdatum, erstelle fertige Kauf-/Verkaufsaufgaben mit Belegen und Diagramm (ApexCharts).",
+    "url": "https://www.meinbwr.de/aktienkurs.html",
+    "inLanguage": "de-DE",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "meinbwr.de – BwR Realschule Bayern",
+      "url": "https://www.meinbwr.de/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 2, "name": "BwR 9", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 3, "name": "Aktienkurs-Generator", "item": "https://www.meinbwr.de/aktienkurs.html" }
+      ]
+    }
+  }
+  </script>
 
-    <!-- === Twitter / X Cards (sehr wichtig 2026) === -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Zufälliger Aktienkurs + Aufgabe für BwR-Unterricht">
-    <meta name="twitter:description" content="Erstelle in Sekunden realistische Aktienkurse mit Diagramm und passender Kauf-/Verkaufsaufgabe. Download, Beleg-Buttons, ideal für Rechnungswesen an Realschulen.">
-    <meta name="twitter:image:alt" content="BwR Aktienkurs Generator Vorschau">
-
-    <!-- === Keywords (nach wie vor nützlich für Long-Tail & kleinere Suchmaschinen) === -->
-    <meta name="keywords" content="Aktienkurs erstellen, BwR Tool, Aktienkurs Diagramm, Rechnungswesen Aufgabe, BWL Unterrichtsmaterial, Aktienkauf Verkauf Beleg, Realschule Wirtschaft, zufälliger Aktienkurs, Börsenkurs Generator, ApexCharts BwR">
-
-     <!-- Styles & Scripts (defer wo sinnvoll für Ladezeit) -->
-    <link rel="stylesheet" href="css/style.css">
-
-    <script src="js/menu.js"></script>
-    <script src="js/html2canvas.min.js"></script>
-    <script src="js/js-yaml.min.js"></script>
-    <script src="js/clipboard.min.js"></script>
-    <script src="js/apexcharts.min.js"></script>
-
-    <!-- Title ganz am Ende – überschreibt vorherige title-Tags im Tab -->
-    <title>Aktienkurs-Generator BwR | meinbwr.de</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/menu.js"></script>
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/apexcharts.min.js"></script>
 </head>
 
 
