@@ -42,6 +42,20 @@ function initializeYamlData() {
     console.log('Finale yamlData hat jetzt', yamlData.length, 'Unternehmen (Basis + eigene)');
 }
 
+function safelyParseSVG(svgText) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgText, 'text/html');
+    const svg = doc.querySelector('svg');
+    const target = svg || doc.body;
+    if (!target || (target === doc.body && target.children.length === 0)) return null;
+    const scripts = target.querySelectorAll('script');
+    scripts.forEach(s => s.remove());
+    if (svg) return svg;
+    const fragment = document.createDocumentFragment();
+    const children = [...target.children];
+    children.forEach(child => fragment.appendChild(child));
+    return fragment;
+}
 
 // ============================================================================
 // KONFIGURATIONEN
@@ -472,10 +486,7 @@ function loadSupplierLogo(logoUrl) {
     xhr.onload = function () {
         if (xhr.status === 200) {
             const svgContent = xhr.responseText;
-            const tempContainer = document.createElement('div');
-            tempContainer.innerHTML = svgContent;
-
-            const svgElement = tempContainer.querySelector('svg');
+            const svgElement = safelyParseSVG(svgContent);
             if (svgElement) {
                 svgElement.setAttribute('x', x);
                 svgElement.setAttribute('y', y);
@@ -1654,10 +1665,10 @@ async function applySVG() {
     let selectedTemplate = document.getElementById("svgDropdown").value;
     let svgContainer = document.getElementById("rechnung1Container");
 
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
     try {
         let svgData = await loadSVGTemplate(selectedTemplate);
-        svgContainer.innerHTML = svgData;
+        svgContainer.innerHTML = '';
+        svgContainer.appendChild(safelyParseSVG(svgData));
     } catch (error) {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
@@ -1665,10 +1676,10 @@ async function applySVG() {
     let selectedKontoauszug = document.getElementById("svgDropdownKontoauszug").value;
     let svgContainerKontoauszug = document.getElementById("kontoauszugContainer");
 
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
     try {
         let svgData = await loadSVGTemplate(selectedKontoauszug);
-        svgContainerKontoauszug.innerHTML = svgData;
+        svgContainerKontoauszug.innerHTML = '';
+        svgContainerKontoauszug.appendChild(safelyParseSVG(svgData));
     } catch (error) {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
@@ -1677,10 +1688,10 @@ async function applySVG() {
     let selectedEmail = document.getElementById("svgDropdownEmail").value;
     let svgContainerEmail = document.getElementById("emailContainer");
 
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
     try {
         let svgData = await loadSVGTemplate(selectedEmail);
-        svgContainerEmail.innerHTML = svgData;
+        svgContainerEmail.innerHTML = '';
+        svgContainerEmail.appendChild(safelyParseSVG(svgData));
     } catch (error) {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
@@ -1688,10 +1699,10 @@ async function applySVG() {
     let selectedQuittung = document.getElementById("svgDropdownQuittung").value;
     let svgContainerQuittung = document.getElementById("quittungContainer");
 
-    // Laden der SVG-Vorlage und Aktualisieren des Containers
     try {
         let svgData = await loadSVGTemplate(selectedQuittung);
-        svgContainerQuittung.innerHTML = svgData;
+        svgContainerQuittung.innerHTML = '';
+        svgContainerQuittung.appendChild(safelyParseSVG(svgData));
     } catch (error) {
         console.error("Fehler beim Anwenden der Daten:", error);
     }
@@ -2421,7 +2432,8 @@ async function applyBelegWithSVG(belegType) {
     if (selectedTemplate && container) {
         try {
             const svgData = await loadSVGTemplate(selectedTemplate);
-            container.innerHTML = svgData;
+            container.innerHTML = '';
+            container.appendChild(safelyParseSVG(svgData));
         } catch (error) {
             console.error("Fehler beim Laden der SVG-Vorlage:", error);
             return;
@@ -2439,75 +2451,44 @@ async function applyBelegWithSVG(belegType) {
 
 // Jahr-Script Handling (wiederverwendbar)
 function handleYearScript(config) {
-    if (!config.jahrCheckbox) return; // Kein Jahr-Handling nötig
+    if (!config.jahrCheckbox) return;
 
     const useScript = document.getElementById(config.jahrCheckbox)?.checked;
 
     if (!useScript) {
-        // Manuelle Jahreseingabe
         const jahrInput = document.getElementById(config.jahrInput);
         const yearElements = document.querySelectorAll(`.${config.jahrClass}`);
         yearElements.forEach(element => {
             element.textContent = jahrInput?.value || '';
         });
     } else {
-        // Dynamisches Script
-        const customDefs = document.getElementById(config.customDefs);
-        const existingScript = document.getElementById(config.scriptId);
+        const currentYear = new Date().getFullYear();
+        const yearElements = document.querySelectorAll(`.${config.jahrClass}`);
+        yearElements.forEach(element => {
+            element.textContent = currentYear;
+        });
 
+        window[config.scriptFunction] = function () {
+            const elements = document.querySelectorAll(`.${config.jahrClass}`);
+            elements.forEach(element => {
+                element.textContent = new Date().getFullYear();
+            });
+        };
+
+        const existingScript = document.getElementById(config.scriptId);
         if (existingScript) existingScript.remove();
 
+        const customDefs = config.customDefs ? document.getElementById(config.customDefs) : null;
         if (customDefs) {
-            const script = document.createElement('script');
-            script.type = 'text/javascript';
+            const script = document.createElementNS('http://www.w3.org/2000/svg', 'script');
             script.id = config.scriptId;
-            script.text = `
-                function getCurrentYear() {
-                    return new Date().getFullYear();
-                }
-                
-                function ${config.scriptFunction}() {
-                    const currentYear = getCurrentYear();
-                    const elements = document.querySelectorAll('.${config.jahrClass}');
-                    elements.forEach(element => {
-                        element.textContent = currentYear;
-                    });
-                }
-            `;
+            script.textContent = 'function ' + config.scriptFunction + '() {' +
+                'var elements = document.querySelectorAll(".' + config.jahrClass + '");' +
+                'elements.forEach(function(el) { el.textContent = new Date().getFullYear(); });' +
+                '}';
             customDefs.appendChild(script);
-
-            // Funktion sofort ausführen
-            eval(script.text);
-            if (typeof window[config.scriptFunction] === 'function') {
-                window[config.scriptFunction]();
-            }
-        } else {
-            // Falls customDefs nicht existiert, Script an body anhängen
-            const script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.id = config.scriptId;
-            script.text = `
-                function getCurrentYear() {
-                    return new Date().getFullYear();
-                }
-                
-                function ${config.scriptFunction}() {
-                    const currentYear = getCurrentYear();
-                    const elements = document.querySelectorAll('.${config.jahrClass}');
-                    elements.forEach(element => {
-                        element.textContent = currentYear;
-                    });
-                }
-            `;
-            document.body.appendChild(script);
-            eval(script.text);
-            if (typeof window[config.scriptFunction] === 'function') {
-                window[config.scriptFunction]();
-            }
         }
     }
-
-
 }
 
 /// ============================================================================
@@ -2685,7 +2666,8 @@ async function lohnabrechnungApplySVGholen() {
     const container = document.getElementById('lohnabrechnungContainer');
     try {
         const svgData = await loadSVGTemplate(selectedQuittung);
-        container.innerHTML = svgData;
+        container.innerHTML = '';
+        container.appendChild(safelyParseSVG(svgData));
     } catch (error) {
         console.error("Fehler beim Laden der SVG-Vorlage:", error);
         return;

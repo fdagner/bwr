@@ -146,13 +146,16 @@
       fragenContainer.innerHTML = ""; // Löschen des Inhalts des Containers
       for (var i = 1; i <= anzahl; i++) {
         var frage = document.createElement("p");
-        frage.innerHTML = "::Frage" + i + "::<br>Wähle eine Option aus.{<br>";
+        frage.appendChild(document.createTextNode("::Frage" + i + "::"));
+        frage.appendChild(document.createElement("br"));
+        frage.appendChild(document.createTextNode("Wähle eine Option aus.{"));
+        frage.appendChild(document.createElement("br"));
 
         for (var j = 0; j < optionen; j++) {
           var addstr = "";
           if (j > 0) addstr = "~";
           var antwort = document.createElement("span");
-          antwort.innerHTML += addstr + "=" + document.getElementById("optionen-beschriftung").value + "#";
+          antwort.appendChild(document.createTextNode(addstr + "=" + document.getElementById("optionen-beschriftung").value + "#"));
           var anzahl_stashdrop = document.getElementById("anzahl-stashdrop").value;
           var selectedCodes = [];
 
@@ -160,17 +163,17 @@
             pickup = document.getElementById("pickup-mitteilung").value;
             var selectedCode = keineDoppeltenObjekte ? removeRandomCode(codes) : codes[randnum(codes.length)];
             selectedCodes.push(selectedCode);
-            antwort.innerHTML += "[stashdrop secret\\=\"" + selectedCode + "\" text\\=\"" + pickup + "\" image]";
+            antwort.appendChild(document.createTextNode('[stashdrop secret="' + selectedCode + '" text="' + pickup + '" image]'));
           }
-          antwort.innerHTML += "<br>";
+          antwort.appendChild(document.createElement("br"));
           frage.appendChild(antwort);
           if (keineDoppeltenObjekte) {
-            // Füge die verwendeten Codes zurück in das Array ein
             codes = codes.concat(selectedCodes);
           }
         }
         var endbr = document.createElement("span");
-        endbr.innerHTML = "}<br>";
+        endbr.appendChild(document.createTextNode("}"));
+        endbr.appendChild(document.createElement("br"));
         frage.appendChild(endbr);
         fragenContainer.appendChild(frage);
       }

@@ -65,14 +65,12 @@
 <body>
     <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // URL-Parameter auslesen
     const params = new URLSearchParams(window.location.search);
     
-    // Parameter in Felder eintragen
     for (const [key, value] of params) {
         const field = document.getElementById(key + 'Input');
         if (field) {
-            field.value = decodeURIComponent(value);
+            field.value = decodeURIComponent(value).replace(/<[^>]*>/g, '');
         }
     }
     

@@ -339,9 +339,16 @@ function setFieldValue(elementId, value, type) {
     const element = document.getElementById(elementId);
     if (!element) return false;
     
+    value = String(value).replace(/<[^>]*>/g, '');
+    
     switch(type) {
-        case 'input':
         case 'select':
+            const options = [...element.options];
+            const valid = options.some(o => o.value === value);
+            if (!valid) return false;
+            element.value = value;
+            break;
+        case 'input':
             element.value = value;
             break;
         case 'textarea':
@@ -366,13 +373,10 @@ function loadURLParametersForBeleg(belegType, params) {
     
     let setCount = 0;
     
-    // Durchlaufe alle Parameter für diesen Beleg
     for (const [paramName, paramConfig] of Object.entries(config)) {
         if (params.has(paramName)) {
-            let value = params.get(paramName);
+            let value = params.get(paramName).replace(/<[^>]*>/g, '');
             
-            // WICHTIG: Für Unternehmen-Dropdowns - nutze cleanValueForInput!
-            // (Genau wie beim Beleg-Import)
             if (typeof cleanValueForInput === 'function') {
                 value = cleanValueForInput(value, paramConfig.type, paramConfig.elementId);
             }

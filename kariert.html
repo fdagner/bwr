@@ -127,8 +127,9 @@
                 return;
             }
 
-            const cellSizeCm = 0.5; // Größe der Zelle in cm
-            const borderColor = document.getElementById('borderColor').value; // Farbe der Linien
+            const cellSizeCm = 0.5;
+            const borderColorRaw = document.getElementById('borderColor').value;
+            const borderColor = /^#[0-9a-fA-F]{6}$/.test(borderColorRaw) ? borderColorRaw : '#D3D3D3';
 
             // SVG Element erstellen
             let svg = `<svg width="${columns * cellSizeCm * 37.795275591}" height="${rows * cellSizeCm * 37.795275591}" xmlns="http://www.w3.org/2000/svg">`;

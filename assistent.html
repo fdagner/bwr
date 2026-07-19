@@ -118,47 +118,73 @@ const UST = 19;
             });
     
             document.getElementById('generateBtn').addEventListener('click', function() {
-                let netto = parseFloat(document.getElementById('netto').value);
-                let steuer = netto*UST/100;
-                let brutto = netto+steuer
-                netto = formatCurrency(netto);
-                steuer = formatCurrency(steuer);
-                brutto = formatCurrency(brutto);
-                let konto = document.getElementById('konto').value;
+                let nettoVal = parseFloat(document.getElementById('netto').value);
+                let steuerVal = nettoVal*UST/100;
+                let bruttoVal = nettoVal+steuerVal
+                let nettoStr = formatCurrency(nettoVal);
+                let steuerStr = formatCurrency(steuerVal);
+                let bruttoStr = formatCurrency(bruttoVal);
                 let kontoElement = document.getElementById('konto');
-                let ware = kontoElement.options[kontoElement.selectedIndex].text; // Den ausgewählten Kontonamen abrufen
-                let rechnungstyp = document.getElementById('eingangsrechnungForm').style.display === 'block' ? 'Eingangsrechnung' : 'Ausgangsrechnung';
-                let buchungssatz = '';
+                let konto = kontoElement.value;
+                let ware = kontoElement.options[kontoElement.selectedIndex].text;
+                let container = document.getElementById('buchungssatz');
+                container.innerHTML = '';
     
-                if (rechnungstyp === 'Eingangsrechnung') {
-                    buchungssatz = "<b>Der Geschäftsfall lautet vermutlich:<br></b> Einkauf von " + ware + "n " + netto + " netto auf Ziel." +
-                        "<br><br><b>Der Buchungssatz lautet vermutlich:</b>" + 
-                        `<table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:650px;">
-                            <tbody>
-                                <tr>
-                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">` + konto + `<br></td>
-                                    <td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1">` + netto + `<br></td>
-                                    <td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 100px" tabindex="1"><br></td>
-                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"><br></td>
-                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1"><br></td>
-                                </tr>
-                                <tr>
-                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">VORST</td>
-                                    <td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1">` + steuer + `</td>
-                                    <td style="text-align: center;width:100px;white-space: pre;overflow: hidden;text-overflow:ellipsis;min-width: 100px" tabindex="1">an</td>
-                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">VE<br></td>
-                                    <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:170px;min-width: 120px" tabindex="1">` + brutto + `</td>
-                                </tr>
-                            </tbody>
-                        </table>`
-                        + "<br><b>Erläuterung</b>:<br>Der Nettobetrag in Höhe von " + netto +  " wird als Aufwand im SOLL auf dem Werkstoffkonto " + konto + " gebucht, da hier " + ware + " vorliegen. Die Umsatzsteuer wird als Vorsteuer auf dem Aktivkonto VORST mit " + steuer +  " im SOLL gebucht, da ein Einkauf vorliegt und wir die Steuer somit vom Finanzamt zurückfordern können. Bei dieser Eingangsrechnung entstehen damit Verbindlichkeiten in Höhe von " + brutto + ", also eine Schuld bei einem Lieferanten in Höhe des Bruttobetrags. Diese Verbindlichkeiten werden auf dem Passivkonto VE im HABEN gebucht.";
-                    
-                } else {
-                    // Hier kannst du die Ausgabe für Ausgangsrechnungen definieren, falls benötigt.
+                if (document.getElementById('eingangsrechnungForm').style.display === 'block') {
+                    let d = document.createElement('div');
+
+                    let line1 = document.createElement('p');
+                    let b1 = document.createElement('b');
+                    b1.textContent = 'Der Geschäftsfall lautet vermutlich:';
+                    line1.appendChild(b1);
+                    line1.appendChild(document.createTextNode(' Einkauf von ' + ware + 'n ' + nettoStr + ' netto auf Ziel.'));
+                    d.appendChild(line1);
+
+                    let line2 = document.createElement('p');
+                    let b2 = document.createElement('b');
+                    b2.textContent = 'Der Buchungssatz lautet vermutlich:';
+                    line2.appendChild(b2);
+                    d.appendChild(line2);
+
+                    let table = document.createElement('table');
+                    table.style.cssText = 'white-space:nowrap;background-color:#fff;font-family:courier;min-width:650px;';
+                    let tbody = document.createElement('tbody');
+
+                    function addRow(c1, c2, c3, c4, c5) {
+                        let tr = document.createElement('tr');
+                        [c1, c2, c3, c4, c5].forEach((txt, i) => {
+                            let td = document.createElement('td');
+                            td.style.cssText = i === 1 ? 'text-align:right;' : i === 2 ? 'text-align:center;' : 'text-align:left;';
+                            td.style.whiteSpace = 'nowrap';
+                            td.style.overflow = 'hidden';
+                            td.style.textOverflow = 'ellipsis';
+                            td.style.padding = '2px 4px';
+                            td.tabIndex = 1;
+                            td.textContent = txt;
+                            tr.appendChild(td);
+                        });
+                        tbody.appendChild(tr);
+                    }
+
+                    addRow(konto, nettoStr, '', '', '');
+                    addRow('VORST', steuerStr, 'an', 'VE', bruttoStr);
+                    table.appendChild(tbody);
+                    d.appendChild(table);
+
+                    let expl = document.createElement('p');
+                    let b3 = document.createElement('b');
+                    b3.textContent = 'Erläuterung:';
+                    expl.appendChild(b3);
+                    expl.appendChild(document.createElement('br'));
+                    expl.appendChild(document.createTextNode(
+                        'Der Nettobetrag in Höhe von ' + nettoStr + ' wird als Aufwand im SOLL auf dem Werkstoffkonto ' + konto + ' gebucht, da hier ' + ware + ' vorliegen. Die Umsatzsteuer wird als Vorsteuer auf dem Aktivkonto VORST mit ' + steuerStr + ' im SOLL gebucht, da ein Einkauf vorliegt und wir die Steuer somit vom Finanzamt zurückfordern können. Bei dieser Eingangsrechnung entstehen damit Verbindlichkeiten in Höhe von ' + bruttoStr + ', also eine Schuld bei einem Lieferanten in Höhe des Bruttobetrags. Diese Verbindlichkeiten werden auf dem Passivkonto VE im HABEN gebucht.'
+                    ));
+                    d.appendChild(expl);
+
+                    container.appendChild(d);
                 }
     
                 document.getElementById('result').style.display = 'block';
-                document.getElementById('buchungssatz').innerHTML = buchungssatz;
             });
         </script>
  

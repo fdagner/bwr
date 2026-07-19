@@ -138,7 +138,6 @@ showImportSummary(belegType, extractedData, tabName);
 function showImportSummary(belegType, extractedData, tabName) {
     const statusEl = document.getElementById('belegImportStatus');
     
-    // Relevante Felder je Belegtyp für die Vorschau
     const SUMMARY_FIELDS = {
         rechnung:     ['nameLieferer', 'nameKunde', 'rechnungsDatum', 'aktuellesJahr', 'artikel1', 'rechnungsbetrag'],
         kontoauszug:  ['kontoauszugName', 'kontoauszugDatum', 'aktuellesJahrKontoauszug', 'kontoauszugNummer', 'kontoauszugKontostand_neu'],
@@ -152,7 +151,6 @@ function showImportSummary(belegType, extractedData, tabName) {
         email:        ['emailName', 'emailSubject']
     };
 
-    // Lesbare Labels
     const FIELD_LABELS = {
         nameLieferer: 'Lieferer', nameKunde: 'Kunde',
         rechnungsDatum: 'Datum', aktuellesJahr: 'Jahr',
@@ -180,42 +178,60 @@ function showImportSummary(belegType, extractedData, tabName) {
         bescheid: 'Bescheid', lohnjournal: 'Lohnjournal', lohnabrechnung: 'Lohnabrechnung', email: 'E-Mail'
     };
 
-    // Baue Tabelle der erkannten Felder
+    statusEl.style.backgroundColor = '#e8f5e9';
+    statusEl.innerHTML = '';
+
+    const headerDiv = document.createElement('div');
+    headerDiv.style.marginBottom = '8px';
+    const strong = document.createElement('strong');
+    strong.textContent = `✓ ${BELEG_LABELS[belegType] || belegType} erfolgreich erkannt`;
+    headerDiv.appendChild(strong);
+    statusEl.appendChild(headerDiv);
+
     const fields = SUMMARY_FIELDS[belegType] || [];
-    let rows = '';
     let foundCount = 0;
+
+    const table = document.createElement('table');
+    table.style.borderCollapse = 'collapse';
+    table.style.marginBottom = '10px';
 
     fields.forEach(key => {
         const val = extractedData[key];
         if (val && val.trim() !== '') {
-            const label = FIELD_LABELS[key] || key;
-            rows += `<tr>
-                <td style="padding:3px 10px 3px 0;color:#555;font-size:13px;">${label}</td>
-                <td style="padding:3px 0;font-size:13px;font-weight:bold;">${val}</td>
-            </tr>`;
+            const tr = document.createElement('tr');
+
+            const tdLabel = document.createElement('td');
+            tdLabel.style.cssText = 'padding:3px 10px 3px 0;color:#555;font-size:13px;';
+            tdLabel.textContent = FIELD_LABELS[key] || key;
+
+            const tdVal = document.createElement('td');
+            tdVal.style.cssText = 'padding:3px 0;font-size:13px;font-weight:bold;';
+            tdVal.textContent = val;
+
+            tr.appendChild(tdLabel);
+            tr.appendChild(tdVal);
+            table.appendChild(tr);
             foundCount++;
         }
     });
 
-    if (rows === '') {
-        rows = `<tr><td colspan="2" style="color:#888;font-size:13px;">Keine Vorschaudaten verfügbar</td></tr>`;
+    if (foundCount === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 2;
+        td.style.cssText = 'color:#888;font-size:13px;';
+        td.textContent = 'Keine Vorschaudaten verfügbar';
+        tr.appendChild(td);
+        table.appendChild(tr);
     }
 
-    const belegLabel = BELEG_LABELS[belegType] || belegType;
+    statusEl.appendChild(table);
 
-    statusEl.style.backgroundColor = '#e8f5e9';
-  statusEl.innerHTML = `
-    <div style="margin-bottom:8px;">
-        <strong>✓ ${belegLabel} erfolgreich erkannt</strong> 
-    </div>
-    <table style="border-collapse:collapse;margin-bottom:10px;">
-        ${rows}
-    </table>
-    <button onclick="jumpToBeleg('${belegType}', '${tabName}')" 
-            style="background:#4caf50;color:#fff;border:none;padding:7px 18px;border-radius:4px;cursor:pointer;font-size:14px;">
-        → Zum ${belegLabel} springen und Felder übernehmen
-    </button>
-`;
+    const btn = document.createElement('button');
+    btn.style.cssText = 'background:#4caf50;color:#fff;border:none;padding:7px 18px;border-radius:4px;cursor:pointer;font-size:14px;';
+    btn.textContent = `→ Zum ${BELEG_LABELS[belegType] || belegType} springen und Felder übernehmen`;
+    btn.addEventListener('click', () => jumpToBeleg(belegType, tabName));
+    statusEl.appendChild(btn);
 }
 
 async function jumpToBeleg(belegType, tabName) {

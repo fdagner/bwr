@@ -57,20 +57,28 @@ document.getElementById('allCompaniesDropdown')?.addEventListener('change', func
     const company = yamlData.find(c => c.unternehmen.name === selectedName);
     if (!company) return;
 
-    // Beispiel: In einem Div anzeigen
     const previewDiv = document.getElementById('companyPreview');
     if (previewDiv) {
+        previewDiv.innerHTML = '';
         const isMyCompany = (selectedName === myCompanyName);
-        const myCompanyBadge = isMyCompany 
-            ? '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;">★ Mein Unternehmen</span>' 
-            : '';
-        
-        previewDiv.innerHTML = `
-            <strong>${company.unternehmen.name} ${company.unternehmen.rechtsform}</strong>${myCompanyBadge}<br>
-            Branche: ${company.unternehmen.branche}<br>
-            Ort: ${company.unternehmen.adresse.plz} ${company.unternehmen.adresse.ort}<br>
-            E-Mail: ${company.unternehmen.kontakt.email || '–'}
-        `;
+
+        const strong = document.createElement('strong');
+        strong.textContent = company.unternehmen.name + ' ' + (company.unternehmen.rechtsform || '');
+        previewDiv.appendChild(strong);
+
+        if (isMyCompany) {
+            const badge = document.createElement('span');
+            badge.style.cssText = 'background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;';
+            badge.textContent = '★ Mein Unternehmen';
+            previewDiv.appendChild(badge);
+        }
+
+        previewDiv.appendChild(document.createElement('br'));
+        previewDiv.appendChild(document.createTextNode('Branche: ' + (company.unternehmen.branche || '')));
+        previewDiv.appendChild(document.createElement('br'));
+        previewDiv.appendChild(document.createTextNode('Ort: ' + (company.unternehmen.adresse.plz || '') + ' ' + (company.unternehmen.adresse.ort || '')));
+        previewDiv.appendChild(document.createElement('br'));
+        previewDiv.appendChild(document.createTextNode('E-Mail: ' + (company.unternehmen.kontakt.email || '–')));
     }
 });
 
@@ -140,39 +148,52 @@ document.getElementById('allCompaniesDropdown')?.addEventListener('change', func
     const company = yamlData.find(c => c.unternehmen.name === selectedName);
     if (!company) return;
 
-    // Beispiel: In einem Div anzeigen
     const previewDiv = document.getElementById('companyPreview');
     if (previewDiv) {
+        previewDiv.innerHTML = '';
+
+        function txt(v) { return document.createTextNode(v || '–'); }
+        function bold(v) { const b = document.createElement('b'); b.textContent = v; return b; }
+        function br() { return document.createElement('br'); }
+
         const isMyCompany = (selectedName === myCompanyName);
-        const myCompanyBadge = isMyCompany 
-            ? '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;">★ Modellunternehmen</span>' 
-            : '';
+        if (isMyCompany) {
+            const badge = document.createElement('span');
+            badge.style.cssText = 'background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;';
+            badge.textContent = '★ Modellunternehmen';
+            previewDiv.appendChild(badge);
+            previewDiv.appendChild(br());
+        }
 
-            let werkstoffeHTML = '–';
-if (company.unternehmen.werkstoffe && typeof company.unternehmen.werkstoffe === 'object') {
-    werkstoffeHTML = Object.entries(company.unternehmen.werkstoffe)
-        .map(([kategorie, liste]) => {
-            if (Array.isArray(liste) && liste.length > 0) {
-                return `<b>${kategorie}:</b> ${liste.join(', ')}`;
-            }
-            return '';
-        })
-        .filter(line => line !== '')           // leere Zeilen entfernen
-        .join('<br>');
-}
+        const h4 = document.createElement('h4');
+        const img = document.createElement('img');
+        img.src = company.unternehmen.logo || '';
+        img.style.cssText = 'width: 50px;vertical-align: middle';
+        h4.appendChild(img);
+        h4.appendChild(txt(' ' + (company.unternehmen.name || '') + ' ' + (company.unternehmen.rechtsform || '')));
+        previewDiv.appendChild(h4);
 
-        
-        previewDiv.innerHTML = `
-        ${myCompanyBadge}
-            <h4>   <img src="${company.unternehmen.logo}" style="width: 50px;vertical-align: middle"> ${company.unternehmen.name} ${company.unternehmen.rechtsform}</h4>
-            <b>Motto:</b> ${company.unternehmen.motto}<br>
-            <b>Branche:</b> ${company.unternehmen.branche}<br>
-            <b>Inhaber/Verantwortlicher:</b> ${company.unternehmen.inhaber}<br>
-            <b>Adresse:</b> ${company.unternehmen.adresse.strasse}, ${company.unternehmen.adresse.plz} ${company.unternehmen.adresse.ort}<br>
-            <b>E-Mail:</b> ${company.unternehmen.kontakt.email || '–'}<br>
-            <b>Werkstoffe:</b><br>${werkstoffeHTML}<br>
-            <b>Bank:</b> ${company.unternehmen.bank}<br>
-        `;
+        previewDiv.appendChild(bold('Motto: ')); previewDiv.appendChild(txt(company.unternehmen.motto)); previewDiv.appendChild(br());
+        previewDiv.appendChild(bold('Branche: ')); previewDiv.appendChild(txt(company.unternehmen.branche)); previewDiv.appendChild(br());
+        previewDiv.appendChild(bold('Inhaber/Verantwortlicher: ')); previewDiv.appendChild(txt(company.unternehmen.inhaber)); previewDiv.appendChild(br());
+        previewDiv.appendChild(bold('Adresse: ')); previewDiv.appendChild(txt((company.unternehmen.adresse?.strasse || '') + ', ' + (company.unternehmen.adresse?.plz || '') + ' ' + (company.unternehmen.adresse?.ort || ''))); previewDiv.appendChild(br());
+        previewDiv.appendChild(bold('E-Mail: ')); previewDiv.appendChild(txt(company.unternehmen.kontakt?.email)); previewDiv.appendChild(br());
+        previewDiv.appendChild(bold('Werkstoffe: ')); previewDiv.appendChild(br());
+
+        if (company.unternehmen.werkstoffe && typeof company.unternehmen.werkstoffe === 'object') {
+            Object.entries(company.unternehmen.werkstoffe).forEach(([kategorie, liste]) => {
+                if (Array.isArray(liste) && liste.length > 0) {
+                    previewDiv.appendChild(bold(kategorie + ': '));
+                    previewDiv.appendChild(txt(liste.join(', ')));
+                    previewDiv.appendChild(br());
+                }
+            });
+        } else {
+            previewDiv.appendChild(txt('–'));
+            previewDiv.appendChild(br());
+        }
+
+        previewDiv.appendChild(bold('Bank: ')); previewDiv.appendChild(txt(company.unternehmen.bank)); previewDiv.appendChild(br());
     }
 });
 
@@ -260,10 +281,16 @@ function handleLogoUpload(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         uploadedLogoBase64 = e.target.result;
-        preview.innerHTML = `
-            <img src="${uploadedLogoBase64}" style="max-width: 150px; max-height: 80px; border: 1px solid #ccc; padding: 5px;">
-            <br><small style="color: #28a745;">✓ Logo hochgeladen</small>
-        `;
+        preview.innerHTML = '';
+        const logoImg = document.createElement('img');
+        logoImg.src = uploadedLogoBase64;
+        logoImg.style.cssText = 'max-width: 150px; max-height: 80px; border: 1px solid #ccc; padding: 5px;';
+        preview.appendChild(logoImg);
+        preview.appendChild(document.createElement('br'));
+        const okMsg = document.createElement('small');
+        okMsg.style.cssText = 'color: #28a745;';
+        okMsg.textContent = '✓ Logo hochgeladen';
+        preview.appendChild(okMsg);
     };
     reader.onerror = function() {
         alert('Fehler beim Lesen der Datei.');
@@ -767,54 +794,93 @@ function displayUserCompanies() {
     
     if (!container) return;
     
+    container.innerHTML = '';
+    
     if (userCompanies.length === 0) {
-        container.innerHTML = '<p style="color: #666; font-style: italic;">Noch keine eigenen Unternehmen hinzugefügt.</p>';
+        const p = document.createElement('p');
+        p.style.cssText = 'color: #666; font-style: italic;';
+        p.textContent = 'Noch keine eigenen Unternehmen hinzugefügt.';
+        container.appendChild(p);
         return;
     }
     
-    let html = '<div style="display: grid; gap: 15px;">';
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display: grid; gap: 15px;';
     
     userCompanies.forEach((company, index) => {
         const u = company.unternehmen;
         const isObsolete = company._obsolete === true;
         
-        const style = isObsolete 
-            ? 'opacity: 0.5; background: #fff5f5; border-color: #ffcccc;'
-            : 'background: #f9f9f9; border-color: #ddd;';
+        const card = document.createElement('div');
+        card.style.cssText = 'border: 1px solid; padding: 15px; border-radius: 4px;' +
+            (isObsolete ? 'opacity: 0.5; background: #fff5f5; border-color: #ffcccc;'
+                       : 'background: #f9f9f9; border-color: #ddd;');
 
-        const obsoleteBadge = isObsolete 
-            ? '<span style="color:#dc3545; font-weight:bold; font-size:0.9em;"> × Nicht mehr in der Quelldatei</span>'
-            : '';
+        const flexRow = document.createElement('div');
+        flexRow.style.cssText = 'display: flex; justify-content: space-between; align-items: start;';
 
-        html += `
-            <div style="border: 1px solid; padding: 15px; border-radius: 4px; ${style}">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div style="flex: 1;">
-                        <h4 style="margin: 0 0 10px 0;">
-                            ${u.name} ${u.rechtsform}
-                            ${obsoleteBadge}
-                        </h4>
-                        <p style="margin: 5px 0; color: #666;">
-                            <strong>Branche:</strong> ${u.branche}<br>
-                            <strong>Ort:</strong> ${u.adresse.ort}
-                            ${u.kontakt.email ? `<br><strong>E-Mail:</strong> ${u.kontakt.email}` : ''}
-                        </p>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button onclick="editUserCompany(${index})" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; ${isObsolete ? 'opacity:0.6;' : ''}">
-                            ✎ Bearbeiten
-                        </button>
-                        <button onclick="deleteUserCompany(${index})" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
-                            ✕ Löschen
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
+        const leftDiv = document.createElement('div');
+        leftDiv.style.flex = '1';
+
+        const h4 = document.createElement('h4');
+        h4.style.cssText = 'margin: 0 0 10px 0;';
+        h4.textContent = (u.name || '') + ' ' + (u.rechtsform || '');
+        leftDiv.appendChild(h4);
+
+        if (isObsolete) {
+            const badge = document.createElement('span');
+            badge.style.cssText = 'color:#dc3545; font-weight:bold; font-size:0.9em;';
+            badge.textContent = ' × Nicht mehr in der Quelldatei';
+            h4.appendChild(badge);
+        }
+
+        const p = document.createElement('p');
+        p.style.cssText = 'margin: 5px 0; color: #666;';
+
+        const b1 = document.createElement('strong');
+        b1.textContent = 'Branche: ';
+        p.appendChild(b1);
+        p.appendChild(document.createTextNode(u.branche || ''));
+        p.appendChild(document.createElement('br'));
+
+        const b2 = document.createElement('strong');
+        b2.textContent = 'Ort: ';
+        p.appendChild(b2);
+        p.appendChild(document.createTextNode(u.adresse?.ort || ''));
+
+        if (u.kontakt?.email) {
+            p.appendChild(document.createElement('br'));
+            const b3 = document.createElement('strong');
+            b3.textContent = 'E-Mail: ';
+            p.appendChild(b3);
+            p.appendChild(document.createTextNode(u.kontakt.email));
+        }
+
+        leftDiv.appendChild(p);
+
+        flexRow.appendChild(leftDiv);
+
+        const btnDiv = document.createElement('div');
+        btnDiv.style.cssText = 'display: flex; gap: 10px;';
+
+        const editBtn = document.createElement('button');
+        editBtn.style.cssText = 'background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;' + (isObsolete ? 'opacity:0.6;' : '');
+        editBtn.textContent = '✎ Bearbeiten';
+        editBtn.addEventListener('click', () => editUserCompany(index));
+        btnDiv.appendChild(editBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.style.cssText = 'background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;';
+        delBtn.textContent = '✕ Löschen';
+        delBtn.addEventListener('click', () => deleteUserCompany(index));
+        btnDiv.appendChild(delBtn);
+
+        flexRow.appendChild(btnDiv);
+        card.appendChild(flexRow);
+        grid.appendChild(card);
     });
     
-    html += '</div>';
-    container.innerHTML = html;
+    container.appendChild(grid);
 }
 
 // Funktion zum Löschen eines benutzerdefinierten Unternehmens
@@ -880,16 +946,24 @@ function editUserCompany(index) {
     arrayToTextarea('newCompanyAWH', w.AWH);
     arrayToTextarea('newCompanyAWB', w.AWB);
 
-    // === Logo laden ===
     uploadedLogoBase64 = u.logo || null;
     const preview = document.getElementById('logoPreview');
-    if (u.logo) {
-        preview.innerHTML = `
-            <img src="${u.logo}" style="max-width: 150px; max-height: 80px; border: 1px solid #ccc; padding: 5px;">
-            <br><small style="color: #28a745;">✓ Aktuelles Logo</small>
-        `;
+    preview.innerHTML = '';
+    if (u.logo && String(u.logo).startsWith('data:image/')) {
+        const img = document.createElement('img');
+        img.src = u.logo;
+        img.style.cssText = 'max-width: 150px; max-height: 80px; border: 1px solid #ccc; padding: 5px;';
+        preview.appendChild(img);
+        preview.appendChild(document.createElement('br'));
+        const okMsg = document.createElement('small');
+        okMsg.style.cssText = 'color: #28a745;';
+        okMsg.textContent = '✓ Aktuelles Logo';
+        preview.appendChild(okMsg);
     } else {
-        preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
+        const msg = document.createElement('small');
+        msg.style.cssText = 'color: #666;';
+        msg.textContent = 'Keine Datei ausgewählt';
+        preview.appendChild(msg);
     }
 
     // Bearbeiten-Modus aktivieren
