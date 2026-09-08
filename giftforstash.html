@@ -59,10 +59,20 @@
 </head>
 
 <body>
-  <style>input[name="code_weight[]"] {width: 50px;}</style>
-  <h1>Generator für MC-Fragen</h1>
-  <p>Dieses Script generiert MC-Fragen für Moodle im GIFT-Format</p>
-  <script>
+  <style>
+    input[name="code_weight[]"] {
+      width: 50px;
+    }
+  </style><main>
+  <div w3-include-html="navigation.html"></div> 
+<h2>Generator für Stash-Packs</h2>
+  <div class="box">
+      <img src="media/pic/stash.png" style="min-width:200px;width:50%">
+  <p>Dieses Script generiert für den Block Stash in mebis Multiple-Choice-Fragen. Anstatt einzelne Stash-Objekte im Kurs zu platzieren, 
+    können ganze Packs mit der Aktivität Lektion verteilt werden.</p>
+
+    
+ <script>
 
     function randnum(length) {
       return Math.floor(Math.random() * length);
@@ -179,7 +189,7 @@
     }
 
   </script>
-  <!-- Dateiupload -->
+   <!-- Dateiupload -->
   <p>Codes per Datei hochladen: <input type="file" id="file-input" onchange="handleFileUpload()"></p>
   <details><summary>Dateiformat</summary>
   <ul>
@@ -217,8 +227,7 @@
   <!-- Container für die generierten Fragen -->
   <div id="fragen-container"></div>
 
-
-  <script>
+ <script>
     function addInput() {
           var inputContainer = document.getElementById("input-container");
           var newInput = document.createElement("input");
@@ -356,5 +365,11 @@
           existingInputs[i].classList.add("existing-weight");
         }
       </script>
+  </main>
+    <div w3-include-html="footer.html"></div> 
+    <script>
+    includeHTML();
+    </script>
 </body>
+
 </html>
