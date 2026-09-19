@@ -1685,15 +1685,13 @@ async function applySVG() {
     }
 
 
-    let selectedEmail = document.getElementById("svgDropdownEmail").value;
-    let svgContainerEmail = document.getElementById("emailContainer");
-
-    try {
-        let svgData = await loadSVGTemplate(selectedEmail);
-        svgContainerEmail.innerHTML = '';
-        svgContainerEmail.appendChild(safelyParseSVG(svgData));
+   try {
+        await applyHTMLTemplate(
+            document.getElementById("svgDropdownEmail").value,
+            "emailContainer"
+        );
     } catch (error) {
-        console.error("Fehler beim Anwenden der Daten:", error);
+        console.error("Mail-Vorlage konnte nicht geladen werden:", error);
     }
 
     let selectedQuittung = document.getElementById("svgDropdownQuittung").value;
@@ -1711,13 +1709,26 @@ async function applySVG() {
 }
 
 async function loadSVGTemplate(templateName) {
-    try {
-        let templatePath = "templates/" + templateName;
-        let response = await fetch(templatePath);
-        let svgData = await response.text();
-        return svgData;
-    } catch (error) {
-        console.error("Fehler beim Laden der SVG-Vorlage:", error);
+    const response = await fetch("templates/" + templateName);
+    if (!response.ok) {
+        throw new Error(`Vorlage nicht gefunden: ${templateName} (${response.status})`);
+    }
+    return await response.text();
+}
+
+async function applyHTMLTemplate(templateName, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const html = await loadSVGTemplate(templateName);
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    doc.querySelectorAll('script').forEach(s => s.remove());
+
+    container.innerHTML = '';
+    doc.head.querySelectorAll('style, link[rel="stylesheet"]')
+        .forEach(el => container.appendChild(el));
+    while (doc.body.firstChild) {
+        container.appendChild(doc.body.firstChild);
     }
 }
 
