@@ -2126,7 +2126,6 @@ const BELEG_APPLY_CONFIG = {
         }
     },
 
-    // HINZUFÜGEN nach kassenbon (in BELEG_APPLY_CONFIG):
     anlagenkarte: {
         svgDropdown: 'svgDropdownAnlagenkarte',
         container: 'anlagenkarteContainer',
@@ -2136,26 +2135,48 @@ const BELEG_APPLY_CONFIG = {
         customDefs: 'customDefsAnlagenkarte',
         scriptId: 'customJsAnlagenkarte',
         scriptFunction: 'SVGonLoadAnlagenkarte',
-        dataFunction: () => {
-            const bezeichnung = document.getElementById('anlagenkarteBezeichnungInput').value;
-            document.getElementById('anlagenkarteBezeichnung').textContent = bezeichnung;
+dataFunction: () => {
+    const bezeichnung = document.getElementById('anlagenkarteBezeichnungInput').value;
+    document.getElementById('anlagenkarteBezeichnung').textContent = bezeichnung;
 
-            const anlagekonto = document.getElementById('anlagenkarteAnlagenkontoInput').value;
-            document.getElementById('anlagenkarteAnlagenkonto').textContent = anlagekonto;
+    const anlagekonto = document.getElementById('anlagenkarteAnlagenkontoInput').value;
+    document.getElementById('anlagenkarteAnlagenkonto').textContent = anlagekonto;
 
-            const anschaffungskosten = document.getElementById('anlagenkarteAnschaffungskostenInput').value;
-            document.getElementById('anlagenkarteAnschaffungskosten').textContent = FormatHelper.currency(anschaffungskosten);
+    const anschaffungskosten = parseFloat(document.getElementById('anlagenkarteAnschaffungskostenInput').value) || 0;
+    document.getElementById('anlagenkarteAnschaffungskosten').textContent = FormatHelper.currency(anschaffungskosten);
 
-            const nutzungsdauer = document.getElementById('anlagenkarteNutzungsdauerInput').value;
-            document.getElementById('anlagenkarteNutzungsdauer').textContent = nutzungsdauer;
+    const nutzungsdauer = parseFloat(document.getElementById('anlagenkarteNutzungsdauerInput').value) || 0;
+    document.getElementById('anlagenkarteNutzungsdauer').textContent = nutzungsdauer;
 
-            const tag = document.getElementById('tagAnlagenkarte').value;
-            const monat = document.getElementById('monatAnlagenkarte').value;
-            document.getElementById('anlagenkarteTag').textContent = tag;
-            document.getElementById('anlagenkarteMonat').textContent = monat;
+    const tag = document.getElementById('tagAnlagenkarte').value;
+    const monat = document.getElementById('monatAnlagenkarte').value;
+    document.getElementById('anlagenkarteTag').textContent = tag;
+    document.getElementById('anlagenkarteMonat').textContent = monat;
 
-            loadAnlagenkarteData();
-        }
+    // Zeitanteilige Abschreibung im 1. Jahr (per Checkbox aktivierbar)
+    const zeitanteiligCheckbox = document.getElementById('anlagenkarteZeitanteiligInput');
+    const jahr1Elem = document.getElementById('anlagenkarteJahr1');
+    const abschreibung1Elem = document.getElementById('anlagenkarteAbschreibung1');
+    const restbuchwert1Elem = document.getElementById('anlagenkarteRestbuchwert1');
+
+    if (zeitanteiligCheckbox && zeitanteiligCheckbox.checked && nutzungsdauer > 0) {
+        const monatNum = parseInt(monat, 10) || 1;
+        const monateJahr1 = 13 - monatNum; // Monate von Anschaffung bis Jahresende
+        const jahresAbschreibung = anschaffungskosten / nutzungsdauer;
+        const abschreibungJahr1 = FormatHelper.roundToTwo(jahresAbschreibung * monateJahr1 / 12);
+        const restbuchwertJahr1 = FormatHelper.roundToTwo(anschaffungskosten - abschreibungJahr1);
+
+        if (jahr1Elem) jahr1Elem.textContent = '1';
+        if (abschreibung1Elem) abschreibung1Elem.textContent = FormatHelper.currency(abschreibungJahr1);
+        if (restbuchwert1Elem) restbuchwert1Elem.textContent = FormatHelper.currency(restbuchwertJahr1);
+    } else {
+        if (jahr1Elem) jahr1Elem.textContent = '';
+        if (abschreibung1Elem) abschreibung1Elem.textContent = '';
+        if (restbuchwert1Elem) restbuchwert1Elem.textContent = '';
+    }
+
+    loadAnlagenkarteData();
+}
     },
     wertpapiere: {
         svgDropdown: 'svgDropdownWertpapiere',

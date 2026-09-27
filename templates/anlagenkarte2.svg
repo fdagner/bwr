@@ -39,9 +39,9 @@
 <text x="200" y="290" font-family="Verdana" font-size="16" font-weight="bold" text-anchor="start" fill="#000">Wertminderung/Abschreibung</text>
 <text x="520" y="290" font-family="Verdana" font-size="16" font-weight="bold" text-anchor="start" fill="#000">Restbuchwert 31.12</text>
 
-<text x="20" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
-<text x="200" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
-<text x="520" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+<text id="anlagenkarteJahr1" x="20" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+<text id="anlagenkarteAbschreibung1" x="200" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
+<text id="anlagenkarteRestbuchwert1" x="520" y="310" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
 
 <text x="20" y="330" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
 <text x="200" y="330" font-family="Verdana" font-size="16" text-anchor="start" fill="#000">...</text>
