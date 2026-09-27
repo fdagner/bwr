@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bilanz erstellen – Aufgabe & Lösung | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Bilanzposten mit Werten – Schülerinnen und Schüler ordnen die Posten in eine Bilanz nach dem gültigen Gliederungsschema ein. Mit Lösung. Ideal für Grundlagen Buchführung Realschule Bayern, Klasse 7.">
+  <link rel="canonical" href="https://www.meinbwr.de/bilanz7-aufgabe.html">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Bilanz erstellen – Aufgabe & Lösung | meinbwr.de">
+  <meta property="og:description" content="Zufällige Bilanzposten mit Werten – Schüler ordnen die Posten selbst in eine Bilanz ein. Perfekt für BwR 7 Realschule Bayern.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/bilanz7-aufgabe.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bilanz erstellen – Aufgabe & Lösung | meinbwr.de">
+  <meta name="twitter:description" content="Zufällige Bilanzposten mit Werten – Schüler ordnen die Posten selbst in eine Bilanz ein. Mit Lösung.">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="color-scheme" content="light">
+
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Bilanz erstellen – Aufgabe & Lösung",
+    "description": "Kostenloses BwR-Tool: Zufällige Bilanzposten mit Werten – Schülerinnen und Schüler ordnen die Posten in eine Bilanz nach dem gültigen Gliederungsschema ein.",
+    "url": "https://www.meinbwr.de/bilanz7-aufgabe.html",
+    "inLanguage": "de-DE",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "meinbwr.de – BwR Realschule Bayern",
+      "url": "https://www.meinbwr.de/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 2, "name": "BwR 7", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 3, "name": "Bilanz erstellen", "item": "https://www.meinbwr.de/bilanz7-aufgabe.html" }
+      ]
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+</head>
+
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+
+  <h2>Bilanz erstellen aus Bilanzposten</h2>
+
+  <div id="generator-container">
+    <div class="box">
+      <p>Hier können Sie eine Aufgabe mit zufälligen Bilanzposten erstellen.
+        Die Schüler ordnen die Posten nach dem gültigen Gliederungsschema in eine Bilanz ein
+        und berechnen das Eigenkapital.</p>
+    </div>
+
+    <br>
+    <button onclick="generiereAufgabe()">Neue Aufgabe erstellen</button>
+
+    <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+      <!-- Exportierbarer Inhalt -->
+      <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+
+      <!-- Buttons daneben – nicht exportiert -->
+      <div id="button-column" style="width: 180px; flex-shrink: 0;"></div>
+    </div>
+  </div>
+
+  <div w3-include-html="downloads.html"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       KI-ASSISTENT PROMPT
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="ki-assistent-box">
+
+    <div class="ki-assistent-header">
+      <span class="ki-icon">🤖</span>
+      <div>
+        <h3>KI-Assistent – System-Prompt</h3>
+        <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, AIS.chat&nbsp;…)</p>
+      </div>
+    </div>
+
+    <div class="ki-assistent-body">
+
+      <div class="ki-hinweis">
+        <span class="hinweis-icon">💡</span>
+        <span>
+          Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+          Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen bei der Zuordnung der Posten –
+          ohne die fertige Bilanz vorwegzunehmen.
+        </span>
+      </div>
+
+      <div class="ki-chips">
+        <span class="ki-chip">📚 BwR Realschule</span>
+        <span class="ki-chip">📊 Bilanzierung</span>
+        <span class="ki-chip">✅ Sokrat. Methode</span>
+        <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+      </div>
+
+      <div class="ki-actions" style="margin-top: 14px;">
+        <button
+          class="ki-prompt-btn ki-prompt-btn--primary"
+          id="kiPromptKopierenBtn"
+          onclick="kopiereKiPrompt()"
+          title="Prompt in die Zwischenablage kopieren"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Prompt kopieren
+        </button>
+
+        <button
+          class="ki-prompt-btn ki-prompt-btn--ghost"
+          id="kiPromptToggleBtn"
+          onclick="toggleKiPromptVorschau()"
+          title="Prompt-Text ein- oder ausblenden"
+        >
+          Prompt anzeigen ▼
+        </button>
+      </div>
+
+      <div class="ki-prompt-vorschau-wrapper">
+        <textarea id="kiPromptVorschau" readonly spellcheck="false" aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+      </div>
+
+    </div>
+  </div>
+  <!-- Ende KI-Assistent -->
+
+</main>
+
+<script src="js/lb7-3-bilanz-erstellen.js"></script>
+<script src="js/download.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+  includeHTML();
+</script>
+
+</body>
+</html>
