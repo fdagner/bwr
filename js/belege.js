@@ -523,15 +523,58 @@ function loadSupplierLogo(logoUrl) {
 
 
 // PNG-Export
-function exportPNG(containerId, filename = 'download.png') {
+function exportPNG(containerId, filename = 'download.png', exportWidth = null) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    html2canvas(container).then(canvas => {
-        const link = document.createElement('a');
-        link.download = filename;
-        link.href = canvas.toDataURL();
-        link.click();
-    });
+
+    const svg = container.querySelector('svg');
+    const scale = 2;
+
+    const download = (canvas) => {
+        canvas.toBlob(blob => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }, 'image/png');
+    };
+
+    // HTML-Typen (E-Mail, Zeitung, ...): wie bisher
+    if (!svg) {
+        html2canvas(container, { scale, backgroundColor: '#ffffff' }).then(download);
+        return;
+    }
+
+    const vb = svg.viewBox && svg.viewBox.baseVal;
+    const hasVB = vb && vb.width > 0 && vb.height > 0;
+    const rect = svg.getBoundingClientRect();
+
+    const w = exportWidth || (hasVB ? vb.width : rect.width);
+    const h = hasVB ? w * vb.height / vb.width : rect.height;
+
+    const clone = svg.cloneNode(true);
+    clone.setAttribute('width', w);
+    clone.setAttribute('height', h);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+    clone.querySelectorAll('script').forEach(s => s.remove());
+
+    const data = new XMLSerializer().serializeToString(clone);
+    const img = new Image();
+
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = w * scale;
+        canvas.height = h * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        download(canvas);
+    };
+    img.onerror = () => alert('PNG-Export fehlgeschlagen');
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(data);
 }
 
 // SVG-Export
@@ -1766,7 +1809,7 @@ const EXPORT_CONFIG = {
     kontoauszug: { id: 'kontoauszugContainer', name: 'kontoauszug' },
     rechnung: { id: 'rechnung1Container', name: 'rechnung' },
     quittung: { id: 'quittungContainer', name: 'quittung' },
-    kassenbon: { id: 'kassenbonContainer', name: 'kassenbon' },
+   kassenbon:   { id: 'kassenbonContainer',   name: 'kassenbon' },
     lohnjournal: { id: 'lohnjournalContainer', name: 'lohnjournal' },
     email: { id: 'emailContainer', name: 'email' },
     newspaper: { id: 'newspaperContainer', name: 'newspaper' },
