@@ -673,7 +673,10 @@ document.addEventListener('DOMContentLoaded', function () {
 const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("belegImportInput");
 
-// Klick → normaler Datei-Dialog
+// Klick auf das Input selbst darf nicht zur Dropzone hochbubbeln
+fileInput.addEventListener("click", (e) => e.stopPropagation());
+
+// Klick auf die Dropzone → Datei-Dialog
 dropZone.addEventListener("click", () => fileInput.click());
 
 // Drag & Drop Styling
@@ -689,12 +692,15 @@ dropZone.addEventListener("dragleave", () => {
 dropZone.addEventListener("drop", (e) => {
     e.preventDefault();
     dropZone.classList.remove("dragover");
+    const file = e.dataTransfer.files[0];
+    if (file) handleBelegImport(file);
+});
 
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-        fileInput.files = files;
-        handleBelegImport();
-    }
+// Dateiauswahl über den Dialog
+fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (file) handleBelegImport(file);
+    fileInput.value = "";   // gleiche Datei kann erneut gewählt werden
 });
 
 // Normale Dateiauswahl

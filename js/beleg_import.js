@@ -75,60 +75,61 @@ const BELEG_DETECTION_PATTERNS = {
 /**
  * Hauptfunktion für Beleg-Import
  */
-async function handleBelegImport() {
+async function handleBelegImport(fileArg) {
     const fileInput = document.getElementById('belegImportInput');
-    
-    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+
+    // Event-Objekte (z.B. von onchange) ignorieren, nur echte Files übernehmen
+    const file = (fileArg instanceof File) ? fileArg : fileInput?.files?.[0];
+
+    if (!file) {
         updateBelegImportStatus('Keine Datei ausgewählt', 'error');
         return;
     }
-    
-    const file = fileInput.files[0];
-    
+
     // Prüfe Dateityp
     if (!file.name.toLowerCase().endsWith('.svg')) {
         updateBelegImportStatus('Bitte wählen Sie eine SVG-Datei aus', 'error');
         return;
     }
-    
+
     try {
         updateBelegImportStatus('Datei wird gelesen...', 'info');
-        
+
         // Lese Datei
         const svgContent = await readFileAsText(file);
-        
+
         // Parse SVG
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(svgContent, 'image/svg+xml');
-        
+
         // Prüfe auf Parser-Fehler
         const parserError = svgDoc.querySelector('parsererror');
         if (parserError) {
             throw new Error('SVG-Datei konnte nicht gelesen werden');
         }
-        
+
         updateBelegImportStatus('Belegtyp wird erkannt...', 'info');
-        
+
         // Erkenne Belegtyp
-  const belegType = detectBelegType(svgDoc);
+        const belegType = detectBelegType(svgDoc);
 
-if (!belegType) {
-    updateBelegImportStatus('Belegtyp konnte nicht erkannt werden', 'error');
-    return;
-}
+        if (!belegType) {
+            updateBelegImportStatus('Belegtyp konnte nicht erkannt werden', 'error');
+            return;
+        }
 
-updateBelegImportStatus(`${belegType.toUpperCase()} erkannt, Daten werden extrahiert...`, 'info');
+        updateBelegImportStatus(`${belegType.toUpperCase()} erkannt, Daten werden extrahiert...`, 'info');
 
-const extractedData = extractBelegData(svgDoc, belegType);
-window._lastImportData = extractedData;
+        const extractedData = extractBelegData(svgDoc, belegType);
+        window._lastImportData = extractedData;
 
-console.log('Extrahierte Daten:', extractedData);
+        console.log('Extrahierte Daten:', extractedData);
 
-// tabName VOR showImportSummary berechnen
-const tabName = TAB_MAPPING[belegType] || belegType;
+        // tabName VOR showImportSummary berechnen
+        const tabName = TAB_MAPPING[belegType] || belegType;
 
-showImportSummary(belegType, extractedData, tabName);
-        
+        showImportSummary(belegType, extractedData, tabName);
+
     } catch (error) {
         console.error('Fehler beim Import:', error);
         updateBelegImportStatus(`Fehler: ${error.message}`, 'error');
@@ -311,6 +312,10 @@ function extractBelegData(svgDoc, belegType) {
         
         // Überspringen wenn leer
         if (textContent === '') return;
+        
+        // Überspringen wenn Platzhalter-/Spaltenüberschrift aus dem SVG
+const PLATZHALTER = ['Bezeichnung', 'Artikelbezeichnung', 'Menge', 'Einheit', 'Einzelpreis', 'Artikel'];
+if (/^(artikel|menge|einheit|einzelpreis)\d*$/i.test(id) && PLATZHALTER.includes(textContent)) return;
 
         // Überspringen wenn identisch mit Placeholder des Ziel-Inputs
         const targetInput = document.getElementById(id + 'Input') || document.getElementById(id);
