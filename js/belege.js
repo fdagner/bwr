@@ -2459,7 +2459,7 @@ dataFunction: () => {
 
             // Buchungssatz-Tabelle
             let output = '<h3>Aufgabe</h3>';
-            output += '<p>Von der Personalabteilung liegt der folgende Belegauszug vor. Bilde die Buchungssätze für die Erfassung des gesamten Personalaufwands, wenn die Auszahlung per Banküberweisung erfolgt.</p>';
+            output += '<p>Von der Personalabteilung liegt ein Belegauszug vor. Bilde die Buchungssätze für die Erfassung des gesamten Personalaufwands, wenn die Auszahlung per Banküberweisung erfolgt.</p>';
             output += '<h3>Lösung</h3>';
             output += '<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:550px;margin:0 0 6px;"><tbody>';
             output += '<tr>';
