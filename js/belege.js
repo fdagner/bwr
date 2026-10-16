@@ -973,11 +973,6 @@ function loadCompanyDataforQuittung() {
 }
 
 
-function loadCompanyDataforKassenbon() {
-    loadBelegData('kundeKassenbon', 'datenKassenbonKunde');
-}
-
-
 // ============================================================================
 // LIEFERANT & KUNDE
 // ============================================================================
