@@ -39,7 +39,7 @@
   </g>
 <!--Gruppe für Rechnungsinformationen-->
   <g id="rechnungsInformationen">
-    <text x="20" y="340" font-family="Calibri" font-weight="bold" font-size="30" fill="#333">RECHNUNG NR-<tspan id="rechnungsNummer"/></tspan></text>
+    <text x="20" y="340" font-family="Calibri" font-weight="bold" font-size="30" fill="#333">RECHNUNG NR-<tspan id="rechnungsNummer"/></text>
     <text id="lieferdatum" x="20" y="380" font-family="Arial" font-size="18" fill="#333">Lieferung <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
     <text x="20" y="410" font-family="Arial" font-size="18" fill="#333">Kundennummer: K<tspan id="nummerKunde"/></text>
     <text id="datum" x="690" y="380" font-family="Arial" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
