@@ -97,34 +97,60 @@ function erzeugeKontoBuchungen(typ) {
   return { buchungen, saldo };
 }
 
-function erzeugeUefeBuchungen() {
+function erzeugeUefeBuchungen(zielSaldo) {
   const buchungsTypen = ['VE', 'VE', 'VE', 'VE', 'VE', 'BK', 'BK', 'KA'];
-  const rahmen = {
-    VE: [200000, 600000],
-    BK: [20000,   80000],
-    KA: [5000,    15000],
-  };
-  const anzahl = 2 + Math.floor(Math.random() * 3);
-  const buchungen = [];
-  for (let i = 0; i < anzahl; i++) {
-    const bTyp = buchungsTypen[Math.floor(Math.random() * buchungsTypen.length)];
-    const [min, max] = rahmen[bTyp];
-    const betrag = generateRandomSaldo(min, max, bTyp === 'KA' ? 10 : 100);
-    buchungen.push({ typ: bTyp, nr: i + 1, betrag });
+  const ziel = Math.max(Math.round(zielSaldo / 100) * 100, 100);
+
+  for (let versuch = 0; versuch < 50; versuch++) {
+    const anzahl = 2 + Math.floor(Math.random() * 3);
+    const typen = Array.from({ length: anzahl }, () =>
+      buchungsTypen[Math.floor(Math.random() * buchungsTypen.length)]);
+    const gewichte = typen.map(t =>
+      t === 'VE' ? 5 + Math.random() * 3 :
+      t === 'BK' ? 1 + Math.random() * 1.5 :
+                   0.3 + Math.random() * 0.5);
+    const summeG = gewichte.reduce((s, g) => s + g, 0);
+
+    const buchungen = [];
+    let rest = ziel;
+    typen.forEach((typ, i) => {
+      const betrag = (i === typen.length - 1)
+        ? rest
+        : Math.round(ziel * gewichte[i] / summeG / 100) * 100;
+      rest -= betrag;
+      buchungen.push({ typ, nr: i + 1, betrag });
+    });
+
+    if (buchungen.every(b => b.betrag >= 100)) {
+      return { buchungen, saldo: ziel };
+    }
   }
-  const saldo = buchungen.reduce((s, b) => s + b.betrag, 0);
-  return { buchungen, saldo };
+  // Fallback: eine einzige Buchung
+  return { buchungen: [{ typ: 'VE', nr: 1, betrag: ziel }], saldo: ziel };
 }
 
 // ── Gesamtdaten zusammenstellen ──────────────────────────────────────────────
 
-function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten) {
-  const kontenTypen = {
-    '6000 AWR': 'AWR',
-    '6010 AWF': 'AWF',
-    '6020 AWH': 'AWH',
-    '6030 AWB': 'AWB',
-  };
+const ALLE_KONTENTYPEN = {
+  '6000 AWR': 'AWR',
+  '6010 AWF': 'AWF',
+  '6020 AWH': 'AWH',
+  '6030 AWB': 'AWB',
+};
+
+function getAusgewaehlteKonten() {
+  const auswahl = {};
+  for (const [nr, typ] of Object.entries(ALLE_KONTENTYPEN)) {
+    if (document.getElementById('chk' + typ)?.checked) auswahl[nr] = typ;
+  }
+  return auswahl;
+}
+
+function getErfolgswunsch() {
+  return document.querySelector('input[name="erfolgsart"]:checked')?.value || 'zufall';
+}
+
+function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten, kontenTypen, erfolgswunsch) {
 
   const konten = {};
   const nachlaesse = {};
@@ -154,13 +180,21 @@ function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten) 
       bzkSaldo,
       guvSaldo:    kDaten.saldo - nachlassSaldo + bzkSaldo,
     };
+    
   }
 
-  const uefeDaten = erzeugeUefeBuchungen();
-  const uefe      = uefeDaten.saldo;
-
   const gesamtAufwand = Object.values(konten).reduce((s, k) => s + k.guvSaldo, 0);
-  const erfolg        = uefe - gesamtAufwand;
+
+  const art = erfolgswunsch === 'zufall'
+    ? (Math.random() < 0.5 ? 'gewinn' : 'verlust')
+    : erfolgswunsch;
+  const faktor = art === 'gewinn'
+    ? 1.1 + Math.random() * 0.4    // Erlöse 10–50 % über den Aufwänden
+    : 0.6 + Math.random() * 0.3;   // Erlöse 10–40 % unter den Aufwänden
+
+  const uefeDaten = erzeugeUefeBuchungen(gesamtAufwand * faktor);
+  const uefe      = uefeDaten.saldo;
+  const erfolg    = uefe - gesamtAufwand;
   const erfolgArt     = erfolg >= 0 ? 'Gewinn' : 'Verlust';
   const erfolgHoehe   = Math.abs(erfolg);
 
@@ -426,12 +460,7 @@ function renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt) {
   const gesamtAufwand = Object.values(guvSaldos).reduce((s, v) => s + v, 0);
   const isGewinn = erfolgArt === 'Gewinn';
 
-  const sollZeilen = [
-    { label: '6000 AWR', betrag: guvSaldos['6000 AWR'] },
-    { label: '6010 AWF', betrag: guvSaldos['6010 AWF'] },
-    { label: '6020 AWH', betrag: guvSaldos['6020 AWH'] },
-    { label: '6030 AWB', betrag: guvSaldos['6030 AWB'] },
-  ];
+  const sollZeilen = Object.entries(guvSaldos).map(([nr, betrag]) => ({ label: nr, betrag }));
   if (isGewinn) sollZeilen.push({ label: '3000 EK', betrag: erfolgHoehe, fett: true });
 
   const habenZeilen = [{ label: '5000 UEFE', betrag: uefe }];
@@ -475,11 +504,18 @@ function zeigeZufaelligenBestandsabschluss() {
   if (!container) return;
   container.innerHTML = '';
 
-  const mitNachlaesse    = document.getElementById('toggleNachlaesse')?.checked || false;
+
+    const mitNachlaesse    = document.getElementById('toggleNachlaesse')?.checked || false;
   const mitBzkUnterkonten = document.getElementById('toggleBzkUnterkonten')?.checked || false;
 
-  const { konten, nachlaesse, bzkUnterkonten, uefeDaten, uefe, gesamtAufwand, erfolg, erfolgArt, erfolgHoehe } =
-    erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten);
+  const kontenTypen = getAusgewaehlteKonten();
+  if (Object.keys(kontenTypen).length === 0) {
+    container.innerHTML = '<p style="color:#b00;font-weight:600;">Bitte mindestens ein Werkstoffkonto auswählen.</p>';
+    return;
+  }
+  const erfolgswunsch = getErfolgswunsch();
+ const { konten, nachlaesse, bzkUnterkonten, uefeDaten, uefe, erfolg, erfolgArt, erfolgHoehe } =
+    erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten, kontenTypen, erfolgswunsch);
 
   const hatUnterkonten = mitNachlaesse || mitBzkUnterkonten;
 

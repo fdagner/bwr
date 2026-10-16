@@ -65,6 +65,22 @@
     <div class="box">
       <p>Hier können Sie eine Aufgabe zum Abschluss der Erfolgskonten und das GUV-Konto generieren.</p>
 
+
+<div class="flex-row" id="erfolgsartAuswahl">
+  <strong>Ergebnis:</strong>
+  <label><input type="radio" name="erfolgsart" value="zufall" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>zufällig</span></label>
+  <label><input type="radio" name="erfolgsart" value="gewinn" onchange="zeigeZufaelligenBestandsabschluss()"> <span>Gewinn</span></label>
+  <label><input type="radio" name="erfolgsart" value="verlust" onchange="zeigeZufaelligenBestandsabschluss()"> <span>Verlust</span></label>
+</div>
+
+<div class="flex-row" id="werkstoffAuswahl">
+  <strong>Werkstoffkonten:</strong>
+  <label><input type="checkbox" id="chkAWR" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>6000 AWR</span></label>
+  <label><input type="checkbox" id="chkAWF" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>6010 AWF</span></label>
+  <label><input type="checkbox" id="chkAWH" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>6020 AWH</span></label>
+  <label><input type="checkbox" id="chkAWB" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>6030 AWB</span></label>
+</div>
+
    <div class="flex-row">
   <label>
     <input
