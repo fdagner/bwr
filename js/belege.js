@@ -443,84 +443,83 @@ function applySupplierSpecificData(data) {
     loadSupplierLogo(data.unternehmen.logo);
 }
 
-// Logo-Logik für Lieferant (SVG-spezifisch)
-// Logo-Logik für Lieferant (SVG-spezifisch)
+let supplierLogoRequestId = 0;
+
+function removeSupplierLogos() {
+    const svgContainer = document.getElementById('rechnungSVG');
+    if (!svgContainer) return;
+    svgContainer
+        .querySelectorAll('#uploaded-image, svg.logo-svg, image.logo-image')
+        .forEach(el => el.remove());
+}
+
 function loadSupplierLogo(logoUrl) {
     const svgContainer = document.getElementById('rechnungSVG');
     const rectElement = document.getElementById('logo-placeholder');
-
     if (!svgContainer || !rectElement) return;
 
-    // Entferne vorhandene Logos
-    const existingImages = svgContainer.querySelectorAll('#uploaded-image, svg.logo-svg');
-    existingImages.forEach(img => img.remove());
+    const requestId = ++supplierLogoRequestId;   // nur der letzte Aufruf zählt
+    removeSupplierLogos();
 
     const x = rectElement.getAttribute('x');
     const y = rectElement.getAttribute('y');
     const width = rectElement.getAttribute('width');
     const height = rectElement.getAttribute('height');
-
     const standardImageURL = 'media/pic/standard.svg';
 
-    // Prüfe ob Base64-Logo (von Benutzerunternehmen)
-    if (logoUrl && logoUrl.startsWith('data:image')) {
-        // Base64 SVG - erstelle image Element
+    const appendImage = (href) => {
+        if (requestId !== supplierLogoRequestId) return;   // veraltet
+        removeSupplierLogos();                             // Sicherheitsnetz
         const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
         image.setAttribute('id', 'uploaded-image');
         image.setAttribute('x', x);
         image.setAttribute('y', y);
         image.setAttribute('width', width);
         image.setAttribute('height', height);
-        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', logoUrl);
+        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', href);
         svgContainer.appendChild(image);
+    };
+
+    // Base64-Logo (eigene Unternehmen): synchron
+    if (logoUrl && logoUrl.startsWith('data:image')) {
+        appendImage(logoUrl);
         return;
     }
 
-    // Fallback: URL oder Standardbild
-    const imageUrl = (logoUrl && logoUrl.trim() !== '' && (logoUrl.startsWith('http') || logoUrl.endsWith('.svg')))
+    const imageUrl = (logoUrl && logoUrl.trim() !== '' &&
+        (logoUrl.startsWith('http') || logoUrl.endsWith('.svg')))
         ? logoUrl
         : standardImageURL;
 
-    // Lade SVG-Datei per XHR
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
-        if (xhr.status === 200) {
-            const svgContent = xhr.responseText;
-            const svgElement = safelyParseSVG(svgContent);
-            if (svgElement) {
-                svgElement.setAttribute('x', x);
-                svgElement.setAttribute('y', y);
-                svgElement.setAttribute('width', width);
-                svgElement.setAttribute('height', height);
-                svgElement.classList.add('logo-svg');
-                svgContainer.appendChild(svgElement);
-            }
-        }
+        if (requestId !== supplierLogoRequestId) return;   // veraltet
+        if (xhr.status !== 200) return;
+
+        const svgElement = safelyParseSVG(xhr.responseText);
+        if (!svgElement) return;
+
+        removeSupplierLogos();                             // Sicherheitsnetz
+        svgElement.setAttribute('x', x);
+        svgElement.setAttribute('y', y);
+        svgElement.setAttribute('width', width);
+        svgElement.setAttribute('height', height);
+        svgElement.classList.add('logo-svg');
+        svgContainer.appendChild(svgElement);
     };
     xhr.onerror = function () {
-        // Bei Fehler: Zeige Standardbild
-        const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-        image.setAttribute('id', 'uploaded-image');
-        image.setAttribute('x', x);
-        image.setAttribute('y', y);
-        image.setAttribute('width', width);
-        image.setAttribute('height', height);
-
+        if (requestId !== supplierLogoRequestId) return;
         fetch(standardImageURL)
             .then(r => r.blob())
             .then(blob => {
                 const reader = new FileReader();
-                reader.onloadend = () => {
-                    image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
-                    svgContainer.appendChild(image);
-                };
+                reader.onloadend = () => appendImage(reader.result);
                 reader.readAsDataURL(blob);
             });
     };
     xhr.open('GET', imageUrl);
     xhr.send();
 }
-
 
 // PNG-Export
 function exportPNG(containerId, filename = 'download.png', exportWidth = null) {
@@ -2530,31 +2529,33 @@ function handleYearScript(config) {
     if (!config.jahrCheckbox) return;
 
     const useScript = document.getElementById(config.jahrCheckbox)?.checked;
+    const customDefs = config.customDefs ? document.getElementById(config.customDefs) : null;
+    const rootSvg = customDefs ? customDefs.ownerSVGElement : null;
+    const yearElements = document.querySelectorAll(`.${config.jahrClass}`);
+
+    // Altes Script immer zuerst entfernen
+    document.getElementById(config.scriptId)?.remove();
 
     if (!useScript) {
         const jahrInput = document.getElementById(config.jahrInput);
-        const yearElements = document.querySelectorAll(`.${config.jahrClass}`);
-        yearElements.forEach(element => {
-            element.textContent = jahrInput?.value || '';
+        yearElements.forEach(el => {
+            el.textContent = jahrInput?.value || '';
         });
+
+        // Skript-Teile entfernen
+        if (rootSvg) rootSvg.removeAttribute('onload');
     } else {
         const currentYear = new Date().getFullYear();
-        const yearElements = document.querySelectorAll(`.${config.jahrClass}`);
-        yearElements.forEach(element => {
-            element.textContent = currentYear;
+        yearElements.forEach(el => {
+            el.textContent = currentYear;
         });
 
         window[config.scriptFunction] = function () {
-            const elements = document.querySelectorAll(`.${config.jahrClass}`);
-            elements.forEach(element => {
-                element.textContent = new Date().getFullYear();
+            document.querySelectorAll(`.${config.jahrClass}`).forEach(el => {
+                el.textContent = new Date().getFullYear();
             });
         };
 
-        const existingScript = document.getElementById(config.scriptId);
-        if (existingScript) existingScript.remove();
-
-        const customDefs = config.customDefs ? document.getElementById(config.customDefs) : null;
         if (customDefs) {
             const script = document.createElementNS('http://www.w3.org/2000/svg', 'script');
             script.id = config.scriptId;
@@ -2564,6 +2565,8 @@ function handleYearScript(config) {
                 '}';
             customDefs.appendChild(script);
         }
+
+        if (rootSvg) rootSvg.setAttribute('onload', config.scriptFunction + '()');
     }
 }
 
