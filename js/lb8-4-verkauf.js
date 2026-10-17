@@ -1159,6 +1159,7 @@ function toggleKiPromptVorschau() {
         // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
         setTimeout(function() {
             autoSelectMyCompany();
+            verkaufZeigeZufaelligenSatz();
    }, 500);
 
     // Prompt-Text in Vorschau einfügen
