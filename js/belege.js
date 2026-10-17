@@ -1654,7 +1654,7 @@ function adjustTextColor() {
                 rgbText = hexToRgb(textColor);
                 if (rgbText && rgbText.length === 3) {
                     const contrast = calculateContrast(rgbBackground, rgbText);
-                    const contrastThreshold = 100;
+                    const contrastThreshold = 150;
                     const newTextColor = contrast > contrastThreshold ? '#000' : '#fff';
 
                     // Setze die Textfarbe unabhängig von der vorherigen Bedingung

@@ -60,7 +60,7 @@
     iban: "DE89370400440532013001"
     bic: "COBADEFFXXX"
     inhaber: "Max Merlin"
-    akzent: "#FFE4E1"
+    akzent: "#ff5500"
 
 - unternehmen:
     id: "3"
@@ -83,7 +83,7 @@
     iban: "DE89370400440532013002"
     bic: "COBADEFFXXX"
     inhaber: "Markus Schatt"
-    akzent: "#F5F5F5"
+    akzent: "#9e9fa0"
 
 - unternehmen:
     id: "4"
@@ -106,7 +106,7 @@
     iban: "DE89370400440532013003"
     bic: "COBADEFFXXX"
     inhaber: "Martin Eichler"
-    akzent: "#f5f5f5"
+    akzent: "#fcd54b"
     werkstoffe:
       AWR:
         - "Eichenholzplatten"
@@ -145,7 +145,7 @@
     iban: "DE89370400440532013004"
     bic: "COBADEFFXXX"
     inhaber: "Nicole Mustermann"
-    akzent: "#008000"
+    akzent: "#557c3b"
 
 - unternehmen:
     id: "6"
@@ -213,7 +213,7 @@
     iban: "DE89370400440532013007"
     bic: "COBADEFFXXX"
     inhaber: "Tobias Kasch"
-    akzent: "#98fb98"
+    akzent: "#4747d7"
 
 - unternehmen:
     id: "9"
@@ -237,7 +237,7 @@
     iban: "DE89370400440532013008"
     bic: "COBADEFFXXX"
     inhaber: "Katharina Blass"
-    akzent: "#FFFFFF"
+    akzent: "#8f4e99"
 
 - unternehmen:
     id: "10"
@@ -285,7 +285,7 @@
     iban: "DE89370400440532013011"
     bic: "COBADEFFXXX"
     inhaber: "Karolina Messner"
-    akzent: "#ffc0cb"
+    akzent: "#2d5016"
 
 - unternehmen:
     id: "12"
@@ -357,7 +357,7 @@
     iban: "DE89370400440532013014"
     bic: "COBADEFFXXX"
     inhaber: "Aleya Mintal"
-    akzent: "#DC143C"
+    akzent: "#31b218"
 
 - unternehmen:
     id: "15"
@@ -405,7 +405,7 @@
     iban: "DE89370400000532000077"
     bic: "COBADEFFXXX"
     inhaber: "Thorsten Fiedler"
-    akzent: "#f5f5f5"
+    akzent: "#666666"
 
 - unternehmen:
     id: "17"
@@ -476,7 +476,7 @@
     id: "19"
     branche: "Werkstoffe"
     name: "Bayerisches Sägewerk"
-    motto: "Natürliches Holz für Ihre Projekte"
+    motto: "Natürlich Holz"
     bank: "Bayern Bank"
     rechtsform: "GmbH"
     logo: "media/pic/saw2.svg"
@@ -494,12 +494,12 @@
     iban: "DE89370400440532013019"
     bic: "COBADEFFXXX"
     inhaber: "Hans Holzmeister"
-    akzent: "#8B4513"
+    akzent: "#9f7f01"
 
 - unternehmen:
     id: "20"
     branche: "Werkstoffe"
-    name: "ÖkoKu"
+    name: "Öko-Werkstoffe"
     motto: "Fachhandel für Kunststoffe"
     bank: "Eco Bank"
     rechtsform: "GmbH"
@@ -524,7 +524,7 @@
     id: "21"
     branche: "Modellunternehmen"
     name: "AlpinSkis"
-    motto: "Piste perfektioniert, Abenteuer garantiert"
+    motto: "Abenteuer garantiert"
     bank: "SnowBank"
     rechtsform: "AG"
     logo: "media/pic/ski.svg"
@@ -565,7 +565,7 @@
     id: "22"
     branche: "Werkstoffe"
     name: "EcoEnergie"
-    motto: "Nachhaltige Energie für eine gute Zukunft"
+    motto: "Für eine gute Zukunft"
     bank: "GreenBank"
     rechtsform: "GmbH"
     logo: "media/pic/energy.svg"
@@ -583,13 +583,13 @@
     iban: "DE89370400440532013022"
     bic: "COBADEFFXXX"
     inhaber: "Emma Grün"
-    akzent: "#f5f5f5"
+    akzent: "#44aa00"
 
 - unternehmen:
     id: "23"
     branche: "Einzelhandel"
     name: "Elektro World"
-    motto: "Innovation in jeder Steckdose"
+    motto: "Innovation & Leidenschaft"
     bank: "Nürnberger Bank"
     rechtsform: "GmbH"
     logo: "media/pic/elektro.svg"
@@ -613,7 +613,7 @@
     id: "24"
     branche: "Modellunternehmen"
     name: "Klangmeister"
-    motto: "Instrumente und traumhafte Klänge aus Meisterhand"
+    motto: "Instrumente aus Meisterhand"
     bank: "Münchener Bank"
     rechtsform: "e. Kfr."
     logo: "media/pic/gitarre.svg"
@@ -696,7 +696,7 @@
     iban: "DE89370400440532013027"
     bic: "COBADEFFXXX"
     inhaber: "Emma Eberhirte"
-    akzent: "#228B22"
+    akzent: "#fbd245"
 
 - unternehmen:
     id: "27"
@@ -720,13 +720,13 @@
     iban: "DE89370400440532013028"
     bic: "COBADEFFXXX"
     inhaber: "Sophie Schaller"
-    akzent: "#FF8C00"
+    akzent: "#3d8cd7"
 
 - unternehmen:
     id: "28"
     branche: "Einzelhandel"
     name: "Radelglück"
-    motto: "Dein Fahrradhandel. Allzeit gute Fahrt!"
+    motto: "Dein Fahrradhandel"
     bank: "Sparbank"
     rechtsform: "e. K"
     logo: "media/pic/fahrrad.svg"
@@ -744,13 +744,13 @@
     iban: "DE89370400440532013030"
     bic: "BYLADEM1ROS"
     inhaber: "Mehmet Sahin"
-    akzent: "#8669E1"
+    akzent: "#231082"
 
 - unternehmen:
     id: "29"
     branche: "Verpackungen"
     name: "Karton-Meister"
-    motto: "Maßgeschneiderte Verpackungslösungen"
+    motto: "Verpackungslösungen"
     bank: "Meisterbank"
     rechtsform: "GmbH"
     logo: "media/pic/box.svg"
@@ -792,7 +792,7 @@
     iban: "DE89370400440532013032"
     bic: "BYLADEM1BAY"
     inhaber: "Bernhard Baumeister"
-    akzent: "#800080"
+    akzent: "#004bc9"
 
 - unternehmen:
     id: "31"
@@ -1042,7 +1042,7 @@
     id: "38"
     branche: "Modellunternehmen"
     name: "Sprezzatura Lederkunst"
-    motto: "Handwerkskunst und Design"
+    motto: "Handwerkskunst & Design"
     bank: "Hausbank"
     rechtsform: "e. Kfr."
     logo: "media/pic/handtasche.svg"
@@ -1131,7 +1131,7 @@
     id: "41"
     branche: "Dienstleistung"
     name: "UBW & Partner"
-    motto: "Unternehmensberatung Walter & Partner"
+    motto: "Beratung Walter & Partner"
     bank: "Hausbank"
     rechtsform: "GmbH"
     logo: "media/pic/standard.svg"
@@ -1149,7 +1149,7 @@
     iban: "DE89300000487653837034"
     bic: "GENODEF1ING"
     inhaber: "Klaus Walter"
-    akzent: "#f5f5f5"
+    akzent: "#1e1eff"
 
 - unternehmen:
     id: "42"
@@ -1221,13 +1221,13 @@
     iban: "DE8937234092876353001"
     bic: "COERDBERXXX"
     inhaber: "Aleya Ötzürk"
-    akzent: "#fade52"
+    akzent: "#ff6600"
 
 - unternehmen:
     id: "45"
     branche: "Werkstoffe"
     name: "Top-Stoffe"
-    motto: "Europas größter Stoffhandel!"
+    motto: "Europas größter Stoffhandel"
     bank: "Nürnberg Bank"
     rechtsform: "GmbH"
     logo:  "media/pic/stoff.svg"
@@ -1245,13 +1245,13 @@
     iban: "DE89372340000011453001"
     bic: "GDFBADNBGXXX"
     inhaber: "Lisa Hammer"
-    akzent: "#b8b298"
+    akzent: "#004fba"
 
 - unternehmen:
     id: "46"
     branche: "Einzelhandel"
-    name: "SPL Schuhe & Lederwaren"
-    motto: "Schuhe und Lederwaren Spenge!"
+    name: "SPL Lederwaren"
+    motto: "Schuhe und Lederwaren!"
     bank: "Nürnberg Bank"
     rechtsform: "GmbH"
     logo:  "media/pic/tasche.svg"
@@ -1269,7 +1269,7 @@
     iban: "DE89372340000011453333001"
     bic: "GERTADNBGXXX"
     inhaber: "Carsten Spenge"
-    akzent: "gray"
+    akzent: "#623b1b"
 
 - unternehmen:
     id: "47"
@@ -1363,7 +1363,7 @@
     iban: "DE89370400440532013005"
     bic: "DEUTDEFFXXX"
     inhaber: "Julia Keller"
-    akzent: "#98FB98"
+    akzent: "#000000"
 
 - unternehmen:
     id: "51"
@@ -1386,7 +1386,7 @@
     iban: "DE89370400440532013006"
     bic: "COBADEFFXXX"
     inhaber: "Thomas Fischer"
-    akzent: "#D3D3D3"
+    akzent: "#f02a11"
 
 - unternehmen:
     id: "52"
@@ -1409,7 +1409,7 @@
     iban: "DE89370400440532013007"
     bic: "PBNKDEFFXXX"
     inhaber: "Myriam Weber"
-    akzent: "#FF6347"
+    akzent: "#bd2019"
 
 - unternehmen:
     id: "53"
@@ -1455,7 +1455,7 @@
     iban: "DE89370400440532013015"
     bic: "GENODEM1GLS"
     inhaber: "Laura Fischer"
-    akzent: "#20B2AA"
+    akzent: "#7f8181"
 
 - unternehmen:
     id: "55"
@@ -1501,7 +1501,7 @@
     iban: "DE89370400440532013034"
     bic: "DEUTDEFFXXX"
     inhaber: "Petra Schneider"
-    akzent: "#FFD700"
+    akzent: "#bd2019"
 
 - unternehmen:
     id: "57"
@@ -1570,12 +1570,12 @@
     iban: "DE89370400440532013040"
     bic: "GENODEF1XXX"
     inhaber: "Mehmet Sahin"
-    akzent: "#ADD8E6"
+    akzent: "#cccccc"
 
 - unternehmen:
     id: "60"
     branche: "Einzelhandel"
-    name: "Bekleidungshaus Mark"
+    name: "Bekleidung Mark"
     motto: "Wir statten Sie aus!"
     bank: "Geschäftsbank"
     rechtsform: "GmbH"
@@ -1594,13 +1594,13 @@
     iban: "DE89370400440534503040"
     bic: "GENODIN1XXX"
     inhaber: "Marina Salini"
-    akzent: "#009ACD"
+    akzent: "#0a96aa"
 
 - unternehmen:
     id: "61"
     branche: "Büro"
     name: "Office 2000"
-    motto: "Bürobedarf und Elektroartikel"
+    motto: "Elektro- & Bürobedarf"
     bank: "Sparbank"
     rechtsform: "GmbH"
     logo: "media/pic/folder.svg"
@@ -1690,7 +1690,7 @@
     iban: "DE89370400233436234040"
     bic: "GENODNBGS1XXX"
     inhaber: "Lisa Kühne"
-    akzent: "#20b2aa"
+    akzent: "#333333"
 
 - unternehmen:
     id: "65"
@@ -1714,7 +1714,7 @@
     iban: "DE83456400233436234040"
     bic: "GENODNBGS1XXX"
     inhaber: "Aleya Ötztürk"
-    akzent: "#df757e"
+    akzent: "#1f6ddc"
 
 - unternehmen:
     id: "66"
@@ -1738,7 +1738,7 @@
     iban: "DE834564002332233444040"
     bic: "GENODNBGA1XXX"
     inhaber: "Achmed Dincer"
-    akzent: "#467fff"
+    akzent: "#fbcf3c"
 
 - unternehmen:
     id: "67"
@@ -1827,7 +1827,7 @@
     iban: "DE72723480111110604012"
     bic: "BYSTDEL2SBK"
     inhaber: "Tina Wölfes"
-    akzent: "#467fff"
+    akzent: "#23a9e6"
 
 - unternehmen:
     id: "70"
@@ -1850,8 +1850,8 @@
     steuernummer: "189/33045/1120"
     iban: "DE12500105170689432014"
     bic: "SOVBDE23XXX"
-    inhaber: "Johanna Merz"
-    akzent: "#4caf50"
+    inhaber: "Dr. Johanna Merz"
+    akzent: "#4576ad"
 
 - unternehmen:
     id: "71"
@@ -1875,7 +1875,7 @@
     iban: "DE88430500010233650129"
     bic: "NOKSDE12XXX"
     inhaber: "Michael Rauscher"
-    akzent: "#d48f2f"
+    akzent: "#557c3b"
 
 - unternehmen:
     id: "72"
@@ -2068,7 +2068,7 @@
     iban: "DE89370400440532013079"
     bic: "COBADEFFXXX"
     inhaber: "Lena Sommerfeld"
-    akzent: "#1E90FF"
+    akzent: "#ff2e2e"
 
 - unternehmen:
     id: "80"
@@ -2092,7 +2092,7 @@
     iban: "DE89370400440532013080"
     bic: "COBADEFFXXX"
     inhaber: "Tobias Fernweh"
-    akzent: "#ffff00"
+    akzent: "#84c8f0"
 
 - unternehmen:
     id: "81"
@@ -2116,13 +2116,13 @@
     iban: "DE89370400440532013081"
     bic: "COBADEFFXXX"
     inhaber: "Jonas Webinger"
-    akzent: "#ffffff"
+    akzent: "#6db8e3"
 
 - unternehmen:
     id: "82"
     branche: "Dienstleistung"
     name: "WebKreativ Studio"
-    motto: "Deine Marke – online zum Leben erweckt"
+    motto: "Dein Onlineauftritt"
     bank: "Sparbank Nürnberg"
     rechtsform: "e. K."
     logo: "media/pic/webkreativ.svg"
@@ -2236,7 +2236,7 @@
     iban: "DE89370400440532013086"
     bic: "GENODEF1KIL"
     inhaber: "Finn Petersen"
-    akzent: "#f5f5f5"
+    akzent: "#4e8abe"
 
 - unternehmen:
     id: "87"
@@ -2266,7 +2266,7 @@
     id: "88"
     branche: "Fuhrpark"
     name: "AutoLog Service"
-    motto: "Ihr Fuhrpark aus guten Händen"
+    motto: "Ihr Fuhrpark in guten Händen"
     bank: "Großbank"
     rechtsform: "GmbH"
     logo: "media/pic/autolog.svg"
@@ -2284,7 +2284,7 @@
     iban: "DE89370400440532013088"
     bic: "DEUTDEFFXXX"
     inhaber: "Oliver Benz"
-    akzent: "#000000"
+    akzent: "#ff6600"
 
 - unternehmen:
     id: "89"
@@ -2356,7 +2356,7 @@
     iban: "DE89370400449434513034"
     bic: "GENODEF1NBG"
     inhaber: "Frieda Macher"
-    akzent: "#ffc0cb"
+    akzent: "#ff2e2e"
 
 - unternehmen:
     id: "92"
@@ -2386,7 +2386,7 @@
     id: "93"
     branche: "Handwerk"
     name: "Sanitär Huber"
-    motto: "Wasser marsch – Wir sind für Sie da!"
+    motto: "Wir sind für Sie da!"
     bank: "VS Bank Passau"
     rechtsform: "e. Kfr."
     logo: "media/pic/monkey.svg"
@@ -2404,7 +2404,7 @@
     iban: "DE89740900000023456789"
     bic: "GENODEF1PA1"
     inhaber: "Maria Huber"
-    akzent: "#4682B4"
+    akzent: "#84c8f0"
 
 - unternehmen:
     id: "94"
@@ -2428,7 +2428,7 @@
     iban: "DE89770500000034567890"
     bic: "BYLADEM1SKB"
     inhaber: "Tibor Farkas"
-    akzent: "#FF6347"
+    akzent: "#000"
 
 - unternehmen:
     id: "95"
@@ -2452,7 +2452,7 @@
     iban: "DE89700900000045678901"
     bic: "GENODEF1HRS"
     inhaber: "Anna Grünwald"
-    akzent: "#90EE90"
+    akzent: "#24a318"
 
 - unternehmen:
     id: "96"
@@ -2476,7 +2476,7 @@
     iban: "DE89790500000056789012"
     bic: "BYLADEM1SWU"
     inhaber: "Thomas Schneider"
-    akzent: "#1E90FF"
+    akzent: "#000000"
 
 - unternehmen:
     id: "97"
@@ -2500,7 +2500,7 @@
     iban: "DE89783500000067890123"
     bic: "GENODEF1CO1"
     inhaber: "Sabine Kraus"
-    akzent: "#FF69B4"
+    akzent: "#ff6600"
 
 - unternehmen:
     id: "98"
@@ -2524,13 +2524,13 @@
     iban: "DE89700500000078901234"
     bic: "BYLADEM1FSI"
     inhaber: "Josef Bierkrug"
-    akzent: "#DAA520"
+    akzent: "#0c61aa"
 
 - unternehmen:
     id: "99"
     branche: "Großhandel"
     name: "FrischePro Bayern"
-    motto: "Obst & Gemüse in Premiumqualität"
+    motto: "Obst & Gemüse"
     bank: "Sparbank Landshut"
     rechtsform: "GmbH"
     logo: "media/pic/vege.svg"
@@ -2554,7 +2554,7 @@
     id: "100"
     branche: "Großhandel"
     name: "TechDistribution Süd"
-    motto: "IT & Elektronik für den Fachhandel"
+    motto: "IT & Elektronik"
     bank: "Commerzbank Nürnberg"
     rechtsform: "GmbH"
     logo: "media/pic/it.svg"
@@ -2596,13 +2596,13 @@
     iban: "DE89720500000001234567"
     bic: "BYLADEM1AUG"
     inhaber: "Petra Sauber"
-    akzent: "#87CEEB"
+    akzent: "#03a6ff"
 
 - unternehmen:
     id: "102"
     branche: "Dienstleistung"
     name: "SecureGuard Bayern"
-    motto: "Ihr Schutz ist unsere Mission"
+    motto: "Ihr Schutz ist unser Auftrag"
     bank: "VS Bank Erlangen"
     rechtsform: "GmbH"
     logo: "media/pic/firewall.svg"
@@ -2620,13 +2620,13 @@
     iban: "DE89763500000012345678"
     bic: "GENODEF1ER1"
     inhaber: "Michael Wachsam"
-    akzent: "#2F4F4F"
+    akzent: "#d94723"
 
 - unternehmen:
     id: "103"
     branche: "Dienstleistung"
-    name: "EventKonzept München"
-    motto: "Unvergessliche Momente schaffen"
+    name: "EventKonzept"
+    motto: "Alles in einer Hand"
     bank: "AlphaVereinsbank"
     rechtsform: "GmbH"
     logo: "media/pic/event.svg"
@@ -2644,7 +2644,7 @@
     iban: "DE89700202700023456789"
     bic: "HYVEDEMMXXX"
     inhaber: "Laura Festlich"
-    akzent: "#FF1493"
+    akzent: "#bf0000"
 
 - unternehmen:
     id: "104"
@@ -2668,13 +2668,13 @@
     iban: "DE89793500000034567890"
     bic: "BYLADEM1SWU"
     inhaber: "Harald Eisen"
-    akzent: "#708090"
+    akzent: "#464646"
 
 - unternehmen:
     id: "105"
     branche: "Werkstoffe"
     name: "Kunststoff Zentrum"
-    motto: "Innovative Kunststofflösungen"
+    motto: "Innovative Lösungen"
     bank: "VS Bank Regensburg"
     rechtsform: "GmbH"
     logo: "media/pic/plastic2.svg"
@@ -2692,7 +2692,7 @@
     iban: "DE89750903000045678901"
     bic: "GENODEF1R01"
     inhaber: "Sandra Polymer"
-    akzent: "#00CED1"
+    akzent: "#4747d7"
 
 - unternehmen:
     id: "106"
@@ -2716,7 +2716,7 @@
     iban: "DE89721500000056789012"
     bic: "BYLADEM1ING"
     inhaber: "Franz Kaiser"
-    akzent: "#BC8F8F"
+    akzent: "#8686bf"
 
 - unternehmen:
     id: "107"
@@ -2764,7 +2764,7 @@
     iban: "DE89701600000078901234"
     bic: "GENODEF1M01"
     inhaber: "Ludwig Fernfahrer"
-    akzent: "#1874CD"
+    akzent: "#8686bf"
 
 - unternehmen:
     id: "109"
@@ -2788,7 +2788,7 @@
     iban: "DE89701600111234901234"
     bic: "GENODZO1M01"
     inhaber: "Altan Merman"
-    akzent: "#e8f1fa"
+    akzent: "#8686bf"
 
 - unternehmen:
     id: "110"
@@ -2812,7 +2812,7 @@
     iban: "DE89323400111234901234"
     bic: "GENODZO1M02"
     inhaber: "Anna Witzling"
-    akzent: "#f5f2ed"
+    akzent: "#00000"
 
 - unternehmen:
     id: "111"
@@ -2955,7 +2955,7 @@
     id: "115"
     branche: "Werkstoffe"
     name: "Polytex Burghausen"
-    motto: "Präzision, Flexibilität und Verlässlichkeit"
+    motto: "Präzision & Verlässlichkeit"
     bank: "Salzachbank "
     rechtsform: "GmbH"
     logo: "media/pic/polytex.svg"
@@ -2973,7 +2973,7 @@
     iban: "DE5171151020252550"
     bic: "SBNKDEF1SON"
     inhaber: "Dr. Elias Wolf"
-    akzent: "#ffb6c1"
+    akzent: "#ff2e2e"
 
 - unternehmen:
     id: "501"
