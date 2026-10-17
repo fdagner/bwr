@@ -155,7 +155,7 @@ function generiereAufgabe() {
     </table>`;
 
   // ── Lösung: sortierte Bilanz ───────────────────────────────────────────
-  let loesungHTML = `<h2>Lösung</h2>
+  let loesungHTML = `<h2 class="loesung">Lösung</h2>
     <table style="border-collapse: collapse;font-family:calibri;background-color:#fff;min-width:700px;max-width:1400px;line-height:1;">
       <tbody>
         <tr style="background-color:#ccc;">

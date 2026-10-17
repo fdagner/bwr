@@ -329,10 +329,10 @@ function generiereBetriebsergebnis() {
       datentabelle(e.p1, e.p2, nvp1, nvp2, vk1, vk2, menge1, menge2, fixKosten) +
     `</div>` +
 
-    `<p style="margin-bottom:6px;"><strong>Aufgabe:</strong>Ermitteln Sie rechnerisch Art und Höhe des gesamten Betriebsergebnisses für das ${quartal}.</p>` +
+    `<p style="margin-bottom:6px;"><strong>Aufgabe:</strong> Ermitteln Sie rechnerisch Art und Höhe des gesamten Betriebsergebnisses für das ${quartal}.</p>` +
 
     `<div style="margin-top:28px;">` +
-    `<h2 style="${S.h2output}">Lösung</h2>` +
+    `<h2 style="${S.h2output}" class="loesung">Lösung</h2>` +
     loesungsSchema(
       e.p1, e.p2,
       menge1, menge2,

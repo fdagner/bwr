@@ -879,9 +879,7 @@ function toggleKiPromptVorschau() {
 }
 
 // ── DRUCK-FUNKTION ───────────────────────────────────────────────────────────
-function drucken() {
-  window.print();
-}
+
 
 function addPrintCSS() {
   const style = document.createElement('style');

@@ -1962,3 +1962,26 @@ select:focus {
   .wb-awb { background: #bf360c; }
 
 
+@media print {
+      body * { visibility: hidden; }
+      #Container, #Container * { visibility: visible; }
+      [contenteditable] {
+        outline: none;
+      }
+      #Container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+      }
+
+      /* Aufgabe und Lösung sauber trennen */
+      #Container h2:first-of-type {
+        page-break-after: avoid;
+      }
+      #Container h2.loesung {
+        page-break-before: always !important;
+        margin-top: 60px !important;
+      }
+    }

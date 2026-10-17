@@ -243,8 +243,8 @@ function erstelleZufallssatz(problemType) {
     // ────────────────────────────────────────────────
     // Aufgabenstellung je nach Problem-Typ
     // ────────────────────────────────────────────────
-    let aufgabeSatz = `<h3>Aufgabe <small style="font-size:0.65em;color:#666;">(Typ ${problemType})</small></h3>`;
-    let loesungSatz = `<h3>Lösung</h3>`;
+    let aufgabeSatz = `<h2>Aufgabe <small style="font-size:0.65em;color:#666;">(Typ ${problemType})</small></h2>`;
+    let loesungSatz = `<h2 class="loesung">Lösung</h2>`;
 
     if (problemType === 1) {
         // ── Typ 1: Fremdbezug berechnen ──────────────────

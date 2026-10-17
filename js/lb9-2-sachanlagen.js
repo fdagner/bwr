@@ -538,7 +538,7 @@ function renderAufgaben() {
     </div>
 
     <div class="loesung-section">
-      <h2>Lösung</h2>
+      <h2 class="loesung">Lösung</h2>
       ${loesungen.map((l, i) => `
         <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                     padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">

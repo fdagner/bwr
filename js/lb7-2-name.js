@@ -710,7 +710,7 @@ function generiereAufgaben() {
   });
 
   let aufgabenHTML  = '<h2>Aufgaben</h2><p><strong>Arbeitsauftrag:</strong> Entscheide jeweils, ob der Firmenname den rechtlichen Vorgaben entspricht. Nenne den betroffenen Grundsatz und begründe deine Entscheidung.</p><ol>';
-  let loesungenHTML = '<h2>Lösungen</h2>';
+  let loesungenHTML = '<h2 class="loesung">Lösungen</h2>';
 
   letzteGenerierteAufgaben.forEach(({ fall, firmenname, sachverhalt, begruendung }, idx) => {
     aufgabenHTML += `<li style="margin-bottom: 1.4em;">

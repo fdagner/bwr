@@ -345,7 +345,7 @@ function erstelleLoesungHTML(values) {
   const weicheText = weiche.length ? weiche.join(", ") : "keine";
 
   return `
-    <h2>Lösung</h2>
+    <h2 class="loesung">Lösung</h2>
 
     <div style="margin:1.2em 0 0.6em 0; padding-bottom:0.6em;">
       <strong>1. Auswirkung der Gewerbesteuer auf den Gewinn</strong>

@@ -565,7 +565,7 @@ function loadDefaultYaml() {
                 <h2>Aufgabe</h2>
         Am ${formattedDate} kauft ${kaeuferName} ${anzahlAktien} Aktien der „${company.name} ${company.rechtsform}".
         Die Spesen betragen 1 % vom Kurswert. Bilde den Buchungssatz.
-        <h3>Lösung</h3>
+        <h2 class="loesung">Lösung</h2>
            <h4>Nebenrechnung</h4>
          <table style="border-collapse: collapse;white-space:nowrap;width:400px;margin: 0 0">
             <tr>

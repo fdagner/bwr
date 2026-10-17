@@ -361,7 +361,7 @@ function generiereAufgaben() {
       <p>${sachverhalt}</p></div>`;
   });
 
-  let loesungenHTML = `<br><h2>Lösungen</h2><div class="loesungen-wrap">`;
+  let loesungenHTML = `<br><h2 class="loesung">Lösungen</h2><div class="loesungen-wrap">`;
   letzteGenerierteAufgaben.forEach(({fall, sachverhalt, begruendung}, idx) => {
     const badgeClass = fall.stil === 'autoritativ' ? 'display: inline-block; font-size: 14px; padding: 2px 8px; border-radius: 20px; background: #FAECE7; color: #993C1D;' : 'display: inline-block; font-size: 14px; padding: 2px 8px; border-radius: 20px; background: #E1F5EE; color: #0F6E56; ';
     const label = stilLabel(fall.stil);

@@ -656,7 +656,7 @@ function zeigeZufaelligeGeschaeftsfaelleV() {
   buttonColumn.innerHTML = "";
 
   let aufgabenHTML  = "<h2>Aufgaben</h2><ol>";
-  let loesungenHTML = "<h2>Lösung</h2>";
+  let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
   const liste = [];
   for (let i = 0; i < anzahl; i++) liste.push(erstelleZufallsGeschaeftsfallV());
 

@@ -641,7 +641,7 @@ function zeigeZufaelligeZielbeziehungen() {
   const ausgewaehlte = paare.slice(0, anzahl);
 
   let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
-  let loesungenHTML = '<h2>Lösungen</h2>';
+  let loesungenHTML = '<h2 class="loesung">Lösungen</h2>';
 
   ausgewaehlte.forEach((paar, idx) => {
     const { z1, z2, beziehung } = paar;

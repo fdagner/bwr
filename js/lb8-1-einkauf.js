@@ -766,7 +766,7 @@ function zeigeZufaelligenSatz() {
   letzteGenerierteGfListeEinkauf = [];
 
   let satzOutput = '<h2>Aufgaben</h2><ol>';
-  let antwortOutput = '<h2>Lösung</h2>';
+  let antwortOutput = '<h2 class="loesung">Lösung</h2>';
 
   for (let i = 1; i <= anzahl; i++) {
     const currentI = i;

@@ -599,7 +599,7 @@ function zeigeZufaelligeProzentAufgaben() {
   const loesungenSection = document.createElement("div");
   loesungenSection.style.cssText = `padding: 20px;`;
 
-  let loesHtml = `<h2 style="margin-top:0;">Lösung</h2>`;
+  let loesHtml = `<h2 style="margin-top:0;" class="loesung">Lösung</h2>`;
   aufgabe.aufgaben.forEach((a, i) => {
     loesHtml += `
       <div style="

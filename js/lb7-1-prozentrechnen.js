@@ -653,7 +653,7 @@ function generiereAufgaben() {
   aufgabenHtml += `</ol>`;
 
   // ── Lösungen-HTML ──
-  let loesungenHtml = `<h2 style="margin-top: 1.5rem;">Lösung</h2>`;
+  let loesungenHtml = `<h2 style="margin-top: 1.5rem;" class="loesung">Lösung</h2>`;
   aufgabenListe.forEach(({ typ, eintrag, d }, i) => {
     const def = AUFGABEN_TYPEN_DEF[typ];
     const loesung = def.buildLoesung(eintrag, d);

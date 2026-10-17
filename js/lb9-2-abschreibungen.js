@@ -554,7 +554,7 @@ function zeigeZufaelligeAbschreibungsAufgabe(manuelleAK = null, manuelleND = nul
   // Lösungen anzeigen
   const loesungDiv = document.createElement('div');
   loesungDiv.className = 'loesung-section';
-  let html = '<h2>Lösung</h2>';
+  let html = '<h2 class="loesung">Lösung</h2>';
   aufgaben.forEach((a, i) => {
     html += `<div style="background: #fff; border: 1px solid #dde3ea; border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; font-size: 16px; line-height: 1.7;">
                <strong>Aufgabe ${i + 1}:</strong><br>${a.loesung}

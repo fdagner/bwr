@@ -328,7 +328,7 @@ letzteGenerierteAufgaben.forEach(({ text }, idx) => {
   html += `</tbody></table>`;
 
   // ── Lösungstabelle ───────────────────────────────────────────────────────
-  html += `<h2 style="margin-top:2em;">Lösung</h2>`;
+  html += `<h2 style="margin-top:2em;" class="loesung">Lösung</h2>`;
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:650px;">`;
   html += `<thead><tr style="background:#eee;">
     <th style="border:1px solid #ccc; padding:6px 10px; text-align:center; width:40px;">Nr.</th>

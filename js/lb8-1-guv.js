@@ -76,7 +76,7 @@ function zeigeZufaelligenAbschluss() {
   html += `</tbody></table><br><div></div></div>`;
 
   // ── LÖSUNG ────────────────────────────────────────────────────────────────
-  html += '<h2 style="margin-top:2.5em">Lösung</h2>';
+  html += '<h2 style="margin-top:2.5em" class="loesung">Lösung</h2>';
 
   // Buchungssätze
 html += `<strong>Buchungssätze:</strong><br>`;

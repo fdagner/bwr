@@ -569,7 +569,7 @@ function zeigeZufaelligeVertriebswege() {
   aufgabenListe = aufgabenListe.slice(0, anzahl);
 
   let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
-  let loesungenHTML = '<h2>Lösung</h2>';
+  let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   aufgabenListe.forEach((key, idx) => {
     const strat = vertriebswege[key];

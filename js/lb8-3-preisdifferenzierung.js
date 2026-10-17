@@ -285,7 +285,7 @@ function zeigeZufaelligePreisdifferenzierung() {
   const alleDiffKeys = shuffle(['person', 'menge', 'zeit', 'raum']);
 
   let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
-  let loesungenHTML = '<h2>Lösung</h2>';
+  let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   alleDiffKeys.forEach((diffKey, idx) => {
     const diff = differenzierungen[diffKey];

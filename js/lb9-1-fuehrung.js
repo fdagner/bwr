@@ -660,7 +660,7 @@ function generiereAufgaben() {
   '<th style="background:#4a6fa5; color:#fff; padding:8px 10px; text-align:left; border:1px solid #ccc;">Personenbeschreibung</th>' + 
   '</tr></thead><tbody>';
 
-let loesungenHTML = '<h2>Lösungen</h2>';
+let loesungenHTML = '<h2 class="loesung">Lösungen</h2>';
 
 letzteGenerierteAufgaben.forEach(({ fall, person }, idx) => {
   const sachverhalt = ersetzeText(fall.sachverhalt, person);

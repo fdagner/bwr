@@ -228,7 +228,7 @@ function generiereAufgaben() {
 
   // ── Lösungs-Tabelle ──────────────────────────────────────────────────────
   let loesungHTML = `
-    <h2>Lösung</h2>
+    <h2 class="loesung">Lösung</h2>
     <table style="width:100%; border-collapse:collapse;">
       <thead>
         <tr>

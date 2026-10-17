@@ -125,7 +125,7 @@
       
       // HTML für Lösung generieren (mit allen Werten)
       let htmlLoesung = `
-        <h2>Lösung</h2>
+        <h2 class="loesung">Lösung</h2>
         <table style="width: 100%; max-width: 750px; border-collapse: collapse; font-size: 14px;">
           <thead>
             <tr style="background-color: #d0d0d0;">

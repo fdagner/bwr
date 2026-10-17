@@ -638,7 +638,7 @@ function renderHaushaltsplanBlock(hp, nr, gesamt) {
   // ══════════════════════════════════════════════════════════════════════════
   // LÖSUNGSTEIL  (Cloze nur hier)
   // ══════════════════════════════════════════════════════════════════════════
-  html += `<h2 style="margin-top:2.5em;">${loesungTitel}</h2>`;
+  html += `<h2 style="margin-top:2.5em;" class="loesung">${loesungTitel}</h2>`;
 
 
   // ── Lösung a: Haushaltsplan mit Werten ───────────────────────────────────

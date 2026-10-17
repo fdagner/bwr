@@ -466,7 +466,7 @@ function zeigeZufaelligeZahlungsaufgaben() {
   aufgabenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die folgenden Fallbeispiele. Entscheide dich für eine oder mehrere geeignete Zahlungsarten. Begründe deine Wahl anhand der Kriterien <strong>Praktikabilität, Gebühren, Sicherheit</strong> und <strong>Datenschutz</strong>.</p>';
   aufgabenHTML += '<ol>';
 
-  let loesungenHTML = '<h2>Lösung</h2>';
+  let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   ausgewaehlte.forEach((fall, idx) => {
     const name = pick(familienNamen);

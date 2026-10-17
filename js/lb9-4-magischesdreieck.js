@@ -246,7 +246,7 @@ function zeigeZufaelligeWahrFalsch() {
   aufgabenHTML += '</ol>';
 
   // ── Lösungen ──────────────────────────────────────────────────────────────
-  let loesungenHTML = '<h2>Lösung</h2>';
+  let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   ausgewaehlte.forEach((item, idx) => {
     const badgeLabel = item.korrekt ? 'WAHR' : 'FALSCH';

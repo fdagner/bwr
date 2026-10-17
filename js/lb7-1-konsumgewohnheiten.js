@@ -574,7 +574,7 @@ function renderKonsumaufgabeBlock(data, nr, gesamt) {
   html += `</tbody></table>`;
 
   // ══ LÖSUNG ════════════════════════════════════════════════════════════════
-  html += `<h2 style="margin-top:2.5em;">Lösung ${gesamt > 1 ? nr : ''}</h2>`;
+  html += `<h2 style="margin-top:2.5em;" class="loesung">Lösung</h2>'>Lösung ${gesamt > 1 ? nr : ''}</h2>`;
 
   // Lösung A
   html += `<h3 style="margin-top:0;">Lösung ${gesamt > 1 ? nr : ''}A – Einnahmen und Ausgaben</h3>`;

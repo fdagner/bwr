@@ -41,4 +41,6 @@
       alert("Fehler beim Kopieren der Tabelle.");
     });
 
-    
+    function drucken() {
+  window.print();
+}

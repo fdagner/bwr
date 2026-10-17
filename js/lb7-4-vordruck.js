@@ -297,7 +297,7 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
   summenRows += sumZeile("Rechnungsbetrag",                                        zelle("brutto", brutto), { fett: true, doppelLinie: true, letzte: true });
 
   // ── Lösungsblock ─────────────────────────────────────────────────────────
-  let loesungHTML = "<strong>Lösung:</strong><br>";
+  let loesungHTML = '<h2 class="loesung">Lösung:</h2>';
   if (rueckwaerts) loesungHTML += `<em>Rückwärtsrechnung – Rechnungsbetrag ist gegeben:</em><br>`;
 
   if (leerFelder.has("gesamtpreis")) loesungHTML += `Menge ${menge} × Einzelpreis ${fmtVD(einzelpreis)} = <strong>Gesamtpreis ${fmtVD(listennetto)}</strong><br>`;

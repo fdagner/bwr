@@ -489,7 +489,7 @@ function verkaufZeigeZufaelligenSatz() {
 
   let verkaufSatzOutput = '<h2>Aufgaben</h2>';
   verkaufSatzOutput += '<ol>';
-  let verkaufAntwortOutput = `<h2>Lösung</h2>`;
+  let verkaufAntwortOutput = `<h2 class="loesung">Lösung</h2>`;
 
   
 

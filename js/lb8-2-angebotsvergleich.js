@@ -620,7 +620,7 @@ function zeigeZufaelligenSatz() {
 </div>`;
 
   const loesungHtml = `
-<h2 style="${S.h2}">Lösung</h2>
+<h2 style="${S.h2}" class="loesung">Lösung</h2>
 <h3 style="${S.h3}">Aufgabe 1 – Einkaufskalkulation Angebot B (${nameB})</h3>
 <div style="${S.kartenGrid}">${karteA_loesung}${karteB_loesung}</div>
 <h3 style="${S.h3}">Aufgabe 2 – Nichtmonetäre Faktoren &amp; Kaufentscheidung</h3>

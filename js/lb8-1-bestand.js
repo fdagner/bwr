@@ -76,7 +76,7 @@ function zeigeZufaelligeBestandsveraenderungen() {
   html += `<p>Bilde die Buchungssätze zu den ermittelten Bestandsveränderungen.</p>`;
 
   // ── LÖSUNG ────────────────────────────────────────────────────────────────
-  html += '<h2 style="margin-top:2.5em">Lösung</h2>';
+  html += '<h2 style="margin-top:2.5em" class="loesung">Lösung</h2>';
 
   // Tabelle mit Veränderungen (wie in Aufgabe, aber jetzt ausgefüllt)
   html += `<table style="border-collapse: collapse; width: 100%; max-width: 900px; margin-bottom: 2em; font-family: courier;">`;

@@ -74,7 +74,7 @@
       
       // HTML für Lösung generieren (mit allen Werten)
       let htmlLoesung = `
-        <h2>Lösung</h2>
+        <h2 class="loesung">Lösung</h2>
         <table style="border-collapse: collapse; font-size: 14px; margin-top: 20px;">
           <tbody>
             <tr>

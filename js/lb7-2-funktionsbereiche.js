@@ -364,7 +364,7 @@ let aufgabenHTML = '<h2>Aufgaben</h2>';
   aufgabenHTML += '</ol>';
 
   // ── Lösungen ──────────────────────────────────────────────────────────────
-  let loesungenHTML = '<h2>Lösung</h2>';
+  let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   ausgewaehlte.forEach((item, idx) => {
     const badgeColor = item.korrekt ? '#2a7a2a' : '#a00;';

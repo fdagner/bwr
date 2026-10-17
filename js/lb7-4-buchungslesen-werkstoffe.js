@@ -96,7 +96,7 @@ function generiereAufgabe() {
       html += `</div>`;
 
       // ── LÖSUNG ───────────────────────────────────────────────────────
-      html += `<h2 style="margin-top:2.5em">Lösung</h2>`;
+      html += `<h2 style="margin-top:2.5em" class="loesung">Lösung</h2>`;
 
       // Geschäftsfälle
       html += `<strong>Geschäftsfälle:</strong><br><br>`;
