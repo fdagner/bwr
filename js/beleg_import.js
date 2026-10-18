@@ -533,6 +533,7 @@ async function fillFormWithExtractedData(belegType, extractedData) {
         return 0;
     }
     
+    
     // WICHTIG: Zuerst SVG-Template laden, bevor Daten gesetzt werden
     const needsSVGLoad = ['rechnung', 'kontoauszug', 'email', 'quittung', 'kassenbon', 
                           'lohnjournal', 'bescheid', 'anlagenkarte', 'wertpapiere', 'lohnabrechnung'];
@@ -607,6 +608,35 @@ async function fillFormWithExtractedData(belegType, extractedData) {
     }
 
     let fieldsSet = 0;
+
+        // Firmenfelder: Namens-Element im SVG → Unternehmens-Dropdown
+    const FIRMEN_FELDER = {
+        kassenbon:      [{ key: 'kassenbonName',            elementId: 'datenKassenbon' }],
+        kontoauszug:    [{ key: 'kontoauszugName',          elementId: 'datenKontoauszug' }],
+        quittung:       [{ key: 'quittungName',             elementId: 'datenQuittung' },
+                         { key: 'quittungNameKunde',        elementId: 'datenQuittungKunde' }],
+        anlagenkarte:   [{ key: 'anlagenkarteName',         elementId: 'datenAnlagenkarte' }],
+        wertpapiere:    [{ key: 'wertpapiereName',          elementId: 'datenWertpapiere' }],
+        bescheid:       [{ key: 'bescheidName',             elementId: 'datenBescheid' }],
+        lohnjournal:    [{ key: 'lohnjournalName',          elementId: 'datenLohnjournal' }],
+        lohnabrechnung: [{ key: 'lohnabrechnungFirmaName',  elementId: 'datenLohnabrechnung' }],
+        email:          [{ key: 'emailName',                elementId: 'datenEmail' }]
+    };
+
+      (FIRMEN_FELDER[belegType] || []).forEach(({ key, elementId }) => {
+        const val = extractedData[key];
+        console.log(`[Firma] ${key} = "${val}" → Dropdown ${elementId}`);
+        if (!val) return;
+
+        const firma = findCompanyInYaml(val);
+        const ok = firma && setFieldValue(elementId, firma, 'select');
+        console.log(`[Firma] gefunden: ${firma}, gesetzt: ${ok}, Wert jetzt: "${document.getElementById(elementId)?.value}"`);
+
+        if (ok) {
+            document.getElementById(elementId).dispatchEvent(new Event('change', { bubbles: true }));
+            fieldsSet++;
+        }
+    });
 
     // Explizites Direkt-Mapping für Rechnung
     // (Felder die durch possibleKeys/fuzzy nicht zuverlässig gefunden werden)

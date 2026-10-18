@@ -772,6 +772,7 @@ if (cls) n.setAttribute('class', cls);
     clone.querySelectorAll('[style*="filter"]').forEach(el => el.remove());
 }
 
+
 // SVG-Export
 function exportSVG(containerId, filename = 'download.svg', titel = '') {
     const container = document.getElementById(containerId);
