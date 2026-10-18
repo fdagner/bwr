@@ -689,6 +689,7 @@ function exportPNG(containerId, filename = 'download.png', exportWidth = null) {
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(data);
 }
 
+
 // Macht das Export-SVG auch für OnlyOffice/Word verträglich
 function prepareSvgForExport(live, clone) {
     const NS = 'http://www.w3.org/2000/svg';
@@ -709,6 +710,7 @@ function prepareSvgForExport(live, clone) {
     const liveTexts = live.querySelectorAll('text');
     const cloneTexts = clone.querySelectorAll('text');
 
+    const usedIds = new Set();   // IDs müssen im Dokument eindeutig bleiben
     liveTexts.forEach((lt, i) => {
         const ct = cloneTexts[i];
         if (!ct) return;
@@ -749,6 +751,14 @@ if (!lt.textContent.trim()) { ct.remove(); return; }   // leere Texte nicht expo
             n.setAttribute('fill', cs.fill);
             if (lt.getAttribute('transform')) n.setAttribute('transform', lt.getAttribute('transform'));
             n.textContent = text;
+            // id und Klasse für den Beleg-Import erhalten
+const src = seg.el;
+if (src.id && !usedIds.has(src.id)) {
+    n.setAttribute('id', src.id);
+    usedIds.add(src.id);
+}
+const cls = src.getAttribute('class');
+if (cls) n.setAttribute('class', cls);
             ct.parentNode.insertBefore(n, ct);
             made++;
         });
