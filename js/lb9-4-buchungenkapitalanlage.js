@@ -477,7 +477,7 @@ function zeigeZufaelligeGeschaeftsfaelle() {
     return;
   }
 
-  let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
+  let aufgabenHTML = `<h2>Buchungen im Bereich Kapitalanlage</h2><h3>Bilde die Buchungssätze im Unternehmen ${kunde}.</h3><ol>`;
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
 letzteGenerierteGeschaeftsfaelle = [testGf];
