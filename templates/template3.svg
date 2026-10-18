@@ -2,7 +2,7 @@
   <defs id="customDefs"/>
   <!--Gruppe für Firmeninformationen-->
      <rect x="0" y="0" width="718" height="1048" stroke="#000" stroke-width="0" fill="#fff"/>
-    <ellipse class="colorSVG" rx="550" ry="130" cx="0" cy="0" fill="#7db9f5"/>
+    <path class="colorSVG" d="M0 0 H550 A550 130 0 0 1 0 130 Z" fill="#7db9f5"/>
     <rect x="0" y="-420" width="720" height="420" fill="#fff"/>
     <rect class="colorSVG" x="0" y="950" width="720" height="100" fill="#7db9f5"/>
     <rect x="0" y="130" width="720" height="1" fill="#000"/>
@@ -37,7 +37,7 @@
     <text id="lieferdatum" x="20" y="380" font-family="Arial" font-size="18" fill="#333">Die Ware haben Sie <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/><tspan> erhalten</tspan></text>
     <text x="20" y="410" font-family="Arial" font-size="18" fill="#333">Kundennummer: K<tspan id="nummerKunde"/></text>
     <text id="datum" x="690" y="380" font-family="Arial" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
-    <text x="20" y="460" font-family="Arial" font-size="14" fill="#333">Wir bedanken uns für Ihren Auftrag und erlauben uns, die folgenden Leistungen in Rechnung zu stellen:<tspan id="nummerKunde"/></text>
+    <text x="20" y="460" font-family="Arial" font-size="14" fill="#333">Wir bedanken uns für Ihren Auftrag und erlauben uns, die folgenden Leistungen in Rechnung zu stellen: </text>
   </g>
 <!--Gruppe für Bestelldaten-->
   <g id="bestellDaten">
@@ -86,7 +86,7 @@
   </g>
 <!--Gruppe für Zahlungsbedingungen-->
    <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Arial" font-size="18" fill="#333">
-    <text x="350" y="830">☘️ Toll, dass Sie bei uns Kunde sind! ☘️</text>
+    <text x="350" y="830">Toll, dass Sie bei uns Kunde sind!</text>
         <g id="zahlungszielSatz">
     <text x="350" y="860">Den Rechnungsbetrag bezahlen Sie bitte in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
   </g>

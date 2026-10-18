@@ -449,8 +449,75 @@ function removeSupplierLogos() {
     const svgContainer = document.getElementById('rechnungSVG');
     if (!svgContainer) return;
     svgContainer
-        .querySelectorAll('#uploaded-image, svg.logo-svg, image.logo-image')
-        .forEach(el => el.remove());
+      .querySelectorAll('#uploaded-image, g.logo-svg, image.logo-image')
+    .forEach(el => el.remove());
+}
+
+
+// Misst nur tatsächlich gezeichnete Elemente (ohne symbol/defs/clipPath/...)
+function measureRenderedBBox(g) {
+    const svgRoot = g.ownerSVGElement;
+    const inv = g.getCTM().inverse();
+    const pt = svgRoot.createSVGPoint();
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+    g.querySelectorAll('path,rect,circle,ellipse,line,polyline,polygon,text,image,use').forEach(el => {
+        if (el.closest('symbol,defs,clipPath,mask,marker,pattern')) return;
+        let b;
+        try { b = el.getBBox(); } catch (e) { return; }
+        if (b.width === 0 && b.height === 0) return;
+
+        const m = inv.multiply(el.getCTM());   // Element → Koordinaten von g
+        [[b.x, b.y], [b.x + b.width, b.y], [b.x, b.y + b.height], [b.x + b.width, b.y + b.height]]
+            .forEach(([px, py]) => {
+                pt.x = px; pt.y = py;
+                const t = pt.matrixTransform(m);
+                minX = Math.min(minX, t.x); minY = Math.min(minY, t.y);
+                maxX = Math.max(maxX, t.x); maxY = Math.max(maxY, t.y);
+            });
+    });
+
+    if (!isFinite(minX)) return { x: 0, y: 0, width: 0, height: 0 };
+    return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+
+// Entfernt Editor-Metadaten und Elemente/Attribute mit Namespace-Präfix,
+// die nach dem HTML-Parsing nicht mehr an einen Namespace gebunden sind
+const SVG_ELEMENTS = new Set([
+    // Struktur
+    'svg','g','defs','symbol','use','switch','a','view',
+    // Formen
+    'path','rect','circle','ellipse','line','polyline','polygon',
+    // Text
+    'text','tspan','textpath',
+    // Bild und Einbettung
+    'image','foreignobject',
+    // Beschreibung
+    'title','desc',
+    // Verläufe, Muster, Masken
+    'lineargradient','radialgradient','stop','pattern','clippath','mask','marker',
+    // Stil
+    'style',
+    // Filter
+    'filter','feblend','fecolormatrix','fecomponenttransfer','fecomposite',
+    'feconvolvematrix','fediffuselighting','fedisplacementmap','fedropshadow',
+    'feflood','fefunca','fefuncb','fefuncg','fefuncr','fegaussianblur','feimage',
+    'femerge','femergenode','femorphology','feoffset','fespecularlighting',
+    'fetile','feturbulence','fedistantlight','fepointlight','fespotlight'
+]);
+
+function stripForeignNamespaces(root) {
+    [...root.querySelectorAll('*')].forEach(el => {
+        if (!root.contains(el)) return;                        // schon mit Elternteil entfernt
+        if (!SVG_ELEMENTS.has(el.localName.toLowerCase())) el.remove();
+    });
+    root.querySelectorAll('*').forEach(el => {
+        [...el.attributes].forEach(attr => {
+            const n = attr.name;
+            const ok = n === 'xlink:href' || n === 'xml:space' || !n.includes(':');
+            if (n.startsWith('xmlns') || !ok) el.removeAttribute(n);
+        });
+    });
 }
 
 function loadSupplierLogo(logoUrl) {
@@ -499,13 +566,57 @@ function loadSupplierLogo(logoUrl) {
         const svgElement = safelyParseSVG(xhr.responseText);
         if (!svgElement) return;
 
-        removeSupplierLogos();                             // Sicherheitsnetz
-        svgElement.setAttribute('x', x);
-        svgElement.setAttribute('y', y);
-        svgElement.setAttribute('width', width);
-        svgElement.setAttribute('height', height);
-        svgElement.classList.add('logo-svg');
-        svgContainer.appendChild(svgElement);
+   removeSupplierLogos();                             // Sicherheitsnetz
+
+const bx = parseFloat(x), by = parseFloat(y);
+const bw = parseFloat(width), bh = parseFloat(height);
+
+const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+g.classList.add('logo-svg');
+
+// Attribute des ursprünglichen Logo-<svg> übernehmen
+['fill', 'stroke', 'stroke-width', 'style'].forEach(a => {
+    if (svgElement.getAttribute?.(a)) g.setAttribute(a, svgElement.getAttribute(a));
+});
+
+while (svgElement.firstChild) g.appendChild(svgElement.firstChild);
+stripForeignNamespaces(g); 
+
+// Erst anhängen, damit getBBox() messen kann
+svgContainer.appendChild(g);
+
+// Gemessener Inhalt (Fallback)
+const bb = measureRenderedBBox(g);
+
+// viewBox lesen und prüfen
+let ref = null; // {x, y, w, h}
+const vbAttr = svgElement.getAttribute?.('viewBox') || svgElement.getAttribute?.('viewbox');
+if (vbAttr) {
+    const p = vbAttr.trim().split(/[\s,]+/).map(Number);
+    if (p.length === 4 && p.every(Number.isFinite) && p[2] > 0 && p[3] > 0) {
+        const [vx, vy, vw, vh] = p;
+        const tol = 0.05; // 5 % Toleranz
+        const inside =
+            bb.width === 0 || bb.height === 0 ||   // nicht messbar → viewBox vertrauen
+            (bb.x >= vx - vw * tol &&
+             bb.y >= vy - vh * tol &&
+             bb.x + bb.width  <= vx + vw * (1 + tol) &&
+             bb.y + bb.height <= vy + vh * (1 + tol));
+        if (inside) ref = { x: vx, y: vy, w: vw, h: vh };
+    }
+}
+
+// Fallback: tatsächlichen Inhalt verwenden
+if (!ref && bb.width > 0 && bb.height > 0) {
+    ref = { x: bb.x, y: bb.y, w: bb.width, h: bb.height };
+}
+
+if (ref) {
+    const s = Math.min(bw / ref.w, bh / ref.h);
+    const tx = bx + (bw - ref.w * s) / 2 - ref.x * s;
+    const ty = by + (bh - ref.h * s) / 2 - ref.y * s;
+    g.setAttribute('transform', `translate(${tx} ${ty}) scale(${s})`);
+}
     };
     xhr.onerror = function () {
         if (requestId !== supplierLogoRequestId) return;
@@ -553,6 +664,8 @@ function exportPNG(containerId, filename = 'download.png', exportWidth = null) {
     const h = hasVB ? w * vb.height / vb.width : rect.height;
 
     const clone = svg.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
     clone.setAttribute('width', w);
     clone.setAttribute('height', h);
     clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -576,6 +689,79 @@ function exportPNG(containerId, filename = 'download.png', exportWidth = null) {
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(data);
 }
 
+// Macht das Export-SVG auch für OnlyOffice/Word verträglich
+function prepareSvgForExport(live, clone) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const EMOJI_CHAR = /[\u2600-\u27BF\uFE0F\u200D]/;
+    const EMOJI_ALL = /[\u2600-\u27BF\uFE0F\u200D]/g;
+
+    // 1. Feste Größe statt width:100%
+    const vb = live.viewBox && live.viewBox.baseVal;
+    if (vb && vb.width > 0) {
+        clone.setAttribute('width', vb.width);
+        clone.setAttribute('height', vb.height);
+    }
+    clone.removeAttribute('style');
+    clone.setAttribute('xmlns', NS);
+    clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+    // 2. Jeden Text (auch ohne tspan) in <text>-Elemente mit absoluter Startposition auflösen
+    const liveTexts = live.querySelectorAll('text');
+    const cloneTexts = clone.querySelectorAll('text');
+
+    liveTexts.forEach((lt, i) => {
+        const ct = cloneTexts[i];
+        if (!ct) return;
+if (!lt.textContent.trim()) { ct.remove(); return; }   // leere Texte nicht exportieren
+
+        // Segmente bilden, Leerzeichen wie SVG zusammenfalten
+        const segs = [];
+        let pos = 0, lastSpace = true;
+        lt.childNodes.forEach(node => {
+            if (node.nodeType !== 1 && node.nodeType !== 3) return;   // Kommentare überspringen
+            let t = (node.textContent || '').replace(/\s+/g, ' ');
+            if (lastSpace && t.startsWith(' ')) t = t.slice(1);
+            if (!t) return;
+  segs.push({ t, start: pos, el: node.nodeType === 1 ? node : lt });
+            pos += t.length;
+            lastSpace = t.endsWith(' ');
+        });
+
+        let made = 0;
+        segs.forEach(seg => {
+            // erstes Zeichen, das weder Leerraum noch Emoji ist
+            let k = 0;
+            while (k < seg.t.length && (/\s/.test(seg.t[k]) || EMOJI_CHAR.test(seg.t[k]))) k++;
+            const text = seg.t.slice(k).replace(EMOJI_ALL, '').replace(/\s+/g, ' ').trim();
+            if (!text) return;
+
+            let p;
+            try { p = lt.getStartPositionOfChar(seg.start + k); } catch (e) { return; }
+
+            const cs = getComputedStyle(seg.el);
+            const n = document.createElementNS(NS, 'text');
+            n.setAttribute('x', p.x);
+            n.setAttribute('y', p.y);
+            n.setAttribute('font-family', cs.fontFamily);
+            n.setAttribute('font-size', parseFloat(cs.fontSize));
+            n.setAttribute('font-weight', cs.fontWeight);
+            n.setAttribute('font-style', cs.fontStyle);
+            n.setAttribute('fill', cs.fill);
+            if (lt.getAttribute('transform')) n.setAttribute('transform', lt.getAttribute('transform'));
+            n.textContent = text;
+            ct.parentNode.insertBefore(n, ct);
+            made++;
+        });
+        if (made > 0) ct.remove();   // Original nur entfernen, wenn Ersatz erzeugt wurde
+    });
+
+    // 3. text-anchor überall entfernen (Positionen sind jetzt absolut)
+    clone.querySelectorAll('[text-anchor]').forEach(el => el.removeAttribute('text-anchor'));
+
+    // 4. Filter-Schatten (z. B. Logo) entfernen, OnlyOffice ignoriert Filter
+    clone.querySelectorAll('[style*="filter"]').forEach(el => el.remove());
+}
+
 // SVG-Export
 function exportSVG(containerId, filename = 'download.svg', titel = '') {
     const container = document.getElementById(containerId);
@@ -584,6 +770,7 @@ function exportSVG(containerId, filename = 'download.svg', titel = '') {
     if (!svg) return alert('Kein SVG gefunden');
 
     const clone = svg.cloneNode(true);
+    prepareSvgForExport(svg, clone);  
     if (titel) {
         const t = document.createElementNS('http://www.w3.org/2000/svg', 'title');
         t.textContent = titel;
@@ -591,6 +778,7 @@ function exportSVG(containerId, filename = 'download.svg', titel = '') {
     }
 
     const svgData = new XMLSerializer().serializeToString(clone);
+    
     const blob = new Blob([svgData], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -607,6 +795,11 @@ function copyToClipboard(containerId) {
     const svg = container.querySelector('svg');
     if (!svg) return alert('Kein SVG zum Kopieren');
     const svgData = new XMLSerializer().serializeToString(svg);
+    const check = new DOMParser().parseFromString(svgData, 'image/svg+xml');
+if (check.querySelector('parsererror')) {
+    alert('Das SVG enthält Fehler (vermutlich im Logo) und kann nicht exportiert werden. Tauschen Sie das Logo aus.');
+    return;
+}
     navigator.clipboard.writeText(svgData).then(() => {
         alert('SVG wurde in die Zwischenablage kopiert');
     });
@@ -1030,7 +1223,7 @@ function loadLogo(event) {
         return;
     }
     // Entferne vorhandene Logos (sowohl <image> als auch SVGs)
-    const existingImages = svgContainer.querySelectorAll('#uploaded-image, svg.logo-svg');
+    const existingImages = svgContainer.querySelectorAll('#uploaded-image, g.logo-svg');
     existingImages.forEach(existingImage => {
         svgContainer.removeChild(existingImage);
     });

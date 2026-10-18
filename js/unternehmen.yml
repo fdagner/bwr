@@ -1455,7 +1455,7 @@
     iban: "DE89370400440532013015"
     bic: "GENODEM1GLS"
     inhaber: "Laura Fischer"
-    akzent: "#7f8181"
+    akzent: "#e16c9e"
 
 - unternehmen:
     id: "55"
@@ -2133,7 +2133,7 @@
       land: "Deutschland"
     kontakt:
       telefon: "+49 9131 88 99 00"
-      email: "kontakt@webkreativ-studio.de"
+      email: "kontakt@webkreativ.de"
       internet: "webkreativ-studio.de"
     ust_id: "DE456789012"
     steuernummer: "220/345/67890"
@@ -2445,8 +2445,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "+49 8152 778899"
-      email: "info@bioparadies-ammersee.de"
-      internet: "bioparadies-ammersee.de"
+      email: "info@bioparadies.de"
+      internet: "bioparadies.de"
     ust_id: "DE678904567"
     steuernummer: "119/901/45678"
     iban: "DE89700900000045678901"
@@ -2469,8 +2469,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "+49 931 556677"
-      email: "service@techmarkt-wuerzburg.de"
-      internet: "techmarkt-wuerzburg.de"
+      email: "service@techmarkt-w.de"
+      internet: "techmarkt-w.de"
     ust_id: "DE789015678"
     steuernummer: "257/012/56789"
     iban: "DE89790500000056789012"
@@ -2500,7 +2500,7 @@
     iban: "DE89783500000067890123"
     bic: "GENODEF1CO1"
     inhaber: "Sabine Kraus"
-    akzent: "#ff6600"
+    akzent: "#d45500"
 
 - unternehmen:
     id: "98"
@@ -2541,8 +2541,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "+49 871 334455"
-      email: "bestellung@frischepro-bayern.de"
-      internet: "frischepro-bayern.de"
+      email: "bestellung@frischepro-b.de"
+      internet: "frischepro-b.de"
     ust_id: "DE012348901"
     steuernummer: "252/345/89012"
     iban: "DE89743500000089012345"
@@ -2565,8 +2565,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "+49 911 776655"
-      email: "vertrieb@techdistribution-sued.de"
-      internet: "techdistribution-sued.de"
+      email: "vertrieb@techd-sued.de"
+      internet: "techd-sued.de"
     ust_id: "DE123459012"
     steuernummer: "218/456/90123"
     iban: "DE89760400610090123456"
@@ -2637,8 +2637,8 @@
       land: "Deutschland"
     kontakt:
       telefon: "+49 89 778899"
-      email: "planung@eventkonzept-muenchen.de"
-      internet: "eventkonzept-muenchen.de"
+      email: "planung@eventkonzept.de"
+      internet: "eventkonzept.de"
     ust_id: "DE456782345"
     steuernummer: "143/789/23456"
     iban: "DE89700202700023456789"
