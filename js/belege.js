@@ -577,12 +577,20 @@ function exportPNG(containerId, filename = 'download.png', exportWidth = null) {
 }
 
 // SVG-Export
-function exportSVG(containerId, filename = 'download.svg') {
+function exportSVG(containerId, filename = 'download.svg', titel = '') {
     const container = document.getElementById(containerId);
     if (!container) return;
     const svg = container.querySelector('svg');
     if (!svg) return alert('Kein SVG gefunden');
-    const svgData = new XMLSerializer().serializeToString(svg);
+
+    const clone = svg.cloneNode(true);
+    if (titel) {
+        const t = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        t.textContent = titel;
+        clone.insertBefore(t, clone.firstChild);
+    }
+
+    const svgData = new XMLSerializer().serializeToString(clone);
     const blob = new Blob([svgData], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -1800,19 +1808,75 @@ function toggleInput(inputId, checkboxId) {
 
 // ERSETZEN Sie die gesamte exportDokument Funktion:
 const EXPORT_CONFIG = {
-    kontoauszug: { id: 'kontoauszugContainer', name: 'kontoauszug' },
-    rechnung: { id: 'rechnung1Container', name: 'rechnung' },
-    quittung: { id: 'quittungContainer', name: 'quittung' },
-   kassenbon:   { id: 'kassenbonContainer',   name: 'kassenbon' },
-    lohnjournal: { id: 'lohnjournalContainer', name: 'lohnjournal' },
-    email: { id: 'emailContainer', name: 'email' },
-    newspaper: { id: 'newspaperContainer', name: 'newspaper' },
-    lohnjournalBS: { id: 'lohnjournalBuchungssatzContainer', name: 'lohnjournalBuchungssatz' },
-    bescheid: { id: 'bescheidContainer', name: 'bescheid' },
-    anlagenkarte: { id: 'anlagenkarteContainer', name: 'anlagenkarte' },
-    wertpapiere: { id: 'wertpapiereContainer', name: 'wertpapier' },
-    lohnabrechnung: { id: 'lohnabrechnungContainer', name: 'lohnabrechnung' }
+    kontoauszug:   { id: 'kontoauszugContainer',   name: 'kontoauszug',   label: 'Kontoauszug',          firmaSelect: 'datenKontoauszug',   praep: 'von' },
+    rechnung: {
+    id: 'rechnung1Container', name: 'rechnung', label: 'Rechnung',   // Fallback
+    firmaSelect: 'datenLieferer', praep: 'von',
+    labelSelect: 'svgDropdown'
+},
+    quittung:      { id: 'quittungContainer',      name: 'quittung',      label: 'Quittung',             firmaSelect: 'datenQuittung',      praep: 'von' },
+    kassenbon:     { id: 'kassenbonContainer',     name: 'kassenbon',     label: 'Kassenbon',            firmaSelect: 'datenKassenbon',     praep: 'von' },
+    lohnjournal:   { id: 'lohnjournalContainer',   name: 'lohnjournal',   label: 'Lohnjournal',          firmaSelect: 'datenLohnjournal',   praep: 'von' },
+    email:         { id: 'emailContainer',         name: 'email',         label: 'E-Mail',               firmaSelect: 'datenEmail',         praep: 'von' },
+    newspaper:     { id: 'newspaperContainer',     name: 'newspaper',     label: 'Zeitungsartikel',      firmaSelect: null },
+    lohnjournalBS: { id: 'lohnjournalBuchungssatzContainer', name: 'lohnjournalBuchungssatz', label: 'Lohnjournal-Buchungssatz', firmaSelect: null },
+    bescheid:      { id: 'bescheidContainer',      name: 'bescheid',      label: 'Bescheid',             firmaSelect: 'datenBescheid',      praep: 'für' },
+    anlagenkarte:  { id: 'anlagenkarteContainer',  name: 'anlagenkarte',  label: 'Anlagenkarte',         firmaSelect: 'datenAnlagenkarte',  praep: 'von' },
+    wertpapiere:   { id: 'wertpapiereContainer',   name: 'wertpapier',    label: 'Wertpapierabrechnung', firmaSelect: 'datenWertpapiere',   praep: 'für' },
+    lohnabrechnung:{ id: 'lohnabrechnungContainer',name: 'lohnabrechnung',label: 'Lohnabrechnung',       firmaSelect: 'datenLohnabrechnung',praep: 'von' }
 };
+
+// Datum des Exports als YYYY-MM-DD (lokale Zeit, nicht UTC)
+function exportDatumString() {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+// Belegart: Anzeigetext der gewählten Vorlage (optional mit Präfix), sonst Standard-Label
+function getExportLabel(config) {
+    if (config.labelSelect) {
+        const select = document.getElementById(config.labelSelect);
+        const text = select?.options[select.selectedIndex]?.text?.trim();
+        if (text) return config.labelPrefix ? `${config.labelPrefix} ${text}` : text;
+    }
+    return config.label;
+}
+
+// Entfernt Zeichen, die in Dateinamen Probleme machen
+function sanitizeFilenamePart(text) {
+    return String(text || '')
+        .replace(/&/g, 'und')
+        .replace(/\./g, '')
+        .replace(/\s+/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .replace(/[\\/:*?"<>|()]/g, '');
+}
+
+// Firmenname inkl. Rechtsform aus dem passenden Dropdown (leer, wenn nichts gewählt)
+function getExportFirmenName(selectId) {
+    if (!selectId) return '';
+    const name = document.getElementById(selectId)?.value;
+    if (!name) return '';
+    const firma = yamlData.find(item => item.unternehmen.name === name);
+    const rechtsform = firma?.unternehmen?.rechtsform || '';
+    return `${name} ${rechtsform}`.trim();
+}
+
+// z. B. "Gutschrift bei Mängelrüge von Müller GmbH"
+function buildExportTitel(typ) {
+    const config = EXPORT_CONFIG[typ];
+    const label = getExportLabel(config);   // ← Anzeigetext der gewählten Vorlage
+    const firma = getExportFirmenName(config.firmaSelect);
+    return firma ? `${label} ${config.praep || 'von'} ${firma}` : label;
+}
+
+// z. B. "2026-10-18_Rechnung_von_Müller_GmbH.svg"
+function buildExportFilename(typ, extension) {
+    return `${exportDatumString()}_${sanitizeFilenamePart(buildExportTitel(typ))}.${extension}`;
+}
+
 
 // ============================================================================
 // EXPORT-FUNKTIONEN
@@ -1824,20 +1888,18 @@ function exportDokument(typ, format) {
         return;
     }
 
-    const filename = `${config.name}.${format === 'clipboard' ? 'svg' : format}`;
-
     // HTML-Typen, die kein SVG haben
     const htmlTypes = ['email', 'newspaper', 'lohnjournalBS'];
 
     switch (format) {
         case 'png':
-            exportPNG(config.id, `${config.name}.png`);
+            exportPNG(config.id, buildExportFilename(typ, 'png'));
             break;
         case 'svg':
             if (htmlTypes.includes(typ)) {
                 copyHTMLToClipboard(config.id);
             } else {
-                exportSVG(config.id, filename);
+                exportSVG(config.id, buildExportFilename(typ, 'svg'), buildExportTitel(typ));
             }
             break;
         case 'clipboard':
@@ -1857,7 +1919,7 @@ function emailHerunterladen() {
     const blob = new Blob([emailHTML], { type: 'html' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'email.html';
+    a.download = buildExportFilename('email', 'html');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1868,7 +1930,7 @@ function newspaperHerunterladen() {
     const blob = new Blob([emailHTML], { type: 'html' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'newspaper.html';
+    a.download = buildExportFilename('newspaper', 'html');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1879,7 +1941,7 @@ function lohnjournalBuchungssatzHerunterladen() {
     const blob = new Blob([emailHTML], { type: 'html' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'lohnjournalbuchungssatz.html';
+   a.download = buildExportFilename('lohnjournalBS', 'html');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
