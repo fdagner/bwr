@@ -177,15 +177,15 @@ const geschaeftsfallTypen = {
     vstSatz: 19,
     vstKonto: '2600 VORST',
     geschaeftsfaelle: [
-      { beschreibung: 'Für den jährlichen Kundendienst an einem Transporter liegt eine Rechnung vor', vorgang: 'Kfz-Inspektion', branche: 'Fuhrpark', zahlungsweg: 'rechnung', betragNetto: 930 },
-      { beschreibung: 'Eingang einer Rechnung für die Reparatur der Heizungsanlage', vorgang: 'Reparatur Heizung', branche: 'Fuhrpark', zahlungsweg: 'rechnung', betragNetto: null },
+      { beschreibung: 'Für den jährlichen Kundendienst an einem Transporter liegt bei {kunde} eine Rechnung vor', vorgang: 'Kfz-Inspektion', branche: 'Fuhrpark', zahlungsweg: 'rechnung', betragNetto: 930 },
+      { beschreibung: 'Eingang einer Rechnung bei {kunde} für die Reparatur der Heizungsanlage', vorgang: 'Reparatur Heizung', branche: 'Fuhrpark', zahlungsweg: 'rechnung', betragNetto: null },
       { beschreibung: 'Für die Wartung der Klimaanlage liegt eine Rechnung vor', vorgang: 'Wartung Klimaanlage', branche: 'Maschinen',zahlungsweg: 'rechnung', betragNetto: null },
       { beschreibung: 'Rechnung für den Austausch von Bremsbelägen am Firmen-Lkw', vorgang: 'Kfz-Reparatur', branche: 'Fuhrpark', zahlungsweg: 'rechnung', betragNetto: null },
-      { beschreibung: 'Rechnung für die Wartung der Produktionsmaschinen', vorgang: 'Maschinenwartung', branche: 'Maschinen',zahlungsweg: 'rechnung', betragNetto: null },
+      { beschreibung: 'Rechnung für die Wartung der Produktionsmaschinen bei {kunde}', vorgang: 'Maschinenwartung', branche: 'Maschinen',zahlungsweg: 'rechnung', betragNetto: null },
       { beschreibung: 'Eingansgrechnung für die Reparatur des Firmenfahrzeugs', vorgang: 'Kfz-Reparatur', branche: 'Fuhrpark',zahlungsweg: 'rechnung', betragNetto: null },
       { beschreibung: 'Eingang einer Rechnung für die Inspektion und Wartung des Firmentransporters', vorgang: 'Kfz-Reparatur', branche: 'Fuhrpark', zahlungsweg: 'rechnung', betragNetto: null },
       { beschreibung: 'Eingang einer Rechnung für die Wartung der Aufzugsanlage', vorgang: 'Wartung Aufzug', branche: 'Maschinen',zahlungsweg: 'rechnung', betragNetto: null },
-      { beschreibung: 'Für die Reparatur der Lüftungsanlage geht eine Rechnung ein', vorgang: 'Reparatur Lüftung', branche: 'Maschinen', zahlungsweg: 'rechnung', betragNetto: null },
+      { beschreibung: 'Für die Reparatur der Lüftungsanlage bei {kunde} geht eine Rechnung ein', vorgang: 'Reparatur Lüftung', branche: 'Maschinen', zahlungsweg: 'rechnung', betragNetto: null },
       { beschreibung: 'Eingangsrechnung für die Reparatur einer Maschine', vorgang: 'Reparatur Fräsmaschine', branche: 'Maschinen', zahlungsweg: 'rechnung', betragNetto: null },
     ],
     betragsbereich: { min: 200, max: 3000 }
@@ -204,10 +204,10 @@ const geschaeftsfallTypen = {
     vstKonto: '2600 VORST',
     geschaeftsfaelle: [
       { beschreibung: 'Barzahlung der Wartungskosten für ein Kopiergerät', vorgang: 'Wartung Kopiergerät', branche: 'Büro', zahlungsweg: 'quittung', betragNetto: 79 },
-      { beschreibung: 'Für die Reparatur eines Druckers liegt eine Quittung vor', vorgang: 'Reparatur Drucker',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
-      { beschreibung: 'Für die Entstörung der Telefonanlage liegt eine Quittung vor', vorgang: 'Entstörung Telefonanlage',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
-      { beschreibung: 'Barzahlung für die Reparatur einer Registrierkasse', vorgang: 'Reparatur Kasse',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
-      { beschreibung: 'Für die Reparatur eines Kopiergeräts liegt eine Quittung vor', vorgang: 'Reparatur Kopierer',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
+      { beschreibung: 'Für die Reparatur eines Druckers liegt bei {kunde} eine Quittung vor', vorgang: 'Reparatur Drucker',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
+      { beschreibung: 'Für die Entstörung der Telefonanlage liegt bei {kunde} eine Quittung vor', vorgang: 'Entstörung Telefonanlage',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
+      { beschreibung: 'Barzahlung von {kunde} für die Reparatur einer Registrierkasse', vorgang: 'Reparatur Kasse',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
+      { beschreibung: 'Für die Reparatur eines Kopiergeräts bei {kunde} liegt eine Quittung vor', vorgang: 'Reparatur Kopierer',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
     ],
     betragsbereich: { min: 50, max: 500 }
   },
@@ -234,7 +234,7 @@ const geschaeftsfallTypen = {
     vstKonto: '2600 VORST',
     geschaeftsfaelle: [
       { beschreibung: 'Lastschrift für die Miete von Ausstellungsflächen auf einer Messe', vorgang: 'Miete Messefläche', zahlungsweg: 'kontoauszug', betragBrutto: 2359.77 },
-      { beschreibung: 'Vom Bankkonto wird der Mietbetrag für Geschäftsräume abgebucht', vorgang: 'Miete Geschäftsräume', zahlungsweg: 'kontoauszug', betragBrutto: null },
+      { beschreibung: 'Vom Bankkonto bei {kunde} wird der Mietbetrag für Geschäftsräume abgebucht', vorgang: 'Miete Geschäftsräume', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Per Dauerauftrag wird die Kantinenpacht abgebucht', vorgang: 'Miete Betriebskantine', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Abbuchung der Pachtgebühr für den Firmenparkplatz vom Bankkonto', vorgang: 'Pacht Parkplatz', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Lastschrift der monatlichen Lagermiete', vorgang: 'Miete Lager', zahlungsweg: 'kontoauszug', betragBrutto: null },
@@ -325,6 +325,7 @@ function erstelleZufallsGeschaeftsfall(verwendete = null) {
 
     const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
     const geschaeftsfall = typ.geschaeftsfaelle[gfIndex];
+    const beschreibung = geschaeftsfall.beschreibung.replaceAll('{kunde}', kunde);
     const { min, max } = typ.betragsbereich;
 
     let nettoBetrag, bruttoBetrag, vstBetrag;
@@ -353,19 +354,14 @@ function erstelleZufallsGeschaeftsfall(verwendete = null) {
     let geschaeftsfallText = '';
 if (typ.belegtyp === 'kontoauszug') {
   const bruttoLabel = typ.mitVorsteuer && typ.vstSatz ? ' brutto.' : '.';
-  geschaeftsfallText = `${geschaeftsfall.beschreibung}${zahlungsart.text}${wertPhrase}${betragFormatted}${bruttoLabel}`;
+  geschaeftsfallText = `${beschreibung}${zahlungsart.text}${wertPhrase}${betragFormatted}${bruttoLabel}`;
 } else if (typ.mitVorsteuer && typ.vstSatz) {
-  // Rechnung / Quittung MIT Vorsteuer: zufällig Netto oder Brutto
   const zeigeNetto = Math.random() < 0.5;
-  if (zeigeNetto) {
-    geschaeftsfallText = `${geschaeftsfall.beschreibung}${wertPhrase}${nettoFormatted} netto.`;
-  } else {
-    geschaeftsfallText = `${geschaeftsfall.beschreibung}${wertPhrase}${betragFormatted} brutto.`;
-  }
-
+  geschaeftsfallText = zeigeNetto
+    ? `${beschreibung}${wertPhrase}${nettoFormatted} netto.`
+    : `${beschreibung}${wertPhrase}${betragFormatted} brutto.`;
 } else {
-  // Ohne Vorsteuer: Netto = Brutto, einfach den Betrag
-  geschaeftsfallText = `${geschaeftsfall.beschreibung}${wertPhrase}${betragFormatted}.`;
+  geschaeftsfallText = `${beschreibung}${wertPhrase}${betragFormatted}.`;
 }
 
     return {
@@ -462,7 +458,7 @@ function erstelleBelegURL(gf) {
     params.set('monat', monat);
     params.set('jahr', jahr);
     params.set('vorgang1', gf.vorgang || 'Zahlung');
-    params.set('wertstellung1', gf.betragFormatted);
+    params.set('wertstellung1', -Math.abs(gf.betrag));
     if (liefererName) params.set('kontoinhaber', liefererName);
     return `belege.html?${params.toString()}`;
 }
@@ -581,7 +577,7 @@ function zeigeZufaelligeGeschaeftsfaelle() {
     return;
   }
 
-  let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
+  let aufgabenHTML = `<h2>Weitere Buchungen im Bereich Anlagegüter</h2><h3>Bilde die Buchungssätze im Unternehmen ${kunde}.</h3><ol>`;
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   letzteGenerierteGeschaeftsfaelle = [testGf];
