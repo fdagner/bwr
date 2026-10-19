@@ -2976,6 +2976,45 @@
     akzent: "#ff2e2e"
 
 - unternehmen:
+    id: "116"
+    branche: "Modellunternehmen"
+    name: "TSE"
+    motto: "Tobias Steinbach Elektrogabelstapler"
+    bank: "Tölzer  Stadtbank"
+    rechtsform: "e. K."
+    logo: "media/pic/tse.svg"
+    adresse:
+      strasse: "Gewerbering 150"
+      plz: "83646"
+      ort: "Bad Tölz"
+      land: "Deutschland"
+    kontakt:
+      telefon: "+49 9571 0990-0"
+      email: "info@tse.xyz"
+      internet: "tse.xyz"
+    ust_id: "DE9786067876"
+    steuernummer: "230/5236/0605"
+    iban: "DE72860480000000765014"
+    bic: "BYSBTEL2SBK"
+    inhaber: "Tobias Steinbach"
+    akzent: "#87CEFA"
+    werkstoffe:
+      AWR:
+        - "Stahlbleche"
+        - "Aluminium"
+      AWF:
+        - "Räder"
+        - "Achsen"
+        - "Elektromotoren"
+      AWH:
+        - "Schrauben"
+        - "Farben"
+      AWB:
+        - "Strom"
+        - "Gas"
+        - "Öl"
+
+- unternehmen:
     id: "501"
     branche: "Familie"
     name: "Ingo Maier"
