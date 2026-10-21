@@ -197,7 +197,7 @@ const kontenUmsatzerloese_2 = {
   },
 };
 
-let kontenVerkaufZahlung;
+let verkaufKontenZahlung;
 function inputSellChangeCategory() {
   if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
     verkaufKontenZahlung = {
@@ -485,6 +485,7 @@ function verkaufZeigeZufaelligenSatz() {
   // Inhalte zurücksetzen
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
+  letzteGenerierteGfListeVerkauf = [];
 
 
   let verkaufSatzOutput = '<h2>Aufgaben</h2>';
@@ -499,6 +500,43 @@ function verkaufZeigeZufaelligenSatz() {
     const verkaufFormattedAngebot = verkaufAngebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedSkonto = verkaufSkontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedDifferenz = verkaufDifferenzSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
+        // Aufgabe und Lösung für KI-Prompt merken
+    const klartext = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '').trim();
+    const buchung = `${verkaufKonto_2} ${verkaufBetrag_2} an ${verkaufKonto_1} ${Zielverkaufspreis} / 4800 UST ${verkaufUSTWert}`;
+    const kalkulation = [
+      `Selbstkostenpreis: ${verkaufAntwort_Selbstkostenpreis} (100 %)`,
+      `+ Gewinn: ${verkaufAntwort_GewinnWert} (${verkaufAntwort_GewinnSatz} %)`,
+      `= Barverkaufspreis: ${verkaufAntwort_barverkaufspreis}`,
+      `+ Kundenskonto: ${verkaufAntwort_skontoBetrag} (${verkaufAntwort_skontoSatz} %)`,
+      `= Zielverkaufspreis: ${Zielverkaufspreis}`,
+      `+ Kundenrabatt: ${verkaufAntwort_rabattWert} (${verkaufAntwort_rabattSatz} %)`,
+      `= Listenverkaufspreis: ${verkaufListenverkaufspreis}`,
+    ].join('\n');
+
+    let aufgabeText, loesungText;
+    switch (verkaufBuchungsoptionDropdown.value) {
+      case 'verkaufskalkulation':
+        aufgabeText = klartext(verkaufFormattedAngebot);
+        loesungText = `${kalkulation}\nBuchungssatz: ${buchung}`;
+        break;
+      case 'verkaufSkontobuchungssatz':
+        aufgabeText = klartext(verkaufFormattedSatz + ' ' + verkaufFormattedSkonto);
+        loesungText = [
+          `Buchungssatz 1: ${buchung}`,
+          `Buchungssatz 2: 2800 BK ${verkaufAntwort_ueberweisungsbetrag} / ${verkaufKonto_Skontobuchungssatz} ${verkaufAntwort_skontoBetrag} / 4800 UST ${verkaufAntwort_vorsteuer_berichtigung} an 2400 FO ${verkaufBetrag_2}`,
+          `Skonto brutto: ${verkaufAntwort_skontoBetrag_brutto}, Skonto netto: ${verkaufAntwort_skontoBetrag}, Umsatzsteuerberichtigung: ${verkaufAntwort_vorsteuer_berichtigung}`,
+          `Überweisungsbetrag: ${verkaufAntwort_ueberweisungsbetrag}`,
+        ].join('\n');
+        break;
+      case 'verkaufDifferenzkalkulation':
+        aufgabeText = klartext(verkaufFormattedDifferenz);
+        loesungText = `${kalkulation}\nErzielter Gewinn: ${verkaufAntwort_Gewinn_berechnet} % (Mindestgewinn: ${verkaufAntwort_wunschGewinn} %)\nEntscheidung: ${verkaufAntwort_Kundenanfrage}`;
+        break;
+      default:
+        aufgabeText = klartext(verkaufFormattedSatz);
+        loesungText = `Buchungssatz: ${buchung}`;
+    }
+    letzteGenerierteGfListeVerkauf.push({ aufgabe: aufgabeText, loesung: loesungText });
     // Generierte Sätze hinzufügen
 
     verkaufSatzOutput += `<li>`;
@@ -704,6 +742,10 @@ if (!buttonColumn) {
 
   // Sätze und Antworten auf der Seite anzeigen
   document.getElementById('Container').innerHTML = verkaufSatzOutput + verkaufAntwortOutput;
+    const vorschau = document.getElementById('kiPromptVorschau');
+  if (vorschau && vorschau.style.display !== 'none') {
+    vorschau.textContent = erstelleKiPromptText();
+  }
 }
 
 // ============================================================================
@@ -921,6 +963,21 @@ function verkaufErstelleRechnungButton(nummer, daten) {
     }
 
 
+// Zuletzt generierte Aufgabenliste (für KI-Prompt)
+let letzteGenerierteGfListeVerkauf = [];
+
+function erstelleKiPromptText() {
+  let aufgabenUndLoesungen;
+  if (letzteGenerierteGfListeVerkauf.length === 0) {
+    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+  } else {
+    aufgabenUndLoesungen = letzteGenerierteGfListeVerkauf
+      .map((e, idx) => `Aufgabe ${idx + 1}:\n${e.aufgabe}\n\nMusterlösung ${idx + 1}:\n${e.loesung}`)
+      .join("\n\n---\n\n");
+  }
+  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+}
+
 // ============================================================================
 // KI-ASSISTENT PROMPT – VERKAUF (Buchungssatz, Verkaufskalkulation, Skontobuchungssatz, Differenzkalkulation)
 // ============================================================================
@@ -928,19 +985,20 @@ function verkaufErstelleRechnungButton(nummer, daten) {
 const KI_ASSISTENT_PROMPT = `
 Du bist ein freundlicher Buchführungs-Assistent für Schüler der Realschule (BwR), 8. Klasse. Du hilfst beim Verständnis von Buchungssätzen und der Verkaufskalkulation im Bereich Absatz/Verkauf.
 
-Aufgabe:
-- Gib KEINE fertigen Buchungssätze, Berechnungen oder Konten vor.
-- Führe die Schüler durch gezielte Fragen und Hinweise zur richtigen Lösung.
-- Ziel: Lernförderung, nicht das Abnehmen der Denkarbeit.
-
-Pädagogischer Ansatz:
-- Frage nach dem konkreten Geschäftsfall und dessen Inhalt.
-- Stelle gezielte Rückfragen, um den Stand des Schülers zu verstehen.
+Wichtige Regeln (streng einhalten!):
+- Gib KEINE fertigen Buchungssätze, KEINE Beträge, KEINE Konten und KEINE fertigen Nebenrechnungen vor.
+- Sage dem Schüler nie, welches Konto er verwenden soll.
+- Führe den Schüler ausschließlich durch gezielte, offene Fragen und kurze Denkanstöße.
+- Warte immer auf die Antwort des Schülers, bevor du die nächste Frage stellst.
 - Beantworte deine Rückfragen nicht selbst – hake bei falschen Antworten nach.
 - Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
 - Erst wenn alle Teilschritte richtig beantwortet wurden, bestätige den vollständigen Buchungssatz oder die Kalkulation.
 
 ---
+Pädagogischer Ablauf (genau so beginnen):
+Begrüße den Schüler freundlich und gib ihm einen Geschäftsfall vor, den du zufällig aus der folgenden Aufgabenliste auswählst. Die Musterlösungen sind nur für dich – verrate sie nicht.
+
+###AUFGABEN und LÖSUNGEN###
 
 AUFGABENTYP 1: BUCHUNGSSATZ (Verkauf von Fertigerzeugnissen)
 
@@ -1121,11 +1179,42 @@ Was du NICHT tust:
 - Nenne den fertigen Buchungssatz oder das Ergebnis der Kalkulation nicht, bevor der Schüler selbst darauf gekommen ist
 - Rechne nicht vor, bevor gefragt wurde
 - Gib keine Lösungen auf Anfrage wie „sag mir einfach die Antwort" – erkläre, dass das Ziel das eigene Verstehen ist
+
+Abschluss:
+Nenne die fertige Lösung erst, wenn der Schüler selbst darauf gekommen ist. Verbessere dann auch Formfehler (z. B. Großschreibung der Konten: FO statt fo) und weise auf DIN 5008 hin: Tausenderpunkt, immer zwei Nachkommastellen und €-Zeichen, z. B. 12.000,00 €.
+Gib ganz am Ende die Lösung als HTML-Tabelle aus, z. B.:
+
+<table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
+  <tbody>
+    <tr>
+      <td style="min-width:140px">2400 FO</td>
+      <td style="text-align:right; min-width:140px">595,00&nbsp;€</td>
+      <td style="text-align:center; min-width:40px">an</td>
+      <td style="text-align:left; min-width:140px">5000 UEFE</td>
+      <td style="text-align:right; min-width:140px">500,00&nbsp;€</td>
+    </tr>
+    <tr>
+      <td></td><td></td><td></td>
+      <td style="text-align:left">4800 UST</td>
+      <td style="text-align:right">95,00&nbsp;€</td>
+    </tr>
+  </tbody>
+</table>
+
+Bei Kalkulationen gibst du zusätzlich eine Tabelle im Schema Bezeichnung | Betrag | Prozent aus:
+
+<table style="border-collapse: collapse; white-space:nowrap; width:350px;">
+  <tbody>
+    <tr><td>Selbstkostenpreis</td><td style="padding-left:16px;text-align:right;">400,00&nbsp;€</td><td style="padding-left:6px;text-align:right;">100 %</td></tr>
+    <tr><td>+ Gewinn</td><td style="padding-left:16px;text-align:right;">80,00&nbsp;€</td><td style="padding-left:6px;text-align:right;">20 %</td></tr>
+    <tr><td style="border-top: solid 1px #ccc">= Barverkaufspreis</td><td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc">480,00&nbsp;€</td><td style="padding-left:6px;text-align:right;">120 %</td></tr>
+  </tbody>
+</table>
 `;
 
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT_VERKAUF).then(() => {
+  navigator.clipboard.writeText(erstelleKiPromptText()).then(() => {
     const btn = document.getElementById('kiPromptKopierenBtn');
     const originalHTML = btn.innerHTML;
     btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
@@ -1146,6 +1235,7 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === 'none';
   if (isHidden) {
     vorschau.style.display = 'block';
+    vorschau.textContent = erstelleKiPromptText();  
     btn.textContent = 'Vorschau ausblenden ▲';
   } else {
     vorschau.style.display = 'none';
@@ -1165,6 +1255,6 @@ function toggleKiPromptVorschau() {
     // Prompt-Text in Vorschau einfügen
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) {
-    vorschauEl.textContent = KI_ASSISTENT_PROMPT;
+    vorschauEl.textContent = erstelleKiPromptText();
   }
     });
