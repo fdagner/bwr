@@ -388,7 +388,6 @@ function zeigeZufaelligeAbschreibungsAufgabe(manuelleAK = null, manuelleND = nul
   const chartInner   = document.getElementById('afaChartInner');
 
   chartWrapper.style.display = 'block';
-  chartHeader.innerHTML = `<h2>Diagramm</h2>`;
   chartInner.innerHTML  = '';
 
   const chartId  = `afa-chart-${Date.now()}`;
@@ -408,12 +407,14 @@ function zeigeZufaelligeAbschreibungsAufgabe(manuelleAK = null, manuelleND = nul
   const showDataLabels      = nd <= 8;
 
   const chartOptions = {
-    chart: {
-      type: 'bar',
-      height: nd <= 6 ? 340 : nd <= 12 ? 400 : 460,
-      stacked: true,
-      toolbar: { show: true, tools: { download: true, zoom: false, pan: false, reset: false } },
-    },
+   chart: {
+  type: 'bar',
+  background: '#fff',
+  animations: { enabled: false },
+  height: nd <= 6 ? 340 : nd <= 12 ? 400 : 460,
+  stacked: true,
+  toolbar: { show: true, tools: { download: true, zoom: false, pan: false, reset: false } },
+},
     series: [
       { name: 'Restbuchwert', data: restbuchwerte, color: '#42A5F5' },
         { name: 'Abschreibungsbetrag',              data: jahresAfa,    color: '#EF5350' },
@@ -518,14 +519,26 @@ function zeigeZufaelligeAbschreibungsAufgabe(manuelleAK = null, manuelleND = nul
     Genaue Werte: Tooltip beim Hovern über die Säulen.
   `;
 
-  setTimeout(() => {
-    const chart = new ApexCharts(document.getElementById(chartId), chartOptions);
-    chart.render();
-    renderedCharts.push(chart);
+ setTimeout(async () => {
+  const chart = new ApexCharts(document.getElementById(chartId), chartOptions);
+  renderedCharts.push(chart);
+  try {
+    await chart.render();
+
     // Legende nach Render einfügen
     const wrapper = document.getElementById('afaChartInner');
     if (wrapper) wrapper.appendChild(legendeDiv);
-  }, 50);
+
+    // Diagramm als Bild in die Aufgabe einsetzen
+    const { imgURI } = await chart.dataURI({ scale: 2 });
+    const platz = document.getElementById(`afaImg-${chartId}`);
+    if (platz && imgURI) {
+      platz.innerHTML = `<p><img src="${imgURI}" alt="Diagramm zur linearen Abschreibung" style="max-width:90%;height:auto;"></p>`;
+    }
+  } catch (e) {
+    console.warn('Diagramm-Export übersprungen:', e);
+  }
+}, 50);
 
 
   // ── Aufgaben & Lösungen ───────────────────────────────────────────────────
@@ -545,10 +558,12 @@ function zeigeZufaelligeAbschreibungsAufgabe(manuelleAK = null, manuelleND = nul
   // Aufgaben anzeigen
   const aufgabenSection = document.createElement('div');
   aufgabenSection.className = 'aufgaben-section';
-  aufgabenSection.innerHTML = `
-    <h2>Aufgaben</h2>
-    <ol>${aufgaben.map(a => `<li>${a.text}</li>`).join('')}</ol>
-  `;
+ aufgabenSection.innerHTML = `
+  <h2>Aufgaben</h2>
+  <p>Es liegt folgendes Diagramm für eine lineare Abschreibung vor:</p>
+  <div id="afaImg-${chartId}"></div>
+  <ol>${aufgaben.map(a => `<li>${a.text}</li>`).join('')}</ol>
+`;
   container.appendChild(aufgabenSection);
 
   // Lösungen anzeigen

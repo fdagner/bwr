@@ -571,7 +571,7 @@ function insertDynamicText(date, company, lastPrice, chartData, imgURI) {
                 <h2>Aufgabe</h2>
         Am ${formattedDate} kauft ${kaeuferName} ${anzahlAktien} Aktien der „${company.name} ${company.rechtsform}".
 Die Spesen betragen 1 % vom Kurswert. Bilde den Buchungssatz.<br><br>
-${imgURI ? `<p><img src="${imgURI}" alt="..." style="max-width:90%;height:auto;"></p>` : ''}
+${imgURI ? `<p><img src="${imgURI}" alt="Aktienkurs ${company.name}" style="max-width:90%;height:auto;"></p>` : ''}
 <h2 class="loesung">Lösung</h2>
            <h4>Nebenrechnung</h4>
          <table style="border-collapse: collapse;white-space:nowrap;width:400px;margin: 0 0">
