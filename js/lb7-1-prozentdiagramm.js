@@ -9,9 +9,9 @@ let FAMILIENNAME = "Müller";
 
 function getFamilienname() {
   const inp = document.getElementById("familiennameInput");
-  return inp && inp.value.trim() ? inp.value.trim() : FAMILIENNAME;
+  const sauber = inp ? inp.value.replace(/[<>]/g, "").trim().slice(0, 30) : "";
+  return sauber || FAMILIENNAME;
 }
-
 // ── Hilfsfunktionen ──────────────────────────────────────────────────────────
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -404,12 +404,12 @@ const aufgabenThemen = [
           {
             text: `Bestimme die Zinseinnahmen für ${jahre[3]} und ${jahre[4]}. Berechne die absolute Veränderung.`,
             loesung: `${jahre[3]}: <strong>${basis} €</strong> &nbsp;|&nbsp; ${jahre[4]}: <strong>${end} €</strong><br>
-            Veränderung: ${end} − ${basis} = <strong>+${diff} €</strong>`,
+            Veränderung: ${end} − ${basis} = <strong>${diff > 0 ? "+" : ""}${diff} €</strong>`,
           },
           {
-            text: `Berechne die prozentuale Steigerung der Zinseinnahmen von ${jahre[3]} auf ${jahre[4]}.`,
+            text: `Berechne die prozentuale Veränderung der Zinseinnahmen von ${jahre[3]} auf ${jahre[4]}.`,
             loesung: `(${end} − ${basis}) ÷ ${basis} × 100<br>
-            = ${diff} ÷ ${basis} × 100 = <strong>${prozent} %</strong>`,
+            = ${diff} ÷ ${basis} × 100 = <strong>${prozent > 0 ? "+" : ""}${prozent} %</strong>`,
           },
         ],
       };
@@ -454,8 +454,16 @@ const energieSets = [
     monate: ["Januar", "Februar", "März", "April", "Mai"],
     werte: [300, 400, 100, 200, 200],
   },
+  { monate: ["Januar", "Februar", "März", "April", "Mai"], werte: [400, 200, 100, 300, 200] },
+  { monate: ["Januar", "Februar", "März", "April", "Mai"], werte: [300, 200, 100, 200, 200] },
+  { monate: ["Januar", "Februar", "März", "April", "Mai"], werte: [400, 300, 200, 100, 300] },
 ];
-      const ds = pick(energieSets);
+            const eindeutig = energieSets.filter(s => {
+        const mx = Math.max(...s.werte), mn = Math.min(...s.werte);
+        return s.werte.filter(v => v === mx).length === 1
+            && s.werte.filter(v => v === mn).length === 1;
+      });
+      const ds = pick(eindeutig);
       const monate = ds.monate;
       const werte = ds.werte;
 
@@ -501,7 +509,7 @@ const energieSets = [
             loesung: `Es handelt sich um ein <strong>Säulendiagramm</strong>. Es vergleicht den Energieverbrauch verschiedener Monate und zeigt, in welchem Monat Familie ${name} am meisten bzw. am wenigsten Energie verbraucht.`,
           },
           {
-            text: `Bestimme den Energieverbrauch für ${maxMon} und im ${minMon} ab. Berechne die absolute Differenz.`,
+            text: `Bestimme den Energieverbrauch für ${maxMon} und ${minMon}. Berechne die absolute Differenz.`,
             loesung: `${maxMon}: <strong>${maxV} kWh</strong> &nbsp;|&nbsp; ${minMon}: ${minV} kWh<br>
             Differenz: ${maxV} − ${minV} = <strong>${diff} kWh</strong>`,
           },
@@ -532,127 +540,100 @@ function getSelectedGenerator() {
   return pick(aufgabenThemen);
 }
 
+let renderZaehler = 0;
+
 function zeigeZufaelligeProzentAufgaben() {
   renderedCharts.forEach(c => { try { c.destroy(); } catch (e) { } });
   renderedCharts = [];
 
   const container = document.getElementById("Container");
+  const chartDiv  = document.getElementById("prozentChart");
   if (!container) return;
-  container.innerHTML = "";
+  if (!chartDiv) {
+    console.error("Element #prozentChart fehlt in der HTML-Datei.");
+    return;
+  }
+  chartDiv.innerHTML = "";
 
-  const chartWrapper = document.createElement("div");
-  chartWrapper.id = "current-chart-wrapper";
-  chartWrapper.style.cssText = `
-    margin: 0 auto 1.5rem auto;
-    max-width: 900px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
-    background: white;
-    min-width: 700px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
-  `;
-
-  const oldWrapper = document.getElementById("current-chart-wrapper");
-  if (oldWrapper) oldWrapper.remove();
-
-  const chartHeader = document.createElement("div");
-  chartHeader.style.cssText = `
-    padding: 16px 20px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    font-weight: bold;
-    font-size: 1.25rem;
-  `;
-
-  const thema = getSelectedGenerator();
+  const mein    = ++renderZaehler;
+  const thema   = getSelectedGenerator();
   const aufgabe = thema.gen();
 
-  chartHeader.innerHTML = `<h2>Diagramm</h2>`;
-  chartWrapper.appendChild(chartHeader);
-
-  const chartDivWrapper = document.createElement("div");
-  chartDivWrapper.style.padding = "20px";
-  const chartId = `chart-${Date.now()}`;
-  const chartDiv = document.createElement("div");
-  chartDiv.id = chartId;
-  chartDivWrapper.appendChild(chartDiv);
-  chartWrapper.appendChild(chartDivWrapper);
-
-  container.parentNode.insertBefore(chartWrapper, container);
-
-  const aufgabenSection = document.createElement("div");
-  aufgabenSection.style.cssText = `
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-  `;
-
-  aufgabenSection.innerHTML = `
-    <h2 style="margin-top:0;">Aufgaben</h2>
-    <ol style="padding-left: 1.6rem; line-height: 1.6;">
-      ${aufgabe.aufgaben.map(a => `<li>${a.text}</li>`).join("")}
-    </ol>
-  `;
-
-  const loesungenSection = document.createElement("div");
-  loesungenSection.style.cssText = `padding: 20px;`;
-
+  // ── Aufgabenblatt im Container (das Diagramm kommt als PNG in den Platzhalter) ──
   let loesHtml = `<h2 style="margin-top:0;" class="loesung">Lösung</h2>`;
   aufgabe.aufgaben.forEach((a, i) => {
     loesHtml += `
-      <div style="
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        padding: 14px;
-        margin-bottom: 12px;
-      ">
+      <div style="background:white; border:1px solid #ddd; border-radius:6px; padding:14px; margin-bottom:12px;">
         <strong>Aufgabe ${i + 1}:</strong><br>
         ${a.loesung}
-      </div>
-    `;
+      </div>`;
   });
-  loesungenSection.innerHTML = loesHtml;
 
-  container.appendChild(aufgabenSection);
-  container.appendChild(loesungenSection);
+  container.innerHTML = `
+      <h2 style="margin-top:0;">Aufgaben</h2>
+    <div id="diagramm-platzhalter" style="margin:0 0 1.5rem 0; min-height:60px; color:#888;">Diagramm wird erstellt …</div>
+    <div style="padding:20px; background:white; border-radius:8px; margin-bottom:1.5rem;">
+      <ol style="padding-left:1.6rem; line-height:1.6;">
+        ${aufgabe.aufgaben.map(a => `<li>${a.text}</li>`).join("")}
+      </ol>
+    </div>
+    <div style="padding:20px;">${loesHtml}</div>`;
 
-  setTimeout(() => {
-    const exportName = (aufgabe.chartOptions.title?.text || "prozentrechnung")
-      .replace(/[^a-zA-Z0-9_-äöüÄÖÜß]/g, "_")
-      .replace(/__+/g, "_");
+  // ── Diagramm rendern, danach als PNG in den Platzhalter ──
+  const exportName = (aufgabe.chartOptions.title?.text || "prozentrechnung")
+    .replace(/[^a-zA-Z0-9_äöüÄÖÜß-]/g, "_")
+    .replace(/__+/g, "_");
 
-    const chartOptions = {
-      ...aufgabe.chartOptions,
-      chart: {
-        ...aufgabe.chartOptions.chart,
-        background: '#ffffff',
-        toolbar: {
-          ...TOOLBAR,
-          export: {
-            csv: { filename: exportName },
-            svg: { filename: exportName },
-            png: { filename: exportName }
-          }
+  const chartOptions = {
+    ...aufgabe.chartOptions,
+    chart: {
+      ...aufgabe.chartOptions.chart,
+      background: "#ffffff",
+      animations: { enabled: false },   // sonst wird eine halb gezeichnete Animation fotografiert
+      toolbar: {
+        ...TOOLBAR,
+        export: {
+          csv: { filename: exportName },
+          svg: { filename: exportName },
+          png: { filename: exportName }
         }
       }
-    };
+    }
+  };
 
-    const chart = new ApexCharts(document.getElementById(chartId), chartOptions);
-    chart.render();
+  setTimeout(() => {
+    if (mein !== renderZaehler) return;   // inzwischen neue Aufgabe erstellt
+    const chart = new ApexCharts(chartDiv, chartOptions);
     renderedCharts.push(chart);
+
+    chart.render()
+      .then(() => chart.dataURI({ scale: 2 }))
+      .then(({ imgURI }) => {
+        if (mein !== renderZaehler) return;
+        const ziel = document.getElementById("diagramm-platzhalter");
+        if (!ziel) return;
+        const img = document.createElement("img");
+        img.src = imgURI;
+        img.alt = aufgabe.chartOptions.title?.text || "Diagramm";
+        img.style.cssText = "display:block; max-width:100%; height:auto;";
+        img.style.width = (chart.w?.globals?.svgWidth || 700) + "px";
+        ziel.innerHTML = "";
+        ziel.appendChild(img);
+      })
+      .catch(err => {
+        console.error("Diagramm konnte nicht erstellt werden:", err);
+        const ziel = document.getElementById("diagramm-platzhalter");
+        if (ziel && mein === renderZaehler) ziel.textContent = "Diagramm konnte nicht erstellt werden.";
+      });
   }, 50);
 }
-
 
 // ============================================================================
 // KI-ASSISTENT
 // ============================================================================
 
 const KI_ASSISTENT_PROMPT_PROZ = `
-Du bist ein freundlicher Mathematik- und Wirtschaftsassistent für Schüler der Realschule (BwR, Klasse 8). Du hilfst beim Verständnis von Prozentrechnung anhand von Diagrammen aus dem Haushalt.
+Du bist ein freundlicher Mathematik- und Wirtschaftsassistent für Schüler der Realschule (BwR, Klasse 7). Du hilfst beim Verständnis von Prozentrechnung anhand von Diagrammen aus dem Haushalt.
 
 Aufgabe:
 - Gib KEINE fertigen Lösungen vor.

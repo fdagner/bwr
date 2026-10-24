@@ -28,12 +28,7 @@ const COLOR_SCHEMES = {
 
 // HTML-Tags und gefährliche Zeichen entfernen
 function sanitizeText(str) {
-  return str
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/&(?!(lt|gt|amp|quot|apos);)/g, "&amp;")
-    .replace(/['"]/g, "")          // einfache & doppelte Anführungszeichen
-    .trim();
+  return String(str).replace(/[<>]/g, "").trim();
 }
 
 // Prüft ob ein String HTML-Tags enthält
@@ -46,6 +41,10 @@ function isValidNumber(val) {
   return /^-?\d{0,12}([.,]\d{0,6})?$/.test(val.trim()) && val.trim() !== "" && val.trim() !== "-";
 }
 
+function parseNum(s) { 
+  return parseFloat(String(s).replace(",", ".")); 
+
+}
 // Text-Validierung: kein HTML, Längenbegrenzung
 function isValidText(val, maxLen = 80) {
   return val.trim().length > 0 && val.length <= maxLen && !containsHtml(val);
@@ -134,6 +133,7 @@ function infografik_init() {
   });
 
   // Standardvorlage laden und sofort rendern
+  populateTemplateDropdown();
   loadTemplate("bip");
 }
 
@@ -255,7 +255,7 @@ function sortRows(mode) {
   const rows = [...container.querySelectorAll(".ig-data-row")];
   const getData = r => {
     const inputs = r.querySelectorAll("input");
-    return { label: inputs[0].value.trim(), value: parseFloat(inputs[1].value) || 0 };
+    return { label: inputs[0].value.trim(), value: parseNum(inputs[1].value) || 0 };
   };
 
   if (mode === "asc")   rows.sort((a,b) => getData(a).value - getData(b).value);
@@ -314,6 +314,11 @@ function closeCsvModal() {
 function previewCsv() {
   const file = document.getElementById("csv-file").files[0];
   if (!file) return;
+    if (file.size > 200 * 1024) {
+    alert("Datei zu groß (max. 200 KB).");
+    document.getElementById("csv-file").value = "";
+    return;
+  }
   const reader = new FileReader();
   reader.onload = e => {
     csvLines = e.target.result.split(/\r?\n/).filter(l => l.trim());
@@ -326,7 +331,7 @@ function previewCsv() {
 function importCsv() {
   if (!csvLines.length) { alert("Bitte erst eine CSV-Datei wählen."); return; }
   const skipHeader = document.getElementById("csv-skip-header").checked;
-  const lines      = skipHeader ? csvLines.slice(1) : csvLines;
+    const lines      = (skipHeader ? csvLines.slice(1) : csvLines).slice(0, 30);
   document.getElementById("data-rows").innerHTML = "";
   rowCount = 0;
   lines.forEach(line => {
@@ -475,7 +480,11 @@ function exportSvg() {
 // ═══════════════════════════════════════════
 function downloadCsv() {
   const { labels, values } = getDataPoints();
-  const content = "Bezeichnung;Wert\n" + labels.map((l,i) => `${l};${values[i]}`).join("\n");
+  const csvCell = s => {
+    s = String(s).replace(/[\r\n;]+/g, " ");
+    return /^[=+\-@\t]/.test(s) ? "'" + s : s;
+  };
+  const content = "Bezeichnung;Wert\n" + labels.map((l,i) => `${csvCell(l)};${values[i]}`).join("\n");
   const b64     = btoa(unescape(encodeURIComponent(content)));
   const a       = document.createElement("a");
   a.href        = "data:text/csv;base64," + b64;
@@ -1043,7 +1052,7 @@ function validateAll() {
 
 
 function niceScale(maxVal, headroomFactor = 1.0, targetTicks = 5) {
-  const raw  = maxVal * headroomFactor;
+  const raw  = Math.max(maxVal, 1) * headroomFactor;
   const mag  = Math.pow(10, Math.floor(Math.log10(raw / targetTicks)));
   const norm = (raw / targetTicks) / mag;
   let step;
@@ -1281,7 +1290,6 @@ const xlabel   = sanitizeText(document.getElementById("inp-xlabel").value);
 
   currentChart = new ApexCharts(document.getElementById("ig-chart-container"), opts);
   currentChart.render();
-   populateTemplateDropdown();
 }
 
 // Start

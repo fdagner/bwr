@@ -1,60 +1,4 @@
 // ============================================================================
-// GLOBALE VARIABLEN
-// ============================================================================
-
-let yamlData = [];
-
-// ============================================================================
-// YAML-DATEN LADEN
-// ============================================================================
-
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
-
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
-
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
-
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => console.error("Konnte unternehmen.yml nicht laden:", err));
-}
-
-// ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
 
@@ -76,7 +20,7 @@ const familienNamen = [
   'Yilmaz', 'Kaya', 'Demir', 'Şahin', 'Çelik', 'Garcia', 'Martinez', 'Lopez',       
   'Schulz', 'Hoffmann', 'Koch', 'Richter', 'Klein', 'Wolf', 'Schröder',
   'Neumann', 'Braun', 'Zimmermann', 'Krüger', 'Hartmann', 'Schmitt',
-];
+]
 
 const maennlVornamen = ['Omar', 'Hassan', 'Karim', 'Stefan', 'Andreas', 'Christian', 'Carlos', 'Luis', 'Peter', 'Martin'];
 const weiblVornamen  = ['Sandra', 'Milena', 'Ana', 'Ivana', 'Christine', 'Aylin', 'Fatma', 'Elif', 'Linh', 'Mai', 'Andrea', 'Sabine', 'Claudia', 'Nicole', 'Julia', 'Maria'];
@@ -277,7 +221,7 @@ function zeigeZufaelligeEinkommensaufgaben() {
   const container = document.getElementById('Container');
   if (!container) return;
 
-  const anzahl    = parseInt(document.getElementById('anzahlAufgaben')?.value) || 4;
+const anzahl    = Math.max(1, Math.min(20, parseInt(document.getElementById('anzahlAufgaben')?.value) || 4));
   const typFilter = document.getElementById('typFilter')?.value || 'alle';
 
   let pool = fallbeispiele;
@@ -499,5 +443,6 @@ function toggleKiPromptVorschau() {
 document.addEventListener('DOMContentLoaded', function () {
   setTimeout(function () {
     zeigeZufaelligeEinkommensaufgaben(); // 
+    
   }, 500);
 });
