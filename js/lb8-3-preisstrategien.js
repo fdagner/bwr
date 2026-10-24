@@ -4,6 +4,7 @@
 
 let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
+let letztePreisAufgaben = [];
 
 // ============================================================================
 // YAML-DATEN LADEN (identisch zum Marketing-Generator)
@@ -287,6 +288,7 @@ function zeigeZufaelligePreisstrategien() {
 
   let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
+  letztePreisAufgaben = [];
 
   aufgabenListe.forEach((stratKey, idx) => {
     const strat = strategien[stratKey];
@@ -295,6 +297,7 @@ function zeigeZufaelligePreisstrategien() {
 
     const ausgabe = pick(unternehmensVarianten)(anzeigeName);
     const text = pick(strat.formulierungen)(ausgabe, preisFormatted);
+    letztePreisAufgaben.push({ text, label: strat.label });
 
     aufgabenHTML += `<li>${text}</li>`;
 
@@ -441,6 +444,85 @@ document.addEventListener('DOMContentLoaded', () => {
     vorschauEl.textContent = KI_ASSISTENT_PROMPT;
   }
 });
+
+// ============================================================================
+// MOODLE-XML-EXPORT – Fragetyp „Zuordnung“ (matching), alle Aufgaben in EINER Frage
+// ============================================================================
+
+const MOODLE_PREIS_PRAEFIX = '8.3-03';
+const MOODLE_PREIS_TITELENDE = 'meinBwR-Zuordnen';
+const MOODLE_PREIS_ANWEISUNG = 'Ordne die jeweilige Preisstrategie zu!';
+const MOODLE_PREIS_PUNKTE_PRO_AUFGABE = 1;
+
+function mxEsc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function mxCdata(s) {
+  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+}
+
+// Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
+function mxIdBasis() {
+  const SCHLUESSEL = 'moodlePreisLetzteIdSekunde';
+  let sek = Math.floor(Date.now() / 1000);
+  try {
+    const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
+    if (sek <= letzte) sek = letzte + 1;
+    localStorage.setItem(SCHLUESSEL, String(sek));
+  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  const d = new Date(sek * 1000);
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+
+function mxBaueMatchingXml(aufgaben) {
+  const punkte = aufgaben.length * MOODLE_PREIS_PUNKTE_PRO_AUFGABE;
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+  xml += `  <question type="matching">\n`;
+  const titel = `${MOODLE_PREIS_PRAEFIX}T${mxIdBasis()}${MOODLE_PREIS_TITELENDE}`;
+  xml += `    <name>\n      <text>${mxEsc(titel)}</text>\n    </name>\n`;
+  xml += `    <questiontext format="html">\n      <text>${mxCdata(`<p>${MOODLE_PREIS_ANWEISUNG}</p>`)}</text>\n    </questiontext>\n`;
+  xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <shuffleanswers>true</shuffleanswers>\n`;
+  xml += `    <correctfeedback format="html">\n      <text>${mxCdata('<p>Die Antwort ist richtig.</p>')}</text>\n    </correctfeedback>\n`;
+  xml += `    <partiallycorrectfeedback format="html">\n      <text>${mxCdata('<p>Die Antwort ist teilweise richtig.</p>')}</text>\n    </partiallycorrectfeedback>\n`;
+  xml += `    <incorrectfeedback format="html">\n      <text>${mxCdata('<p>Die Antwort ist falsch.</p>')}</text>\n    </incorrectfeedback>\n`;
+  xml += `    <shownumcorrect/>\n`;
+
+  aufgaben.forEach(({ text, label }, i) => {
+    xml += `    <subquestion format="html">\n`;
+    xml += `      <text>${mxCdata(`<p>${text}</p><hr>`)}</text>\n`;
+    xml += `      <answer>\n        <text>${mxEsc(label)}</text>\n      </answer>\n`;
+    xml += `    </subquestion>\n`;
+  });
+  
+
+  xml += `  </question>\n\n</quiz>\n`;
+  return xml;
+}
+
+function exportiereMoodle() {
+  if (!letztePreisAufgaben.length) {
+    alert('Bitte zuerst Aufgaben erstellen.');
+    return;
+  }
+  const xml = mxBaueMatchingXml(letztePreisAufgaben);
+
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const dateiname = `quiz-preisstrategien-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 
 function autoSelectMyCompany() {
   const myCompanyName = localStorage.getItem('myCompany');
