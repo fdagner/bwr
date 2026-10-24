@@ -198,8 +198,8 @@ const geschaeftsfallTypen = {
       { beschreibung: ' beauftragt eine Spedition für den Transport von Fertigerzeugnissen zu einem Kunden', artikel: 'Speditionsauftrag Auslieferung', einheit: 'Frt.' },
       { beschreibung: ' gibt Fertigerzeugnisse per Spedition an einen Kunden', artikel: 'Frachtleistung Warenausgang', einheit: 'Frt.' },
       { beschreibung: ' beauftragt die Spedition mit dem Versand an einen Großkunden', artikel: 'Spedition Großkundenlieferung', einheit: 'Frt.' },
-      { beschreibung: ' lässt Waren per Spedition an den Handelspartner liefern', artikel: 'Transport Fertigerzeignisse', einheit: 'Frt.' },
-      { beschreibung: ' erhält die Kostenaufstellung für eine Auslieferung von Fertigerzeignissen an einen Kunden', artikel: 'Frachtkosten Kundenlieferung', einheit: 'Frt.' }
+      { beschreibung: ' lässt Waren per Spedition an den Handelspartner liefern', artikel: 'Transport Fertigerzeugnisse', einheit: 'Frt.' },
+      { beschreibung: ' erhält die Kostenaufstellung für eine Auslieferung von Fertigerzeugnissen an einen Kunden', artikel: 'Frachtkosten Kundenlieferung', einheit: 'Frt.' }
     ]
   }
 };
@@ -485,6 +485,7 @@ function zeigeZufaelligeGeschaeftsfaelle() {
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
   letzteGenerierteGfListeFrachten = [];
+  if (typeof moodleReset === 'function') moodleReset();
 
   let aufgabenHTML = '<h2>Buchungen zu Ausgangsfrachten und Verpackungsmaterial</h2><h3>Bilde die Buchungssätze zu den folgenden Geschäftsfällen.</h3><ol>';
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
@@ -498,6 +499,14 @@ function zeigeZufaelligeGeschaeftsfaelle() {
       aufgabe: klartext(geschaeftsfall.text),
       loesung: `Buchungssatz: ${geschaeftsfall.typDaten.konto} ${geschaeftsfall.nettoFormatted} / 2600 VORST ${geschaeftsfall.vorsteuerFormatted} an ${geschaeftsfall.zahlungsart.konto} ${geschaeftsfall.bruttoFormatted}`
     });
+        if (typeof moodleErfasseAusgangsfrachten === 'function') {
+      moodleErfasseAusgangsfrachten({
+        nr: i, typName: geschaeftsfall.typDaten.name, satz: geschaeftsfall.text,
+        aufwandskonto: geschaeftsfall.typDaten.konto, zahlungskonto: geschaeftsfall.zahlungsart.konto,
+        netto: geschaeftsfall.nettoFormatted, vorsteuer: geschaeftsfall.vorsteuerFormatted,
+        brutto: geschaeftsfall.bruttoFormatted, ustProzent: geschaeftsfall.ustProzent
+      });
+    }
 
     aufgabenHTML += `<li>${geschaeftsfall.text}</li>`;
 

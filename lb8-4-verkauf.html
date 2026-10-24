@@ -72,6 +72,7 @@
           <option value="verkaufskalkulation">Verkaufskalkulation mit Buchungssatz</option>
           <option value="verkaufDifferenzkalkulation">Differenzkalkulation</option>
           <option value="verkaufSkontobuchungssatz">Skontobuchungssatz</option>
+          <option value="gemischt">Vermischte Aufgaben</option>
         </select>
         <br>
       <label for="verkaufMitRabatt">Rabatt:</label>
@@ -115,6 +116,10 @@
     </div>
 </div>
       <button onclick="verkaufZeigeZufaelligenSatz()">Aufgaben erstellen</button>
+<div style="margin-top:10px;display:none">
+  <label for="moodlePraefix">Moodle-Kategorie / Namenspräfix:</label>
+  <input type="text" id="moodlePraefix" value="BwR 8 Verkauf" maxlength="60">
+</div>
     </div>
    <div style="display: flex; gap: 30px;">
     <div id="Container" style="flex: 3;" contenteditable="true">
@@ -190,6 +195,8 @@
       <!-- Ende KI-Assistent -->
   </main>
   <script src="js/lb8-4-verkauf.js"></script>
+<script src="js/moodle-export.js"></script>
+<script src="js/moodle-export-verkauf.js"></script>
     <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div> 
   <script>

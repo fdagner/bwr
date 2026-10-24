@@ -122,6 +122,10 @@
         </div>
         <br>
         <button onclick="zeigeZufaelligeGeschaeftsfaelle()">Aufgaben erstellen</button>
+<div style="margin-top:10px;display:none">
+  <label for="moodlePraefix">Moodle-Kategorie / Namenspräfix:</label>
+  <input type="text" id="moodlePraefix" value="BwR 9 Weitere Buchungen" maxlength="60">
+</div>
       </div>
 
       <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
@@ -197,6 +201,8 @@
   </main>
 
   <script src="js/lb9-2-weiterebuchungen.js"></script>
+<script src="js/moodle-export.js"></script>
+<script src="js/moodle-export-weiterebuchungen.js"></script>
   <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div>
   <script>

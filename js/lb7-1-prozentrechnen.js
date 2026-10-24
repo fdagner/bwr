@@ -20,9 +20,10 @@ function shuffle(arr) {
 
 // Euro-Beträge: Tausenderpunkt nach deutschem Standard (1.000 €)
 function fmtE(n) {
-  return n.toLocaleString('de-DE');
+  return Number.isInteger(n)
+    ? n.toLocaleString('de-DE')
+    : n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-
 // Stückzahlen (Personen, Schüler, mAh usw.): schmales Leerzeichen als Tausendertrenner (1 000)
 function fmt(n) {
   return n.toLocaleString('de-DE').replace(/\./g, '\u202F');
@@ -474,7 +475,15 @@ const AUFGABEN_TYPEN_DEF = {
   W:    { cbId: 'cb-W',    label: 'Prozentwert (W)',               buildText: (e, d) => e.textW(d),    buildLoesung: buildLoesungW    },
   G:    { cbId: 'cb-G',    label: 'Grundwert (G)',                 buildText: (e, d) => e.textG(d),    buildLoesung: buildLoesungG    },
   p:    { cbId: 'cb-p',    label: 'Prozentsatz (p %)',             buildText: (e, d) => e.textp(d),    buildLoesung: buildLoesungp    },
-  Gv:   { cbId: 'cb-Gv',  label: 'Verminderter GW (G → G−)',      buildText: (e, d) => e.textGv(d),   buildLoesung: buildLoesungGv   },
+ Gv: {
+  cbId: 'cb-Gv',
+  label: 'Verminderter GW (G → G−)',
+  buildText: (e, d) => e.textGv(d),
+  buildLoesung: (e, d) =>
+    e.kategorie.startsWith('Umsatzsteuer')
+      ? buildLoesungGe_r(e, d)
+      : buildLoesungGv(e, d)
+},
   Gv_r: { cbId: 'cb-Gv_r',label: 'Grundwert aus G− berechnen',   buildText: (e, d) => e.textGv_r(d), buildLoesung: buildLoesungGv_r },
   Ge:   { cbId: 'cb-Ge',  label: 'Vermehrter GW (G → G+)',        buildText: (e, d) => e.textGe(d),   buildLoesung: buildLoesungGe   },
   Ge_r: { cbId: 'cb-Ge_r',label: 'Grundwert aus G+ berechnen',   buildText: (e, d) => e.textGe_r(d), buildLoesung: buildLoesungGe_r },
@@ -598,12 +607,13 @@ function buildLoesungGv_r(eintrag, d) {
 // ============================================================================
 
 function ergaenzeDaten(d) {
+  const r2 = x => Math.round(x * 100) / 100;
   return {
     G:  d.G,
     p:  d.p,
-    W:  Math.round(d.G * d.p / 100),
-    Gv: Math.round(d.G * (100 - d.p) / 100),
-    Ge: Math.round(d.G * (100 + d.p) / 100),
+    W:  r2(d.G * d.p / 100),
+    Gv: r2(d.G * (100 - d.p) / 100),
+    Ge: r2(d.G * (100 + d.p) / 100),
   };
 }
 
@@ -739,47 +749,6 @@ function erstelleKiPromptText() {
     aufgabenBlock = letzteGenerierteAufgaben.map(({ typ, eintrag, d }, i) => {
       const def = AUFGABEN_TYPEN_DEF[typ];
 
-      // Aufgabentext: HTML-Tags entfernen
-      const aufgabeKlartext = def.buildText(eintrag, d)
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/\s{2,}/g, ' ')
-        .trim();
-
-      // Lösung: HTML-Tags + Sub-Tags entfernen, Leerzeilen bereinigen
-      const loesungKlartext = def.buildLoesung(eintrag, d)
-        .replace(/<sub>/gi, '').replace(/<\/sub>/gi, '')
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/\n\s*\n/g, '\n')
-        .trim();
-
-      return `--- Aufgabe ${i + 1} ---
-Typ: ${def.label}
-Thema: ${eintrag.emoji} ${eintrag.sache} (${eintrag.kategorie})
-Aufgabe: ${aufgabeKlartext}
-
-Musterlösung:
-${loesungKlartext}`;
-    }).join('\n\n');
-  }
-
-  return KI_ASSISTENT_PROMPT.trimEnd() + `
-
-============================================================
-AKTUELLE AUFGABEN MIT MUSTERLÖSUNGEN
-============================================================
-${aufgabenBlock}`;
-}
-function erstelleKiPromptText() {
-  let aufgabenBlock = '';
-
-  if (letzteGenerierteAufgaben.length === 0) {
-    aufgabenBlock = '(Noch keine Aufgaben generiert.)';
-  } else {
-    aufgabenBlock = letzteGenerierteAufgaben.map(({ typ, eintrag, d }, i) => {
-      const def = AUFGABEN_TYPEN_DEF[typ];
-
       const aufgabeKlartext = def.buildText(eintrag, d)
         .replace(/<[^>]+>/g, '')
         .replace(/&nbsp;/g, ' ')
@@ -829,13 +798,6 @@ function toggleKiPromptVorschau() {
   if (hidden) vorschau.textContent = erstelleKiPromptText();
 }
 
-function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const hidden = getComputedStyle(vorschau).display === 'none';
-  vorschau.style.display = hidden ? 'block' : 'none';
-  btn.textContent = hidden ? 'Vorschau ausblenden ▲' : 'Prompt anzeigen ▼';
-}
 
 // ── Initialisierung ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {

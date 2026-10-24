@@ -70,6 +70,7 @@
             <option value="buchungssatz">Aufwand buchen</option>
             <option value="einkaufskalkulation">Einkaufskalkulation mit Buchungssatz</option>
      <option value="skontobuchungssatz">Skontobuchungssatz</option>
+     <option value="gemischt">Vermischte Aufgaben</option>
           </select>
           <br><div class="flex-row">
         <div><label for="mitRabatt">Rabatt:</label><input type="checkbox" id="mitRabatt">
@@ -165,7 +166,11 @@
 <br>
 
         <button onclick="zeigeZufaelligenSatz()">Aufgaben erstellen</button>
-    
+
+<div style="margin-top:10px;display:none">
+  <label for="moodlePraefix">Moodle-Kategorie / Namenspräfix:</label>
+  <input type="text" id="moodlePraefix" value="BwR 8 Einkauf" maxlength="60">
+</div>
 
 
  <div class="output-wrapper" style="display: flex; gap: 20px;">
@@ -247,6 +252,8 @@
       <!-- Ende KI-Assistent -->
   </main>
   <script src="js/lb8-1-einkauf.js"></script>
+<script src="js/moodle-export.js"></script>
+<script src="js/moodle-export-einkauf.js"></script>
 
     <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div> 

@@ -2,6 +2,13 @@
 let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 
+// ── Vermischte Aufgaben ──────────────────────────────────────────────────
+let modusUeberschreibung = null;
+const EINKAUF_MODI = ['buchungssatz', 'einkaufskalkulation', 'skontobuchungssatz'];
+function getModus() {
+  return modusUeberschreibung || document.getElementById('buchungsoptionDropdown').value;
+}
+
 // ============================================================================
 // BENUTZERDEFINIERTE UNTERNEHMEN - Integration
 // ============================================================================
@@ -174,23 +181,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updateMitBezugskostenState() {
 
-    if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
+    if (getModus() === 'einkaufskalkulation') {
       mitRuecksendung.disabled = true;
       mitRuecksendung.checked = false;
       mitBezugskosten.disabled = false;
     };
 
-    if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
+    if (getModus() === 'skontobuchungssatz') {
       mitBezugskosten.disabled = true;
       mitBezugskosten.checked = false;
       mitRuecksendung.disabled = true;
       mitRuecksendung.checked = false;
     };
 
-    if (buchungsoptionDropdown.value === 'buchungssatz') {
+    if (getModus() === 'buchungssatz') {
       mitBezugskosten.disabled = false;
       mitRuecksendung.disabled = false;
     };
+
+      if (getModus() === 'gemischt') {
+      mitBezugskosten.disabled = false;
+      mitRuecksendung.disabled = false;
+    }
   }
 
   buchungsoptionDropdown.addEventListener('change', updateMitBezugskostenState);
@@ -302,7 +314,7 @@ const kontenWerkstoffe_2 = {
 
 let kontenZahlung;
 function inputChangeCategory() {
-  if (buchungsoptionDropdown.value === 'einkaufskalkulation' || buchungsoptionDropdown.value === 'skontobuchungssatz') {
+  if (getModus() === 'einkaufskalkulation' || getModus() === 'skontobuchungssatz') {
     kontenZahlung = {
       ", wobei eine Eingangsrechnung eingeht": "4400 VE",
       ". Die Werkstoffe werden geliefert und der Lieferer sendet eine Eingangsrechnung": "4400 VE",
@@ -764,11 +776,23 @@ function zeigeZufaelligenSatz() {
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
   letzteGenerierteGfListeEinkauf = [];
+  if (typeof moodleReset === 'function') moodleReset();
 
   let satzOutput = '<h2>Aufgaben</h2><ol>';
   let antwortOutput = '<h2 class="loesung">Lösung</h2>';
+  const gemischt = document.getElementById('buchungsoptionDropdown').value === 'gemischt';
+  const origBezug = mitBezugskosten.checked;
+  const origRueck = mitRuecksendung.checked;
+  modusUeberschreibung = null;
+
 
   for (let i = 1; i <= anzahl; i++) {
+        if (gemischt) {
+      modusUeberschreibung = EINKAUF_MODI[Math.floor(Math.random() * EINKAUF_MODI.length)];
+      // Nebenbedingungen je Typ: Skonto ohne Bezugskosten/Rücksendung, Kalkulation ohne Rücksendung
+      mitBezugskosten.checked = origBezug && modusUeberschreibung !== 'skontobuchungssatz';
+      mitRuecksendung.checked = origRueck && modusUeberschreibung === 'buchungssatz';
+    }
     const currentI = i;
     const [
       zufaelligerSatz, angebotSatz, ruecksendungSatz, skontoSatz,
@@ -784,7 +808,7 @@ function zeigeZufaelligenSatz() {
 
     // Aufgabe und Lösung für KI-Prompt merken
 const aufgabeText = (() => {
-  switch (buchungsoptionDropdown.value) {
+  switch (getModus()) {
     case 'einkaufskalkulation': return angebotSatz.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     case 'skontobuchungssatz':  return (zufaelligerSatz + ' ' + skontoSatz).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     default:                    return zufaelligerSatz.replace(/\s+/g, ' ').trim();
@@ -793,7 +817,7 @@ const aufgabeText = (() => {
 
 const loesungText = (() => {
   const fmt = (v) => typeof v === 'string' ? v : String(v);
-  switch (buchungsoptionDropdown.value) {
+  switch (getModus()) {
     case 'einkaufskalkulation':
       return [
         `Listeneinkaufspreis: ${listeneinkaufspreis} (100 %)`,
@@ -819,15 +843,30 @@ const loesungText = (() => {
 
 letzteGenerierteGfListeEinkauf.push({ aufgabe: aufgabeText, loesung: loesungText });
 
+
     const formattedSatz = zufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const formattedAngebot = angebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const formattedSkonto = skontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const formattedRuecksendung = ruecksendungSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
 
+    if (typeof moodleErfasseGeschaeftsfall === 'function') {
+  moodleErfasseGeschaeftsfall({
+    nr: currentI, modus: getModus(), mitBezugskosten: mitBezugskosten.checked,
+    satz: formattedSatz, angebotSatz: formattedAngebot, skontoSatz: formattedSkonto,
+    listeneinkaufspreis, rabattWert: antwort_rabattWert, rabattSatz: antwort_rabattSatz,
+    skontoProzent: antwort_skontoSatz, skontoBetrag: antwort_skontoBetrag,
+    skontoBrutto: antwort_skontoBetrag_brutto, vorsteuerBerichtigung: antwort_vorsteuer_berichtigung,
+    ueberweisung: antwort_ueberweisungsbetrag, bareinkaufspreis: antwort_bareinkaufspreis,
+    einstandspreis: antwort_einstandspreis, konto1: konto_1, zieleinkaufspreis,
+    kontoBezug: antwort_bezugskosten, bezugskosten: antwort_bezugskostenWert,
+    ust: USTWert, konto2: konto_2, brutto: betrag_2, kontoNachlass: konto_Skontobuchungssatz
+  });
+}
+
     // ── Aufgaben-Text (wird exportiert) ───────────────────────────────
     let aufgabeHtml = `<li>`;
 
-    switch (buchungsoptionDropdown.value) {
+    switch (getModus()) {
       case 'einkaufskalkulation':
         aufgabeHtml += `<div>${formattedAngebot}</div>`;
         break;
@@ -872,7 +911,7 @@ const geschaeftsfallDaten = {
     const buttonDiv = document.createElement('div');
     buttonDiv.style.margin = '12px 0';
 
-    if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
+    if (getModus() === 'einkaufskalkulation') {
       // Speziell für Einkaufskalkulation: Angebot + Rechnung
       buttonDiv.innerHTML = `
         ${erstelleAngebotButton(currentI, geschaeftsfallDaten)}
@@ -886,7 +925,7 @@ const geschaeftsfallDaten = {
     }
 
     // Gutschrift-Button (Rücksendung) – bleibt wie bisher
-    if (mitRuecksendung.checked && currentI > 0 && currentI < anzahl && konto_2 === "4400 VE" && buchungsoptionDropdown.value === 'buchungssatz') {
+    if (mitRuecksendung.checked && currentI > 0 && currentI < anzahl && konto_2 === "4400 VE" && getModus() === 'buchungssatz') {
       const gutschriftNummer = currentI + 1;
       const gutschriftButtonHtml = erstelleGeschaeftsfallButton(gutschriftNummer, geschaeftsfallDaten, true);
       const gutschriftDiv = document.createElement('div');
@@ -905,7 +944,7 @@ const geschaeftsfallDaten = {
     // ── Lösung / Antwort (wird exportiert) ─────────────────────────────
     antwortOutput += `<div style="margin-top: 1.5em;"><strong>${parseInt(i)}.</strong><br>`;
 
-    if (buchungsoptionDropdown.value === 'einkaufskalkulation') {
+    if (getModus() === 'einkaufskalkulation') {
       antwortOutput += `
         <table style="border-collapse: collapse; white-space:nowrap; width:350px; margin: 0 0">
           <tbody>
@@ -953,7 +992,7 @@ const geschaeftsfallDaten = {
         </tbody>
       </table><br>`;
 
-    if (buchungsoptionDropdown.value === 'skontobuchungssatz') {
+    if (getModus() === 'skontobuchungssatz') {
       antwortOutput += `
         <br><b>Nebenrechnung:</b><br>
         <table style="border-collapse: collapse; white-space:nowrap; width:350px; margin: 0 0">
@@ -998,11 +1037,19 @@ const geschaeftsfallDaten = {
     }
 
     antwortOutput += `</div>`;
-if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && buchungsoptionDropdown.value === 'buchungssatz') {
+if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && getModus() === 'buchungssatz') {
     letzteGenerierteGfListeEinkauf.push({
     aufgabe: `${formattedRuecksendung} aus Geschäftsfall ${currentI} zurück und erhält dafür eine Gutschrift.`,
     loesung: `Buchungssatz Rücksendung:\n${konto_2} ${berechnung_bruttoWertRuecksendung} an 2600 VORST ${USTWertRuecksendung} / ${konto_1} ${zieleinkaufspreis_Ruecksendung}`,
   });
+
+if (typeof moodleErfasseRuecksendung === 'function') {
+    moodleErfasseRuecksendung({
+      nr: currentI, ausgangssatz: formattedSatz, text: formattedRuecksendung,
+      konto1: konto_1, konto2: konto_2, brutto: berechnung_bruttoWertRuecksendung,
+      ust: USTWertRuecksendung, netto: zieleinkaufspreis_Ruecksendung
+    });
+  }
 
   i++;
   // ... rest des Rücksendungs-HTML-Blocks bleibt unverändert
@@ -1027,6 +1074,10 @@ if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && b
     } else {
     }
   }
+
+  modusUeberschreibung = null;
+  mitBezugskosten.checked = origBezug;
+  mitRuecksendung.checked = origRueck;
   satzOutput += '</ol>'; // Ende der nummerierten Liste für Sätze
 
   container.innerHTML = satzOutput + antwortOutput;

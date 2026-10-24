@@ -1,3 +1,99 @@
+(function () {
+  const NEWS_FILE = 'news.md';
+
+  const track = document.getElementById('newsTrack');
+  const dotsBox = document.getElementById('newsDots');
+  const root = document.getElementById('news');
+  if (!track || !root) return;
+
+  const TYP = { neu: 'Neu', update: 'Update', info: 'Info' };
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // Inline-Markdown: erst HTML escapen, dann **fett** und [Text](url)
+  const inline = s => esc(s)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+
+  const fmt = iso => {
+    const d = new Date(iso);
+    return isNaN(d) ? iso : d.toLocaleDateString('de-DE',
+      { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
+
+  function parse(md) {
+     md = md.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+    return md.split(/^##\s+/m).slice(1).map(block => {
+      const lines = block.split('\n');
+      const [datum, ...rest] = lines.shift().split('|').map(s => s.trim());
+      const titel = rest.join('|');
+      const punkte = lines
+        .map(l => l.match(/^\s*[-*]\s+\[(\w+)\]\s+(.+)$/))
+        .filter(Boolean)
+        .map(m => ({ typ: m[1].toLowerCase(), html: inline(m[2]) }));
+      return { datum, titel, punkte };
+    }).filter(n => n.punkte.length);
+  }
+
+  function render(NEWS) {
+    track.innerHTML = NEWS.map(n => `
+      <article class="news-card">
+        <div class="news-meta"><time datetime="${n.datum}">${fmt(n.datum)}</time></div>
+        ${n.titel ? `<h3>${esc(n.titel)}</h3>` : ''}
+        <ul class="news-list">
+          ${n.punkte.map(p => `
+            <li>
+              <span class="news-badge ${TYP[p.typ] ? p.typ : 'info'}">${TYP[p.typ] || 'Info'}</span>
+              <div>${p.html}</div>
+            </li>`).join('')}
+        </ul>
+      </article>`).join('');
+
+    dotsBox.innerHTML = NEWS.map((_, i) =>
+      `<button type="button" class="news-dot" aria-label="Neuigkeit ${i + 1}" data-i="${i}"></button>`
+    ).join('');
+    const dots = [...dotsBox.children];
+
+    const count = NEWS.length;
+    const index = () => Math.round(track.scrollLeft / track.clientWidth);
+    const goTo = i => track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
+    const next = () => goTo((index() + 1) % count);
+    const prev = () => goTo((index() - 1 + count) % count);
+
+    function updateDots() {
+      const i = Math.min(index(), count - 1);
+      dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    }
+    track.addEventListener('scroll', updateDots, { passive: true });
+    window.addEventListener('resize', updateDots);
+    updateDots();
+
+    root.querySelector('.news-next').addEventListener('click', next);
+    root.querySelector('.news-prev').addEventListener('click', prev);
+    dotsBox.addEventListener('click', e => {
+      const b = e.target.closest('.news-dot');
+      if (b) goTo(+b.dataset.i);
+    });
+    track.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    });
+  }
+
+  fetch(NEWS_FILE, { cache: 'no-cache' })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(md => {
+      const news = parse(md);
+      if (!news.length) throw new Error('keine Einträge');
+      render(news);
+    })
+    .catch(err => {
+      console.warn('News konnten nicht geladen werden:', err);
+      root.style.display = 'none';
+    });
+})();
+
+
+
 // ============================================================================
 // BENUTZERDEFINIERTE UNTERNEHMEN - LOCAL STORAGE VERWALTUNG
 // ============================================================================

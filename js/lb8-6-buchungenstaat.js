@@ -410,7 +410,7 @@ function erstelleBuchungssatz(geschaeftsfall) {
       <tbody>
         <tr>
           <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
-          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1"></td>
+          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.betragFormatted}</td>
           <td style="border-with:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
           <td style="border-with:0;text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
           <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.betragFormatted}</td>
@@ -534,6 +534,7 @@ function zeigeZufaelligeGeschaeftsfaelle() {
 
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
+  if (typeof moodleReset === 'function') moodleReset();
 
   const testGf = erstelleZufallsGeschaeftsfall();
   if (!testGf) {
@@ -558,6 +559,14 @@ const geschaeftsfaelle = letzteGenerierteGeschaeftsfaelle;
 
   geschaeftsfaelle.forEach((gf, idx) => {
     const i = idx + 1;
+      if (typeof moodleErfasseStaat === 'function') {
+    moodleErfasseStaat({
+      nr: i, typName: gf.typDaten.name, satz: gf.text,
+      aufwandskonto: gf.typDaten.konto, zahlungskonto: gf.zahlungsart.konto,
+      betrag: gf.betragFormatted,
+      messbetrag: gf.extraDaten?.messbetrag, hebesatz: gf.extraDaten?.hebesatz
+    });
+  }
     aufgabenHTML  += `<li>${gf.text}</li>`;
     loesungenHTML += `<div style="margin-top: 1.5em;"><strong>${i}.</strong><br>${erstelleBuchungssatz(gf)}</div>`;
 
@@ -806,5 +815,8 @@ function autoSelectMyCompany() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  setTimeout(autoSelectMyCompany, 100);
+  setTimeout(function () {
+    autoSelectMyCompany();
+    zeigeZufaelligeGeschaeftsfaelle();
+  }, 100);
 });

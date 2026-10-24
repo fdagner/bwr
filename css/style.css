@@ -144,6 +144,8 @@ button svg {
   color: var(--surface);
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
 }
 
 .icon:hover {
@@ -179,11 +181,6 @@ select {
   color: var(--text-primary);
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-select:focus {
-  outline: none;
-  border-color: var(--accent-color);
 }
 
 /* ============================================
@@ -234,14 +231,6 @@ select:focus {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.exportButtons {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 24px;
-}
 
 /* ============================================
    MARKIERUNGEN (Konsolidiert)
@@ -623,7 +612,6 @@ summary:hover {
   width: 100%;
   text-align: center;
   background-color: rgba(44, 62, 80, 0.8);
-  box-sizing: border-box;
 }
 
 .slideshow-container .numbertext {
@@ -657,10 +645,6 @@ summary:hover {
   border-radius: 8px;
   padding: 20px;
   box-shadow: var(--shadow);
-}
-
-.kontenplan .hidden {
-  display: none;
 }
 
 .kontenplan .aktiv {
@@ -825,10 +809,7 @@ footer {
       text-align: center;
     }
 
-    .icon {
-  position: relative;
-  cursor: pointer;
-}
+ 
 
 .icon::after {
   content: attr(data-tooltip);
@@ -852,12 +833,6 @@ footer {
 }
 
 
-.button-row {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;              /* Abstand zwischen Buttons */
-  align-items: center;
-}
 /* ============================================
    UTILITY CLASSES
    ============================================ */
@@ -1220,6 +1195,14 @@ select:focus {
    ZUSÄTZLICHE FIELDSET-GRUPPEN - ALLE SECTIONS
    ============================================ */
 
+.lohn-daten-gruppe {
+    background-color: #f0fff8;
+    border-color: #ccffdd;
+}
+.lohn-daten-gruppe:hover {
+    border-color: #99ffbb;
+}
+
 /* Lohnabrechnung Fieldsets */
 .steuer-gruppe {
     background-color: #fff0f5;
@@ -1387,157 +1370,6 @@ select:focus {
     transform: translateY(-2px);
 }
 
-/* ============================================
-   ZUSÄTZLICHE FIELDSET-GRUPPEN - ALLE SECTIONS
-   ============================================ */
-
-/* Lohnabrechnung Fieldsets */
-.lohn-daten-gruppe {
-    background-color: #f0fff8;
-    border-color: #ccffdd;
-}
-
-.lohn-daten-gruppe:hover {
-    border-color: #99ffbb;
-}
-
-.steuer-gruppe {
-    background-color: #fff0f5;
-    border-color: #ffcce0;
-}
-
-.steuer-gruppe:hover {
-    border-color: #ff99cc;
-}
-
-.sozialversicherung-gruppe {
-    background-color: #f0f5ff;
-    border-color: #cce0ff;
-}
-
-.sozialversicherung-gruppe:hover {
-    border-color: #99ccff;
-}
-
-/* Bescheid Fieldsets */
-.bescheid-art-gruppe {
-    background-color: #fffbf0;
-    border-color: #fff0cc;
-}
-
-.bescheid-art-gruppe:hover {
-    border-color: #ffe699;
-}
-
-.bescheid-daten-gruppe {
-    background-color: #f0fff5;
-    border-color: #ccffdd;
-}
-
-.bescheid-daten-gruppe:hover {
-    border-color: #99ffbb;
-}
-
-/* Anlagenkarte Fieldsets */
-.anlage-daten-gruppe {
-    background-color: #f5f0ff;
-    border-color: #e0ccff;
-}
-
-.anlage-daten-gruppe:hover {
-    border-color: #cc99ff;
-}
-
-/* Wertpapiere Fieldsets */
-.wertpapier-daten-gruppe {
-    background-color: #fff5f0;
-    border-color: #ffdccc;
-}
-
-.wertpapier-daten-gruppe:hover {
-    border-color: #ffb399;
-}
-
-.wertpapier-art-gruppe {
-    background-color: #f0fffa;
-    border-color: #ccffee;
-}
-
-.wertpapier-art-gruppe:hover {
-    border-color: #99ffdd;
-}
-
-/* Spezielle Input-Gruppen */
-.checkbox-inline {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    white-space: nowrap;
-    margin: 0;
-    cursor: pointer;
-}
-
-.checkbox-inline input[type="checkbox"] {
-    margin: 0;
-    cursor: pointer;
-}
-
-/* Email Container Spezial-Styling */
-#emailContainer {
-    border: 0px solid #00000039;
-    line-height: 0.75;
-    padding: 0px;
-    margin: 0px;
-    min-width: 700px;
-}
-
-
-/* Lohnjournal spezielle Container */
-#lohnjournalBuchungssatzContainer {
-    max-width: 760px;
-    margin: 0 auto;
-}
-
-/* Responsive Anpassungen für alle neuen Sections */
-@media (max-width: 768px) {
-    #emailContainer {
-        min-width: 100%;
-    }
-    
-    #newspaperContent {
-        column-count: 1;
-    }
-    
-    .checkbox-inline {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-
-/* Verbesserte Hover-Effekte für alle Fieldsets */
-.lohn-daten-gruppe,
-.steuer-gruppe,
-.sozialversicherung-gruppe,
-.bescheid-art-gruppe,
-.bescheid-daten-gruppe,
-.anlage-daten-gruppe,
-.wertpapier-daten-gruppe,
-.wertpapier-art-gruppe {
-    transition: all 0.3s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.lohn-daten-gruppe:hover,
-.steuer-gruppe:hover,
-.sozialversicherung-gruppe:hover,
-.bescheid-art-gruppe:hover,
-.bescheid-daten-gruppe:hover,
-.anlage-daten-gruppe:hover,
-.wertpapier-daten-gruppe:hover,
-.wertpapier-art-gruppe:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-}
 
  /* ── KI-Assistent Block ─────────────────────────────────────────── */
     .ki-assistent-box {
@@ -1622,7 +1454,6 @@ select:focus {
       border: 1.5px solid #e2e8f0;
       border-radius: 6px;
       resize: vertical;
-      box-sizing: border-box;
       margin-top: 10px;
       white-space: pre-wrap;
     }
@@ -1681,7 +1512,6 @@ select:focus {
         font-size: .88rem;
         border: 1px solid #ccc;
         border-radius: 3px;
-        box-sizing: border-box;
     }
     #ig-controls textarea { resize: vertical; min-height: 54px; }
 
@@ -1729,7 +1559,6 @@ select:focus {
         border: 1px solid #ccc;
         border-radius: 3px;
         width: 100%;
-        box-sizing: border-box;
         font-family: inherit;
     }
     .ig-drag-handle {
@@ -1935,7 +1764,6 @@ select:focus {
     border-radius: 4px;
     font-size: 0.92em;
     width: 100%;
-    box-sizing: border-box;
     transition: border-color 0.15s;
   }
 
@@ -1990,4 +1818,183 @@ svg text[contenteditable="true"] {
     cursor: text !important;
     user-select: text !important;
     -webkit-user-select: text !important;
+}
+
+
+/* Hamburger auf Desktop ausblenden */
+.nav-toggle { display: none; }
+
+@media (max-width: 768px) {
+
+  h1 { font-size: 1.4rem; }
+
+  .nav-toggle {
+    display: block;
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1.1rem;
+    text-align: left;
+    color: #fff;
+    background: #333;      /* an deine Navbar-Farbe anpassen */
+    border: 0;
+    cursor: pointer;
+  }
+
+  /* Navbar: standardmäßig zu, geöffnet als Spalte */
+  .navbar { display: none; flex-direction: column; width: 100%; }
+  .navbar.open { display: flex; }
+
+  .navbar > a,
+  .dropbtn,
+  .sub-dropbtn,
+  .dropdown-content a,
+  .dropdown-sub-content a {
+    display: block;
+    width: 100%;
+    padding: 14px 16px;     /* Touch-Ziel >= 44px */
+    text-align: left;
+  }
+
+  .dropdown,
+  .dropdown-sub { width: 100%; }
+
+  /* Hover abschalten (bleibt auf Touch sonst hängen), Klick-Toggle statt dessen */
+  .navbar .dropdown-content,
+  .navbar .dropdown-sub-content {
+    display: none;
+    position: static;       /* kein Overlay, schiebt Inhalt nach unten */
+    width: 100%;
+    min-width: 0;
+    box-shadow: none;
+    float: none;
+  }
+  .navbar .dropdown:hover > .dropdown-content,
+  .navbar .dropdown-sub:hover > .dropdown-sub-content { display: none; }
+
+  .navbar .dropdown.open > .dropdown-content,
+  .navbar .dropdown-sub.open > .dropdown-sub-content { display: block; }
+
+  /* Einrückung je Ebene */
+  .dropdown-content a,
+  .dropdown-content .sub-dropbtn { padding-left: 32px; }
+  .dropdown-sub-content a { padding-left: 48px; }
+
+  /* Pfeil dreht sich beim Öffnen */
+  .dropbtn svg { transition: transform .2s; }
+  .dropdown.open > .dropbtn svg { transform: translate(0,3px) rotate(180deg); }
+}
+
+/* ============================================
+   NEUIGKEITEN-SLIDER
+   ============================================ */
+
+.news-slider { margin: 24px 0; }
+
+.news-wrap { position: relative; }
+
+.news-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--surface-dark);
+}
+.news-track::-webkit-scrollbar { display: none; }
+
+.news-card {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  padding: 24px 64px;          /* Platz für die Pfeile */
+  min-height: 150px;
+}
+
+.news-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.news-badge {
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent-color);
+}
+.news-badge.neu    { background: var(--success); }
+.news-badge.update { background: var(--accent-color); }
+.news-badge.info   { background: var(--warning); }
+
+.news-card h3 { margin: 0 0 8px 0; font-size: 18px; }
+.news-card p  { margin: 0 0 8px 0; }
+
+/* Pfeile (überschreiben die globalen button-Styles) */
+.news-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: rgba(44, 62, 80, 0.75);
+  color: #fff;
+}
+.news-nav:hover:not(:disabled) { background: rgba(44, 62, 80, 0.95); transform: translateY(-50%); }
+.news-prev { left: 10px; }
+.news-next { right: 10px; }
+
+.news-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.news-dot {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--accent-color);
+  background: transparent;
+}
+.news-dot:hover:not(:disabled) { transform: none; box-shadow: none; }
+.news-dot.active { background: var(--accent-color); }
+
+@media (max-width: 768px) {
+  .news-card { padding: 20px 20px 20px 20px; }
+  .news-nav  { display: none; }   /* auf dem Handy wischen */
+}
+
+.news-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.news-list li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.news-list .news-badge {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  min-width: 62px;
+  text-align: center;
+}
+
+.news-list a { 
+  margin-left: 4px;
 }

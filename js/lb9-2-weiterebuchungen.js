@@ -233,7 +233,7 @@ const geschaeftsfallTypen = {
     vstSatz: 19,
     vstKonto: '2600 VORST',
     geschaeftsfaelle: [
-      { beschreibung: 'Lastschrift für die Miete von Ausstellungsflächen auf einer Messe', vorgang: 'Miete Messefläche', zahlungsweg: 'kontoauszug', betragBrutto: 2359.77 },
+      { beschreibung: 'Lastschrift für die Miete von Ausstellungsflächen auf einer Messe', vorgang: 'Miete Messefläche', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Vom Bankkonto bei {kunde} wird der Mietbetrag für Geschäftsräume abgebucht', vorgang: 'Miete Geschäftsräume', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Per Dauerauftrag wird die Kantinenpacht abgebucht', vorgang: 'Miete Betriebskantine', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Abbuchung der Pachtgebühr für den Firmenparkplatz vom Bankkonto', vorgang: 'Pacht Parkplatz', zahlungsweg: 'kontoauszug', betragBrutto: null },
@@ -261,7 +261,7 @@ const geschaeftsfallTypen = {
     mitUSt: false,
     geschaeftsfaelle: [
       { beschreibung: 'Bankeinzug der Beiträge für die Rechtsschutzversicherung', vorgang: 'Jahresbeitrag Rechtsschutzversicherung', zahlungsweg: 'kontoauszug', betragBrutto: 2770 },
-      { beschreibung: 'Bankeinzug der jährlichen Kfz-Steuer', vorgang: 'Kfz-Steuer', zahlungsweg: 'kontoauszug', betragBrutto: 930 },
+      { beschreibung: 'Bankeinzug der jährlichen Kfz-Versicherung', vorgang: 'Kfz-Versicherung', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Abbuchung des Beitrags für die Betriebshaftpflichtversicherung vom Bankkonto', vorgang: 'Betriebshaftpflichtvers. Jahresbeitrag', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Lastschrift der Jahresprämie für die Feuerversicherung', vorgang: 'Jahresbeitrag Feuerversicherung', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Bankeinzug des Beitrags für die Transportversicherung', vorgang: 'Jahresbeitrag Transportversicherung', zahlungsweg: 'kontoauszug', betragBrutto: null },
@@ -563,6 +563,7 @@ function zeigeZufaelligeGeschaeftsfaelle() {
 
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
+  if (typeof moodleReset === 'function') moodleReset();
 
   verwendeteSchluessel = new Set(); // ← RESET – das fehlte!
 
@@ -589,6 +590,15 @@ function zeigeZufaelligeGeschaeftsfaelle() {
 
   geschaeftsfaelle.forEach((gf, idx) => {
     const i = idx + 1;
+      if (typeof moodleErfasseWeitereBuchungen === 'function') {
+    moodleErfasseWeitereBuchungen({
+      nr: i, typName: gf.typDaten.name, satz: gf.text,
+      aufwandskonto: gf.typDaten.konto, zahlungskonto: gf.zahlungsart.konto,
+      mitVorsteuer: !!(gf.typDaten.mitVorsteuer && gf.vstBetrag > 0),
+      netto: gf.nettoFormatted, vorsteuer: gf.vstFormatted, brutto: gf.betragFormatted,
+      vorsteuerkonto: gf.typDaten.vstKonto, vstSatz: gf.typDaten.vstSatz
+    });
+  }
     aufgabenHTML  += `<li>${gf.text}</li>`;
     loesungenHTML += `<div style="margin-top: 1.5em;"><strong>${i}.</strong><br>${erstelleBuchungssatz(gf)}</div>`;
 
@@ -701,7 +711,7 @@ Vorsteuerkonten (immer im SOLL):
 
 Zahlungskonten:
 - 2800 BK – Bank (Soll Eingang, Haben Zahlung)
-- 2000 KA – Kasse (Haben Barzahlung)
+- 2880 KA – Kasse (Haben Barzahlung)
 - 4400 VE – Verbindlichkeiten (Haben Rechnungseingang, noch nicht bezahlt)
 
 Buchungslogik:
@@ -732,7 +742,7 @@ Häufige Schülerfehler – darauf hinweisen, nicht vorwegnehmen:
 
 Besondere Hinweise für den Unterricht:
 - Aufwendungen mindern den Gewinn
-- Versicherungsbeiträge und Kfz-Steuer enthalten KEINE Vorsteuer
+- Versicherungsbeiträge enthalten KEINE Vorsteuer
 
 Tonalität:
 - Freundlich, ermutigend, auf Augenhöhe mit Realschülerinnen und -schülern
@@ -746,7 +756,42 @@ Was du NICHT tust:
 - Gib keine Lösungen auf Anfrage wie „sag mir einfach die Antwort" – erkläre, dass das Ziel das eigene Verstehen ist
 
 Nenne den fertigen Buchungssatz erst, wenn der Schüler selbst darauf gekommen ist. Verbessere am Schluss dann auch Formfehler, zum Beispiel Großschreibung der Konten (BK statt Bk) und weise darauf hin die DIN 5008 zu beachten: Tausenderpunkt den Beträgen mit zwei Nachkommastellen und €-Zeichen: z. B. 12.000,00 €
-Gib ganz am Ende jeder erfolgreichen Aufgabe die Musterlösung in der HTML-Version aus.
+Ausgabeformat:
+- Während des gesamten Dialogs schreibst du NUR normalen Text. Keine HTML-Tags, keine Tabellen, keine Code-Blöcke.
+- Nur ganz am Ende einer erfolgreich gelösten Aufgabe gibst du die Musterlösung als HTML-Tabelle aus. Nimm dafür eines der beiden Muster und setze nur die Konten und Beträge der aktuellen Aufgabe ein.
+
+Muster mit Vorsteuer:
+<table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
+  <tbody>
+    <tr>
+      <td style="min-width:140px">6160 FRI</td>
+      <td style="text-align:right; min-width:140px">930,00&nbsp;€</td>
+      <td style="text-align:center; min-width:40px"></td>
+      <td style="min-width:140px"></td>
+      <td style="text-align:right; min-width:140px"></td>
+    </tr>
+    <tr>
+      <td>2600 VORST</td>
+      <td style="text-align:right">176,70&nbsp;€</td>
+      <td style="text-align:center">an</td>
+      <td style="text-align:left">4400 VE</td>
+      <td style="text-align:right">1.106,70&nbsp;€</td>
+    </tr>
+  </tbody>
+</table>
+
+Muster ohne Vorsteuer:
+<table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
+  <tbody>
+    <tr>
+      <td style="min-width:140px">6900 VBEI</td>
+      <td style="text-align:right; min-width:140px">2.770,00&nbsp;€</td>
+      <td style="text-align:center; min-width:40px">an</td>
+      <td style="text-align:left; min-width:140px">2800 BK</td>
+      <td style="text-align:right; min-width:140px">2.770,00&nbsp;€</td>
+    </tr>
+  </tbody>
+</table>
 Am Ende einer erfolgreich gelösten Übung:
 - Frage immer: „Möchtest du noch einen anderen Geschäftsfall üben? Dann geb ich dir einfach den nächsten!" Dann wähle wieder einen zufälligen aus, der noch nicht dran war.
 Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Buchung selbst findet und versteht.
@@ -761,7 +806,7 @@ function erstelleKiPromptText() {
       const nr = idx + 1;
       const bs = erstelleBuchungssatz(gf);
       const bsPlain = erstellePlainBuchungssatz(gf);
-      return `--- Aufgabe ${nr} ---\n${gf.text}\nMusterlösung Aufgabe ${nr}: ${bsPlain}\nMusterlösung Aufgabe ${nr} als HTML:\n${bs}`;
+           return `--- Aufgabe ${nr} ---\n${gf.text}\nMusterlösung Aufgabe ${nr}: ${bsPlain}`;
     }).join('\n\n');
   }
   return KI_ASSISTENT_PROMPT.replace('###AUFGABEN und LÖSUNGEN###', inhalt);

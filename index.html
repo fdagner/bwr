@@ -113,6 +113,15 @@
     </div>
     <br>
 
+<section id="news" class="news-slider" aria-label="Neuigkeiten und neue Funktionen">
+  <h2>Neuigkeiten</h2>
+  <div class="news-wrap">
+    <button type="button" class="news-nav news-prev" aria-label="Vorherige Neuigkeit">❮</button>
+    <div class="news-track" id="newsTrack" tabindex="0"></div>
+    <button type="button" class="news-nav news-next" aria-label="Nächste Neuigkeit">❯</button>
+  </div>
+  <div class="news-dots" id="newsDots"></div>
+</section>
 
     <section id="modellunternehmen">
 
@@ -251,7 +260,7 @@
               console.error("Error parsing uploaded data from Local Storage:", error);
             }
           } else {
-            updateLocalStorageStatus('Standdarddaten werden verwendet.');
+            updateLocalStorageStatus('Standarddaten werden verwendet.');
           }
         }
 

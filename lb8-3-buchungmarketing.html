@@ -110,6 +110,12 @@
 <br>
         <button onclick="zeigeZufaelligeGeschaeftsfaelle()">Aufgaben erstellen</button>
 
+        <button onclick="zeigeZufaelligeGeschaeftsfaelle()">Aufgaben erstellen</button>
+<div style="margin-top:10px;display:none">
+  <label for="moodlePraefix">Moodle-Kategorie / Namenspräfix:</label>
+  <input type="text" id="moodlePraefix" value="BwR 8 Marketing" maxlength="60">
+</div>
+
         <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
           <!-- Exportierbarer Inhalt -->
           <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
@@ -186,8 +192,10 @@
       </div>
       <!-- Ende KI-Assistent -->
   </main>
-  
-  <script src="js/lb8-3-buchungmarketing.js"></script>
+
+<script src="js/lb8-3-buchungmarketing.js"></script>
+<script src="js/moodle-export.js"></script>
+<script src="js/moodle-export-marketing.js"></script>
       <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div> 
   <script>

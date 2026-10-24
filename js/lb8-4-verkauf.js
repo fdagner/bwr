@@ -2,6 +2,13 @@
   let yamlData = [];
   let lieferer = '<i>[Modellunternehmen]</i>';
 
+  // ── Vermischte Aufgaben ──────────────────────────────────────────────────
+let verkaufModusUeberschreibung = null;
+const VERKAUF_MODI = ['verkaufBuchungssatz', 'verkaufskalkulation', 'verkaufDifferenzkalkulation', 'verkaufSkontobuchungssatz'];
+function verkaufGetModus() {
+  return verkaufModusUeberschreibung || document.getElementById('verkaufBuchungsoptionDropdown').value;
+}
+
   // ============================================================================
 // BENUTZERDEFINIERTE UNTERNEHMEN - Integration
 // ============================================================================
@@ -113,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const verkaufBuchungsoptionDropdown = document.getElementById('verkaufBuchungsoptionDropdown');
 
   function verkaufUpdateMitBezugskostenState() {
-    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+    if (verkaufGetModus() === 'verkaufskalkulation' || verkaufGetModus() === 'verkaufDifferenzkalkulation') {
       verkaufMitBezugskosten.disabled = true;
       verkaufMitBezugskosten.checked = false;
     } else {
@@ -199,7 +206,7 @@ const kontenUmsatzerloese_2 = {
 
 let verkaufKontenZahlung;
 function inputSellChangeCategory() {
-  if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
+  if (verkaufGetModus() === 'verkaufskalkulation' || verkaufGetModus() === 'verkaufSkontobuchungssatz') {
     verkaufKontenZahlung = {
       " gegen Rechnung": "2400 FO",
       " auf Rechnung": "2400 FO",
@@ -361,7 +368,7 @@ function verkaufErstelleZufallssatz() {
   let verkaufWunschRandom_Gewinn = getRandomWunschGewinn();
   let verkaufWunschGewinn;
   let verkauf_Random_Gewinn_Berechnet = 0;
-  if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+  if (verkaufGetModus() === 'verkaufDifferenzkalkulation') {
     verkaufWunschGewinn = parseFloat(verkaufRandom_Gewinn);
     verkaufRandom_Gewinn = parseFloat(verkaufRandom_Gewinn) + parseFloat(verkaufWunschRandom_Gewinn);
   } else {
@@ -376,7 +383,7 @@ function verkaufErstelleZufallssatz() {
   let verkaufSelbstkostenpreis = formatCurrency(verkaufBerechnungSelbstkostenpreis);
 
   let verkaufKundenanfrage;
-  if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+  if (verkaufGetModus() === 'verkaufDifferenzkalkulation') {
 
     if (verkaufRandom_Gewinn < 0) {
       verkaufKundenanfrage = "Wir können die Kundenanfrage nicht akzeptieren, da wir Verlust machen würden.";
@@ -486,15 +493,23 @@ function verkaufZeigeZufaelligenSatz() {
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
   letzteGenerierteGfListeVerkauf = [];
-
+  if (typeof moodleReset === 'function') moodleReset();
 
   let verkaufSatzOutput = '<h2>Aufgaben</h2>';
   verkaufSatzOutput += '<ol>';
   let verkaufAntwortOutput = `<h2 class="loesung">Lösung</h2>`;
-
+  const gemischt = document.getElementById('verkaufBuchungsoptionDropdown').value === 'gemischt';
+  const origBezug = verkaufMitBezugskosten.checked;
+  verkaufModusUeberschreibung = null;
   
 
   for (let i = 1; i <= verkaufAnzahl; i++) {
+        if (gemischt) {
+      verkaufModusUeberschreibung = VERKAUF_MODI[Math.floor(Math.random() * VERKAUF_MODI.length)];
+      // Kalkulation und Differenzkalkulation kennen keine Bezugskosten
+      verkaufMitBezugskosten.checked = origBezug &&
+        !['verkaufskalkulation', 'verkaufDifferenzkalkulation'].includes(verkaufModusUeberschreibung);
+    }
     const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_Gewinn_berechnet, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz] = verkaufErstelleZufallssatz();
     const verkaufFormattedSatz = verkaufZufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedAngebot = verkaufAngebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
@@ -514,7 +529,7 @@ function verkaufZeigeZufaelligenSatz() {
     ].join('\n');
 
     let aufgabeText, loesungText;
-    switch (verkaufBuchungsoptionDropdown.value) {
+    switch (verkaufGetModus()) {
       case 'verkaufskalkulation':
         aufgabeText = klartext(verkaufFormattedAngebot);
         loesungText = `${kalkulation}\nBuchungssatz: ${buchung}`;
@@ -537,11 +552,27 @@ function verkaufZeigeZufaelligenSatz() {
         loesungText = `Buchungssatz: ${buchung}`;
     }
     letzteGenerierteGfListeVerkauf.push({ aufgabe: aufgabeText, loesung: loesungText });
+
+    if (typeof moodleErfasseVerkauf === 'function') {
+  moodleErfasseVerkauf({
+    nr: i, modus: verkaufGetModus(),
+    satz: verkaufFormattedSatz, angebotSatz: verkaufFormattedAngebot, skontoSatz: verkaufFormattedSkonto,
+    selbstkostenpreis: verkaufAntwort_Selbstkostenpreis, gewinnWert: verkaufAntwort_GewinnWert,
+    gewinnSatz: verkaufAntwort_GewinnSatz, barverkaufspreis: verkaufAntwort_barverkaufspreis,
+    skontoBetrag: verkaufAntwort_skontoBetrag, skontoProzent: verkaufAntwort_skontoSatz,
+    skontoBrutto: verkaufAntwort_skontoBetrag_brutto, ustBerichtigung: verkaufAntwort_vorsteuer_berichtigung,
+    ueberweisung: verkaufAntwort_ueberweisungsbetrag, zielverkaufspreis: Zielverkaufspreis,
+    rabattWert: verkaufAntwort_rabattWert, rabattSatz: verkaufAntwort_rabattSatz,
+    listenverkaufspreis: verkaufListenverkaufspreis,
+    konto1: verkaufKonto_1, konto2: verkaufKonto_2, brutto: verkaufBetrag_2, ust: verkaufUSTWert,
+    kontoNachlass: verkaufKonto_Skontobuchungssatz
+  });
+}
     // Generierte Sätze hinzufügen
 
     verkaufSatzOutput += `<li>`;
 
-    switch (verkaufBuchungsoptionDropdown.value) {
+    switch (verkaufGetModus()) {
       case 'verkaufskalkulation':
         verkaufSatzOutput += `<div>${verkaufFormattedAngebot}</div><br>`;
         break;
@@ -575,7 +606,7 @@ if (!buttonColumn) {
     const buttonDiv = document.createElement('div');
     buttonDiv.style.margin = '12px 0';
 
-    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation') {
+    if (verkaufGetModus() === 'verkaufskalkulation') {
         // Angebot + Rechnung bei Kalkulation
         buttonDiv.innerHTML = `
             ${verkaufErstelleAngebotButton(i, geschaeftsfallDaten)}
@@ -597,7 +628,7 @@ if (!buttonColumn) {
 
     // Generierte Antworten hinzufügen
     verkaufAntwortOutput += `${parseInt(i)}.<br><br>`;
-    if (verkaufBuchungsoptionDropdown.value === 'verkaufskalkulation' || verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+    if (verkaufGetModus() === 'verkaufskalkulation' || verkaufGetModus() === 'verkaufDifferenzkalkulation') {
       verkaufAntwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
@@ -608,7 +639,7 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `<td>+ Gewinn</td><td style="padding-left:16px;text-align:right;">${verkaufAntwort_GewinnWert}</td>`;
       verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">${verkaufAntwort_GewinnSatz} %</td>`;
       verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">&nbsp;`;
-      if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+      if (verkaufGetModus() === 'verkaufDifferenzkalkulation') {
         verkaufAntwortOutput += ` (${verkaufAntwort_Gewinn_berechnet} %)`;
       }
       verkaufAntwortOutput += `</td>`;
@@ -647,10 +678,10 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `</table>`;
       verkaufAntwortOutput += `<br><br>`;
     }
-    if (verkaufBuchungsoptionDropdown.value === 'verkaufDifferenzkalkulation') {
+    if (verkaufGetModus() === 'verkaufDifferenzkalkulation') {
       verkaufAntwortOutput += `<p>${verkaufAntwort_Kundenanfrage}</p>`;
     }
-    if (verkaufBuchungsoptionDropdown.value != 'verkaufDifferenzkalkulation') {
+    if (verkaufGetModus() != 'verkaufDifferenzkalkulation') {
       verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;width:600px;margin:0 0;margin-bottom:6px;">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
@@ -670,7 +701,7 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `</table>`;
       verkaufAntwortOutput += `<br>`;
     }
-    if (verkaufBuchungsoptionDropdown.value === 'verkaufSkontobuchungssatz') {
+    if (verkaufGetModus() === 'verkaufSkontobuchungssatz') {
       verkaufAntwortOutput += `<h4>Nebenrechnung:</h4>`;
       verkaufAntwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       verkaufAntwortOutput += `<tbody>`;
@@ -736,7 +767,8 @@ if (!buttonColumn) {
     verkaufAntwortOutput += `<br>`;
   }
 
-
+  verkaufModusUeberschreibung = null;
+  verkaufMitBezugskosten.checked = origBezug;
   verkaufSatzOutput += '</ol>'; // Ende der nummerierten Liste für Sätze
 
 

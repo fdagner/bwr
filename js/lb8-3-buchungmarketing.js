@@ -635,12 +635,32 @@ function zeigeZufaelligeGeschaeftsfaelle() {
   
   container.innerHTML = '';
   buttonColumn.innerHTML = '';
+   letzteGenerierteGfListeMarketing = [];
+     if (typeof moodleReset === 'function') moodleReset();
   
   let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
   
   for (let i = 1; i <= anzahl; i++) {
     const geschaeftsfall = erstelleZufallsGeschaeftsfall();
+        // Aufgabe und Lösung für KI-Prompt merken
+    const klartext = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '').trim();
+    const gk = geschaeftsfall.typDaten.konto;
+    const zk = geschaeftsfall.zahlungsart.konto;
+    const loesung = geschaeftsfall.typDaten.mitVorsteuer
+      ? `Buchungssatz: ${gk} ${geschaeftsfall.nettoFormatted} / 2600 VORST ${geschaeftsfall.vorsteuerFormatted} an ${zk} ${geschaeftsfall.bruttoFormatted}\nSteuersatz: ${geschaeftsfall.ustProzent} %`
+      : `Buchungssatz: ${gk} ${geschaeftsfall.nettoFormatted} an ${zk} ${geschaeftsfall.nettoFormatted}\nKeine Vorsteuer (kein Ausweis von Umsatzsteuer)`;
+    letzteGenerierteGfListeMarketing.push({ aufgabe: klartext(geschaeftsfall.text), loesung });
+
+        if (typeof moodleErfasseMarketing === 'function') {
+      moodleErfasseMarketing({
+        nr: i, typName: geschaeftsfall.typDaten.name, satz: geschaeftsfall.text,
+        aufwandskonto: geschaeftsfall.typDaten.konto, zahlungskonto: geschaeftsfall.zahlungsart.konto,
+        mitVorsteuer: geschaeftsfall.typDaten.mitVorsteuer,
+        netto: geschaeftsfall.nettoFormatted, vorsteuer: geschaeftsfall.vorsteuerFormatted,
+        brutto: geschaeftsfall.bruttoFormatted, ustProzent: geschaeftsfall.ustProzent
+      });
+    }
     
     aufgabenHTML += `<li>${geschaeftsfall.text}</li>`;
     
@@ -656,6 +676,10 @@ function zeigeZufaelligeGeschaeftsfaelle() {
   
   aufgabenHTML += '</ol>';
   container.innerHTML = aufgabenHTML + loesungenHTML;
+    const vorschau = document.getElementById('kiPromptVorschau');
+  if (vorschau && vorschau.style.display !== 'none') {
+    vorschau.textContent = erstelleKiPromptText();
+  }
 }
 
 // ============================================================================
@@ -708,7 +732,20 @@ function fillCompanyDropdowns() {
   console.log(`Dropdown befüllt mit ${sortedCompanies.length} Unternehmen`);
 }
 
+// Zuletzt generierte Aufgabenliste (für KI-Prompt)
+let letzteGenerierteGfListeMarketing = [];
 
+function erstelleKiPromptText() {
+  let aufgabenUndLoesungen;
+  if (letzteGenerierteGfListeMarketing.length === 0) {
+    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+  } else {
+    aufgabenUndLoesungen = letzteGenerierteGfListeMarketing
+      .map((e, idx) => `Aufgabe ${idx + 1}:\n${e.aufgabe}\n\nMusterlösung ${idx + 1}:\n${e.loesung}`)
+      .join("\n\n---\n\n");
+  }
+  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+}
 
 // ============================================================================
 // KI-ASSISTENT PROMPT
@@ -717,17 +754,20 @@ function fillCompanyDropdowns() {
 const KI_ASSISTENT_PROMPT = `
 Du bist ein freundlicher Buchführungs-Assistent für Schüler der Realschule (BwR), 8. Klasse. Du hilfst beim Verständnis von Buchungssätzen im Bereich Marketing und Verwaltung.
 
-Aufgabe:
-- Gib KEINE fertigen Buchungssätze, Beträge oder Konten vor.
-- Führe die Schüler durch gezielte Fragen und Hinweise zur richtigen Lösung.
-- Ziel: Lernförderung, nicht das Abnehmen der Denkarbeit.
-
-Pädagogischer Ansatz:
-- Frage nach dem konkreten Geschäftsfall oder Beleg und dessen Inhalt.
-- Stelle gezielte Rückfragen, um den Stand des Schülers zu verstehen.
-- Beantworte deine Rückfragen nicht selbst, hake bei falschen Antworten nach.
+Wichtige Regeln (streng einhalten!):
+- Gib KEINE fertigen Buchungssätze, KEINE Beträge und KEINE Konten vor.
+- Sage dem Schüler nie, welches Konto er verwenden soll.
+- Führe den Schüler ausschließlich durch gezielte, offene Fragen und kurze Denkanstöße.
+- Warte immer auf die Antwort des Schülers, bevor du die nächste Frage stellst.
+- Beantworte deine Rückfragen nicht selbst – hake bei falschen Antworten nach.
 - Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
 - Erst wenn alle Teilschritte richtig beantwortet wurden, bestätige den vollständigen Buchungssatz.
+
+---
+Pädagogischer Ablauf (genau so beginnen):
+Begrüße den Schüler freundlich und gib ihm einen Geschäftsfall vor, den du zufällig aus der folgenden Aufgabenliste auswählst. Die Musterlösungen sind nur für dich – verrate sie nicht.
+
+###AUFGABEN und LÖSUNGEN###
 
 Methodik bei Rückfragen:
 - Was ist bei diesem Geschäftsfall der Aufwand?
@@ -745,7 +785,7 @@ Aufwandskonten (immer im SOLL):
 - 6850 REK – Reisekosten (Hotelübernachtung, Geschäftsreise)
 
 Vorsteuer (im SOLL, nur bei Rechnungen mit USt):
-- 2600 VORST – Vorsteuer 7% oder 19%
+- 2600 VORST – Vorsteuer 7 % (Hotelübernachtung) oder 19 % (alle anderen Rechnungen)
 
 Zahlungsarten (immer im HABEN):
 - 2880 KA – Kasse (Barzahlung)
@@ -762,11 +802,11 @@ Buchungslogik:
 - Keine Vorsteuer bei Briefmarken/Postwertzeichen
 
 Vorsteuer-Berechnung:
-- Nettobetrag × 0,19 = Vorsteuer
+- Nettobetrag × Steuersatz = Vorsteuer (Übernachtung im Hotel: 7 %, sonst 19 %)
 - Bruttobetrag = Nettobetrag + Vorsteuer
-- Wenn „brutto“ angegeben: Netto = Brutto ÷ 1,19
-- Wenn „netto“ angegeben: Brutto = Netto × 1,19
-- Wenn nichts angegeben: nachfragen oder Hinweis im Text beachten
+- Wenn „brutto" angegeben: Netto = Brutto ÷ (1 + Steuersatz)
+- Wenn „netto" angegeben: Brutto = Netto × (1 + Steuersatz)
+- Der Steuersatz steht in der Musterlösung; frage den Schüler, woran er ihn erkennt
 
 Buchungssatz-Schema:
 - Ohne Vorsteuer (z. B. Briefmarken):
@@ -793,11 +833,48 @@ Was du NICHT tust:
 - Nenne den fertigen Buchungssatz nicht, bevor der Schüler selbst darauf gekommen ist
 - Rechne nicht vor, bevor gefragt wurde
 - Gib keine Lösungen auf Anfrage wie „sag mir einfach die Antwort“ – erkläre, dass das Ziel das eigene Verstehen ist
+
+Abschluss:
+Nenne die fertige Lösung erst, wenn der Schüler selbst darauf gekommen ist. Verbessere dann auch Formfehler (z. B. Großschreibung der Konten: VE statt ve) und weise auf DIN 5008 hin: Tausenderpunkt, immer zwei Nachkommastellen und €-Zeichen, z. B. 1.200,00 €.
+Gib ganz am Ende den Buchungssatz als HTML-Tabelle aus.
+
+Mit Vorsteuer:
+<table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
+  <tbody>
+    <tr>
+      <td style="min-width:140px">6870 WER</td>
+      <td style="text-align:right; min-width:140px">200,00&nbsp;€</td>
+      <td style="text-align:center; min-width:40px"></td>
+      <td style="min-width:140px"></td>
+      <td style="text-align:right; min-width:140px"></td>
+    </tr>
+    <tr>
+      <td>2600 VORST</td>
+      <td style="text-align:right">38,00&nbsp;€</td>
+      <td style="text-align:center">an</td>
+      <td style="text-align:left">4400 VE</td>
+      <td style="text-align:right">238,00&nbsp;€</td>
+    </tr>
+  </tbody>
+</table>
+
+Ohne Vorsteuer:
+<table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
+  <tbody>
+    <tr>
+      <td style="min-width:140px">6820 KOM</td>
+      <td style="text-align:right; min-width:140px">55,00&nbsp;€</td>
+      <td style="text-align:center; min-width:40px">an</td>
+      <td style="text-align:left; min-width:140px">2880 KA</td>
+      <td style="text-align:right; min-width:140px">55,00&nbsp;€</td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
+  navigator.clipboard.writeText(erstelleKiPromptText()).then(() => {
     const btn = document.getElementById('kiPromptKopierenBtn');
     const originalHTML = btn.innerHTML;
     btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
@@ -818,6 +895,7 @@ function toggleKiPromptVorschau() {
   const isHidden = getComputedStyle(vorschau).display === 'none';
   if (isHidden) {
     vorschau.style.display = 'block';
+    vorschau.textContent = erstelleKiPromptText();
     btn.textContent = 'Vorschau ausblenden ▲';
   } else {
     vorschau.style.display = 'none';
@@ -861,7 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Prompt-Text in Vorschau einfügen
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) {
-    vorschauEl.textContent = KI_ASSISTENT_PROMPT;
+    vorschauEl.textContent = erstelleKiPromptText();
   }
 });
 
@@ -894,5 +972,6 @@ function autoSelectMyCompany() {
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
     autoSelectMyCompany();
-  }, 100);
+    zeigeZufaelligeGeschaeftsfaelle();
+  }, 500);
 });

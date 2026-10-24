@@ -53,3 +53,37 @@ function includeHTML() {
    const optionshtml2canvas = {
     scale: 2, // Maßstab für die Ausgabeauflösung
   };
+(function () {
+  const mq = window.matchMedia('(max-width: 768px)');
+
+  document.addEventListener('click', e => {
+    // Hamburger
+    const toggle = e.target.closest('.nav-toggle');
+    if (toggle) {
+      const nav = document.querySelector('.navbar');
+      if (!nav) return;
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open);
+      return;
+    }
+
+    // Dropdowns per Klick (nur mobil)
+    const btn = e.target.closest('.navbar .dropbtn, .navbar .sub-dropbtn');
+    if (btn && mq.matches) {
+      e.preventDefault();
+      const parent = btn.parentElement;   // .dropdown bzw. .dropdown-sub
+      [...parent.parentElement.children].forEach(s => {
+        if (s !== parent) s.classList.remove('open');
+      });
+      parent.classList.toggle('open');
+    }
+  });
+
+  // Beim Wechsel auf Desktop alles zurücksetzen
+  mq.addEventListener('change', () => {
+    const nav = document.querySelector('.navbar');
+    if (!nav) return;
+    nav.classList.remove('open');
+    nav.querySelectorAll('.open').forEach(el => el.classList.remove('open'));
+  });
+})();
