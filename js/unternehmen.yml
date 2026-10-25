@@ -892,9 +892,9 @@
     akzent: "#f5f5f5"
     werkstoffe:
       AWR:
-        - "Eichenholzbretter"
+        - "Eichenholz"
         - "Buchenholzplatten"
-        - "Furnierstämme"
+        - "Furnierstämmen"
       AWF:
         - "Scharniere"
         - "Schubladenführungen"
@@ -1789,20 +1789,20 @@
     akzent: "#4b4534"
     werkstoffe:
       AWR:
-        - "Eichenhölzer"
-        - "Fichtenhölzer"
-        - "Buchenhölzer"
+        - "Eichenholz"
+        - "Fichtenholz"
+        - "Buchenholz"
       AWF:
-        - "Aluminiumtischbeine"
-        - "Schließzylinder "
-        - "Scharniere"
+        - "Aluminiumtischbeinen"
+        - "Schließzylindern"
+        - "Scharnieren"
       AWH:
         - "Schrauben"
-        - "Holzleime"
+        - "Holzleim"
         - "Dübel"
       AWB:
         - "Strom"
-        - "Schmierstoffe"
+        - "Schmierstoff"
         - "Reinigungsmittel"
 
 - unternehmen:
@@ -3000,7 +3000,7 @@
     akzent: "#87CEFA"
     werkstoffe:
       AWR:
-        - "Stahlbleche"
+        - "Stahlblech"
         - "Aluminium"
       AWF:
         - "Räder"
