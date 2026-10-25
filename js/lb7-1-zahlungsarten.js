@@ -2,104 +2,8 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 
-let yamlData = [];
-let kunde = '<i>[Modellunternehmen]</i>';
+let letzteZahlungsAufgaben = [];
 
-// ============================================================================
-// YAML-DATEN LADEN
-// ============================================================================
-
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
-
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
-
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
-
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-    });
-}
-
-// ============================================================================
-// DROPDOWN BEFÜLLEN
-// ============================================================================
-
-function fillCompanyDropdowns() {
-  if (!yamlData || yamlData.length === 0) return;
-
-  const sortedCompanies = [...yamlData].sort((a, b) => {
-    const brancheA = a.unternehmen?.branche || '';
-    const brancheB = b.unternehmen?.branche || '';
-    if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
-    return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
-  });
-
-  const kundeSelect = document.getElementById('zahlKunde');
-  if (!kundeSelect) return;
-
-  kundeSelect.innerHTML = '';
-  const opt = document.createElement('option');
-  opt.value = '';
-  opt.text = '— bitte Unternehmen auswählen —';
-  opt.disabled = true;
-  opt.selected = true;
-  kundeSelect.appendChild(opt);
-
-  sortedCompanies.forEach(company => {
-    const u = company.unternehmen;
-    if (!u?.name) return;
-    const displayText = u.branche
-      ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
-      : `${u.name} ${u.rechtsform || ''}`.trim();
-    const option = document.createElement('option');
-    option.value = u.name;
-    option.textContent = displayText;
-    option.dataset.id = u.id || '';
-    option.dataset.rechtsform = u.rechtsform || '';
-    option.dataset.branche = u.branche || '';
-    kundeSelect.appendChild(option);
-  });
-}
 
 // ============================================================================
 // PREISVALIDIERUNG
@@ -251,19 +155,6 @@ const zahlungsarten = {
     nachteile: ['Abhängig von Smartphone-Akku und NFC', 'Nutzungsdaten bei Tech-Konzernen', 'Nicht überall akzeptiert', 'Gerät muss entsperrt sein'],
     empfehlung: 'Praktisch für schnelle Alltagseinkäufe im stationären Handel.'
   },
-  nachnahme: {
-    label: 'Zahlung per Nachnahme',
-    emoji: '📦',
-    merkmale: {
-      praktikabilitaet: 'Zahlung bei Lieferung – kein Vorauszahlungsrisiko',
-      gebuehren: 'Nachnahmegebühr ca. 3–5 € durch Paketdienstleister',
-      sicherheit: 'Kein Vorleistungsrisiko; Ware wird erst bei Zahlung übergeben',
-      datenschutz: 'Daten beim Händler und Paketdienstleister',
-    },
-    vorteile: ['Kein Vorauszahlungsrisiko', 'Keine Bankdaten nötig', 'Geeignet ohne Online-Banking', 'Schutz vor unseriösen Händlern'],
-    nachteile: ['Nachnahmegebühr fällt an', 'Paket muss persönlich entgegengenommen werden', 'Ware kann bei Lieferung nicht vollständig geprüft werden', 'Kaum noch üblich, nicht überall möglich'],
-    empfehlung: 'Sinnvoll bei unbekannten Online-Händlern ohne PayPal oder Kreditkarte.'
-  },
 };
 
 // ============================================================================
@@ -272,151 +163,98 @@ const zahlungsarten = {
 
 const familienSituationen = [
   {
-    situation: (name, preis) => `Familie ${name} kauft beim Bäcker um die Ecke frische Brötchen und Kuchen für insgesamt ${preis} €.`,
-    kontext: 'Alltäglicher Kauf beim lokalen Händler, kleiner Betrag',
-    preisGen: () => pick([16, 18, 20, 22, 24, 28, 32, 36, 38]),
-    geeignet: ['barzahlung', 'ec_karte', 'mobilepay'],
-    wenigerGeeignet: ['kreditkarte', 'nachnahme', 'ueberweisung'],
+    situation: (n, preis) => `Familie ${n} kauft beim Bäcker um die Ecke Brötchen und Kuchen für ${preis} €.`,
+    preisGen: () => pick([8, 10, 12, 15, 18]),
+    loesung: [
+      { art: 'barzahlung', grund: 'Bei kleinen Beträgen geht Bargeld schnell und kostet nichts.' },
+      { art: 'ec_karte', grund: 'Mit der Girocard kann man kontaktlos und ohne Bargeld zahlen.' },
+    ],
   },
   {
-    situation: (name, preis) => `Familie ${name} möchte online ein neues Fahrrad für ${preis} € bestellen. Der Händler ist noch unbekannt und hat kaum Bewertungen im Internet.`,
-    kontext: 'Online-Kauf bei unbekanntem Händler, mittlerer Betrag',
-    preisGen: () => pick([400, 500, 550, 650, 750, 800, 850, 900]),
-    geeignet: ['nachnahme', 'paypal', 'kreditkarte'],
-    wenigerGeeignet: ['barzahlung', 'ueberweisung', 'ec_karte'],
+    situation: (n, preis) => `Familie ${n} möchte online ein Fahrrad für ${preis} € kaufen. Der Händler ist ihr unbekannt und sie hat Angst, dass das Fahrrad nicht ankommt.`,
+    preisGen: () => pick([400, 500, 650, 800]),
+    loesung: [
+      { art: 'paypal', grund: 'Der Käuferschutz hilft, wenn die Ware nicht ankommt.' },
+      { art: 'kreditkarte', grund: 'Bei Problemen kann das Geld zurückgefordert werden.' },
+    ],
   },
   {
-    situation: (name, preis) => `Herr ${name} bucht für seine Familie einen Sommerurlaub in Spanien für ${preis} €. Er möchte auch im Ausland sicher zahlen können und legt Wert auf Stornoschutz.`,
-    kontext: 'Reisebuchung, großer Betrag, internationaler Kontext, Stornoschutz wichtig',
-    preisGen: () => pick([3000, 3200, 3500, 3600, 3800, 4000]),
-    geeignet: ['kreditkarte', 'ueberweisung'],
-    wenigerGeeignet: ['barzahlung', 'lastschrift', 'nachnahme', 'ec_karte'],
+    situation: (n, preis) => `Herr ${n} bucht online einen Familienurlaub in Spanien für ${preis} €.`,
+    preisGen: () => pick([2000, 2500, 3000, 3500]),
+    loesung: [
+      { art: 'kreditkarte', grund: 'Sie ist weltweit einsetzbar und bei großen Online-Buchungen üblich.' },
+      { art: 'ueberweisung', grund: 'Sie ist sicher und gut nachweisbar, und viele Reiseanbieter akzeptieren sie.' },
+    ],
   },
   {
-    situation: (name, preis) => `Frau ${name} schließt einen Vertrag für einen Streaming-Dienst ab. Monatlich werden ${preis} € fällig. Sie möchte nichts vergessen und den Ablauf automatisieren.`,
-    kontext: 'Monatliche Abo-Zahlung, Automatisierung gewünscht',
+    situation: (n, preis) => `Frau ${n} schließt ein Streaming-Abo ab. Jeden Monat werden ${preis} € fällig. Sie möchte nicht jeden Monat daran denken müssen.`,
+    preisGen: () => pick([8, 10, 13, 15]),
+    loesung: [
+      { art: 'lastschrift', grund: 'Der Betrag wird jeden Monat automatisch abgebucht.' },
+      { art: 'paypal', grund: 'Die Abbuchung läuft automatisch über das PayPal-Konto.' },
+    ],
+  },
+  {
+    situation: (n, preis, v) => `${v} (16) hat noch kein eigenes Konto. Im Schulcafé kostet das Mittagessen ${preis} €.`,
+    preisGen: () => pick([3, 4, 5, 6]),
+    loesung: [
+      { art: 'barzahlung', grund: 'Ohne Konto und Karte ist Bargeld die einzige Möglichkeit.' },
+    ],
+  },
+  {
+    situation: (n, preis) => `Frau ${n} kauft auf dem Wochenmarkt Gemüse und Käse für ${preis} €. Der Stand hat kein Kartenlesegerät.`,
+    preisGen: () => pick([14, 18, 22, 26]),
+    loesung: [
+      { art: 'barzahlung', grund: 'Ohne Kartenlesegerät kann man dort nur bar bezahlen.' },
+    ],
+  },
+  {
+    situation: (n, preis) => `Frau ${n} tankt für ${preis} € und möchte schnell und kontaktlos bezahlen.`,
+    preisGen: () => pick([55, 65, 75, 90]),
+    loesung: [
+      { art: 'ec_karte', grund: 'Kontaktlos mit der Girocard geht es in wenigen Sekunden.' },
+      { art: 'mobilepay', grund: 'Mit dem Smartphone ist kontaktloses Zahlen ohne Karte möglich.' },
+    ],
+  },
+  {
+    situation: (n, preis) => `Familie ${n} lässt die Waschmaschine reparieren. Der Handwerker schickt eine Rechnung über ${preis} €.`,
+    preisGen: () => pick([180, 240, 290, 340]),
+    loesung: [
+      { art: 'ueberweisung', grund: 'Die Rechnung wird bequem per Online-Banking bezahlt, der Kontoauszug dient als Nachweis.' },
+    ],
+  },
+  {
+    situation: (n, preis, v) => `Der Sportverein von ${v} verlangt jeden Monat ${preis} € Beitrag. Familie ${n} möchte nicht jeden Monat selbst daran denken.`,
     preisGen: () => pick([15, 20, 25, 30]),
-    geeignet: ['lastschrift', 'kreditkarte', 'paypal'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte'],
+    loesung: [
+      { art: 'lastschrift', grund: 'Der Verein bucht den Beitrag automatisch ab.' },
+      { art: 'ueberweisung', grund: 'Mit einem Dauerauftrag wird der Beitrag jeden Monat automatisch überwiesen.' },
+    ],
   },
   {
-    situation: (name, preis) => `Tochter ${name} (16 Jahre) möchte im Schulausflug-Café bezahlen. Ihr Anteil beträgt ${preis} €. Sie hat kein eigenes Konto.`,
-    kontext: 'Jugendliche ohne Bankkonto, kleiner Betrag, sofort',
-    preisGen: () => pick([5, 6, 7, 8, 9, 10]),
-    geeignet: ['barzahlung'],
-    wenigerGeeignet: ['kreditkarte', 'ueberweisung', 'nachnahme', 'ec_karte'],
+    situation: (n, preis, v) => `${v} (19) kauft ein Festival-Ticket für ${preis} €. Das Ticket gibt es nur im Internet.`,
+    preisGen: () => pick([89, 109, 129, 149]),
+    loesung: [
+      { art: 'paypal', grund: 'Schnell bezahlt, und der Käuferschutz hilft, wenn das Ticket nicht ankommt.' },
+      { art: 'kreditkarte', grund: 'Online weit verbreitet, und bei Problemen kann man das Geld zurückfordern.' },
+    ],
   },
   {
-    situation: (name, preis) => `Familie ${name} kauft beim lokalen Möbelhändler ein neues Sofa für ${preis} €. Der Händler akzeptiert nur Barzahlung oder Überweisung.`,
-    kontext: 'Stationärer Kauf, großer Betrag, eingeschränkte Zahlungsmittel',
-    preisGen: () => pick([600, 700, 750, 800, 900, 1000]),
-    geeignet: ['barzahlung', 'ueberweisung'],
-    wenigerGeeignet: ['paypal', 'mobilepay', 'nachnahme', 'ec_karte'],
+    situation: (n, preis) => `Frau ${n} fährt mit dem Taxi nach Hause. Die Fahrt kostet ${preis} €. Sie hat nur Bargeld dabei.`,
+    preisGen: () => pick([18, 22, 26, 32]),
+    loesung: [
+      { art: 'barzahlung', grund: 'Sie hat nur Bargeld dabei, und das nimmt der Taxifahrer immer an.' },
+    ],
   },
   {
-    situation: (name, preis) => `Herr ${name} möchte seiner Tochter schnell ${preis} € schicken, damit sie an der Klassenfahrt teilnehmen kann. Die Zahlung muss bis morgen früh beim Veranstalter eingehen.`,
-    kontext: 'Eilige Zahlung, Zeitdruck, muss sofort ankommen',
-    preisGen: () => pick([80, 100, 120, 150]),
-    geeignet: ['ueberweisung'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift', 'ec_karte'],
-  },
-  {
-    situation: (name, preis) => `Frau ${name} tankt ihr Auto für ${preis} € an einer Autobahntankstelle und möchte schnell und kontaktlos zahlen.`,
-    kontext: 'Schnellzahlung, stationär, kontaktlos gewünscht',
-    preisGen: () => pick([55, 60, 65, 70, 75, 80, 90, 100]),
-    geeignet: ['mobilepay', 'kreditkarte', 'ec_karte'],
-    wenigerGeeignet: ['nachnahme', 'barzahlung', 'ueberweisung'],
-  },
-  {
-    situation: (name, preis) => `Familie ${name} kauft ein neues Smartphone für ${preis} €. Sie haben nicht genug Erspartes, möchten das Gerät aber sofort haben und in Raten zahlen.`,
-    kontext: 'Große Anschaffung, Ratenzahlung gewünscht – Zahlung selbst per Lastschrift oder Überweisung',
-    preisGen: () => pick([500, 600, 700, 800, 900, 1000]),
-    geeignet: ['kreditkarte', 'lastschrift'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte'],
-  },
-  {
-    situation: (name, preis) => `Opa ${name} möchte einen Online-Einkauf bei einem bekannten Versandhaus über ${preis} € tätigen. Er hat kein Smartphone und möchte seine Bankdaten nicht online eingeben.`,
-    kontext: 'Älterer Nutzer, Datenschutzbedenken, Online-Kauf',
-    preisGen: () => pick([30, 40, 50, 60, 70, 80]),
-    geeignet: ['nachnahme', 'ueberweisung'],
-    wenigerGeeignet: ['mobilepay', 'paypal', 'ec_karte'],
-  },
-  {
-    situation: (name, preis) => `Frau ${name} kauft auf einem Wochenmarkt frisches Gemüse und Käse für ${preis} €. Der Marktstand hat kein Kartenterminal.`,
-    kontext: 'Wochenmarkt, kein Kartenterminal, kleiner Betrag',
-    preisGen: () => pick([14, 15, 18, 20, 22, 24, 26, 28]),
-    geeignet: ['barzahlung'],
-    wenigerGeeignet: ['kreditkarte', 'paypal', 'ueberweisung', 'mobilepay', 'ec_karte'],
-  },
-  {
-    situation: (name, preis) => `Familie ${name} mietet für den Urlaub ein Ferienhaus und soll ${preis} € Anzahlung leisten. Der Vermieter möchte einen schriftlichen Zahlungsnachweis.`,
-    kontext: 'Mietanzahlung, Nachweis gewünscht, größerer Betrag',
-    preisGen: () => pick([500, 750, 1000, 1250, 1500]),
-    geeignet: ['ueberweisung', 'kreditkarte'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift'],
-  },
-  {
-    situation: (name, preis) => `Familie ${name} bestellt Essen bei einem Lieferdienst für ${preis} €. Die Lieferung kommt in ca. 30–40 Minuten.`,
-    kontext: 'Essenslieferung, Online-Bestellung, mittlerer Betrag',
-    preisGen: () => pick([28, 35, 42, 48, 55, 62]),
-    geeignet: ['paypal', 'kreditkarte', 'mobilepay'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ueberweisung'],
-  },
-  {
-    situation: (name, preis) => `Herr ${name} lässt seine Waschmaschine reparieren – der Handwerker verlangt ${preis} € und gibt eine ordentliche Rechnung aus.`,
-    kontext: 'Handwerker vor Ort, mittlerer Betrag, Rechnung vorhanden',
-    preisGen: () => pick([180, 220, 260, 290, 340, 380]),
-    geeignet: ['barzahlung', 'ueberweisung', 'ec_karte'],
-    wenigerGeeignet: ['paypal', 'lastschrift', 'nachnahme'],
-  },
-  {
-    situation: (name, preis) => `Familie ${name} spendet ${preis} € an eine gemeinnützige Organisation und möchte eine Spendenquittung für die Steuererklärung.`,
-    kontext: 'Spende, Nachweis für Steuer wichtig',
-    preisGen: () => pick([50, 75, 100, 120, 150, 200, 250]),
-    geeignet: ['ueberweisung', 'lastschrift', 'kreditkarte'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme'],
-  },
-  {
-    situation: (name, preis) => `Tochter ${name} (19) bucht sich mit Freundinnen ein Festival-Ticket für ${preis} € pro Person. Die Tickets sind nur online erhältlich.`,
-    kontext: 'Online-Ticketkauf, junges Publikum, mittlerer Betrag',
-    preisGen: () => pick([89, 109, 129, 149, 169, 189]),
-    geeignet: ['kreditkarte', 'paypal'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift'],
-  },
-  {
-    situation: (name, preis) => `Familie ${name} kauft im Baumarkt Terrassenplatten, Erde und Pflanzen im Wert von ${preis} € und möchte alles sofort mitnehmen.`,
-    kontext: 'Großer Einkauf im stationären Fachhandel',
-    preisGen: () => pick([320, 380, 450, 520, 580, 650]),
-    geeignet: ['ec_karte', 'kreditkarte', 'mobilepay', 'barzahlung'],
-    wenigerGeeignet: ['paypal', 'nachnahme', 'lastschrift'],
-  },
-  {
-    situation: (name, preis) => `Frau ${name} muss kurzfristig einen Flug innerhalb Deutschlands für morgen buchen – das Ticket kostet ${preis} €. Sie möchte maximale Flexibilität bei einer möglichen Stornierung.`,
-    kontext: 'Last-Minute-Flugbuchung, Stornierungsoption wichtig',
-    preisGen: () => pick([180, 220, 260, 310, 360, 420]),
-    geeignet: ['kreditkarte', 'paypal'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'lastschrift', 'ec_karte'],
-  },
-  {
-    situation: (name, preis) => `Oma ${name} lässt sich vom Taxi nach Hause fahren. Die Fahrt kostet ${preis} € und sie hat nur Bargeld dabei.`,
-    kontext: 'Taxi, ältere Person, Barzahlung üblich',
-    preisGen: () => pick([18, 22, 26, 32, 38, 45]),
-    geeignet: ['barzahlung'],
-    wenigerGeeignet: ['ueberweisung', 'paypal', 'nachnahme'],
-  },
-  {
-    situation: (name, preis) => `Familie ${name} richtet für den Sohn einen Dauerauftrag ein, um monatlich ${preis} € Vereinsbeitrag an den Fußballverein zu überweisen.`,
-    kontext: 'Wiederkehrende Zahlung, Dauerauftrag, kleiner bis mittlerer Betrag',
-    preisGen: () => pick([15, 20, 25, 30, 35, 40]),
-    geeignet: ['ueberweisung', 'lastschrift'],
-    wenigerGeeignet: ['barzahlung', 'nachnahme', 'ec_karte', 'mobilepay'],
-  },
-  {
-    situation: (name, preis) => `Herr ${name} kauft im Supermarkt den Wocheneinkauf für die Familie – Gesamtbetrag ${preis} €. Er möchte schnell und unkompliziert an der Kasse zahlen.`,
-    kontext: 'Supermarkt, mittlerer Betrag, schnelle Abwicklung',
-    preisGen: () => pick([45, 55, 65, 75, 85, 95, 110]),
-    geeignet: ['ec_karte', 'mobilepay', 'barzahlung'],
-    wenigerGeeignet: ['ueberweisung', 'nachnahme', 'kreditkarte'],
+    situation: (n, preis) => `Herr ${n} bezahlt an der Supermarktkasse den Wocheneinkauf von ${preis} €.`,
+    preisGen: () => pick([45, 65, 85, 110]),
+    loesung: [
+      { art: 'ec_karte', grund: 'Mit der Girocard geht es schnell und ohne Gebühren für den Kunden.' },
+      { art: 'mobilepay', grund: 'Mit dem Smartphone kann man kontaktlos zahlen.' },
+      { art: 'barzahlung', grund: 'Bargeld funktioniert an jeder Kasse.' },
+      { art: 'kreditkarte', grund: 'Sie wird in vielen Supermärkten akzeptiert, ist im Alltag aber seltener als die Girocard.' },
+    ],
   },
 ];
 
@@ -437,6 +275,8 @@ function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+const vornamen = ['Lena', 'Paul', 'Mia', 'Jonas', 'Emma', 'Luca', 'Anna', 'Felix', 'Sophie', 'Tim'];
+
 const familienNamen = [
   'Müller', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker',
   'Schulz', 'Hoffmann', 'Koch', 'Richter', 'Klein', 'Wolf', 'Schröder',
@@ -453,69 +293,67 @@ function zeigeZufaelligeZahlungsaufgaben() {
 
   container.innerHTML = '';
 
+  const vorschauEl = document.getElementById('kiPromptVorschau');
+  if (vorschauEl) vorschauEl.textContent = erstelleKiPromptText();
+
   const anzahlInput = document.getElementById('anzahlAufgaben');
   const anzahl = Math.min(parseInt(anzahlInput?.value) || 4, familienSituationen.length);
-
   const ausgewaehlte = shuffle(familienSituationen).slice(0, anzahl);
 
-  // ── 1. Übersichtstabelle ZUERST ─────────────────────────────────────────
-  let tabelleHTML = ``;
-
-  // ── 2. Aufgaben ──────────────────────────────────────────────────────────
-  let aufgabenHTML = '<h2>Aufgaben</h2>';
-  aufgabenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die folgenden Fallbeispiele. Entscheide dich für eine oder mehrere geeignete Zahlungsarten. Begründe deine Wahl anhand der Kriterien <strong>Praktikabilität, Gebühren, Sicherheit</strong> und <strong>Datenschutz</strong>.</p>';
+  let aufgabenHTML = '<h2>Fallbeispiele: Zahlungsarten</h2>';
+  aufgabenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die Fallbeispiele. Entscheide dich für eine geeignete Zahlungsart.</p>';
   aufgabenHTML += '<ol>';
 
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
+  letzteZahlungsAufgaben = [];
+  loesungenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Mehrere Zahlungsarten können richtig sein, wenn die Begründung zur Situation passt.</p>';
 
   ausgewaehlte.forEach((fall, idx) => {
     const name = pick(familienNamen);
+    const vorname = pick(vornamen);
     const preis = fall.preisGen();
-    const situationstext = fall.situation(name, preis.toLocaleString('de-DE'));
-    const geeigneteArten = fall.geeignet;
-    const wenigerGeeignet = fall.wenigerGeeignet;
+    const text = fall.situation(name, preis.toLocaleString('de-DE'), vorname);
+    letzteZahlungsAufgaben.push({ text, loesung: fall.loesung });
 
-    aufgabenHTML += `<li style="margin-bottom: 1.2em;">${situationstext}</li>`;
+    aufgabenHTML += `<li style="margin-bottom: 1.2em;">${text}</li>`;
 
-    // Lösung
-    loesungenHTML += `<div style="margin-top: 1.5em; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden;">`;
-    loesungenHTML += `<div style="background: #f5f5f5; padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">`;
-    loesungenHTML += `Aufgabe ${idx + 1}: ${fall.kontext}</div>`;
-    loesungenHTML += `<div style="padding: 10px 14px;">`;
-
-    loesungenHTML += `<p style="margin: 6px 0; color: #2a7a2a;"><strong>✅ Geeignete Zahlungsarten:</strong></p>`;
-    geeigneteArten.forEach(key => {
-      const z = zahlungsarten[key];
+    loesungenHTML += `<div style="margin-top: 1.2em;"><strong>${idx + 1}.</strong>`;
+    fall.loesung.forEach(({ art, grund }) => {
+      const z = zahlungsarten[art];
       if (!z) return;
-      loesungenHTML += `<div style="border: 1px solid #ccc; background:#fff; font-family: courier; padding: 6px 10px; margin: 4px 0; font-size: 0.9rem;">`;
-      loesungenHTML += `<strong>${z.emoji} ${z.label}</strong><br>`;
-      loesungenHTML += `🔹 Praktikabilität: ${z.merkmale.praktikabilitaet}<br>`;
-      loesungenHTML += `🔹 Gebühren: ${z.merkmale.gebuehren}<br>`;
-      loesungenHTML += `🔹 Sicherheit: ${z.merkmale.sicherheit}<br>`;
-      loesungenHTML += `🔹 Datenschutz: ${z.merkmale.datenschutz}<br>`;
-      loesungenHTML += `<em>➡️ ${z.empfehlung}</em>`;
-      loesungenHTML += `</div>`;
+      loesungenHTML += `<div style="border: 1px solid #ccc; background:#fff; font-family: courier; padding: 6px 10px; margin: 4px 0; font-size: 0.9rem;"><strong>${z.emoji} ${z.label}</strong> – ${grund}</div>`;
     });
-
-    loesungenHTML += `<p style="margin: 10px 0 4px; color: #a00;"><strong>❌ Weniger geeignet in diesem Fall:</strong></p>`;
-    loesungenHTML += `<div style="font-family: courier; font-size: 0.9rem; padding: 4px 8px; background: #fff5f5; border: 1px solid #f5c6c6; border-radius: 4px;">`;
-    loesungenHTML += wenigerGeeignet.map(key => {
-      const z = zahlungsarten[key];
-      return z ? `${z.emoji} ${z.label}` : key;
-    }).join(' &nbsp;|&nbsp; ');
     loesungenHTML += `</div>`;
-    loesungenHTML += `</div></div>`;
   });
 
   aufgabenHTML += '</ol>';
+  container.innerHTML = aufgabenHTML + loesungenHTML;
+}
 
-  container.innerHTML = tabelleHTML + aufgabenHTML + loesungenHTML;
+function erstelleKiPromptText() {
+  let aufgabenBlock;
+
+  if (!letzteZahlungsAufgaben.length) {
+    aufgabenBlock = '(Noch keine Aufgaben generiert.)';
+  } else {
+    aufgabenBlock = letzteZahlungsAufgaben.map(({ text, loesung }, i) => {
+      const loesungText = loesung
+        .map(({ art, grund }) => `- ${zahlungsarten[art].label}: ${grund}`)
+        .join('\n');
+      return `--- Aufgabe ${i + 1} ---\nFallbeispiel: ${text}\n\nGeeignete Zahlungsarten (Musterlösung):\n${loesungText}`;
+    }).join('\n\n');
+  }
+
+  return KI_ASSISTENT_PROMPT.replace('###AUFGABEN###', () => aufgabenBlock);
 }
 
 const KI_ASSISTENT_PROMPT = `
 Du bist ein freundlicher Wirtschaftsassistent für Schüler der Realschule (BwR). Du hilfst beim Verständnis von Zahlungsarten im Alltag.
-Du forderst den Schüler auf, ein Fallbeispiel zu nennen, das er bekommen hat.
-Arbeitsauftrag ist immer: "Entscheide dich für eine oder mehrere geeignete Zahlungsarten. Begründe deine Wahl anhand der Kriterien Praktikabilität, Gebühren, Sicherheit und Datenschutz.
+Unten findest du eine Liste mit Fallbeispielen und Musterlösungen. Begrüße den Schüler und wähle zufällig ein Fallbeispiel aus der Liste. Schreibe es vollständig in den Chat. Wähle bei jeder weiteren Aufgabe zufällig ein Fallbeispiel, das noch nicht bearbeitet wurde.
+Arbeitsauftrag ist immer: "Entscheide dich für eine geeignete Zahlungsart."
+
+FALLBEISPIELE MIT MUSTERLÖSUNGEN:
+###AUFGABEN###
 
 Aufgabe:
 - Gib KEINE fertigen Lösungen (z. B. direkte Empfehlungen) vor.
@@ -523,20 +361,13 @@ Aufgabe:
 - Ziel: Lernförderung, kritisches Verbraucherdenken.
 
 Pädagogischer Ansatz:
-- Frage, welche Merkmale in der Situation wichtig sind (Betrag? Ort? Datenschutz? Geschwindigkeit?).
 - Stelle gezielte Rückfragen, um den Stand des Schülers zu verstehen.
 - Beantworte deine Rückfragen nicht selbst.
 - Bei Fehlern: erkläre das Prinzip, nicht die Lösung.
 - Erst wenn der Schüler selbst auf eine begründete Antwort kommt, bestätige ihn.
+- Mehrere Zahlungsarten können richtig sein. Lass dir von der Schülerin oder dem Schüler kurz erklären, warum die Wahl passt.
 
-Methodik bei Rückfragen:
-- Wie groß ist der Betrag – lohnt sich die Zahlung mit Karte/App?
-- Findet der Kauf stationär oder online statt?
-- Ist Anonymität oder Datenschutz in dieser Situation wichtig?
-- Ist Sicherheit oder Rückbuchungsmöglichkeit relevant?
-- Fallen Gebühren an, die bei dem Betrag ins Gewicht fallen?
-
-Die acht Zahlungsarten:
+Die sieben Zahlungsarten:
 
 1. Barzahlung
    - Kein Konto, keine Technik nötig, anonym
@@ -566,9 +397,6 @@ Die acht Zahlungsarten:
    - Kontaktlos, sehr schnell, echte Kartendaten werden nicht übertragen
    - Abhängig von Smartphone-Akku und NFC, Nutzungsdaten bei Tech-Konzernen
 
-8. Nachnahme
-   - Kein Vorauszahlungsrisiko, keine Bankdaten nötig
-   - Nachnahmegebühr ca. 3–5 €, Paket muss persönlich entgegengenommen werden
 
 Wichtiger Hinweis für dich:
 
@@ -582,10 +410,14 @@ Was du NICHT tust:
 - Nenne die beste Zahlungsart nicht direkt, bevor der Schüler argumentiert hat
 - Gib keine Lösungen auf Anfragen wie „sag mir einfach die Antwort"
 - Erkläre, dass das Ziel das eigene Abwägen und kritische Denken ist
+
+Nach jeder gelösten Aufgabe frage: „Möchtest du die nächste Aufgabe bearbeiten?"
+Die Musterlösungen sind nur für dich. Verrate sie nie, bevor der Schüler selbst eine geeignete Zahlungsart genannt hat.
+
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
+  navigator.clipboard.writeText(erstelleKiPromptText()).then(() => {
     const btn = document.getElementById('kiPromptKopierenBtn');
     const originalHTML = btn.innerHTML;
     btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
@@ -605,6 +437,7 @@ function toggleKiPromptVorschau() {
   const btn = document.getElementById('kiPromptToggleBtn');
   const isHidden = getComputedStyle(vorschau).display === 'none';
   if (isHidden) {
+    vorschau.textContent = erstelleKiPromptText();
     vorschau.style.display = 'block';
     btn.textContent = 'Vorschau ausblenden ▲';
   } else {
@@ -613,55 +446,102 @@ function toggleKiPromptVorschau() {
   }
 }
 
+
 // ============================================================================
-// INITIALISIERUNG
+// MOODLE-XML-EXPORT – Multiple Choice (eine Antwort), jede geeignete Zahlungsart = richtig
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  const kundeSelect = document.getElementById('zahlKunde');
-  if (kundeSelect) {
-    if (kundeSelect.value) {
-      kunde = kundeSelect.value.trim();
-    }
-    kundeSelect.addEventListener('change', () => {
-      kunde = kundeSelect.value.trim() || '';
-    });
-  }
+const MOODLE_ZAHL_PRAEFIX = '7.1-05#T';           
+const MOODLE_ZAHL_TITELENDE = 'meinBwR-Auswaehlen';
+const MOODLE_ZAHL_ANWEISUNG = 'Gib eine geeignete Zahlungsart an. Hinweis: Es können mehrere korrekt sein.';
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-
-  if (yamlData && yamlData.length > 0) {
-    fillCompanyDropdowns();
-  } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
-  }
-
-  const vorschauEl = document.getElementById('kiPromptVorschau');
-  if (vorschauEl) {
-    vorschauEl.textContent = KI_ASSISTENT_PROMPT;
-  }
-});
-
-function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
-  if (!myCompanyName) return;
-  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-  dropdowns.forEach(dropdown => {
-    const options = Array.from(dropdown.options);
-    const matchingOption = options.find(opt => opt.value === myCompanyName);
-    if (matchingOption) {
-      dropdown.value = myCompanyName;
-      const event = new Event('change', { bubbles: true });
-      dropdown.dispatchEvent(event);
-    }
-  });
+function zxEsc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function zxCdata(s) {
+  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  setTimeout(function () {
-    autoSelectMyCompany();
-    zeigeZufaelligeZahlungsaufgaben();
-  }, 500);
-});
+// Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
+function zxIdBasis() {
+  const SCHLUESSEL = 'moodleZahlungLetzteIdSekunde';
+  let sek = Math.floor(Date.now() / 1000);
+  try {
+    const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
+    if (sek <= letzte) sek = letzte + 1;
+    localStorage.setItem(SCHLUESSEL, String(sek));
+  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  const d = new Date(sek * 1000);
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+
+function zxBaueMultichoiceXml(aufgaben) {
+  const basis = zxIdBasis();
+  const alleArten = Object.keys(zahlungsarten);
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+
+  aufgaben.forEach(({ text, loesung }, i) => {
+    const id = `${basis}${String(i + 1).padStart(3, '0')}`;
+    const titel = `${MOODLE_ZAHL_PRAEFIX}${id}${MOODLE_ZAHL_TITELENDE}`;
+    const richtig = new Map(loesung.map(l => [l.art, l.grund]));
+
+    const rueckmeldung = '<p><strong>Geeignet sind:</strong></p><ul>' +
+      loesung.map(({ art, grund }) => `<li><strong>${zahlungsarten[art].label}</strong>: ${grund}</li>`).join('') +
+      '</ul>';
+
+    xml += `  <question type="multichoice">\n`;
+    xml += `    <name>\n      <text>${zxEsc(titel)}</text>\n    </name>\n`;
+    xml += `    <questiontext format="html">\n      <text>${zxCdata(`<p>${text}</p><p><em>${MOODLE_ZAHL_ANWEISUNG}</em></p>`)}</text>\n    </questiontext>\n`;
+    xml += `    <generalfeedback format="html">\n      <text>${zxCdata(rueckmeldung)}</text>\n    </generalfeedback>\n`;
+    xml += `    <defaultgrade>1</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+    xml += `    <single>true</single>\n    <shuffleanswers>true</shuffleanswers>\n    <answernumbering>abc</answernumbering>\n    <showstandardinstruction>0</showstandardinstruction>\n`;
+    xml += `    <correctfeedback format="html">\n      <text>${zxCdata('<p>Die Antwort ist richtig.</p>')}</text>\n    </correctfeedback>\n`;
+    xml += `    <partiallycorrectfeedback format="html">\n      <text>${zxCdata('<p>Die Antwort ist teilweise richtig.</p>')}</text>\n    </partiallycorrectfeedback>\n`;
+    xml += `    <incorrectfeedback format="html">\n      <text>${zxCdata('<p>Die Antwort ist falsch.</p>')}</text>\n    </incorrectfeedback>\n`;
+
+    alleArten.forEach(art => {
+      const ok = richtig.has(art);
+      xml += `    <answer fraction="${ok ? 100 : 0}" format="html">\n`;
+      xml += `      <text>${zxCdata(`<p>${zahlungsarten[art].label}</p>`)}</text>\n`;
+      xml += `      <feedback format="html">\n        <text>${ok ? zxCdata(`<p>${richtig.get(art)}</p>`) : ''}</text>\n      </feedback>\n`;
+      xml += `    </answer>\n`;
+    });
+
+    xml += `  </question>\n\n`;
+  });
+
+  return xml + '</quiz>\n';
+}
+
+function exportiereMoodle() {
+  if (!letzteZahlungsAufgaben.length) {
+    alert('Bitte zuerst Aufgaben erstellen.');
+    return;
+  }
+  const xml = zxBaueMultichoiceXml(letzteZahlungsAufgaben);
+
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const dateiname = `quiz-zahlungsarten-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function startZahlungsaufgaben() {
+  zeigeZufaelligeZahlungsaufgaben();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startZahlungsaufgaben);
+} else {
+  startZahlungsaufgaben();
+}

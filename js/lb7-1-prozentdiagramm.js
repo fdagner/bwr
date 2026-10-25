@@ -134,6 +134,7 @@ const aufgabenThemen = [
 
       return {
         kontext: `Familie ${name} – Heizkosten aktuelle Heizperiode`,
+        ergebnis: { abs: diff, einheit: '€', proz: prozent },
         chartOptions: {
           chart: { type: "line", height: 400, width: 650, toolbar: TOOLBAR },
           series: [{ name: "Heizkosten (€)", data: werte }],
@@ -209,6 +210,7 @@ const aufgabenThemen = [
 
       return {
         kontext: `Familie ${name} – Monatliche Konsumausgaben (aktuelles Jahr)`,
+        ergebnis: { abs: gesamt, einheit: '€', proz: fragenProz },
         chartOptions: {
           chart: { type: "bar", height: 300, toolbar: TOOLBAR },
           series: [{ name: "Ausgaben (€)", data: werte }],
@@ -285,6 +287,7 @@ const aufgabenThemen = [
 
       return {
         kontext: `Familie ${name} vergleicht Urlaubsangebote, Pauschalreise 2 Personen`,
+        ergebnis: { abs: diff, einheit: '€', proz: prozDiff },
         chartOptions: {
           chart: { type: "bar", height: 300, toolbar: TOOLBAR },
           series: [{ name: "Preis (€)", data: sortedWerte }],
@@ -367,6 +370,7 @@ const aufgabenThemen = [
 
       return {
         kontext: `Familie ${name} – Jährliche Zinseinnahmen`,
+        ergebnis: { abs: diff, einheit: '€', proz: prozent },
         chartOptions: {
           chart: { type: "line", height: 300, width: 650, toolbar: TOOLBAR },
           series: [{ name: "Zinseinnahmen (€)", data: werte }],
@@ -476,6 +480,7 @@ const energieSets = [
 
       return {
         kontext: `Familie ${name} – Monatlicher Energieverbrauch`,
+        ergebnis: { abs: diff, einheit: 'kWh', proz: p },
         chartOptions: {
           chart: { type: "bar", height: 300, toolbar: TOOLBAR },
           series: [{ name: "Verbrauch (kWh)", data: werte }],
@@ -541,6 +546,7 @@ function getSelectedGenerator() {
 }
 
 let renderZaehler = 0;
+let letzteProzentDaten = null;   // { aufgabe, imgURI, breite } für den Moodle-Export
 
 function zeigeZufaelligeProzentAufgaben() {
   renderedCharts.forEach(c => { try { c.destroy(); } catch (e) { } });
@@ -556,6 +562,7 @@ function zeigeZufaelligeProzentAufgaben() {
   chartDiv.innerHTML = "";
 
   const mein    = ++renderZaehler;
+  letzteProzentDaten = null;
   const thema   = getSelectedGenerator();
   const aufgabe = thema.gen();
 
@@ -570,7 +577,7 @@ function zeigeZufaelligeProzentAufgaben() {
   });
 
   container.innerHTML = `
-      <h2 style="margin-top:0;">Aufgaben</h2>
+      <h2 style="margin-top:0;">Prozentrechnen mit Diagramm</h2>
     <div id="diagramm-platzhalter" style="margin:0 0 1.5rem 0; min-height:60px; color:#888;">Diagramm wird erstellt …</div>
     <div style="padding:20px; background:white; border-radius:8px; margin-bottom:1.5rem;">
       <ol style="padding-left:1.6rem; line-height:1.6;">
@@ -619,6 +626,7 @@ function zeigeZufaelligeProzentAufgaben() {
         img.style.width = (chart.w?.globals?.svgWidth || 700) + "px";
         ziel.innerHTML = "";
         ziel.appendChild(img);
+        letzteProzentDaten = { aufgabe, imgURI, breite: chart.w?.globals?.svgWidth || 700 };
       })
       .catch(err => {
         console.error("Diagramm konnte nicht erstellt werden:", err);
@@ -698,9 +706,135 @@ function toggleKiPromptVorschauProz() {
   btn.textContent = hidden ? "Vorschau ausblenden ▲" : "Prompt anzeigen ▼";
 }
 
+// ============================================================================
+// MOODLE-XML-EXPORT – PROZENTDIAGRAMM (Fragetyp „Lückentext“ / cloze)
+// Wird NACH lb7-1-prozentdiagramm.js eingebunden.
+// Nutzt die globale Variable letzteProzentDaten. Button: onclick="exportiereMoodle()"
+// ============================================================================
+
+// ── Einstellungen ───────────────────────────────────────────────────────────
+const MOODLE_PD_PRAEFIX = '7.1-00#T';          // ← an dein Schema anpassen
+const MOODLE_PD_TITELENDE = 'meinBwR-Nennen-Berechnen'; // ← ggf. anpassen
+const PD_DIAGRAMMARTEN = ['Liniendiagramm', 'Säulendiagramm', 'Balkendiagramm', 'Kreisdiagramm'];
+const PD_GRUENDE = ['einen Verlauf', 'einen Vergleich', 'eine Rangliste', 'einen Anteil an einem Ganzen'];
+
+// ── Hilfsfunktionen ─────────────────────────────────────────────────────────
+function pdEsc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function pdCdata(s) {
+  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+}
+
+// Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
+function pdIdBasis() {
+  const SCHLUESSEL = 'moodleProzentDiagrammLetzteIdSekunde';
+  let sek = Math.floor(Date.now() / 1000);
+  try {
+    const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
+    if (sek <= letzte) sek = letzte + 1;
+    localStorage.setItem(SCHLUESSEL, String(sek));
+  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  const d = new Date(sek * 1000);
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+
+// Diagrammart und Begründung aus den Diagramm-Optionen ableiten
+function pdDiagrammart(chartOptions) {
+  if (chartOptions.chart?.type === 'line') return { art: 'Liniendiagramm', grund: 'einen Verlauf' };
+  if (chartOptions.plotOptions?.bar?.horizontal) return { art: 'Balkendiagramm', grund: 'eine Rangliste' };
+  return { art: 'Säulendiagramm', grund: 'einen Vergleich' };
+}
+
+// Schreibweisen einer Zahl. Musterlösung (erster Eintrag): mit zwei Dezimalstellen,
+// bei zweiDezMuster=false ohne Dezimalstellen. Zusätzlich ohne Tausenderpunkt und bei
+// positiven Werten mit „+“.
+function pdZahlVarianten(wert, zweiDezMuster) {
+  const zwei = wert.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const kurz = zwei.replace(/,00$/, '').replace(/(,\d)0$/, '$1');
+  const basis = zweiDezMuster ? [zwei, kurz] : [kurz, zwei];
+  const ohneTausender = basis.map(z => z.replace(/\./g, ''));
+  let liste = [...new Set([...basis, ...ohneTausender])];
+  if (wert > 0) liste = [...liste, ...liste.map(z => '+' + z)];
+  return liste;
+}
+
+function pdLueckeZahl(wert, einheit) {
+  const zweiDez = einheit === '€' || einheit === '%';
+  const antworten = pdZahlVarianten(wert, zweiDez).map(z => `=${z} ${einheit}`);
+  return `{1:SHORTANSWER:${antworten.join('~')}}`;
+}
+
+function pdLueckeAuswahl(optionen, richtig) {
+  return `{1:MULTICHOICE_S:${optionen.map(o => (o === richtig ? '=' : '') + o).join('~')}}`;
+}
+
+// ── XML aufbauen ────────────────────────────────────────────────────────────
+function pdBaueClozeXml(daten) {
+  const { aufgabe, imgURI, breite } = daten;
+  const a = aufgabe.aufgaben;
+  const e = aufgabe.ergebnis;
+  const { art, grund } = pdDiagrammart(aufgabe.chartOptions);
+
+  const titel = `${MOODLE_PD_PRAEFIX}${pdIdBasis()}${MOODLE_PD_TITELENDE}`;
+  const bildName = 'diagramm.png';
+  const alt = aufgabe.chartOptions.title?.text || 'Diagramm';
+  const base64 = String(imgURI).replace(/^data:image\/png;base64,/, '');
+
+  const punkte = [
+    `${a[0].text}<br>Es handelt sich um ein ${pdLueckeAuswahl(PD_DIAGRAMMARTEN, art)}. ` +
+      `Sie wird hier verwendet, weil es um ${pdLueckeAuswahl(PD_GRUENDE, grund)} geht.`,
+    `${a[1].text}<br>${pdLueckeZahl(e.abs, e.einheit)}`,
+    `${a[2].text}<br>${pdLueckeZahl(e.proz, '%')}`,
+  ];
+
+  const fragetext =
+    `<p><img src="@@PLUGINFILE@@/${bildName}" alt="${pdEsc(alt)}" width="${breite}" style="max-width:100%;height:auto;"></p>` +
+    `<ol>${punkte.map(p => `<li style="margin-bottom:1em;">${p}</li>`).join('')}</ol>`;
+
+  const rechenweg = '<p><strong>Lösung</strong></p>' +
+    a.map((x, i) => `<p><strong>Aufgabe ${i + 1}:</strong><br>${x.loesung}</p>`).join('');
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+  xml += `  <question type="cloze">\n`;
+  xml += `    <name>\n      <text>${pdEsc(titel)}</text>\n    </name>\n`;
+  xml += `    <questiontext format="html">\n      <text>${pdCdata(fragetext)}</text>\n`;
+  xml += `      <file name="${bildName}" path="/" encoding="base64">${base64}</file>\n    </questiontext>\n`;
+  xml += `    <generalfeedback format="html">\n      <text>${pdCdata(rechenweg)}</text>\n    </generalfeedback>\n`;
+  xml += `    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `  </question>\n\n</quiz>\n`;
+  return xml;
+}
+
+// ── Button-Handler ──────────────────────────────────────────────────────────
+function exportiereMoodle() {
+  if (typeof letzteProzentDaten === 'undefined' || !letzteProzentDaten) {
+    alert('Bitte zuerst eine Aufgabe erstellen und warten, bis das Diagramm angezeigt wird.');
+    return;
+  }
+  const xml = pdBaueClozeXml(letzteProzentDaten);
+
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const dateiname = `quiz-prozentdiagramm-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+
 // ── Initialisierung ──────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) vorschauEl.textContent = KI_ASSISTENT_PROMPT_PROZ;
   setTimeout(zeigeZufaelligeProzentAufgaben, 300);
 });
+

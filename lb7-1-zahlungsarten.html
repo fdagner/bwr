@@ -66,17 +66,15 @@
 
   <div id="generator-container">
     <div class="box">
-      <p>
-        Hier können Sie zufällige Fallbeispiele zu <strong>Zahlungsarten im Familien­alltag</strong> generieren.
-        Die Schüler wählen jeweils geeignete Zahlungs­möglichkeiten aus und begründen ihre Wahl
-        anhand der Kriterien: <strong>Praktikabilität, Gebühren, Sicherheit</strong> und <strong>Datenschutz</strong>.
-      </p>
-      <p>
-        Folgende Zahlungsarten werden behandelt:
-        <strong>Barzahlung, Überweisung, Lastschrift, Kreditkarte, Online-Bezahldienst (z.&nbsp;B. PayPal),
-        Girocard&nbsp;, Sofort&shy;überweisung, Mobile Payment, Nachnahme</strong> und
-        <strong>Ratenkauf&nbsp;/ Kauf auf Rechnung</strong>.
-      </p>
+     <p>
+  Hier können Sie zufällige Fallbeispiele zu <strong>Zahlungsarten im Familienalltag</strong> generieren.
+  Die Schüler wählen für jedes Fallbeispiel eine geeignete Zahlungsart und begründen ihre Wahl kurz.
+</p>
+<p>
+  Folgende Zahlungsarten kommen in den Lösungen vor:
+  <strong>Barzahlung, Girocard, Überweisung, Lastschrift, Kreditkarte,
+  Online-Bezahldienst (z.&nbsp;B. PayPal), Mobile Payment</strong>.
+</p>
 
       <!-- ── Einstellungen ──────────────────────────────────────────────── -->
       <h3>Einstellungen</h3>
@@ -98,11 +96,11 @@
           </select>
         </div>
       </div>
-
+    <button onclick="zeigeZufaelligeZahlungsaufgaben()">Aufgaben erstellen</button>
     </div><!-- /box -->
 
     <br>
-    <button onclick="zeigeZufaelligeZahlungsaufgaben()">Aufgaben erstellen</button>
+
 
     <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
       <!-- Exportierbarer Inhalt -->
@@ -114,7 +112,7 @@
 
   </div><!-- /generator-container -->
 
-  <div w3-include-html="downloads.html"></div>
+  <div w3-include-html="downloads3.html"></div>
 
   <!-- ══════════════════════════════════════════════════════════════════════
        KI-ASSISTENT PROMPT
@@ -142,6 +140,7 @@
       <div class="ki-chips">
         <span class="ki-chip">📚 BwR Realschule</span>
         <span class="ki-chip">💳 Zahlungsverkehr</span>
+        <span class="ki-chip">❓Aufgaben integriert</span>
         <span class="ki-chip">✅ Sokrat. Methode</span>
         <span class="ki-chip">🔒 Keine direkten Lösungen</span>
       </div>
