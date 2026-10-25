@@ -187,3 +187,100 @@ function updateZiele() {
 
 // Initialisierung
 updateZiele();
+
+// ============================================================================
+// MOODLE-XML-EXPORT – UNTERNEHMENSZIELE – Fragetyp „Zuordnung“ (matching),
+// alle Aufgaben in EINER Frage
+// Wird NACH lb7-2-unternehmensziele.js eingebunden. Liest die Lösungstabelle
+// (#ziele-body-l) direkt aus der Seite – inklusive Änderungen, die Sie im
+// bearbeitbaren Bereich vorgenommen haben. Button: onclick="exportiereMoodleZiele()"
+// ============================================================================
+
+const MOODLE_ZIELE_PRAEFIX = '7.2-01#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung
+const MOODLE_ZIELE_TITELENDE = 'meinBwR-Zuordnen';
+const MOODLE_ZIELE_ANWEISUNG = 'Ordne die folgenden Unternehmensziele den drei Kategorien zu: ökologisch, ökonomisch oder sozial.';
+const MOODLE_ZIELE_PUNKTE_PRO_AUFGABE = 1;
+
+function mzEsc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function mzCdata(s) {
+  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+}
+
+// Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
+function mzIdBasis() {
+  const SCHLUESSEL = 'moodleZieleLetzteIdSekunde';
+  let sek = Math.floor(Date.now() / 1000);
+  try {
+    const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
+    if (sek <= letzte) sek = letzte + 1;
+    localStorage.setItem(SCHLUESSEL, String(sek));
+  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  const d = new Date(sek * 1000);
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+
+// Liest Ziel und Kategorie aus der Lösungstabelle
+function mzLeseAufgaben() {
+  const zeilen = document.querySelectorAll('#ziele-body-l tr');
+  const aufgaben = [];
+  zeilen.forEach(tr => {
+    const zellen = tr.cells;
+    if (!zellen || zellen.length < 3) return;
+    const text = zellen[1].textContent.replace(/\s+/g, ' ').trim();
+    const label = zellen[2].textContent.replace(/\s+/g, ' ').trim();
+    if (text && label) aufgaben.push({ text, label });
+  });
+  return aufgaben;
+}
+
+function mzBaueMatchingXml(aufgaben) {
+  const punkte = aufgaben.length * MOODLE_ZIELE_PUNKTE_PRO_AUFGABE;
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+  xml += `  <question type="matching">\n`;
+  const titel = `${MOODLE_ZIELE_PRAEFIX}${mzIdBasis()}${MOODLE_ZIELE_TITELENDE}`;
+  xml += `    <name>\n      <text>${mzEsc(titel)}</text>\n    </name>\n`;
+  xml += `    <questiontext format="html">\n      <text>${mzCdata(`<p>${MOODLE_ZIELE_ANWEISUNG}</p>`)}</text>\n    </questiontext>\n`;
+  xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <shuffleanswers>true</shuffleanswers>\n`;
+  xml += `    <correctfeedback format="html">\n      <text>${mzCdata('<p>Die Antwort ist richtig.</p>')}</text>\n    </correctfeedback>\n`;
+  xml += `    <partiallycorrectfeedback format="html">\n      <text>${mzCdata('<p>Die Antwort ist teilweise richtig.</p>')}</text>\n    </partiallycorrectfeedback>\n`;
+  xml += `    <incorrectfeedback format="html">\n      <text>${mzCdata('<p>Die Antwort ist falsch.</p>')}</text>\n    </incorrectfeedback>\n`;
+  xml += `    <shownumcorrect/>\n`;
+
+  aufgaben.forEach(({ text, label }) => {
+    xml += `    <subquestion format="html">\n`;
+    xml += `      <text>${mzCdata(`<p>${mzEsc(text)}</p><hr>`)}</text>\n`;
+    xml += `      <answer>\n        <text>${mzEsc(label)}</text>\n      </answer>\n`;
+    xml += `    </subquestion>\n`;
+  });
+
+  xml += `  </question>\n\n</quiz>\n`;
+  return xml;
+}
+
+function exportiereMoodle() {
+  const aufgaben = mzLeseAufgaben();
+  if (!aufgaben.length) {
+    alert('Bitte zuerst Unternehmensziele erstellen.');
+    return;
+  }
+  const xml = mzBaueMatchingXml(aufgaben);
+
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const dateiname = `quiz-unternehmensziele-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}

@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // MOODLE-XML-EXPORT – Fragetyp „Zuordnung“ (matching), alle Aufgaben in EINER Frage
 // ============================================================================
 
-const MOODLE_PREIS_PRAEFIX = '8.3-03';
+const MOODLE_PREIS_PRAEFIX = '8.3-03#T';
 const MOODLE_PREIS_TITELENDE = 'meinBwR-Zuordnen';
 const MOODLE_PREIS_ANWEISUNG = 'Ordne die jeweilige Preisstrategie zu!';
 const MOODLE_PREIS_PUNKTE_PRO_AUFGABE = 1;
@@ -479,7 +479,7 @@ function mxBaueMatchingXml(aufgaben) {
   const punkte = aufgaben.length * MOODLE_PREIS_PUNKTE_PRO_AUFGABE;
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
   xml += `  <question type="matching">\n`;
-  const titel = `${MOODLE_PREIS_PRAEFIX}T${mxIdBasis()}${MOODLE_PREIS_TITELENDE}`;
+  const titel = `${MOODLE_PREIS_PRAEFIX}${mxIdBasis()}${MOODLE_PREIS_TITELENDE}`;
   xml += `    <name>\n      <text>${mxEsc(titel)}</text>\n    </name>\n`;
   xml += `    <questiontext format="html">\n      <text>${mxCdata(`<p>${MOODLE_PREIS_ANWEISUNG}</p>`)}</text>\n    </questiontext>\n`;
   xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
