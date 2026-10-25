@@ -1,0 +1,100 @@
+<svg id="rechnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 560" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:720px;border: 0px solid #ccc" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYToyZTAwZDFmOC0wMTRkLTRiNjItOTdjMi03MjBmMDc2MzAyYzAAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaJ0mF0h5u/HkEVbd1SEC7eEAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpiODJlNzA0NC0wYzI4LTQxNWItOWY3MS0xYzk4NDJhMTI1MjZscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNom+osT8mk4ldkVblQRscHgQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggFlo7UP1hV62FXPeqjLSd4MNOx3yQBJ7DnUqJBh9NeCmkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaCOxyjCKYWG6Jlt5EK/w8KcAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIFfsAa11xE5o5ewQ/T8yHR8DDfdkqAuhV+W9q0cC7EF6ZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GQEiZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjJlMDBkMWY4LTAxNGQtNGI2Mi05N2MyLTcyMGYwNzYzMDJjMC9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmJjNGVhOGI3LTE4ODgtNDJkYy05Y2JhLTE4ZDczMTg1YWMxZnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCAWWjtQ/WFXrYVc96qMtJ3gw07HfJAEnsOdSokGH014KaJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggye5Fuwft/tIwaU+9oc4I2XeJ2YeUOd2NXdibUFXSUYyiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggZoCnXK7ZjI9kse2eTxDJVwbxfSZIbFmvwQGsMmQYy4t0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQIr3uOOVNMRTUehNlTl+jquC8trTOjeUWPX51h8roKrPTJLUQAXWHC7PQLse0kbRn4wcvKM0gb03U/IM7bQ46Bs=</c2pa:manifest></metadata>
+  <defs id="customDefs"/>
+  <rect x="0" y="0" width="720" height="560" stroke="#000" stroke-width="1" fill="#fff"/>
+
+  <!--Unsichtbarer Bereich: alle IDs bleiben erhalten (Koordinaten wie im Original), werden aber nicht angezeigt-->
+  <g id="unsichtbar" visibility="hidden">
+    <g id="liefererInformationen" fill="#000">
+      <text id="nameLieferer" x="20" y="75" font-family="Calibri" font-size="38" font-weight="bold"/>
+      <text id="mottoLieferer" x="20" y="110" font-family="Calibri" font-size="24" font-weight="bold"/>
+      <text id="adresseLieferer" x="20" y="150" font-family="Arial" font-style="italic" font-size="14" fill="#333"/>
+    </g>
+    <g id="kundenDaten" font-size="18">
+      <text id="nameKunde" x="20" y="200" font-family="Arial" fill="#333"/>
+      <text id="inhaberKunde" x="20" y="220" font-family="Arial" fill="#333"/>
+      <text id="strasseKunde" x="20" y="240" font-family="Arial" fill="#333"/>
+      <text id="plzKunde" x="20" y="260" font-family="Arial" fill="#333"/>
+    </g>
+    <g id="liefererDaten" font-size="17">
+      <text id="nameLangLieferer" x="700" y="200" font-family="Arial" text-anchor="end" fill="#333"/>
+      <text id="strasseLieferer" x="700" y="215" font-family="Arial" text-anchor="end" fill="#333"/>
+      <text id="plzLieferer" x="700" y="230" font-family="Arial" text-anchor="end" fill="#333"/>
+      <text id="ansprechpartnerLieferer" x="700" y="245" font-family="Arial" text-anchor="end" fill="#333"/>
+      <text id="telefonLieferer" x="700" y="260" font-family="Arial" text-anchor="end" fill="#333"/>
+      <text id="emailLieferer" x="700" y="275" font-family="Arial" text-anchor="end" fill="#333"/>
+      <text id="internetLieferer" x="700" y="290" font-family="Arial" text-anchor="end" fill="#333"/>
+    </g>
+    <g id="Zahlungsbedingungen" text-anchor="middle" font-family="Arial" font-size="18" fill="#333">
+      <text x="350" y="830">Toll, dass Sie bei uns Kunde sind!</text>
+      <g id="zahlungszielSatz">
+        <text x="350" y="860">Den Rechnungsbetrag bezahlen Sie bitte in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
+      </g>
+      <text id="skontotext" x="350" y="890">Falls Sie innerhalb von <tspan id="skontofrist"> </tspan> Tagen zahlen, gewähren wir Ihnen <tspan id="skonto"> </tspan> % Skonto</text>
+      <text id="Eigentumsvorbehalt" x="350" y="920">Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum</text>
+    </g>
+    <g id="footerText" fill="#fff" font-size="18">
+      <text id="bankLieferer" x="20" y="1000" font-family="Arial"/>
+      <text id="ibanLieferer" x="20" y="1020" font-family="Arial"/>
+      <text id="bicLieferer" x="20" y="1040" font-family="Arial"/>
+      <text id="amtsgerichtLieferer" x="700" y="1000" font-family="Arial" text-anchor="end"/>
+      <text id="ustidLieferer" x="700" y="1020" font-family="Arial" text-anchor="end"/>
+      <text id="steuernummerLieferer" x="700" y="1040" font-family="Arial" text-anchor="end"/>
+    </g>
+  </g>
+
+  <!--Gruppe für Rechnungsinformationen-->
+  <g id="rechnungsInformationen">
+    <text class="colorSVG" x="20" y="60" font-family="Calibri" font-weight="bold" fill="#7db9f5" font-size="30">RECHNUNG NR-<tspan id="rechnungsNummer"/></text>
+    <text id="lieferdatum" x="20" y="100" font-family="Arial" font-size="18" fill="#333">Die Ware haben Sie <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/><tspan> erhalten</tspan></text>
+    <text x="20" y="130" font-family="Arial" font-size="18" fill="#333">Kundennummer: K<tspan id="nummerKunde"/></text>
+    <text id="datum" x="690" y="100" font-family="Arial" font-size="18" fill="#333" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+    <text x="20" y="180" font-family="Arial" font-size="14" fill="#333">Wir bedanken uns für Ihren Auftrag und erlauben uns, die folgenden Leistungen in Rechnung zu stellen: </text>
+  </g>
+
+  <!--Gruppe für Bestelldaten-->
+  <g id="bestellDaten">
+    <rect class="colorSVG" x="20" y="230" width="680" height="2" fill="#7db9f5"/>
+    <text id="pos" x="40" y="220" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Pos</text>
+    <text id="artikel" x="100" y="220" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Leistung</text>
+    <text id="menge" x="400" y="220" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Menge</text>
+    <text id="einzelpreis" x="530" y="220" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Einzelpreis</text>
+    <text id="gesamtpreis" x="690" y="220" font-family="Arial" font-size="18" fill="#000" font-weight="bold" text-anchor="end">Gesamtpreis</text>
+    <text id="pos1" x="40" y="260" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="artikel1" x="100" y="260" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="menge1" x="400" y="260" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="einzelpreis1" x="530" y="260" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="gesamtpreis1" x="690" y="260" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="pos2" x="40" y="290" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="artikel2" x="100" y="290" font-family="Arial" font-size="18" fill="#333"/>
+    <text id="menge2" x="400" y="290" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="einzelpreis2" x="530" y="290" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    <text id="gesamtpreis2" x="690" y="290" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+  </g>
+  <rect class="colorSVG" x="20" y="310" width="680" height="1" fill="#7db9f5"/>
+
+  <!--Gruppe für Abrechnungsdetails-->
+  <g id="abrechnungsDetails">
+    <g id="zwischensummeRabattVersand">
+      <text id="warenwert" x="390" y="340" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Warenwert</text>
+      <text id="zwischensumme" x="690" y="340" font-family="Arial" font-size="18" fill="#333" text-anchor="end"></text>
+      <g id="gRabatt">
+        <text id="rabatt" x="390" y="370" font-family="Arial" font-size="18" fill="#000" font-weight="bold"></text>
+        <text id="rabattsumme" x="690" y="370" font-family="Arial" font-size="18" fill="#333" text-anchor="end"></text>
+      </g>
+      <g id="gBezugskosten">
+        <text id="bezugskosten" x="390" y="400" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Bezugskosten</text>
+        <text id="bezugskostenSumme" x="690" y="400" font-family="Arial" font-size="18" fill="#333" text-anchor="end"></text>
+      </g>
+    </g>
+    <g id="warenwertUstRechnungsbetrag">
+      <rect class="colorSVG" x="390" y="410" width="300" height="1" fill="#7db9f5"/>
+      <text x="390" y="430" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Nettowert</text>
+      <text id="nettowert" x="690" y="430" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+      <text x="390" y="460" font-family="Arial" font-size="18" fill="#000" font-weight="bold"><tspan id="ust"> </tspan> % UST </text>
+      <text id="ustsumme" x="690" y="460" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+      <rect class="colorSVG" x="390" y="470" width="300" height="1" fill="#7db9f5"/>
+      <text x="390" y="490" font-family="Arial" font-size="18" fill="#000" font-weight="bold">Rechnungsbetrag</text>
+      <text id="rechnungsbetrag" x="690" y="490" font-family="Arial" font-size="18" fill="#333" text-anchor="end"/>
+    </g>
+  </g>
+</svg>
