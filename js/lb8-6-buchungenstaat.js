@@ -213,18 +213,19 @@ const geschaeftsfallTypen = {
   kfzsteuer: {
     name: 'KFZ-Steuer',
     konto: '7030 KFZST',
-    behoerden: ['Hauptzollamt', 'Zollamt', 'Kraftfahrzeugsteuerstelle'],
-    belegtyp: 'bescheid',
+    behoerden: ['Hauptzollamt', 'Zollamt'],
+    belegtyp: 'kontoauszug',
     bescheidArt: null,
     zahlungsarten: [
-      { text: ' geht ein ', konto: '4400 VE' },
-      { text: ' liegt vor ', konto: '4400 VE' },
+      { text: ' per Lastschrift abgebucht ', konto: '2800 BK' },
+      { text: ' per Lastschrift vom Bankkonto eingezogen ', konto: '2800 BK' },
     ],
+    wertFormulierungen: [' in Höhe von ', ' mit einem Betrag von '],
     mitVorsteuer: false,
     geschaeftsfaelle: [
-      { beschreibung: ' Der KFZ-Steuerbescheid für den Firmenwagen ' },
-      { beschreibung: ' Der KFZ-Steuerbescheid für das Betriebsfahrzeug ' },
-      { beschreibung: ' Ein KFZ-Steuerbescheid für einen Lieferwagen ' },
+      { beschreibung: ' Die KFZ-Steuer für den Firmenwagen wird ' },
+      { beschreibung: ' Die KFZ-Steuer für das Betriebsfahrzeug wird ' },
+      { beschreibung: ' Die KFZ-Steuer für einen Lieferwagen wird ' },
     ],
     betragsbereich: { min: 80, max: 600 }
   },
@@ -375,7 +376,8 @@ function erstelleZufallsGeschaeftsfall() {
   ];
   const ausgabe = varianten[Math.floor(Math.random() * varianten.length)];
 
-  const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
+    const wertListe = typ.wertFormulierungen || wertFormulierungen;
+  const wertPhrase = wertListe[Math.floor(Math.random() * wertListe.length)];
 
   const zText = zahlungsart.text.trim();
   let verbindung = '';
@@ -383,9 +385,15 @@ function erstelleZufallsGeschaeftsfall() {
     verbindung = ' ';
   }
 
-  const geschaeftsfallText =
-    `${geschaeftsfall.beschreibung}${ausgabe}${verbindung}${zText}${wertPhrase}${betragFormatted}.`;
-
+   let geschaeftsfallText;
+  if (typ.belegtyp === 'kontoauszug') {
+    // z. B. "Die KFZ-Steuer für den Firmenwagen wird bei der Firma X per Lastschrift abgebucht in Höhe von 250,00 €."
+    geschaeftsfallText =
+      `${geschaeftsfall.beschreibung.trim()} ${ausgabe} ${zText}${wertPhrase}${betragFormatted}.`;
+  } else {
+    geschaeftsfallText =
+      `${geschaeftsfall.beschreibung}${ausgabe}${verbindung}${zText}${wertPhrase}${betragFormatted}.`;
+  }
   return {
     text: geschaeftsfallText,
     typ: zufallsTyp,
@@ -430,6 +438,37 @@ function erstellePlainBuchungssatz(geschaeftsfall) {
   return buchungssatzPlain;
 }
 
+function erstelleKontoauszugURL(geschaeftsfall) {
+  const params = new URLSearchParams();
+  params.set('beleg', 'kontoauszug');
+
+  const now = new Date();
+  const tag = now.getDate().toString().padStart(2, '0');
+  const monat = (now.getMonth() + 1).toString().padStart(2, '0');
+  const jahr = now.getFullYear().toString();
+  params.set('tag', tag);
+  params.set('monat', monat);
+  params.set('jahr', jahr);
+
+  // Unternehmen (Dropdown "datenKontoauszug" → URL-Parameter "kontoinhaber")
+  const kundeValue = document.getElementById('staatKunde')?.value?.trim() || '';
+  if (kundeValue) params.set('kontoinhaber', kundeValue);
+
+  // Vorgang: Lastschrift der Behörde
+  params.set('vorgang1', `Lastschrift ${geschaeftsfall.behoerde} KFZ-Steuer`);
+
+  // wertstellung1 = Betrag, negativ (Abbuchung)
+  const betrag = geschaeftsfall.betragFormatted.replace(/[€\s]/g, '').trim();
+  params.set('wertstellung1', `-${betrag}`);
+  // Beleg-Daten
+  params.set('nummer', String(Math.floor(Math.random() * 90) + 10));
+  const kontostandAlt = generateRandomBetrag(3000, 20000);
+  params.set('kontostand_alt', kontostandAlt.toLocaleString('de-DE', { minimumFractionDigits: 2 }));
+
+  return `belege.html?${params.toString()}`;
+}
+
+
 // ============================================================================
 // BELEG-URL ERSTELLEN
 // URL-Parameter-Schema (bescheid):
@@ -443,6 +482,7 @@ function erstellePlainBuchungssatz(geschaeftsfall) {
 // ============================================================================
 function erstelleBelegURL(geschaeftsfall) {
   const typ = geschaeftsfall.typDaten;
+  if (typ.belegtyp === 'kontoauszug') return erstelleKontoauszugURL(geschaeftsfall);
 
   // Kein Bescheid-Art definiert → kein Button
   if (!typ.bescheidArt) return null;
@@ -504,7 +544,7 @@ function erstelleBelegButton(nummer, geschaeftsfall) {
       </div>`;
   }
 
-  const belegTypName = 'Bescheid';
+    const belegTypName = geschaeftsfall.typDaten.belegtyp === 'kontoauszug' ? 'Kontoauszug' : 'Bescheid';
 
   // URL sicher als data-Attribut speichern, onclick liest daraus
   return `
@@ -676,16 +716,18 @@ Aufwandskonten (immer im SOLL):
 - 7030 KFZST – KFZ-Steuer (Steuer für betriebliche Kraftfahrzeuge)
 - 6730 GEB – Gebühren (Abfall, Abwasser, Verwaltungsgebühren, Genehmigungen)
 
-BUhcung Bescheid (immer im HABEN):
-- 4400 VE – Verbindlichkeiten
+Gegenkonten (immer im HABEN):
+- 4400 VE – Verbindlichkeiten (bei Bescheid: Grundsteuer, Gewerbesteuer, Gebühren)
+- 2800 BK – Bankguthaben (bei Lastschrift: KFZ-Steuer, Beleg ist der Kontoauszug)
 
 Buchungslogik:
 - Aufwandskonto immer im Soll
-- Verbindlichkeiten immer im Haben
+- Bei Bescheid: Verbindlichkeiten im Haben
+- Bei Lastschrift (KFZ-Steuer): Bankguthaben im Haben
 - KEINE Vorsteuer bei Steuern und Gebühren an Behörden!
 
 Buchungssatz-Schema (immer einfach):
-Aufwandskonto (Soll) | Betrag | an | Verbindlichkeiten (Haben) | Betrag
+Aufwandskonto (Soll) | Betrag | an | Verbindlichkeiten bzw. Bankguthaben (Haben) | Betrag
 
 Beispiel Gewerbesteuer:
 7000 GWST | 1.200,00 € | an | 4400 VE | 1.200,00 €

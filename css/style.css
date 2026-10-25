@@ -1998,3 +1998,7 @@ svg text[contenteditable="true"] {
 .news-list a { 
   margin-left: 4px;
 }
+
+#Container img{
+  max-width: 50%;
+}
