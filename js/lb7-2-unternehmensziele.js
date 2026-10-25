@@ -196,7 +196,7 @@ updateZiele();
 // bearbeitbaren Bereich vorgenommen haben. Button: onclick="exportiereMoodleZiele()"
 // ============================================================================
 
-const MOODLE_ZIELE_PRAEFIX = '7.2-01#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung
+const MOODLE_ZIELE_PRAEFIX = '7.2-03#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung
 const MOODLE_ZIELE_TITELENDE = 'meinBwR-Zuordnen';
 const MOODLE_ZIELE_ANWEISUNG = 'Ordne die folgenden Unternehmensziele den drei Kategorien zu: ökologisch, ökonomisch oder sozial.';
 const MOODLE_ZIELE_PUNKTE_PRO_AUFGABE = 1;
