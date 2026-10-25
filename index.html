@@ -540,38 +540,61 @@
              </div>
         </details>
 
-        <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Welches Exportformat soll ich verwenden?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <p><strong>PNG:</strong> </p>
-            <ul style="margin: 4px 0 12px 20px;">
-              <li>Schnelle Integration</li>
-              <li>H5P-Aktivitäten in der ByCS Lernplattform</li>
-              <li>Wenn keine nachträgliche Bearbeitung nötig ist</li>
-            </ul>
-            <p><strong>Office:</strong> </p>
-            <ul style="margin: 4px 0 12px 20px;">
-              <li>Direktes Einfügen in Textverarbeitung, Tabellenkalkulation...</li>
-              <li>Wenn Sie die Belege in Office-Dokumenten weiterbearbeiten möchten</li>
-              <li>Meist ist ein Nachbearbeiten notwendig, da das Format auf die Darstellung im Browser optimiert ist. </li>
-            </ul>
-            <p><strong>SVG:</strong> </p>
-            <ul style="margin: 4px 0 12px 20px;">
-              <li>Nachträgliche Bearbeitung möglich (z. B. unter "Belege importieren" oder mit Inkscape)</li>
-              <li>Skalierbare Grafiken ohne Qualitätsverlust</li>
-              <li>ByCS Lernplattform (Text-/Medienfelder, Textseiten, Tests)</li>
-            </ul>
-            <p><strong>HTML/Inline SVG:</strong> </p>
-            <ul style="margin: 4px 0 12px 20px;">
-              <li>Direktes Einbinden in Textfeld, Freitext-Aufgabe...</li>
-              <li>Fortgeschrittene Nutzer mit HTML-Kenntnissen</li>
-              <li>Dynamische Inhalte (z.B. automatisches Datum)</li>
-              <li>Direktes Einbinden in Moodle/ByCS-Kurse mit Scripting</li>
-            </ul>
-          </div>
-        </details>
+<details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
+  <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
+    Welches Exportformat soll ich verwenden?
+  </summary>
+  <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
+
+    <p><strong>
+      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>PNG:</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Schnelle Integration</li>
+      <li>H5P-Aktivitäten in der ByCS Lernplattform</li>
+      <li>Wenn keine nachträgliche Bearbeitung nötig ist</li>
+    </ul>
+
+    <p><strong>
+      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z"/></svg>Office:</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Direktes Einfügen in Textverarbeitung, Tabellenkalkulation...</li>
+      <li>Wenn Sie die Belege in Office-Dokumenten weiterbearbeiten möchten</li>
+      <li>Meist ist ein Nachbearbeiten notwendig, da das Format auf die Darstellung im Browser optimiert ist.</li>
+    </ul>
+
+    <p><strong>
+      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z"/></svg>HTML/Inline SVG:</strong></p>
+        <ul style="margin: 4px 0 12px 20px;">
+      <li>Nachträgliche Bearbeitung möglich (z. B. unter "Belege importieren" oder mit Inkscape)</li>
+      <li>Skalierbare Grafiken ohne Qualitätsverlust</li>
+      <li>ByCS Lernplattform (Text-/Medienfelder, Textseiten, Tests)</li>
+    </ul>
+
+    <p><strong>
+    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/></svg>HTML/Inline SVG:</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Direktes Einbinden in Textfeld, Freitext-Aufgabe...</li>
+      <li>Fortgeschrittene Nutzer mit HTML-Kenntnissen</li>
+      <li>Dynamische Inhalte (z.B. automatisches Datum)</li>
+      <li>Direktes Einbinden in Moodle/ByCS-Kurse mit Scripting</li>
+    </ul>
+
+    <p><strong>
+      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 640 640" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M128 128C128 92.7 156.7 64 192 64L405.5 64C422.5 64 438.8 70.7 450.8 82.7L493.3 125.2C505.3 137.2 512 153.5 512 170.5L512 208L128 208L128 128zM64 320C64 284.7 92.7 256 128 256L512 256C547.3 256 576 284.7 576 320L576 416C576 433.7 561.7 448 544 448L512 448L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 448L96 448C78.3 448 64 433.7 64 416L64 320zM192 480L192 512L448 512L448 416L192 416L192 480zM520 336C520 322.7 509.3 312 496 312C482.7 312 472 322.7 472 336C472 349.3 482.7 360 496 360C509.3 360 520 349.3 520 336z"/></svg>Drucken (Arbeitsblatt):</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Öffnet den Druckdialog des Browsers mit einer aufbereiteten Ansicht</li>
+      <li>Alternativ im Druckdialog „Als PDF speichern" wählen, um ein PDF zu erzeugen</li>
+    </ul>
+
+    <p><strong>
+      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 640 640" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M80 259.8L289.2 345.9C299 349.9 309.4 352 320 352C330.6 352 341 349.9 350.8 345.9L593.2 246.1C602.2 242.4 608 233.7 608 224C608 214.3 602.2 205.6 593.2 201.9L350.8 102.1C341 98.1 330.6 96 320 96C309.4 96 299 98.1 289.2 102.1L46.8 201.9C37.8 205.6 32 214.3 32 224L32 520C32 533.3 42.7 544 56 544C69.3 544 80 533.3 80 520L80 259.8zM128 331.5L128 448C128 501 214 544 320 544C426 544 512 501 512 448L512 331.4L369.1 390.3C353.5 396.7 336.9 400 320 400C303.1 400 286.5 396.7 270.9 390.3L128 331.4z"/></svg>Moodle-Fragetyp:</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Exportiert die Aufgabe als XML-Datei, die in die Moodle-/ByCS-Fragensammlung importiert werden kann</li>
+      <li>Die Aufgabe steht danach als Frage in Tests zur Verfügung und kann automatisch bewertet werden</li>
+    </ul>
+
+  </div>
+</details>
 
 <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
           <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
