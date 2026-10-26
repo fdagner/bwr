@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abschluss Bestandskonten & SBK | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Aufgaben zum Abschluss der Bestandskonten (Aktiv- und Passivkonten) über das Schlussbilanzkonto 8010 SBK. Ideal für BwR Jahrgangsstufe 8 Realschule Bayern (LehrplanPLUS), Buchführungsabschluss, Prüfungsvorbereitung und Leistungsnachweise. Mit Export (PNG/SVG/Clipboard) und KI-Prompt für sokratischen Chatbot.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb8-1-bestandskonten.html">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Abschluss Bestandskonten & SBK – BwR Aufgabe Generator | meinbwr.de">
+  <meta property="og:description" content="Zufällige Aufgabe zum Abschluss der Bestandskonten über das Schlussbilanzkonto (8010 SBK). Perfekt für BwR 8 Realschule Bayern – Buchführungsabschluss, Prüfungen. Export als Bild/Text, plus fertiger KI-Prompt (sokratisch, lösungsfrei).">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb8-1-bestandskonten.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Abschluss Bestandskonten & SBK – BwR Aufgabe Generator | meinbwr.de">
+  <meta name="twitter:description" content="Zufällige Aufgabe zum Abschluss der Bestandskonten über das Schlussbilanzkonto (8010 SBK). Perfekt für BwR 8 Realschule Bayern – Buchführungsabschluss, Prüfungen. Export als Bild/Text, plus fertiger KI-Prompt (sokratisch, lösungsfrei).">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="color-scheme" content="light">
+
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Abschluss Bestandskonten & SBK",
+    "description": "Kostenloses BwR-Tool: Generiere zufällige Aufgaben zum Abschluss der Bestandskonten (Aktiv- und Passivkonten) über das Schlussbilanzkonto 8010 SBK. Ideal für BwR Jahrgangsstufe 8 Realschule Bayern (LehrplanPLUS), Buchführungsabschluss, Prüfungsvorbereitung und Leistungsnachweise. Mit Export (PNG/SVG/Clipboard) und KI-Prompt für sokratischen Chatbot.",
+    "url": "https://www.meinbwr.de/lb8-1-bestandskonten.html",
+    "inLanguage": "de-DE",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "meinbwr.de – BwR Realschule Bayern",
+      "url": "https://www.meinbwr.de/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 2, "name": "BwR 8", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 3, "name": "Bestandskonten", "item": "https://www.meinbwr.de/lb8-1-bestandskonten.html" }
+      ]
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+</head>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+
+  <h2>Abschluss der Bestandskonten (beta)</h2>
+
+  <div id="generator-container">
+    <div class="box">
+      <p>Hier können Sie eine Aufgabe zum Abschluss der Bestandskonten über das Schlussbilanzkonto (8010 SBK) generieren. 
+        4800 UST und 2600 VORST sind bereits über die Zahllast mit dem Bankkonto ausgeglichen, zur Einfachheit mit einer Buchung. 
+        Der Gewinn (UEFE abzüglich AWR und AWH, jeweils netto) ist bereits über 8020 GUV auf 3000 EK gebucht.</p>
+
+      <div class="flex-row" id="aktivAuswahl">
+        <strong>Aktivkonten:</strong>
+        <label><input type="checkbox" id="chk0500" onchange="zeigeZufaelligenBestandsabschluss()"> <span>0500 GR</span></label>
+        <label><input type="checkbox" id="chk0530" onchange="zeigeZufaelligenBestandsabschluss()"> <span>0530 BVG</span></label>
+        <label><input type="checkbox" id="chk0700" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>0700 MA</span></label>
+        <label><input type="checkbox" id="chk0840" onchange="zeigeZufaelligenBestandsabschluss()"> <span>0840 FP</span></label>
+        <label><input type="checkbox" id="chk0860" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>0860 BM</span></label>
+        <label><input type="checkbox" id="chk0870" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>0870 BGA</span></label>
+        <label><input type="checkbox" checked disabled> <span>2400 FO</span></label>
+        <label><input type="checkbox" checked disabled> <span>2800 BK</span></label>
+        <label><input type="checkbox" id="chk2880" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>2880 KA</span></label>
+      </div>
+
+      <div class="flex-row" id="passivAuswahl">
+        <strong>Passivkonten:</strong>
+        <label><input type="checkbox" checked disabled> <span>3000 EK</span></label>
+        <label><input type="checkbox" id="chk4200" onchange="zeigeZufaelligenBestandsabschluss()"> <span>4200 KBKV</span></label>
+        <label><input type="checkbox" id="chk4250" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>4250 LBKV</span></label>
+        <label><input type="checkbox" checked disabled> <span>4400 VE</span></label>
+      </div>
+
+      <div class="flex-row">
+        <button onclick="zeigeZufaelligenBestandsabschluss()">Neue Aufgabe erstellen</button>
+        <button onclick="drucken()">
+          📄 T-Konten-Blatt drucken
+        </button>
+      </div>
+    </div>
+
+    <div id="Container" style="max-width:960px;margin:0 auto;" contenteditable="true"></div>
+
+    <div w3-include-html="downloads.html"></div>
+    <!-- KI-ASSISTENT -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, AIS.chat&nbsp;…)</p>
+        </div>
+      </div>
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+          Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.</span>
+        </div>
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">🧾 Abschluss Bestandskonten</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+        <div class="ki-actions" style="margin-top:14px;">
+          <button class="ki-prompt-btn ki-prompt-btn--primary"
+                  id="kiPromptKopierenBtn"
+                  onclick="kopiereKiPrompt()"
+                  title="Prompt in die Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+          <button class="ki-prompt-btn ki-prompt-btn--ghost"
+                  id="kiPromptToggleBtn"
+                  onclick="toggleKiPromptVorschau()">
+            Prompt anzeigen ▼
+          </button>
+        </div>
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false"
+                    aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/lb8-1-bestandskonten.js"></script>
+  <script src="js/download.js"></script>
+  <div w3-include-html="footer.html"></div>
+  <script>includeHTML();</script>
+</main>
+</body>
+</html>
