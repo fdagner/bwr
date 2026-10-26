@@ -5,7 +5,7 @@ let kunde = '<i>[Modellunternehmen]</i>';
 // KONTEN (hier zentral anpassbar)
 // ============================================================================
 const KONTO_BANK     = '2800 BK';
-const KONTO_DARLEHEN = '4250 LVKI';   // Langfristige Verbindlichkeiten ggü. Kreditinstituten
+const KONTO_DARLEHEN = '4250 LBKV';   // Langfristige Bankverbindlichkeiten
 const KONTO_ZINS     = '7510 ZAW';    // Zinsaufwendungen
 
 // ============================================================================
@@ -163,18 +163,18 @@ function bsHtml(soll, haben) {
   return h + '</table>';
 }
 
-function planTabelle(plan) {
+function planTabelle(plan, art) {
   const th = 'style="border:1px solid #ccc;padding:4px 8px;background:#f0f4f8;text-align:right;"';
   const td = 'style="border:1px solid #ccc;padding:4px 8px;text-align:right;"';
+  const lastHeader = (art === 'annuitaet') ? 'Annuität' : 'Schuldendienst';
   let h = `<table style="border-collapse:collapse;font-size:14px;margin:6px 0;">
-    <tr><th ${th}>Jahr</th><th ${th}>Restschuld Jahresanfang</th><th ${th}>Zinsen</th><th ${th}>Tilgung</th><th ${th}>Schuldendienst</th></tr>`;
+    <tr><th ${th}>Jahr</th><th ${th}>Restschuld Jahresanfang</th><th ${th}>Zinsen</th><th ${th}>Tilgung</th><th ${th}>${lastHeader}</th></tr>`;
   plan.rows.forEach(r => {
     h += `<tr><td ${td}>${r.j}</td><td ${td}>${formatEuro(r.anfang)}</td><td ${td}>${formatEuro(r.zins)}</td><td ${td}>${formatEuro(r.tilgung)}</td><td ${td}>${formatEuro(r.sd)}</td></tr>`;
   });
   h += `<tr><td ${td}><strong>Σ</strong></td><td ${td}></td><td ${td}><strong>${formatEuro(plan.gesamtZins)}</strong></td><td ${td}><strong>${formatEuro(plan.rows[0].anfang)}</strong></td><td ${td}><strong>${formatEuro(plan.gesamtZahlung)}</strong></td></tr></table>`;
   return h;
 }
-
 // ============================================================================
 // AUFGABEN
 // ============================================================================
@@ -189,22 +189,15 @@ function erstelleAufgaben(art, K, n, p, plan) {
     text: `Bilde den Buchungssatz für die Aufnahme des Darlehens (Gutschrift auf dem Bankkonto).`,
     loesung: bsHtml([[KONTO_BANK, K]], [[KONTO_DARLEHEN, K]]),
   };
-  const gesamtAufgabe = {
-    text: `Berechne die gesamten Zinsen und die Gesamtzahlung an die Bank über die Laufzeit.`,
-    loesung: `Gesamtzinsen: ${val(f(plan.gesamtZins))}<br>Gesamtzahlung = Kreditsumme + Gesamtzinsen = ${f(K)} + ${f(plan.gesamtZins)} = ${val(f(plan.gesamtZahlung))}<br>${planTabelle(plan)}`,
-  };
 
   if (art === 'fest') {
     return [
       { text: `Erkläre den Begriff „Festdarlehen“ (auch Fälligkeitsdarlehen).`,
         loesung: `Beim <strong>Festdarlehen</strong> wird die gesamte Kreditsumme am <strong>Ende der Laufzeit in einer Summe</strong> zurückgezahlt. Während der Laufzeit werden nur die <strong>Zinsen</strong> gezahlt.` },
-      { text: `Lies die Kreditsumme und die Laufzeit aus dem Diagramm ab und berechne die jährlichen Zinsen bei einem Zinssatz von ${pz}.`,
-        loesung: `Kreditsumme: ${val(f(K))}, Laufzeit: ${val(n + ' Jahre')}<br>Jahreszinsen = ${f(K)} · ${pz} = ${val(f(r1.zins))}` },
       { text: `Erkläre, weshalb die Zinsen in jedem Jahr gleich hoch sind.`,
         loesung: `Die Restschuld bleibt bis zum Ende der Laufzeit unverändert bei ${f(K)}, da keine Tilgung erfolgt. Die Zinsen werden immer von derselben Bemessungsgrundlage berechnet und sind daher in jedem Jahr gleich.` },
-      { text: `Beschreibe, wie sich Zinsen, Tilgung und Gesamtzahlung (Schuldendienst) im Laufe der Laufzeit entwickeln.`,
+      { text: `Beschreibe anhand der Tilgungstabelle und des Diagramms, wie sich Zinsen, Tilgung und Gesamtzahlung (Schuldendienst) im Laufe der Laufzeit entwickeln.`,
         loesung: `Zinsen: in jedem Jahr konstant (${f(r1.zins)}).<br>Tilgung: in den Jahren 1 bis ${n - 1} keine Tilgung, im letzten Jahr die gesamte Kreditsumme (${f(K)}).<br>Schuldendienst: in den Jahren 1 bis ${n - 1} nur Zinsen (${f(r1.zins)}), im letzten Jahr ${f(rl.sd)}.` },
-      gesamtAufgabe,
       { text: `Erläutere, wie sich die Gesamtzinsen ändern, wenn die Laufzeit verlängert wird.`,
         loesung: `Bei längerer Laufzeit zahlt das Unternehmen in mehr Jahren Zinsen auf die volle Kreditsumme. Die jährlichen Zinsen bleiben gleich, die <strong>Gesamtzinsen steigen</strong> aber proportional zur Laufzeit.` },
       buchAufnahme,
@@ -217,15 +210,12 @@ function erstelleAufgaben(art, K, n, p, plan) {
 
   if (art === 'abzahlung') {
     return [
-      { text: `Erkläre den Begriff „Abzahlungsdarlehen“ (Ratentilgung).`,
+      { text: `Erkläre den Begriff „Abzahlungsdarlehen“.`,
         loesung: `Beim <strong>Abzahlungsdarlehen</strong> wird die Kreditsumme in <strong>gleichbleibenden Tilgungsraten</strong> zurückgezahlt. Die Zinsen werden von der jeweiligen Restschuld berechnet. Der Schuldendienst (Zins + Tilgung) sinkt daher von Jahr zu Jahr.` },
-      { text: `Weise anhand des Diagramms nach, dass die jährliche Tilgungsrate ${f(r1.tilgung)} beträgt.`,
-        loesung: `Tilgungsrate = Kreditsumme : Laufzeit = ${f(K)} : ${n} = ${val(f(r1.tilgung))}<br>Im Diagramm ist der blaue Anteil (Tilgung) in jedem Jahr gleich hoch.` },
-      { text: `Erkläre, weshalb die Zinsen von Jahr zu Jahr sinken.`,
+      { text: `Erkläre anhand der Tilgungstabelle, weshalb die Zinsen von Jahr zu Jahr sinken.`,
         loesung: `Durch die Tilgung sinkt die Restschuld jedes Jahr um ${f(r1.tilgung)}. Die Zinsen werden von der Restschuld zu Jahresbeginn berechnet. Eine geringere Restschuld bedeutet geringere Zinsen: Jahr 1: ${f(r1.zins)}, Jahr ${n}: ${f(rl.zins)}.` },
-      { text: `Beschreibe, wie sich Zinsen, Tilgung und Gesamtzahlung (Schuldendienst) im Laufe der Laufzeit entwickeln.`,
+      { text: `Beschreibe anhand der Tilgungstabelle und des Diagramms, wie sich Zinsen, Tilgung und Gesamtzahlung (Schuldendienst) im Laufe der Laufzeit entwickeln.`,
         loesung: `Zinsen: sinken (von ${f(r1.zins)} auf ${f(rl.zins)}).<br>Tilgung: konstant (${f(r1.tilgung)}).<br>Schuldendienst: sinkt (von ${f(r1.sd)} auf ${f(rl.sd)}), da nur die Zinsen sinken.` },
-      gesamtAufgabe,
       { text: `Erläutere, wie sich der Schuldendienst ändert, wenn die Laufzeit erhöht wird.`,
         loesung: `Bei längerer Laufzeit sinkt die jährliche Tilgungsrate (Kreditsumme : Laufzeit), der jährliche Schuldendienst wird geringer. Da die Restschuld aber langsamer sinkt, fallen insgesamt <strong>mehr Zinsen</strong> an.` },
       buchAufnahme,
@@ -240,15 +230,10 @@ function erstelleAufgaben(art, K, n, p, plan) {
   return [
     { text: `Erkläre den Begriff „Annuitätendarlehen“.`,
       loesung: `Beim <strong>Annuitätendarlehen</strong> zahlt der Kreditnehmer jedes Jahr denselben Betrag (<strong>Annuität</strong> = Zinsen + Tilgung). Da die Zinsen durch die sinkende Restschuld abnehmen, steigt der Tilgungsanteil.` },
-    { text: `Lies aus dem Diagramm die Annuität ab und weise nach, dass sie in jedem Jahr gleich hoch ist.`,
-      loesung: `Annuität = Zinsen + Tilgung = ${f(r1.zins)} + ${f(r1.tilgung)} = ${val(f(r1.sd))} im 1. Jahr.<br>Jahr 2: ${f(plan.rows[1].zins)} + ${f(plan.rows[1].tilgung)} = ${f(plan.rows[1].sd)}.<br>Die Säulen sind gleich hoch${Math.abs(rl.sd - r1.sd) > 0.005 ? ` (Rundungsabweichung im letzten Jahr: ${f(rl.sd)})` : ''}.` },
-    { text: `Berechne aus dem Diagramm die Tilgungsrate im 1.&nbsp;Jahr und die Zinsen. Zinssatz: ${pz}.`,
-      loesung: `Zinsen 1. Jahr = ${f(K)} · ${pz} = ${val(f(r1.zins))}<br>Tilgung 1. Jahr = Annuität − Zinsen = ${f(r1.sd)} − ${f(r1.zins)} = ${val(f(r1.tilgung))}` },
-    { text: `Beschreibe, wie sich Zinsen, Tilgung und Gesamtzahlung (Schuldendienst) im Laufe der Laufzeit entwickeln.`,
-      loesung: `Zinsen: sinken (von ${f(r1.zins)} auf ${f(rl.zins)}).<br>Tilgung: steigt (von ${f(r1.tilgung)} auf ${f(rl.tilgung)}).<br>Schuldendienst: bleibt konstant (${f(r1.sd)}).` },
+    { text: `Beschreibe anhand der Tilgungstabelle und des Diagramms, wie sich Zinsen, Tilgung und Gesamtzahlung (Annuität) im Laufe der Laufzeit entwickeln.`,
+      loesung: `Zinsen: sinken (von ${f(r1.zins)} auf ${f(rl.zins)}).<br>Tilgung: steigt (von ${f(r1.tilgung)} auf ${f(rl.tilgung)}).<br>Annuität: bleibt konstant (${f(r1.sd)}).` },
     { text: `Erkläre, weshalb die Tilgung von Jahr zu Jahr steigt, obwohl die Annuität gleich bleibt.`,
       loesung: `Mit jeder Tilgung sinkt die Restschuld und damit der Zinsbetrag. Die ersparten Zinsen werden bei gleichbleibender Annuität zusätzlich zur Tilgung verwendet.` },
-    gesamtAufgabe,
     { text: `Erläutere, wie sich der Schuldendienst ändert, wenn die Laufzeit erhöht wird.`,
       loesung: `Bei längerer Laufzeit sinkt die jährliche Annuität, weil die Schuld auf mehr Jahre verteilt wird. Die Restschuld sinkt langsamer, daher steigen die <strong>Gesamtzinsen</strong>.` },
     buchAufnahme,
@@ -265,12 +250,14 @@ function erstelleAufgaben(art, K, n, p, plan) {
 let letzteDarlehensAufgabe = null;
 let renderedCharts = [];
 
+
 function zufallswerteSetzen() {
   document.getElementById('kreditInput').value = pick([9000, 12000, 18000, 24000, 30000, 60000]);
   document.getElementById('laufzeitInput').value = pick([3, 4, 5, 6]);
   document.getElementById('zinsInput').value = pick([2, 2.5, 3, 3.5, 4, 4.5, 5, 6]);
   zeigeDarlehensAufgabe();
 }
+
 
 function zeigeDarlehensAufgabe() {
   renderedCharts.forEach(c => { try { c.destroy(); } catch (e) {} });
@@ -279,19 +266,58 @@ function zeigeDarlehensAufgabe() {
   let art = document.getElementById('darlehenSelect').value;
   if (art === 'zufall') art = pick(Object.keys(ARTEN));
 
-  let K = parseFloat(document.getElementById('kreditInput').value) || 9000;
-  let n = parseInt(document.getElementById('laufzeitInput').value) || 3;
+  // ===== Validierung =====
+  let K = parseFloat(document.getElementById('kreditInput').value);
+  let n = parseInt(document.getElementById('laufzeitInput').value);
   let p = parseFloat(document.getElementById('zinsInput').value);
-  if (isNaN(p) || p < 0) p = 3;
-  n = Math.min(Math.max(n, 2), 10);
-  K = Math.max(Math.round(K), 1000);
-  if (art === 'abzahlung') K = Math.floor(K / n) * n;   // ganzzahlige Tilgungsrate
 
+  let hinweis = [];
+
+  if (isNaN(K) || K < 1000) {
+    K = 9000;
+    hinweis.push('Kreditsumme wurde auf 9.000 € gesetzt.');
+  }
+  if (isNaN(n) || n < 2) {
+    n = 3;
+    hinweis.push('Laufzeit wurde auf 3 Jahre gesetzt.');
+  }
+  if (isNaN(p) || p < 0.5) {
+    p = 3;
+    hinweis.push('Zinssatz wurde auf 3 % gesetzt.');
+  }
+
+  // Grenzen erzwingen
+  K = Math.min(Math.max(Math.round(K), 1000), 1000000);
+  n = Math.min(Math.max(n, 2), 10);
+  p = Math.min(Math.max(p, 0.5), 12);
+
+  // Abzahlungsdarlehen: ganzzahlige Tilgungsrate
+  if (art === 'abzahlung') {
+    const Kneu = Math.floor(K / n) * n;
+    if (Kneu !== K) {
+      hinweis.push(`Kreditsumme wurde auf ${formatEuro(Kneu)} angepasst (ganzzahlige Tilgung).`);
+      K = Kneu;
+    }
+  }
+
+  // Rundungsfreie Kreditsumme nur bei Annuität
   const KOriginal = K;
-  const kreditHinweis = (K !== KOriginal)
-    ? `<p style="font-size:12px;color:#888;">Hinweis: Die Kreditsumme wurde von ${formatEuro(KOriginal)} auf ${formatEuro(K)} angepasst, damit die Annuität in jedem Jahr exakt gleich hoch ist.</p>` : '';
+  if (art === 'annuitaet') {
+    K = findeRundungsfreieKreditsumme(K, n, p);
+    if (K !== KOriginal) {
+      hinweis.push(`Kreditsumme wurde von ${formatEuro(KOriginal)} auf ${formatEuro(K)} angepasst, damit die Annuität in jedem Jahr exakt gleich hoch ist.`);
+    }
+  }
+
+  // Hinweis anzeigen
   const hinweisEl = document.getElementById('darlehenHinweis');
-  if (hinweisEl) hinweisEl.innerHTML = kreditHinweis;
+  if (hinweisEl) {
+    hinweisEl.innerHTML = hinweis.length > 0
+      ? `<p style="font-size:12px;color:#888;">${hinweis.join(' ')}</p>`
+      : '';
+  }
+  // =======================
+
   const plan = berechnePlan(art, K, n, p);
   const info = ARTEN[art];
 
@@ -305,7 +331,6 @@ function zeigeDarlehensAufgabe() {
   chartDiv.id = chartId;
   inner.appendChild(chartDiv);
 
-  const labelFmt = v => (v && v > 0) ? formatEuro(v) : '';
   const chartOptions = {
     chart: { type: 'bar', background: '#fff', animations: { enabled: false }, height: 420, stacked: true,
              toolbar: { show: true, tools: { download: true, zoom: false, pan: false, reset: false } } },
@@ -325,7 +350,7 @@ function zeigeDarlehensAufgabe() {
     },
     plotOptions: { bar: { borderRadius: 2, columnWidth: n <= 4 ? '45%' : '65%' } },
     legend: { position: 'top', fontFamily: 'Helvetica, Arial, sans-serif', fontSize: '13px' },
-    dataLabels: { enabled: true, formatter: labelFmt, style: { fontSize: '11px', fontWeight: 600, colors: ['#fff'] } },
+    dataLabels: { enabled: false },
     tooltip: { y: { formatter: v => formatEuro(v) }, shared: true, intersect: false },
     grid: { padding: { right: 30, left: 10 }, borderColor: '#e5e7eb', xaxis: { lines: { show: false } } },
     title: { text: `${info.name} bei ${kunde} – Kreditsumme ${formatEuro(K)}, ${n} Jahre`, align: 'left',
@@ -355,8 +380,14 @@ function zeigeDarlehensAufgabe() {
   container.innerHTML = `
     <div class="aufgaben-section">
       <h2>Aufgaben</h2>
-      <p>${kunde} nimmt zu Jahresbeginn ein <strong>${info.name}</strong> über ${formatEuro(K)} mit einer Laufzeit von ${n} Jahren und einem Zinssatz von ${zinsText} auf. Das Diagramm zeigt den jährlichen Schuldendienst.</p>
+      <p>${kunde} nimmt zu Jahresbeginn ein <strong>${info.name}</strong> über ${formatEuro(K)} mit einer Laufzeit von ${n} Jahren und einem Zinssatz von ${zinsText} auf. Die Tilgungstabelle und das Diagramm zeigen den jährlichen Schuldendienst.</p>
+      
+      <h3 style="margin:16px 0 8px;">Tilgungsplan</h3>
+      ${planTabelle(plan, art)}
+      
+      <h3 style="margin:16px 0 8px;">Diagramm</h3>
       <div id="darlehenImg-${chartId}"></div>
+      
       <ol>${aufgaben.map(a => `<li>${a.text}</li>`).join('')}</ol>
     </div>`;
 

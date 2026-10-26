@@ -40,7 +40,7 @@
   <div w3-include-html="navigation.html"></div>
 
   <div class="afa-generator-wrap">
-    <h2>Darlehen – mit Diagramm (beta)</h2>
+    <h2>Darlehensarten (beta)</h2>
 
     <div class="box">
       <p>
@@ -54,7 +54,7 @@
           <option value="fest">📌 Festdarlehen</option>
           <option value="abzahlung">📉 Abzahlungsdarlehen</option>
           <option value="annuitaet" selected>⚖️ Annuitätendarlehen</option>
-          <option value="zufall">🔀 Zufällig</option>
+          <option value="zufall" hidden>🔀 Zufällig</option>
         </select>
         <label for="marketingKunde">Unternehmen:</label>
         <select id="marketingKunde" class="meinUnternehmen"></select>
@@ -63,15 +63,15 @@
       <div class="flex-row">
         <div>
           <label for="kreditInput">Kreditsumme (€)</label>
-          <input type="number" id="kreditInput" value="9000" min="1000" max="1000000" step="500">
+          <input type="number" id="kreditInput" value="10000" min="1000" max="1000000" step="500">
         </div>
         <div>
           <label for="laufzeitInput">Laufzeit (Jahre)</label>
-          <input type="number" id="laufzeitInput" value="3" min="2" max="10" step="1">
+          <input type="number" id="laufzeitInput" value="5" min="2" max="10" step="1">
         </div>
         <div>
           <label for="zinsInput">Zinssatz (% p. a.)</label>
-          <input type="number" id="zinsInput" value="3" min="0.5" max="12" step="0.1">
+          <input type="number" id="zinsInput" value="4" min="0.5" max="12" step="0.1">
         </div>
       </div>
       <p style="font-size:12px;color:#888;margin:8px 0 0;">
@@ -82,7 +82,7 @@
       <br>
       <button class="primary-btn" onclick="zeigeDarlehensAufgabe()">Neue Aufgabe</button>
       <button class="primary-btn" onclick="zufallswerteSetzen()">🎲 Zufallswerte</button>
-
+<br><br>
       <div id="darlehenChartWrapper" class="chart-wrapper" style="display:none;min-width:700px;background-color:#fff;">
         <div class="chart-inner" id="darlehenChartInner"></div>
       </div>
