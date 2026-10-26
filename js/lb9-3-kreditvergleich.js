@@ -356,10 +356,17 @@ function zeigeZufaelligenSatz() {
 </div>`;
 
   // ── LÖSUNG ───────────────────────────────────────────────────────────
-  function loesungKarte(brief, bank, kal, guenstig) {
-    const proz = fmtZahl(100 - kal.disagio, 0, 2);
-    return `
-<div style="${guenstig && !gleich ? S.karteGuenstig : S.karte}">
+function loesungKarte(brief, bank, kal, guenstig) {
+  const proz = fmtZahl(100 - kal.disagio, 0, 2);
+
+  // Originalfarben beibehalten, nur das günstigere Angebot grün machen
+  let stil = brief === 'A' ? S.karte : S.karteAufgabe;
+  if (guenstig && !gleich) {
+    stil = S.karteGuenstig;
+  }
+
+  return `
+<div style="${stil}">
   <div style="${S.karteTitel}">
     Lösung: Angebot ${brief} – ${bank}
     ${guenstig && !gleich ? `<span style="${S.badgeGuenstig}">✓ Niedrigster effektiver Zins</span>` : ''}
@@ -380,7 +387,7 @@ function zeigeZufaelligenSatz() {
     ${kalkZeileErgebnis('= Effektiver Zinssatz', `<strong>${fmtEffektiv(kal.effektiv)}</strong>`)}
   </table>
 </div>`;
-  }
+}
 
   const karteA_loesung = loesungKarte('A', nameA, kalkA, istAGuenstig);
   const karteB_loesung = loesungKarte('B', nameB, kalkB, !istAGuenstig);

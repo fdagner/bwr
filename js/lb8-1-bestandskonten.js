@@ -251,7 +251,7 @@ function berechneSaldo(k) {
 function tkKopf(titel, klein) {
   // feste Spaltenbreiten → Mittellinie sitzt bei jedem Konto an derselben Stelle
   const w = klein ? [26, 24, 26, 24] : [25, 25, 25, 25];
-  return `<table class="tkonto${klein ? ' tkonto-klein' : ''}" style="border-collapse:collapse;table-layout:fixed;width:100%;background:#fff;font-size:${klein ? '0.82em' : '1.0em'};">
+  return `<table class="tkonto${klein ? ' tkonto-klein' : ''}" style="border-collapse:collapse;table-layout:fixed;width:100%;background:#fff;font-size:1.0em;">
     <colgroup><col style="width:${w[0]}%"><col style="width:${w[1]}%"><col style="width:${w[2]}%"><col style="width:${w[3]}%"></colgroup>
     <thead><tr>
       <th style="text-align:left;font-weight:600;padding:4px 0;">Soll</th>
@@ -262,10 +262,12 @@ function tkKopf(titel, klein) {
 
 function tkZeile(sLabel, sBetrag, hLabel, hBetrag) {
   const fmt = b => (b === null || b === undefined) ? '&nbsp;' : formatBetrag(b);
+  // lange Buchungstexte (z. B. "5000 UEFE, 4800 UST") kleiner, kurze (AB, 2800 BK) normal
+  const lbl = l => !l ? '&nbsp;' : (l.length > 12 ? `<span style="font-size:0.82em;">${l}</span>` : l);
   return `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${sLabel || '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${lbl(sLabel)}</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${fmt(sBetrag)}</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${hLabel || '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${lbl(hLabel)}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${fmt(hBetrag)}</td>
     </tr>`;
 }
@@ -338,11 +340,11 @@ function zeigeZufaelligenBestandsabschluss() {
   }
   const { aktiv, passiv, summe: bilanzsumme, ust, vorst, uefeNetto, aufwandNetto, gewinn } = ergebnis;
 
-  const anzahlSBK = Math.max(Object.keys(aktiv).length, Object.keys(passiv).length);
+  const anzahlSBK = Math.max(Object.keys(aktiv).length, Object.keys(passiv).length) + 1;   // eine Zeile extra
 
   // ── AUFGABE ────────────────────────────────────────────────────────────────
   let html = '<h2>Aufgabe</h2>';
-  html += `<p>Die folgenden Bestandskonten weisen zum Jahresende die aufgeführten Buchungen auf (AB = Anfangsbestand).<br>Ermittle die Salden und schließe alle Konten über das Schlussbilanzkonto (8010 SBK) ab. Bilde die Buchungssätze.</p>`;
+  html += `<p>Die folgenden Bestandskonten weisen zum Jahresende die aufgeführten Buchungen auf.<br>Ermittle die Salden und schließe alle Konten ab. Bilde die Buchungssätze.</p>`;
 
   html += `<div class="tkonto-grid">`;
   Object.entries(aktiv).forEach(([nr, k]) => {
@@ -552,7 +554,6 @@ function addPrintCSS() {
     .tkonto-klein td { white-space: normal !important; }
 
     @media print {
-      .tkonto.tkonto-klein { font-size: 0.7em !important; }
       body * { visibility: hidden; }
       #Container, #Container * { visibility: visible; }
       #Container {

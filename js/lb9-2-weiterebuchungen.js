@@ -222,7 +222,7 @@ const geschaeftsfallTypen = {
     name: 'Miete & Pacht (Bankabbuchung)',
     konto: '6700 AWMP',
     belegtyp: 'kontoauszug',
-    kontoauszugArt: 'kontoauszug1.svg',
+    kontoauszugArt: 'kontoauszug3.svg',
     zahlungsarten: [
       { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
       { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
@@ -251,7 +251,7 @@ const geschaeftsfallTypen = {
     name: 'Versicherungsbeiträge',
     konto: '6900 VBEI',
     belegtyp: 'kontoauszug',
-    kontoauszugArt: 'kontoauszug2.svg',
+    kontoauszugArt: 'kontoauszug3.svg',
     zahlungsarten: [
       { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
       { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
@@ -453,7 +453,7 @@ function erstelleBelegURL(gf) {
 
  if (belegArt === 'kontoauszug') {
     params.set('beleg', 'kontoauszug');
-    params.set('vorlage', typ.kontoauszugArt || 'kontoauszug1.svg');
+    params.set('vorlage', typ.kontoauszugArt || 'kontoauszug3.svg');
     params.set('tag', tag);
     params.set('monat', monat);
     params.set('jahr', jahr);

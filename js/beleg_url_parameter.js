@@ -53,7 +53,7 @@ const URL_PARAM_CONFIG = {
         kunde: { elementId: 'datenKunde', type: 'select' },
     },
     
-    // ========== KONTOAUSZUG ==========
+// ========== KONTOAUSZUG ==========
     kontoauszug: {
         // Vorgänge
         vorgang1: { elementId: 'kontoauszugVorgang1Input', type: 'input' },
@@ -72,7 +72,7 @@ const URL_PARAM_CONFIG = {
         monat: { elementId: 'monatKontoauszug', type: 'select' },
         jahr: { elementId: 'jahrKontoauszug', type: 'input' },
         
-        // Vorlage
+        // ➔ HIER MUSS DIE VORLAGE ERGÄNZT WERDEN:
         vorlage: { elementId: 'svgDropdownKontoauszug', type: 'select' },
         
         // Unternehmen
