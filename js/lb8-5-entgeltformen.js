@@ -206,47 +206,47 @@ const entgeltformen = {
     label: 'Leistungsentgelt',
     langform: 'Leistungsentgelt ',
     kurzbeschreibung: 'Der Lohn richtet sich nach der Arbeitsleistung (Menge, Qualität, Erfolg). Frage: Wie viel bzw. wie gut wird gearbeitet?',
-    formulierungen: [
+        formulierungen: [
       {
         art: 'Stückakkord',
         text: (u) => {
           const s = rnd(0.4, 2.5, 0.05), st = rnd(1200, 3600, 100);
-          return `Frau Horvat näht bei ${u} Hemden. Sie erhält für jedes fertige Hemd ${fmt(s)} €. Im Monat hat sie ${fmtInt(st)} Hemden gefertigt und verdient damit ${fmt(s * st)} €.`;
+          return `Frau Horvat arbeitet bei ${u} im Versand und packt die bestellten Waren für den Transport. Sie erhält für jedes versandfertig gepackte Paket ${fmt(s)} €. Im Monat hat sie ${fmtInt(st)} Pakete gepackt und verdient damit ${fmt(s * st)} €.`;
         }
       },
       {
         art: 'Zeitakkord',
         text: (u) => {
           const vz = rnd(4, 12, 1), mf = rnd(0.2, 0.4, 0.05), st = rnd(300, 600, 20);
-          return `Bei ${u} gilt für Herrn Brandt in der Montage eine Vorgabezeit von ${vz} Minuten je Werkstück bei einem Minutenfaktor von ${fmt(mf)} €. Er erhält je Werkstück ${fmt(vz * mf)} € – unabhängig davon, wie lange er tatsächlich braucht. In diesem Monat hat er ${st} Werkstücke montiert.`;
+          return `Bei ${u} stellt Herr Brandt in der Kommissionierung die Waren für Kundenaufträge zusammen. Pro Kundenauftrag gilt eine Vorgabezeit von ${vz} Minuten bei einem Minutenfaktor von ${fmt(mf)} €. Er erhält je Kundenauftrag ${fmt(vz * mf)} € – unabhängig davon, wie lange er tatsächlich braucht. In diesem Monat hat er ${st} Aufträge bearbeitet.`;
         }
       },
       {
         art: 'Provision',
         text: (u) => {
           const pr = rnd(2, 8, 0.5), um = rnd(40000, 160000, 5000);
-          return `Herr Schulz ist Außendienstmitarbeiter bei ${u}. Er erhält ${fmtInt(pr)} % Provision auf seinen erzielten Umsatz. Im letzten Monat verkaufte er Waren für ${fmtInt(um)} € und bekam dafür ${fmt(um * pr / 100)} €.`;
+          return `Herr Schulz ist Außendienstmitarbeiter bei ${u}. Er erhält ${fmtInt(pr)} % Provision auf seinen erzielten Umsatz. Im letzten Monat verkaufte er Produkte des Unternehmens für ${fmtInt(um)} € und bekam dafür ${fmt(um * pr / 100)} €.`;
         }
       },
       {
         art: 'Prämienlohn (Qualitätsprämie)',
         text: (u) => {
           const gl = rnd(2000, 3200, 50), pm = rnd(5, 20, 1), n = rnd(20, 60, 2);
-          return `Herr Ostermann bekommt bei ${u} einen Grundlohn von ${fmt(gl)} € im Monat. Zusätzlich erhält er eine Qualitätsprämie von ${fmt(pm)} € für jeden Auftrag, der ohne Reklamation abgeschlossen wird. Im letzten Monat waren das ${n} Aufträge.`;
+          return `Herr Ostermann bekommt bei ${u} einen Grundlohn von ${fmt(gl)} € im Monat. Zusätzlich erhält er eine Qualitätsprämie von ${fmt(pm)} € für jeden Kundenauftrag, der ohne Reklamation abgeschlossen wird. Im letzten Monat waren das ${n} Aufträge.`;
         }
       },
       {
         art: 'Prämienlohn (Ersparnisprämie)',
         text: (u) => {
           const p = rnd(10, 40, 5), pc = rnd(2, 8, 1);
-          return `${u} zahlt Frau Dietrich neben ihrem Grundlohn eine Prämie von ${fmt(p)} € für jedes Prozent, um das sie den Materialverbrauch in der Produktion senkt. In diesem Monat hat sie ${pc} % Material eingespart.`;
+          return `${u} zahlt Frau Dietrich neben ihrem Grundlohn eine Prämie von ${fmt(p)} € für jedes Prozent, um das sie den Verbrauch an Verbrauchsmaterial (z. B. Papier, Verpackung) in ihrer Abteilung senkt. In diesem Monat hat sie ${pc} % eingespart.`;
         }
       },
       {
         art: 'Abschlussprämie',
         text: (u) => {
           const b = rnd(30, 120, 5), n = rnd(6, 25, 1);
-          return `Frau Petrović arbeitet im Verkauf bei ${u}. Für jeden abgeschlossenen Kaufvertrag erhält sie ${fmt(b)} €. Im letzten Monat hat sie ${n} Verträge abgeschlossen. Je mehr Abschlüsse sie erzielt, desto höher ist ihr Verdienst.`;
+          return `Frau Petrović arbeitet im Verkauf bei ${u}. Für jeden abgeschlossenen Kaufvertrag mit einem Kunden erhält sie ${fmt(b)} €. Im letzten Monat hat sie ${n} Verträge abgeschlossen. Je mehr Abschlüsse sie erzielt, desto höher ist ihr Verdienst.`;
         }
       },
     ]
