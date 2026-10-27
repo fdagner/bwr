@@ -87,10 +87,10 @@ function getWerkstoffName(key) {
     }
 
     const KONTEN_CONFIG = {
-      AWR: { nr: '6000', name: 'AWR', label: 'Rohstoffen',       rahmen: { VE: [5000,20000], BK: [1000,10000], KA: [500,3000] } },
-      AWF: { nr: '6010', name: 'AWF', label: 'Fremdbauteilen',   rahmen: { VE: [1000, 5000], BK: [500,  3000], KA: [100, 800]  } },
-      AWH: { nr: '6020', name: 'AWH', label: 'Hilfsstoffen',     rahmen: { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  } },
-      AWB: { nr: '6030', name: 'AWB', label: 'Betriebsstoffen',  rahmen: { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  } }
+      AWR: { nr: '6000', name: 'AWR', label: 'Rohstoffe',       rahmen: { VE: [5000,20000], BK: [1000,10000], KA: [500,3000] } },
+      AWF: { nr: '6010', name: 'AWF', label: 'Fremdbauteile',   rahmen: { VE: [1000, 5000], BK: [500,  3000], KA: [100, 800]  } },
+      AWH: { nr: '6020', name: 'AWH', label: 'Hilfsstoffe',     rahmen: { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  } },
+      AWB: { nr: '6030', name: 'AWB', label: 'Betriebsstoffe',  rahmen: { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  } }
     };
 
     const POOL = ['VE','VE','VE','BK','BK','KA'];
@@ -104,10 +104,12 @@ function getWerkstoffName(key) {
         function geschaeftsfall(key, b) {
       const cfg = KONTEN_CONFIG[key];
       const wst = b.werkstoff || cfg.label;
-        const texte = {
-        VE: `Einkauf von ${wst} in Höhe von ${formatBetrag(b.betrag)}\u00a0€ netto auf Ziel.`,
-        BK: `Kauf von ${wst} in Höhe von ${formatBetrag(b.betrag)}\u00a0€ netto per Banküberweisung.`,
-        KA: `Beschaffung von ${wst} in Höhe von ${formatBetrag(b.betrag)}\u00a0€ netto in bar.`,
+      const unternehmenName = document.getElementById('unternehmenSelect')?.value || '';
+      const kunde = unternehmenName ? ` ${unternehmenName}` : '';  
+      const texte = {
+        VE: `${kunde} beschafft ${wst} im Wert von ${formatBetrag(b.betrag)}\u00a0€ netto auf Ziel.`,
+        BK: `${kunde} kauft ${wst} im Wert von ${formatBetrag(b.betrag)}\u00a0€ netto per Banküberweisung.`,
+        KA: `${kunde} beschafft ${wst} in Höhe von ${formatBetrag(b.betrag)}\u00a0€ netto in bar.`,
       };
       return texte[b.typ];
     }

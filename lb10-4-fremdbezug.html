@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eigenfertigung oder Fremdbezug – Make-or-Buy | meinbwr.de BwR</title>
+  <meta name="description"
+    content="Kostenloses BwR-Tool: Generiere zufällige Aufgaben zur Entscheidung Eigenfertigung oder Fremdbezug (Make-or-Buy). Ideal für BwR Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/fremdbezug.html">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Eigenfertigung oder Fremdbezug – Make-or-Buy | meinbwr.de">
+  <meta property="og:description"
+    content="Zufällige Aufgaben Eigenfertigung vs. Fremdbezug: Berechne Kosten, vergleiche Varianten und sieh das Diagramm. Drei Problemtypen wählbar. Perfekt für BwR Klasse 9/10 Realschule Bayern.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/fremdbezug.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Eigenfertigung oder Fremdbezug – Make-or-Buy | meinbwr.de">
+  <meta name="twitter:description"
+    content="Zufällige Aufgaben zur Eigenfertigung/Fremdbezug-Entscheidung mit Berechnung, Kostenvergleich und Diagramm.">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="color-scheme" content="light">
+
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Eigenfertigung oder Fremdbezug",
+    "description": "Kostenloses BwR-Tool: Generiere zufällige Aufgaben zur Entscheidung Eigenfertigung oder Fremdbezug (Make-or-Buy). Ideal für BwR Realschule Bayern.",
+    "url": "https://www.meinbwr.de/fremdbezug.html",
+    "inLanguage": "de-DE",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "meinbwr.de – BwR Realschule Bayern",
+      "url": "https://www.meinbwr.de/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 2, "name": "BwR 10", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 3, "name": "Eigenfertigung oder Fremdbezug", "item": "https://www.meinbwr.de/fremdbezug.html" }
+      ]
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/apexcharts.min.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+</head>
+
+<body>
+  <main>
+    <div w3-include-html="navigation.html"></div>
+    <h2>Fremdbezug oder Eigenfertigung</h2>
+    <div class="box">
+      <p>Es wird eine zufällige Aufgabe zur Entscheidung Eigenfertigung oder Fremdbezug erstellt.</p>
+      <div class="flex-row" style="align-items: center; margin-bottom: 12px; gap: 15px; flex-wrap: wrap;">
+
+        <div>
+          <label for="marketingKunde"><strong>Unternehmen:</strong></label>
+          <select id="marketingKunde" class="meinUnternehmen" onchange="generateProblem()">
+            <!-- Wird automatisch aus YAML befüllt -->
+          </select>
+        </div>
+      </div>
+
+      <div class="grid3">
+        <fieldset class="vorlage-green">
+         <legend>Aufgabentyp</legend>
+          <div class="form-field">
+           <p>Es gibt drei mögliche Fälle.</p>
+            <label for="problemType"><strong>Problem-Typ wählen:</strong></label>
+            <select id="problemType" onchange="generateProblem()">
+              <option value="1">Fremdbezug berechnen</option>
+              <option value="2">Eigenfertigung berechnen</option>
+              <option value="3" selected>Fremdbezug & Eigenfertigung berechnen</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Manuelle Eingabefelder (ohne oninput, Steuerung per Button) -->
+
+        <fieldset class="vorlage-red">
+          <legend>Einstellungen</legend>
+          <div class="form-field">
+
+            <div>
+              <label for="listeneinkaufspreisInput">Listeneinkaufspreis (€)</label>
+              <input type="number" id="listeneinkaufspreisInput" placeholder="z. B. 60" min="10" max="500" step="5">
+            </div>
+            <div>
+              <label for="rabattInput">Rabatt (%)</label>
+              <input type="number" id="rabattInput" placeholder="z. B. 10" min="0" max="50" step="1">
+            </div>
+            <div>
+              <label for="variableKostenInput">Variable Kosten (€)</label>
+              <input type="number" id="variableKostenInput" placeholder="z. B. 30" min="5" max="400" step="1">
+            </div>
+            <div>
+              <label for="fixkostenInput">Fixkosten gesamt (€)</label>
+              <input type="number" id="fixkostenInput" placeholder="z. B. 15000" min="0" max="200000" step="500">
+            </div>
+            <div>
+              <label for="mengeInput">Stückzahl / Menge</label>
+              <input type="number" id="mengeInput" placeholder="z. B. 600" min="10" max="10000" step="50">
+            </div>
+          </div>
+        </fieldset>
+
+      </div>
+
+
+
+      <br>
+      <button class="primary-btn" onclick="zeigeZufaelligeAufgabe()" style="margin-right:10px;">
+        🔀 Zufällige Werte
+      </button>
+      <button class="primary-btn" onclick="generateProblem()">
+        ▶ Aufgabe aktualisieren
+      </button>
+    </div>
+
+    <div id="Container" style="min-width: 480px" contenteditable="true"></div>
+    <div w3-include-html="downloads.html"></div>
+    <div>
+      <div id="fremdbezugDiagrammContainer" style="min-width: 600px;min-height:300px;width:100%">
+        <div id="fremdbezugChart"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════
+           KI-ASSISTENT PROMPT
+      ══════════════════════════════════════════════════════════════ -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, AIS.chat...)</p>
+        </div>
+      </div>
+
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>
+            Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+            Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.
+          </span>
+        </div>
+
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">🧾 Eigenfertigung oder Fremdbezug</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+
+        <div class="ki-actions" style="margin-top: 14px;">
+          <button class="ki-prompt-btn ki-prompt-btn--primary" id="kiPromptKopierenBtn" onclick="kopiereKiPrompt()"
+            title="Prompt in die Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+
+          <button class="ki-prompt-btn ki-prompt-btn--ghost" id="kiPromptToggleBtn" onclick="toggleKiPromptVorschau()"
+            title="Prompt-Text ein- oder ausblenden">
+            Prompt anzeigen ▼
+          </button>
+        </div>
+
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false"
+            aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- Ende KI-Assistent -->
+  </main>
+  <div w3-include-html="footer.html"></div>
+  <script>
+    includeHTML();
+  </script>
+  <script src="js/lb10-4-fremdbezug.js"></script>
+  <script src="js/download.js"></script>
+</body>
+
+</html>
