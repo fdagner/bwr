@@ -86,6 +86,10 @@ function loadDefaultYaml() {
 
 // Wird beim Start aufgerufen, prüft und aktualisiert die Anzeige
 function initializeKontoAuswahl() {
+    // Sicherstellen, dass jede Änderung den Hinweis aktualisiert
+    document.querySelectorAll('.typCheckbox').forEach(cb => {
+        cb.addEventListener('change', aktualisiereAuswahlInfo);
+    });
     aktualisiereAuswahlInfo();
 }
 
@@ -96,14 +100,17 @@ function aktualisiereAuswahlInfo() {
 
     if (!auswahlInfo) return;
 
+    auswahlInfo.style.display = 'block';
+
     if (checkedCount === 0) {
-        auswahlInfo.textContent = '⚠️ Keine Themen ausgewählt - es werden alle verfügbaren Geschäftsfälle verwendet';
+        auswahlInfo.textContent = '⚠️ Keine Themen ausgewählt - es werden alle verwendet';
         auswahlInfo.style.background = '#fff3cd';
         auswahlInfo.style.color = '#856404';
     } else if (checkedCount === checkboxes.length) {
-        auswahlInfo.style.display = 'none'; // Blendet den Hinweistext aus, wenn alles gewählt ist
+        auswahlInfo.textContent = '✓ Alle Themen ausgewählt';
+        auswahlInfo.style.background = '#d4edda';
+        auswahlInfo.style.color = '#155724';
     } else {
-        auswahlInfo.style.display = 'block';
         auswahlInfo.textContent = `✓ ${checkedCount} von ${checkboxes.length} Themen ausgewählt`;
         auswahlInfo.style.background = '#d1ecf1';
         auswahlInfo.style.color = '#0c5460';
