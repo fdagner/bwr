@@ -537,17 +537,6 @@ function erstellePlainBuchungssatz(geschaeftsfall) {
     return `${typ.sollKonto} ${geschaeftsfall.betragFormatted} an ${typ.habenKonto} ${geschaeftsfall.betragFormatted}`;
 }
 
-function erstellePlainBuchungssatz(geschaeftsfall) {
-    const typ = geschaeftsfall.typDaten;
-    if (typ.mitDisagio) {
-        return `2800 BK ${geschaeftsfall.auszahlungFormatted} / 7510 ZAW ${geschaeftsfall.disagioFormatted} an ${typ.habenKonto} ${geschaeftsfall.kreditsummeFormatted}`;
-    }
-    return `${typ.sollKonto} ${geschaeftsfall.betragFormatted} an ${typ.habenKonto} ${geschaeftsfall.betragFormatted}`;
-}
-function erstellePlainBuchungssatz(geschaeftsfall) {
-    const typ = geschaeftsfall.typDaten;
-    return `${typ.sollKonto} ${geschaeftsfall.betragFormatted} an ${typ.habenKonto} ${geschaeftsfall.betragFormatted}`;
-}
 
 // ============================================================================
 // BELEG-URL ERSTELLEN
