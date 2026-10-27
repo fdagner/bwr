@@ -154,10 +154,10 @@ const geschaeftsfallTypen = {
         mitVorsteuer: false,
         mitUSt: false,
         geschaeftsfaelle: [
-            { beschreibung: 'Ein kurzfristiger Bankkredit ', vorgang: 'Kreditaufnahme kurzfristig' },
-            { beschreibung: 'Ein kurzfristiges Darlehen zur Überbrückung von Engpässen ', vorgang: 'Gutschrift Kurzfristkredit' },
-            { beschreibung: 'Ein kurzfristiger Betriebsmittelkredit ', vorgang: 'Kreditaufnahme KBKV' },
-            { beschreibung: 'Ein Bankkredit mit einer Laufzeit von 6 Monaten ', vorgang: 'Kurzfristiges Darlehen' },
+            { typText: 'Die Hausbank gewährt einen kurzfristigen Bankkredit über {summe} und schreibt den Betrag auf dem Bankkonto von {kunde} gut.', vorgang: 'Kreditaufnahme kurzfristig' },
+            { typText: 'Zur Überbrückung von Engpässen wird ein kurzfristiger Kredit über {summe} auf dem Geschäftskonto der Firma {kunde} gutgeschrieben.', vorgang: 'Gutschrift Kurzfristkredit' },
+            { typText: 'Ein kurzfristiger Betriebsmittelkredit über {summe} wird auf dem Bankkonto von {kunde} gutgeschrieben.', vorgang: 'Kreditaufnahme KBKV' },
+            { typText: 'Die Bank bewilligt {kunde} einen Bankkredit mit einer Laufzeit von 6 Monaten über {summe}. Der Betrag wird auf dem Bankkonto gutgeschrieben.', vorgang: 'Kurzfristiges Darlehen' },
         ],
         customBetrag: () => generateGlattenBetrag(10000, 50000, 5000),
         betragsbereich: { min: 10000, max: 50000 }
@@ -179,9 +179,9 @@ const geschaeftsfallTypen = {
         mitVorsteuer: false,
         mitUSt: false,
         geschaeftsfaelle: [
-            { beschreibung: 'Ein langfristiges Darlehen ', vorgang: 'Kreditaufnahme langfristig' },
-            { beschreibung: 'Ein langfristiger Investitionskredit ', vorgang: 'Investitionskredit' },
-            { beschreibung: 'Ein Baudarlehen ', vorgang: 'Baudarlehen' }
+            { typText: 'Die Hausbank gewährt ein langfristiges Darlehen über {summe} und schreibt den Betrag auf dem Bankkonto von {kunde} gut.', vorgang: 'Kreditaufnahme langfristig' },
+            { typText: 'Ein langfristiger Investitionskredit über {summe} wird auf dem Geschäftskonto der Firma {kunde} gutgeschrieben.', vorgang: 'Investitionskredit' },
+            { typText: 'Die Bank bewilligt {kunde} ein Darlehen mit einer Laufzeit von 10 Jahren über {summe}. Der Betrag wird auf dem Bankkonto gutgeschrieben.', vorgang: 'Baudarlehen' },
         ],
         customBetrag: () => generateGlattenBetrag(50000, 200000, 10000),
         betragsbereich: { min: 50000, max: 200000 }
@@ -357,13 +357,13 @@ function erstelleZufallsGeschaeftsfall() {
     const ausgewaehlteTypen = getAusgewaehlteTypen();
 
     let verfuegbareTypen = Object.keys(geschaeftsfallTypen);
-    
+
     if (ausgewaehlteTypen.length > 0) {
         verfuegbareTypen = verfuegbareTypen.filter(typKey => {
             return ausgewaehlteTypen.includes(typKey);
         });
     }
-    
+
     // Wenn gar nichts ausgewählt ist, nimm sicherheitshalber alle
     if (verfuegbareTypen.length === 0) {
         verfuegbareTypen = Object.keys(geschaeftsfallTypen);
@@ -374,7 +374,7 @@ function erstelleZufallsGeschaeftsfall() {
 
     const geschaeftsfall = typ.geschaeftsfaelle[Math.floor(Math.random() * typ.geschaeftsfaelle.length)];
     const { min, max } = typ.betragsbereich;
-    
+
     // Wenn der Typ eine eigene glatte Betragsfunktion hat, nutze diese, sonst den Standard
     const bruttoBetrag = typ.customBetrag ? typ.customBetrag() : generateRandomBetrag(min, max);
 
@@ -388,7 +388,7 @@ function erstelleZufallsGeschaeftsfall() {
         extraDaten: {}
     };
 
-   // Textgenerierung je nach Geschäftsfall-Typ
+    // Textgenerierung je nach Geschäftsfall-Typ
     switch (zufallsTyp) {
         case 'kredit_disagio': {
             const zinssatz = typ.disagioSatz || 1.5;
@@ -398,7 +398,7 @@ function erstelleZufallsGeschaeftsfall() {
             ausgabeData.kreditsumme = bruttoBetrag;
             ausgabeData.disagioBetrag = disagioBetrag;
             ausgabeData.auszahlungsBetrag = auszahlungsBetrag;
-            
+
             ausgabeData.kreditsummeFormatted = formatCurrency(bruttoBetrag);
             ausgabeData.disagioFormatted = formatCurrency(disagioBetrag);
             ausgabeData.auszahlungFormatted = formatCurrency(auszahlungsBetrag);
@@ -407,13 +407,13 @@ function erstelleZufallsGeschaeftsfall() {
 
             const satzFormatted = zinssatz.toFixed(1).replace('.', ',');
             const zufallsGf = geschaeftsfall.typText;
-            
-            ausgabeData.text = zufallsGf
-              .replace('{summe}', ausgabeData.kreditsummeFormatted)
-              .replace('{satz}', satzFormatted)
-              .replace('{kunde}', kunde);
 
-            ausgabeData.betrag = auszahlungsBetrag; 
+            ausgabeData.text = zufallsGf
+                .replace('{summe}', ausgabeData.kreditsummeFormatted)
+                .replace('{satz}', satzFormatted)
+                .replace('{kunde}', kunde);
+
+            ausgabeData.betrag = auszahlungsBetrag;
             break;
         }
 
@@ -422,11 +422,13 @@ function erstelleZufallsGeschaeftsfall() {
             break;
         }
 
-        case 'kbkv': {
-            ausgabeData.text = `${geschaeftsfall.beschreibung} über ${ausgabeData.betragFormatted}.`;
+        case 'kbkv':
+        case 'lbkv': {
+            ausgabeData.text = geschaeftsfall.typText
+                .replace('{summe}', ausgabeData.betragFormatted)
+                .replace('{kunde}', kunde);
             break;
         }
-
         case 'tilgung': {
             const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
             const variantenHaben = [
