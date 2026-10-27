@@ -350,7 +350,7 @@ function zeigeZufaelligenSatz() {
 <div style="${S.aufgabeBox}">
   <p>${nehmer} benötigt ein Darlehen über ${formatCurrency(kredit)} und holt zwei Kreditangebote ein:</p>
   <ol style="${S.aufgabeOl}">
-    <li style="${S.aufgabeLi}">Berechne für das Angebot der <i>${nameB}</i> den Auszahlungsbetrag, die Zinsen in Euro und den effektiven Zinssatz (auf zwei Nachkommastellen gerundet).</li>
+    <li style="${S.aufgabeLi}">Berechne für das Angebot der <i>${nameB}</i> den effektven Zinssatz.</li>
     <li style="${S.aufgabeLi}">Vergleiche beide Angebote. Für welche Bank soll sich ${nehmer} entscheiden? Begründe deine Entscheidung.</li>
   </ol>
 </div>`;
