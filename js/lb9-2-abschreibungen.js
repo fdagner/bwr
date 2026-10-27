@@ -416,9 +416,23 @@ function zeigeZufaelligeAbschreibungsAufgabe(manuelleAK = null, manuelleND = nul
   toolbar: { show: true, tools: { download: true, zoom: false, pan: false, reset: false } },
 },
     series: [
-      { name: 'Restbuchwert', data: restbuchwerte, color: '#42A5F5' },
-        { name: 'Abschreibungsbetrag',              data: jahresAfa,    color: '#EF5350' },
+      { name: 'Restbuchwert', data: restbuchwerte, color: '#00468C' },
+        { name: 'Abschreibungsbetrag',              data: jahresAfa,    color: '#F5B041' },
     ],
+ fill: {
+  type: ['solid', 'pattern'],
+  pattern: {
+    style: ['', 'slantedLines'],
+    width: 6,
+    height: 6,
+    strokeWidth: 2
+  }
+},
+stroke: {
+  show: true,
+  width: 1,
+  colors: ['#00468C', '#8A5A00']  // dunkle Umrandung, trennt die Flächen
+},
     xaxis: {
       categories: jahrLabels,
       title: {

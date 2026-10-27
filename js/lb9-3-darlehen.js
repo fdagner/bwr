@@ -334,10 +334,24 @@ function zeigeDarlehensAufgabe() {
   const chartOptions = {
     chart: { type: 'bar', background: '#fff', animations: { enabled: false }, height: 420, stacked: true,
              toolbar: { show: true, tools: { download: true, zoom: false, pan: false, reset: false } } },
-    series: [
-      { name: 'Tilgung', data: plan.rows.map(r => r.tilgung), color: '#42A5F5' },
-      { name: 'Zinsen',  data: plan.rows.map(r => r.zins),     color: '#EF5350' },
-    ],
+   series: [
+  { name: 'Tilgung', data: plan.rows.map(r => r.tilgung), color: '#00468C' }, // dunkles Blau
+  { name: 'Zinsen',  data: plan.rows.map(r => r.zins),     color: '#F5B041' }, // helles Orange
+],
+fill: {
+  type: ['solid', 'pattern'],
+  pattern: {
+    style: ['', 'slantedLines'],
+    width: 6,
+    height: 6,
+    strokeWidth: 2
+  }
+},
+stroke: {
+  show: true,
+  width: 1,
+  colors: ['#00468C', '#8A5A00']  // dunkle Umrandung, trennt die Flächen
+},
     xaxis: {
       categories: plan.rows.map(r => `Jahr ${r.j}`),
       title: { text: 'Jahr der Laufzeit', style: { fontSize: '14px', fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: 600, color: '#263238' } },
