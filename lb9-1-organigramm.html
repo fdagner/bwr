@@ -4,25 +4,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Organigramm Generator – Einliniensystem &amp; Mehrliniensystem | meinbwr.de BwR</title>
-  <meta name="description" content="Kostenloses BwR-Tool: Organigramme für Einliniensystem und Mehrliniensystem mit Modellunternehmen, Zufallspersonen und optionaler Stabsstelle erstellen und als PNG oder SVG exportieren.">
+  <title>Organigramm Generator – Einlinien-, Mehrlinien- &amp; Matrixorganisation | meinbwr.de BwR</title>
+  <meta name="description"
+    content="Kostenloses BwR-Tool: Generiere Organigramme für Einliniensystem, Mehrliniensystem und Matrixorganisation mit Modellunternehmen, Zufallspersonen und optionaler Stabsstelle. Ideal für BwR Jahrgangsstufe 9 Realschule Bayern (LehrplanPLUS), Aufbauorganisation, Unterricht und Leistungsnachweise. Mit Export (PNG/SVG/Clipboard).">
   <link rel="canonical" href="https://www.meinbwr.de/lb9-1-organigramm.html">
   <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title"
+    content="Organigramm Generator – Einlinien-, Mehrlinien- &amp; Matrixorganisation | meinbwr.de">
+  <meta property="og:description"
+    content="Zufällige Organigramme zu Einliniensystem, Mehrliniensystem und Matrixorganisation mit Modellunternehmen und Stabsstelle. Perfekt für BwR 9 Realschule Bayern – Aufbauorganisation, Unterricht, Prüfungen. Export als Bild.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb9-1-organigramm.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title"
+    content="Organigramm Generator – Einlinien-, Mehrlinien- &amp; Matrixorganisation | meinbwr.de">
+  <meta name="twitter:description"
+    content="Zufällige Organigramme zu Einliniensystem, Mehrliniensystem und Matrixorganisation mit Modellunternehmen und Stabsstelle. Perfekt für BwR 9 Realschule Bayern – Aufbauorganisation, Unterricht, Prüfungen. Export als Bild.">
+
+  <!-- Theme -->
   <meta name="theme-color" content="#2c5f2d">
   <meta name="color-scheme" content="light">
 
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Organigramm Generator",
+    "description": "Kostenloses BwR-Tool: Generiere Organigramme für Einliniensystem, Mehrliniensystem und Matrixorganisation mit Modellunternehmen, Zufallspersonen und optionaler Stabsstelle. Ideal für BwR Jahrgangsstufe 9 Realschule Bayern (LehrplanPLUS), Aufbauorganisation, Unterricht und Leistungsnachweise. Mit Export (PNG/SVG/Clipboard).",
+    "url": "https://www.meinbwr.de/lb9-1-organigramm.html",
+    "inLanguage": "de-DE",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "meinbwr.de – BwR Realschule Bayern",
+      "url": "https://www.meinbwr.de/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 2, "name": "BwR 9", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 3, "name": "Organigramm", "item": "https://www.meinbwr.de/lb9-1-organigramm.html" }
+      ]
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
   <script src="js/menu.js"></script>
   <style>
-    .ao-zeile { display: flex; gap: 8px; align-items: center; margin: 4px 0; }
-    .ao-zeile span { width: 150px; flex-shrink: 0; font-size: 0.9rem; }
-    .ao-zeile input { flex: 1; min-width: 0; padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; }
-    #organigramm { overflow-x: auto; background: #fff; border: 1px solid #ddd; padding: 8px; }
-    #organigramm svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
-    .ao-optionen label { margin-right: 18px; }
+    .ao-zeile {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 4px 0;
+    }
+
+    .ao-zeile span {
+      width: 150px;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+
+    .ao-zeile input {
+      flex: 1;
+      min-width: 0;
+      padding: 5px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #Container {
+      overflow-x: auto;
+    }
+
+    #Container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .ao-optionen label {
+      margin-right: 18px;
+    }
   </style>
 </head>
+
 
 <body>
   <main>
@@ -30,60 +107,87 @@
     <h2>Organigramm</h2>
 
     <div class="box">
-      <p>Erstellen Sie ein Organigramm für ein Modellunternehmen. Der Inhaber wird als CEO eingesetzt, alle Personen und Bezeichnungen lassen sich ändern.</p>
-      <h3>Einstellungen</h3>
-      <div class="flex-row">
-        <div>
-          <label for="unternehmen">Modellunternehmen:</label>
-          <select id="unternehmen"></select>
-        </div>
-        <div>
-          <label for="typ">Organisationssystem:</label>
-          <select id="typ">
-            <option value="ein" selected>Einliniensystem</option>
-            <option value="mehr">Mehrliniensystem</option>
-          </select>
-        </div>
-        <div>
-          <label for="anzahl">Anzahl der Abteilungen:</label>
-          <select id="anzahl">
-            <option value="2">2</option><option value="3">3</option>
-            <option value="4" selected>4</option><option value="5">5</option>
-          </select>
-        </div>
-        <div>
-          <label for="tiefe">Ebenen unter der Geschäftsleitung:</label>
-          <select id="tiefe">
-            <option value="1">1 (Abteilungen)</option>
-            <option value="2" selected>2 (Abteilungen und Teams)</option>
-            <option value="3">3 (zusätzlich Sachbearbeitung)</option>
-          </select>
-        </div>
+      <p>Erstellen Sie ein Organigramm für ein Modellunternehmen. Der Inhaber wird als CEO eingesetzt, alle Personen und
+        Bezeichnungen lassen sich ändern.</p>
+      <h3>Unternehmen wählen</h3>
+      <div>
+        <label for="unternehmen">Modellunternehmen:</label>
+        <select id="unternehmen" class="meinUnternehmen"></select>
       </div>
-      <p class="ao-optionen" style="margin-top: 12px;">
-        <label><input type="checkbox" id="stab"> Stabsstelle anzeigen</label>
-        <label><input type="checkbox" id="titel" checked> Firmenname als Überschrift</label>
-      </p>
-      <button type="button" onclick="erstelleModell()">Neu erstellen</button>
-      <button type="button" onclick="neuePersonen()">Neue Personen</button>
-    </div>
+      <h3>Daten</h3>
 
-    <div class="box" style="margin-top: 16px;">
-      <h3>Bezeichnungen und Personen bearbeiten</h3>
-      <div class="ao-zeile"><span>Firmenname</span><input id="firma" aria-label="Firmenname"></div>
-      <div id="editor"></div>
-    </div>
+      <div class="grid3">
+        <fieldset class="vorlage-green" style="max-width: 350px">
+          <legend>System</legend>
+          <div class="form-field">
+            <label for="typ">Organisationssystem:</label>
+            <select id="typ">
+              <option value="ein" selected>Einliniensystem</option>
+              <option value="mehr">Mehrliniensystem</option>
+              <option value="matrix">Matrixorganisation</option>
+            </select>
+          </div>
+        </fieldset>
+          <fieldset class="vorlage-blue" style="max-width: 350px">
+            <legend>Daten</legend>
+            <div class="form-field">
+                <label for="anzahl">Anzahl der Abteilungen:</label>
+                <select id="anzahl">
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4" selected>4</option>
+                  <option value="5">5</option>
+                </select>
+                <label for="personen">Personen pro Team:</label>
+                <select id="personen">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3" selected>3</option>
+                  <option value="4">4</option>
+                </select>
+                <label for="tiefe">Ebenen unter der Geschäftsleitung:</label>
+                <select id="tiefe">
+                  <option value="1">1 (Abteilungen)</option>
+                  <option value="2" selected>2 (Abteilungen und Teams)</option>
+                  <option value="3">3 (zusätzlich Sachbearbeitung)</option>
+                </select>
+            </div>
+          </fieldset>
+  <fieldset class="vorlage-grey" style="max-width: 350px">
+            <legend>Extras</legend>
+      
+          <label><input type="checkbox" id="stab">Stabsstelle</label><br><br>
+          <label><input type="checkbox" id="titel" checked> Firmenname als Überschrift</label>
+       
+          </fieldset>
 
-    <div style="margin-top: 20px;">
-      <div id="organigramm"></div>
-      <p style="margin-top: 12px;">
-        <button type="button" onclick="exportierePng()">Als PNG herunterladen</button>
-        <button type="button" onclick="exportiereSvg()">Als SVG herunterladen</button>
-      </p>
-    </div>
+
+        </div>
+<br><br>
+  <button type="button" onclick="erstelleModell()">Neu erstellen</button>
+        <button type="button" onclick="neuePersonen()">Neue Personen</button>
+      
+      </div>
+
+      
+
+      <div class="box" style="margin-top: 16px;">
+        <h3>Bezeichnungen und Personen bearbeiten</h3>
+        <p id="inhaberHinweis" style="color:#b71c1c;"></p>
+        <div class="ao-zeile"><span>Firmenname</span><input id="firma" aria-label="Firmenname"></div>
+        <div id="editor"></div>
+      </div>
+
+      <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
+        <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
+        <div id="button-column" style="width: 180px; flex-shrink: 0;"></div>
+      </div>
+
+      <div w3-include-html="downloads2.html"></div>
   </main>
 
   <script src="js/lb9-1-organigramm.js"></script>
+  <script src="js/download2.js"></script>
   <div w3-include-html="footer.html"></div>
   <script>
     includeHTML();

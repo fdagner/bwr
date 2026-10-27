@@ -3,7 +3,7 @@
 - [neu] **Aufgabe im Lernbereich 8.1** - [Abschluss Bestandskonten](lb8-1-bestandskonten.html).
 - [update] **Exportfunktion Moodle-Fragetyp** - [Führungsstil](lb9-1-fuehrungsstil.html), [Aufbauorganisation](lb9-1-aufbauorganisation.html)
 - [update] **Aufgabe Fremdbezug oder Eigenfertigung** - Aufgabenlayout verbessert, Werte können manuell eingegeben werden: [Fremdbezug oder Eigenfertigung](lb10-4-fremdbezug.html).
-
+- [update] **Organigramm direkt erstellen** - [Organigramm](lb9-1-organigramm.html).
 
 
 ## 2026-10-25 | Oktober 2026
