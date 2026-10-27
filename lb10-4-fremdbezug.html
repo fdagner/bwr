@@ -65,25 +65,25 @@
 <body>
   <main>
     <div w3-include-html="navigation.html"></div>
-    <h2>Fremdbezug oder Eigenfertigung</h2>
+    <h2>Eigenfertigung oder Fremdbezug</h2>
     <div class="box">
       <p>Es wird eine zufällige Aufgabe zur Entscheidung Eigenfertigung oder Fremdbezug erstellt.</p>
+<h3>Unternehmen auswählen</h3>
       <div class="flex-row" style="align-items: center; margin-bottom: 12px; gap: 15px; flex-wrap: wrap;">
 
         <div>
-          <label for="marketingKunde"><strong>Unternehmen:</strong></label>
+          <label for="marketingKunde">Unternehmen:</label>
           <select id="marketingKunde" class="meinUnternehmen" onchange="generateProblem()">
             <!-- Wird automatisch aus YAML befüllt -->
           </select>
         </div>
       </div>
-
+<h3>Daten</h3>
       <div class="grid3">
         <fieldset class="vorlage-green">
          <legend>Aufgabentyp</legend>
           <div class="form-field">
-           <p>Es gibt drei mögliche Fälle.</p>
-            <label for="problemType"><strong>Problem-Typ wählen:</strong></label>
+            <label for="problemType">Fall-Typ</label>
             <select id="problemType" onchange="generateProblem()">
               <option value="1">Fremdbezug berechnen</option>
               <option value="2">Eigenfertigung berechnen</option>
@@ -95,7 +95,7 @@
         <!-- Manuelle Eingabefelder (ohne oninput, Steuerung per Button) -->
 
         <fieldset class="vorlage-red">
-          <legend>Einstellungen</legend>
+          <legend>Fremdbezug</legend>
           <div class="form-field">
 
             <div>
@@ -106,6 +106,14 @@
               <label for="rabattInput">Rabatt (%)</label>
               <input type="number" id="rabattInput" placeholder="z. B. 10" min="0" max="50" step="1">
             </div>
+                </div>
+        </fieldset>
+
+
+          <fieldset class="vorlage-blue">
+          <legend>Eigenfertigung</legend>
+          <div class="form-field">
+
             <div>
               <label for="variableKostenInput">Variable Kosten (€)</label>
               <input type="number" id="variableKostenInput" placeholder="z. B. 30" min="5" max="400" step="1">
@@ -114,12 +122,20 @@
               <label for="fixkostenInput">Fixkosten gesamt (€)</label>
               <input type="number" id="fixkostenInput" placeholder="z. B. 15000" min="0" max="200000" step="500">
             </div>
+              </div>
+        </fieldset>
+
+
+         <fieldset class="vorlage-pink">
+          <legend>Stückzahl</legend>
+          <div class="form-field">
             <div>
               <label for="mengeInput">Stückzahl / Menge</label>
               <input type="number" id="mengeInput" placeholder="z. B. 600" min="10" max="10000" step="50">
             </div>
           </div>
         </fieldset>
+
 
       </div>
 
@@ -130,7 +146,7 @@
         🔀 Zufällige Werte
       </button>
       <button class="primary-btn" onclick="generateProblem()">
-        ▶ Aufgabe aktualisieren
+        Daten übernehmen
       </button>
     </div>
 
