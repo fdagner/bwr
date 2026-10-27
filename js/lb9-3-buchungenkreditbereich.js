@@ -750,7 +750,7 @@ B. Sobald der Schüler einen Geschäftsfall geschickt hat, stelle die Fragen nac
 Kontenplan – Kreditbereich:
 Passivkonten / Verbindlichkeiten (Mehrung im HABEN):
 - 4200 KBKV – Kurzfristige Bankverbindlichkeiten
-- 4200 LBKV – Langfristige Bankverbindlichkeiten
+- 4250 LBKV – Langfristige Bankverbindlichkeiten
 
 Aufwandskonten (Mehrung im SOLL):
 - 7510 ZAW – Zinsaufwendungen
