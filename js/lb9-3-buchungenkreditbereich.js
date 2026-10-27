@@ -759,6 +759,8 @@ Aufwandskonten (Mehrung im SOLL):
 Aktivkonto Bank:
 - 2800 BK – Bank (Zunahme im SOLL, Abnahme im HABEN)
 
+- Disagio: Bank (Soll) und ZAW (Soll) an LBKV (Haben) – das Disagio ist Zinsaufwand und wird auf 7510 ZAW gebucht
+
 Buchungslogik:
 - Kreditaufnahme: Bank (Soll) an KBKV / LBKV (Haben)
 - Zinsen / Gebühren: ZAW / KGV (Soll) an Bank (Haben)
