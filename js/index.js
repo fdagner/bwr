@@ -59,13 +59,25 @@
     const next = () => goTo((index() + 1) % count);
     const prev = () => goTo((index() - 1 + count) % count);
 
+    function updateHeight() {
+  const card = track.children[Math.min(index(), count - 1)];
+  if (card) track.style.height = card.offsetHeight + 'px';
+}
+
     function updateDots() {
-      const i = Math.min(index(), count - 1);
-      dots.forEach((d, k) => d.classList.toggle('active', k === i));
-    }
-    track.addEventListener('scroll', updateDots, { passive: true });
-    window.addEventListener('resize', updateDots);
-    updateDots();
+  const i = Math.min(index(), count - 1);
+  dots.forEach((d, k) => d.classList.toggle('active', k === i));
+  updateHeight();
+}
+track.addEventListener('scroll', updateDots, { passive: true });
+window.addEventListener('resize', updateDots);
+
+// Höhe nachführen, wenn sich eine Karte ändert (Schrift lädt nach, Umbruch bei anderer Breite)
+if ('ResizeObserver' in window) {
+  const ro = new ResizeObserver(updateHeight);
+  [...track.children].forEach(c => ro.observe(c));
+}
+updateDots();
 
     root.querySelector('.news-next').addEventListener('click', next);
     root.querySelector('.news-prev').addEventListener('click', prev);

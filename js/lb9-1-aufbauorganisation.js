@@ -302,6 +302,110 @@ function toggleKiPromptVorschau() {
   }
 }
 
+
+// ============================================================================
+// MOODLE-XML-EXPORT – AUFBAUORGANISATION – Fragetyp „Zuordnung“ (matching),
+// alle Merkmale in EINER Frage
+// Liest die Lösungstabelle (h2.loesung + table) direkt aus der Seite –
+// inklusive Änderungen im bearbeitbaren Bereich.
+// Button: onclick="exportiereMoodle()"
+// ============================================================================
+
+const MOODLE_AO_PRAEFIX = '9.1-02#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung
+const MOODLE_AO_TITELENDE = 'meinBwR-Zuordnen';
+const MOODLE_AO_ANWEISUNG = 'Ordne die folgenden Merkmale dem richtigen Organisationssystem zu: Einliniensystem oder Mehrliniensystem.';
+const MOODLE_AO_PUNKTE_PRO_AUFGABE = 1;
+
+function maEsc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function maCdata(s) {
+  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+}
+
+// Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
+function maIdBasis() {
+  const SCHLUESSEL = 'moodleAoLetzteIdSekunde';
+  let sek = Math.floor(Date.now() / 1000);
+  try {
+    const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
+    if (sek <= letzte) sek = letzte + 1;
+    localStorage.setItem(SCHLUESSEL, String(sek));
+  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  const d = new Date(sek * 1000);
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+
+// Liest Merkmal und System aus der Lösungstabelle (✓ in Spalte 2 oder 3)
+function maLeseAufgaben() {
+  const zeilen = document.querySelectorAll('#Container h2.loesung + table tbody tr');
+  const aufgaben = [];
+  zeilen.forEach(tr => {
+    const z = tr.cells;
+    if (!z || z.length < 3) return;
+    const text = z[0].textContent.replace(/\s+/g, ' ').trim();
+    const einlinie = z[1].textContent.includes('✓');
+    const mehrlinie = z[2].textContent.includes('✓');
+    if (!text || einlinie === mehrlinie) return;   // unklare Zeilen überspringen
+    aufgaben.push({ text, label: einlinie ? 'Einliniensystem' : 'Mehrliniensystem' });
+  });
+  return aufgaben;
+}
+
+function maBaueMatchingXml(aufgaben) {
+  const punkte = aufgaben.length * MOODLE_AO_PUNKTE_PRO_AUFGABE;
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+  xml += `  <question type="matching">\n`;
+  const titel = `${MOODLE_AO_PRAEFIX}${maIdBasis()}${MOODLE_AO_TITELENDE}`;
+  xml += `    <name>\n      <text>${maEsc(titel)}</text>\n    </name>\n`;
+  xml += `    <questiontext format="html">\n      <text>${maCdata(`<p>${MOODLE_AO_ANWEISUNG}</p>`)}</text>\n    </questiontext>\n`;
+  xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <shuffleanswers>true</shuffleanswers>\n`;
+  xml += `    <correctfeedback format="html">\n      <text>${maCdata('<p>Die Antwort ist richtig.</p>')}</text>\n    </correctfeedback>\n`;
+  xml += `    <partiallycorrectfeedback format="html">\n      <text>${maCdata('<p>Die Antwort ist teilweise richtig.</p>')}</text>\n    </partiallycorrectfeedback>\n`;
+  xml += `    <incorrectfeedback format="html">\n      <text>${maCdata('<p>Die Antwort ist falsch.</p>')}</text>\n    </incorrectfeedback>\n`;
+  xml += `    <shownumcorrect/>\n`;
+
+  aufgaben.forEach(({ text, label }) => {
+    xml += `    <subquestion format="html">\n`;
+    xml += `      <text>${maCdata(`<p>${maEsc(text)}</p><hr>`)}</text>\n`;
+    xml += `      <answer>\n        <text>${maEsc(label)}</text>\n      </answer>\n`;
+    xml += `    </subquestion>\n`;
+  });
+
+  xml += `  </question>\n\n</quiz>\n`;
+  return xml;
+}
+
+function exportiereMoodle() {
+  const aufgaben = maLeseAufgaben();
+  if (!aufgaben.length) {
+    alert('Bitte zuerst Aufgaben erstellen.');
+    return;
+  }
+  if (aufgaben.length < 2) {
+    alert('Moodle benötigt für eine Zuordnungsfrage mindestens 2 Merkmale. Bitte mehr Zeilen erstellen.');
+    return;
+  }
+  const xml = maBaueMatchingXml(aufgaben);
+
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const dateiname = `quiz-aufbauorganisation-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 // ============================================================================
 // INITIALISIERUNG
 // ============================================================================

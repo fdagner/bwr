@@ -1900,6 +1900,9 @@ svg text[contenteditable="true"] {
   border: 1px solid var(--border-light);
   border-radius: 10px;
   background: var(--surface-dark);
+  align-items: flex-start;   /* Karten nicht mehr auf die höchste strecken */
+  overflow-y: hidden;
+  transition: height .25s ease;
 }
 .news-track::-webkit-scrollbar { display: none; }
 

@@ -356,8 +356,8 @@ function generiereAufgaben() {
 
   let aufgabenHTML = `<h2>Aufgaben</h2><p><strong>Arbeitsauftrag:</strong><br>Lies die Fallbeispiels. Entscheide jeweils, welchen Führungsstil die Führungskraft anwendet (autoritativ oder kooperativ) und begründe deine Antwort.</p>`;
 
-  letzteGenerierteAufgaben.forEach(({fall, sachverhalt}, idx) => {
-    aufgabenHTML += `<div style="margin-bottom: 10px;font-size: 16px; line-height: 1.6; font-family: var(--font-mono); border: 0.5px solid #333; padding: 8px 12px;"><strong>Aufgabe ${idx+1}: ${fall.situation}</strong>
+   letzteGenerierteAufgaben.forEach(({fall, sachverhalt}, idx) => {
+    aufgabenHTML += `<div class="fs-aufgabe" data-stil="${fall.stil}" style="margin-bottom: 10px;font-size: 16px; line-height: 1.6; font-family: var(--font-mono); border: 0.5px solid #333; padding: 8px 12px;"><strong>Aufgabe ${idx+1}: ${fall.situation}</strong>
       <p>${sachverhalt}</p></div>`;
   });
 
@@ -405,4 +405,107 @@ function toggleKiPromptVorschau() {
   }
 }
 
+// ============================================================================
+// MOODLE-XML-EXPORT – FÜHRUNGSSTIL – Fragetyp „Zuordnung“ (matching),
+// alle Aufgaben in EINER Frage
+// Liest die Aufgaben-Boxen (.fs-aufgabe) direkt aus der Seite – inklusive
+// Änderungen im bearbeitbaren Bereich. Button: onclick="exportiereMoodle()"
+// ============================================================================
+
+const MOODLE_FS_PRAEFIX = '9.1-01#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung
+const MOODLE_FS_TITELENDE = 'meinBwR-Zuordnen';
+const MOODLE_FS_ANWEISUNG = 'Entscheide jeweils, welchen Führungsstil die Führungskraft anwendet: autoritativ oder kooperativ.';
+const MOODLE_FS_PUNKTE_PRO_AUFGABE = 1;
+const MOODLE_FS_ABLENKER = [];          // optional z. B. ['weder noch'] als zusätzliche falsche Antwort
+
+function mfEsc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function mfCdata(s) {
+  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+}
+
+// Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
+function mfIdBasis() {
+  const SCHLUESSEL = 'moodleFsLetzteIdSekunde';
+  let sek = Math.floor(Date.now() / 1000);
+  try {
+    const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
+    if (sek <= letzte) sek = letzte + 1;
+    localStorage.setItem(SCHLUESSEL, String(sek));
+  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  const d = new Date(sek * 1000);
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+
+// Liest Sachverhalt und Führungsstil aus den Aufgaben-Boxen
+function mfLeseAufgaben() {
+  const boxen = document.querySelectorAll('#Container .fs-aufgabe');
+  const aufgaben = [];
+  boxen.forEach(box => {
+    const p = box.querySelector('p');
+    const text = p ? p.textContent.replace(/\s+/g, ' ').trim() : '';
+    const label = box.dataset.stil || '';
+    if (text && label) aufgaben.push({ text, label });
+  });
+  return aufgaben;
+}
+
+function mfBaueMatchingXml(aufgaben) {
+  const punkte = aufgaben.length * MOODLE_FS_PUNKTE_PRO_AUFGABE;
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+  xml += `  <question type="matching">\n`;
+  const titel = `${MOODLE_FS_PRAEFIX}${mfIdBasis()}${MOODLE_FS_TITELENDE}`;
+  xml += `    <name>\n      <text>${mfEsc(titel)}</text>\n    </name>\n`;
+  xml += `    <questiontext format="html">\n      <text>${mfCdata(`<p>${MOODLE_FS_ANWEISUNG}</p>`)}</text>\n    </questiontext>\n`;
+  xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <shuffleanswers>true</shuffleanswers>\n`;
+  xml += `    <correctfeedback format="html">\n      <text>${mfCdata('<p>Die Antwort ist richtig.</p>')}</text>\n    </correctfeedback>\n`;
+  xml += `    <partiallycorrectfeedback format="html">\n      <text>${mfCdata('<p>Die Antwort ist teilweise richtig.</p>')}</text>\n    </partiallycorrectfeedback>\n`;
+  xml += `    <incorrectfeedback format="html">\n      <text>${mfCdata('<p>Die Antwort ist falsch.</p>')}</text>\n    </incorrectfeedback>\n`;
+  xml += `    <shownumcorrect/>\n`;
+
+  aufgaben.forEach(({ text, label }) => {
+    xml += `    <subquestion format="html">\n`;
+    xml += `      <text>${mfCdata(`<p>${mfEsc(text)}</p><hr>`)}</text>\n`;
+    xml += `      <answer>\n        <text>${mfEsc(label)}</text>\n      </answer>\n`;
+    xml += `    </subquestion>\n`;
+  });
+
+  // Zusätzliche falsche Antworten (leere Frage + Antwort)
+  MOODLE_FS_ABLENKER.forEach(a => {
+    xml += `    <subquestion format="html">\n      <text></text>\n`;
+    xml += `      <answer>\n        <text>${mfEsc(a)}</text>\n      </answer>\n    </subquestion>\n`;
+  });
+
+  xml += `  </question>\n\n</quiz>\n`;
+  return xml;
+}
+
+function exportiereMoodle() {
+  const aufgaben = mfLeseAufgaben();
+  if (!aufgaben.length) {
+    alert('Bitte zuerst Aufgaben erstellen.');
+    return;
+  }
+  const xml = mfBaueMatchingXml(aufgaben);
+
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const dateiname = `quiz-fuehrungsstil-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 generiereAufgaben();
+

@@ -1,3 +1,9 @@
+## 2026-10-27 | Oktober 2026
+- [neu] **Aufgaben im Lernbereich 9.3** - [Kreditvergleich](lb9-3-kreditvergleich.html), [Buchungen im Kreditbereich](lb9-3-buchungenkreditbereich.html), [Darlehensarten](lb9-3-darlehen.html).
+
+- [neu] **Aufgabe im Lernbereich 8.1** - [Abschluss Bestandskonten](lb8-1-bestandskonten.html).
+- [neu] **Exportfunktion Moodle-Fragetyp** - [Führungsstil](lb9-1-fuehrungsstil.html), (Aufbauorganisation)[lb9-1-aufbauorganisation.html]
+  
 ## 2026-10-25 | Oktober 2026
 - [neu] **Neue Exportfunktion: Moodle-Fragetyp** – Generierte Fragen für [Prozentrechnen](lb7-1-prozentrechnen.html), [Zahlungsarten](lb7-1-zahlungsverkehr), [Prozentrechnen mit Diagramm](lb7-1-prozentdiagramm.html), [Unternehmensziele](lb7-2-unternehmensziele.html), [Buchungslesen Werkstoffe](lb7-4-buchungslesen-werkstoffe.html), [Preisstrategien](lb8-3-preisstrategien.html), [Preisdifferenzierungen](lb8-3-preisdifferenzierung.html) können nun als Moodle-Fragetyp exportiert werden.
 - [neu] **Neue Exportfunktion: Druck-Button** – Viele Aufgaben können nun direkt als Arbeitsblatt gedruckt werden, bei denen Aufgaben und Lösungen getrennt werden.

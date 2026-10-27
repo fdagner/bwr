@@ -39,49 +39,52 @@
 <main>
   <div w3-include-html="navigation.html"></div>
 
-  <div class="afa-generator-wrap">
-    <h2>Darlehensarten (beta)</h2>
+  
+    <h2>Darlehensarten</h2>
 
     <div class="box">
       <p>
         Hier können Sie zufällige Aufgaben zu <strong>Festdarlehen, Abzahlungsdarlehen und Annuitätendarlehen</strong>
         generieren. Die Auszahlung erfolgt zu Jahresbeginn, Zins und Tilgung werden jeweils am Jahresende gezahlt.
       </p>
+  <h3>Unternehmen auswählen</h3>
+        <div class="flex-row">
+        <label for="marketingKunde">Unternehmen:</label>
+        <select id="marketingKunde" class="meinUnternehmen"></select>
+</div>
 
-      <div class="flex-row">
-        <label for="darlehenSelect">Darlehensart:</label>
-        <select class="dropdown" id="darlehenSelect" onchange="zeigeDarlehensAufgabe()">
+<h3>Daten</h3>
+<div class="grid3">
+ 
+ <fieldset class="vorlage-green" style="max-width: 350px">
+              <legend>Einstellungen</legend>
+<div class="form-field">
+          <select class="dropdown" id="darlehenSelect" onchange="zeigeDarlehensAufgabe()">
           <option value="fest">📌 Festdarlehen</option>
           <option value="abzahlung">📉 Abzahlungsdarlehen</option>
           <option value="annuitaet" selected>⚖️ Annuitätendarlehen</option>
           <option value="zufall" hidden>🔀 Zufällig</option>
         </select>
-        <label for="marketingKunde">Unternehmen:</label>
-        <select id="marketingKunde" class="meinUnternehmen"></select>
-      </div>
-
-      <div class="flex-row">
-        <div>
-          <label for="kreditInput">Kreditsumme (€)</label>
+         <label for="kreditInput">Kreditsumme (€)</label>
           <input type="number" id="kreditInput" value="10000" min="1000" max="1000000" step="500">
-        </div>
-        <div>
-          <label for="laufzeitInput">Laufzeit (Jahre)</label>
+           <label for="laufzeitInput">Laufzeit (Jahre)</label>
           <input type="number" id="laufzeitInput" value="5" min="2" max="10" step="1">
-        </div>
-        <div>
           <label for="zinsInput">Zinssatz (% p. a.)</label>
           <input type="number" id="zinsInput" value="4" min="0.5" max="12" step="0.1">
-        </div>
-      </div>
+          </div>
+</fieldset>
+    </div>
+
       <p style="font-size:12px;color:#888;margin:8px 0 0;">
         Beim Abzahlungsdarlehen wird die Kreditsumme ggf. auf ein Vielfaches der Laufzeit abgerundet, damit die Tilgungsrate ganzzahlig ist.
       </p>
 
+  
       <div id="darlehenHinweis"></div>
       <br>
-      <button class="primary-btn" onclick="zeigeDarlehensAufgabe()">Neue Aufgabe</button>
       <button class="primary-btn" onclick="zufallswerteSetzen()">🎲 Zufallswerte</button>
+      <button class="primary-btn" onclick="zeigeDarlehensAufgabe()">Daten übernehmen</button>
+
 <br><br>
       <div id="darlehenChartWrapper" class="chart-wrapper" style="display:none;min-width:700px;background-color:#fff;">
         <div class="chart-inner" id="darlehenChartInner"></div>
