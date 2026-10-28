@@ -2,7 +2,7 @@
 - [neu] **Aufgaben im Lernbereich 9.3** - [Kreditvergleich](lb9-3-kreditvergleich.html), [Buchungen im Kreditbereich](lb9-3-buchungenkreditbereich.html), [Darlehensarten](lb9-3-darlehen.html).
 - [neu] **Aufgabe im Lernbereich 8.1** - [Abschluss Bestandskonten](lb8-1-bestandskonten.html).
 - [neu] **Aufgabe im Lernbereich 8.2** - [Optimale Bestellmenge](lb8-2-bestellmenge.html).
-- [neu] **Aufgabe im Lernbereich 8.5** - [Perosnalzusatzkosten](lb8-5-personalzusatzkosten.html).
+- [neu] **Aufgabe im Lernbereich 8.5** - [Personalzusatzkosten](lb8-5-personalzusatzkosten.html).
 - [update] **Exportfunktion Moodle-Fragetyp** - [Führungsstil](lb9-1-fuehrungsstil.html), [Aufbauorganisation](lb9-1-aufbauorganisation.html)
 - [update] **Aufgabe Fremdbezug oder Eigenfertigung** - Aufgabenlayout verbessert, Werte können manuell eingegeben werden: [Fremdbezug oder Eigenfertigung](lb10-4-fremdbezug.html).
 - [update] **Organigramm direkt erstellen** - [Organigramm](lb9-1-organigramm.html).
