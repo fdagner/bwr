@@ -55,20 +55,31 @@
   <script src="js/menu.js"></script>
   <script src="js/html2canvas.min.js"></script>
   <script src="js/clipboard.min.js"></script>
+  <script src="js/js-yaml.min.js"></script>
   <script src="js/apexcharts.min.js"></script>
 </head>
 
 <body>
   <main>
     <div w3-include-html="navigation.html"></div>
-    <h2>Optimale Bestellmenge (Tabelle und Diagramm)</h2>
+    <h2>Optimale Bestellmenge</h2>
     <div class="box">
+      <p>Hier können Sie automatisch eine vollständige Aufgabe zur optimalen
+        Bestellmenge erstellen. Sie besteht aus einem Interview, Tabelle, Diagramm und drei Arbeitsaufträgen. Alle Werte im Interview werden aus den Eingabefeldern berechnet.      </ul>
       <p>Geben Sie Ihre Wunschwerte als Ganzzahlen an. Die Schrittweite sollte ein Teiler der Bestellhäufigkeit sein:
         Je höher die Schrittweite, desto kürzer die Tabelle. Empfehlenswert sind 5er oder 10er Schritte.
         Die Berechnung ergibt immer einen ganzzahligen und passgenauen Schnittpunkt, bei dem Bestellkosten und
         Lagerhaltungskosten gleich hoch sind.
         Sollen die Werte unterschiedlich sein und der Schnittpunkt rechnerisch nicht ganzzahlig, geben Sie bei der
         optimalen Bestellhäufigkeit eine Kommazahl an. </p>
+
+        <div class="flex-row">
+  <div>
+    <label for="bmUnternehmen">Modellunternehmen:</label>
+    <select id="bmUnternehmen" class="meinUnternehmen"></select>
+  </div>
+  </div>
+<br>
       <div class="grid3">
         <div>
           <label for="optimaleBestellmenge">Optimale Bestellmenge:</label><br>
@@ -107,7 +118,8 @@
         </label>
       </p><br>
   
-      <button onclick="berechneOptimaleBestellmengeUndHaeufigkeit()">Tabelle und Diagramm erstellen</button>
+      <button onclick="berechneOptimaleBestellmengeUndHaeufigkeit()">Daten übernehmen</button>
+    <button type="button" id="bmNeuePersonen">Neue Personen erstellen</button>
 <br><br>
         <div style="overflow-x:auto;">
         <div id="chart" style="width: 100%;min-width: 750px;"></div>
@@ -122,7 +134,7 @@
     <br>
   
   </main>
-  <script src="js/lb8-1-bestellmenge.js"></script>
+  <script src="js/lb8-2-bestellmenge.js"></script>
   <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div>
   <script>
