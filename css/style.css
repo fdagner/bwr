@@ -1805,15 +1805,28 @@ select:focus {
         border: none;
       }
 
+      #Container {
+    display: block !important;
+    flex: none !important;
+   
+  }
+
       /* Aufgabe und Lösung sauber trennen */
       #Container h2:first-of-type {
         page-break-after: avoid;
       }
       #Container h2.loesung {
-        break-before: page !important;
         page-break-before: always !important;
         margin-top: 60px !important;
       }
+
+   
+  #Container .aufgaben-section > div,
+  #Container .loesung-section > div {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
     }
 
 svg text[contenteditable="true"] {
