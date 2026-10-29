@@ -1793,6 +1793,12 @@ select:focus {
 
 @media print {
       body * { visibility: hidden; }
+
+      #Container, #Container * {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
       #Container, #Container * { visibility: visible; }
       [contenteditable] {
         outline: none;
