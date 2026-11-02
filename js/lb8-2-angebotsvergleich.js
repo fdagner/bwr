@@ -298,6 +298,40 @@ function erzeugeURLFuerAngebotsvergleich(d) {
   return `belege.html?${p.toString()}`;
 }
 
+// Mail-URL für ein einzelnes Angebot (A oder B) im Angebotsvergleich:
+// der Lieferer versendet das Angebot per E-Mail an den Käufer.
+function erzeugeMailURLAngebotsvergleich(d, liefererName, buchstabe) {
+  const p = new URLSearchParams();
+  const ks = document.getElementById('einkaufKaeufer');
+  p.set('beleg', 'email');
+  p.set('vorlage', 'mail3.html');
+  if (liefererName) p.set('absender', liefererName.trim());
+  if (ks?.value) p.set('empfaenger', ks.value.trim());
+  p.set('betreff', `Angebot ${buchstabe} – ${d.werkstoff || 'Werkstoffe'}`);
+  p.set('text', erzeugeAngebotsvergleichMailText(d));
+  return `belege.html?${p.toString()}`;
+}
+
+// Mailtext für ein Angebot (Angebotsvergleich) – vom Lieferer an den Käufer
+function erzeugeAngebotsvergleichMailText(d) {
+  const ep = formatCurrency(d.einzelpreis);
+  const menge = d.menge;
+  const einheit = d.einheit || 'Stk.';
+  let text = `vielen Dank für Ihre Anfrage. Gerne unterbreiten wir Ihnen ein Angebot über ${menge} ${einheit} ${d.werkstoff || 'Werkstoffe'}: `;
+  text += `Der Listenpreis beträgt ${ep} je ${einheit.replace(/\.$/, '')}. `;
+  if (d.rabattSatz && parseFloat(d.rabattSatz) > 0) {
+    text += `Bei dieser Abnahmemenge gewähren wir Ihnen einen Rabatt von ${d.rabattSatz} %. `;
+  }
+  if (d.skontoSatz && parseFloat(d.skontoSatz) > 0) {
+    text += `Bei Zahlung innerhalb der Skontofrist gewähren wir Ihnen ${d.skontoSatz} % Skonto. `;
+  }
+  if (d.bezugskostenWert && parseFloat(parseNumericValue(d.bezugskostenWert)) > 0) {
+    text += `Hinzu kommen Bezugskosten in Höhe von ${d.bezugskostenWert}. `;
+  }
+  text += `Wir freuen uns auf Ihre Bestellung und stehen für Rückfragen gerne zur Verfügung.`;
+  return text;
+}
+
 // ============================================================================
 // KALKULATION
 // ============================================================================
@@ -456,10 +490,22 @@ function zeigeZufaelligenSatz() {
   const teuerEsp = istAGuenstig ? kalkB.esp : kalkA.esp;
   const diff = formatCurrency(Math.abs(kalkA.esp - kalkB.esp));
 
-  const belegDaten = istAGuenstig
-    ? { listeneinkaufspreis: formatCurrency(kalkA.lep), rabattSatz: String(kalkA.rabatt), bezugskostenWert: formatCurrency(kalkA.bezugskosten), skontoSatz: String(kalkA.skonto), werkstoff: werkstoffAnzeige, lieferer: nameA }
-    : { listeneinkaufspreis: formatCurrency(kalkB.lep), rabattSatz: String(kalkB.rabatt), bezugskostenWert: formatCurrency(kalkB.bezugskosten), skontoSatz: String(kalkB.skonto), werkstoff: werkstoffAnzeige, lieferer: nameB };
+  const belegDatenA = {
+    listeneinkaufspreis: formatCurrency(kalkA.lep), rabattSatz: String(kalkA.rabatt),
+    bezugskostenWert: formatCurrency(kalkA.bezugskosten), skontoSatz: String(kalkA.skonto),
+    werkstoff: werkstoffAnzeige, lieferer: nameA,
+    einzelpreis: epA, menge: mengeA, einheit: einheit,
+  };
+  const belegDatenB = {
+    listeneinkaufspreis: formatCurrency(kalkB.lep), rabattSatz: String(kalkB.rabatt),
+    bezugskostenWert: formatCurrency(kalkB.bezugskosten), skontoSatz: String(kalkB.skonto),
+    werkstoff: werkstoffAnzeige, lieferer: nameB,
+    einzelpreis: epB, menge: mengeB, einheit: einheit,
+  };
+  const belegDaten = istAGuenstig ? belegDatenA : belegDatenB;
   const belegUrl = erzeugeURLFuerAngebotsvergleich(belegDaten);
+  const mailUrlA = erzeugeMailURLAngebotsvergleich(belegDatenA, nameA, 'A');
+  const mailUrlB = erzeugeMailURLAngebotsvergleich(belegDatenB, nameB, 'B');
 
   const guenstigerNm = istAGuenstig ? nmA : nmB;
   const teurerNm = istAGuenstig ? nmB : nmA;
@@ -510,7 +556,15 @@ function zeigeZufaelligenSatz() {
 
   const belegHtml = `
   <div style="${S.belegZeile}; margin-top:20px;">
-    <button class="geschaeftsfall-beleg-button" onclick="window.open('${belegUrl}','_blank')" 
+    <button class="geschaeftsfall-beleg-button" onclick="window.open('${mailUrlA}','_blank')"
+            style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
+      📧 Angebot A per Mail (${nameA})
+    </button>
+    <button class="geschaeftsfall-beleg-button" onclick="window.open('${mailUrlB}','_blank')"
+            style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
+      📧 Angebot B per Mail (${nameB})
+    </button>
+    <button class="geschaeftsfall-beleg-button" onclick="window.open('${belegUrl}','_blank')"
             style="width:100%;padding:10px 12px;font-size:14px;">
       📄 Eingangsrechnung erstellen
     </button>

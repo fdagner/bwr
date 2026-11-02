@@ -74,8 +74,7 @@
     <br>
     <div id="generator-container">
       <div class="box">
-        <p>Sie können hier zufällige Kreditvergleiche mit Disagio generieren. Ein Angebot ist mit effektivem Zinssatz
-          vorgegeben, beim anderen berechnen die Schüler den effektiven Zinssatz.</p>
+        <p>Sie können hier zufällige Kreditvergleiche mit Disagio generieren. Variante 1: nur ein Angebot (Hausbank) – effektiver Zinssatz wird berechnet. Variante 2: zwei Angebote – effektiver Zinssatz von Angebot B und Vergleich.</p>
 
         <p style="margin:10px 0;padding:10px 14px;background:#eef3fb;border-left:4px solid #1466a6;border-radius:0 6px 6px 0;
                   font-size:0.95em;line-height:1.6;">
@@ -96,6 +95,16 @@
             <select id="kkKreditnehmer" class="meinUnternehmen"></select>
           </div>
 </div>
+          <h3>Aufgabentyp</h3>
+          <div class="flex-row">
+            <div>
+              <label for="kkVariante">Fall-Typ:</label>
+              <select id="kkVariante" onchange="zeigeZufaelligenSatz()">
+                <option value="1">Effektiver Zinssatz (nur Angebot A – Hausbank)</option>
+                <option value="2" selected>Kreditvergleich (Angebot A + B)</option>
+              </select>
+            </div>
+          </div>
          <h3>Daten</h3>
           <!-- ════════════════════════════════════════════════════════════
            KREDITVERGLEICH – EINSTELLUNGEN
@@ -124,7 +133,7 @@
 
             <!-- ── Angebot A ─────────────────────────────────────────── -->
 
-            <fieldset class="vorlage-pink">
+            <fieldset class="vorlage-pink" id="kkFeldA">
               <legend> Angebot A – vorgegeben</legend>
               <div class="form-field">
                 <label for="kkZinsA">Zinssatz p. a. A (%)</label>
@@ -137,7 +146,7 @@
             </fieldset>
             <!-- ── Angebot B ─────────────────────────────────────────── -->
 
-            <fieldset class="vorlage-blue">
+            <fieldset class="vorlage-blue" id="kkFeldB">
               <legend> Angebot B - zum Berechnen</legend>
 
               <div class="form-field">
@@ -203,7 +212,7 @@
       </div>
     </div>
   </main>
-  <script src="js/lb9-3-kreditvergleich.js"></script>
+  <script src="js/lb9-3-kreditvergleich.js?v=4"></script>
   <div w3-include-html="footer.html"></div>
   <script>includeHTML();</script>
 </body>

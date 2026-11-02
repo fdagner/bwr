@@ -87,6 +87,33 @@ function rundeAufZehntausender(zahl) {
     return Math.ceil(zahl / 10000) * 10000;
 }
 
+// HTML-Escaping für Namen aus der YAML
+function escFD(text) {
+    return String(text === null || text === undefined ? '' : text)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Konkretes Fremdbauteil des gewählten Modellunternehmens (werkstoffe.AWF), z. B. "Schaltwerke"
+function waehleFremdbauteil(unternehmensName) {
+    let teile = [];
+    try {
+        const sel = document.getElementById('marketingKunde');
+        const unternehmen = (yamlData || []).find(c => {
+            const u = c.unternehmen;
+            if (!u) return false;
+            return u.name === unternehmensName ||
+                (u.name + (u.rechtsform ? ' ' + u.rechtsform : '')).trim() === unternehmensName;
+        });
+        const awf = unternehmen?.unternehmen?.werkstoffe?.AWF;
+        if (Array.isArray(awf)) {
+            teile = awf.map(w => (typeof w === 'string' ? w : w?.name))
+                       .filter(n => n && String(n).trim());
+        }
+    } catch (e) { /* Fallback unten */ }
+    if (!teile.length) return 'Fremdbauteile';
+    return teile[Math.floor(Math.random() * teile.length)];
+}
+
 // Zufällige Werte in die Inputs schreiben und Aufgabe generieren
 function zeigeZufaelligeAufgabe() {
     let listeneinkaufspreis = getRandomIntegerWithSteps(20, 100, 10);
@@ -152,8 +179,8 @@ function generateProblem() {
     // ────────────────────────────────────────────────
     // ApexCharts-Diagramm
     // ────────────────────────────────────────────────
-    const colorFremd = '#FF6384';
-    const colorEigen = '#36A2EB';
+    const colorFremd = '#E11D48';   // gestrichelte Linie – dunkler für mehr Kontrast
+    const colorEigen = '#1D5FBF';   // durchgezogene Linie – dunkler für mehr Kontrast
 
     const options = {
         chart: {
@@ -162,7 +189,7 @@ function generateProblem() {
             fontFamily: 'Arial, Helvetica, sans-serif',
             toolbar: { show: true, autoSelected: 'zoom' },
             zoom: { enabled: true },
-            animations: { enabled: true }
+            animations: { enabled: false }
         },
         title: {
             text: 'Fremdbezug und Eigenfertigung',
@@ -220,13 +247,23 @@ function generateProblem() {
             }
         },
         legend: {
-            position: 'bottom',
-            fontSize: '16px',
-            markers: {
-                width: 20,
-                height: 4,
-                radius: 0
-            }
+            show: false
+        },
+        annotations: {
+            // Bezeichnung direkt am Linienende – weißlich-hellgelber Hintergrund,
+            // damit keine Linie den Text durchbricht; Position auseinanderziehen,
+            // wenn beide Linien nah beieinander enden
+            points: (() => {
+                const fremdEnd = random_einstandspreis_gesamt_chart;
+                const eigenEnd = random_gesamtkosten_chart;
+                const nah = Math.abs(fremdEnd - eigenEnd) < random_Kosten_Max_chart * 0.1;
+                const fremdOben = !nah || fremdEnd >= eigenEnd;
+                const stil = (farbe) => ({ background: '#fff9c4', color: farbe, fontSize: '15px', fontWeight: 700, fontFamily: 'Arial, Helvetica, sans-serif', padding: { left: 6, right: 6, top: 2, bottom: 2 } });
+                return [
+                    { x: maxMenge, y: fremdEnd, marker: { size: 0 }, label: { text: 'Fremdbezug', textAnchor: 'end', offsetX: -12, offsetY: fremdOben ? 6 : 26, borderColor: 'transparent', borderWidth: 0, style: stil(colorFremd) } },
+                    { x: maxMenge, y: eigenEnd, marker: { size: 0 }, label: { text: 'Eigenfertigung', textAnchor: 'end', offsetX: -12, offsetY: fremdOben ? 26 : 6, borderColor: 'transparent', borderWidth: 0, style: stil(colorEigen) } }
+                ];
+            })()
         },
         tooltip: {
             shared: true,
@@ -240,14 +277,16 @@ function generateProblem() {
         }
     };
 
+    let chartBereit = null;
     if (window.fremdbezugApexChart) {
-        window.fremdbezugApexChart.updateOptions(options, true, true);
+        // Promise festhalten – wird für Typ 4 (Grafik als Bild im Editor) benötigt
+        chartBereit = window.fremdbezugApexChart.updateOptions(options, true, true);
     } else {
         window.fremdbezugApexChart = new ApexCharts(
             document.querySelector("#fremdbezugChart"),
             options
         );
-        window.fremdbezugApexChart.render();
+        chartBereit = window.fremdbezugApexChart.render();
     }
 
     // ────────────────────────────────────────────────
@@ -355,6 +394,26 @@ function generateProblem() {
         loesungSatz += tabelleEigenfertigung(f_variableKosten, raw_menge, raw_variableKosten, raw_fixeKostenGesamt_aufgabe, f_variableKosten_gesamt_aufgabe, f_fixeKostenGesamt_aufgabe, f_gesamtkosten_aufgabe);
         loesungSatz += `<h4>Antwort</h4>${fremdbezug_Antwort}`;
 
+    } else if (problemType === 4) {
+        // Typ 4: Entscheidung anhand der Grafik – Aufgabe + Grafik-Bild,
+        // Lösung mit Ablesen aus der Grafik, Berechnungen und Antwort.
+        const fremdteil = escFD(waehleFremdbauteil(unternehmensName));
+        aufgabeSatz += `
+            <p>Für die Ausweitung der Produktion benötigt „${unternehmensName}“ ${f_menge} ${fremdteil}.<br>
+            Entscheiden Sie anhand der Grafik, ob die ${f_menge} ${fremdteil} in Eigenfertigung hergestellt oder per Fremdbezug beschafft werden sollen.</p>`;
+
+        loesungSatz += `
+            <h4>Ablesen aus der Grafik</h4>
+            <p>${(raw_einstandspreis_gesamt === raw_gesamtkosten_aufgabe)
+                ? `Die Kostenlinien für Fremdbezug und Eigenfertigung schneiden sich genau bei ${f_menge} ${fremdteil} – beide Alternativen kosten ${f_einstandspreis_gesamt_aufgabe}.`
+                : (raw_einstandspreis_gesamt < raw_gesamtkosten_aufgabe)
+                    ? `Bei ${f_menge} ${fremdteil} liegt die Kostenlinie des Fremdbezugs (${f_einstandspreis_gesamt_aufgabe}) unter der der Eigenfertigung (${f_gesamtkosten_aufgabe}).`
+                    : `Bei ${f_menge} ${fremdteil} liegt die Kostenlinie der Eigenfertigung (${f_gesamtkosten_aufgabe}) unter der des Fremdbezugs (${f_einstandspreis_gesamt_aufgabe}).`}</p>`;
+
+        // Keine Berechnung bei diesem Falltyp – die Entscheidung laut
+        // Aufgabenstellung soll allein anhand der Grafik getroffen werden.
+        loesungSatz += `<h4>Antwort</h4>${fremdbezug_Antwort}`;
+
     } else {
         aufgabeSatz += `
             <p>${randomArray_Subjekt}. ${randomArray_Subjekt2}</p>
@@ -386,20 +445,62 @@ function generateProblem() {
         loesungSatz += `<h4>Antwort</h4>${fremdbezug_Antwort}`;
     }
 
-    // Ausgabe: läuft schon ein Editor, über JoditEditor.setContent schreiben,
-    // damit Editor-Wert und Quelle synchron bleiben.
-    const container = document.getElementById("Container");
-    if (window.JoditEditor && container._jodit) {
-        window.JoditEditor.setContent(container, aufgabeSatz + loesungSatz);
-    } else {
-        container.innerHTML = aufgabeSatz + loesungSatz;
+    // Diagramm als Bild unter die Aufgabe einfügen (nur Typ 4):
+    // dazu wird nur das fertige Diagramm als PNG in den Editor gesetzt
+    function diagrammBildAlsHtml(pngURI) {
+        return `<p style="text-align:center;margin:10px 0 0;"><img src="${pngURI}" alt="Grafik Eigenfertigung vs. Fremdbezug" style="display:block;max-width:100%;height:auto;margin:0 auto;"></p>`;
     }
 
-    // Aufgabe steht: Editor (Jodit) aktivieren – einmalig. data-jodit-init erlaubt
-    // den Adopt auch auf ApexCharts-Seiten (Muster aus lb10-4-gewinnschwelle).
-    if (window.JoditEditor && !container._jodit) {
-        container.setAttribute('data-jodit-init', '1');
-        try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+    const container = document.getElementById("Container");
+
+    function editorInhaltSetzen(html) {
+        // läuft schon ein Editor, über JoditEditor.setContent schreiben,
+        // damit Editor-Wert und Quelle synchron bleiben
+        if (window.JoditEditor && container._jodit) {
+            window.JoditEditor.setContent(container, html);
+        } else {
+            container.innerHTML = html;
+        }
+
+        // Aufgabe steht: Editor (Jodit) aktivieren – einmalig. data-jodit-init erlaubt
+        // den Adopt auch auf ApexCharts-Seiten (Muster aus lb10-4-gewinnschwelle).
+        if (window.JoditEditor && !container._jodit) {
+            container.setAttribute('data-jodit-init', '1');
+            try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+        }
+    }
+
+    if (problemType === 4) {
+        // Erst das Diagramm fertig rendern, dann nur Bild + Aufgabe in den Editor
+        const bildEinfuegen = () => {
+            try {
+                window.fremdbezugApexChart.dataURI({ scale: 1 })
+                    .then(({ imgURI }) => editorInhaltSetzen(aufgabeSatz + diagrammBildAlsHtml(imgURI) + loesungSatz))
+                    .catch(err => {
+                        console.warn('Diagramm-Bild fehlgeschlagen:', err);
+                        editorInhaltSetzen(aufgabeSatz + loesungSatz);
+                    });
+            } catch (e) {
+                console.warn('Diagramm-Bild fehlgeschlagen:', e);
+                editorInhaltSetzen(aufgabeSatz);
+            }
+        };
+        if (chartBereit && typeof chartBereit.then === 'function') {
+            // Kleine Verzögerung: ApexCharts zeichnet die Annotation-Labels erst
+            // nach dem Auflösen des render()-Promises – sonst fehlen die
+            // Bezeichnungen im exportierten Diagramm-Bild
+            chartBereit
+                .then(() => new Promise(warten => setTimeout(warten, 1200)))
+                .then(bildEinfuegen)
+                .catch(err => {
+                    console.warn('Diagramm-Render fehlgeschlagen:', err);
+                    editorInhaltSetzen(aufgabeSatz + loesungSatz);
+                });
+        } else {
+            bildEinfuegen();
+        }
+    } else {
+        editorInhaltSetzen(aufgabeSatz + loesungSatz);
     }
 
     return [aufgabeSatz, loesungSatz];

@@ -83,6 +83,14 @@
     <label for="bmUnternehmen">Modellunternehmen:</label>
     <select id="bmUnternehmen" class="meinUnternehmen"></select>
   </div>
+  <div>
+    <label for="bmVariante">Fall-Typ:</label>
+    <select id="bmVariante" onchange="berechneOptimaleBestellmengeUndHaeufigkeit()">
+      <option value="1" selected>Interview, Tabelle und Diagramm</option>
+      <option value="2">Nur Diagramm (Bestellmenge ablesen)</option>
+      <option value="3">Nur Tabelle (Bestellmenge ermitteln)</option>
+    </select>
+  </div>
   </div>
 <br>
       <div class="grid3">
@@ -138,7 +146,7 @@
     <br>
   
   </main>
-  <script src="js/lb8-2-bestellmenge.js"></script>
+  <script src="js/lb8-2-bestellmenge.js?v=21"></script>
   <div w3-include-html="footer.html"></div>
   <script>
     includeHTML();

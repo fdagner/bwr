@@ -4490,23 +4490,23 @@
           preis_max: 15
     fertigerzeugnisse:
       hauptwerk:
-        - name: "Elektrogabelstapler"
+        - name: "E-Gabelstapler"
           preis_min: 8000
           preis_max: 40000
           einheit: "Stück"
-        - name: "Elektro-Hochhubwagen"
+        - name: "E-Hochhubwagen"
           preis_min: 2500
           preis_max: 8000
           einheit: "Stück"
-        - name: "Elektro-Schubmaststapler"
+        - name: "E-Schubmaststapler"
           preis_min: 12000
           preis_max: 35000
           einheit: "Stück"
-        - name: "Elektro-Niederhubwagen"
+        - name: "E-Niederhubwagen"
           preis_min: 1500
           preis_max: 5000
           einheit: "Stück"
-        - name: "Elektro-Seitenstapler"
+        - name: "E-Seitenstapler"
           preis_min: 15000
           preis_max: 40000
           einheit: "Stück"

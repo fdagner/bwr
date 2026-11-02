@@ -562,6 +562,27 @@ function getBelegtypAusKonto(konto_2) {
   return "rechnung"; // 4400 VE → Eingangsrechnung
 }
 
+// Mailtext des Angebots (Einkaufskalkulation): der Lieferer (Stammunternehmen)
+// versendet das Angebot an das Modellunternehmen mit Listenpreis, ggf. Rabatt
+// und Skonto (analog zur Verkaufskalkulation).
+function erzeugeEinkaufAngebotText(daten, werkstoffOverride) {
+    const werkstoff = (werkstoffOverride || daten.werkstoff || 'Werkstoffe').replace(/^von\s+/i, '');
+    const listeneinkaufspreis = daten.listeneinkaufspreis || '';
+    const rabattSatz = daten.rabattSatz || '0';
+    const skontoSatz = daten.skontoSatz || '0';
+
+    let text = `vielen Dank für Ihre Anfrage. Gerne unterbreiten wir Ihnen ein Angebot über ${werkstoff}: `;
+    text += `Der Listenpreis beträgt ${listeneinkaufspreis} je PAL. `;
+    if (parseFloat(rabattSatz) > 0) {
+        text += `Bei dieser Abnahmemenge gewähren wir Ihnen einen Rabatt von ${rabattSatz} %. `;
+    }
+    if (parseFloat(skontoSatz) > 0) {
+        text += `Bei Zahlung innerhalb der Skontofrist gewähren wir Ihnen ${skontoSatz} % Skonto. `;
+    }
+    text += `Wir freuen uns auf Ihre Bestellung und stehen für Rückfragen gerne zur Verfügung.`;
+    return text;
+}
+
 function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isGutschrift = false) {
   const params = new URLSearchParams();
 
@@ -633,6 +654,31 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
 
   // 2. Firmennamen über die ermittelte ID holen
   const lieferantenName = getUnternehmensNamePerId(lieferantenId);
+
+  // Mail-Fall (Einkaufskalkulation): Angebot des Lieferers per E-Mail
+  if (typ === 'mail') {
+    params.set('beleg', 'email');
+    params.set('vorlage', 'mail3.html');
+    // Lieferant: Stammunternehmen des Werkstoffs; Fallback: zufälliges Unternehmen
+    let lieferantMail = lieferantenName;
+    if (!lieferantMail && typeof yamlData !== 'undefined' && yamlData.length > 0) {
+      const kaeuferName = kaeuferSelect?.value?.trim();
+      const kandidaten = yamlData
+        .map(e => e.unternehmen?.name)
+        .filter(n => n && n !== kaeuferName);
+      if (kandidaten.length) lieferantMail = kandidaten[Math.floor(Math.random() * kandidaten.length)];
+    }
+    if (lieferantMail) params.set('absender', lieferantMail);
+    if (kaeuferSelect?.value) params.set('empfaenger', kaeuferSelect.value.trim());
+    // Werkstoff-Bezeichnung für Betreff/Text bereinigen ("von Hilfsstoffen" → "Hilfsstoffe")
+    const werkstoffMail = (werkstoffName || 'Werkstoffe').replace(/^von\s+/i, '');
+    params.set('betreff', `Angebot ${werkstoffMail}`);
+    params.set('text', erzeugeEinkaufAngebotText(geschaeftsfallDaten, werkstoffMail));
+    return `belege.html?${params.toString()}`;
+  }
+
+  // 2. Firmennamen über die ermittelte ID holen
+  const lieferantenName2 = lieferantenName;
 
   // Generellen Kunden (Modellunternehmen) setzen
   if (kaeuferSelect?.value) {
@@ -709,7 +755,7 @@ function erstelleGeschaeftsfallButton(nummer, daten, isGutschrift = false) {
   </button>`;
 }
 
-function erstelleAngebotButton(nummer, daten) {
+function erstelleAngebotButton(nummer, daten, buchstabe = 'a') {
   const url = erzeugeURLFuerGeschaeftsfall(daten, 'angebot');
   return `
         <button
@@ -718,12 +764,28 @@ function erstelleAngebotButton(nummer, daten) {
             title="Angebot für Aufgabe ${nummer} als SVG öffnen"
              style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
-            📄 ${nummer}a. Angebot erstellen
+            📄 ${nummer}${buchstabe}. Angebot erstellen
         </button>
     `;
 }
 
-function erstelleRechnungButton(nummer, daten) {
+// Angebots-Mail (Einkaufskalkulation): der Lieferer (Stammunternehmen) versendet
+// das Angebot an das Modellunternehmen per E-Mail
+function erstelleAngebotMailButton(nummer, daten) {
+  const url = erzeugeURLFuerGeschaeftsfall(daten, 'mail');
+  return `
+        <button
+            class="geschaeftsfall-beleg-button angebot-mail-button"
+            onclick="window.open('${url}', '_blank')"
+            title="Angebots-Mail des Lieferers für Aufgabe ${nummer} öffnen"
+            style="width: 100%; padding: 10px 12px; font-size: 14px;"
+        >
+            📧 ${nummer}a. Angebot per Mail (Lieferer)
+        </button>
+    `;
+}
+
+function erstelleRechnungButton(nummer, daten, buchstabe = 'b') {
   const url = erzeugeURLFuerGeschaeftsfall(daten, 'rechnung');   // → KEIN vorlage-Parameter
   return `
         <button
@@ -732,7 +794,7 @@ function erstelleRechnungButton(nummer, daten) {
             title="Eingangsrechnung für Aufgabe ${nummer} als SVG öffnen"
             style="width: 100%; padding: 9px 11px; font-size: 13px;"
         >
-            📄 ${nummer}b. Eingangsrechnung erstellen
+            📄 ${nummer}${buchstabe}. Eingangsrechnung erstellen
         </button>
     `;
 }
@@ -892,11 +954,14 @@ const geschaeftsfallDaten = {
     buttonDiv.style.margin = '12px 0';
 
     if (getModus() === 'einkaufskalkulation') {
-      // Speziell für Einkaufskalkulation: Angebot + Rechnung
+      // Angebot per Mail (vom Lieferer) + Angebot als Beleg + Eingangsrechnung –
+      // beide Angebots-Belege gehören zu 1a
       buttonDiv.innerHTML = `
-        ${erstelleAngebotButton(currentI, geschaeftsfallDaten)}
+        ${erstelleAngebotMailButton(currentI, geschaeftsfallDaten)}
         <div style="margin-top:8px;"></div>
-        ${erstelleRechnungButton(currentI, geschaeftsfallDaten)}
+        ${erstelleAngebotButton(currentI, geschaeftsfallDaten, 'a')}
+        <div style="margin-top:8px;"></div>
+        ${erstelleRechnungButton(currentI, geschaeftsfallDaten, 'b')}
     `;
     } else {
       // Alle anderen Modi → nur eine Rechnung (wie bisher)

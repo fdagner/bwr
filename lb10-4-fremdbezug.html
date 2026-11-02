@@ -94,6 +94,7 @@
               <option value="1">Fremdbezug berechnen</option>
               <option value="2">Eigenfertigung berechnen</option>
               <option value="3" selected>Fremdbezug & Eigenfertigung berechnen</option>
+              <option value="4">Entscheidung anhand der Grafik</option>
             </select>
           </div>
         </fieldset>
@@ -154,14 +155,15 @@
       <button class="primary-btn" onclick="generateProblem()">
         Daten übernehmen
       </button>
+
+      <div style="overflow-x:auto; margin-top:16px;">
+        <div id="fremdbezugDiagrammContainer" style="min-width: 600px;min-height:300px;width:100%">
+          <div id="fremdbezugChart"></div>
+        </div>
+      </div>
     </div>
 
     <div id="Container" style="min-width: 480px" contenteditable="true"></div>
-    <div>
-      <div id="fremdbezugDiagrammContainer" style="min-width: 600px;min-height:300px;width:100%">
-        <div id="fremdbezugChart"></div>
-      </div>
-    </div>
 
     <!-- ══════════════════════════════════════════════════════════════
            KI-ASSISTENT PROMPT
@@ -220,7 +222,7 @@
   <script>
     includeHTML();
   </script>
-  <script src="js/lb10-4-fremdbezug.js"></script>
+  <script src="js/lb10-4-fremdbezug.js?v=6"></script>
 </body>
 
 </html>

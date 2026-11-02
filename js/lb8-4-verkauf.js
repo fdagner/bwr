@@ -204,17 +204,31 @@ function verkaufErstelleZufallssatz() {
   inputSellChangeCategory();
   verkaufAktuellesProdukt = verkaufWaehleProdukt();
   const verkaufPosten = verkaufGeneriereMengeUndPreis(verkaufAktuellesProdukt);
-  verkaufAktuelleMenge = verkaufPosten.menge;
+  // Kein Fertigerzeugnis hinterlegt → zufällige Stückzahl; sie taucht dann in
+  // der Aufgabe (Kalkulation/Differenzkalkulation), in der Mail und den Belegen auf
+  let verkaufMengeStueck = null;
+  if (!verkaufAktuellesProdukt &&
+      (verkaufGetModus() === 'verkaufDifferenzkalkulation' || verkaufGetModus() === 'verkaufskalkulation')) {
+    verkaufMengeStueck = 100 + Math.floor(Math.random() * 19) * 50; // 100–1000, 50er-Schritte
+  }
+  verkaufAktuelleMenge = verkaufPosten.menge || verkaufMengeStueck;
   verkaufAktuellerStueckpreis = verkaufPosten.stueckpreis;
   verkaufAktuelleEinheit = verkaufAktuellesProdukt?.einheit
     ? String(verkaufAktuellesProdukt.einheit).trim()
-    : null;
+    : (verkaufMengeStueck ? 'Stück' : null);
   const verkaufMengeText = verkaufPosten.menge
     ? `${verkaufPosten.menge}${verkaufAktuelleEinheit ? ' ' + verkaufAktuelleEinheit : ''} `
     : '';
   const verkaufProduktAkk = verkaufAktuellesProdukt
     ? `${verkaufMengeText}${verkaufAktuellesProdukt.name.trim()}`
     : 'Fertigerzeugnisse';
+  // Für Kundenanfrage/Angebot (Verkaufskalkulation & Differenzkalkulation):
+  // ohne hinterlegtes Fertigerzeugnis wird eine zufällige Stückzahl
+  // erwähnt ("150 Stück Fertigerzeugnisse"); mit Produkt gilt der
+  // übliche Text (Menge + Einheit + Name)
+  const verkaufProduktAkkAnfrage = verkaufMengeStueck
+    ? `${verkaufMengeStueck} Stück Fertigerzeugnisse`
+    : verkaufProduktAkk;
   const verkaufMitMenge = !!verkaufAktuelleMenge;
   const verkaufGes  = verkaufMitMenge ? ' insgesamt' : '';
   const verkaufLief = verkaufMitMenge ? ' für die gesamte Lieferung' : '';
@@ -228,10 +242,10 @@ function verkaufErstelleZufallssatz() {
   // Arrays mit verschiedenen Teilen des Satzes
   const verkaufArray_Subjekt = [`${lieferer} verkauft `, `${lieferer} liefert `, `Firma ${lieferer} verkauft `, `${lieferer} veräußert `, `${lieferer} hat verkauft: `];
   const verkaufArray_Subjekt_2 = [`Es werden von ${lieferer} verkauft: `];
-  const verkaufArray_Subjekt_3 = [`Ein Kunde bittet um ein Angebot für ${verkaufProduktAkk}. Berechne den Listenverkaufspreis${verkaufLief} unter den folgenden Bedingungen: `, `${lieferer} erhält eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis${verkaufLief} berechnen, wenn wir mit den folgenden Werten kalkulieren: `];
-  const verkaufArray_Subjekt_4 = [`${lieferer} erreicht eine telefonische Anfrage für ${verkaufProduktAkk}. Berechne den Listenverkaufspreis${verkaufLief} bei`, `${lieferer} erhält eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis${verkaufLief} bei `];
+  const verkaufArray_Subjekt_3 = [`Ein Kunde bittet um ein Angebot für ${verkaufProduktAkkAnfrage}. Berechne den Listenverkaufspreis${verkaufLief} unter den folgenden Bedingungen: `, `${lieferer} erhält eine Anfrage für ein Angebot per E-Mail für ${verkaufProduktAkkAnfrage}. Du sollst nun den Listenverkaufspreis${verkaufLief} berechnen, wenn wir mit den folgenden Werten kalkulieren: `];
+  const verkaufArray_Subjekt_4 = [`${lieferer} erreicht eine telefonische Anfrage für ${verkaufProduktAkkAnfrage}. Berechne den Listenverkaufspreis${verkaufLief} bei`, `${lieferer} erhält eine Kundenanfrage per Mail für ${verkaufProduktAkkAnfrage}. Berechne den Listenverkaufspreis${verkaufLief} bei `];
   const verkaufArray_Subjekt_5 = [`Ein Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
-  const verkaufArray_Subjekt_6 = [`Ein Kunde möchte bei ${lieferer} ${verkaufProduktAkk} kaufen und verhandelt über den Preis`, `${lieferer} erhält von einem Kunden eine Anfrage für ${verkaufProduktAkk}`, `Ein Kunde sendet ${lieferer} per E-Mail eine Anfrage für ${verkaufProduktAkk}`, `Ein Stammkunde möchte bei ${lieferer} ${verkaufProduktAkk} kaufen und sendet eine Anfrage`];
+  const verkaufArray_Subjekt_6 = [`Ein Kunde möchte bei ${lieferer} ${verkaufProduktAkkAnfrage} kaufen und verhandelt über den Preis`, `${lieferer} erhält von einem Kunden eine Anfrage für ${verkaufProduktAkkAnfrage}`, `Ein Kunde sendet ${lieferer} per E-Mail eine Anfrage für ${verkaufProduktAkkAnfrage}`, `Ein Stammkunde möchte bei ${lieferer} ${verkaufProduktAkkAnfrage} kaufen und sendet eine Anfrage`];
   const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
   const verkaufArray_Fertigerzeugnisse_2 = Object.keys(kontenUmsatzerloese_2);
     const verkaufArray_Supply_Wert = verkaufMitMenge
@@ -601,6 +615,7 @@ if (!buttonColumn) {
         bezugskostenWert:    verkaufAntwort_bezugskostenWert,   // meist Versandkosten
         skontoSatz:          verkaufAntwort_skontoSatz,
         produktName:         verkaufAktuellesProdukt?.name || verkaufExtractProduktName(verkaufKonto_1),
+        produkt:             !!verkaufAktuellesProdukt, // true = konkretes Fertigerzeugnis hinterlegt
         menge:               verkaufAktuelleMenge,
         einzelpreis:         verkaufAktuellerStueckpreis,
         einheit:             verkaufAktuelleEinheit  
@@ -610,11 +625,21 @@ if (!buttonColumn) {
     buttonDiv.style.margin = '12px 0';
 
     if (verkaufGetModus() === 'verkaufskalkulation') {
-        // Angebot + Rechnung bei Kalkulation
+        // Beide Angebots-Belege (Mail + SVG) gehören zu 1a, die Ausgangsrechnung zu 1b
         buttonDiv.innerHTML = `
-            ${verkaufErstelleAngebotButton(i, geschaeftsfallDaten)}
+            ${verkaufErstelleAngebotMailButton(i, geschaeftsfallDaten)}
             <div style="margin-top:8px;"></div>
-            ${verkaufErstelleRechnungButton(i, geschaeftsfallDaten)}
+            ${verkaufErstelleAngebotButton(i, geschaeftsfallDaten, 'a')}
+            <div style="margin-top:8px;"></div>
+            ${verkaufErstelleRechnungButton(i, geschaeftsfallDaten, 'b')}
+        `;
+    } else if (verkaufGetModus() === 'verkaufDifferenzkalkulation') {
+        // Kundenanfrage per Mail (der Kunde fragt an) + Ausgangsrechnung –
+        // beide einfach "1." nummeriert (kein a/b/c)
+        buttonDiv.innerHTML = `
+            ${verkaufErstelleMailButton(i, geschaeftsfallDaten)}
+            <div style="margin-top:8px;"></div>
+            ${verkaufErstelleRechnungButton(i, geschaeftsfallDaten, '')}
         `;
     } else {
         // Alle anderen Fälle → (vorerst) nur Rechnung
@@ -855,6 +880,66 @@ function verkaufParseNumericValue(value) {
         .replace(/\./g, '')
         .replace(',', '.');
 }
+
+// Mailtext der Kundenanfrage (Differenzkalkulation): höfliche Anfrage,
+// in der der Kunde Listenpreis, ggf. Rabatt und Skonto nennt.
+// Mit Fertigerzeugnis: "450 Mountainbike" (ohne "Stück").
+// Ohne Fertigerzeugnis: "450 Stück".
+function verkaufBaueKundenanfrageText(daten) {
+    const menge = parseInt(daten.menge, 10);
+    const mengeText = daten.produkt
+        ? (menge > 0 ? `${menge} ` : '') // "Stück" entfällt bei hinterlegtem Fertigerzeugnis
+        : (menge > 0 ? `${menge} Stück ` : '');
+    const einheitText = (daten.produkt && daten.einheit && daten.einheit !== 'Stück') ? `${daten.einheit} ` : '';
+    const produkt = daten.produktName || 'Fertigerzeugnisse';
+    const gesamtliefer = menge > 0 ? ' für die gesamte Lieferung' : '';
+
+    let text = `wir möchten ${mengeText}${einheitText}${produkt} bei Ihnen bestellen und bitten Sie höflich um ein Angebot. `;
+    if (daten.produkt && parseFloat(daten.einzelpreis) > 0) {
+        // Mit Fertigerzeugnis: realistischer Listenpreis je Stück
+        text += `Ihrer Preisliste entnehmen wir einen Listenpreis von ${formatCurrency(daten.einzelpreis)} je Stück, den wir gerne zahlen würden. `;
+    } else {
+        text += `Ihrer Preisliste entnehmen wir einen Listenpreis von ${daten.listenverkaufspreis || ''}${gesamtliefer}, den wir gerne zahlen würden. `;
+    }
+    if (parseFloat(verkaufParseNumericValue(daten.rabattSatz)) > 0) {
+        text += `Aufgrund der größeren Abnahmemenge bitten wir Sie um einen Rabatt von ${daten.rabattSatz} %. `;
+    }
+    if (parseFloat(verkaufParseNumericValue(daten.skontoSatz)) > 0) {
+        text += `Da wir unsere Rechnungen zuverlässig innerhalb der Skontofrist begleichen, würden wir ${daten.skontoSatz} % Skonto nutzen. `;
+    }
+    text += `Bitte senden Sie uns zeitnah ein passendes Angebot zu – wir freuen uns auf Ihre Rückmeldung.`;
+    return text;
+}
+
+// Mailtext des Angebots (Verkaufskalkulation): der Lieferer versendet das
+// Angebot an den Kunden mit Listenpreis, ggf. Rabatt und Skonto.
+// Mit Fertigerzeugnis: Listenpreis je Stück; ohne: Gesamtbetrag.
+function verkaufBaueAngebotText(daten) {
+    const menge = parseInt(daten.menge, 10);
+    const mengeText = daten.produkt
+        ? (menge > 0 ? `${menge} ` : '') // "Stück" entfällt bei hinterlegtem Fertigerzeugnis
+        : (menge > 0 ? `${menge} Stück ` : '');
+    const einheitText = (daten.produkt && daten.einheit && daten.einheit !== 'Stück') ? `${daten.einheit} ` : '';
+    const produkt = daten.produktName || 'Fertigerzeugnisse';
+    const gesamtliefer = menge > 0 ? ' für die gesamte Lieferung' : '';
+
+    let text = `vielen Dank für Ihre Anfrage. Gerne unterbreiten wir Ihnen ein Angebot über ${mengeText}${einheitText}${produkt}: `;
+    if (daten.produkt && parseFloat(daten.einzelpreis) > 0) {
+        // Mit Fertigerzeugnis: realistischer Listenpreis je Stück
+        text += `Der Listenpreis beträgt ${formatCurrency(daten.einzelpreis)} je Stück. `;
+    } else {
+        text += `Der Listenpreis beträgt ${daten.listenverkaufspreis || ''}${gesamtliefer}. `;
+    }
+    if (parseFloat(verkaufParseNumericValue(daten.rabattSatz)) > 0) {
+        text += `Bei dieser Abnahmemenge gewähren wir Ihnen einen Rabatt von ${daten.rabattSatz} %. `;
+    }
+    if (parseFloat(verkaufParseNumericValue(daten.skontoSatz)) > 0) {
+        text += `Bei Zahlung innerhalb der Skontofrist gewähren wir Ihnen ${daten.skontoSatz} % Skonto. `;
+    }
+    text += `Wir freuen uns auf Ihre Bestellung und stehen für Rückfragen gerne zur Verfügung.`;
+    return text;
+}
+
 function verkaufExtractProduktName(kontoCode) {
     // Hier kannst du später erweitern, wenn du mehrere Erlöskonten hast
     if (kontoCode.includes('5000')) return 'Fertigerzeugnisse';
@@ -864,8 +949,8 @@ function verkaufExtractProduktName(kontoCode) {
 function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
     const params = new URLSearchParams();
 
-    // Basis-Parameter
-    params.set('beleg', 'rechnung');   // oder 'ausgangsrechnung' – je nach deinem belege.html
+    // Beleg-Typ: Mail → E-Mail-Tab in belege.html, sonst Rechnungs-Tab
+    params.set('beleg', (typ === 'mail' || typ === 'mailangebot') ? 'email' : 'rechnung');
 
     // Vorlage je nach Typ
     let vorlage = null;
@@ -873,6 +958,10 @@ function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
         vorlage = 'angebot2.svg';     //
     } else if (typ === 'rechnung') {
         vorlage = 'template1.svg';   // ← anpassen!
+    } else if (typ === 'mail') {
+        vorlage = 'mail3.html';      // Klassische Mail-Vorlage (Kundenanfrage)
+    } else if (typ === 'mailangebot') {
+        vorlage = 'mail3.html';      // Klassische Mail-Vorlage (Angebot des Lieferers)
     }
 
     if (vorlage) {
@@ -880,6 +969,50 @@ function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
     }
 
     // ── Verkaufsspezifische Parameter ───────────────────────────────────────
+    if (typ === 'mail' || typ === 'mailangebot') {
+        // Mail-Fälle:
+        //  mail        → Kundenanfrage (Differenzkalkulation): der Kunde fragt an
+        //  mailangebot → Angebot (Verkaufskalkulation): der Lieferer versendet das Angebot
+        const kundeSelectM   = document.getElementById('einkaufKaeufer');
+        const liefererSelectM = document.getElementById('einkaufLieferer');
+
+        let kundeName = (kundeSelectM?.value || '').trim();
+        if (!kundeName && kundeSelectM) {
+            // Keine Kundenwahl: zufälliges echtes Kundenunternehmen einsetzen
+            const echteKunden = [...kundeSelectM.options].filter(o => o.value.trim());
+            if (echteKunden.length) {
+                const opt = echteKunden[Math.floor(Math.random() * echteKunden.length)];
+                kundeName = opt.value.trim();
+                kundeSelectM.value = kundeName;
+            }
+        }
+
+        let firmaName = (liefererSelectM?.value || '').trim();
+        if (!firmaName && liefererSelectM) {
+            const echteFirmen = [...liefererSelectM.options].filter(o => o.value.trim());
+            if (echteFirmen.length) firmaName = echteFirmen[0].value.trim();
+        }
+
+        // Richtung: Anfrage = Kunde → Firma; Angebot = Firma → Kunde
+        if (typ === 'mail') {
+            if (kundeName) params.set('absender',   kundeName);
+            if (firmaName) params.set('empfaenger', firmaName);
+        } else {
+            if (firmaName) params.set('absender',   firmaName);
+            if (kundeName) params.set('empfaenger', kundeName);
+        }
+
+        // Betreff: Angebot + Fertigerzeugnis
+        const produktName = geschaeftsfallDaten.produktName || 'Fertigerzeugnisse';
+        params.set('betreff', `Angebot ${produktName}`);
+
+        // Mailtext: Anfrage vom Kunden bzw. Angebot vom Lieferer
+        params.set('text', typ === 'mail'
+            ? verkaufBaueKundenanfrageText(geschaeftsfallDaten)
+            : verkaufBaueAngebotText(geschaeftsfallDaten));
+        return `belege.html?${params.toString()}`;
+    }
+
      if (geschaeftsfallDaten.menge && geschaeftsfallDaten.einzelpreis) {
         params.set('einzelpreis1', String(geschaeftsfallDaten.einzelpreis));
     } else if (geschaeftsfallDaten.listenverkaufspreis) {
@@ -936,27 +1069,55 @@ const url = verkaufErzeugeURLFuerBeleg(daten, 'rechnung');
     `;
 }
 
-function verkaufErstelleAngebotButton(nummer, daten) {
+function verkaufErstelleAngebotButton(nummer, daten, buchstabe = 'a') {
     const url = verkaufErzeugeURLFuerBeleg(daten, 'angebot');
-    
+
     return `
         <button class="geschaeftsfall-beleg-button angebot-button"
                 onclick="window.open('${url}', '_blank')"
                 title="Angebot für Aufgabe ${nummer} erstellen"
                 style="width: 100%; padding: 10px 12px; font-size: 14px;">
-            📄 ${nummer}a. Angebot erstellen
+            📄 ${nummer}${buchstabe}. Angebot erstellen
         </button>
     `;
 }
 
-function verkaufErstelleRechnungButton(nummer, daten) {
+// Kundenanfrage als Mail-Beleg (Differenzkalkulation): Der Kunde fragt
+// höflich per Mail an und nennt Listenpreis, ggf. Rabatt und Skonto.
+// Kennzeichnung: einfach "1" (kein a/b/c), wie der Rechnungs-Beleg daneben.
+function verkaufErstelleMailButton(nummer, daten) {
+    const url = verkaufErzeugeURLFuerBeleg(daten, 'mail');
+    return `
+        <button class="geschaeftsfall-beleg-button mail-button"
+                onclick="window.open('${url}', '_blank')"
+                title="Anfrage-Mail des Kunden für Aufgabe ${nummer} öffnen"
+                style="width:100%; padding:10px 12px; font-size:14px;">
+            📧 ${nummer}. Anfrage per Mail (Kunde)
+        </button>
+    `;
+}
+
+// Angebots-Mail (Verkaufskalkulation): der Lieferer versendet das Angebot an den Kunden
+function verkaufErstelleAngebotMailButton(nummer, daten) {
+    const url = verkaufErzeugeURLFuerBeleg(daten, 'mailangebot');
+    return `
+        <button class="geschaeftsfall-beleg-button angebot-mail-button"
+                onclick="window.open('${url}', '_blank')"
+                title="Angebot-Mail des Lieferers für Aufgabe ${nummer} öffnen"
+                style="width:100%; padding:10px 12px; font-size:14px;">
+            📧 ${nummer}a. Angebot per Mail (Lieferer)
+        </button>
+    `;
+}
+
+function verkaufErstelleRechnungButton(nummer, daten, buchstabe = 'b') {
     const url = verkaufErzeugeURLFuerBeleg(daten, 'rechnung');
     return `
         <button class="geschaeftsfall-beleg-button rechnung-button"
                 onclick="window.open('${url}', '_blank')"
                 title="Ausgangsrechnung für Aufgabe ${nummer} erstellen"
                 style="width:100%; padding:10px 12px; font-size:14px;">
-            📄 ${nummer}b. Ausgangsrechnung erstellen
+            📄 ${nummer}${buchstabe}. Ausgangsrechnung erstellen
         </button>
     `;
 }

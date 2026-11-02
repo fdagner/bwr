@@ -114,14 +114,8 @@ let bestellChart = null;
   function baueAufgabe() {
     const d = leseDaten();
     if (!d) return '';
+    const variante = ($('bmVariante') && $('bmVariante').value) || '1';
     const u = (yamlData[$('bmUnternehmen').value] || yamlData[0]).unternehmen;
-    const inhaber = (typeof u.inhaber === 'string' && u.inhaber.trim()) || neuePerson([]);
-    if (!personen || personen.inhaber !== inhaber) personen = { inhaber, a: '', b: '' };
-    if (!personen.a) {
-      personen.a = neuePerson([inhaber]);
-      personen.b = neuePerson([inhaber, personen.a]);
-    }
-    const { a, b } = personen;
 
     // Rohstoff: erster Eintrag unter werkstoffe.AWR, sonst allgemein "Rohstoffeinheiten"
     const awr = u.werkstoffe && Array.isArray(u.werkstoffe.AWR) ? u.werkstoffe.AWR : [];
@@ -130,6 +124,34 @@ let bestellChart = null;
 
     const firma = `${u.name} ${u.rechtsform || ''}`.trim();
     const ort = u.adresse && u.adresse.ort ? ` in ${u.adresse.ort}` : '';
+
+    // ── Variante 2: nur Diagramm – optimale Bestellmenge ablesen ──────────
+    if (variante === '2') {
+      return `<div id="bmAufgabe" style="${S.box}">
+<h2 style="${S.h2}">Aufgabe – Optimale Bestellmenge (Diagramm)</h2>
+<p style="${S.p}">Es liegt folgende Grafik vor.</p>
+<p style="${S.p}"><strong>Arbeitsauftrag:</strong> Ermittle aus dem Diagramm die optimale Bestellmenge.</p>
+</div>`;
+    }
+
+    // ── Variante 3: nur Tabelle – optimale Bestellmenge ermitteln ─────────
+    if (variante === '3') {
+      return `<div id="bmAufgabe" style="${S.box}">
+<h2 style="${S.h2}">Aufgabe – Optimale Bestellmenge (Tabelle)</h2>
+<p style="${S.p}">Es liegt folgende Tabelle vor.</p>
+<p style="${S.p}"><strong>Arbeitsauftrag:</strong> Ermittle aus der Tabelle die optimale Bestellmenge und die optimale Bestellhäufigkeit.</p>
+</div>`;
+    }
+
+    // ── Variante 1: Interview (bisherig) ──────────────────────────────────
+    const inhaber = (typeof u.inhaber === 'string' && u.inhaber.trim()) || neuePerson([]);
+    if (!personen || personen.inhaber !== inhaber) personen = { inhaber, a: '', b: '' };
+    if (!personen.a) {
+      personen.a = neuePerson([inhaber]);
+      personen.b = neuePerson([inhaber, personen.a]);
+    }
+    const { a, b } = personen;
+
     const rede = (name, text) => `<p style="${S.p}"><strong>${esc(name)}:</strong> „${text}“</p>`;
 
     return `<div id="bmAufgabe" style="${S.box}">
@@ -265,7 +287,17 @@ function generiereContainer() {
 
     lagerkostenElement.innerText = formatCurrency(lagerkosten);
     bedarfElement.innerText = formatNumberWithSpace(bedarf);
-    ContainerElement.innerHTML = '<h3>Tabelle</h3>';
+
+    // Fall-Typ: 2 = nur Diagramm (keine Tabelle im Container), 3 = nur Tabelle
+    const fallTyp = (document.getElementById('bmVariante') || {}).value || '1';
+    ContainerElement.innerHTML = (fallTyp === '2') ? '' : '<h3>Tabelle</h3>';
+
+    // Kein Tabellenaufbau bei "nur Diagramm" – Diagramm-PNG wird über
+    // drawChart → aktualisiereDiagrammPng() unter die Aufgabe gesetzt
+    if (fallTyp === '2') {
+        drawChart([]);
+        return;
+    }
 
     // Input-Feldwerte abrufen
     const bestellkosten = parseInt(document.getElementById('bestellkosten').value, 10);
@@ -352,7 +384,9 @@ function generiereContainer() {
     ContainerElement.appendChild(table);
 
     drawChart(werteArray);
-    aktualisiereLoesung();
+    // Die Lösung wird NICHT hier erzeugt, sondern erst nach dem Rendern des
+    // Diagramms in aktualisiereDiagrammPng() – sonst steht die Lösung doppelt
+    // und das Diagramm läge zwischen den beiden Lösungen.
 }
 
 function drawChart(werteArray) {
@@ -382,6 +416,8 @@ function drawChart(werteArray) {
         bestellkostenData.push(parseFloat(bestellkostenGesamt));
         gesamtkostenData.push(parseFloat(gesamtkosten));
     }
+
+    const lastIdx = Math.max(0, labels.length - 1);  // Endpunkt der Linien für die Direkt-Bezeichnung
 
     // ApexCharts konfigurieren
     let ychartmax = roundUpToNearest((optimaleBestellhaeufigkeit * bestellkosten + optimaleBestellmenge / 2 * lagerkosten) * 3);
@@ -442,10 +478,13 @@ function drawChart(werteArray) {
                 data: gesamtkostenData,
             }
         ],
+        // Farben dunkel (drucker-/ kopierfest), Linien mit unterscheidbaren Mustern:
+        // Lagerhaltungskosten gestrichelt, Bestellkosten gepunktet, Gesamtkosten durchgezogen
+        colors: ['#1F4E79', '#C00000', '#262626'],
         stroke: {
-            width: 4,
+            width: 5,
             curve: 'straight',
-
+            dashArray: [10, 2, 0],
         },
         xaxis: {
             categories: labels,
@@ -510,11 +549,17 @@ function drawChart(werteArray) {
             }
         },
         legend: {
-            position: 'top',                      // Legende nach oben verschieben
-            horizontalAlign: 'center',            // Horizontal zentrieren
-            verticalAlign: 'top',                 // Vertikal oben ausrichten
-            floating: true,                       // Floatet die Legende oben über dem Diagramm
-            markers: { size: 10 }                 // Sichtbare Legende – ohne Klick-Ausblendung (Pointer-events via CSS aus)
+            show: false                           // Bezeichnungen stehen direkt an den Linien (siehe annotations)
+        },
+        // Bezeichnung direkt an der Linie (Endpunkt als Punkt-Annotation) –
+        // weißer Hintergrund, damit keine Linie den Text durchbricht; auch für
+        // kopierte schwarz-weiß-Versionen eindeutig (gestrichelt/gepunktet/durchgezogen)
+        annotations: {
+            points: [
+                { x: labels[lastIdx], y: parseFloat(lagerhaltungskostenData[lastIdx]), marker: { size: 0 }, label: { text: 'Lagerhaltungskosten', textAnchor: 'end', offsetX: -12, offsetY: 24, borderColor: 'transparent', borderWidth: 0, style: { background: '#fff9c4', color: '#1F4E79', fontSize: '15px', fontWeight: 700, fontFamily: 'Arial, Helvetica, sans-serif', padding: { left: 6, right: 6, top: 2, bottom: 2 } } } },
+                { x: labels[lastIdx], y: parseFloat(bestellkostenData[lastIdx]), marker: { size: 0 }, label: { text: 'Bestellkosten', textAnchor: 'end', offsetX: -12, offsetY: -18, borderColor: 'transparent', borderWidth: 0, style: { background: '#fff9c4', color: '#C00000', fontSize: '15px', fontWeight: 700, fontFamily: 'Arial, Helvetica, sans-serif', padding: { left: 6, right: 6, top: 2, bottom: 2 } } } },
+                { x: labels[lastIdx], y: parseFloat(gesamtkostenData[lastIdx]), marker: { size: 0 }, label: { text: 'Gesamtkosten', textAnchor: 'end', offsetX: -12, offsetY: -8, borderColor: 'transparent', borderWidth: 0, style: { background: '#fff9c4', color: '#262626', fontSize: '15px', fontWeight: 700, fontFamily: 'Arial, Helvetica, sans-serif', padding: { left: 6, right: 6, top: 2, bottom: 2 } } } }
+            ]
         },
     };
     // Entferne den Inhalt des Containers und erstelle das Diagramm neu
@@ -523,34 +568,89 @@ function drawChart(werteArray) {
     chartContainer.innerHTML = "";
 
     bestellChart = new ApexCharts(chartContainer, options);
-    bestellChart.render().then(aktualisiereDiagrammPng).catch(err => console.error('Diagramm-Fehler:', err));
+    bestellChart.render()
+        // Verzögerung: ApexCharts zeichnet die Annotation-Labels erst nach dem
+        // auflösen des render()-Promises – sonst fehlen die Bezeichnungen im PNG
+        .then(() => new Promise(warten => setTimeout(warten, 1200)))
+        .then(aktualisiereDiagrammPng)
+        .catch(err => {
+            console.error('Diagramm-Fehler:', err);
+            aktualisiereDiagrammPng(); // Lösung auch ohne Diagramm erzeugen
+        });
 
     //~Ansichtsoptionen aus: Legende nur informativ (kein Ein-/Ausblende-Klick)
     chartContainer.style.position = 'relative';
-    let pe = chartContainer.querySelector('style.peDis');
-    if (!pe) {
-        pe = document.createElement('style');
-        pe.className = 'peDis';
-        pe.textContent = '#chart .apexcharts-legend{text-align:center;pointer-events:none;cursor:default!important;} ' +
-            '#chart .apexcharts-toolbar .apexcharts-zoom-icon, #chart .apexcharts-toolbar .apexcharts-zoomin-icon, #chart .apexcharts-toolbar .apexcharts-zoomout-icon, #chart .apexcharts-toolbar .apexcharts-pan-icon, #chart .apexcharts-toolbar .apexcharts-reset-zoom-icon{display:none!important;}';
-        chartContainer.appendChild(pe);
-    }
 }
+
+// Die Ansichtsoptionen (Legende aus, Export-Werkzeuge bleiben) nach dem
+// Rendern in das Chart-DOM einsetzen – ApexCharts baut den Container-Inhalt
+// beim Rendern neu auf, darum mehrfach/prüfen.
+// Rastert das LIVE-SVG des Diagramms zu einem PNG-Daten-URI – im Gegensatz zu
+// dataURI() bleiben die Annotation-Label-Texte (Bezeichnungen an den Linien)
+// garantiert erhalten, weil genau das gerenderte SVG als Vorlage dient.
+function svgElementNachPng(svgEl, skalierung) {
+    return new Promise((aufs, fehler) => {
+        try {
+            const mass = svgEl.getBoundingClientRect();
+            const breite = Math.round(mass.width || svgEl.clientWidth || 800);
+            const hoehe = Math.round(mass.height || svgEl.clientHeight || 480);
+            const klon = svgEl.cloneNode(true);
+            klon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            klon.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+            klon.setAttribute('width', String(breite));
+            klon.setAttribute('height', String(hoehe));
+            if (!klon.getAttribute('viewBox')) klon.setAttribute('viewBox', '0 0 ' + breite + ' ' + hoehe);
+            let quelltext = '';
+            if (typeof XMLSerializer === 'function') quelltext = new XMLSerializer().serializeToString(klon);
+            const bildSvg = new Image();
+            bildSvg.onload = () => {
+                const leinwand = document.createElement('canvas');
+                leinwand.width = Math.round(breite * skalierung);
+                leinwand.height = Math.round(hoehe * skalierung);
+                const cx = leinwand.getContext('2d');
+                cx.fillStyle = '#ffffff';
+                cx.fillRect(0, 0, leinwand.width, leinwand.height);
+                cx.drawImage(bildSvg, 0, 0, leinwand.width, leinwand.height);
+                aufs(leinwand.toDataURL('image/png'));
+            };
+            bildSvg.onerror = fehler;
+            bildSvg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(quelltext);
+        } catch (e) { fehler(e); }
+    });
+}
+
+(function () {
+    // Legende aus + Export-Werkzeuge beibehalten – im <head>, damit ApexCharts
+    // den Stil bei jedem DOM-Neuaufbau nicht wieder entfernen kann
+    window.chartStilSetzen = function () {
+        if (document.getElementById('chartStil')) return;
+        const pe = document.createElement('style');
+        pe.id = 'chartStil';
+        pe.textContent = '#chart .apexcharts-legend{display:none!important;} ' +
+            '#chart .apexcharts-toolbar .apexcharts-zoom-icon, #chart .apexcharts-toolbar .apexcharts-zoomin-icon, #chart .apexcharts-toolbar .apexcharts-zoomout-icon, #chart .apexcharts-toolbar .apexcharts-pan-icon, #chart .apexcharts-toolbar .apexcharts-reset-zoom-icon{display:none!important;}';
+        document.head.appendChild(pe);
+    };
+})();
 
 // Diagramm als PNG unter die Tabelle im Container setzen (oder wieder entfernen)
 function aktualisiereDiagrammPng() {
     const container = document.getElementById('Container');
     if (!container) return;
 
-    const alt = document.getElementById('diagrammPng');
-    if (alt) alt.remove();
+    window.chartStilSetzen();
+
+    // Alle vorhandenen Diagramm-Kopien entfernen (auch im Editor-Layer)
+    document.querySelectorAll('#diagrammPng').forEach(el => el.remove());
+
+    // Fall-Typ 3 ("nur Tabelle"): kein Diagramm im Container
+    const fallTyp = (document.getElementById('bmVariante') || {}).value || '1';
+    if (fallTyp === '3') { aktualisiereLoesung(); return; }
 
     const cb = document.getElementById('chartAlsPng');
     if (!cb || !cb.checked || !bestellChart) { aktualisiereLoesung(); return; }
 
-    bestellChart.dataURI({ scale: 2 }).then(({ imgURI }) => {
-        const doppelt = document.getElementById('diagrammPng');
-        if (doppelt) doppelt.remove();
+    bestellChart.dataURI({ scale: 1 }).then(({ imgURI }) => {
+        document.querySelectorAll('#diagrammPng').forEach(d => d.remove());
 
         const img = document.createElement('img');
         img.src = imgURI;
@@ -562,9 +662,17 @@ function aktualisiereDiagrammPng() {
         div.id = 'diagrammPng';
         div.innerHTML = '<br><h3>Diagramm</h3>';
         div.appendChild(img);
-        container.appendChild(div);
+
+        // Diagramm direkt unter die Tabelle setzen (nicht ans Container-Ende,
+        // sonst steht es hinter bzw. zwischen den Lösungen)
+        const tabelle = container.querySelector('table');
+        if (tabelle) tabelle.after(div); else container.appendChild(div);
+        window.chartStilSetzen();
         aktualisiereLoesung();
-    }).catch(err => console.error('PNG konnte nicht erstellt werden:', err));
+    }).catch(err => {
+        console.error('PNG konnte nicht erstellt werden:', err);
+        aktualisiereLoesung();
+    });
 }
 
 // Lösung ans Ende des Containers setzen (unter Aufgabe, Tabelle und Diagramm)
@@ -572,8 +680,9 @@ function aktualisiereLoesung() {
     const container = document.getElementById('Container');
     if (!container) return;
 
-    const alt = document.getElementById('bmLoesung');
-    if (alt) alt.remove();
+    // ALLE vorhanden-Lösungen entfernen (auch Kopien im Editor-Layer),
+    // damit die Lösung nie doppelt erscheint
+    document.querySelectorAll('#bmLoesung').forEach(el => el.remove());
 
     const menge = parseInt(document.getElementById('optimaleBestellmenge').value, 10);
     const haeuf = parseInt(document.getElementById('optimaleBestellhaeufigkeit').value, 10);
@@ -590,7 +699,27 @@ function aktualisiereLoesung() {
     const p = 'margin:0 0 8px 0;';
     const div = document.createElement('div');
     div.id = 'bmLoesung';
-    div.innerHTML = `
+
+    const fallTyp = (document.getElementById('bmVariante') || {}).value || '1';
+    if (fallTyp === '2') {
+        // Nur Diagramm: Lösung verweist auf das Ablesen aus der Grafik –
+        // nur die Bestellmenge ist ablesbar, keine Bestellhäufigkeit
+        div.innerHTML = `
+<h2 style="font-size:1.3em;" class="loesung">Lösung</h2>
+<p style="${p}"><strong>Optimale Bestellmenge laut Diagramm</strong></p>
+<p style="${p}">Aus dem Diagramm ergibt sich eine optimale Bestellmenge von <strong>${formatNumberWithSpace(menge)} Stück</strong>. An dieser Stelle schneiden sich die Kurven für Bestellkosten und Lagerkosten – beide Kostenarten sind hier gleich hoch. An der Kostenachse ist ablesbar, dass die Gesamtkosten an dieser Bestellmenge ihren niedrigsten Wert haben; bei jeder größeren oder kleineren Bestellmenge steigen die Gesamtkosten.</p>
+<p style="${p}"><strong>Begründung</strong></p>
+<p style="${p}">Mit steigender Bestellmenge sinken die Bestellkosten, da weniger Bestellungen nötig sind. Gleichzeitig steigen die Lagerkosten, weil der durchschnittliche Lagerbestand (Bestellmenge : 2) größer wird. Die Gesamtkosten fallen zunächst, erreichen ihr Minimum am Schnittpunkt beider Kurven und steigen danach wieder an. Die optimale Bestellmenge liegt genau an diesem Schnittpunkt.</p>`;
+    } else if (fallTyp === '3') {
+        // Nur Tabelle: Lösung verweist auf das Ermitteln aus der Tabelle
+        div.innerHTML = `
+<h2 style="font-size:1.3em;" class="loesung">Lösung</h2>
+<p style="${p}"><strong>Optimale Bestellmenge laut Tabelle</strong></p>
+<p style="${p}">Aus der Tabelle ergibt sich eine optimale Bestellmenge von <strong>${formatNumberWithSpace(menge)} Stück</strong> bei <strong>${haeuf} Bestellungen</strong> im Jahr (Jahresbedarf ${formatNumberWithSpace(bedarfL)} Stück), weil die Gesamtkosten hier mit <strong>${formatCurrency(gesamt)}</strong> am niedrigsten sind. Bestellkosten (${formatCurrency(bestellGes)}) und Lagerkosten (${formatCurrency(lagerGes)}) sind an dieser Stelle (ungefähr) gleich hoch.</p>
+<p style="${p}"><strong>Begründung</strong></p>
+<p style="${p}">Bei kleinen Bestellmengen übersteigen die hohen Bestellkosten die Einsparungen bei den Lagerkosten, bei großen Bestellmengen kehren sich die Größenverhältnisse um. Die Gesamtkosten sind genau dort am niedrigsten, wo beide Kostenarten (ungefähr) gleich hoch sind – also bei der optimalen Bestellmenge.</p>`;
+    } else {
+        div.innerHTML = `
 <h2 style="font-size:1.3em;" class="loesung">Lösung</h2>
 <p style="${p}"><strong>1. Zielkonflikt</strong></p>
 <p style="${p}">Bestellt das Unternehmen selten, aber in großen Mengen, sinken die Bestellkosten, weil nur wenige Bestellungen anfallen. Gleichzeitig steigt der durchschnittliche Lagerbestand und damit steigen die Lagerkosten. Bestellt es dagegen oft kleine Mengen, sind die Lagerkosten niedrig, aber die Bestellkosten hoch. Beide Kostenarten verhalten sich gegenläufig. Ziel ist es, die Bestellmenge zu finden, bei der die Gesamtkosten am niedrigsten sind.</p>
@@ -598,6 +727,7 @@ function aktualisiereLoesung() {
 <p style="${p}">Mit steigender Bestellmenge sinken die Bestellkosten, da weniger Bestellungen nötig sind. Die Lagerhaltungskosten steigen dagegen gleichmäßig an, da der durchschnittliche Lagerbestand (Bestellmenge : 2) größer wird. Die Gesamtkosten sind die Summe beider Kurven. Sie fallen zunächst, erreichen ein Minimum und steigen dann wieder an. Das Minimum der Gesamtkosten liegt genau im Schnittpunkt der Kurven für Bestellkosten und Lagerhaltungskosten.</p>
 <p style="${p}"><strong>3. Optimale Bestellmenge</strong></p>
 <p style="${p}">Die optimale Bestellmenge beträgt <strong>${formatNumberWithSpace(menge)} Stück</strong> bei <strong>${haeuf} Bestellungen</strong> im Jahr. In der Tabelle sind hier die Gesamtkosten mit <strong>${formatCurrency(gesamt)}</strong> am niedrigsten. Bestellkosten (${formatCurrency(bestellGes)}) und Lagerkosten (${formatCurrency(lagerGes)}) sind (ungefähr) gleich hoch. In der Grafik liegt das Minimum der Gesamtkosten beim Schnittpunkt der Kurven für Bestell- und Lagerhaltungskosten.</p>`;
+    }
     container.appendChild(div);
 
     // Editor initialisieren (einmalig), sobald die Aufgabe vollständig steht
@@ -606,6 +736,14 @@ function aktualisiereLoesung() {
     if (window.JoditEditor && !container._jodit) {
         container.setAttribute('data-jodit-init', '1');
         try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+    } else if (container._jodit && container._jodit.editor && container._jodit.editor.isConnected) {
+        // Bereits übernommen: Inhalt sofort in den Editor übernehmen, damit
+        // die Lösung nie doppelt erscheint (sonst synchronisiert der
+        // MutationObserver 300 ms später noch mal aus einem veralteten Stand)
+        try {
+            container._jodit.value = container.innerHTML;
+            container._joditSrc = container.innerHTML;
+        } catch (e) { console.warn('Editor-Sync fehlgeschlagen', e); }
     }
 }
 

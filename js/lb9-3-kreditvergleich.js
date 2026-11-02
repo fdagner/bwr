@@ -362,6 +362,17 @@ function zeigeZufaelligenSatz() {
   zeigeValidierungsFehler(validierung.errors);
   if (!validierung.valid) return;
 
+  const variante = parseInt(document.getElementById('kkVariante')?.value) || 2;
+  // B-Feld ausblenden, wenn nur Angebot A (Hausbank) berechnet wird
+  const feldB = document.getElementById('kkFeldB');
+  if (feldB) feldB.style.display = (variante === 1) ? 'none' : '';
+
+  // Legenden der Eingabefelder (oben) an den Fall-Typ anpassen
+  const legendeA = document.querySelector('#kkFeldA legend');
+  if (legendeA) legendeA.textContent = (variante === 1) ? ' Angebot A – zum Berechnen' : ' Angebot A – vorgegeben';
+  const legendeB = document.querySelector('#kkFeldB legend');
+  if (legendeB) legendeB.textContent = ' Angebot B – zum Berechnen';
+
   const container = document.getElementById('Container');
   letzteGenerierteGfListeEinkauf = [];
 
@@ -408,17 +419,24 @@ function zeigeZufaelligenSatz() {
 <div style="${S.karte}">
   <div style="${S.karteTitel}">Angebot A</div>
   <div style="${S.liefererLabel}">Bank: <strong>${nameA}</strong></div>
-  <table style="${S.kalkTable}">${zeilenAufgabe(kalkA, `<strong>${fmtEffektiv(kalkA.effektiv)}</strong>`)}</table>
+  <table style="${S.kalkTable}">${zeilenAufgabe(kalkA, variante === 1 ? '<strong>?</strong>' : `<strong>${fmtEffektiv(kalkA.effektiv)}</strong>`)}</table>
 </div>`;
 
-  const karteB_aufgabe = `
+  const karteB_aufgabe = (variante === 1) ? '' : `
 <div style="${S.karteAufgabe}">
   <div style="${S.karteTitel}">Angebot B</div>
   <div style="${S.liefererLabel}">Bank: <strong>${nameB}</strong></div>
   <table style="${S.kalkTable}">${zeilenAufgabe(kalkB, '<strong>?</strong>')}</table>
 </div>`;
 
-  const aufgabeHtml = `
+  const aufgabeHtml = (variante === 1) ? `
+<h2 style="${S.h2}">Aufgabe – Effektiver Zinssatz</h2>
+<div style="${S.aufgabeBox}">
+  <p>${nehmer} benötigt ein Darlehen über ${formatCurrency(kredit)} bei der Hausbank <i>${nameA}</i> (Laufzeit ${fmtZahl(tage, 0, 0)} Tage).</p>
+  <ol style="${S.aufgabeOl}">
+    <li style="${S.aufgabeLi}">Berechne den effektiven Zinssatz des Darlehensangebots der <i>${nameA}</i>.</li>
+  </ol>
+</div>` : `
 <h2 style="${S.h2}">Aufgabe – Kreditvergleich</h2>
 <div style="${S.aufgabeBox}">
   <p>${nehmer} benötigt ein Darlehen über ${formatCurrency(kredit)} und holt zwei Kreditangebote ein:</p>
@@ -497,7 +515,10 @@ function loesungKarte(brief, bank, kal, guenstig) {
 </div>
 <div style="${S.fazitViolett}"><strong>Hinweis:</strong> ${hinweisText}</div>`;
 
-  const loesungHtml = `
+  const loesungHtml = (variante === 1) ? `
+<h2 style="${S.h2}" class="loesung">Lösung</h2>
+<h3 style="${S.h3}">Aufgabe – Effektiver Zinssatz ${nameA}</h3>
+<div style="${S.kartenGrid}">${karteA_loesung}</div>` : `
 <h2 style="${S.h2}" class="loesung">Lösung</h2>
 <h3 style="${S.h3}">Aufgabe 1 – Effektiver Zinssatz Angebot B (${nameB})</h3>
 <div style="${S.kartenGrid}">${karteA_loesung}${karteB_loesung}</div>
