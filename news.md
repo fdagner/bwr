@@ -3,8 +3,8 @@
 - [neu] **Belege-Sammlung** – Belege können in einer Sammlung gespeichert, gesichert und wieder bearbeitet werden. [+ Sammlung](sammlung.html)
 - [neu] **Texteditor** – Rich-Text-Editor in Aufgabenbereichen mit Formatierung, Beleg-Einfügen aus der Sammlung, Kopierfunktion, Druck und HTML-Export.
 - [update] **Belege: Komplettüberarbeitung der Vorlagen für Mail**
-- [update] **Lohn- und Gehaltsabrechung** - Neue Vorlage Ausbildungsvergütung; Berücksichtigung aktueller Werte von Mindestausbildungsvergütung, Beitragsbemessungsgrenzen und Freibeträgen [Lohn-/Gehaltsjournal](belege.html?beleg=lohnabrechnung)
-- [update] **Zinsberechnung** - Berücksichtigen des Hauptrefinanzierungssatzes bei Zinsangaben im Kreidtbereich. [Kreditvergleich](lb9-3-kreditvergleich.html)  
+- [update] **Lohn- und Gehaltsabrechung** - Neue Vorlage Ausbildungsvergütung; Berücksichtigung aktueller Werte von Mindestausbildungsvergütung, Beitragsbemessungsgrenzen und Freibeträgen [Lohn-/Gehaltsabrechnung](belege.html?beleg=lohnabrechnung)
+- [update] **Zinsberechnung** - Berücksichtigen des Hauptrefinanzierungssatzes bei Zinsangaben im Kreditbereich. [Kreditvergleich](lb9-3-kreditvergleich.html)  
 - [Info] **Export-Buttons** – Alle Icon-Buttons wurden durch sprechende Text-Buttons (z. B. PNG, SVG, HTML-Code, Moodle-Fragetyp...) ersetzt.
 - [info] **Neue Datenbank für Unternehmen** – Die Datenbank wurde neu strukturiert. Bitte Daten zurücksetzen und eigene Unternehmen daran anpassen. 
 

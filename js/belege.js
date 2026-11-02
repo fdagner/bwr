@@ -416,39 +416,142 @@ function loadLogoToSVG(logoUrl, svgContainerId, placeholderId) {
 
     if (!svgContainer || !rectElement) return;
 
-    // Entferne vorhandene Logos
-    const existingImages = svgContainer.querySelectorAll('#uploaded-image');
-    existingImages.forEach(img => img.remove());
+    const NS = 'http://www.w3.org/2000/svg';
+    const box = {
+        x: parseFloat(rectElement.getAttribute('x')) || 0,
+        y: parseFloat(rectElement.getAttribute('y')) || 0,
+        w: parseFloat(rectElement.getAttribute('width')) || 0,
+        h: parseFloat(rectElement.getAttribute('height')) || 0
+    };
 
-    const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-    image.setAttribute('id', 'uploaded-image');
-    image.setAttribute('x', rectElement.getAttribute('x'));
-    image.setAttribute('y', rectElement.getAttribute('y'));
-    image.setAttribute('width', rectElement.getAttribute('width'));
-    image.setAttribute('height', rectElement.getAttribute('height'));
+    // Vorherige Logo-Varianten entfernen
+    svgContainer.querySelectorAll('#uploaded-image, #uploaded-logo').forEach(el => el.remove());
 
     const standardImageURL = 'media/pic/standard.svg';
     const imageUrl = (logoUrl && logoUrl.trim() !== '') ? logoUrl : standardImageURL;
 
-    // Prüfe ob URL oder Data-URL
-    if (imageUrl.startsWith('http') || imageUrl.startsWith('data:image')) {
-        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', imageUrl);
+    // Fallback: Logo als <image> einbetten (contain, zentriert)
+    function bildeImageFallback(url) {
+        const image = document.createElementNS(NS, 'image');
+        image.setAttribute('id', 'uploaded-image');
+        image.setAttribute('x', box.x);
+        image.setAttribute('y', box.y);
+        image.setAttribute('width', box.w);
+        image.setAttribute('height', box.h);
+        image.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', url);
+        image.setAttribute('href', url);
         svgContainer.appendChild(image);
-    } else {
-        // Lade als Blob und konvertiere zu Base64
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-            const reader = new FileReader();
-            reader.onloadend = function () {
-                image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', reader.result);
-                svgContainer.appendChild(image);
-            };
-            reader.readAsDataURL(xhr.response);
+        const probe = new Image();
+        probe.onload = function () {
+            const iw = probe.naturalWidth, ih = probe.naturalHeight;
+            if (!iw || !ih) return;
+            const skala = Math.min(box.w / iw, box.h / ih);
+            const w = iw * skala, h = ih * skala;
+            image.setAttribute('width', w);
+            image.setAttribute('height', h);
+            image.setAttribute('x', box.x + (box.w - w) / 2);
+            image.setAttribute('y', box.y + (box.h - h) / 2);
         };
-        xhr.open('GET', imageUrl);
-        xhr.responseType = 'blob';
-        xhr.send();
+        probe.src = url;
     }
+
+    // Bevorzugt: Logo-Kindknoten inline in die Mail-SVG übernehmen.
+    // Eingebettete SVG-Dokumente (<image href=".svg">) clippen auf ihren EIGENEN
+    // ViewBox – viele Logos (z. B. lur.svg) malen aber mit Linienstärke über ihre
+    // deklarierte viewBox-Grenze hinaus, wodurch Kanten fehlen – auch im
+    // PNG-Export (html2canvas). Inline+transform entfällt dieser innere Clip.
+    // Die Kindknoten werden "hygienisiert": metadata/script raus, alle IDs mit
+    // Präfix (meinbwr-logo-) gedisst – inkl. Rückwärtsreferenzen url(#…)/#id –,
+    // und exakt per getBBox() in die Platzhalterbox eingepasst.
+    const LOGO_PRÄFIX = 'meinbwr-logo-';
+
+    function versucheInline(url) {
+        fetch(url).then(r => r.ok ? r.text() : Promise.reject(new Error('HTTP ' + r.status)))
+        .then(function (text) {
+            const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+            const inner = doc && doc.documentElement;
+            if (!inner || inner.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) {
+                return bildeImageFallback(url);
+            }
+            // deklarierte Maße als Fallback für die Einpassung
+            let vw = 0, vh = 0, vx = 0, vy = 0;
+            const vb = (inner.getAttribute('viewBox') || '').match(/(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/);
+            if (vb) { vx = +vb[1]; vy = +vb[2]; vw = +vb[3]; vh = +vb[4]; }
+            if (!vw || !vh) {
+                vw = parseFloat(inner.getAttribute('width')); vh = parseFloat(inner.getAttribute('height'));
+                vx = 0; vy = 0;
+            }
+            if (!vw || !vh) return bildeImageFallback(url);
+
+            const content = document.createElementNS(NS, 'g');
+            const aussen = document.createElementNS(NS, 'g');
+            aussen.setAttribute('id', 'uploaded-logo');
+            aussen.appendChild(content);
+            let kinder = 0;
+            Array.from(inner.childNodes).forEach(function (kind) {
+                if (kind.nodeType === 8) return;                     // Kommentar
+                const name = (kind.nodeName || '').toLowerCase();
+                if (name === 'metadata' || name === 'script') return; // Lizenz-Blobs etc.
+                content.appendChild(document.importNode(kind, true));
+                kinder++;
+            });
+            if (!kinder) return bildeImageFallback(url);
+
+            // IDs namespace-en und alle Referenzen auf sie mitziehen
+            (function namespaceIds(wurzel) {
+                const idMap = {};
+                [wurzel].concat(Array.from(wurzel.querySelectorAll('[id]'))).forEach(function (el) {
+                    const alt = el.getAttribute && el.getAttribute('id');
+                    if (alt && !idMap.hasOwnProperty(alt)) idMap[alt] = LOGO_PRÄFIX + alt;
+                });
+                // IDs tatsächlich umbenennen (Referenzen werden unten mitgezogen)
+                [wurzel].concat(Array.from(wurzel.querySelectorAll('[id]'))).forEach(function (el) {
+                    const alt = el.getAttribute('id');
+                    if (alt && idMap[alt]) el.setAttribute('id', idMap[alt]);
+                });
+                function ersetzeRefs(text) {
+                    if (!text || text.indexOf('#') === -1) return text;
+                    return String(text)
+                        .replace(/url\(\s*['"]?#([^\s'")]+)['"]?\s*\)/g, function (a, id) { return 'url(#' + (idMap[id] || id) + ')'; })
+                        .replace(/^#([A-Za-z_][\w:.-]*)$/, function (a, id) { return '#' + (idMap[id] || id); })
+                        .replace(/(^|[\s,{])#([A-Za-z_][\w:.-]*)/g, function (a, pre, id) { return pre + '#' + (idMap[id] || id); });
+                }
+                [wurzel].concat(Array.from(wurzel.querySelectorAll('*'))).forEach(function (el) {
+                    if (el.attributes) {
+                        Array.from(el.attributes).forEach(function (at) {
+                            const neu = ersetzeRefs(at.value);
+                            if (neu !== at.value) {
+                                if (at.namespaceURI) el.setAttributeNS(at.namespaceURI, at.name, neu);
+                                else el.setAttribute(at.name, neu);
+                            }
+                        });
+                    }
+                    if (el.nodeName && el.nodeName.toLowerCase() === 'style') {
+                        el.textContent = ersetzeRefs(el.textContent);
+                    }
+                });
+            })(content);
+
+            // Einpassung: exakte content-Grenzen messen, Fallback auf viewBox
+            svgContainer.appendChild(aussen);
+            let bb = null;
+            try {
+                const mess = content.getBBox();
+                if (mess && mess.width > 0 && mess.height > 0) bb = mess;
+            } catch (e) { /* nicht verlegbar/gerendert – Fallback unten */ }
+            if (!bb) bb = { x: vx, y: vy, width: vw, height: vh };
+            const zugabe = Math.max(bb.width, bb.height) * 0.025; // Linien-Überstand
+            const ew = bb.width + zugabe * 2, eh = bb.height + zugabe * 2;
+            const skala = Math.min(box.w / ew, box.h / eh);
+            const tx = box.x + (box.w - ew * skala) / 2 - (bb.x - zugabe) * skala;
+            const ty = box.y + (box.h - eh * skala) / 2 - (bb.y - zugabe) * skala;
+            aussen.setAttribute('transform', 'translate(' + tx + ' ' + ty + ') scale(' + skala + ')');
+        })
+        .catch(function () { bildeImageFallback(url); });
+    }
+
+    versucheInline(imageUrl);
 }
 
 // Hilfsfunktion für Handelsregister-Bestimmung
