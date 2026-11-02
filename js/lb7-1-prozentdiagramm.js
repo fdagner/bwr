@@ -534,6 +534,30 @@ function getSelectedGenerator() {
   return pick(aufgabenThemen);
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Jodit-Integration in #Container – Hilfsfunktionen (Muster lb10-4-gewinnschwelle)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// HTML in #Container schreiben: läuft schon ein Jodit-Editor, über
+// JoditEditor.setContent, damit Editor-Wert und Quelle synchron bleiben.
+function schreibeContainerHtml(container, html) {
+  if (window.JoditEditor && container._jodit) {
+    window.JoditEditor.setContent(container, html);
+  } else {
+    container.innerHTML = html;
+  }
+}
+
+// Jodit-Editor (einmalig) aktivieren, sobald das Aufgabenblatt vollständig steht.
+// data-jodit-init erlaubt den Adopt auch für Container mit generierten Bildern
+// (Diagramm-PNG) – joditeditor.js überspringt solche Container sonst (ApexCharts-Seite).
+function aktiviereContainerEditor(container) {
+  if (window.JoditEditor && !container._jodit) {
+    container.setAttribute('data-jodit-init', '1');
+    try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+  }
+}
+
 let renderZaehler = 0;
 let letzteProzentDaten = null;   // { aufgabe, imgURI, breite } für den Moodle-Export
 
@@ -565,7 +589,7 @@ function zeigeZufaelligeProzentAufgaben() {
       </div>`;
   });
 
-  container.innerHTML = `
+  let aufgabeHtml = `
       <h2 style="margin-top:0;">Prozentrechnen mit Diagramm</h2>
     <div id="diagramm-platzhalter" style="margin:0 0 1.5rem 0; min-height:60px; color:#888;">Diagramm wird erstellt …</div>
     <div style="padding:20px; background:white; border-radius:8px; margin-bottom:1.5rem;">
@@ -574,6 +598,10 @@ function zeigeZufaelligeProzentAufgaben() {
       </ol>
     </div>
     <div style="padding:20px;">${loesHtml}</div>`;
+
+  // Ausgabe: läuft schon ein Editor, über JoditEditor.setContent schreiben,
+  // damit Editor-Wert und Quelle synchron bleiben (Muster lb10-4-gewinnschwelle).
+  schreibeContainerHtml(container, aufgabeHtml);
 
   // ── Diagramm rendern, danach als PNG in den Platzhalter ──
   const exportName = (aufgabe.chartOptions.title?.text || "prozentrechnung")
@@ -606,21 +634,33 @@ function zeigeZufaelligeProzentAufgaben() {
       .then(() => chart.dataURI({ scale: 2 }))
       .then(({ imgURI }) => {
         if (mein !== renderZaehler) return;
-        const ziel = document.getElementById("diagramm-platzhalter");
-        if (!ziel) return;
-        const img = document.createElement("img");
-        img.src = imgURI;
-        img.alt = aufgabe.chartOptions.title?.text || "Diagramm";
-        img.style.cssText = "display:block; max-width:100%; height:auto;";
-        img.style.width = (chart.w?.globals?.svgWidth || 700) + "px";
-        ziel.innerHTML = "";
-        ziel.appendChild(img);
-        letzteProzentDaten = { aufgabe, imgURI, breite: chart.w?.globals?.svgWidth || 700 };
+        const alt = aufgabe.chartOptions.title?.text || "Diagramm";
+        const breite = chart.w?.globals?.svgWidth || 700;
+
+        // Diagramm als PNG in das Aufgabenblatt schreiben (Platzhalter ersetzen)
+        const imgHtml = `<img src="${imgURI}" alt="${alt}" style="display:block; max-width:100%; height:auto; width:${breite}px;">`;
+        aufgabeHtml = aufgabeHtml.replace(
+          '<div id="diagramm-platzhalter" style="margin:0 0 1.5rem 0; min-height:60px; color:#888;">Diagramm wird erstellt …</div>',
+          imgHtml
+        );
+        schreibeContainerHtml(container, aufgabeHtml);
+
+        letzteProzentDaten = { aufgabe, imgURI, breite };
+
+        // Aufgabenblatt steht vollständig (inkl. Diagramm-PNG): Jodit-Editor
+        // einmalig aktivieren. data-jodit-init erlaubt den Adopt auch für
+        // Container mit generierten Bildern (Muster aus lb8-2-bestellmenge).
+        aktiviereContainerEditor(container);
       })
       .catch(err => {
         console.error("Diagramm konnte nicht erstellt werden:", err);
-        const ziel = document.getElementById("diagramm-platzhalter");
-        if (ziel && mein === renderZaehler) ziel.textContent = "Diagramm konnte nicht erstellt werden.";
+        if (mein !== renderZaehler) return;
+        aufgabeHtml = aufgabeHtml.replace(
+          'Diagramm wird erstellt …',
+          'Diagramm konnte nicht erstellt werden.'
+        );
+        schreibeContainerHtml(container, aufgabeHtml);
+        aktiviereContainerEditor(container);
       });
   }, 50);
 }

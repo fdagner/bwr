@@ -2074,8 +2074,19 @@ svg text[contenteditable="true"] {
   margin: 0;
 }
 
-@media (max-width: 768px) {
+/* iPad-Portrait & schmale Desktops (769–900 px): Flex-Zeile aus
+   #Container (min-width:580px) + #button-column (180px, flex-shrink:0)
+   überlappt/überläuft dort – erst ab 900 px ist genug Platz. */
+@media (max-width: 900px) {
   .output-wrapper { flex-wrap: wrap; }
+  .output-wrapper > #Container { min-width: 100% !important; }
+  .output-wrapper > #button-column {
+    width: 100% !important;
+    flex-shrink: 1 !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }
 
 

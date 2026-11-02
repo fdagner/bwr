@@ -386,7 +386,22 @@ function generateProblem() {
         loesungSatz += `<h4>Antwort</h4>${fremdbezug_Antwort}`;
     }
 
-    document.getElementById("Container").innerHTML = aufgabeSatz + loesungSatz;
+    // Ausgabe: läuft schon ein Editor, über JoditEditor.setContent schreiben,
+    // damit Editor-Wert und Quelle synchron bleiben.
+    const container = document.getElementById("Container");
+    if (window.JoditEditor && container._jodit) {
+        window.JoditEditor.setContent(container, aufgabeSatz + loesungSatz);
+    } else {
+        container.innerHTML = aufgabeSatz + loesungSatz;
+    }
+
+    // Aufgabe steht: Editor (Jodit) aktivieren – einmalig. data-jodit-init erlaubt
+    // den Adopt auch auf ApexCharts-Seiten (Muster aus lb10-4-gewinnschwelle).
+    if (window.JoditEditor && !container._jodit) {
+        container.setAttribute('data-jodit-init', '1');
+        try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+    }
+
     return [aufgabeSatz, loesungSatz];
 }
 

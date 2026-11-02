@@ -201,10 +201,17 @@ function zufallsNvp(pr) {
   return Math.max(2, v);
 }
 
-// Variable Kosten je Einheit – aus dem Zahlenbereich der Felder.
-// Wird stets unter dem gezogenen NVP gehalten (und > 0), auch wenn der
-// manuelle VK-Bereich über dem NVP-Bereich des Produkts liegt.
+// Variable Kosten je Einheit.
+// Manueller Modus: aus dem Zahlenbereich der Felder, stets unter dem gezogenen
+// NVP geklemmt (und > 0), auch wenn der manuelle VK-Bereich über dem NVP-Bereich liegt.
+// YAML-Produkt: am Nettoverkaufspreis orientiert – Kennziffer-Ziehung 40–70 %
+// des NVP (Deckungsbeitrag je Einheit also 30–60 % des Preises), ganzzahlig.
 function zufallsVk(pr, nvpRef) {
+  if (pr.quelle === 'yaml') {
+    const anteil = randInt(40, 70);
+    const vk = Math.max(1, Math.round(nvpRef * anteil / 100));
+    return Math.min(nvpRef - 1, vk);
+  }
   const hi = Math.max(1, Math.min(pr.vkMax, nvpRef - 1));
   const lo = Math.min(Math.max(1, pr.vkMin), hi);
   return randInt(lo, hi);
@@ -224,6 +231,16 @@ function zufallsMenge(pr) {
 // Fixkosten: in beiden Modi aus dem manuellen Bereich (Werte > 0)
 function zufallsFix(e) {
   return randInt(e.fixMin, e.fixMax, e.fixStep);
+}
+
+// Fixkosten bei aktiven Unternehmensdaten: aus dem Deckungsbeitrag ableiten
+// (45–150 % des DB, auf fixStep gerundet). Damit richten sich die Fixkosten
+// am Geschäftsvolumen aus und das Betriebsergebnis kann plausibel – nicht mehr
+// automatisch massiv – im Plus oder Minus landen.
+function fixkostenAusDb(e, gesamtDb) {
+  if (!e.yamlAktiv) return zufallsFix(e);
+  const anteil = randInt(45, 150) / 100;
+  return Math.max(e.fixStep, rundeAuf(Math.max(gesamtDb, 0) * anteil, e.fixStep));
 }
 
 // Fixkosten so wählen, dass der gesuchte NVP in der Preisspanne des Produkts liegt
@@ -293,6 +310,10 @@ let erzArtManuell = null;
 // NVP-Zahlenbereich wurde manuell verändert? (false = YAML darf ihn vorbelegen)
 let nvpBereichManuell = false;
 
+// VK-/Fixkosten-Zahlenbereich wurde manuell verändert?
+// (false = YAML darf die Felder mit den Generator-Spannen vorbelegen)
+let vkFixBereichManuell = false;
+
 function setzeErzeugnisFeld(aktiv, text) {
   const input = document.getElementById('erzeugnisArt');
   if (!input) return;
@@ -329,6 +350,37 @@ function aktualisiereYamlModus() {
       if (mins.length) { if (nvpMinEl) nvpMinEl.value = Math.min(...mins); }
       if (maxs.length) { if (nvpMaxEl) nvpMaxEl.value = Math.max(...maxs); }
     }
+
+    // VK-/Fixkosten-Bereiche mitführen: die Felder zeigen jetzt die Spannen,
+    // in denen der Generator zeichnet (nur solange nicht selbst verändert).
+    //   VK:   40–70 % des NVP  → aus dem NVP-Bereich des Produkts abgeleitet
+    //   Fix:  45–150 % des Deckungsbeitrags → mit Mengenbereich überschlagen
+    if (!vkFixBereichManuell) {
+      const mins = liste.map(p => Number(p.preis_min)).filter(Number.isFinite);
+      const maxs = liste.map(p => Number(p.preis_max)).filter(Number.isFinite);
+      if (mins.length && maxs.length) {
+        const nLo = Math.max(1, Math.min(...mins));
+        const nHi = Math.max(...maxs, nLo + 1);
+        const vkMinEl = document.getElementById('vkMin');
+        const vkMaxEl = document.getElementById('vkMax');
+        const vkNeuMin = Math.max(1, Math.round(nLo * 0.40));
+        const vkNeuMax = Math.max(vkNeuMin + 1, Math.round(nHi * 0.70));
+        if (vkMinEl) vkMinEl.value = vkNeuMin;
+        if (vkMaxEl) vkMaxEl.value = vkNeuMax;
+
+        const mengenLo = getNum('mengeMin', 500);
+        const mengenHi = Math.max(mengenLo, getNum('mengeMax', 6000));
+        const rundenE = parseInt(getVal('fixRunden')) || 1000;
+        const dbLo = nLo * 0.30 * mengenLo;    // kleinster plausibler Deckungsbeitrag
+        const dbHi = nHi * 0.60 * mengenHi;    // größter plausibler Deckungsbeitrag
+        const fixMinEl = document.getElementById('fixMin');
+        const fixMaxEl = document.getElementById('fixMax');
+        const fixNeuLo = Math.max(rundenE, rundeAuf(dbLo * 0.45, rundenE));
+        const fixNeuHi = Math.max(fixNeuLo + rundenE, rundeAuf(dbHi * 1.50, rundenE));
+        if (fixMinEl) fixMinEl.value = fixNeuLo;
+        if (fixMaxEl) fixMaxEl.value = fixNeuHi;
+      }
+    }
   } else {
     setzeErzeugnisFeld(false);   // kein Haken / keine (ausreichenden) Produkte → manuelle Eingabe zurück
   }
@@ -349,7 +401,9 @@ function aktualisiereYamlModus() {
     info.textContent = 'Produkte werden zufällig gezogen aus: ' +
       liste.map(p => p.name).join(', ') +
       '. Produktname, Einheit und NVP-Preisspanne stammen aus den Unternehmensdaten – ' +
-      'variable Kosten, Mengen und Fixkosten verwenden die eingestellten Zahlenbereiche.';
+      'die variablen Kosten orientieren sich am Nettoverkaufspreis (Deckungsbeitrag je Einheit ' +
+      '30 bis 60 % des Preises), die Mengen kommen aus dem Mengenbereich und die Fixkosten ' +
+      'richten sich am Geschäftsvolumen aus.';
   }
 }
 
@@ -536,7 +590,7 @@ function generiereBetriebsergebnis() {
   const db2       = nve2 - gesamtVK2;
   const gesamtDB  = db1 + db2;
 
-  const fixKosten = zufallsFix(e);
+  const fixKosten = fixkostenAusDb(e, gesamtDB);
   const be        = gesamtDB - fixKosten;
 
   const quartal   = zufallsQuartal();
@@ -597,7 +651,7 @@ function generiereBetriebsergebnis1P() {
   const gesamtVK1 = vk1 * menge1;
   const db1       = nve1 - gesamtVK1;
 
-  const fixKosten = zufallsFix(e);
+  const fixKosten = fixkostenAusDb(e, db1);
   const be        = db1 - fixKosten;
 
   const quartal   = zufallsQuartal();
@@ -1532,7 +1586,7 @@ function generiereZusatzauftrag() {
   const db2       = nve2 - gesamtVK2;
   const gesamtDB  = db1 + db2;
 
-  const fixKosten = zufallsFix(e);
+  const fixKosten = fixkostenAusDb(e, gesamtDB);
   const be        = gesamtDB - fixKosten;
   const istGewinn = be >= 0;
 
@@ -1754,7 +1808,7 @@ function generiereZusatzauftrag1P() {
   const gesamtVK1 = vk1 * menge1;
   const db1       = nve1 - gesamtVK1;
 
-  const fixKosten = zufallsFix(e);
+  const fixKosten = fixkostenAusDb(e, db1);
   const be        = db1 - fixKosten;
   const istGewinn = be >= 0;
 
@@ -2202,7 +2256,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('change', (ev) => {
     if (ev.target && ev.target.id === 'tkKunde') {
       kunde = ev.target.value.trim() || '';
-      nvpBereichManuell = false;   // Vorschlag für das neue Unternehmen neu befüllen
+      nvpBereichManuell = false;      // Vorschlag für das neue Unternehmen neu befüllen
+      vkFixBereichManuell = false;    // ebenso VK-/Fix-Bereiche
       aktualisiereYamlModus();
     }
   });
@@ -2211,15 +2266,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const yamlCheckbox = document.getElementById('nutzeYamlProdukte');
   if (yamlCheckbox) {
     yamlCheckbox.addEventListener('change', () => {
-      nvpBereichManuell = false;   // beim Umschalten Vorschlag neu befüllen
+      nvpBereichManuell = false;      // beim Umschalten Vorschlag neu befüllen
+      vkFixBereichManuell = false;    // ebenso VK-/Fix-Bereiche
       aktualisiereYamlModus();
     });
   }
 
-  // NVP-Zahlenbereich: manuelle Eingabe merken (sperrt die YAML-Vorbelegung)
+  // NVP- und VK-/Fix-Zahlenbereiche: manuelle Eingabe merken
+  // (sperrt die jeweilige YAML-Vorbelegung)
   ['nvpMin', 'nvpMax'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', () => { nvpBereichManuell = true; });
+  });
+  ['vkMin', 'vkMax', 'fixMin', 'fixMax'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => { vkFixBereichManuell = true; });
   });
 
   // Produktanzahl-Dropdown: UI-Reaktion + Auto-Generate
