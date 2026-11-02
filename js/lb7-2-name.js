@@ -633,14 +633,6 @@ Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel i
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 function grundsatzLabel(key) {
   const map = {
@@ -709,7 +701,7 @@ function generiereAufgaben() {
     };
   });
 
-  let aufgabenHTML  = '<h2>Aufgaben</h2><p><strong>Arbeitsauftrag:</strong> Entscheide jeweils, ob der Firmenname den rechtlichen Vorgaben entspricht. Nenne den betroffenen Grundsatz und begründe deine Entscheidung.</p><ol>';
+  let aufgabenHTML  = '<h2>Aufgabe</h2><h3>Entscheide jeweils, ob der Firmenname den rechtlichen Vorgaben entspricht. Nenne den betroffenen Grundsatz und begründe deine Entscheidung.</h3><ol>';
   let loesungenHTML = '<h2 class="loesung">Lösungen</h2>';
 
   letzteGenerierteAufgaben.forEach(({ fall, firmenname, sachverhalt, begruendung }, idx) => {

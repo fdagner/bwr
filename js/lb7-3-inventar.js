@@ -24,10 +24,6 @@ function generateRandomInventar() {
     }
 
 
-    function formatCurrency(value) {
-        return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-    }
-
     function updateCellValueById(id, value) {
         const cell = document.getElementById(id);
         if (cell) {
@@ -80,48 +76,3 @@ function generateRandomInventar() {
     const ekValue = avuvValue - fkValue;
     updateCellValueById("EK-Value", ekValue);
 }
-
-
-function inventarHerunterladen() {
-    const inventarHTML = document.getElementById('inventarContainer').innerHTML;
-    const blob = new Blob([inventarHTML], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'inventar.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-function inventarKopiereInZwischenablage() {
-    const inventarHTML = document.getElementById('inventarContainer').innerHTML;
-    navigator.clipboard.writeText(inventarHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function inventarHerunterladenAlsPNG() {
-    const inventarContainer = document.getElementById('inventarContainer');
-
-    html2canvas(inventarContainer, optionshtml2canvas).then(canvas => {
-        const dataURL = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'inventar.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
-}
-
-let clipboardinventar = new ClipboardJS('#officeButtoninventar');
-
-clipboardinventar.on('success', function (e) {
-    console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
-});
-
-clipboardinventar.on('error', function (e) {
-    console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-    alert("Fehler beim Kopieren der Tabelle.");
-});

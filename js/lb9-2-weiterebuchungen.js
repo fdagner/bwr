@@ -2,7 +2,6 @@
 // BUCHUNGEN ANLAGEGÜTER – REPARATUREN, MIETE & VERSICHERUNGEN
 // ============================================================================
 // Globale Variablen
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGeschaeftsfaelle = [];
 let verwendeteSchluessel = new Set();
@@ -23,59 +22,9 @@ const kontenDefinitionen = {
 // ============================================================================
 // YAML-DATEN LADEN
 // ============================================================================
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-    console.log(`${userCompanies.length} Benutzerunternehmen hinzugefügt. Gesamt: ${yamlData.length} Unternehmen`);
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-    });
-}
 
 // ============================================================================
 // KONTO-AUSWAHL FUNKTIONEN
@@ -278,13 +227,7 @@ const geschaeftsfallTypen = {
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-function formatCurrency(value) {
-  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
 
-function roundToTwoDecimals(num) {
-  return Math.round(num * 100) / 100;
-}
 
 function generateRandomBetrag(min = 100, max = 1000) {
   const steps = Math.floor((max - min) / 5);
@@ -857,39 +800,47 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Kunde geändert:', kunde);
   });
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-
-  if (yamlData && yamlData.length > 0) {
-    fillCompanyDropdowns();
-  } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
-  }
-
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) {
     vorschauEl.textContent = KI_ASSISTENT_PROMPT;
+  }
+
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // sobald die YAML-Daten tatsächlich geladen sind
+  if (yamlData && yamlData.length > 0) {
+    fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeZufaelligeGeschaeftsfaelle();
+  } else {
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligeGeschaeftsfaelle();
+    }, { once: true });
   }
 });
 
 // Auto-Select: Mein Unternehmen aus localStorage
 function autoSelectMyCompany() {
   const myCompanyName = localStorage.getItem('myCompany');
+  
   if (!myCompanyName) return;
-
+  
   const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+  
   dropdowns.forEach(dropdown => {
-    const matchingOption = Array.from(dropdown.options).find(opt => opt.value === myCompanyName);
+    const options = Array.from(dropdown.options);
+    const matchingOption = options.find(opt => opt.value === myCompanyName);
+    
     if (matchingOption) {
       dropdown.value = myCompanyName;
-      dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+      
+      const event = new Event('change', { bubbles: true });
+      dropdown.dispatchEvent(event);
+      
       console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
     }
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  setTimeout(autoSelectMyCompany, 250);
-  setTimeout(zeigeZufaelligeGeschaeftsfaelle, 500);
-});
+// (Aufruf erfolgt jetzt event-basiert über 'yamlDataLoaded' im ersten DOMContentLoaded-Handler)

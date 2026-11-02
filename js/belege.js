@@ -4,43 +4,96 @@
 let yamlData = []; // Initialize yamlData as an empty array
 let nummerKunde = 0;
 
-function initializeYamlData() {
-    let baseData = [];
+// Hilfsfunktionen für die Deduplizierung von Unternehmen (Prüfung nach id + Name)
+function unternehmenSchluesselBelege(c) {
+    return String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase();
+}
+function existiertInCoreBelege(unternehmen, coreData) {
+    const schluessel = unternehmenSchluesselBelege(unternehmen);
+    const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+    return (coreData || []).some(c =>
+        unternehmenSchluesselBelege(c) === schluessel ||
+        String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name
+    );
+}
+function dedupliziereUnternehmenBelege(liste) {
+    const seen = new Set();
+    const out = [];
+    for (const c of (liste || [])) {
+        const key = unternehmenSchluesselBelege(c);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(c);
+    }
+    return out;
+}
 
-    // Priorität 1: Hochgeladene YAML (wenn vorhanden)
+// Zentrale Initialisierung: Core IMMER zuerst laden, dann (falls vorhanden)
+// nur die zusätzlichen, hochgeladenen Unternehmen ergänzen.
+async function initializeYamlData() {
+    // 1. Core IMMER frisch laden (Cache-busting), damit Änderungen an
+    //    js/unternehmen.yml sofort sichtbar werden. Cache nur als Fallback.
+    let coreData = [];
+    try {
+        const resp = await fetch('js/unternehmen.yml?v=' + Date.now());
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const text = await resp.text();
+        coreData = jsyaml.load(text) || [];
+        try { localStorage.setItem('standardYamlData', JSON.stringify(coreData)); } catch (e) {}
+    } catch (e) {
+        console.warn('Core-YAML konnte nicht frisch geladen werden, Fallback auf Cache', e);
+        try { coreData = JSON.parse(localStorage.getItem('standardYamlData') || '[]'); } catch (_) { coreData = []; }
+    }
+
+    // 2. Zusätzliche (hochgeladene) Unternehmen, dedupliziert gegen Core.
+    //    id-Kollisionen (gleiche id, anderer Name) werden durch Vergabe einer neuen id aufgelöst.
+    let zusaetzliche = [];
     const uploadedJSON = localStorage.getItem('uploadedYamlCompanyData');
     if (uploadedJSON) {
         try {
-            baseData = JSON.parse(uploadedJSON);
-            console.log('Hochgeladene YAML geladen mit', baseData.length, 'Unternehmen');
-        } catch (err) {
-            console.warn('Hochgeladene YAML korrupt → falle auf Standard zurück', err);
+            const uploaded = JSON.parse(uploadedJSON);
+            const verwendeteIds = new Set(coreData.map(c => c?.unternehmen?.id));
+            for (const u of uploaded) {
+                if (existiertInCoreBelege(u, coreData)) continue; // exaktes Duplikat → überspringen
+                if (verwendeteIds.has(u?.unternehmen?.id)) {
+                    const maxId = Math.max(0, ...[...coreData, ...zusaetzliche].map(c => Number(c?.unternehmen?.id) || 0));
+                    let neueId = maxId + 1;
+                    while (verwendeteIds.has(neueId) || zusaetzliche.some(x => x?.unternehmen?.id === neueId)) neueId++;
+                    const copy = JSON.parse(JSON.stringify(u));
+                    if (copy.unternehmen) copy.unternehmen.id = neueId;
+                    verwendeteIds.add(neueId);
+                    zusaetzliche.push(copy);
+                } else {
+                    verwendeteIds.add(u?.unternehmen?.id);
+                    zusaetzliche.push(u);
+                }
+            }
+            if (zusaetzliche.length === 0) {
+                localStorage.removeItem('uploadedYamlCompanyData');
+            } else {
+                localStorage.setItem('uploadedYamlCompanyData', JSON.stringify(zusaetzliche));
+            }
+        } catch (e) {
+            localStorage.removeItem('uploadedYamlCompanyData');
         }
     }
 
-    // Priorität 2: Standard-YAML (nur wenn nichts hochgeladen)
-    if (baseData.length === 0) {
-        const standardJSON = localStorage.getItem('standardYamlData');
-        if (standardJSON) {
-            baseData = JSON.parse(standardJSON);
-            console.log('Standard-YAML geladen mit', baseData.length, 'Unternehmen');
-        } else {
-            loadStandardYamlData(); // asynchron → Abbruch hier
-            return;
-        }
-    }
+    // 3. Zusammenführen
+    yamlData = dedupliziereUnternehmenBelege([...coreData, ...zusaetzliche]);
 
-    // Basis setzen
-    yamlData = baseData;
-
-    // Merge: Eigene Unternehmen IMMER hinzufügen (Option B)
+    // 4. Eigene (manuell angelegte) Unternehmen ergänzen
     mergeUserCompaniesIntoYamlData();
 
     // Dropdowns aktualisieren
     updateAllDropdowns();
 
-    console.log('Finale yamlData hat jetzt', yamlData.length, 'Unternehmen (Basis + eigene)');
+    console.log('Finale yamlData (belege) hat jetzt', yamlData.length, 'Unternehmen (Core + zusätzliche + eigene)');
+    console.log('[belege] Eigene Unternehmen:', getUserCompanies().map(c => c?.unternehmen?.name).filter(Boolean));
+    console.log('[belege] Gespeichertes Modellunternehmen (myCompany):', (localStorage.getItem('myCompany') || '').trim() || '(keines)');
+    console.log('[belege] Liste:', yamlData.map(c => (c?.unternehmen?.id + ' ' + c?.unternehmen?.name + ' ' + (c?.unternehmen?.rechtsform || '')).trim()));
 }
+
+
 
 function safelyParseSVG(svgText) {
     const parser = new DOMParser();
@@ -271,32 +324,30 @@ const RandomHelper = {
 // SAFE DOM HELPER - Verhindert Null-Pointer Fehler
 // ============================================================================
 const SafeDOM = {
+    // Mehrfach-IDs erlaubt: Beleg-Vorlagen dürfen dieselbe id mehrfach einsetzen
+    // (z. B. emailNameKunde mehrfach in mail3.html) – alle Treffer werden gefüllt.
+    alleMitId: (id) => Array.from(document.querySelectorAll(`[id="${id}"]`)),
     setText: (id, text) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = text;
+        document.querySelectorAll(`[id="${id}"]`).forEach(el => { el.textContent = text; });
     },
     setHTML: (id, html) => {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = html;
+        document.querySelectorAll(`[id="${id}"]`).forEach(el => { el.innerHTML = html; });
     },
     setValue: (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.value = value;
+        document.querySelectorAll(`[id="${id}"]`).forEach(el => { el.value = value; });
     },
     setAttr: (id, attr, value) => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute(attr, value);
+        document.querySelectorAll(`[id="${id}"]`).forEach(el => el.setAttribute(attr, value));
     },
     setClass: (className, text) => {
         const els = document.getElementsByClassName(className);
         for (const el of els) el.textContent = text;
     },
     exists: (id) => {
-        return document.getElementById(id) !== null;
+        return document.querySelector(`[id="${id}"]`) !== null;
     },
     remove: (id) => {
-        const el = document.getElementById(id);
-        if (el) el.remove();
+        document.querySelectorAll(`[id="${id}"]`).forEach(el => el.remove());
     }
 };
 
@@ -314,11 +365,11 @@ function loadBelegData(belegType, dropdownId) {
     const config = BELEG_FIELD_MAPPING[belegType];
     if (!config) return;
 
-    // Einzelne Element-IDs befüllen
+    // Einzelne Element-IDs befüllen (auch wenn dieselbe id mehrfach vorkommt)
     if (config.fields) {
         Object.entries(config.fields).forEach(([elementId, path]) => {
-            const element = document.getElementById(elementId);
-            if (!element) return;
+            const elements = document.querySelectorAll(`[id="${elementId}"]`);
+            if (elements.length === 0) return;
 
             let value;
             if (typeof path === 'function') {
@@ -327,7 +378,9 @@ function loadBelegData(belegType, dropdownId) {
                 value = path.split('.').reduce((obj, key) => obj?.[key], selectedData);
             }
 
-            element.textContent = value || '';
+            elements.forEach(element => {
+                element.textContent = value || '';
+            });
         });
     }
 
@@ -633,11 +686,14 @@ if (ref) {
 }
 
 // PNG-Export
-function exportPNG(containerId, filename = 'download.png', exportWidth = null) {
+function exportPNG(containerId, filename = 'download.png', exportWidth = null, forceRaster = false) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const svg = container.querySelector('svg');
+    // forceRaster = true für HTML-Belege (E-Mail, Zeitung, …): Diese enthalten evtl.
+    // kleine einzelne SVGs (z. B. das Mail-Icon). Ohne Restriktion würde exportPNG
+    // sonst nur dieses eine SVG-Icon rendern statt den ganzen Beleg.
+    const svg = forceRaster ? null : container.querySelector(':scope > svg');
     const scale = 2;
 
     const download = (canvas) => {
@@ -773,12 +829,22 @@ if (cls) n.setAttribute('class', cls);
 }
 
 
-// SVG-Export
+// SVG-Export (fällt bei HTML-Vorlagen wie E-Rechnung auf HTML-Download zurück)
 function exportSVG(containerId, filename = 'download.svg', titel = '') {
     const container = document.getElementById(containerId);
     if (!container) return;
-    const svg = container.querySelector('svg');
-    if (!svg) return alert('Kein SVG gefunden');
+    const svg = container.querySelector(':scope > svg');
+    if (!svg) {
+        const htmlData = container.innerHTML.replace(/&nbsp;/g, ' ');
+        const blob = new Blob([htmlData], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename.replace(/\.svg$/i, '.html');
+        link.click();
+        URL.revokeObjectURL(url);
+        return;
+    }
 
     const clone = svg.cloneNode(true);
     prepareSvgForExport(svg, clone);  
@@ -803,8 +869,8 @@ function exportSVG(containerId, filename = 'download.svg', titel = '') {
 function copyToClipboard(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    const svg = container.querySelector('svg');
-    if (!svg) return alert('Kein SVG zum Kopieren');
+    const svg = container.querySelector(':scope > svg');
+    if (!svg) return copyHTMLToClipboard(containerId);
     const svgData = new XMLSerializer().serializeToString(svg);
     const check = new DOMParser().parseFromString(svgData, 'image/svg+xml');
 if (check.querySelector('parsererror')) {
@@ -911,17 +977,109 @@ function mergeUserCompaniesIntoYamlData() {
 
 // Initialisierung beim Laden der Seite
 document.addEventListener('DOMContentLoaded', function () {
-    if (!localStorage.getItem('standardYamlData')) {
-        loadStandardYamlData();
-    }
-
-    // Zentrale Initialisierung → Dropdowns werden befüllt
+    // Zentrale Initialisierung (lädt Core immer zuerst, dann zusätzliche hochgeladene)
     initializeYamlData();
 
     initializeDropdownHandlers(); // deine Event-Listener
-    
-    applySVGholen();              // falls nötig
+
+    // Ausbildungsberuf-Feld nur bei Vorlage "Ausbildungsvergütung" zeigen
+    lohnabrechnungsBerufFeldUmschalten();
+    const selLohnabrechnung = document.getElementById('svgDropdownLohnabrechnung');
+    if (selLohnabrechnung) selLohnabrechnung.addEventListener('change', lohnabrechnungsBerufFeldUmschalten);
+
+    // (Alle Belege werden automatisch erstellt, sobald die Dropdowns befüllt sind –
+    //  das übernimmt alleBelegeAutomatischErstellen() am Ende von updateAllDropdowns())
 });
+
+    // Beleg aus Sammlung öffnen (wenn ?openBeleg=<id> in URL)
+    function restoreOpenedBeleg(item) {
+        if (!item) return;
+        const tabMap = {
+            rechnung: 'rechnung', kontoauszug: 'kontoauszug', quittung: 'quittung',
+            kassenbon: 'kassenbon', email: 'email', newspaper: 'newspaper',
+            lohnabrechnung: 'lohnabrechnung', lohnjournal: 'lohnjournal',
+            bescheid: 'bescheid', anlagenkarte: 'anlagenkarte', wertpapiere: 'wertpapiere'
+        };
+        const rawMarkup = item.htmlContent || item.svgContent || (item.content && item.content.trim().startsWith('<') ? item.content : null);
+        if (!rawMarkup && !item.formState && item.content && item.content.startsWith('data:image/')) {
+            alert('Dieser Beleg wurde nur als Bild ohne Vorlagendaten gespeichert. Bitte neu sammeln, um ihn bearbeiten zu können.');
+            return;
+        }
+
+        // 1. Wenn vollständiger Formularzustand gespeichert wurde (SVG- und HTML-Belege)
+        if (item.formState && item.formState.fields) {
+            const belegType = item.belegType || item.formState.belegType || 'rechnung';
+            const tabName = tabMap[belegType] || belegType;
+            if (typeof openTabFromURL === 'function') openTabFromURL(tabName);
+            for (const [elId, info] of Object.entries(item.formState.fields)) {
+                if (typeof setFieldValue === 'function') {
+                    setFieldValue(elId, info.value, info.type);
+                }
+            }
+            const savedHtml = item.htmlContent || item.formState.containerHtml || '';
+            setTimeout(async function () {
+                if (belegType === 'email') {
+                    try { await emailVorlageAnwenden(); } catch (e) { console.warn(e); }
+                    const c = document.getElementById('emailContainer');
+                    if (c && savedHtml) c.innerHTML = savedHtml;
+                } else if (belegType === 'newspaper') {
+                    const colRange = document.getElementById('newspaperColumnRange');
+                    const colVal = document.getElementById('newspaperColumnValue');
+                    if (colRange && colVal) colVal.innerText = colRange.value;
+                    const applyBtn = document.getElementById('newspaperApplyChangesButton');
+                    if (applyBtn) applyBtn.click();
+                    const nd = document.getElementById('newspaperDiv');
+                    const nc = document.getElementById('newspaperContent');
+                    const colorIn = document.getElementById('newspaperColorInput');
+                    if (nd && colorIn) nd.style.backgroundColor = colorIn.value;
+                    if (nc && colRange) nc.style.columnCount = colRange.value;
+                } else if (belegType === 'rechnung' || belegType === 'kontoauszug') {
+                    try { await applySVGholen(true); } catch (e) { console.warn('applySVGholen failed', e); }
+                } else if (typeof executeApplyFunction === 'function') {
+                    executeApplyFunction(belegType);
+                }
+            }, 150);
+            return;
+        }
+
+        // 2. Fallback über Markup-Analyse (SVG oder HTML)
+        if (rawMarkup && typeof detectBelegType === 'function') {
+            try {
+                const doc = (typeof parseBelegMarkup === 'function')
+                    ? parseBelegMarkup(rawMarkup)
+                    : new DOMParser().parseFromString(String(rawMarkup).replace(/&nbsp;/g, '&#160;'), 'image/svg+xml');
+                const belegType = item.belegType || detectBelegType(doc);
+                if (belegType) {
+                    const extractedData = extractBelegData(doc, belegType);
+                    window._lastImportData = extractedData;
+                    const tabName = tabMap[belegType] || belegType;
+                    setTimeout(function () {
+                        jumpToBeleg(belegType, tabName).then(function () {
+                            if (belegType === 'rechnung' || belegType === 'kontoauszug') {
+                                try { applySVGholen(true); } catch (e) { console.warn('applySVGholen failed', e); }
+                            }
+                        }).catch(function (e) { console.warn('jumpToBeleg failed', e); });
+                    }, 200);
+                    return;
+                }
+            } catch (e) { console.warn('Beleg import failed', e); }
+        }
+        const cid = item.containerId || 'rechnung1Container';
+        const container = document.getElementById(cid);
+        if (container) container.innerHTML = rawMarkup || item.content || '';
+    }
+
+    document.addEventListener('yamlDataLoaded', function () {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('openBeleg');
+        if (!id || !window.Collection) return;
+        const run = function () {
+            Collection.getItem(id).then(restoreOpenedBeleg).catch(function (e) { console.warn('openBeleg failed', e); });
+        };
+        if (window._belegeInitialisiert) run();
+        else document.addEventListener('belegeInitialisiert', run, { once: true });
+    }, { once: true });
+
 
 
 const dropZone = document.getElementById("dropZone");
@@ -1037,7 +1195,27 @@ function updateAllDropdowns() {
 
         // Sicherstellen, dass wirklich nichts anderes ausgewählt ist
         dropdown.value = '';
+
+        // "Mein Unternehmen" direkt beim Befüllen automatisch wählen (bis der
+        // Nutzer selbst ein anderes Unternehmen wählt). Damit funktioniert
+        // die Auto-Auswahl unabhängig von Event-/Load-Timing.
+        const myCompany = (localStorage.getItem('myCompany') || '').trim();
+        if (myCompany && dropdown.classList.contains('meinUnternehmen')) {
+            const opt = Array.from(dropdown.options).find(o =>
+                o.value.trim() === myCompany || o.text.trim() === myCompany);
+            if (opt) {
+                dropdown.value = opt.value;
+                dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        }
     });
+
+    // Signal an andere Scripts (z. B. beleg_url_parameter.js), dass die
+    // Unternehmensdaten geladen und alle Dropdowns befüllt sind
+    document.dispatchEvent(new Event('yamlDataLoaded'));
+
+    // ALLE Belege direkt beim Seitenaufruf erstellen (nicht erst auf Button-Druck)
+    alleBelegeAutomatischErstellen();
 }
 
 // ============================================================================
@@ -1080,24 +1258,9 @@ function reloadDropdownOptions() {
 
 
 
-if (!localStorage.getItem('uploadedYamlCompanyData')) {
-    fetch('js/unternehmen.yml')
-        .then(response => response.text())
-        .then(data => {
-            const standardData = jsyaml.load(data);
-            // Speichere Standard-Daten
-            localStorage.setItem('standardYamlData', JSON.stringify(standardData));
-            yamlData = standardData;
-
-            // Füge Benutzerunternehmen hinzu
-            mergeUserCompaniesIntoYamlData();
-            updateAllDropdowns();
-        });
-} else {
-    // Wenn hochgeladene Daten vorhanden sind, lade diese
-    loadUploadedDataFromLocalStorage();
-}
-
+// (Kein eigenständiger Top-Level-Fetch mehr: Der Abruf der Standard-YAML passiert
+// ausschließlich im DOMContentLoaded-Handler → updateAllDropdowns() läuft genau einmal
+// und das Event 'yamlDataLoaded' löscht nicht mehr aus Versehen die Auto-Auswahl.)
 
 // ============================================================================
 // BELEG-DATEN LADEN (Spezifisch)
@@ -1111,6 +1274,41 @@ function loadEmailData() {
     loadBelegData('email', 'datenEmail');
 }
 
+// Wendet die aktuell gewählte Mailvorlage an: Vorlage rendern und
+// Firmen-/Empfängerdaten sofort einsetzen. Wird beim Wechsel des Vorlagen-
+// Dropdowns (onchange) und beim „Zurücksetzen"-Button verwendet.
+async function emailVorlageAnwenden(preserveText = true) {
+    // Aktuellen Betreff/Text sichern, damit ein Vorlagenwechsel den
+    // vom Nutzer eingegebenen Text nicht verwirft.
+    const savedSubject = document.getElementById('emailSubject')?.textContent;
+    const savedBody = document.getElementById('emailTextMessage')?.textContent;
+    const subjectEdited = preserveText && savedSubject && savedSubject.trim() !== '' && !/^\[Hier Betreff einfügen\]$/i.test(savedSubject.trim());
+    const bodyEdited = preserveText && savedBody && savedBody.trim() !== '' && !/^\[Hier Mailtext bearbeiten\]$/i.test(savedBody.trim());
+
+    const vorlage = document.getElementById('svgDropdownEmail')?.value || 'mail1.html';
+    await applyHTMLTemplate(vorlage, 'emailContainer');
+    // Firmen-/Kundendaten wieder einsetzen
+    loadEmailData();
+    loadCompanyDataforEmail();
+
+    // Nutzertext nach Vorlagenwechsel wiederherstellen
+    if (subjectEdited) {
+        const el = document.getElementById('emailSubject');
+        if (el) el.textContent = savedSubject;
+    }
+    if (bodyEdited) {
+        const el = document.getElementById('emailTextMessage');
+        if (el) el.textContent = savedBody;
+    }
+}
+
+// Mail-Vorlage zurücksetzen: Den in der Vorlage hinterlegten Platzhalter-/Standardtext
+// wiederherstellen (Vorschau ist contenteditable → Nutzer schreibt seinen Text direkt
+// in die Mail; damit lässt er sich auch wiederherstellen).
+async function emailZuruecksetzen() {
+    await emailVorlageAnwenden(false);
+}
+
 // Lade die Unternehmensdaten basierend auf der Auswahl im Dropdown-Feld
 function loadCompanyDataforEmail() {
     const selectedName = document.getElementById('datenEmailKunde')?.value;
@@ -1119,11 +1317,13 @@ function loadCompanyDataforEmail() {
     const selectedData = yamlData.find(item => item.unternehmen.name === selectedName);
     if (!selectedData) return;
 
-    const emailInhaber = document.getElementById('emailNameKunde');
-    if (emailInhaber) emailInhaber.textContent = selectedData.unternehmen.inhaber;
-
-    const emailAdresse = document.getElementById('emailAdresseKunde');
-    if (emailAdresse) emailAdresse.textContent = selectedData.unternehmen.kontakt.email;
+    // mail1/mail2 nutzen (eindeutige) ids, mail3 nutzt Klassen für mehrfach-Verwendung
+    document.querySelectorAll('[id="emailNameKunde"], .emailNameKunde').forEach(el => {
+        el.textContent = selectedData.unternehmen.inhaber;
+    });
+    document.querySelectorAll('[id="emailAdresseKunde"], .emailAdresseKunde').forEach(el => {
+        el.textContent = selectedData.unternehmen.kontakt?.email || '';
+    });
 }
 
 function loadQuittungData() {
@@ -1266,9 +1466,9 @@ function loadLogo(event) {
 // ============================================================================
 // BELEG-ANWENDUNG (Apply-Funktionen)
 // ============================================================================
-function applyOrderData() {
+function applyOrderData(validationUeberspringen = false) {
 
-    if (!validateInputs()) {
+    if (!validationUeberspringen && !validateInputs()) {
         // Wenn die Validierung fehlschlägt, stoppe die Funktion
         return;
     }
@@ -1639,13 +1839,14 @@ if (elemZahlungsziel) {
         removeIfExists('kontoauszugDatum3');
     }
     // Laden der Daten für die Mail / E-Mail-Vorschau
+    // Die Text-/Betreff-Inputs gibt es nicht mehr: Der Platzhaltertext steckt direkt
+    // in der Vorlage und wird in der editierbaren Vorschau geändert. Überschreiben
+    // nur noch, falls doch ein Feld existiert (Abwärtskompatibilität).
+    const emailTextInput = document.getElementById('emailInputText');
+    if (emailTextInput) SafeDOM.setText('emailTextMessage', emailTextInput.value);
 
-
-    const emailTextMessage = document.getElementById('emailInputText').value;
-    SafeDOM.setText('emailTextMessage', emailTextMessage);
-
-    const emailSubject = document.getElementById('emailSubjectInput').value;
-    SafeDOM.setText('emailSubject', emailSubject);
+    const emailSubjectInput = document.getElementById('emailSubjectInput');
+    if (emailSubjectInput) SafeDOM.setText('emailSubject', emailSubjectInput.value);
 
     loadCompanyData(); // Laden der Kundeninformationen
     loadSupplierData(); // Laden der Lieferanteninformationen
@@ -1654,28 +1855,68 @@ if (elemZahlungsziel) {
     loadCompanyDataforEmail(); // Laden der E-Mail-Daten (Kunde)
 }
 
-async function quittungApplySVGholen() {
-    await applyBelegWithSVG('quittung');
+async function quittungApplySVGholen(validationUeberspringen = false) {
+    await applyBelegWithSVG('quittung', validationUeberspringen);
 }
 
-async function kassenbonApplySVGholen() {
-    await applyBelegWithSVG('kassenbon');
+async function kassenbonApplySVGholen(validationUeberspringen = false) {
+    await applyBelegWithSVG('kassenbon', validationUeberspringen);
 }
 
-async function journalApplySVGholen() {
-    await applyBelegWithSVG('lohnjournal');
+async function journalApplySVGholen(validationUeberspringen = false) {
+    await applyBelegWithSVG('lohnjournal', validationUeberspringen);
 }
 
-async function anlagenkarteApplySVGholen() {
-    await applyBelegWithSVG('anlagenkarte');
+async function anlagenkarteApplySVGholen(validationUeberspringen = false) {
+    await applyBelegWithSVG('anlagenkarte', validationUeberspringen);
 }
 
-async function wertpapiereApplySVGholen() {
-    await applyBelegWithSVG('wertpapiere');
+async function wertpapiereApplySVGholen(validationUeberspringen = false) {
+    await applyBelegWithSVG('wertpapiere', validationUeberspringen);
 }
 
-async function bescheidApplySVGholen() {
-    await applyBelegWithSVG('bescheid');
+async function bescheidApplySVGholen(validationUeberspringen = false) {
+    await applyBelegWithSVG('bescheid', validationUeberspringen);
+}
+
+// ============================================================================
+// START-AUFBAU: ALLE BELEGE SOFORT BEIM SEITENAUFRUF ERSTELLEN
+// (nicht erst beim Klick auf „Alle Daten übernehmen")
+// ============================================================================
+let belegStartErstellungLaeuft = false;
+
+async function alleBelegeAutomatischErstellen() {
+    if (belegStartErstellungLaeuft) return;
+    belegStartErstellungLaeuft = true;
+    const still = true;   // beim Aufbau keine Validierungs-Popups
+
+    try {
+        await applySVGholen(still);
+    } catch (err) {
+        console.warn('Startaufbau Rechnung/Kontoauszug/Mail fehlgeschlagen:', err);
+    }
+
+    // Jeder Beleg einzeln abgesichert: ein Fehler eines einzelnen Belegs
+    // darf die restlichen nicht mehr abbrechen.
+    const jobs = [
+        ['Quittung', () => quittungApplySVGholen(still)],
+        ['Kassenbon', () => kassenbonApplySVGholen(still)],
+        ['Bescheid', () => bescheidApplySVGholen(still)],
+        ['Anlagenkarte', () => anlagenkarteApplySVGholen(still)],
+        ['Wertpapiere', () => wertpapiereApplySVGholen(still)],
+        ['Lohnjournal', () => journalApplySVGholen(still)],
+        ['Lohnabrechnung', () => lohnabrechnungApplySVGholen(still)],
+    ];
+    for (const [name, job] of jobs) {
+        try {
+            await job();
+        } catch (err) {
+            console.warn(`Startaufbau ${name} fehlgeschlagen:`, err);
+        }
+    }
+    window._belegeInitialisiert = true;
+    try { document.dispatchEvent(new Event('belegeInitialisiert')); } catch (e) {}
+    // Zeitungsartikel wird live über seine Formular-Inputs gesteuert (kein Render-Schritt)
 }
 
 
@@ -1803,9 +2044,9 @@ document.addEventListener("DOMContentLoaded", function () {
 // ============================================================================
 // SVG/TEMPLATE-VERWALTUNG
 // ============================================================================
-function applySVGholen() {
-    applySVG().then(() => {
-        applyOrderData();
+function applySVGholen(validationUeberspringen = false) {
+    return applySVG().then(() => {
+        applyOrderData(validationUeberspringen);
         adjustTextColor();
     });
 }
@@ -1963,8 +2204,11 @@ async function applySVG() {
 
 }
 
+// Cache-Buster für Vorlage-Fetches: garantiert frische Vorlagen bei jedem Seitenaufruf
+const vorlagenCacheBuster = Date.now();
+
 async function loadSVGTemplate(templateName) {
-    const response = await fetch("templates/" + templateName);
+    const response = await fetch("templates/" + templateName + "?t=" + vorlagenCacheBuster);
     if (!response.ok) {
         throw new Error(`Vorlage nicht gefunden: ${templateName} (${response.status})`);
     }
@@ -1988,17 +2232,11 @@ async function applyHTMLTemplate(templateName, containerId) {
 }
 
 
-document.addEventListener('DOMContentLoaded', async (event) => {
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        initializeDropdownHandlers();
-        await applySVG();       // WARTEN bis SVG geladen
-        applyOrderData();
-        loadSupplierData();     // Farben NACH SVG setzen
-    } catch (error) {
-        console.error("Fehler beim Laden der SVG:", error);
-    }
-});
+// (Kein zweiter DOMContentLoaded-Handler mit setTimeout mehr: Die zentrale Pipeline
+//  DOMContentLoaded → initializeYamlData → updateAllDropdowns → alleBelegeAutomatischErstellen
+//  übernimmt alles. Die Farb-/Daten-Nachsorge (loadSupplierData etc.) läuft über
+//  applySVGholen → applyOrderData. Doppelt registrierte Change-Listener waren
+//  hier die Folge – deshalb weg damit.)
 
 
 function toggleInput(inputId, checkboxId) {
@@ -2097,7 +2335,7 @@ function exportDokument(typ, format) {
 
     switch (format) {
         case 'png':
-            exportPNG(config.id, buildExportFilename(typ, 'png'));
+            exportPNG(config.id, buildExportFilename(typ, 'png'), null, htmlTypes.includes(typ));
             break;
         case 'svg':
             if (htmlTypes.includes(typ)) {
@@ -2190,12 +2428,12 @@ clipboardEmail.on('error', function (e) {
 });
 
 
-function validateInputs() {
+function validateInputs(still = false) {
     // Textfelder validieren
     for (const [inputId, rule] of Object.entries(VALIDATION_RULES.text)) {
         const input = document.getElementById(inputId);
         if (input && !isValidText(input.value, rule.max)) {
-            alert(`Bitte geben Sie eine gültige ${rule.label} ein. Maximal ${rule.max} Zeichen!`);
+            if (!still) alert(`Bitte geben Sie eine gültige ${rule.label} ein. Maximal ${rule.max} Zeichen!`);
             return false;
         }
     }
@@ -2204,7 +2442,7 @@ function validateInputs() {
     for (const [inputId, rule] of Object.entries(VALIDATION_RULES.number)) {
         const input = document.getElementById(inputId);
         if (input && !isValidNumber(input.value, rule.min, rule.max)) {
-            alert(`Bitte geben Sie bei ${rule.label} gültige Werte zwischen ${rule.min} und ${rule.max} ein.`);
+            if (!still) alert(`Bitte geben Sie bei ${rule.label} gültige Werte zwischen ${rule.min} und ${rule.max} ein.`);
             return false;
         }
     }
@@ -2213,7 +2451,7 @@ function validateInputs() {
     for (const [inputId, rule] of Object.entries(VALIDATION_RULES.percentage)) {
         const input = document.getElementById(inputId);
         if (input && !isValidPercentage(input.value)) {
-            alert(`Bitte geben Sie bei ${rule.label} gültige Werte zwischen 0 und 100 ein.`);
+            if (!still) alert(`Bitte geben Sie bei ${rule.label} gültige Werte zwischen 0 und 100 ein.`);
             return false;
         }
     }
@@ -2222,14 +2460,14 @@ function validateInputs() {
     const menge1 = parseFloat(document.getElementById('mengeInput')?.value || 0);
     const preis1 = parseFloat(document.getElementById('einzelpreisInput')?.value || 0);
     if (menge1 * preis1 > 999999999) {
-        alert('Die Gesamtsumme (Menge * Einzelpreis) Pos. 1 darf nicht höher als 999.999.999,00 sein.');
+        if (!still) alert('Die Gesamtsumme (Menge * Einzelpreis) Pos. 1 darf nicht höher als 999.999.999,00 sein.');
         return false;
     }
 
     const menge2 = parseFloat(document.getElementById('mengeInput2')?.value || 0);
     const preis2 = parseFloat(document.getElementById('einzelpreisInput2')?.value || 0);
     if (menge2 * preis2 > 999999999) {
-        alert('Die Gesamtsumme (Menge * Einzelpreis) Pos. 2 darf nicht höher als 999.999.999,00 sein.');
+        if (!still) alert('Die Gesamtsumme (Menge * Einzelpreis) Pos. 2 darf nicht höher als 999.999.999,00 sein.');
         return false;
     }
 
@@ -2243,16 +2481,14 @@ function validateInputs() {
 const VALIDATION_RULES = {
     // Textfelder mit Maximallänge
     text: {
-        'artikelInput': { max: 32, label: 'Artikelbezeichnung Pos. 1' },
-        'artikelInput2': { max: 32, label: 'Artikelbezeichnung Pos. 2' },
+        'artikelInput': { max: 28, label: 'Artikelbezeichnung Pos. 1' },
+        'artikelInput2': { max: 28, label: 'Artikelbezeichnung Pos. 2' },
         'angebotLieferzeitInput': { max: 25, label: 'Lieferzeit' },
         'einheitInput': { max: 5, label: 'Einheit Pos. 1' },
         'einheitInput2': { max: 5, label: 'Einheit Pos. 2' },
         'kontoauszugVorgang1Input': { max: 45, label: 'Kontoauszug Vorgang 1' },
         'kontoauszugVorgang2Input': { max: 45, label: 'Kontoauszug Vorgang 2' },
         'kontoauszugVorgang3Input': { max: 45, label: 'Kontoauszug Vorgang 3' },
-        'emailSubjectInput': { max: 100, label: 'E-Mail Betreff' },
-        'emailInputText': { max: 5000, label: 'E-Mail Text' },
         'quittungZweckInput': { max: 50, label: 'Quittung Zweck' },
         'kassenbonZweckInput': { max: 50, label: 'Kassenbon Artikel' },
         'newspaperHeadlineInput': { max: 150, label: 'Zeitungs-Überschrift' },
@@ -2263,7 +2499,8 @@ const VALIDATION_RULES = {
         'wertpapiereISINInput': { max: 12, label: 'ISIN' },
         'jahr': { max: 4, label: 'Jahr (Rechnung)' },
         'jahrKontoauszug': { max: 6, label: 'Jahr (Kontoauszug)' },
-        'jahrWertpapiere': { max: 6, label: 'Jahr (Wertpapiere)' }
+        'jahrWertpapiere': { max: 6, label: 'Jahr (Wertpapiere)' },
+        'lohnabrechnungAusbildungsberufInput': { max: 60, label: 'Ausbildungsberuf' },
     },
 
     // Zahlenfelder mit Min/Max
@@ -2286,7 +2523,7 @@ const VALIDATION_RULES = {
         'wertpapiereAnzahlInput': { min: 1, max: 5000, label: 'Wertpapiere Anzahl' },
         'bescheidMessbetragInput': { min: 0, max: 9999, label: 'Messbetrag' },
         'bescheidHebesatzInput': { min: 0, max: 999, label: 'Hebesatz' },
-        'lohnabrechnungBruttoInput': { min: 0, max: 9999, label: 'Bruttogehalt' },
+        'lohnabrechnungBruttoInput': { min: 0, max: 20000, label: 'Bruttogehalt' },
         'lohnabrechnungKVSatzInput': { min: 0, max: 20, label: 'KV-Satz' },
         'lohnabrechnungPVSatzInput': { min: 0, max: 5, label: 'PV-Satz' },
         'lohnabrechnungRVSatzInput': { min: 0, max: 20, label: 'RV-Satz' },
@@ -2335,6 +2572,11 @@ function isValidNumber(value, minValue, maxValue) {
 function isValidPercentage(value) {
     return isValidNumber(value, 0, 100);
 }
+
+// Globale Verfügbarkeit der Beleg-Validatoren
+window.isValidText = isValidText;
+window.isValidNumber = isValidNumber;
+window.isValidPercentage = isValidPercentage;
 
 
 
@@ -2650,7 +2892,18 @@ dataFunction: () => {
                 return brutto * satz;
             };
 
-            const berechneSozialversicherung = (brutto) => brutto * 0.389;
+            const berechneSozialversicherung = (brutto) => {
+                // Bemessungsbasis je Zweig begrenzt (KV/PV bzw. RV/ALV) – die
+                // monatlichen Grenzen gelten aktuell laut BEITRAGSBEMESSUNGSGRENZEN
+                // in js/utils.js. Pauschale Gesamtabgabe 38,9 %
+                // (AN+AG), aufgeteilt KV+PV (18,2 von 39,4 Punkte) bzw. RV+ALV (21,2 von 39,4),
+                // sodass unterhalb der Grenzen unverändert 38,9 % x Brutto herauskommen.
+                const anteilKvPv = 18.2 / 39.4;
+                const anteilRvAlv = 21.2 / 39.4;
+                const basisKvPv = bbgBasisKVPV(brutto);
+                const basisRvAlv = bbgBasisRVALV(brutto);
+                return basisKvPv * 0.389 * anteilKvPv + basisRvAlv * 0.389 * anteilRvAlv;
+            };
 
             // 3 zufällige Mitarbeiter
             const ausgewählt = chooseRandom(mitarbeiter, 3);
@@ -2757,8 +3010,8 @@ dataFunction: () => {
 };
 
 // Generische Beleg-Apply-Funktion
-async function applyBelegWithSVG(belegType) {
-    if (!validateInputs()) return;
+async function applyBelegWithSVG(belegType, validationUeberspringen = false) {
+    if (!validationUeberspringen && !validateInputs()) return;
 
     const config = BELEG_APPLY_CONFIG[belegType];
     if (!config) {
@@ -2871,7 +3124,16 @@ const MITARBEITER_DATEN = {
 
 
 // Zufällige Mitarbeiterdaten generieren
-function generateMitarbeiterDaten() {
+// Ausbildungsberufe für das Ausbildungsvergütungs-Template (lohnabrechnungAusbildungsberuf)
+const AUSBILDUNGSBERUFE = [
+    'Kaufmann/-frau für Büromanagement', 'Industriekaufmann/-frau', 'Kaufmann/-frau im Einzelhandel',
+    'Verkäufer/-in', 'Fachkraft für Lagerlogistik', 'Steuerfachangestellte/r',
+    'Kaufmann/-frau im Groß- und Außenhandel', 'Bankkaufmann/-frau',
+    'Kaufmann/-frau für Versicherungen und Finanzberatung', 'Fachinformatiker/-in',
+    'Hotelfachmann/-frau', 'Koch/Köchin'
+];
+
+function generateMitarbeiterDaten(ausbildung = false, ausbildungsjahrSoll = null) {
     const geschlecht = Math.random() > 0.5 ? 'm' : 'w';
     const vorname = MITARBEITER_DATEN.vornamen[geschlecht][Math.floor(Math.random() * MITARBEITER_DATEN.vornamen[geschlecht].length)];
     const nachname = MITARBEITER_DATEN.nachnamen[Math.floor(Math.random() * MITARBEITER_DATEN.nachnamen.length)];
@@ -2882,15 +3144,30 @@ function generateMitarbeiterDaten() {
     // Personalnummer
     const personalnr = String(Math.floor(Math.random() * 90000) + 10000) + '-' + String(Math.floor(Math.random() * 90) + 10);
 
-    // Geburtsdatum (zwischen 25 und 60 Jahren)
-    const alter = Math.floor(Math.random() * 36) + 25;
+    // Alter & Betriebszugehörigkeit
+    // Ausbildung: Alter 17–22, plausibel zum Ausbildungsjahr; Eintritt vor Beginn des AJ
+    // Regulär: Alter 25–60, Eintritt 1–15 Jahre zurück
+    // Ausbildungsjahr: wenn die Lehrkraft eines vorgibt (1–4), dieses verwenden,
+    // sonst würfeln (in der Regel 1.–3. Jahr)
+    let alter, dienstjahre, ausbildungsberuf = null, ausbildungsjahr = null;
+    if (ausbildung) {
+        const soll = parseInt(ausbildungsjahrSoll, 10);
+        ausbildungsjahr = (!isNaN(soll) && soll >= 1 && soll <= 4)
+            ? soll
+            : (Math.floor(Math.random() * 3) + 1);
+        ausbildungsberuf = pick(AUSBILDUNGSBERUFE);
+        alter = 16 + ausbildungsjahr + Math.floor(Math.random() * 3); // z. B. ->17–19 im 1. AJ
+        dienstjahre = ausbildungsjahr - 1;                            // Eintritt im AJ bzw. bereits beschäftigt
+    } else {
+        alter = Math.floor(Math.random() * 36) + 25;
+        dienstjahre = Math.floor(Math.random() * 15) + 1;
+    }
     const jahr = new Date().getFullYear() - alter;
     const monat = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
     const tag = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
     const geburtsdatum = `${tag}.${monat}.${jahr.toString().slice(2)}`;
 
-    // Eintrittsdatum (zwischen 1 und 15 Jahren zurück)
-    const dienstjahre = Math.floor(Math.random() * 15) + 1;
+    // Eintrittsdatum (Ausbildung: zu Beginn des aktuellen Ausbildungsjahres)
     const eintrittJahr = new Date().getFullYear() - dienstjahre;
     const eintrittMonat = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
     const eintrittTag = '01';
@@ -2915,40 +3192,53 @@ function generateMitarbeiterDaten() {
         eintrittsdatum: eintrittsdatum,
         steuerID: steuerID,
         bank: bank,
-        iban: iban
+        iban: iban,
+        ausbildungsberuf: ausbildungsberuf,
+        ausbildungsjahr: ausbildungsjahr
     };
 }
 
-// Lohnsteuer-Berechnung (vereinfacht nach Grundtabelle 2024)
+// Lohnsteuer-Berechnung (vereinfachte Tarifformel)
+// Alle Ankerwerte (Grundfreibetrag, Zonengrenzen, Steuersätze, Kinderfreibeträge)
+// gelten jeweils aktuell laut js/utils.js – nichts hier fest verdrahten!
 function berechneLohnsteuer(brutto, steuerklasse, kinderfreibetrag = "0") {
-    const jahresbrutto = brutto * 12;
+    const T = EINKOMMENSTEUERTARIF;
+
+    // Steuerliche Kinderfreibeträge (inkl. BEA) mindern das zu versteuernde
+    // Einkommen. Die Zähler im Select geben Freibetragsanteile an
+    // (0,5 = ein Kind anteilig, 1,0 = ein Kind). In Steuerklasse VI
+    // (Zweitjob) bleiben Kinderfreibeträge außen vor.
+    const freibetragAnteile = parseFloat(String(kinderfreibetrag).replace(",", ".")) || 0;
+    const kinderFreibetragJaehrlich = (steuerklasse === "VI")
+        ? 0
+        : freibetragAnteile * KINDERFREIBETRAG.einschlBeaEUR; // Anteil × Freibetrag pro Kind (0,5 -> halber)
+    const jahresbrutto = Math.max(0, brutto * 12 - kinderFreibetragJaehrlich);
 
     function estGrundtarif(zvE) {
-        // Grundfreibetrag
-        const grundfreibetrag = 12096;
-
+        // Grundfreibetrag (Ledige) – aktueller Wert laut EINKOMMENSTEUERTARIF in js/utils.js
+        const grundfreibetrag = T.grundfreibetragLedig;
         if (zvE <= grundfreibetrag) {
             return 0;
         }
 
         // Progressionszone 1
-        if (zvE <= 17443) {
+        if (zvE <= T.zone1Bis) {
             const y = (zvE - grundfreibetrag) / 10000;
             return (979.18 * y + 1400) * y;
         }
 
         // Progressionszone 2
-        if (zvE <= 68480) {
-            const z = (zvE - 17443) / 10000;
+        if (zvE <= T.zone2Bis) {
+            const z = (zvE - T.zone1Bis) / 10000;
             return (192.59 * z + 2397) * z + 966.53;
         }
 
-        // Proportionalzone
-        if (zvE <= 277825) {
+        // Proportionalzone (Spitzensteuersatz 42 %)
+        if (zvE <= T.proportionalBis) {
             return 0.42 * zvE - 10911.92;
         }
 
-        // Reichensteuer
+        // Reichensteuer (45 %)
         return 0.45 * zvE - 19246.67;
     }
 
@@ -2986,9 +3276,8 @@ function berechneLohnsteuer(brutto, steuerklasse, kinderfreibetrag = "0") {
             break;
     }
 
-    // Kinderfreibetrag (vereinfacht monatliche Wirkung)
-    const freibetrag = parseFloat(kinderfreibetrag.replace(",", ".")) || 0;
-    jahressteuer -= freibetrag * 12 * 250;
+    // Kinderfreibeträge wirken bereits über das geminderte zu versteuernde
+    // Einkommen (siehe oben), daher keine weitere Absetzung hier mehr.
 
     jahressteuer = Math.max(0, jahressteuer);
 
@@ -3002,9 +3291,67 @@ function loadLohnabrechnungFirma() {
     loadBelegData('lohnabrechnungFirma', 'datenLohnabrechnung');
 }
 
+// ============================================================================
+// AUSBILDUNGSFELDER-EINGABE (nur bei Vorlage "Ausbildungsvergütung" sichtbar)
+// – Ausbildungsberuf (Standard: Kaufmann/-frau für Büromanagement, belege.html)
+// – Ausbildungsjahr (leer = Zufall 1.–3. Jahr; sonst fix für Mindestvergütungsprüfung)
+// ============================================================================
+function lohnabrechnungsBerufFeldUmschalten() {
+    const select = document.getElementById('svgDropdownLohnabrechnung');
+    const sichtbar = select && select.value === 'ausbildungsverguetung.svg';
+    const feldBeruf = document.getElementById('lohnabrechnungAusbildungsberufFeld');
+    const feldJahr = document.getElementById('lohnabrechnungAusbildungsjahrFeld');
+    if (feldBeruf) feldBeruf.style.display = sichtbar ? '' : 'none';
+    if (feldJahr) feldJahr.style.display = sichtbar ? '' : 'none';
+}
+
+// Leere Soli-Zeile aus einer Lohnabrechnungs-Vorlage entfernen (Soli = 0 €).
+// Die Zeile (Label + Wert) wird gelöscht und ALLE darunter liegenden Elemente
+// (Texte, Boxen, Trennlinien) um den Zeilenabstand nach oben verschoben – so
+// entsteht keine Lücke, auch nicht im PNG-/Druckexport.
+// Die vier Vorlagen haben die Soli-Zeile immer vor der Kirchensteuer-Zeile;
+// der Rasterabstand (hier 20 px) wird aus der Vorlage dynamisch ermittelt.
+function entferneLeereSoliZeile(soliWert) {
+    if (soliWert !== 0) return;
+    const wertEl = document.getElementById('lohnabrechnungSoli');
+    if (!wertEl) return;
+    const svg = wertEl.ownerSVGElement;
+    if (!svg) return;
+    const y = parseFloat(wertEl.getAttribute('y'));
+    if (isNaN(y)) return;
+
+    // 1) Rasterabstand: kleinste Text-y unterhalb der Soli-Zeile
+    let naechsteY = null;
+    svg.querySelectorAll('text').forEach(t => {
+        const ty = parseFloat(t.getAttribute('y'));
+        if (!isNaN(ty) && ty > y + 0.5 && (naechsteY === null || ty < naechsteY)) naechsteY = ty;
+    });
+
+    // 2) Zeileninhalt entfernen: alle <text> mit derselben y-Position (Label + Wert)
+    svg.querySelectorAll('text').forEach(t => {
+        const ty = parseFloat(t.getAttribute('y'));
+        if (!isNaN(ty) && Math.abs(ty - y) < 0.5) t.remove();
+    });
+
+    if (naechsteY === null) return; // Soli war die letzte Zeile – nichts zu verschieben
+    const delta = naechsteY - y;
+
+    // 3) Alles darunter um delta nach oben schieben (text/rect: y; line: y1/y2)
+    svg.querySelectorAll('text, rect').forEach(el => {
+        const ey = parseFloat(el.getAttribute('y'));
+        if (!isNaN(ey) && ey > y) el.setAttribute('y', ey - delta);
+    });
+    svg.querySelectorAll('line').forEach(el => {
+        const y1 = parseFloat(el.getAttribute('y1'));
+        const y2 = parseFloat(el.getAttribute('y2'));
+        if (!isNaN(y1) && y1 > y) el.setAttribute('y1', y1 - delta);
+        if (!isNaN(y2) && y2 > y) el.setAttribute('y2', y2 - delta);
+    });
+}
+
 // Hauptfunktion: Lohnabrechnung erstellen
-async function lohnabrechnungApplySVGholen() {
-    if (!validateInputs()) return;
+async function lohnabrechnungApplySVGholen(validationUeberspringen = false) {
+    if (!validationUeberspringen && !validateInputs()) return;
 
     // SVG laden
     let selectedQuittung = document.getElementById("svgDropdownLohnabrechnung").value;
@@ -3021,8 +3368,16 @@ async function lohnabrechnungApplySVGholen() {
     // Firmendaten laden
     loadLohnabrechnungFirma();
 
-    // Mitarbeiterdaten generieren
-    const mitarbeiter = generateMitarbeiterDaten();
+    // Mitarbeiterdaten generieren (bei Ausbildungsvergütung: Azubi-Daten mit Beruf + Ausbildungsjahr)
+    const istAusbildung = selectedQuittung === 'ausbildungsverguetung.svg';
+    // Ausbildungsjahr: Auswahl der Lehrkraft (belegformular), sonst Zufall (1.–3. Jahr)
+    let azubiJahrSoll = null;
+    if (istAusbildung) {
+        const jahrInput = document.getElementById('lohnabrechnungAusbildungsjahrInput');
+        const jahrWert = jahrInput ? parseInt(jahrInput.value, 10) : NaN;
+        if (!isNaN(jahrWert) && jahrWert >= 1 && jahrWert <= 4) azubiJahrSoll = jahrWert;
+    }
+    const mitarbeiter = generateMitarbeiterDaten(istAusbildung, azubiJahrSoll);
     document.getElementById('lohnabrechnungMitarbeiterName').textContent = mitarbeiter.name;
     document.getElementById('lohnabrechnungMitarbeiterStrasse').textContent = mitarbeiter.strasse;
     document.getElementById('lohnabrechnungPersonalnr').textContent = mitarbeiter.personalnr;
@@ -3031,6 +3386,18 @@ async function lohnabrechnungApplySVGholen() {
     document.getElementById('lohnabrechnungSteuerID').textContent = mitarbeiter.steuerID;
     document.getElementById('lohnabrechnungBank').textContent = mitarbeiter.bank;
     document.getElementById('lohnabrechnungIBAN').textContent = mitarbeiter.iban;
+
+    // Ausbildungsdaten (nur im Ausbildungsvergütungs-Template vorhanden – guarded)
+    // Beruf: bevorzugt aus dem Eingabefeld (Standard: Kaufmann/-frau für Büromanagement),
+    // Fallback: Zufallsberuf aus der Liste
+    const elBeruf = document.getElementById('lohnabrechnungAusbildungsberuf');
+    if (elBeruf) {
+        const berufInput = document.getElementById('lohnabrechnungAusbildungsberufInput');
+        const berufManuell = (istAusbildung && berufInput && berufInput.value.trim()) ? berufInput.value.trim() : null;
+        elBeruf.textContent = berufManuell || mitarbeiter.ausbildungsberuf || '';
+    }
+    const elJahr = document.getElementById('lohnabrechnungAusbildungsjahr');
+    if (elJahr && mitarbeiter.ausbildungsjahr) elJahr.textContent = `${mitarbeiter.ausbildungsjahr}. Ausbildungsjahr`;
 
     // Monat
     const monat = document.getElementById('lohnabrechnungMonatInput').value;
@@ -3050,6 +3417,28 @@ async function lohnabrechnungApplySVGholen() {
     // Brutto
     const brutto = parseFloat(document.getElementById('lohnabrechnungBruttoInput').value);
     document.getElementById('lohnabrechnungBrutto').textContent = FormatHelper.currency(brutto);
+
+    // MINDESTAUSBILDUNGSVERGÜTUNG: Wenn das Brutto unter dem gesetzlichen
+    // Mindestsatz des aktuellen Ausbildungsjahres liegt, Hinweis-Banner zeigen.
+    // Monatsbeträge aktualisiert laut MINDESTAUSBILDUNGSVERGUETUNG in js/utils.js
+    // (jahr-Feld beachten); tarifvertragliche Regeln können höher ausfallen.
+    const minHinweis = document.getElementById('lohnabrechnungMindestlohnHinweis');
+    if (minHinweis) {
+        const minSatz = (istAusbildung && mitarbeiter.ausbildungsjahr)
+            ? mindestAusbildungsverguetung(mitarbeiter.ausbildungsjahr)
+            : null;
+        if (minSatz !== null && brutto < minSatz) {
+            minHinweis.style.display = '';
+            minHinweis.innerHTML =
+                '<strong>Hinweis:</strong> Die Ausbildungsvergütung von <strong>' + FormatHelper.currency(brutto) +
+                '</strong> liegt unter der gesetzlichen <strong>Mindestausbildungsvergütung (Monatsbetrag: ' +
+                FormatHelper.currency(minSatz) + ' im ' + mitarbeiter.ausbildungsjahr + '. Ausbildungsjahr)</strong>. ' +
+                'Bitte pr&uuml;fen – tarifvertragliche Regelungen k&ouml;nnen h&ouml;here Anspr&uuml;che begr&uuml;nden.';
+        } else {
+            minHinweis.style.display = 'none';
+            minHinweis.innerHTML = '';
+        }
+    }
 
     // Lohnsteuer: Automatisch berechnen ODER manuellen Wert behalten
     const lohnsteuerGesperrt = document.getElementById('lohnabrechnungLohnsteuerSperreInput').checked;
@@ -3079,17 +3468,30 @@ async function lohnabrechnungApplySVGholen() {
     const steuerGesamt = lohnsteuer + soli + kirchensteuer;
     document.getElementById('lohnabrechnungSteuerGesamt').textContent = FormatHelper.currency(steuerGesamt);
 
-    // Sozialversicherung AN-Anteile (VEREINFACHT - nur Prozentsätze, keine Sonderfälle)
+    // SOLIDARITÄTSZUSCHLAG 0: Zeile komplett aus der Vorlage entfernen
+    // (statt "0,00 €" – inkl. Platz; alles darunter rückt nach oben).
+    // Wirkt für Lohnabrechnung, Gehaltsabrechnung und Ausbildungsvergütung.
+    entferneLeereSoliZeile(soli);
+
+    // Sozialversicherung AN-Anteile
+    // Beiträge nur bis zur Beitragsbemessungsgrenze berechnen – die
+    // monatlichen Grenzwerte gelten jeweils aktuell laut
+    // BEITRAGSBEMESSUNGSGRENZEN in js/utils.js
+    // (über die Hilfsfunktionen bbgBasisKVPV/bbgBasisRVALV).
     const kvSatz = parseFloat(document.getElementById('lohnabrechnungKVSatzInput').value) / 100;
     const pvSatz = parseFloat(document.getElementById('lohnabrechnungPVSatzInput').value) / 100;
     const rvSatz = parseFloat(document.getElementById('lohnabrechnungRVSatzInput').value) / 100;
     const alvSatz = parseFloat(document.getElementById('lohnabrechnungALVSatzInput').value) / 100;
 
-    // Einfache Berechnung: Brutto × Prozentsatz
-    const kvAN = FormatHelper.roundToTwo(brutto * kvSatz);
-    const pvAN = FormatHelper.roundToTwo(brutto * pvSatz);
-    const rvAN = FormatHelper.roundToTwo(brutto * rvSatz);
-    const alvAN = FormatHelper.roundToTwo(brutto * alvSatz);
+    // Bemessungsbasis je Zweig begrenzen (KV/PV bzw. RV/ALV)
+    const basisKvPv = bbgBasisKVPV(brutto);
+    const basisRvAlv = bbgBasisRVALV(brutto);
+
+    // Beiträge = Bemessungsbasis × Prozentsatz
+    const kvAN = FormatHelper.roundToTwo(basisKvPv * kvSatz);
+    const pvAN = FormatHelper.roundToTwo(basisKvPv * pvSatz);
+    const rvAN = FormatHelper.roundToTwo(basisRvAlv * rvSatz);
+    const alvAN = FormatHelper.roundToTwo(basisRvAlv * alvSatz);
 
     document.getElementById('lohnabrechnungKrankenversicherung').textContent = FormatHelper.currency(kvAN);
     document.getElementById('lohnabrechnungPflegeversicherung').textContent = FormatHelper.currency(pvAN);

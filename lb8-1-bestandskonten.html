@@ -50,10 +50,15 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/jodit.min.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/clipboard.min.js"></script>
-  <script src="js/menu.js"></script>
+  <script src="js/menu.js?v=14"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/jodit.min.js"></script>
+  <script src="js/joditeditor.js?v=67"></script>
+<script src="js/collection.js?v=26"></script>
 </head>
 <body>
 <main>
@@ -90,7 +95,7 @@
 
       <div class="flex-row">
         <button onclick="zeigeZufaelligenBestandsabschluss()">Neue Aufgabe erstellen</button>
-        <button onclick="drucken()">
+        <button onclick="window.print()">
           📄 T-Konten-Blatt drucken
         </button>
       </div>
@@ -98,7 +103,6 @@
 
     <div id="Container" style="max-width:960px;margin:0 auto;" contenteditable="true"></div>
 
-    <div w3-include-html="downloads.html"></div>
     <!-- KI-ASSISTENT -->
     <div class="ki-assistent-box">
       <div class="ki-assistent-header">
@@ -148,7 +152,6 @@
   </div>
 
   <script src="js/lb8-1-bestandskonten.js"></script>
-  <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div>
   <script>includeHTML();</script>
 </main>

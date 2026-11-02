@@ -16,10 +16,7 @@
     }
 
     // Funktion zum Formatieren von Prozent
-    function pwbFormatiereProzent(wert) {
-      return wert.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' %';
-    }
-
+    
     // Funktion zum Berechnen der UST
     function pwbBerechneUST(nettobetrag) {
       return Math.round(nettobetrag * 0.19 * 100) / 100;
@@ -122,74 +119,9 @@
     }
 
     // Export-Funktionen
-    function pwbHerunterladenAlsPNG() {
-      const element = document.getElementById('Container');
-      if (!element.innerHTML) {
-        alert('Bitte erstellen Sie zuerst eine Aufgabe!');
-        return;
-      }
-      
-      html2canvas(element).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'pauschalwertberichtigung.png';
-        link.href = canvas.toDataURL();
-        link.click();
-      });
-    }
-
-    function pwbHerunterladen() {
-      const element = document.getElementById('Container');
-      if (!element.innerHTML) {
-        alert('Bitte erstellen Sie zuerst eine Aufgabe!');
-        return;
-      }
-      
-      const htmlContent = `<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <title>Pauschalwertberichtigung</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { border-collapse: collapse; }
-    th, td { border: 1px solid #000; padding: 8px; }
-  </style>
-</head>
-<body>
-  ${element.innerHTML}
-</body>
-</html>`;
-      
-      const blob = new Blob([htmlContent], { type: 'text/html' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'pauschalwertberichtigung.html';
-      link.click();
-    }
-
-    function pwbKopiereInZwischenablage() {
-      const element = document.getElementById('Container');
-      if (!element.innerHTML) {
-        alert('Bitte erstellen Sie zuerst eine Aufgabe!');
-        return;
-      }
-      
-      const range = document.createRange();
-      range.selectNode(element);
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-      
-      try {
-        document.execCommand('copy');
-        alert('In Zwischenablage kopiert!');
-      } catch (err) {
-        alert('Fehler beim Kopieren');
-      }
-      
-      window.getSelection().removeAllRanges();
-    }
-
-
+    
+    
+    
      // Beim Laden der Seite automatisch einen BAB erstellen
     document.addEventListener("DOMContentLoaded", function() {
       pwbZeigeZufaelligeTabelle();

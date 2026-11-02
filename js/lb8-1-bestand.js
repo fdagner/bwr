@@ -18,12 +18,6 @@ function generateRandomBestand(faktor = 1) {
 }
 
 // Formatierung (unverändert)
-function formatBetrag(value) {
-  return value.toLocaleString('de-DE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
 
 function erstelleZufaelligeBestandsveraenderungen() {
   const bestandsdaten = werkstoffe.map(w => {

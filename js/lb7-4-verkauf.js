@@ -74,9 +74,6 @@ const alleGfVerkauf = [
 function formatCurrencyV(value) {
   return value.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
 }
-function roundToTwoDecimalsV(num) {
-  return Math.round(num * 100) / 100;
-}
 function pickV(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -93,28 +90,40 @@ function generateNettoOhneRabattV() {
 // YAML-HILFSFUNKTIONEN
 // ============================================================================
 
+function existiertInCoreVK(unternehmen, coreData) {
+  const key = String(unternehmen?.unternehmen?.id ?? '') + '|' + String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+  const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+  return (coreData || []).some(c => (String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase()) === key || String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name);
+}
+
 function ladeYamlVerkauf() {
-  const saved =
-    localStorage.getItem("uploadedYamlCompanyData") ||
-    localStorage.getItem("standardYamlData");
-  if (saved) {
-    try {
-      yamlDataVerkauf = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlDataVerkauf(); // ← NEU
-      document.dispatchEvent(new Event("yamlDataVerkaufLoaded"));
-      return true;
-    } catch (e) { /* ignorieren */ }
-  }
-  fetch("js/unternehmen.yml")
+  fetch("js/unternehmen.yml?v=" + Date.now())
     .then((r) => (r.ok ? r.text() : Promise.reject()))
     .then((txt) => {
-      yamlDataVerkauf = jsyaml.load(txt) || [];
-      mergeUserCompaniesIntoYamlDataVerkauf(); // ← korrigiert (war: mergeUserCompaniesIntoYamlData)
+      const coreData = jsyaml.load(txt) || [];
+      try { localStorage.setItem("standardYamlData", JSON.stringify(coreData)); } catch (e) {}
+      const saved = localStorage.getItem("uploadedYamlCompanyData");
+      let zusaetzliche = [];
+      if (saved) {
+        try {
+          const uploaded = JSON.parse(saved);
+          zusaetzliche = uploaded.filter(u => !existiertInCoreVK(u, coreData));
+          if (zusaetzliche.length === 0) {
+            localStorage.removeItem("uploadedYamlCompanyData");
+          } else if (zusaetzliche.length !== uploaded.length) {
+            localStorage.setItem("uploadedYamlCompanyData", JSON.stringify(zusaetzliche));
+          }
+        } catch (e) { localStorage.removeItem("uploadedYamlCompanyData"); }
+      }
+      yamlDataVerkauf = [...coreData, ...zusaetzliche];
+      mergeUserCompaniesIntoYamlDataVerkauf();
       document.dispatchEvent(new Event("yamlDataVerkaufLoaded"));
     })
     .catch(() => {});
   return false;
 }
+
+
 
 function fillCompanyDropdownV() {
   if (!yamlDataVerkauf?.length) return;
@@ -255,14 +264,72 @@ function bsEinfachUstV(gf) {
 // ============================================================================
 // GESCHÄFTSFALL GENERIEREN
 // ============================================================================
-
-function genReNrV() {
-  return Math.floor(100 + Math.random() * 9900);
-}
+// ============================================================================
+// DYNAMISCHE PRODUKTBEZEICHNUNG (ANALOG ZU LB8)
+// ============================================================================
 
 function getProduktbezeichnung() {
+  // 1. Falls ein manuelles Eingabefeld genutzt wird, dieses bevorzugen
   const val = document.getElementById("produktBezeichnung")?.value?.trim();
-  return val || "Fertigerzeugnisse";
+  if (val) return val;
+
+  // 2. Aktuell ausgewähltes Unternehmen ermitteln
+  const selectedCompanyName = document.getElementById("verkaufKunde")?.value?.trim();
+  
+  if (selectedCompanyName && yamlDataVerkauf?.length) {
+    const companyEntry = yamlDataVerkauf.find(
+      (e) => e.unternehmen?.name === selectedCompanyName
+    );
+    
+    // a) Prüfen, ob das Unternehmen Fertigerzeugnisse definiert hat (z. B. Werkstoffunternehmen)
+    const hauptwerkProdukte = companyEntry?.unternehmen?.fertigerzeugnisse?.hauptwerk;
+    if (hauptwerkProdukte && hauptwerkProdukte.length > 0) {
+      const zufallsProdukt = pickV(hauptwerkProdukte);
+      return zufallsProdukt.name;
+    }
+
+    // b) Prüfen, ob Werkstoffe definiert sind (falls als Erzeugnisse/Bauteile relevant)
+    if (companyEntry?.unternehmen?.werkstoffe?.AWR?.length) {
+      return pickV(companyEntry.unternehmen.werkstoffe.AWR);
+    }
+  }
+
+  // Fallback, wenn kein spezielles Erzeugnis gefunden wurde
+  return "Fertigerzeugnisse";
+}
+
+// Zufälliges Fertigerzeugnis des gewählten Verkäufers (oder null)
+function waehleProduktV() {
+  const name = document.getElementById("verkaufKunde")?.value?.trim() || "";
+  const firma = yamlDataVerkauf.find((c) => c.unternehmen?.name === name);
+  const u = firma?.unternehmen;
+  // "ferigerzeugnisse" = alter Tippfehler-Schlüssel in bereits gespeicherten Unternehmen
+  const liste = (u?.fertigerzeugnisse || u?.ferigerzeugnisse)?.hauptwerk;
+  if (!Array.isArray(liste)) return null;
+  const gueltig = liste.filter((p) => p?.name?.trim());
+  return gueltig.length ? pickV(gueltig) : null;
+}
+
+// Menge + Stückpreis innerhalb der Preisspanne (oder null ohne gültige Preise)
+function genMengePreisV(produkt) {
+  const min = Number(produkt?.preis_min);
+  const max = Number(produkt?.preis_max);
+  if (!produkt || !Number.isFinite(min) || !Number.isFinite(max) || max < min) return null;
+
+  // Schrittweite so, dass Rabatte (5/10/15/20 %) glatte Beträge ergeben
+  const step = max >= 1000 ? 100 : (max >= 100 ? 20 : 1);
+  const lo = Math.ceil(min / step);
+  const hi = Math.floor(max / step);
+  const stueckpreis = hi < lo
+    ? Math.round(min)
+    : (lo + Math.floor(Math.random() * (hi - lo + 1))) * step;
+
+  // Menge: mindestens 2, Obergrenze je nach Stückpreis, Gesamtwert max. 100.000 €
+  let maxMenge = stueckpreis >= 5000 ? 8 : stueckpreis >= 1000 ? 15 : stueckpreis >= 100 ? 30 : 100;
+  maxMenge = Math.max(2, Math.min(maxMenge, Math.floor(100000 / stueckpreis)));
+  const menge = 2 + Math.floor(Math.random() * (maxMenge - 1));
+
+  return { menge, stueckpreis, gesamt: menge * stueckpreis };
 }
 
 // Zuletzt generierte GF-Liste (für KI-Prompt)
@@ -273,14 +340,27 @@ function erstelleZufallsGeschaeftsfallV() {
   const ustAngegeben = document.getElementById("optUstAngegeben")?.checked ?? false;
 
   const typ = alleGfVerkauf[0];
-  const produktname = getProduktbezeichnung();
+  const produkt = waehleProduktV();
+  const posten = genMengePreisV(produkt);
+  const mitMenge = !!posten;
+  const produktname = produkt ? produkt.name.trim() : getProduktbezeichnung();
+  // Einheit aus der YAML (z. B. "m²", "m"); ohne Angabe -> "Stk" für den Beleg, im Text keine Einheit
+  const einheitYaml = produkt?.einheit ? String(produkt.einheit).trim() : "";
+  const artikelText = mitMenge
+    ? `${posten.menge}${einheitYaml ? "\u00a0" + einheitYaml : ""} ${produktname}`
+    : produktname;
   const abnehmerObj = getZufaelligenAbnehmer();
 
   const mitRabatt = mitRabattOpt;
   const rabattProzent = mitRabatt ? pickV(RABATT_SAETZE_V) : 0;
 
   let listennetto, nettoBetrag;
-  if (mitRabatt) {
+  if (mitMenge) {
+    listennetto = posten.gesamt;
+    nettoBetrag = mitRabatt
+      ? Math.round(listennetto * (1 - rabattProzent / 100))
+      : listennetto;
+  } else if (mitRabatt) {
     const betraege = genZielUndListenpreisV(rabattProzent);
     listennetto = betraege.listennetto;
     nettoBetrag = betraege.nettoBetrag;
@@ -296,20 +376,33 @@ function erstelleZufallsGeschaeftsfallV() {
 
   const angabeIstBrutto = mitRabatt ? false : Math.random() < 0.5;
 
-  const rabattFormulierungen = [
+  const rabattFormulierungen = mitMenge ? [
     `${formatCurrencyV(listennetto)} netto, mit einem Rabatt von ${rabattProzent}\u00a0%`,
-    `netto ${formatCurrencyV(listennetto)}. Es wird ein Rabatt von ${rabattProzent}\u00a0% gewährt`,
+    `${formatCurrencyV(listennetto)} netto für die gesamte Lieferung. Es wird ein Rabatt von ${rabattProzent}\u00a0% gewährt`,
     `${formatCurrencyV(listennetto)} netto (abzüglich ${rabattProzent}\u00a0% Rabatt)`,
-    `netto ${formatCurrencyV(listennetto)}, abzüglich ${rabattProzent}\u00a0% Rabatt`,
+    `${formatCurrencyV(listennetto)} netto, abzüglich ${rabattProzent}\u00a0% Rabatt`,
+  ] : [
+    `${formatCurrencyV(listennetto)} netto, mit einem Rabatt von ${rabattProzent}\u00a0%`,
+    `${formatCurrencyV(listennetto)} netto. Es wird ein Rabatt von ${rabattProzent}\u00a0% gewährt`,
+    `${formatCurrencyV(listennetto)} netto (abzüglich ${rabattProzent}\u00a0% Rabatt)`,
+    `${formatCurrencyV(listennetto)} netto, abzüglich ${rabattProzent}\u00a0% Rabatt`,
   ];
-  const nettoFormulierungen = [
+  const nettoFormulierungen = mitMenge ? [
+    `${formatCurrencyV(nettoBetrag)} netto`,
+    `${formatCurrencyV(nettoBetrag)} netto`,
+    `${formatCurrencyV(nettoBetrag)} netto`,
+  ] : [
     `Verkaufspreis netto: ${formatCurrencyV(nettoBetrag)}`,
     `Nettobetrag: ${formatCurrencyV(nettoBetrag)}`,
     `Listenpreis netto: ${formatCurrencyV(nettoBetrag)}`,
   ];
-  const bruttoFormulierungen = [
+  const bruttoFormulierungen = mitMenge ? [
+    `${formatCurrencyV(bruttoBetrag)} brutto`,
+    `${formatCurrencyV(bruttoBetrag)} brutto`,
+    `${formatCurrencyV(bruttoBetrag)} brutto`,
+  ] : [
     `Rechnungsbetrag: ${formatCurrencyV(bruttoBetrag)}`,
-    `Bruttobetrag: ${formatCurrencyV(bruttoBetrag)}`,
+    `brutto: ${formatCurrencyV(bruttoBetrag)}`,
     `Rechnungsbetrag: ${formatCurrencyV(bruttoBetrag)}`,
   ];
 
@@ -320,24 +413,31 @@ function erstelleZufallsGeschaeftsfallV() {
     betragText = angabeIstBrutto ? pickV(bruttoFormulierungen) : pickV(nettoFormulierungen);
   }
 
-  const ustFormulierungen = [
+  const ustFormulierungen = mitMenge ? [
+    `Die Umsatzsteuer beträgt insgesamt ${formatCurrencyV(Umsatzsteuer)}.`,
+    `Umsatzsteuer insgesamt (19\u00a0%): ${formatCurrencyV(Umsatzsteuer)}.`,
+    `Der Umsatzsteuerbetrag liegt insgesamt bei ${formatCurrencyV(Umsatzsteuer)}.`,
+  ] : [
     `Die Umsatzsteuer beträgt ${formatCurrencyV(Umsatzsteuer)}.`,
     `Umsatzsteuer (19\u00a0%): ${formatCurrencyV(Umsatzsteuer)}.`,
     `Der Umsatzsteuerbetrag liegt bei ${formatCurrencyV(Umsatzsteuer)}.`,
   ];
+
   const ustHinweis = ustAngegeben ? ` ${pickV(ustFormulierungen)}` : "";
 
-  const vorlagenIdx = Math.floor(Math.random() * typ.vorlagen.length);
-  const textVorlage = typ.vorlagen[vorlagenIdx]
+  // "mit {artikel}" verlangt den Dativ -> bei echten Produkten weglassen
+  const vorlagenPool = produkt
+    ? typ.vorlagen.filter((v) => !v.includes("mit {artikel}"))
+    : typ.vorlagen;
+  const textVorlage = pickV(vorlagenPool)
     .replace("{kunde}", kundeVerkauf)
-    .replace("{artikel}", produktname);
+    .replace("{artikel}", artikelText);
 
   const betragsEinleitungen = [
-    "in Höhe von",
-    "zum Betrag von",
-    "mit einem Gesamtbetrag von",
-    "mit einem Betrag von",
-    "in Höhe von",
+    "in Höhe von insgesamt",
+    "zum Betrag von insgesamt",
+    "mit einem Betrag von insgesamt",
+    "in Höhe von insgesamt",
   ];
   const nurBrutto = angabeIstBrutto && !mitRabatt;
   const einleitungPool = nurBrutto
@@ -353,7 +453,9 @@ function erstelleZufallsGeschaeftsfallV() {
     abnehmerObj,
     produktname,
     artikelBelegName: produktname,
-    einheit: "Stk",
+    menge: posten ? posten.menge : null,
+    stueckpreis: posten ? posten.stueckpreis : null,
+    einheit: einheitYaml || "Stk",
     sollKto: typ.soll,
     habenKto: typ.haben,
     rabatt: mitRabatt,
@@ -610,16 +712,17 @@ function erstelleBelegURL(gf) {
   if (kv) params.set("lieferer", kv);
   params.set("kunde", gf.abnehmerObj.name);
 
-  if (gf.rabatt) {
-    params.set("artikel1",     gf.artikelBelegName);
-    params.set("menge1",       "1");
-    params.set("einheit1",     gf.einheit || "Stk");
+  params.set("artikel1", gf.artikelBelegName);
+  params.set("menge1",   String(gf.menge || 1));
+  params.set("einheit1", gf.einheit || "Stk");
+
+  if (gf.menge && gf.stueckpreis) {
+    params.set("einzelpreis1", String(gf.stueckpreis));
+    if (gf.rabatt) params.set("rabatt", gf.rabattProzent);
+  } else if (gf.rabatt) {
     params.set("einzelpreis1", parseNumericValueV(formatCurrencyV(gf.listennetto)));
-    params.set("rabatt",       gf.rabattProzent);
+    params.set("rabatt", gf.rabattProzent);
   } else {
-    params.set("artikel1",     gf.artikelBelegName);
-    params.set("menge1",       "1");
-    params.set("einheit1",     gf.einheit || "Stk");
     params.set("einzelpreis1", parseNumericValueV(formatCurrencyV(gf.nettoBetrag)));
   }
 
@@ -699,8 +802,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "yamlDataVerkaufLoaded",
     () => {
       fillCompanyDropdownV();
-      setTimeout(autoSelectMyCompanyV, 100);
-      setTimeout(zeigeZufaelligeGeschaeftsfaelleV, 200);
+      autoSelectMyCompanyV();
+      zeigeZufaelligeGeschaeftsfaelleV();
     },
     { once: true },
   );
@@ -709,7 +812,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (yamlDataVerkauf?.length) {
     fillCompanyDropdownV();
-    setTimeout(autoSelectMyCompanyV, 100);
-    setTimeout(zeigeZufaelligeGeschaeftsfaelleV, 200);
+    autoSelectMyCompanyV();
+    zeigeZufaelligeGeschaeftsfaelleV();
   }
 });

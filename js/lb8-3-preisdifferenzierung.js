@@ -2,7 +2,6 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 let letztePreisAufgaben = [];
 
@@ -10,56 +9,9 @@ let letztePreisAufgaben = [];
 // YAML-DATEN LADEN (identisch zum Marketing-Generator)
 // ============================================================================
 
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-    });
-}
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -239,18 +191,6 @@ const differenzierungen = {
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 const unternehmensVarianten = [
   (name) => name,
@@ -415,14 +355,18 @@ document.addEventListener('DOMContentLoaded', () => {
     kunde = kundeSelect.value.trim() || '';
   });
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeZufaelligePreisdifferenzierung();
   } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligePreisdifferenzierung();
+    }, { once: true });
   }
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
@@ -525,10 +469,4 @@ function autoSelectMyCompany() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(function() {
-    autoSelectMyCompany();
-      zeigeZufaelligePreisdifferenzierung()
-  }, 500);
-
-});
+// (Aufruf erfolgt jetzt event-basiert über 'yamlDataLoaded' im ersten DOMContentLoaded-Handler)

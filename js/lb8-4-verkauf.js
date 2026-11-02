@@ -1,5 +1,4 @@
-// Globale Variable – wird von einkauf.js benötigt
-  let yamlData = [];
+// yamlData wird von company-loader.js global bereitgestellt
   let lieferer = '<i>[Modellunternehmen]</i>';
 
   // ── Vermischte Aufgaben ──────────────────────────────────────────────────
@@ -14,77 +13,11 @@ function verkaufGetModus() {
 // ============================================================================
 
 // Funktion zum Abrufen der benutzerdefinierten Unternehmen aus dem Local Storage
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
 // Funktion zum Zusammenführen der benutzerdefinierten Unternehmen mit den Standard-YAML-Daten
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  
-  if (userCompanies.length > 0) {
-    // Füge Benutzerunternehmen zu yamlData hinzu
-    yamlData = [...yamlData, ...userCompanies];
-    
-    // Sortiere nach Branche
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-    
-    console.log(`${userCompanies.length} Benutzerunternehmen hinzugefügt. Gesamt: ${yamlData.length} Unternehmen`);
-  }
-}
-
 
 // Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
-      
-      // ← NEU: Benutzerdefinierte Unternehmen hinzufügen
-      mergeUserCompaniesIntoYamlData();
-      
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
 
-// Versuch 2: Standard-Datei laden
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      
-      // ← NEU: Standard-Daten im LocalStorage speichern (falls noch nicht vorhanden)
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      
-      // ← NEU: Benutzerdefinierte Unternehmen hinzufügen
-      mergeUserCompaniesIntoYamlData();
-      
-      console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-      // Optional: leere Liste oder Fehlermeldung im UI
-    });
-}
 
   // Start: zuerst localStorage, sonst Standard
   document.addEventListener('DOMContentLoaded', () => {
@@ -102,9 +35,6 @@ function loadDefaultYaml() {
         console.log('Lieferer geändert:', lieferer);
     });
 
-    if (!loadYamlFromLocalStorage()) {
-      loadDefaultYaml();
-    }
   });
 
 
@@ -132,20 +62,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initialisiere den Zustand der "mitBezugskosten"-Checkbox beim Laden der Seite
   verkaufUpdateMitBezugskostenState();
+
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
-        fillCompanyDropdowns();
-    } else {
-        // Falls yamlData noch nicht geladen → auf Event warten oder fetch auslösen
-        document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
-    }
+    fillCompanyDropdowns();
+    autoSelectMyCompany();
+    verkaufZeigeZufaelligenSatz();
+  } else {
+    // Falls yamlData noch nicht geladen → auf Event warten oder fetch auslösen
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      verkaufZeigeZufaelligenSatz();
+    }, { once: true });
+  }
 
 });
 
 // Auf 2 Dezimalstellen runden
-function roundToTwoDecimals(num) {
-  return Math.round(num * 100) / 100;
-}
-
 
 // Funktion für zufällige Zahlen Rabatt, Gewinn und Bezugskosten
 function getRandomIntegerWithSteps(min, max, step) {
@@ -185,9 +120,6 @@ function generateRandomNettoWert() {
 }
 
 // Währung nach DIN 5008
-function formatCurrency(value) {
-  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
 
 // Kontenplan
 const kontenUmsatzserloese = {
@@ -221,9 +153,72 @@ function inputSellChangeCategory() {
   }
 }
 
+// Zuletzt gewähltes Fertigerzeugnis (wird auch für den Beleg-Button gebraucht)
+let verkaufAktuellesProdukt = null;
+let verkaufAktuelleMenge = null;
+let verkaufAktuellerStueckpreis = null;
+let verkaufAktuelleEinheit = null;
+
+
+
+// Zufälliges Fertigerzeugnis des gewählten Verkäufers (oder null)
+function verkaufWaehleProdukt() {
+  const firma = yamlData.find(c => c.unternehmen?.name === lieferer);
+  const u = firma?.unternehmen;
+  // "ferigerzeugnisse" = alter Tippfehler-Schlüssel in bereits gespeicherten Unternehmen
+  const liste = (u?.fertigerzeugnisse || u?.ferigerzeugnisse)?.hauptwerk;
+  if (!Array.isArray(liste)) return null;
+  const gueltig = liste.filter(p => p?.name && p.name.trim());
+  if (gueltig.length === 0) return null;
+  return gueltig[Math.floor(Math.random() * gueltig.length)];
+}
+
+// Zufällige Menge + Stückpreis innerhalb der Preisspanne des Produkts
+function verkaufGeneriereMengeUndPreis(produkt) {
+  const min = Number(produkt?.preis_min);
+  const max = Number(produkt?.preis_max);
+
+  // Kein Produkt oder keine gültige Spanne -> bisheriges Verhalten (ohne Menge)
+  if (!produkt || !Number.isFinite(min) || !Number.isFinite(max) || max < min) {
+    return { menge: null, stueckpreis: null, gesamt: generateRandomNettoWert() };
+  }
+
+  // Stückpreis: zufällig in [min, max], gerundet (teure Produkte auf 100 €)
+  const step = max >= 1000 ? 100 : (max >= 100 ? 10 : 1);
+  const lo = Math.ceil(min / step);
+  const hi = Math.floor(max / step);
+  const stueckpreis = hi < lo
+    ? Math.round(min)
+    : (lo + Math.floor(Math.random() * (hi - lo + 1))) * step;
+
+  // Menge: mindestens 2, Obergrenze je nach Stückpreis, Gesamtwert max. 250.000 €
+  let maxMenge = stueckpreis >= 5000 ? 10 : stueckpreis >= 1000 ? 20 : stueckpreis >= 100 ? 50 : 200;
+  maxMenge = Math.max(2, Math.min(maxMenge, Math.floor(250000 / stueckpreis)));
+  const menge = 2 + Math.floor(Math.random() * (maxMenge - 1));
+
+  return { menge, stueckpreis, gesamt: menge * stueckpreis };
+}
+
 
 function verkaufErstelleZufallssatz() {
   inputSellChangeCategory();
+  verkaufAktuellesProdukt = verkaufWaehleProdukt();
+  const verkaufPosten = verkaufGeneriereMengeUndPreis(verkaufAktuellesProdukt);
+  verkaufAktuelleMenge = verkaufPosten.menge;
+  verkaufAktuellerStueckpreis = verkaufPosten.stueckpreis;
+  verkaufAktuelleEinheit = verkaufAktuellesProdukt?.einheit
+    ? String(verkaufAktuellesProdukt.einheit).trim()
+    : null;
+  const verkaufMengeText = verkaufPosten.menge
+    ? `${verkaufPosten.menge}${verkaufAktuelleEinheit ? ' ' + verkaufAktuelleEinheit : ''} `
+    : '';
+  const verkaufProduktAkk = verkaufAktuellesProdukt
+    ? `${verkaufMengeText}${verkaufAktuellesProdukt.name.trim()}`
+    : 'Fertigerzeugnisse';
+  const verkaufMitMenge = !!verkaufAktuelleMenge;
+  const verkaufGes  = verkaufMitMenge ? ' insgesamt' : '';
+  const verkaufLief = verkaufMitMenge ? ' für die gesamte Lieferung' : '';
+  const verkaufLP   = verkaufMitMenge ? 'Listenpreis' : 'Listenpreis';
   let verkaufRandom_Rabatt = getRandomRabatt();
   let verkaufRandom_Bezugskosten = getRandomBezugskosten();
   let verkaufRandom_Gewinn = getRandomGewinn();
@@ -232,20 +227,22 @@ function verkaufErstelleZufallssatz() {
   verkaufRandom_Bezugskosten = formatCurrency(verkaufRandom_Bezugskosten);
   // Arrays mit verschiedenen Teilen des Satzes
   const verkaufArray_Subjekt = [`${lieferer} verkauft `, `${lieferer} liefert `, `Firma ${lieferer} verkauft `, `${lieferer} veräußert `, `${lieferer} hat verkauft: `];
-  const verkaufArray_Subjekt_2 = [`Verkauf `];
-  const verkaufArray_Subjekt_3 = [`Ein Kunde bittet um ein Angebot für Fertigerzeugnisse. Berechne den Listenverkaufspreis unter den folgenden Bedingungen: `, `${lieferer} erhält eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis berechnen, wenn wir mit den folgenden Werten kalkulieren: `];
-  const verkaufArray_Subjekt_4 = [`${lieferer} erreicht eine telefonische Anfrage für den Kauf von Fertigerzeugnissen. Berechne den Listenverkaufspreis bei`, `${lieferer} erhält eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis bei `];
+  const verkaufArray_Subjekt_2 = [`Es werden von ${lieferer} verkauft: `];
+  const verkaufArray_Subjekt_3 = [`Ein Kunde bittet um ein Angebot für ${verkaufProduktAkk}. Berechne den Listenverkaufspreis${verkaufLief} unter den folgenden Bedingungen: `, `${lieferer} erhält eine Anfrage für ein Angebot per E-Mail. Du sollst nun den Listenverkaufspreis${verkaufLief} berechnen, wenn wir mit den folgenden Werten kalkulieren: `];
+  const verkaufArray_Subjekt_4 = [`${lieferer} erreicht eine telefonische Anfrage für ${verkaufProduktAkk}. Berechne den Listenverkaufspreis${verkaufLief} bei`, `${lieferer} erhält eine Kundenanfrage per Mail. Berechne den Listenverkaufspreis${verkaufLief} bei `];
   const verkaufArray_Subjekt_5 = [`Ein Kunde bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${verkaufRandom_Skonto} % Skonto`, `Die Rechnung wird mit ${verkaufRandom_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${verkaufRandom_Skonto} % Skonto per Bank`,];
-  const verkaufArray_Subjekt_6 = [`Ein Kunde verhandelt mit ${lieferer} über den Kauf von Fertigerzeugnissen`, `${lieferer} erhalten von einem Kunden eine Anfrage für Fertigerzeugnisse`, `Ein Kunde sendet ${lieferer} per E-Mail eine Anfrage für den Bezug von Fertigerzeugnissen`, `Ein Stammkunde möchte bei ${lieferer} Fertigerzeugnisse kaufen und sendet eine Anfrage`];
+  const verkaufArray_Subjekt_6 = [`Ein Kunde möchte bei ${lieferer} ${verkaufProduktAkk} kaufen und verhandelt über den Preis`, `${lieferer} erhält von einem Kunden eine Anfrage für ${verkaufProduktAkk}`, `Ein Kunde sendet ${lieferer} per E-Mail eine Anfrage für ${verkaufProduktAkk}`, `Ein Stammkunde möchte bei ${lieferer} ${verkaufProduktAkk} kaufen und sendet eine Anfrage`];
   const verkaufArray_Fertigerzeugnisse = Object.keys(kontenUmsatzserloese);
   const verkaufArray_Fertigerzeugnisse_2 = Object.keys(kontenUmsatzerloese_2);
-  const verkaufArray_Supply_Wert = ['mit einem Verkaufspreis in Höhe von', 'im Wert von', 'mit', 'in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
+    const verkaufArray_Supply_Wert = verkaufMitMenge
+    ? ['im Gesamtwert von', 'mit einem Gesamtbetrag in Höhe von']
+    : ['mit einem Verkaufspreis in Höhe von', 'im Wert von', 'mit', 'in Höhe von', 'mit einem Betrag in Höhe von', 'im Umfang von'];
   const verkaufArray_Zahlung = Object.keys(verkaufKontenZahlung);
   const verkaufArray_Supply_Rabatt = [`, ${verkaufRandom_Rabatt} % Rabatt`];
   const verkaufArray_Supply_Rabatt_2 = [
     `. ${lieferer} bietet ${verkaufRandom_Rabatt} % Treuerabatt`,
     `. ${lieferer} bietet ${verkaufRandom_Rabatt} % Mengenrabatt`,
-    `. ${verkaufRandom_Rabatt} % Sonderrabatt werden von uns angeboten`,
+    `. ${verkaufRandom_Rabatt} % Sonderrabatt werden zusätzlich angeboten`,
     `. ${verkaufRandom_Rabatt} % Rabatt können vom Kunden abgezogen werden`,
     `. ${lieferer} gewährt zudem ${verkaufRandom_Rabatt} % Kundenrabatt`,
     `. ${lieferer} gewährt zudem ${verkaufRandom_Rabatt} % Mengenrabatt`,
@@ -260,11 +257,11 @@ function verkaufErstelleZufallssatz() {
     ` sowie ${verkaufRandom_Skonto} % Skonto`,
   ];
   const verkaufArray_Supply_Bezugskosten = [
-    `. Zusätzlich belastet ${lieferer} den Kunden mit Versandkosten von netto ${verkaufRandom_Bezugskosten}`,
-    `. Zusätzlich berechnet ${lieferer} Verpackungskosten in Höhe von ${verkaufRandom_Bezugskosten} netto`,
-    `. Transportversicherung und Rollgeld betragen darüber hinaus netto ${verkaufRandom_Bezugskosten} und werden dem Kunden zusätzlich berechnet`,
-    `. Die Leihverpackung in Höhe von ${verkaufRandom_Bezugskosten} netto wird dem Kunden zusätzlich berechnet`,
-    `. Es werden darüber hinaus netto ${verkaufRandom_Bezugskosten} an Versandkosten dem Kunden berechnet`,
+    `. Zusätzlich belastet ${lieferer} den Kunden mit Versandkosten${verkaufLief} von netto ${verkaufRandom_Bezugskosten}`,
+    `. Zusätzlich berechnet ${lieferer} Verpackungskosten${verkaufLief} in Höhe von ${verkaufRandom_Bezugskosten} netto`,
+    `. Transportversicherung und Rollgeld betragen${verkaufLief} darüber hinaus netto ${verkaufRandom_Bezugskosten} und werden dem Kunden zusätzlich berechnet`,
+    `. Die Leihverpackung${verkaufLief} in Höhe von ${verkaufRandom_Bezugskosten} netto wird dem Kunden zusätzlich berechnet`,
+    `. Es werden darüber hinaus netto ${verkaufRandom_Bezugskosten} an Versandkosten${verkaufLief} dem Kunden berechnet`,
   ];
   const verkaufArray_Supply_Gewinn = [
     ` ${verkaufRandom_Gewinn} % Gewinnzuschlag `,
@@ -280,6 +277,9 @@ function verkaufErstelleZufallssatz() {
   const verkaufRandomSubjekt = verkaufSelectedarray_Subjekt[Math.floor(Math.random() * verkaufSelectedarray_Subjekt.length)];
   const verkaufRandomAngebot = verkaufSelectedarray_Angebot[Math.floor(Math.random() * verkaufSelectedarray_Angebot.length)];
   const verkaufRandomFertigerzeugnis = verkaufSelectedarray_Fertigerzeugnisse[Math.floor(Math.random() * verkaufSelectedarray_Fertigerzeugnisse.length)];
+  const verkaufAnzeigeFertigerzeugnis = verkaufAktuellesProdukt
+    ? verkaufProduktAkk
+    : verkaufRandomFertigerzeugnis;
   const verkaufRandomSupply_Wert = verkaufArray_Supply_Wert[Math.floor(Math.random() * verkaufArray_Supply_Wert.length)];
   const verkaufAntwortFertigerzeugnis = kontenUmsatzserloese[verkaufRandomFertigerzeugnis]?.Hauptkonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Hauptkonto;
   const verkaufAntwortBezugskosten = kontenUmsatzserloese[verkaufRandomFertigerzeugnis]?.Unterkonto || kontenUmsatzerloese_2[verkaufRandomFertigerzeugnis]?.Unterkonto;
@@ -287,7 +287,7 @@ function verkaufErstelleZufallssatz() {
   const verkaufRandomSkontobuchungssatz = verkaufArray_Subjekt_5[Math.floor(Math.random() * verkaufArray_Subjekt_5.length)];
   const verkaufRandomDifferenzkalkulation = verkaufArray_Subjekt_6[Math.floor(Math.random() * verkaufArray_Subjekt_6.length)];
  const verkaufNettoOderBrutto = verkaufMitRabatt.checked ? 'Netto' : (Math.random() < 0.5 ? 'Netto' : 'Brutto');
-  let verkaufWert = generateRandomNettoWert();
+  let verkaufWert = verkaufPosten.gesamt;
   const verkaufRandomZahlung = verkaufArray_Zahlung[Math.floor(Math.random() * verkaufArray_Zahlung.length)];
   const verkaufAntwortZahlung = verkaufKontenZahlung[verkaufRandomZahlung]
   if (verkaufAntwortZahlung === "2880 KA") {
@@ -432,32 +432,32 @@ function verkaufErstelleZufallssatz() {
   const verkaufRandomAngebotSatz = Math.random();
   verkaufAngebotSatz = `<ol style="list-style-type: lower-latin;">`;
   if (verkaufRandomAngebotSatz < 0.33) {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis}, ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Bilde den Buchungssatz: der Kunde akzeptiert das Angebot. Die Bezahlung erfolgt ${verkaufRandomZahlung}.</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} Selbstkostenpreis${verkaufGes} ${verkaufAntwort_Selbstkostenpreis}, ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Bilde den Buchungssatz: der Kunde akzeptiert das Angebot. Die Bezahlung erfolgt ${verkaufRandomZahlung}.</li>`;
   } else if (verkaufRandomAngebotSatz < 0.66) {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis}, ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Der Kunde akzeptiert das Angebot und gibt die Bestellung in Auftrag. Wir liefern ${verkaufRandomZahlung}.</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} Selbstkostenpreis${verkaufGes} ${verkaufAntwort_Selbstkostenpreis}, ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}.</li><li>Der Kunde akzeptiert das Angebot und gibt die Bestellung in Auftrag. Wir liefern ${verkaufRandomZahlung}.</li>`;
   } else {
-    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Die Selbstkosten betragen ${verkaufAntwort_Selbstkostenpreis}.</li><li>Der Kunde nimmt das Angebot ${verkaufRandomZahlung} an. Bilde den Buchungssatz!</li>`;
+    verkaufAngebotSatz += `<li>${verkaufRandomAngebot} ${verkaufRandomSupply_Gewinn} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Die Selbstkosten betragen${verkaufGes} ${verkaufAntwort_Selbstkostenpreis}.</li><li>Der Kunde nimmt das Angebot ${verkaufRandomZahlung} an. Bilde den Buchungssatz!</li>`;
   }
   verkaufAngebotSatz += `</ol>`;
 
   let verkaufDifferenzSatz;
   const verkaufRandomDifferenzkalkulationSatz = Math.random();
   if (verkaufRandomDifferenzkalkulationSatz < 0.33) {
-    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation} zum Listenpreis von ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Berechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können, wenn der Selbstkostenpreis ${verkaufAntwort_Selbstkostenpreis} beträgt und wir mindestens ${verkaufWunschGewinn} % Gewinn erzielen wollen.`;
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation} zum ${verkaufLP} von insgesamt ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Berechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können, wenn der Selbstkostenpreis${verkaufGes} ${verkaufAntwort_Selbstkostenpreis} beträgt und wir mindestens ${verkaufWunschGewinn} % Gewinn erzielen wollen.`;
   } else if (verkaufRandomDifferenzkalkulationSatz < 0.66) {
-    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er schlägt einen Listenpreis von ${verkaufRandomNettowert} vor ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Der Selbstkostenpreis beträgt dabei ${verkaufAntwort_Selbstkostenpreis} und wir wollen mindestens ${verkaufWunschGewinn} % Gewinn erzielen. Berechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können.`;
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er schlägt einen ${verkaufLP} von insgesamt ${verkaufRandomNettowert} vor ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2}. Der Selbstkostenpreis beträgt dabei${verkaufGes} ${verkaufAntwort_Selbstkostenpreis} und wir wollen mindestens ${verkaufWunschGewinn} % Gewinn erzielen. Berechne, ob wir die Anfrage zu den genannten Konditionen akzeptieren können.`;
   } else {
-    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er möchte einen Listenpreis von ${verkaufRandomNettowert} bezahlen ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} erhalten. Berechne, ob wir die Anfrage akzeptieren können. Wir möchten mindestens ${verkaufWunschGewinn} % Gewinn erzielen, die Selbstkosten betragen ${verkaufAntwort_Selbstkostenpreis}.`;
+    verkaufDifferenzSatz = `${verkaufRandomDifferenzkalkulation}. Er möchte einen ${verkaufLP} von insgesamt ${verkaufRandomNettowert} bezahlen ${verkaufRandomSupply_Rabatt} ${verkaufRandomSupply_Skonto_2} erhalten. Berechne, ob wir die Anfrage akzeptieren können. Wir möchten mindestens ${verkaufWunschGewinn} % Gewinn erzielen, die Selbstkosten betragen ingesamt ${verkaufAntwort_Selbstkostenpreis}.`;
   }
 
   let verkaufZufaelligerSatz;
   const verkaufRandomValue = Math.random();
   if (verkaufRandomValue < 0.33) {
-    verkaufZufaelligerSatz = `${verkaufRandomSubjekt} ${verkaufRandomFertigerzeugnis} ${verkaufRandomZahlung} ${verkaufRandomSupply_Wert} ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt_2} ${verkaufRandomSupply_Bezugskosten}.`;
+    verkaufZufaelligerSatz = `${verkaufRandomSubjekt} ${verkaufAnzeigeFertigerzeugnis} ${verkaufRandomZahlung} ${verkaufRandomSupply_Wert} ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt_2} ${verkaufRandomSupply_Bezugskosten}.`;
   } else if (verkaufRandomValue < 0.66) {
-    verkaufZufaelligerSatz = `${verkaufRandomSubjekt} ${verkaufRandomFertigerzeugnis} ${verkaufRandomSupply_Wert} ${verkaufRandomNettowert} ${verkaufRandomZahlung} ${verkaufRandomSupply_Rabatt_2} ${verkaufRandomSupply_Bezugskosten}.`;
+    verkaufZufaelligerSatz = `${verkaufRandomSubjekt} ${verkaufAnzeigeFertigerzeugnis} ${verkaufRandomSupply_Wert} ${verkaufRandomNettowert} ${verkaufRandomZahlung} ${verkaufRandomSupply_Rabatt_2} ${verkaufRandomSupply_Bezugskosten}.`;
   } else {
-    verkaufZufaelligerSatz = `${verkaufRandomSubjekt} ${verkaufRandomFertigerzeugnis} ${verkaufRandomZahlung} ${verkaufRandomSupply_Wert} ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt_2} ${verkaufRandomSupply_Bezugskosten}.`;
+    verkaufZufaelligerSatz = `${verkaufRandomSubjekt} ${verkaufAnzeigeFertigerzeugnis} ${verkaufRandomZahlung} ${verkaufRandomSupply_Wert} ${verkaufRandomNettowert} ${verkaufRandomSupply_Rabatt_2} ${verkaufRandomSupply_Bezugskosten}.`;
   }
 
   const verkaufRandomSkontoSatz = Math.random();
@@ -600,7 +600,10 @@ if (!buttonColumn) {
         rabattSatz:          verkaufAntwort_rabattSatz,
         bezugskostenWert:    verkaufAntwort_bezugskostenWert,   // meist Versandkosten
         skontoSatz:          verkaufAntwort_skontoSatz,
-        produktName:         verkaufExtractProduktName(verkaufKonto_1)
+        produktName:         verkaufAktuellesProdukt?.name || verkaufExtractProduktName(verkaufKonto_1),
+        menge:               verkaufAktuelleMenge,
+        einzelpreis:         verkaufAktuellerStueckpreis,
+        einheit:             verkaufAktuelleEinheit  
     };
 
     const buttonDiv = document.createElement('div');
@@ -627,7 +630,7 @@ if (!buttonColumn) {
 }
 
     // Generierte Antworten hinzufügen
-    verkaufAntwortOutput += `${parseInt(i)}.<br><br>`;
+    verkaufAntwortOutput += `<div style="margin: 10px 0 2px;"><strong>${parseInt(i)}.</strong></div>`;
     if (verkaufGetModus() === 'verkaufskalkulation' || verkaufGetModus() === 'verkaufDifferenzkalkulation') {
       verkaufAntwortOutput += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
       verkaufAntwortOutput += `<tbody>`;
@@ -691,6 +694,7 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px;text-align:left" tabindex="1">${verkaufKonto_1}</td>`;
       verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px;text-align:right" tabindex="1">${Zielverkaufspreis}</td>`;
       verkaufAntwortOutput += `</tr>`;
+      verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1"></td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 120px" tabindex="1"></td>`;
       verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
@@ -753,7 +757,7 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1"></td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1"></td>`;
       verkaufAntwortOutput += `</tr>`;
-      verkaufAntwortOutput += `</tr>`;
+      verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">4800 UST</td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">${verkaufAntwort_vorsteuer_berichtigung}</td>`;
       verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
@@ -764,8 +768,7 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `</table>`;
       verkaufAntwortOutput += `<br>`;
     }
-    verkaufAntwortOutput += `<br>`;
-  }
+    }
 
   verkaufModusUeberschreibung = null;
   verkaufMitBezugskosten.checked = origBezug;
@@ -852,14 +855,6 @@ function verkaufParseNumericValue(value) {
         .replace(/\./g, '')
         .replace(',', '.');
 }
-
-function verkaufExtractZahlungsart(kontoCode) {
-    const map = {
-        '2400 FO': 'Rechnung'
-    };
-    return map[kontoCode] || 'Rechnung';
-}
-
 function verkaufExtractProduktName(kontoCode) {
     // Hier kannst du später erweitern, wenn du mehrere Erlöskonten hast
     if (kontoCode.includes('5000')) return 'Fertigerzeugnisse';
@@ -885,7 +880,9 @@ function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
     }
 
     // ── Verkaufsspezifische Parameter ───────────────────────────────────────
-    if (geschaeftsfallDaten.listenverkaufspreis) {
+     if (geschaeftsfallDaten.menge && geschaeftsfallDaten.einzelpreis) {
+        params.set('einzelpreis1', String(geschaeftsfallDaten.einzelpreis));
+    } else if (geschaeftsfallDaten.listenverkaufspreis) {
         params.set('einzelpreis1', verkaufParseNumericValue(geschaeftsfallDaten.listenverkaufspreis));
     }
     if (geschaeftsfallDaten.rabattSatz) {
@@ -909,8 +906,8 @@ function verkaufErzeugeURLFuerBeleg(geschaeftsfallDaten, typ = 'rechnung') {
     if (liefererSelect?.value) params.set('lieferer', liefererSelect.value.trim());
 
     // Standardwerte
-    params.set('menge1',     '1');
-    params.set('einheit1',   'Stück');
+    params.set('menge1',     String(geschaeftsfallDaten.menge || 1));
+    params.set('einheit1',   geschaeftsfallDaten.einheit || 'Stück');
     params.set('umsatzsteuer', '19');
 const now = new Date();
 
@@ -1276,17 +1273,11 @@ function toggleKiPromptVorschau() {
 }
 
 
- // WICHTIG: Warte bis die Seite vollständig geladen ist
-    document.addEventListener('DOMContentLoaded', function() {
-        // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
-        setTimeout(function() {
-            autoSelectMyCompany();
-            verkaufZeigeZufaelligenSatz();
-   }, 500);
+// (Auto-Select und Aufgabenaufruf erfolgen jetzt event-basiert über 'yamlDataLoaded'
+// im zentralen DOMContentLoaded-Handler oben)
 
     // Prompt-Text in Vorschau einfügen
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) {
     vorschauEl.textContent = erstelleKiPromptText();
   }
-    });

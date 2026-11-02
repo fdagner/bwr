@@ -5,18 +5,7 @@
 let letzteGenerierteAufgaben = [];
 
 // ── Hilfsfunktionen ──────────────────────────────────────────────────────────
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 // Euro-Beträge: Tausenderpunkt nach deutschem Standard (1.000 €)
 function fmtE(n) {
@@ -654,7 +643,7 @@ function generiereAufgaben() {
   letzteGenerierteAufgaben = aufgabenListe;
 
   // ── Aufgaben-HTML ──
-  let aufgabenHtml = `<h2>Aufgaben</h2><ol style="padding-left: 1.6rem; line-height: 1.8;">`;
+  let aufgabenHtml = `<h2>Aufgaben zur Prozentrechnung</h2><ol style="padding-left: 1.6rem; line-height: 1.8;">`;
   aufgabenListe.forEach(({ typ, eintrag, d }) => {
     const def = AUFGABEN_TYPEN_DEF[typ];
     const text = def.buildText(eintrag, d);

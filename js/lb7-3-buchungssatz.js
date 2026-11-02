@@ -7,7 +7,14 @@ let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGeschaeftsfaelle = [];
 
 // YAML-Daten
-let yamlData = [];
+
+// ============================================================================
+// YAML-DATEN LADEN
+// ============================================================================
+
+
+
+
 
 // ============================================================================
 // KONTEN-DEFINITIONEN
@@ -61,15 +68,6 @@ const branchenKatMap = {
   'FP':    ['Fuhrpark'],
   'alle':   null,
 };
-
-function getBranchenKat(branche) {
-  if (!branche) return 'alle';
-  for (const [kat, branchen] of Object.entries(branchenKatMap)) {
-    if (branchen && branchen.includes(branche)) return kat;
-  }
-  return 'alle';
-}
-
 // ── Einfache Geschäftsfälle (kein USt) ───────────────────────────────────────
 
 const gfEinfach = [
@@ -186,7 +184,7 @@ const gfEinfach = [
     belegtyp: null,
     minBetrag: 5000, maxBetrag: 40000,
     vorlagen: [
-      '{kunde} wandelt einen kurzfristigen in einen langfristigen Bankkredit um',
+      '{kunde} wandelt einen kurzfristigen Bankkredit in einen langfristigen Bankkredit um',
       'Ein kurzfristiger Bankkredit wird in einen langfristiges Darlehen umgewandelt',
     ],
   },
@@ -619,58 +617,7 @@ function getZufallsLieferant(branchenKat) {
   return lieferantFallbackMap[branchenKat] || lieferantFallbackMap['alle'];
 }
 
-// ============================================================================
-// YAML-DATEN LADEN
-// ============================================================================
 
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
-
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
-
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn('localStorage YAML kaputt:', err);
-    }
-  }
-  return false;
-}
-
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => console.error('Konnte unternehmen.yml nicht laden:', err));
-}
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -712,14 +659,22 @@ function fillCompanyDropdowns() {
 
 function autoSelectMyCompany() {
   const myCompanyName = localStorage.getItem('myCompany');
+  
   if (!myCompanyName) return;
+  
   const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+  
   dropdowns.forEach(dropdown => {
     const options = Array.from(dropdown.options);
     const matchingOption = options.find(opt => opt.value === myCompanyName);
+    
     if (matchingOption) {
       dropdown.value = myCompanyName;
-      dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+      
+      const event = new Event('change', { bubbles: true });
+      dropdown.dispatchEvent(event);
+      
+      console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
     }
   });
 }
@@ -810,13 +765,7 @@ function getAusgewaehlteKonten() {
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function formatCurrency(value) {
-  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
 
-function roundToTwoDecimals(num) {
-  return Math.round(num * 100) / 100;
-}
 
 function generateRandomBetrag(min, max) {
   let schritt;
@@ -834,14 +783,7 @@ function roundTo(val, schritt) {
   return Math.round(val / schritt) * schritt;
 }
 
-function parseNumericValue(value) {
-  if (!value) return '0';
-  return value.toString().replace(/[€\s]/g, '').replace(/\./g, '').replace(',', '.');
-}
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 function td(content, align = 'left', minW = 140) {
   return `<td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:${minW}px; min-width:${minW}px; text-align:${align}" tabindex="1">${content}</td>`;
@@ -889,27 +831,6 @@ function erstelleZusammengesetztenBSUst(gf, sollKto, habenKto1, habenKto2) {
     `<tr>${td('VORST')}${td(formatCurrency(VORST),'right')}${tdCenter('')}${td(habenKto2,'left')}${td(formatCurrency(a2),'right')}</tr>`
   );
 }
-
-function erstelleZusammengesetztenBS(gf, sollKto, habenKto1, habenKto2) {
-  const a1 = gf.anteil1;
-  const a2 = gf.anteil2;
-  const gesamt = gf.nettoBetrag;
-  return tableWrap(
-    `<tr>${td(sollKto)}${td(formatCurrency(gesamt),'right')}${tdCenter('an')}${td(habenKto1,'left')}${td(formatCurrency(a1),'right')}</tr>` +
-    `<tr>${td('')}${td('','right')}${tdCenter('')}${td(habenKto2,'left')}${td(formatCurrency(a2),'right')}</tr>`
-  );
-}
-
-function erstelleZusammengesetztenBSVerkauf(gf, habenKto, sollKto1, sollKto2) {
-  const a1 = gf.anteil1;
-  const a2 = gf.anteil2;
-  const gesamt = gf.nettoBetrag;
-  return tableWrap(
-    `<tr>${td(sollKto1)}${td(formatCurrency(a1),'right')}${tdCenter('')}${td('','left')}${td('','right')}</tr>` +
-    `<tr>${td(sollKto2)}${td(formatCurrency(a2),'right')}${tdCenter('an')}${td(habenKto,'left')}${td(formatCurrency(gesamt),'right')}</tr>`
-  );
-}
-
 function erstelleZusammengesetztenBSVerkaufUst(gf, habenKto, sollKto1, sollKto2) {
   const a1    = gf.anteil1;
   const a2    = gf.anteil2;
@@ -1206,21 +1127,24 @@ function zeigeZufaelligeGeschaeftsfaelle() {
 
   if (!container || !buttonColumn) return;
 
-  container.innerHTML    = '';
-  buttonColumn.innerHTML = '';
+   if (window.JoditEditor) { window.JoditEditor.setContent(container, ''); }
+   else { container.innerHTML = ''; }
+   buttonColumn.innerHTML = '';
 
   const testGf = erstelleZufallsGeschaeftsfall();
   if (!testGf) {
-    container.innerHTML = `
+    const _noTaskHtml = `
       <div style="padding: 14px 16px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px; color: #856404; margin-top: 16px;">
         ⚠️ <strong>Keine passenden Geschäftsfälle verfügbar.</strong><br>
         Die gewählte Kombination aus Optionen und Konten ergibt keine gültigen Aufgaben.
         Bitte wählen Sie weitere Konten aus oder aktivieren Sie mehr Optionen.
       </div>`;
+    if (window.JoditEditor) { window.JoditEditor.setContent(container, _noTaskHtml); }
+    else { container.innerHTML = _noTaskHtml; }
     return;
   }
 
-  let aufgabenHTML  = '<h2>Aufgaben</h2><ol>';
+  let aufgabenHTML  = '<h2>Buchungssätze zu Bestandskonten</h2><h3>Bilde zu den vorliegenden Geschäftsfällen die Buchungssätze!</h3><ol>';
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
 letzteGenerierteGeschaeftsfaelle = [testGf];
@@ -1243,7 +1167,9 @@ const geschaeftsfaelle = letzteGenerierteGeschaeftsfaelle;
   });
 
   aufgabenHTML += '</ol>';
-  container.innerHTML = aufgabenHTML + loesungenHTML;
+    const _html = '<div style="font-size: 15px; line-height: 1.5;">' + aufgabenHTML + loesungenHTML + '</div>';
+  if (window.JoditEditor) { window.JoditEditor.setContent(container, _html); }
+  else { container.innerHTML = _html; }
     const vorschau = document.getElementById("kiPromptVorschau");
 if (vorschau && vorschau.style.display !== "none") {
   vorschau.textContent = erstelleKiPromptText();
@@ -1445,21 +1371,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (!loadYamlFromLocalStorage()) loadDefaultYaml();
-
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeZufaelligeGeschaeftsfaelle();
   } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
-
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligeGeschaeftsfaelle();
+    }, { once: true });
   }
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) vorschauEl.textContent = KI_ASSISTENT_PROMPT;
-  setTimeout(autoSelectMyCompany, 100);
-  
-  setTimeout(function () {
-  zeigeZufaelligeGeschaeftsfaelle();
-  }, 500);
 });
 
+
+async function aufgabenZurSammlung() {
+    const container = document.getElementById('Container');
+    if (!container) { alert('Keine Aufgaben vorhanden.'); return; }
+    const html = container.innerHTML;
+    let aufgabeHtml = html;
+    let loesungHtml = '';
+    const marker = /<h2[^>]*class=["']loesung["'][^>]*>.*?<\/h2>/i;
+    const m = html.match(marker);
+    if (m) {
+        const idx = html.indexOf(m[0]);
+        aufgabeHtml = html.substring(0, idx);
+        loesungHtml = html.substring(idx);
+    }
+    const res = await Collection.showCollectDialog({ defaultTitle: 'Buchungssatz-Aufgabe', hasSolution: !!loesungHtml });
+    if (!res) return;
+    try {
+        await Collection.collectItem({
+            collectionId: res.collectionId,
+            type: 'aufgabe',
+            title: res.title,
+            content: aufgabeHtml,
+            thumbnail: '',
+            solutionContent: (res.includeSolution ? (loesungHtml || null) : null)
+        });
+        alert('Zur Sammlung hinzugefügt (Lösung als separates Objekt).');
+    } catch (e) {
+        if (e && e.message === 'MAX_ITEMS') alert('Sammlung voll (max. 100).');
+        else { console.error(e); alert('Fehler beim Hinzufügen.'); }
+    }
+}

@@ -1,44 +1,8 @@
   // ── Unternehmen / Werkstoffbezeichnungen aus YAML ─────────────────────────
-let yamlData = [];
 
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) yamlData = [...yamlData, ...userCompanies];
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn('localStorage YAML kaputt:', err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => console.error('Konnte unternehmen.yml nicht laden:', err));
-}
 
 function fillUnternehmenSelect() {
   const select = document.getElementById('unternehmenSelect');
@@ -66,22 +30,27 @@ function fillUnternehmenSelect() {
   if (mein && [...select.options].some(o => o.value === mein)) select.value = mein;
 }
 
+// Liefert die Werkstoffnamen eines Kontos als Strings
+// (neue Struktur: { name, stammlieferant } – alte Struktur: reiner String)
+function getWerkstoffNamenListe(eintrag, key) {
+  const liste = eintrag?.unternehmen?.werkstoffe?.[key];
+  if (!Array.isArray(liste)) return [];
+  return liste
+    .map(v => (v && typeof v === 'object') ? v.name : v)
+    .map(v => String(v ?? '').trim())
+    .filter(v => v.length > 0);
+}
+
 // Zufällige Bezeichnung aus YAML, sonst allgemeine Form (z. B. "Rohstoffen")
 function getWerkstoffName(key) {
   const name = document.getElementById('unternehmenSelect')?.value;
   const eintrag = name ? yamlData.find(e => e.unternehmen?.name === name) : null;
-  const liste = eintrag?.unternehmen?.werkstoffe?.[key];
-  const kandidaten = Array.isArray(liste)
-    ? liste.map(v => String(v ?? '').trim()).filter(v => v.length > 0)
-    : [];
+  const kandidaten = getWerkstoffNamenListe(eintrag, key);
   if (kandidaten.length > 0) return kandidaten[Math.floor(Math.random() * kandidaten.length)];
   return KONTEN_CONFIG[key].label;
 }
   
-  function formatBetrag(value) {
-      return value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
+  
     function rnd(min, max, step) {
       return Math.round((Math.random() * (max - min) + min) / step) * step;
     }
@@ -95,12 +64,7 @@ function getWerkstoffName(key) {
 
     const POOL = ['VE','VE','VE','BK','BK','KA'];
 
-    function gegenKonto(typ) {
-      if (typ === 'VE') return { nr: '4400', kurz: 'VE' };
-      if (typ === 'BK') return { nr: '2800', kurz: 'BK' };
-      if (typ === 'KA') return { nr: '2880', kurz: 'KA' };
-    }
-
+    
         function geschaeftsfall(key, b) {
       const cfg = KONTEN_CONFIG[key];
       const wst = b.werkstoff || cfg.label;
@@ -122,11 +86,11 @@ function getWerkstoffName(key) {
         rows += `<tr style="border-top:2px solid #ccc;">
           <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}.) ${b.typ}` : '&nbsp;'}</td>
           <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) + '\u00a0€' : '&nbsp;'}</td>
-          <td style="padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
-          <td style="text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
+          <td style="padding:3px 2px 3px 6px;min-width:100px;width:25%;">&nbsp;</td>
+          <td style="text-align:right;padding:3px 2px;min-width:100px;width:25%;">&nbsp;</td>
         </tr>`;
       }
-      return `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;">
+      return `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;table-layout:fixed;">
         <thead><tr>
           <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
           <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${titel}</span></th>
@@ -165,10 +129,7 @@ function getFalscheWerkstoffe(key, richtig, n = 3) {
   const eintrag = name ? yamlData.find(e => e.unternehmen?.name === name) : null;
   let pool = [];
   Object.keys(KONTEN_CONFIG).filter(k => k !== key).forEach(k => {
-    const liste = eintrag?.unternehmen?.werkstoffe?.[k];
-    const eigene = Array.isArray(liste)
-      ? liste.map(v => String(v ?? '').trim()).filter(v => v.length > 0)
-      : [];
+    const eigene = getWerkstoffNamenListe(eintrag, k);
     if (eigene.length) pool.push(...eigene);
     else pool.push(KONTEN_CONFIG[k].label);
   });
@@ -203,12 +164,6 @@ function mxIdBasis() {
   const p = n => String(n).padStart(2, '0');
   return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
 }
-
-function xmlEsc(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-
 function exportiereMoodle() {
   const container = document.getElementById('Container');
   if (!container) return;
@@ -228,7 +183,7 @@ function exportiereMoodle() {
 
   if (!absaetze.length) { alert('Keine Geschäftsfälle im Container gefunden.'); return; }
 
-      const re = /^(\d+)\.\s*(Einkauf|Kauf|Beschaffung|Verkauf)\s+von\s+(.+?)\s+in Höhe von\s+([\d.,]+)\s*€\s+(?:(netto|brutto)\s+)?(auf Ziel|per Banküberweisung|in bar)\.?$/;
+      const re = /^(\d+)\.\s*(?:(.+?)\s+)?(beschafft|kauft)\s+(.+?)\s+(im Wert von|in Höhe von)\s+([\d.,]+)\s*€\s+(netto|brutto)\s+(auf Ziel|per Banküberweisung|in bar)\.?$/;
       const zahlungen = ['auf Ziel', 'per Banküberweisung', 'in bar'];
 
   let zeilen = '';
@@ -237,18 +192,16 @@ function exportiereMoodle() {
   absaetze.forEach(text => {
     const m = text.match(re);
     if (!m) { uebersprungen.push(text.slice(0, 40) + '…'); return; }
-    const [, nr, verb, werkstoff, betrag, nettoBrutto, zahlung] = m;
+    const [, nr, subjekt, verb, werkstoff, wertPhrase, betrag, nettoBrutto, zahlung] = m;
 
     // Konto der Buchung (nur um Werkstoffe desselben Kontos als Falschantwort auszuschließen)
     let key = null;
     letzteAufgabe.forEach(k => k.buchungen.forEach(b => { if (String(b.nr) === nr) key = k.key; }));
 
-    const richtigesVerb = (verb === 'Verkauf') ? 'Einkauf' : verb;
     const verbDD = clozeSelect(shuffleArray([
-      { text: richtigesVerb, richtig: true },
-      { text: 'Verkauf',     richtig: false }
-    ]));
-
+  { text: verb,       richtig: true },
+  { text: 'verkauft', richtig: false }
+]));
     const werkstoffDD = clozeSelect(shuffleArray([
       { text: werkstoff, richtig: true },
       ...getFalscheWerkstoffe(key, werkstoff).map(t => ({ text: t, richtig: false }))
@@ -258,7 +211,7 @@ function exportiereMoodle() {
       zahlungen.map(t => ({ text: t, richtig: t === zahlung }))
     ));
 
-           zeilen += `<p><strong>${nr}.</strong> ${verbDD} von ${werkstoffDD} in Höhe von ${betrag}\u00a0€ ${nettoBrutto || 'netto'} ${zahlungDD}.</p>`;
+           zeilen += `<p><strong>${nr}.</strong> ${subjekt ? mxEsc(subjekt) + ' ' : ''}${verbDD} ${werkstoffDD} ${wertPhrase} ${betrag}\u00a0€ ${nettoBrutto} ${zahlungDD}.</p>`;
           });
 
   if (!zeilen) { alert('Kein Geschäftsfall hatte das erwartete Format.'); return; }
@@ -321,7 +274,7 @@ function generiereAufgabe() {
       letzteAufgabe = alleKonten;
       // ── AUFGABE ──────────────────────────────────────────────────────
       let html = '<h2>Aufgabe zum Buchungslesen</h2>';
-      html += `<p>Formuliere für die Eintragungen in den T-Konten jeweils einen Geschäftsfall.</p>`;
+      html += `<h3>Formuliere für die Eintragungen in den T-Konten jeweils einen Geschäftsfall.</h3>`;
 
       html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin:1.5em 0 2em;">`;
       alleKonten.forEach(({ key, buchungen }) => {
@@ -335,7 +288,7 @@ function generiereAufgabe() {
       html += `<h2 style="margin-top:2.5em" class="loesung">Lösung</h2>`;
 
       // Geschäftsfälle
-      html += `<strong>Geschäftsfälle:</strong><br><br>`;
+      html += `<strong>Geschäftsfälle:</strong>`;
       let nr = 1;
       alleKonten.forEach(({ key, buchungen }) => {
         buchungen.forEach(b => {
@@ -350,7 +303,6 @@ function generiereAufgabe() {
 
     document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('unternehmenSelect')?.addEventListener('change', generiereAufgabe);
-  if (!loadYamlFromLocalStorage()) loadDefaultYaml();
 });
 
 document.addEventListener('yamlDataLoaded', () => {

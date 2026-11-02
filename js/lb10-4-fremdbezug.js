@@ -4,58 +4,22 @@ window.zeigeZufaelligeAufgabe = zeigeZufaelligeAufgabe;
 window.kopiereKiPrompt = kopiereKiPrompt;
 window.toggleKiPromptVorschau = toggleKiPromptVorschau;
 
-let yamlData = [];
 
 // ────────────────────────────────────────────────
 // YAML / UNTERNEHMEN LADEN
 // ────────────────────────────────────────────────
-function getUserCompanies() {
-  try { return JSON.parse(localStorage.getItem('userCompanies') || '[]'); } catch(e) { return []; }
+
+
+function unternehmenSchluesselFD(c) {
+  return String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase();
+}
+function existiertInCoreFD(unternehmen, coreData) {
+  const s = unternehmenSchluesselFD(unternehmen);
+  const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+  return (coreData || []).some(c => unternehmenSchluesselFD(c) === s || String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name);
 }
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn('localStorage YAML kaputt:', err);
-    }
-  }
-  return false;
-}
-
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => console.error('Konnte unternehmen.yml nicht laden:', err));
-}
 
 function fillCompanyDropdowns() {
   if (!yamlData || yamlData.length === 0) return;
@@ -104,9 +68,6 @@ function autoSelectMyCompany() {
 }
 
 // Hilfsfunktionen
-function roundToTwoDecimals(num) {
-    return Math.round(num * 100) / 100;
-}
 
 function getRandomIntegerWithSteps(min, max, step) {
     const range = (max - min) / step;
@@ -117,9 +78,6 @@ function roundToNearest50(number) {
     return Math.ceil(number / 50) * 50;
 }
 
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);
-}
 
 function formatiereMenge(menge) {
     return menge.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -512,10 +470,6 @@ function toggleKiPromptVorschau() {
 
 // Initialisierung beim Laden der Seite
 document.addEventListener("DOMContentLoaded", function () {
-    if (!loadYamlFromLocalStorage()) {
-        loadDefaultYaml();
-    }
-
     if (yamlData && yamlData.length > 0) {
         fillCompanyDropdowns();
     } else {

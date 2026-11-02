@@ -27,18 +27,7 @@ function getRandomValueInRange(min, max) {
   return Math.ceil(randomValue / 5000) * 5000;
 }
 
-function formatCurrency(value) {
-  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 // ============================================================================
 // GLOBALE VARIABLE FÜR DIE ZULETZT GENERIERTEN POSTEN (für KI-Prompt)
@@ -133,8 +122,8 @@ function generiereAufgabe() {
   // ── Aufgabe: unsortierte Postenliste ──────────────────────────────────
   const shuffled = shuffle(posten);
   let aufgabenHTML = `
-    <h2>Aufgabe</h2>
-    <p><strong>Arbeitsauftrag:</strong> Erstelle aus den folgenden Bilanzposten die vollständige Bilanz zum 1. Januar.</p>
+    <h2>Aufgabe: Eine Bilanz erstellen</h2>
+    <h3>Erstelle aus den folgenden Bilanzposten die vollständige Bilanz zum 1. Januar.</h3>
     <table style="border-collapse: collapse;font-family:calibri;background-color:#fff;min-width:500px;max-width:700px;line-height:1.4;">
       <tbody>
         <tr style="background-color:#ccc;">

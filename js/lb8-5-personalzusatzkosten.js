@@ -285,14 +285,6 @@ function erstelleKiPromptText() {
   return KI_PROMPT.replace("###AUFGABEN und LOESUNGEN###", aufgabenText);
 }
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 // Zieht n Fälle aus dem Pool (ohne Wiederholung, solange der Pool reicht)
 function nimm(pool, n) {
@@ -335,8 +327,8 @@ function generiereAufgaben() {
 
   // --- AUFGABEN-TABELLE ---
   let aufgabenHTML = `
-    <h2>Aufgaben</h2>
-    <p><strong>Arbeitsauftrag:</strong><br>Lies die Beispiele und kreuze in der jeweiligen Zeile an, ob es sich um gesetzliche oder um tarifliche/betriebliche Personalzusatzkosten handelt.</p>
+    <h2>Aufgaben Personalzusatzkosten</h2>
+    <h3>Lies die Beispiele und kreuze in der jeweiligen Zeile an, ob es sich um gesetzliche oder um tarifliche/betriebliche Personalzusatzkosten handelt.</h3>
     <div style="overflow-x: auto;">
       <table style="width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 15px; margin-top: 10px;">
         <thead>

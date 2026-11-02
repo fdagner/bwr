@@ -1,12 +1,6 @@
 
 
 // Formatieren der Währung mit Euro-Symbol, Tausenderpunkt und Dezimalkomma
-function formatCurrency(amount) {
-    return new Intl.NumberFormat("de-DE", {
-        style: "currency",
-        currency: "EUR",
-    }).format(amount);
-}
 
 function generateRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -29,6 +23,8 @@ function updateTable() {
         averageValue += generateRandomNumber(5000, 100000);
     }
     averageValue /= (werkstoffe.length - 1);
+    // Auf glatte 5.000-EUR-Schritte runden (keine Centbeträge im Unterrichtsbeleg)
+    averageValue = Math.round(averageValue / 5000) * 5000;
 
     for (let i = 0; i < werkstoffe.length; i++) {
         let werkstoff = werkstoffe[i];
@@ -37,12 +33,16 @@ function updateTable() {
         if (werkstoff === "Rohstoffe") {
             inventoryValue = averageValue * 2;
         } else {
-            inventoryValue = generateRandomNumber(5000, 100000);
+            // Glatte 100-EUR-Schritte
+            inventoryValue = Math.round(generateRandomNumber(5000, 100000) / 100) * 100;
         }
 
         let deviationPercentage = generateRandomPercentage(-2, 10);
-        let accountingValue = Math.round(inventoryValue * (1 + deviationPercentage / 100));
+        // Buchführungswert ebenfalls auf glatte EUR runden
+        let accountingValue = Math.round(inventoryValue * (1 + deviationPercentage / 100) / 100) * 100;
         let inventoryDifference = -1 * (inventoryValue - accountingValue);
+        // Negativer Null-Stand vermeiden ("-0,00 €")
+        if (inventoryDifference === 0) inventoryDifference = 0;
 
         tableContent += "<tr>";
         tableContent += "<td style='text-align: left;border: 1px solid #ccc;padding: 15px;'>" + werkstoff + "</td>";
@@ -65,46 +65,3 @@ function updateTable() {
 
 updateTable();
 
-function inventurdifferenzenHerunterladen() {
-    const inventurdifferenzenHTML = document.getElementById('inventurdifferenzenContainer').innerHTML;
-    const blob = new Blob([inventurdifferenzenHTML], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'inventurdifferenzen.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-function inventurdifferenzenKopiereInZwischenablage() {
-    const inventurdifferenzenHTML = document.getElementById('inventurdifferenzenContainer').innerHTML;
-    navigator.clipboard.writeText(inventurdifferenzenHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function inventurdifferenzenHerunterladenAlsPNG() {
-    const inventurdifferenzenContainer = document.getElementById('inventurdifferenzenContainer');
-
-    html2canvas(inventurdifferenzenContainer, optionshtml2canvas).then(canvas => {
-        const dataURL = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'inventurdifferenzen.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
-}
-
-let clipboardVorkontierung = new ClipboardJS('#officeButtonVorkontierung');
-
-clipboardVorkontierung.on('success', function (e) {
-    console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
-});
-
-clipboardVorkontierung.on('error', function (e) {
-    console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-    alert("Fehler beim Kopieren der Tabelle.");
-});

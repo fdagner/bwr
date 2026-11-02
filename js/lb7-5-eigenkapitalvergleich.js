@@ -2,7 +2,6 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteEkAufgaben = [];
 let letzteAktiveSpalten = ['aufw', 'ertr', 'gewinn', 'ekAnf', 'ekEnd']; // Standard
@@ -11,56 +10,9 @@ let letzteAktiveSpalten = ['aufw', 'ertr', 'gewinn', 'ekAnf', 'ekEnd']; // Stand
 // YAML-DATEN LADEN (identisch zu den anderen Generatoren)
 // ============================================================================
 
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-    });
-}
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -110,9 +62,6 @@ function fillCompanyDropdowns() {
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 // Zufallszahl von min bis max in festen Schritten
 function rnd(min, max, step) {
@@ -139,9 +88,9 @@ const unternehmensVarianten = [
 
 // Einleitungstexte (ohne Zahlen, passen für Aufgabe und Moodle)
 const einleitungen = [
-  (u) => `Im Buchführungsprogramm von ${u} fehlen in der folgenden Übersicht einige Werte. Berechne die fehlenden Werte.`,
-  (u) => `Bei der Erstellung der Jahreszahlen von ${u} sind einige Werte verloren gegangen. Berechne die fehlenden Werte.`,
-  (u) => `Bei ${u} zeigt das Programm einige Werte nicht an. Berechne die fehlenden Werte.`,
+  (u) => `<h3>Im Buchführungsprogramm von ${u} fehlen in der folgenden Übersicht einige Werte. Berechne die fehlenden Werte.</h3>`,
+  (u) => `<h3>Bei der Erstellung der Jahreszahlen von ${u} sind einige Werte verloren gegangen. Berechne die fehlenden Werte.</h3>`,
+  (u) => `<h3>Bei ${u} zeigt das Programm einige Werte nicht an. Berechne die fehlenden Werte.</h3>`,
 ];
 
 // ============================================================================
@@ -537,23 +486,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-
-  if (yamlData && yamlData.length > 0) {
-    fillCompanyDropdowns();
-  } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
-  }
-
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) {
     vorschauEl.textContent = KI_ASSISTENT_PROMPT;
   }
 
-  setTimeout(function () {
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // sobald die YAML-Daten tatsächlich geladen sind
+  if (yamlData && yamlData.length > 0) {
+    fillCompanyDropdowns();
     autoSelectMyCompany();
     zeigeZufaelligeEkAufgaben();
-  }, 500);
+  } else {
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligeEkAufgaben();
+    }, { once: true });
+  }
 });

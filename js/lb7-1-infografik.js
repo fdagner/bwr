@@ -1070,60 +1070,6 @@ function niceScale(maxVal, headroomFactor = 1.0, targetTicks = 5) {
 // ═══════════════════════════════════════════
 // HILFSFUNKTION: Bar-Labels manuell außen rechts zeichnen
 // ═══════════════════════════════════════════
-function renderBarLabelsOutside(chartCtx, values, fmtVal, labelColor) {
-  setTimeout(() => {
-    const container = document.getElementById("ig-chart-container");
-    const svg = container.querySelector("svg");
-    if (!svg) return;
-
-    svg.querySelectorAll(".manual-bar-label").forEach(el => el.remove());
-
-    // ApexCharts rendert horizontale Balken als <path> mit Index-Attribut "i" und "j"
-    // Selektor: paths mit j="0" (erster/einziger Datensatz) sortiert nach i (Kategorieindex)
-    let paths = Array.from(svg.querySelectorAll("path[j='0']")).filter(p => {
-      try { const bb = p.getBBox(); return bb.width > 0 && bb.height > 0; } catch(e) { return false; }
-    });
-
-    // Fallback: alle paths innerhalb .apexcharts-bar-area
-    if (!paths.length) {
-      svg.querySelectorAll(".apexcharts-bar-area").forEach(g => {
-        g.querySelectorAll("path").forEach(p => {
-          try { const bb = p.getBBox(); if (bb.width > 0) paths.push(p); } catch(e) {}
-        });
-      });
-    }
-
-    if (!paths.length) return;
-
-    // Sortiere nach i-Attribut (Kategorieindex 0,1,2…) falls vorhanden, sonst nach Y
-    paths.sort((a, b) => {
-      const ai = parseInt(a.getAttribute("i") ?? "999");
-      const bi = parseInt(b.getAttribute("i") ?? "999");
-      if (ai !== bi) return ai - bi;
-      try { return a.getBBox().y - b.getBBox().y; } catch(e) { return 0; }
-    });
-
-    paths.forEach((path, i) => {
-      if (i >= values.length) return;
-      let bb;
-      try { bb = path.getBBox(); } catch(e) { return; }
-
-      const x = bb.x + bb.width + 8;
-      const y = bb.y + bb.height / 2 + 4;
-
-      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      text.setAttribute("x", x);
-      text.setAttribute("y", y);
-      text.setAttribute("font-family", "Georgia, serif");
-      text.setAttribute("font-size", "12");
-      text.setAttribute("fill", labelColor);
-      text.setAttribute("class", "manual-bar-label");
-      text.textContent = fmtVal(values[i]);
-      svg.appendChild(text);
-    });
-  }, 150);
-}
-
 // ═══════════════════════════════════════════
 // CHART GENERIEREN
 // ═══════════════════════════════════════════

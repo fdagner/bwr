@@ -1,12 +1,18 @@
+## 2026-11-02 | November 2026
+- [neu] **Fertigerzeugnisse und Stammlieferer** - Unternehmen können nun Angaben zu Fertigerzeugnissen und Stammlieferanten erhalten. So können Aufgaben und Belege noch effizienter erstellt werden.
+- [neu] **Belege-Sammlung** – Belege können in einer Sammlung gespeichert, gesichert und wieder bearbeitet werden. [+ Sammlung](sammlung.html)
+- [neu] **Texteditor** – Rich-Text-Editor in Aufgabenbereichen mit Formatierung, Beleg-Einfügen aus der Sammlung, Kopierfunktion, Druck und HTML-Export.
+- [update] **Belege: Komplettüberarbeitung der Vorlagen für Mail**
+- [update] **Lohn- und Gehaltsabrechung** - Neue Vorlage Ausbildungsvergütung; Berücksichtigung aktueller Werte von Mindestausbildungsvergütung, Beitragsbemessungsgrenzen und Freibeträgen [Lohn-/Gehaltsjournal](belege.html?beleg=lohnabrechnung)
+- [update] **Zinsberechnung** - Berücksichtigen des Hauptrefinanzierungssatzes bei Zinsangaben im Kreidtbereich. [Kreditvergleich](lb9-3-kreditvergleich.html)  
+- [Info] **Export-Buttons** – Alle Icon-Buttons wurden durch sprechende Text-Buttons (z. B. PNG, SVG, HTML-Code, Moodle-Fragetyp...) ersetzt.
+- [info] **Neue Datenbank für Unternehmen** – Die Datenbank wurde neu strukturiert. Bitte Daten zurücksetzen und eigene Unternehmen daran anpassen. 
+
 ## 2026-10-28 | Oktober 2026
 - [neu] **Aufgaben im Lernbereich 9.3** - [Kreditvergleich](lb9-3-kreditvergleich.html), [Buchungen im Kreditbereich](lb9-3-buchungenkreditbereich.html), [Darlehensarten](lb9-3-darlehen.html).
 - [neu] **Aufgabe im Lernbereich 8.1** - [Abschluss Bestandskonten](lb8-1-bestandskonten.html).
-<<<<<<< HEAD
-- [neu] **Aufgabe im Lernbereich 7.5** - [Eigenkapitalvergleich](lb7-5-eigenkapitalvergleich.html).
-=======
 - [neu] **Aufgabe im Lernbereich 8.2** - [Optimale Bestellmenge](lb8-2-bestellmenge.html).
 - [neu] **Aufgabe im Lernbereich 8.5** - [Personalzusatzkosten](lb8-5-personalzusatzkosten.html).
->>>>>>> ed5b23e134e7ba7120027f65477dd5b1699b81a3
 - [update] **Exportfunktion Moodle-Fragetyp** - [Führungsstil](lb9-1-fuehrungsstil.html), [Aufbauorganisation](lb9-1-aufbauorganisation.html)
 - [update] **Aufgabe Fremdbezug oder Eigenfertigung** - Aufgabenlayout verbessert, Werte können manuell eingegeben werden: [Fremdbezug oder Eigenfertigung](lb10-4-fremdbezug.html).
 - [update] **Organigramm direkt erstellen** - [Organigramm](lb9-1-organigramm.html).

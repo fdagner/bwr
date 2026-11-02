@@ -1,9 +1,3 @@
-function formatBetrag(value) {
-  return value.toLocaleString('de-DE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
 
 function generateRandomSaldo(min, max, round = 100) {
   return Math.round((Math.random() * (max - min) + min) / round) * round;

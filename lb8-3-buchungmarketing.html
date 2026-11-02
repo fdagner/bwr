@@ -51,11 +51,17 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/jodit.min.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/jodit.min.js"></script>
+  <script src="js/joditeditor.js?v=67"></script>
+<script src="js/collection.js?v=26"></script>
+  <script src="js/company-loader.js"></script>
   <script src="js/clipboard.min.js"></script>
-  <script src="js/menu.js"></script>
+  <script src="js/menu.js?v=14"></script>
 </head>
 
 <body>
@@ -110,7 +116,6 @@
 <br>
         <button onclick="zeigeZufaelligeGeschaeftsfaelle()">Aufgaben erstellen</button>
 
-        <button onclick="zeigeZufaelligeGeschaeftsfaelle()">Aufgaben erstellen</button>
 <div style="margin-top:10px;display:none">
   <label for="moodlePraefix">Moodle-Kategorie / Namenspräfix:</label>
   <input type="text" id="moodlePraefix" value="BwR 8 Marketing" maxlength="60">
@@ -127,7 +132,6 @@
         </div>
       </div>
 
-        <div w3-include-html="downloads.html"></div> 
 
         <!-- ══════════════════════════════════════════════════════════════
            KI-ASSISTENT PROMPT
@@ -196,7 +200,6 @@
 <script src="js/lb8-3-buchungmarketing.js"></script>
 <script src="js/moodle-export.js"></script>
 <script src="js/moodle-export-marketing.js"></script>
-      <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div> 
   <script>
     includeHTML();

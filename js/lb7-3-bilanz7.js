@@ -22,10 +22,7 @@ function generateRandomBilanz7() {
     }
 
 
-    function formatCurrency(value) {
-        return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-    }
-
+    
     function updateCellValueById(id, value) {
         const cell = document.getElementById(id);
         if (cell) {
@@ -66,53 +63,7 @@ function generateRandomBilanz7() {
 }
 
 
-function bilanz7Herunterladen() {
-    const bilanz7HTML = document.getElementById('bilanz7Container').innerHTML;
-    const blob = new Blob([bilanz7HTML], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'bilanz7.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-function bilanz7KopiereInZwischenablage() {
-    const bilanz7HTML = document.getElementById('bilanz7Container').innerHTML;
-    navigator.clipboard.writeText(bilanz7HTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function bilanz7HerunterladenAlsPNG() {
-    const bilanz7Container = document.getElementById('bilanz7Container');
-
-    html2canvas(bilanz7Container, optionshtml2canvas).then(canvas => {
-        const dataURL = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'bilanz7.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
-}
-
-let clipboardbilanz7 = new ClipboardJS('#officeButtonbilanz7');
-
-clipboardbilanz7.on('success', function (e) {
-    console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
-});
-
-clipboardbilanz7.on('error', function (e) {
-    console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-    alert("Fehler beim Kopieren der Tabelle.");
-});
-
-
 document.addEventListener("DOMContentLoaded", function () {
-    // Hier wird generiereWertetabelle() beim Laden der Seite ausgeführt
+    // Generierung beim Laden der Seite ausführen
     generateRandomBilanz7();
-  });
-  
+});

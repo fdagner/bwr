@@ -1,4 +1,3 @@
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 
 // ============================================================================
@@ -11,40 +10,10 @@ const KONTO_ZINS     = '7510 ZAW';    // Zinsaufwendungen
 // ============================================================================
 // YAML / UNTERNEHMEN
 // ============================================================================
-function getUserCompanies() {
-  const s = localStorage.getItem('userCompanies');
-  return s ? JSON.parse(s) : [];
-}
-function mergeUserCompaniesIntoYamlData() {
-  const uc = getUserCompanies();
-  if (uc.length > 0) {
-    yamlData = [...yamlData, ...uc];
-    yamlData.sort((a, b) => (a.unternehmen?.branche || '').localeCompare(b.unternehmen?.branche || ''));
-  }
-}
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) { console.warn('localStorage YAML kaputt:', err); }
-  }
-  return false;
-}
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => { if (!res.ok) throw new Error('unternehmen.yml nicht gefunden'); return res.text(); })
-    .then(txt => {
-      yamlData = jsyaml.load(txt) || [];
-      if (!localStorage.getItem('standardYamlData')) localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => console.error('Konnte unternehmen.yml nicht laden:', err));
-}
+
+
+
+
 function fillCompanyDropdowns() {
   if (!yamlData || yamlData.length === 0) return;
   const sel = document.getElementById('marketingKunde');
@@ -79,7 +48,7 @@ function autoSelectMyCompany() {
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
 function r2(x) { return Math.round(x * 100) / 100; }
 function formatEuro(v) { return v.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
 function formatProzent(p) { return p.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + '&nbsp;%'; }
@@ -495,12 +464,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if (kundeSelect) {
     kundeSelect.addEventListener('change', () => { kunde = kundeSelect.value.trim() || '<i>[Modellunternehmen]</i>'; });
   }
-  if (!loadYamlFromLocalStorage()) loadDefaultYaml();
-  if (yamlData && yamlData.length > 0) fillCompanyDropdowns();
-  else document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
-  setTimeout(autoSelectMyCompany, 250);
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgabe rendern,
+  // sobald die YAML-Daten tatsächlich geladen sind
+  if (yamlData && yamlData.length > 0) {
+    fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeDarlehensAufgabe();
+  } else {
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeDarlehensAufgabe();
+    }, { once: true });
+  }
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) vorschauEl.textContent = KI_BASE_PROMPT.replace('###AUFGABEN###', '(Noch keine Aufgabe generiert.)');
-  setTimeout(zeigeDarlehensAufgabe, 300);
 });

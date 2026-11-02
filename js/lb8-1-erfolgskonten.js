@@ -1,9 +1,3 @@
-function formatBetrag(value) {
-  return value.toLocaleString('de-DE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
 
 function generateRandomSaldo(min, max, round = 100) {
   return Math.round((Math.random() * (max - min) + min) / round) * round;
@@ -303,7 +297,7 @@ function renderTKontoGUVAufgabe(minZeilen) {
   // Haben-Seite: UEFE + ggf. Verlust → mindestens 2 Zeilen
   // Wir nehmen das Maximum beider Seiten + 2 Puffer
   const alleZeilen = Math.max(minZeilen || 6, 6) + 2;
-  let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
+  let html = `<table class="tkonto tkonto-guv" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">8020 GUV</span></th>
@@ -311,10 +305,10 @@ function renderTKontoGUVAufgabe(minZeilen) {
     </tr></thead><tbody>`;
   for (let i = 0; i < alleZeilen; i++) {
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">&nbsp;</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">&nbsp;</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
-      <td style="text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
+      <td style="width:25%;padding:3px 2px;white-space:nowrap;">&nbsp;</td>
+      <td style="width:25%;text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">&nbsp;</td>
+      <td style="width:25%;padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
+      <td style="width:25%;text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
     </tr>`;
   }
   html += `</tbody></table>`;
@@ -956,6 +950,12 @@ function addPrintCSS() {
         font-size: 0.85em !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+      }
+      .tkonto td, .tkonto th {
+        white-space: nowrap !important;
+      }
+      .tkonto-guv {
+        table-layout: fixed !important;
       }
 
       @page {

@@ -116,38 +116,99 @@ let yamlData = []; // Initialize yamlData as an empty array
 // YAML/DATEN-VERWALTUNG
 // ============================================================================
 
-function initializeYamlData() {
-    let baseData = [];
-    
-    // Priorität 1: Hochgeladene YAML (wenn vorhanden)
+// Hilfsfunktionen für die Deduplizierung von Unternehmen (Prüfung nach id + Name)
+function unternehmenSchluessel(c) {
+    return String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase();
+}
+function existiertInCore(unternehmen, coreData) {
+    const schluessel = unternehmenSchluessel(unternehmen);
+    const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+    return (coreData || []).some(c => unternehmenSchluessel(c) === schluessel || String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name);
+}
+function dedupliziereUnternehmen(liste) {
+    const seen = new Set();
+    const out = [];
+    for (const c of (liste || [])) {
+        const key = unternehmenSchluessel(c);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(c);
+    }
+    return out;
+}
+
+// Zentrale Initialisierung: Core IMMER zuerst laden, dann (falls vorhanden)
+// nur die zusätzlichen, hochgeladenen Unternehmen ergänzen.
+async function initializeYamlData() {
+    // 1. Core (Standard) laden — immer frisch vom Server, Fallback auf Cache
+    let coreData = [];
+    try {
+        const resp = await fetch('js/unternehmen.yml?v=' + Date.now());
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const text = await resp.text();
+        coreData = jsyaml.load(text) || [];
+        sessionStorage.setItem('standardYamlData', JSON.stringify(coreData));
+        console.log('Core-YAML frisch geladen mit', coreData.length, 'Unternehmen');
+    } catch (err) {
+        console.warn('Core-YAML konnte nicht geladen werden, Fallback auf Cache', err);
+        try { coreData = JSON.parse(sessionStorage.getItem('standardYamlData') || localStorage.getItem('standardYamlData') || '[]'); }
+        catch (e) { coreData = []; }
+    }
+
+    // 2. Hochgeladene Datei: nur die zusätzlichen Unternehmen behalten (Dedup gegen Core).
+    //    id-Kollisionen (gleiche id, anderer Name) werden durch Vergabe einer neuen id aufgelöst.
+    let zusaetzliche = [];
     const uploadedJSON = localStorage.getItem('uploadedYamlCompanyData');
     if (uploadedJSON) {
         try {
-            baseData = JSON.parse(uploadedJSON);
-            console.log('Hochgeladene YAML geladen mit', baseData.length, 'Unternehmen');
-            
-            // Basis setzen
-            yamlData = baseData;
-            
-            // Merge: Eigene Unternehmen IMMER hinzufügen
-            mergeUserCompaniesIntoYamlData();
-            markObsoleteUserCompanies();
-            displayUserCompanies();
-            populateAllCompaniesDropdown();
-            
-            console.log('Finale yamlData hat jetzt', yamlData.length, 'Unternehmen (Basis + eigene)');
-            return; // Fertig, verwende hochgeladene Daten
-            
+            const uploaded = JSON.parse(uploadedJSON);
+            if (Array.isArray(uploaded)) {
+                const verwendeteIds = new Set(coreData.map(c => c?.unternehmen?.id));
+                for (const u of uploaded) {
+                    if (existiertInCore(u, coreData)) continue; // exaktes Duplikat (id + Name) → überspringen
+                    // id-Kollision → neue eindeutige id vergeben
+                    if (verwendeteIds.has(u?.unternehmen?.id)) {
+                        const maxId = Math.max(0, ...[...coreData, ...zusaetzliche].map(c => Number(c?.unternehmen?.id) || 0));
+                        let neueId = maxId + 1;
+                        while (verwendeteIds.has(neueId) || zusaetzliche.some(x => x?.unternehmen?.id === neueId)) neueId++;
+                        if (u.unternehmen) u.unternehmen.id = neueId;
+                        verwendeteIds.add(neueId);
+                    } else {
+                        verwendeteIds.add(u?.unternehmen?.id);
+                    }
+                    zusaetzliche.push(u);
+                }
+                if (zusaetzliche.length === 0) {
+                    localStorage.removeItem('uploadedYamlCompanyData');
+                } else {
+                    localStorage.setItem('uploadedYamlCompanyData', JSON.stringify(zusaetzliche));
+                    if (zusaetzliche.length !== uploaded.length) {
+                        console.log('Hochgeladene Datei bereinigt: nur', zusaetzliche.length, 'zusätzliche Unternehmen gespeichert');
+                    }
+                }
+            }
         } catch (err) {
-            console.warn('Hochgeladene YAML korrupt → falle auf Standard zurück', err);
-            localStorage.removeItem('uploadedYamlCompanyData'); // Korrupte Daten entfernen
+            console.warn('uploadedYamlCompanyData korrupt → entfernt', err);
+            localStorage.removeItem('uploadedYamlCompanyData');
         }
     }
-    
-    // Priorität 2: Standard-YAML vom Server laden (IMMER frisch, nicht aus Local Storage)
-    console.log('Lade Standard-YAML frisch vom Server...');
-    loadStandardYamlData();
+
+    // 3. Zusammenführen (Core + zusätzliche, dedupliziert)
+    yamlData = dedupliziereUnternehmen([...coreData, ...zusaetzliche]);
+
+    // 4. Eigene (manuell angelegte) Unternehmen ergänzen
+    mergeUserCompaniesIntoYamlData();
+    markObsoleteUserCompanies();
+    displayUserCompanies();
+    populateAllCompaniesDropdown();
+
+    console.log('Finale yamlData hat jetzt', yamlData.length, 'Unternehmen (Core + zusätzliche + eigene)');
+    console.log('[index] Eigene Unternehmen:', getUserCompanies().map(c => c?.unternehmen?.name).filter(Boolean));
+    console.log('[index] Gespeichertes Modellunternehmen (myCompany):', (localStorage.getItem('myCompany') || '').trim() || '(keines)');
+    console.log('[index] Liste:', yamlData.map(c => (c?.unternehmen?.id + ' ' + c?.unternehmen?.name + ' ' + (c?.unternehmen?.rechtsform || '')).trim()));
 }
+
+
 
 // Event Listener für Dropdown-Änderungen erweitern
 document.getElementById('allCompaniesDropdown')?.addEventListener('change', function() {
@@ -288,19 +349,60 @@ document.getElementById('allCompaniesDropdown')?.addEventListener('change', func
         previewDiv.appendChild(bold('E-Mail: ')); previewDiv.appendChild(txt(company.unternehmen.kontakt?.email)); previewDiv.appendChild(br());
         previewDiv.appendChild(bold('Werkstoffe: ')); previewDiv.appendChild(br());
 
-        if (company.unternehmen.werkstoffe && typeof company.unternehmen.werkstoffe === 'object') {
-            Object.entries(company.unternehmen.werkstoffe).forEach(([kategorie, liste]) => {
-                if (Array.isArray(liste) && liste.length > 0) {
-                    previewDiv.appendChild(bold(kategorie + ': '));
-                    previewDiv.appendChild(txt(liste.join(', ')));
-                    previewDiv.appendChild(br());
-                }
-            });
-        } else {
-            previewDiv.appendChild(txt('–'));
+       if (company.unternehmen.werkstoffe && typeof company.unternehmen.werkstoffe === 'object') {
+    Object.entries(company.unternehmen.werkstoffe).forEach(([kategorie, liste]) => {
+        if (Array.isArray(liste) && liste.length > 0) {
+            previewDiv.appendChild(bold(kategorie + ': '));
+            
+            // Objekte ({ name, ... }) und alte reine Strings gleichermaßen unterstützen:
+            const werkstoffNamen = liste
+                .map(item => (item && typeof item === 'object') ? item.name : item)
+                .filter(Boolean)
+                .join(', ');
+            
+            previewDiv.appendChild(txt(werkstoffNamen));
             previewDiv.appendChild(br());
         }
+    });
+} else {
+    previewDiv.appendChild(txt('–'));
+    previewDiv.appendChild(br());
+}
 
+        // Fertigerzeugnisse anzeigen
+previewDiv.appendChild(bold('Fertigerzeugnisse: '));
+previewDiv.appendChild(br());
+
+const fertigerzeugnisse =
+    company.unternehmen.fertigerzeugnisse?.hauptwerk || [];
+
+if (fertigerzeugnisse.length > 0) {
+    fertigerzeugnisse.forEach(produkt => {
+        const zeile = document.createElement('div');
+        zeile.style.marginLeft = '15px';
+
+        const name = document.createElement('strong');
+        name.textContent = produkt.name || 'Unbenanntes Produkt';
+
+        zeile.appendChild(name);
+
+        const preis = document.createTextNode(
+            ` – Preis: ${Number(produkt.preis_min).toLocaleString('de-DE', {
+                style: 'currency',
+                currency: 'EUR'
+            })} bis ${Number(produkt.preis_max).toLocaleString('de-DE', {
+                style: 'currency',
+                currency: 'EUR'
+            })}`
+        );
+
+        zeile.appendChild(preis);
+        previewDiv.appendChild(zeile);
+    });
+} else {
+    previewDiv.appendChild(txt('Keine Fertigerzeugnisse hinterlegt.'));
+    previewDiv.appendChild(br());
+}
         previewDiv.appendChild(bold('Bank: ')); previewDiv.appendChild(txt(company.unternehmen.bank)); previewDiv.appendChild(br());
     }
 });
@@ -312,27 +414,53 @@ function handleFileUpload() {
     if (uploadedFile) {
         const reader = new FileReader();
 
-        reader.onload = function (e) {
+        reader.onload = async function (e) {
             try {
                 const uploadedYamlCompanyData = jsyaml.load(e.target.result);
 
                 if (uploadedYamlCompanyData && Array.isArray(uploadedYamlCompanyData)) {
-                    // Speichern der hochgeladenen Daten im Local Storage
-                    localStorage.setItem('uploadedYamlCompanyData', JSON.stringify(uploadedYamlCompanyData));
-                    yamlData = uploadedYamlCompanyData;
-                    uploadedYamlCompanyData.sort((a, b) => {
-                        if (!a.unternehmen.branche && b.unternehmen.branche) return 1;
-                        if (a.unternehmen.branche && !b.unternehmen.branche) return -1;
-                        if (!a.unternehmen.branche && !b.unternehmen.branche) return 0;
-                        return a.unternehmen.branche.localeCompare(b.unternehmen.branche);
-                    });
-                    updateLocalStorageStatus('Daten wurden erfolgreich hochgeladen.');
+                    // Core (Standard) frisch laden, um Duplikate zu erkennen (Prüfung: id + Name)
+                    let coreData = [];
+                    try {
+                        const resp = await fetch('js/unternehmen.yml?v=' + Date.now());
+                        const text = await resp.text();
+                        coreData = jsyaml.load(text) || [];
+                        sessionStorage.setItem('standardYamlData', JSON.stringify(coreData));
+                    } catch (err) {
+                        console.warn('Core-Fetch fehlgeschlagen, verwende Cache', err);
+                        try { coreData = JSON.parse(localStorage.getItem('standardYamlData') || sessionStorage.getItem('standardYamlData') || '[]'); } catch (e) { coreData = []; }
+                    }
 
-                    // Reload dropdown and random companies based on the uploaded data
-                    displayUserCompanies();
-                    markObsoleteUserCompanies();    
-                    initializeYamlData();
-                     alert("Datei erfolgreich hochgeladen!");
+                    // Nur die zusätzlichen Unternehmen speichern; id-Kollisionen (gleiche id, anderer Name)
+                    // werden durch Vergabe einer neuen, noch nicht vergebenen id aufgelöst.
+                    const verwendeteIds = new Set(coreData.map(c => c?.unternehmen?.id));
+                    const zusaetzliche = [];
+                    for (const u of uploadedYamlCompanyData) {
+                        if (existiertInCore(u, coreData)) continue; // exaktes Duplikat (id + Name) → überspringen
+                        if (verwendeteIds.has(u?.unternehmen?.id)) {
+                            const maxId = Math.max(0, ...[...coreData, ...zusaetzliche].map(c => Number(c?.unternehmen?.id) || 0));
+                            let neueId = maxId + 1;
+                            while (verwendeteIds.has(neueId) || zusaetzliche.some(x => x?.unternehmen?.id === neueId)) neueId++;
+                            const copy = JSON.parse(JSON.stringify(u));
+                            if (copy.unternehmen) copy.unternehmen.id = neueId;
+                            verwendeteIds.add(neueId);
+                            zusaetzliche.push(copy);
+                        } else {
+                            verwendeteIds.add(u?.unternehmen?.id);
+                            zusaetzliche.push(u);
+                        }
+                    }
+                    if (zusaetzliche.length === 0) {
+                        localStorage.removeItem('uploadedYamlCompanyData');
+                        updateLocalStorageStatus('Alle Unternehmen der Datei sind bereits im Core vorhanden – nichts zusätzlich gespeichert.');
+                    } else {
+                        localStorage.setItem('uploadedYamlCompanyData', JSON.stringify(zusaetzliche));
+                        updateLocalStorageStatus('Daten hochgeladen: ' + zusaetzliche.length + ' zusätzliche Unternehmen gespeichert (' + (uploadedYamlCompanyData.length - zusaetzliche.length) + ' bereits im Core).');
+                    }
+
+                    // Core + zusätzliche neu aufbauen
+                    await initializeYamlData();
+                    alert("Datei erfolgreich hochgeladen!");
                 } else {
                     console.error("Invalid YAML format in the uploaded file.");
                     alert("Fehler im YAML format. Datei bitte überprüfen.");
@@ -554,16 +682,30 @@ function handleAddCompanyForm(event) {
     const rawSteuernummer = document.getElementById('newCompanySteuernummer').value;
     const akzent = document.getElementById('newCompanyAkzent').value;
 
-    function textareaToArray(id) {
-    const val = document.getElementById(id)?.value || '';
-    return val.split('\n').map(s => s.trim()).filter(Boolean);
+    // Werkstoffe: Zeilen auslesen (Einheit + Preise vom Nutzer, Stammlieferer je Kategorie automatisch)
+    let werkstoffe;
+    try {
+        werkstoffe = {
+            AWR: getWerkstoffeFromForm('newCompanyAWR'),
+            AWF: getWerkstoffeFromForm('newCompanyAWF'),
+            AWH: getWerkstoffeFromForm('newCompanyAWH'),
+            AWB: getWerkstoffeFromForm('newCompanyAWB'),
+        };
+    } catch (error) {
+        alert(error.message);
+        return;
+    }
+
+let fertigerzeugnisse;
+
+try {
+    fertigerzeugnisse = {
+        hauptwerk: getFertigerzeugnisseFromForm()
+    };
+} catch (error) {
+    alert(error.message);
+    return;
 }
-const werkstoffe = {
-    AWR: textareaToArray('newCompanyAWR'),
-    AWF: textareaToArray('newCompanyAWF'),
-    AWH: textareaToArray('newCompanyAWH'),
-    AWB: textareaToArray('newCompanyAWB'),
-};
     
     // Erste Sicherheitsschicht: Prüfe auf gefährliche Zeichen
     const allInputs = [
@@ -817,6 +959,7 @@ const werkstoffe = {
             steuernummer: steuernummer,
             akzent: akzent,
             werkstoffe: werkstoffe,
+            fertigerzeugnisse: fertigerzeugnisse,
         },
         _permanentlyValid: true,
     };
@@ -860,8 +1003,8 @@ populateAllCompaniesDropdown();
 
 // Formular zurücksetzen
 form.reset();
-['newCompanyAWR','newCompanyAWF','newCompanyAWH','newCompanyAWB']
- .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+setFertigerzeugnisseInForm([]);
+WERKSTOFF_FELDER.forEach(id => setWerkstoffeInForm(id, []));
 delete form.dataset.editIndex;
 uploadedLogoBase64 = null;
 document.getElementById('logoPreview').innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
@@ -884,14 +1027,18 @@ function mergeUserCompaniesIntoYamlData() {
         return;
     }
 
-    yamlData = [...yamlData, ...userCompanies];
+    // Basis-Daten nach Branche sortieren, eigene Unternehmen immer ans Ende
+    const baseData = yamlData
+        .filter(c => !c._isUserCompany)
+        .sort((a, b) => {
+            const brancheA = a.unternehmen?.branche || '';
+            const brancheB = b.unternehmen?.branche || '';
+            return brancheA.localeCompare(brancheB);
+        });
 
-    // Sortieren nach Branche
-    yamlData.sort((a, b) => {
-        const brancheA = a.unternehmen?.branche || '';
-        const brancheB = b.unternehmen?.branche || '';
-        return brancheA.localeCompare(brancheB);
-    });
+    userCompanies.forEach(c => { c._isUserCompany = true; });
+
+    yamlData = [...baseData, ...userCompanies];
 
     console.log('Merged:', userCompanies.length, 'eigene Unternehmen hinzugefügt → Gesamt:', yamlData.length);
 }
@@ -1043,16 +1190,19 @@ function editUserCompany(index) {
 
     // === WERKSTOFFE ins Formular laden (JETZT KORREKT!) ===
     function arrayToTextarea(id, arr) {
-        const el = document.getElementById(id);
-        if (el) el.value = Array.isArray(arr) ? arr.join('\n') : '';
+        setWerkstoffeInForm(id, arr);
     }
-
-    const w = u.werkstoffe || {};        // ← HIER WAR DER FEHLER (früher: company.werkstoffe)
+    const w = u.werkstoffe || {};      
 
     arrayToTextarea('newCompanyAWR', w.AWR);
     arrayToTextarea('newCompanyAWF', w.AWF);
     arrayToTextarea('newCompanyAWH', w.AWH);
     arrayToTextarea('newCompanyAWB', w.AWB);
+
+    // Fertigerzeugnisse des Hauptwerks laden
+const fertigerzeugnisse = u.fertigerzeugnisse?.hauptwerk || [];
+
+setFertigerzeugnisseInForm(fertigerzeugnisse);
 
     uploadedLogoBase64 = u.logo || null;
     const preview = document.getElementById('logoPreview');
@@ -1159,7 +1309,16 @@ function loadStandardYamlData() {
 function exportCurrentYamlData() {
     try {
         // 1. Nur nicht-obsolete Unternehmen auswählen
-        const exportData = yamlData.filter(company => company._obsolete !== true);
+               const exportData = yamlData
+            .filter(company => company._obsolete !== true)
+            .sort((a, b) => {
+                if (!!a._isUserCompany !== !!b._isUserCompany) {
+                    return a._isUserCompany ? 1 : -1;   // eigene ans Ende
+                }
+                const brancheA = a.unternehmen?.branche || '';
+                const brancheB = b.unternehmen?.branche || '';
+                return brancheA.localeCompare(brancheB);
+            });
 
         // 2. Alle internen Flags (_obsolete, _permanentlyValid, ...) entfernen
         const cleanExportData = exportData.map(company => {
@@ -1190,12 +1349,6 @@ function exportCurrentYamlData() {
             return clean;
         });
 
-        // 3. Sortierung (optional, aber schön)
-        cleanExportData.sort((a, b) => {
-            const brancheA = a.unternehmen?.branche || '';
-            const brancheB = b.unternehmen?.branche || '';
-            return brancheA.localeCompare(brancheB);
-        });
 
         // 4. YAML erzeugen und downloaden
         const yamlString = jsyaml.dump(cleanExportData);
@@ -1230,9 +1383,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // Komplette YAML-Initialisierung + Merge + Mark + Display
+    // (populateAllCompaniesDropdown() ruft updateMyCompanyStatus() und
+    //  autoSelectMyCompany() am Ende selbst auf – auch beim Nachladen via fetch)
     initializeYamlData();
-    updateMyCompanyStatus();
-    autoSelectMyCompany();
     
     // Export-Button hinzufügen
     const modellunternehmenSection = document.getElementById('exportbutton');
@@ -1272,27 +1425,6 @@ function deleteAndLoadDefaultData() {
     
     updateLocalStorageStatus('Daten wurden zurückgesetzt. Standard-Liste wird vom Server geladen.');
     alert('Daten erfolgreich zurückgesetzt. Standard-Liste wurde aktualisiert.');
-}
-
-// Optional: Funktion zum manuellen Aktualisieren der Standard-Daten
-function refreshStandardData() {
-    const uploadedJSON = localStorage.getItem('uploadedYamlCompanyData');
-    
-    if (uploadedJSON) {
-        alert('Sie verwenden eine hochgeladene Liste. Um die Standard-Daten zu aktualisieren, setzen Sie bitte zuerst die Daten zurück.');
-        return;
-    }
-    
-    if (!confirm('Möchten Sie die Standard-Unternehmensliste vom Server neu laden?')) {
-        return;
-    }
-    
-    sessionStorage.removeItem('standardYamlData');
-    console.log('Aktualisiere Standard-Daten vom Server...');
-    loadStandardYamlData();
-    
-    alert('Standard-Daten wurden aktualisiert.');
-    updateLocalStorageStatus('Standard-Daten vom Server aktualisiert.');
 }
 
 function markObsoleteUserCompanies() {
@@ -1473,3 +1605,329 @@ function generateRandomField(type) {
             break;
     }
 }
+
+
+// Fertigerzeugnis-Eingabezeile hinzufügen
+function addFertigerzeugnisRow(produkt = {}) {
+    const container = document.getElementById('newCompanyFertigerzeugnisse');
+    if (!container) return;
+
+    const row = document.createElement('div');
+
+    row.className = 'fertigerzeugnis-row';
+    row.style.cssText =
+        'display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; align-items:center;';
+
+    const name = document.createElement('input');
+    name.type = 'text';
+    name.className = 'fertigerzeugnis-name';
+    name.placeholder = 'Produktbezeichnung (Plural, z. B. Bürostühle)';
+    name.maxLength = 80;
+    name.value = produkt.name || '';
+    name.style.cssText = 'flex:3 1 220px; min-width:0;';
+
+    const preisMin = document.createElement('input');
+    preisMin.type = 'number';
+    preisMin.className = 'fertigerzeugnis-preis-min';
+    preisMin.placeholder = 'Preis min.';
+    preisMin.min = '0';
+    preisMin.step = '0.01';
+    preisMin.value = produkt.preis_min ?? '';
+    preisMin.style.cssText = 'flex:1 1 110px; min-width:0;';
+
+    const preisMax = document.createElement('input');
+    preisMax.type = 'number';
+    preisMax.className = 'fertigerzeugnis-preis-max';
+    preisMax.placeholder = 'Preis max.';
+    preisMax.min = '0';
+    preisMax.step = '0.01';
+    preisMax.value = produkt.preis_max ?? '';
+    preisMax.style.cssText = 'flex:1 1 110px; min-width:0;';
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = '✕';
+    removeButton.title = 'Fertigerzeugnis entfernen';
+    removeButton.style.cssText =
+        'background:#dc3545; color:white; border:0; border-radius:4px; padding:7px 10px; cursor:pointer;';
+
+    removeButton.addEventListener('click', () => row.remove());
+
+    row.append(name, preisMin, preisMax, removeButton);
+    container.appendChild(row);
+}
+
+
+// Fertigerzeugnisse aus dem Formular auslesen
+function getFertigerzeugnisseFromForm() {
+    const rows = document.querySelectorAll(
+        '#newCompanyFertigerzeugnisse .fertigerzeugnis-row'
+    );
+
+    const produkte = [];
+
+    rows.forEach(row => {
+        const name = row.querySelector('.fertigerzeugnis-name').value.trim();
+        const minValue = row.querySelector('.fertigerzeugnis-preis-min').value;
+        const maxValue = row.querySelector('.fertigerzeugnis-preis-max').value;
+
+        // Leere Zeilen ignorieren
+        if (!name && !minValue && !maxValue) return;
+
+        if (!name || minValue === '' || maxValue === '') {
+            throw new Error(
+                'Bitte bei jedem Fertigerzeugnis Bezeichnung und beide Preise angeben.'
+            );
+        }
+
+        const preisMin = Number(minValue);
+        const preisMax = Number(maxValue);
+
+        if (
+            !Number.isFinite(preisMin) ||
+            !Number.isFinite(preisMax) ||
+            preisMin < 0 ||
+            preisMax < preisMin
+        ) {
+            throw new Error(
+                'Bitte prüfen Sie die Preise. Der Höchstpreis muss mindestens so hoch wie der Mindestpreis sein.'
+            );
+        }
+
+        produkte.push({
+            name: CompanyValidation.sanitizeInput(name),
+            preis_min: preisMin,
+            preis_max: preisMax
+        });
+    });
+
+    return produkte;
+}
+
+
+// Fertigerzeugnisse im Formular anzeigen
+function setFertigerzeugnisseInForm(produkte) {
+    const container = document.getElementById('newCompanyFertigerzeugnisse');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (Array.isArray(produkte) && produkte.length > 0) {
+        produkte.forEach(produkt => addFertigerzeugnisRow(produkt));
+    } else {
+        addFertigerzeugnisRow();
+    }
+}
+
+
+// ===== Werkstoffe: Eingabezeilen (Bezeichnung, Einheit, Preis min/max) mit Plus-Button =====
+const WERKSTOFF_FELDER = ['newCompanyAWR', 'newCompanyAWF', 'newCompanyAWH', 'newCompanyAWB'];
+
+// Stammlieferer (Unternehmens-ID) je Werkstoffkategorie – beim Speichern automatisch gesetzt
+const WERKSTOFF_STAMMLIEFERANT = { AWR: '106', AWF: '67', AWH: '16', AWB: '22' };
+
+// Formular-ID -> Kategorie (newCompanyAWR -> AWR)
+function werkstoffKategorie(id) {
+    return id.replace('newCompany', '');
+}
+
+// Zeilen -> verstecktes Textarea (nur Bezeichnungen, bleibt der Abwärtskompatibilität erhalten)
+function syncWerkstoffTextarea(id) {
+    const ta = document.getElementById(id);
+    const list = document.getElementById(id + 'Rows');
+    if (!ta || !list) return;
+    ta.value = Array.from(list.querySelectorAll('.werkstoff-input'))
+        .map(input => input.value.trim())
+        .filter(Boolean)
+        .join('\n');
+}
+
+// value: alter Bestandswert (reiner String) oder neues Objekt
+// { name, einheit, preis_min, preis_max }
+function addWerkstoffRow(id, value = '') {
+    const list = document.getElementById(id + 'Rows');
+    if (!list) return;
+
+    const w = (value && typeof value === 'object') ? value : { name: value };
+
+    const row = document.createElement('div');
+    row.className = 'werkstoff-row';
+    row.style.cssText = 'margin-bottom:10px; padding-bottom:8px; border-bottom:1px dashed #e0e0e0;';
+
+    // Zeile 1: Bezeichnung + Entfernen-Button
+    const top = document.createElement('div');
+    top.style.cssText = 'display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center;';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'werkstoff-input';
+    input.placeholder = 'Werkstoffbezeichnung';
+    input.maxLength = 80;
+    input.value = w.name || '';
+    input.style.minWidth = '0';
+    input.addEventListener('input', () => syncWerkstoffTextarea(id));
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = '✕';
+    removeButton.title = 'Werkstoff entfernen';
+    removeButton.style.cssText =
+        'background:#dc3545; color:white; border:0; border-radius:4px; padding:7px 10px; cursor:pointer;';
+    removeButton.addEventListener('click', () => {
+        row.remove();
+        if (!list.querySelector('.werkstoff-row')) addWerkstoffRow(id); // immer mind. 1 Zeile
+        syncWerkstoffTextarea(id);
+    });
+
+    top.append(input, removeButton);
+
+    // Zeile 2: Einheit + Preisspanne (bricht bei schmalem Platz um; Stammlieferer wird automatisch hinterlegt)
+    const details = document.createElement('div');
+    details.style.cssText = 'display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;';
+
+    const einheit = document.createElement('input');
+    einheit.type = 'text';
+    einheit.className = 'werkstoff-einheit';
+    einheit.placeholder = 'Einheit';
+    einheit.maxLength = 5;
+    einheit.value = w.einheit || '';
+    einheit.title = 'Einheit (max. 5 Zeichen)';
+    einheit.style.cssText = 'flex:1 1 80px; min-width:0;';
+
+    const preisMin = document.createElement('input');
+    preisMin.type = 'number';
+    preisMin.className = 'werkstoff-preis-min';
+    preisMin.placeholder = 'Preis min.';
+    preisMin.title = 'Preis minimum in € (größer als 0)';
+    preisMin.min = '0.01';
+    preisMin.step = '0.01';
+    preisMin.value = w.preis_min ?? '';
+    preisMin.style.cssText = 'flex:1 1 100px; min-width:0;';
+
+    const preisMax = document.createElement('input');
+    preisMax.type = 'number';
+    preisMax.className = 'werkstoff-preis-max';
+    preisMax.placeholder = 'Preis max.';
+    preisMax.title = 'Preis maximum in € (größer als 0)';
+    preisMax.min = '0.01';
+    preisMax.step = '0.01';
+    preisMax.value = w.preis_max ?? '';
+    preisMax.style.cssText = 'flex:1 1 100px; min-width:0;';
+
+    details.append(einheit, preisMin, preisMax);
+    row.append(top, details);
+    list.appendChild(row);
+}
+
+// Werkstoffe inkl. Einheit und Preisspanne aus dem Formular auslesen.
+// Der Stammlieferer wird je Kategorie automatisch ergänzt (WERKSTOFF_STAMMLIEFERANT).
+function getWerkstoffeFromForm(id) {
+    const list = document.getElementById(id + 'Rows');
+    const kategorie = werkstoffKategorie(id);
+    const items = [];
+    if (!list) return items;
+
+    list.querySelectorAll('.werkstoff-row').forEach(row => {
+        const name = row.querySelector('.werkstoff-input').value.trim();
+        const einheit = row.querySelector('.werkstoff-einheit').value.trim();
+        const minVal = row.querySelector('.werkstoff-preis-min').value;
+        const maxVal = row.querySelector('.werkstoff-preis-max').value;
+
+        // Völlig leere Zeilen ignorieren
+        if (!name && !einheit && !minVal && !maxVal) return;
+
+        if (!name || !einheit || minVal === '' || maxVal === '') {
+            throw new Error(
+                `Bitte bei jedem Werkstoff (${kategorie}) Bezeichnung, Einheit und beide Preise angeben.`
+            );
+        }
+
+        if (containsDangerousChars(name) || containsDangerousChars(einheit)) {
+            throw new Error(
+                `Ungültige Zeichen im Werkstoff "${kategorie}" erkannt: Die Zeichen <, >, {, } sind nicht erlaubt.`
+            );
+        }
+
+        if (einheit.length > 5) {
+            throw new Error(
+                `Die Einheit bei "${name}" (${kategorie}) darf höchstens 5 Zeichen haben.`
+            );
+        }
+
+        const preisMin = Number(minVal);
+        const preisMax = Number(maxVal);
+
+        if (
+            !Number.isFinite(preisMin) ||
+            !Number.isFinite(preisMax) ||
+            preisMin <= 0 ||
+            preisMax <= 0 ||
+            preisMax < preisMin
+        ) {
+            throw new Error(
+                `Bitte die Preise bei "${name}" (${kategorie}) prüfen: Beide Preise müssen größer als 0 sein und der Höchstpreis mindestens so hoch wie der Mindestpreis.`
+            );
+        }
+
+        items.push({
+            name: CompanyValidation.sanitizeInput(name),
+            stammlieferant: WERKSTOFF_STAMMLIEFERANT[kategorie] || null,
+            einheit: CompanyValidation.sanitizeInput(einheit),
+            preis_min: preisMin,
+            preis_max: preisMax
+        });
+    });
+
+    return items;
+}
+
+// Liste im Formular setzen (leeres Array = zurücksetzen)
+function setWerkstoffeInForm(id, werte) {
+    initWerkstoffUI();
+    const list = document.getElementById(id + 'Rows');
+    if (!list) return;
+
+    list.innerHTML = '';
+    const items = Array.isArray(werte) && werte.length > 0 ? werte : [''];
+    items.forEach(w => addWerkstoffRow(id, w));
+    syncWerkstoffTextarea(id);
+}
+
+// Baut pro Textarea die Zeilen-Oberfläche + Plus-Button (nur einmal)
+function initWerkstoffUI() {
+    WERKSTOFF_FELDER.forEach(id => {
+        const ta = document.getElementById(id);
+        if (!ta || document.getElementById(id + 'Rows')) return;
+
+        ta.style.display = 'none';
+        ta.removeAttribute('required'); // sonst blockiert das versteckte Feld das Absenden
+
+        const wrapper = document.createElement('div');
+
+        const list = document.createElement('div');
+        list.id = id + 'Rows';
+
+        const addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.textContent = '+ Werkstoff hinzufügen';
+        addButton.style.cssText =
+            'background:#28a745; color:white; border:0; border-radius:4px; padding:7px 12px; cursor:pointer;';
+        addButton.addEventListener('click', () => {
+            addWerkstoffRow(id);
+            list.querySelector('.werkstoff-row:last-child .werkstoff-input')?.focus();
+        });
+
+        wrapper.append(list, addButton);
+        ta.insertAdjacentElement('afterend', wrapper);
+
+        // vorhandenen Textarea-Inhalt übernehmen
+        const vorhanden = ta.value.split('\n').map(s => s.trim()).filter(Boolean);
+        (vorhanden.length ? vorhanden : ['']).forEach(w => addWerkstoffRow(id, w));
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    setFertigerzeugnisseInForm([]);
+    initWerkstoffUI();
+});

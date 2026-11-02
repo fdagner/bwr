@@ -1,7 +1,6 @@
 // ============================================================================
 // GLOBALE VARIABLEN
 // ============================================================================
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGfListeEinkauf = []; // Name aus der Vorlage beibehalten (Kompatibilität mit download.js)
 
@@ -65,54 +64,95 @@ function fillBankDropdowns() {
 }
 
 // ============================================================================
+// BANK DES MODELLUNTERNEHMENS
+// Ist ein Modellunternehmen gewählt, so erscheint dessen Bank (aus der
+// unternehmen.yml) im Dropdown von Angebot A und wird ausgewählt.
+// Ohne gewähltes Modellunternehmen bleibt das Standardverhalten (Zufall).
+// ============================================================================
+function bankDesUnternehmens() {
+  const sel = document.getElementById('kkKreditnehmer');
+  const name = sel ? sel.value : '';
+  if (!name || !window.yamlData || !Array.isArray(window.yamlData)) return '';
+  const eintrag = window.yamlData.find(e => e.unternehmen?.name === name);
+  return (eintrag && eintrag.unternehmen.bank) ? eintrag.unternehmen.bank.trim() : '';
+}
+
+function setzeBankA() {
+  const selA = document.getElementById('kkBankA');
+  const bank = bankDesUnternehmens();
+  if (!selA || !bank) return false;
+  let opt = Array.from(selA.options).find(o => o.value === bank);
+  if (!opt) {
+    opt = document.createElement('option');
+    opt.value = bank;
+    opt.textContent = bank;
+    selA.insertBefore(opt, selA.options[0] || null); // neue Bank oben einsortieren
+  }
+  selA.value = bank;
+  return true;
+}
+
+// ============================================================================
+// HAUPTREFINANZIERUNGSSATZ – ANZEIGE + EINSTELLUNG
+// Ankerwert (Standard in js/utils.js) wird prominent angezeigt und kann vom
+// Nutzer angepasst werden; Zufallssätze orientieren sich am geänderten Wert.
+// ============================================================================
+function initialisiereHrsEinstellung() {
+  const input = document.getElementById('kkHrs');
+  const eingabefeld = document.getElementById('kkHrsBannerWert');
+
+  function aktualisiere() {
+    const satz = getHauptrefinanzierungssatz();
+    const txt = satz.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' %';
+    if (eingabefeld) eingabefeld.textContent = txt;
+    if (input && document.activeElement !== input) input.value = String(satz); // type=number: Punkt-Schreibweise
+  }
+
+  if (input) {
+    input.addEventListener('change', () => {
+      const v = parseFloat(String(input.value).trim().replace(',', '.'));
+      if (!isNaN(v) && v >= 0 && v <= 20) {
+        setHauptrefinanzierungssatz(v);
+        // laufende Aufgabe mit neuem Ankerwert neu würfeln
+        befuelleZufallswerte();
+        if (typeof zeigeZufaelligenSatz === 'function') zeigeZufaelligenSatz();
+      } else {
+        alert('Bitte einen Wert zwischen 0 und 20 % eingeben.');
+        aktualisiere();
+      }
+    });
+  }
+  const stdBtn = document.getElementById('kkHrsStandard');
+  if (stdBtn) {
+    stdBtn.addEventListener('click', () => {
+      resetHauptrefinanzierungssatz();
+      befuelleZufallswerte();
+      if (typeof zeigeZufaelligenSatz === 'function') zeigeZufaelligenSatz();
+    });
+  }
+  document.addEventListener('hrschange', aktualisiere);
+  aktualisiere();
+}
+
+// ============================================================================
 // YAML-LADEN
 // ============================================================================
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => (a.unternehmen?.branche || '').localeCompare(b.unternehmen?.branche || ''));
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) { console.warn("localStorage YAML kaputt:", err); }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => { if (!res.ok) throw new Error('nicht gefunden'); return res.text(); })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => console.error("Konnte unternehmen.yml nicht laden:", err));
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   fillBankDropdowns();
+  initialisiereHrsEinstellung();
 
   const nehmerSelect = document.getElementById('kkKreditnehmer');
   if (nehmerSelect) {
     if (nehmerSelect.value) kunde = nehmerSelect.value.trim();
     nehmerSelect.addEventListener('change', () => {
       kunde = nehmerSelect.value.trim() || '';
+      // Bank des gewählten Modellunternehmens sofort im Angebot A setzen
+      // (ohne Auswahl bleibt das Zufallsverhalten)
+      setzeBankA();
     });
   }
 
@@ -120,18 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('yamlDataLoaded', () => {
     fillCompanyDropdown();
     autoSelectMyCompany();
+    befuelleZufallswerte();  // Felder beim ersten Laden befüllen
+    zeigeZufaelligenSatz();  // Aufgabe sofort rendern
   }, { once: true });
 
-  if (!loadYamlFromLocalStorage()) loadDefaultYaml();
 });
 
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-function roundToTwoDecimals(num) { return Math.round((num + Number.EPSILON) * 100) / 100; }
+
 function rndInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function rndOf(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-function formatCurrency(value) { return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
+
 function fmtZahl(v, min = 0, max = 2) { return v.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: max }); }
 function fmtProzent(v) { return `${fmtZahl(v, 0, 2)}&nbsp;%`; }
 function fmtEffektiv(v) { return `${fmtZahl(v, 2, 2)}&nbsp;%`; }
@@ -142,8 +183,8 @@ function fmtEffektiv(v) { return `${fmtZahl(v, 2, 2)}&nbsp;%`; }
 const AV_INPUT_RULES = {
   kkKredit: { label: 'Kreditbetrag', min: 100, max: 1000000, integer: true },
   kkTage: { label: 'Laufzeit (Tage)', min: 30, max: 3600, integer: true },
-  kkZinsA: { label: 'Zinssatz A', min: 0.1, max: 15, integer: false },
-  kkZinsB: { label: 'Zinssatz B', min: 0.1, max: 15, integer: false },
+  kkZinsA: { label: 'Zinssatz A', min: 0, max: 15, integer: false },
+  kkZinsB: { label: 'Zinssatz B', min: 0, max: 15, integer: false },
   kkDisagioA: { label: 'Disagio A', min: 0, max: 10, integer: false },
   kkDisagioB: { label: 'Disagio B', min: 0, max: 10, integer: false },
 };
@@ -203,28 +244,56 @@ function berechneKredit(kredit, zins, disagio, tage) {
 // Ziel: Ein Angebot hat den niedrigeren Nominalzins, das andere das höhere Disagio,
 // sodass der Vergleich nicht trivial ist. Effektive Zinssätze sollen sich unterscheiden.
 // ============================================================================
+// Laufliste mit glatten Laufzeiten (in Tagen) – gut lesbare Beträge statt
+// beliebiger Zufallszahlen. Ausrichtung an der 360-Tage-Methode: 360 = 1 Jahr,
+// 720 = 2 Jahre, 1080 = 3 Jahre usw. – so kommt die 360-Tage-Rechnung auf
+// glatte Jahreszinsergebnisse.
+const KREDIT_LAUFZEITEN = [
+    90, 100, 200, 250, 300, 360, 400, 450, 500, 600,
+    720, 750, 800, 900, 1000, 1080, 1200, 1250,
+    1440, 1500, 1800, 2000, 2250, 2500, 2700, 3000, 3600
+];
 function genKonditionen(kredit, tage) {
+  // Zinssätze bewegen sich im Korridor um den Hauptrefinanzierungssatz (Ankerwert,
+  // siehe js/utils.js): Unternehmenskredit, gute Bonität = Ankerwert × 1,5 bis × 2,5.
+  const bereich = zinsbereich('unternehmenskredit-gut');
+
+  // SONDERFALL Ankerwert 0 (oder sehr klein): Der Faktor-Korridor kollabiert auf
+  // einen Punkt bzw. wird so schmal, dass zwei unterscheidbare Nominalzinssätze
+  // unmöglich sind. Dann erhalten beide Angebote denselben (korridor-)Zinssatz
+  // und unterscheiden sich nur über das Disagio – der effektive Zinssatz entsteht
+  // allein aus dem Disagio. Berechnung bleibt vollständig korrekt.
+  const korridorSchmal = (bereich.max - bereich.min) < 0.2;
+  if (korridorSchmal) {
+    const z = bereich.min;
+    const dA = rndOf([0, 0.5, 1, 1.5, 2]);
+    const dB = dA + rndOf([0.5, 1, 1.5]);
+    return { zA: z, dA, zB: z, dB };
+  }
+
   let ergebnis = null;
   for (let i = 0; i < 60; i++) {
-    const zA = rndInt(15, 45) / 10;
+    const zA = zufallsZinsWert('unternehmenskredit-gut');
     const dA = rndOf([0, 0.5, 1, 1.5, 2]);
     const deltaZ = rndInt(1, 4) / 10;
     const deltaD = rndOf([0.5, 1, 1.5]);
     const bNiedrigerZins = Math.random() < 0.5;
-    const zB = Math.round((bNiedrigerZins ? zA - deltaZ : zA + deltaZ) * 10) / 10;
+    // Angebot B im selben Korridor halten
+    let zBRaw = Math.round((bNiedrigerZins ? zA - deltaZ : zA + deltaZ) * 10) / 10;
+    const zB = Math.min(bereich.max, Math.max(bereich.min, zBRaw));
     const dB = bNiedrigerZins ? dA + deltaD : Math.max(0, dA - deltaD);
-    if (zB < 0.5 || dB === dA) continue;
+    if (zB === zA || dB === dA) continue;
     ergebnis = { zA, dA, zB, dB };
     const eA = berechneKredit(kredit, zA, dA, tage).effektiv;
     const eB = berechneKredit(kredit, zB, dB, tage).effektiv;
     if (Math.abs(eA - eB) >= 0.02) break;
   }
-  return ergebnis || { zA: 1.9, dA: 0.5, zB: 1.7, dB: 1 };
+  return ergebnis || { zA: bereich.min, dA: 0.5, zB: bereich.max, dB: 1 };
 }
 
 function befuelleZufallswerte() {
   const kredit = rndOf([10000, 15000, 20000, 25000, 30000, 40000, 45000, 50000, 60000, 75000, 80000, 100000]);
-  const tage = rndInt(720, 2880);
+  const tage = rndOf(KREDIT_LAUFZEITEN);
   const k = genKonditionen(kredit, tage);
   document.getElementById('kkKredit').value = kredit;
   document.getElementById('kkTage').value = tage;
@@ -233,15 +302,22 @@ function befuelleZufallswerte() {
   document.getElementById('kkZinsB').value = k.zB;
   document.getElementById('kkDisagioB').value = k.dB;
 
-  // zwei verschiedene Banken zufällig wählen
+  // Banken wählen: Mit ausgewähltem Modellunternehmen bekommt Angebot A
+  // dessen Bank (aus der unternehmen.yml); ansonsten Zufall für beide.
   const selA = document.getElementById('kkBankA');
   const selB = document.getElementById('kkBankB');
-  if (selA && selB && BANKEN.length > 1) {
-    const i = rndInt(0, BANKEN.length - 1);
-    let j = rndInt(0, BANKEN.length - 1);
-    while (j === i) j = rndInt(0, BANKEN.length - 1);
-    selA.selectedIndex = i;
-    selB.selectedIndex = j;
+  if (selA && selB) {
+    const hatUnternehmBankA = setzeBankA();
+    if (!hatUnternehmBankA && selA.options.length > 1) {
+      selA.selectedIndex = rndInt(0, selA.options.length - 1);
+    }
+    if (selB.options.length > 1) {
+      let j = rndInt(0, selB.options.length - 1);
+      while (selB.options[j].value === selA.value) {
+        j = rndInt(0, selB.options.length - 1);
+      }
+      selB.selectedIndex = j;
+    }
   }
 }
 
@@ -287,9 +363,6 @@ function zeigeZufaelligenSatz() {
   if (!validierung.valid) return;
 
   const container = document.getElementById('Container');
-  const buttonColumn = document.getElementById('button-column');
-  if (!container || !buttonColumn) return;
-  container.innerHTML = ''; buttonColumn.innerHTML = '';
   letzteGenerierteGfListeEinkauf = [];
 
   const nameA = document.getElementById('kkBankA')?.value || 'Bank A';
@@ -564,12 +637,6 @@ document.addEventListener('DOMContentLoaded', function () {
     zBtn.onclick = befuelleZufallswerte;
     aufgabeBtn.insertAdjacentElement('beforebegin', zBtn);
   }
-
-  setTimeout(function () {
-    autoSelectMyCompany();
-    befuelleZufallswerte();  // Felder beim ersten Laden befüllen
-    zeigeZufaelligenSatz();  // Aufgabe sofort rendern
-  }, 500);
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) vorschauEl.textContent = erstelleKiPromptText();

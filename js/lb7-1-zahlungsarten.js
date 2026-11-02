@@ -262,18 +262,6 @@ const familienSituationen = [
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 const vornamen = ['Lena', 'Paul', 'Mia', 'Jonas', 'Emma', 'Luca', 'Anna', 'Felix', 'Sophie', 'Tim'];
 
@@ -301,12 +289,12 @@ function zeigeZufaelligeZahlungsaufgaben() {
   const ausgewaehlte = shuffle(familienSituationen).slice(0, anzahl);
 
   let aufgabenHTML = '<h2>Fallbeispiele: Zahlungsarten</h2>';
-  aufgabenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die Fallbeispiele. Entscheide dich für eine geeignete Zahlungsart.</p>';
+  aufgabenHTML += '<h3>Lies die Fallbeispiele. Entscheide dich für eine geeignete Zahlungsart.</h3>';
   aufgabenHTML += '<ol>';
 
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
   letzteZahlungsAufgaben = [];
-  loesungenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Mehrere Zahlungsarten können richtig sein, wenn die Begründung zur Situation passt.</p>';
+  loesungenHTML += '<h3>Mehrere Zahlungsarten können richtig sein, wenn die Begründung zur Situation passt.</h3>';
 
   ausgewaehlte.forEach((fall, idx) => {
     const name = pick(familienNamen);

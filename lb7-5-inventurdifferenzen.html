@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventurdifferenzen – Zufallsaufgaben | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Generieren Sie zufällige Inventurdifferenz-Aufgaben mit Ist- und Soll-Beständen für den BwR-Unterricht an der Realschule Bayern.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb7-5-inventurdifferenzen.html">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Inventurdifferenzen – Zufallsaufgaben | meinbwr.de">
+  <meta property="og:description" content="Kostenloses BwR-Tool: Generieren Sie zufällige Inventurdifferenz-Aufgaben mit Ist- und Soll-Beständen für den BwR-Unterricht an der Realschule Bayern.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb7-5-inventurdifferenzen.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Inventurdifferenzen – Zufallsaufgaben | meinbwr.de">
+  <meta name="twitter:description" content="Kostenloses BwR-Tool: Generieren Sie zufällige Inventurdifferenz-Aufgaben mit Ist- und Soll-Beständen für den BwR-Unterricht an der Realschule Bayern.">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="color-scheme" content="light">
+
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Inventurdifferenzen – Zufallsaufgaben",
+    "description": "Kostenloses BwR-Tool: Generieren Sie zufällige Inventurdifferenz-Aufgaben mit Ist- und Soll-Beständen für den BwR-Unterricht an der Realschule Bayern.",
+    "url": "https://www.meinbwr.de/lb7-5-inventurdifferenzen.html",
+    "inLanguage": "de-DE",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "meinbwr.de – BwR Realschule Bayern",
+      "url": "https://www.meinbwr.de/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 2, "name": "BwR 7", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 3, "name": "Inventurdifferenzen", "item": "https://www.meinbwr.de/lb7-5-inventurdifferenzen.html" }
+      ]
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/jodit.min.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/kontenplan.js"></script>
+  <script src="js/js-yaml.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/jodit.min.js"></script>
+  <script src="js/joditeditor.js?v=67"></script>
+</head>
+<main>
+    <div w3-include-html="navigation.html"></div>
+    <h2>Inventurdifferenzen</h2>
+    <form id="inventurdifferenzenForm" class="box">
+        <p>Für die Werkstoffarten können zufällige Ist- und Soll-Bestände generiert werden.</p>
+        <button type="button" onclick="updateTable()">Neue Tabelle erstellen</button>
+    </form>
+
+    <div id="inventurdifferenzenButtonContainer" style="margin:0 auto;">
+        <div style="width:700px" contenteditable="true">
+            <div id="inventurdifferenzenContainer" style="margin: 0 auto;padding:10px">
+                <h3>Aufgabe</h3>
+                <p><b>Für die verschiedenen Werkstoffarten liegen dir aus der Inventur die Ist-Bestände und aus der
+                        Buchführung die Soll-Bestände vor. Ermittle jeweils die Höhe der Inventurabweichung.</b></p>
+                <table class="inventurdifferenz"
+                    style="border: 1px solid #ccc;font-family:courier;font-size: 16px;min-width:650px;border-collapse:collapse;">
+                    <thead>
+                        <tr style="text-align: center;background-color:#ededed;font-weight: bold;">
+                            <th>Werkstoffe</th>
+                            <th>Ist-Bestand</th>
+                            <th>Soll-Bestand</th>
+                            <th>Inventurdifferenz</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+
+                <h3>Lösung</h3>
+                <table class="inventurdifferenz"
+                    style="border: 1px solid #ccc;font-family:courier;font-size: 16px;min-width:650px;border-collapse:collapse;">
+                    <thead>
+                        <tr style="text-align: center;background-color:#ededed;font-weight: bold;">
+                            <th>Werkstoffe</th>
+                            <th>Ist-Bestand</th>
+                            <th>Soll-Bestand</th>
+                            <th>Inventurdifferenz</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body-l">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</main>
+<script src="js/lb7-5-inventurdifferenzen.js"></script>
+<div w3-include-html="footer.html"></div>
+<script>
+    includeHTML();
+</script>
+</body>
+
+</html>

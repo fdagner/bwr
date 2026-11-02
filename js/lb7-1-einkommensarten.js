@@ -2,18 +2,6 @@
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 const familienNamen = [
   'Müller', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Ivanov', 'Petrov', 
@@ -238,8 +226,8 @@ const anzahl    = Math.max(1, Math.min(20, parseInt(document.getElementById('anz
 }));
 
   // ── Aufgabenstellung ─────────────────────────────────────────────────────
-  let html = `<h2>Aufgaben</h2>`;
-  html += `<p style="font-style:italic; color:#555; font-size:0.95rem;">Lies die folgenden Fallbeispiele. Trage Akteur, Einkommensart und Einkommensquelle in die Tabelle unten ein.</p>`;
+  let html = `<h2>Aufgabe: Einkommensarten</h2>`;
+  html += `<h3>Lies die folgenden Fallbeispiele. Trage Akteur, Einkommensart und Einkommensquelle in die Tabelle unten ein.</h3>`;
   html += `<ol>`;
 
 letzteGenerierteAufgaben.forEach(({ text }, idx) => {

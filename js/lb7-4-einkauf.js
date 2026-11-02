@@ -73,7 +73,7 @@ function fillBezeichnungsfelder(unternehmensName) {
     if (!Array.isArray(liste)) return;
     [0, 1, 2].forEach(i => {
       const el = document.getElementById(`bezeichnung${konto}_${i}`);
-      if (el) el.value = liste[i] ?? "";
+      if (el) el.value = liste[i]?.name ?? liste[i] ?? "";
     });
   });
 }
@@ -154,6 +154,65 @@ function getLieferantFuerGf(konto, awbArt) {
       return getLieferantAusYaml("EcoFuel");
   }
   return getLieferantAusYaml("Werkstoffunion");
+}
+
+// ============================================================================
+// DYNAMISCHE LIEFERANTEN-ERMITTLUNG PER STAMMLIEFERANT (YAML)
+// ============================================================================
+
+function getLieferantenNameFuerWerkstoff(unternehmensName, werkstoffName, konto) {
+  if (!yamlDataWerkstoffe?.length) return null;
+  let lieferantenId = null;
+
+  // 1. Beim ausgewählten Unternehmen suchen
+  if (unternehmensName) {
+    const eintrag = yamlDataWerkstoffe.find(e => e.unternehmen?.name === unternehmensName);
+    const werkstoffe = eintrag?.unternehmen?.werkstoffe ?? eintrag?.werkstoffe;
+    if (werkstoffe) {
+      const kontiZuPruefen = konto ? [konto] : ["AWR", "AWF", "AWH", "AWB"];
+      for (const k of kontiZuPruefen) {
+        const liste = werkstoffe[k];
+        if (Array.isArray(liste)) {
+          const gefunden = liste.find(w => {
+            if (typeof w === 'object' && w !== null) return w.name === werkstoffName;
+            return w === werkstoffName;
+          });
+          if (gefunden && typeof gefunden === 'object' && gefunden.stammlieferant) {
+            lieferantenId = gefunden.stammlieferant;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  // 2. Fallback: im gesamten YAML suchen
+  if (!lieferantenId) {
+    for (const eintrag of yamlDataWerkstoffe) {
+      const werkstoffe = eintrag.unternehmen?.werkstoffe ?? eintrag?.werkstoffe;
+      if (!werkstoffe) continue;
+      for (const k of ["AWR", "AWF", "AWH", "AWB"]) {
+        const liste = werkstoffe[k];
+        if (Array.isArray(liste)) {
+          const gefunden = liste.find(w => {
+            if (typeof w === 'object' && w !== null) return w.name === werkstoffName;
+            return w === werkstoffName;
+          });
+          if (gefunden && typeof gefunden === 'object' && gefunden.stammlieferant) {
+            lieferantenId = gefunden.stammlieferant;
+            break;
+          }
+        }
+      }
+      if (lieferantenId) break;
+    }
+  }
+
+  if (!lieferantenId) return null;
+
+  // Unternehmen per ID finden
+  const unternehmenEintrag = yamlDataWerkstoffe.find(e => String(e.unternehmen?.id).trim() === String(lieferantenId).trim());
+  return unternehmenEintrag?.unternehmen?.name || null;
 }
 
 // ============================================================================
@@ -434,28 +493,42 @@ function getAusgewaehlteKontenW() {
 // YAML LADEN
 // ============================================================================
 
+function existiertInCoreWS(unternehmen, coreData) {
+  const key = String(unternehmen?.unternehmen?.id ?? '') + '|' + String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+  const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+  return (coreData || []).some(c => (String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase()) === key || String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name);
+}
+
 function ladeYamlWerkstoffe() {
-  const saved =
-    localStorage.getItem("uploadedYamlCompanyData") ||
-    localStorage.getItem("standardYamlData");
-  if (saved) {
-    try {
-      yamlDataWerkstoffe = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlDataWerkstoffe(); // ← NEU
-      document.dispatchEvent(new Event("yamlDataWerkstoffeLoaded"));
-      return true;
-    } catch (e) { /* ignorieren */ }
-  }
-  fetch("js/unternehmen.yml")
+  fetch("js/unternehmen.yml?v=" + Date.now())
     .then((r) => (r.ok ? r.text() : Promise.reject()))
     .then((txt) => {
-      yamlDataWerkstoffe = jsyaml.load(txt) || [];
-      mergeUserCompaniesIntoYamlDataWerkstoffe(); // ← NEU
+      const coreData = jsyaml.load(txt) || [];
+      try { localStorage.setItem("standardYamlData", JSON.stringify(coreData)); } catch (e) {}
+      const saved = localStorage.getItem("uploadedYamlCompanyData");
+      let zusaetzliche = [];
+      if (saved) {
+        try {
+          const uploaded = JSON.parse(saved);
+          zusaetzliche = uploaded.filter(u => !existiertInCoreWS(u, coreData));
+          if (zusaetzliche.length === 0) {
+            localStorage.removeItem("uploadedYamlCompanyData");
+          } else if (zusaetzliche.length !== uploaded.length) {
+            localStorage.setItem("uploadedYamlCompanyData", JSON.stringify(zusaetzliche));
+          }
+        } catch (e) { localStorage.removeItem("uploadedYamlCompanyData"); }
+      }
+      yamlDataWerkstoffe = [...coreData, ...zusaetzliche];
+      mergeUserCompaniesIntoYamlDataWerkstoffe();
       document.dispatchEvent(new Event("yamlDataWerkstoffeLoaded"));
     })
     .catch(() => {});
   return false;
 }
+
+
+
+
 
 function fillCompanyDropdownW() {
   if (!yamlDataWerkstoffe?.length) return;
@@ -561,7 +634,7 @@ function erstelleZufallsGeschaeftsfallW() {
   const vorlagenIdx = Math.floor(Math.random() * typ.vorlagen.length);
   let textVorlage = typ.vorlagen[vorlagenIdx]
     .replace("{kunde}", kundeWerkstoffe)
-    .replace("{werkstoff}", werkstoffBezeichnung);  // einheitlicher Platzhalter
+    .replace("{werkstoff}", werkstoffBezeichnung);
 
   const angabeIstBrutto = Math.random() < 0.5;
   let betragText;
@@ -584,23 +657,23 @@ function erstelleZufallsGeschaeftsfallW() {
   const listenbrutto = roundToTwoDecimalsW(listennetto * 1.19);
 
   // ── Belegname ─────────────────────────────────────────────────────────────
-  // AWB + BK: Rechnungsnummer anhängen; sonst einfach der belegName / awbArt
   let artikelBelegName;
   if (konto === "AWB" && typ.haben === "BK") {
     artikelBelegName = `${awbArt} Re.Nr. ${genReNrW()}`;
   } else if (konto === "AWB") {
     artikelBelegName = awbArt;
   } else {
-    artikelBelegName = artikel.belegName;  // benutzerdef. Name auch auf dem Beleg
+    artikelBelegName = artikel.belegName;
   }
 
   return {
     text: geschaeftsfallText,
     typ,
+    konto: typ.konto,
+    awbArt,
     lieferantObj,
     artikelBelegName,
     einheit: artikel.einheit,
-    awbArt,
     werkstoffBezeichnung,
     sollKto: typ.soll,
     habenKto: typ.haben,
@@ -810,6 +883,7 @@ Am Ende einer erfolgreich gelösten Übung:
 - Frage immer: „Möchtest du noch einen anderen Geschäftsfall üben? Dann geb ich dir einfach den nächsten!" Dann wähle wieder einen zufälligen aus, der noch nicht dran war.
 Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel ist es, dass der Schüler die Buchung selbst findet und versteht.
 `;
+
 // ============================================================================
 // KI-PROMPT AKTIONEN
 // ============================================================================
@@ -862,8 +936,16 @@ function erstelleBelegURLW(gf) {
 
   params.set("beleg", bt);
 
+  // Dynamische Lieferanten- / Empfängerermittlung über Stammlieferant oder Fallback
+  const werkstoffName = gf.werkstoffBezeichnung || gf.artikelBelegName;
+  const dynamischerLieferant = getLieferantenNameFuerWerkstoff(kv, werkstoffName, gf.konto);
+  const fallbLieferant = getLieferantFuerGf(gf.konto, gf.awbArt)?.name;
+  const lieferantenName = dynamischerLieferant || fallbLieferant || gf.lieferantObj?.name;
+
   if (bt === "rechnung") {
-    params.set("lieferer", gf.lieferantObj.name);
+    if (lieferantenName) {
+      params.set("lieferer", lieferantenName);
+    }
     if (kv) params.set("kunde", kv);
     params.set("artikel1", gf.artikelBelegName);
     params.set("menge1", "1");
@@ -882,6 +964,9 @@ function erstelleBelegURLW(gf) {
     params.set("skontofrist", "20");
   } else if (bt === "kontoauszug") {
     if (kv) params.set("kontoinhaber", kv);
+    if (lieferantenName) {
+      params.set("empfaenger", lieferantenName);
+    }
     params.set("vorgang1", gf.artikelBelegName);
     params.set(
       "wertstellung1",

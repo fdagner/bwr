@@ -3,6 +3,9 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Belege erstellen: Rechnung, Kontoauszug, Quittung, Kassenbon &amp; mehr | meinbwr.de BwR</title>
   <meta name="description" content="Kostenloser BwR-Belege-Generator für Realschule Bayern: Erstelle Rechnungen, Angebote, Kontoauszüge, Quittungen, Kassenbons, E-Mails, Lohnabrechnungen, Wertpapierbelege u.v.m. Import, Bearbeitung, Export (PNG/SVG/Clipboard). Ideal für Rechnungswesen-Unterricht, Klassenarbeiten &amp; Prüfungen.">
@@ -54,10 +57,12 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/menu.js"></script>
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <script src="js/menu.js?v=14"></script>
   <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
+  
   <script src="js/clipboard.min.js"></script>
 </head>
 
@@ -102,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="drop-zone" id="dropZone">
     <p>SVG hier hineinziehen oder klicken zum Auswählen</p>
-    <input type="file" id="belegImportInput" accept=".svg">
+    <input type="file" id="belegImportInput" accept=".svg,.html,.htm">
 </div>
 
 <p>
@@ -130,20 +135,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="artikelInput">Bezeichnung</label>
-                        <input type="text" id="artikelInput" placeholder="Artikelbezeichnung" />
+                        <input type="text" id="artikelInput" placeholder="Artikelbezeichnung" maxlength="28" />
                     </div>
                     
                     <div class="form-field form-field-group">
                         <label for="mengeInput">Menge</label>
                         <div class="input-group">
                             <input type="number" id="mengeInput" placeholder="Menge" min="0" max="1000" />
-                            <input type="text" id="einheitInput" placeholder="Einheit" />
+                            <input type="text" id="einheitInput" placeholder="Einheit" maxlength="5" />
                         </div>
                     </div>
                     
                     <div class="form-field">
                         <label for="einzelpreisInput">Einzelpreis</label>
-                        <input type="number" id="einzelpreisInput" min="0" placeholder="Einzelpreis" />
+                        <input type="number" id="einzelpreisInput" min="0" max="9999999" placeholder="Einzelpreis" />
                     </div>
                 </fieldset>
 
@@ -153,20 +158,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="artikelInput2">Bezeichnung</label>
-                        <input type="text" id="artikelInput2" placeholder="Artikelbezeichnung" />
+                        <input type="text" id="artikelInput2" placeholder="Artikelbezeichnung" maxlength="28" />
                     </div>
                     
                     <div class="form-field form-field-group">
                         <label for="mengeInput2">Menge</label>
                         <div class="input-group">
                             <input type="number" id="mengeInput2" placeholder="Menge" min="0" max="1000" />
-                            <input type="text" id="einheitInput2" placeholder="Einheit" />
+                            <input type="text" id="einheitInput2" placeholder="Einheit" maxlength="5" />
                         </div>
                     </div>
                     
                     <div class="form-field">
                         <label for="einzelpreisInput2">Einzelpreis</label>
-                        <input type="number" id="einzelpreisInput2" min="0" placeholder="Einzelpreis" />
+                        <input type="number" id="einzelpreisInput2" min="0" max="9999999" placeholder="Einzelpreis" />
                     </div>
                 </fieldset>
 
@@ -176,14 +181,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="rabattInput">Rabatt (%)</label>
-                        <input type="number" id="rabattInput" placeholder="Rabatt eingeben" />
+                        <input type="number" id="rabattInput" placeholder="Rabatt eingeben" min="0" max="100" />
                     </div>
                     
                     <div class="form-field form-field-group">
                         <label for="bezugskostenInput">Bezugskosten</label>
                         <div class="input-group">
-                            <input type="number" id="bezugskostenInput" min="0" placeholder="Bezugskosten eingeben" />
-                            <input type="text" id="bezugskostenArtInput" value="Versand" />
+                            <input type="number" id="bezugskostenInput" min="0" max="9999999" placeholder="Bezugskosten eingeben" />
+                            <input type="text" id="bezugskostenArtInput" value="Versand" maxlength="25" />
                         </div>
                     </div>
                     
@@ -196,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="angebotLieferzeitInput">Lieferzeit in Tagen</label>
-                        <input type="text" id="angebotLieferzeitInput" value="1-3" />
+                        <input type="text" id="angebotLieferzeitInput" value="1-3" maxlength="25" />
                     </div>
                     
                     <div class="form-field checkbox-field">
@@ -213,22 +218,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="umsatzsteuerInput">Umsatzsteuer (%)</label>
-                        <input type="number" id="umsatzsteuerInput" value="19" min="0" placeholder="Umsatzsteuer eingeben" />
+                        <input type="number" id="umsatzsteuerInput" value="19" min="0" max="100" placeholder="Umsatzsteuer eingeben" />
                     </div>
                     
                     <div class="form-field">
                         <label for="zahlungszielInput">Zahlungsziel (Tage)</label>
-                        <input type="number" id="zahlungszielInput" value="30" min="0" placeholder="Zahlungsziel eingeben" />
+                        <input type="number" id="zahlungszielInput" value="30" min="0" max="365" placeholder="Zahlungsziel eingeben" />
                     </div>
                     
                     <div class="form-field">
                         <label for="skontoInput">Skonto (%)</label>
-                        <input type="number" id="skontoInput" value="2" min="0" placeholder="Skonto eingeben" />
+                        <input type="number" id="skontoInput" value="2" min="0" max="100" placeholder="Skonto eingeben" />
                     </div>
                     
                     <div class="form-field">
                         <label for="skontofristInput">Skontofrist (Tage)</label>
-                        <input type="number" id="skontofristInput" value="20" min="0" placeholder="Skontofrist eingeben" />
+                        <input type="number" id="skontofristInput" value="20" min="0" max="365" placeholder="Skontofrist eingeben" />
                     </div>
                 </fieldset>
 
@@ -293,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="jahr">Jahr</label>
-                        <input type="text" id="jahr" value="" placeholder="Jahr" />
+                        <input type="text" id="jahr" value="" placeholder="Jahr" maxlength="6" />
                     </div>
                     
                     <div class="form-field checkbox-field">
@@ -332,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="angebot1.svg">Angebot</option>
                             <option value="angebot2.svg">Angebot 2</option>
                             <option value="angebot3.svg">Angebot Telefonnotiz</option>
-                            <option value="gutschrift1.svg">Gutschrift bei Mängelrüge</option>
+                                <option value="gutschrift1.svg">Gutschrift bei Mängelrüge</option>
                             <option value="gutschrift2.svg">Gutschrift bei Rücksendung</option>
                         </select>
                     </div>
@@ -367,9 +372,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <!-- Aktionen -->
         <section class="form-section form-actions">
-            <button type="button" onclick="applySVGholen()">Alle Daten übernehmen</button>
-            
-      
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button type="button" onclick="applySVGholen()">Alle Daten übernehmen</button>
+                <button type="button" onclick="zufaelligeAusgangsrechnungErstellen()">Zufällige Ausgangsrechnung erstellen</button>
+                <button type="button" onclick="zufaelligeEingangsrechnungErstellen()">Zufällige Eingangsrechnung erstellen</button>
+            </div>
+
+       
         </section>
     </form>
 
@@ -380,28 +389,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Export-Buttons -->
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('rechnung','png')" 
+        <button class="card-btn" type="button" onclick="exportDokument('rechnung','png')" 
                 data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
-                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-            </svg>
+           PNG
         </button>
         
-      <button class="icon" type="button" onclick="exportDokument('rechnung','svg')" 
+      <button class="card-btn" type="button" onclick="exportDokument('rechnung','svg')" 
                 data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-            </svg>
+                SVG
+            
         </button>
         
-        <button class="icon" type="button" onclick="exportDokument('rechnung','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
-                aria-label="Als HTML-Code in Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
-                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('rechnung','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage herunterladen" 
+                aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
+            
         </button>
-    </nav>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('rechnung1Container')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
 
       <section id="kontoauszug" class="tabcontent">
@@ -421,12 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="kontoauszugVorgang1Input">Bezeichnung</label>
-                        <input type="text" id="kontoauszugVorgang1Input" placeholder="Buchung" />
+                        <input type="text" id="kontoauszugVorgang1Input" placeholder="Buchung" maxlength="45" />
                     </div>
                     
                     <div class="form-field">
                         <label for="kontoauszugWertstellung1Input">Wertstellung</label>
-                        <input type="number" id="kontoauszugWertstellung1Input" placeholder="Wert" />
+                        <input type="number" id="kontoauszugWertstellung1Input" placeholder="Wert" min="0" max="999999" />
                     </div>
                 </fieldset>
 
@@ -436,12 +443,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="kontoauszugVorgang2Input">Bezeichnung</label>
-                        <input type="text" id="kontoauszugVorgang2Input" placeholder="Buchung" />
+                        <input type="text" id="kontoauszugVorgang2Input" placeholder="Buchung" maxlength="45" />
                     </div>
                     
                     <div class="form-field">
                         <label for="kontoauszugWertstellung2Input">Wertstellung</label>
-                        <input type="number" id="kontoauszugWertstellung2Input" placeholder="Wert" />
+                        <input type="number" id="kontoauszugWertstellung2Input" placeholder="Wert" min="0" max="999999" />
                     </div>
                 </fieldset>
 
@@ -451,12 +458,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="kontoauszugVorgang3Input">Bezeichnung</label>
-                        <input type="text" id="kontoauszugVorgang3Input" placeholder="Buchung" />
+                        <input type="text" id="kontoauszugVorgang3Input" placeholder="Buchung" maxlength="45" />
                     </div>
                     
                     <div class="form-field">
                         <label for="kontoauszugWertstellung3Input">Wertstellung</label>
-                        <input type="number" id="kontoauszugWertstellung3Input" placeholder="Wert" />
+                        <input type="number" id="kontoauszugWertstellung3Input" placeholder="Wert" min="0" max="999999" />
                     </div>
                 </fieldset>
 
@@ -521,7 +528,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="jahrKontoauszug">Jahr</label>
-                        <input type="text" id="jahrKontoauszug" value="" placeholder="Jahr" />
+                        <input type="text" id="jahrKontoauszug" value="" placeholder="Jahr" maxlength="6" />
                     </div>
                     
                     <div class="form-field checkbox-field">
@@ -544,7 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="kontoauszugKontostand_altInput">Alter Kontostand</label>
-                        <input type="number" id="kontoauszugKontostand_altInput" placeholder="Wert" value="80000" />
+                        <input type="number" id="kontoauszugKontostand_altInput" placeholder="Wert" value="80000" min="-999999999" />
                     </div>
                 </fieldset>
 
@@ -587,28 +594,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Export-Buttons -->
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('kontoauszug','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
-                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('kontoauszug','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            
         </button>
         
-        <button class="icon" type="button" onclick="exportDokument('kontoauszug','svg')" 
-                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('kontoauszug','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+            
         </button>
         
-        <button class="icon" type="button" onclick="exportDokument('kontoauszug','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
-                aria-label="Als HTML-Code in Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
-                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('kontoauszug','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage herunterladen" 
+                aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
+            
         </button>
-    </nav>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('kontoauszugContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
      <section id="quittung" class="tabcontent">
     <header>
@@ -627,12 +631,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="quittungNettoInput">Nettobetrag</label>
-                        <input type="number" id="quittungNettoInput" placeholder="netto" />
+                        <input type="number" id="quittungNettoInput" placeholder="netto" min="0" max="9999" />
                     </div>
                     
                     <div class="form-field">
                         <label for="quittungUSTInput">Umsatzsteuersatz (%)</label>
-                        <input type="number" id="quittungUSTInput" value="19" />
+                        <input type="number" id="quittungUSTInput" value="19" min="0" max="99" />
                     </div>
                 </fieldset>
 
@@ -642,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="quittungZweckInput">Für</label>
-                        <input type="text" id="quittungZweckInput" placeholder="Zweck" />
+                        <input type="text" id="quittungZweckInput" placeholder="Zweck" maxlength="50" />
                     </div>
                     
                     <div class="form-field">
@@ -715,7 +719,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="jahrQuittung">Jahr</label>
-                        <input type="text" id="jahrQuittung" value="" placeholder="Jahr" />
+                        <input type="text" id="jahrQuittung" value="" placeholder="Jahr" maxlength="6" />
                     </div>
                     
                     <div class="form-field checkbox-field">
@@ -761,28 +765,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Export-Buttons -->
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('quittung','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
-                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('quittung','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            
         </button>
         
-        <button class="icon" type="button" onclick="exportDokument('quittung','svg')" 
-                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('quittung','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+            
         </button>
         
-        <button class="icon" type="button" onclick="exportDokument('quittung','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
-                aria-label="Als HTML-Code in Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
-                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('quittung','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage herunterladen" 
+                aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
+            
         </button>
-    </nav>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('quittungContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
 
       <!-- KASSENBON SECTION -->
@@ -802,12 +803,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="kassenbonNettoInput">Nettobetrag</label>
-                        <input type="number" id="kassenbonNettoInput" placeholder="netto" />
+                        <input type="number" id="kassenbonNettoInput" placeholder="netto" min="0" max="9999" />
                     </div>
                     
                     <div class="form-field">
                         <label for="kassenbonUSTInput">Umsatzsteuersatz (%)</label>
-                        <input type="number" id="kassenbonUSTInput" value="19" />
+                        <input type="number" id="kassenbonUSTInput" value="19" min="0" max="99" />
                     </div>
                 </fieldset>
 
@@ -817,7 +818,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="kassenbonZweckInput">Bezeichnung</label>
-                        <input type="text" id="kassenbonZweckInput" placeholder="Zweck" />
+                        <input type="text" id="kassenbonZweckInput" placeholder="Zweck" maxlength="50" />
                     </div>
                     
                     <div class="form-field">
@@ -899,7 +900,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="jahrKassenbon">Jahr</label>
-                        <input type="text" id="jahrKassenbon" value="" placeholder="Jahr" />
+                        <input type="text" id="jahrKassenbon" value="" placeholder="Jahr" maxlength="6" />
                     </div>
                     
                     <div class="form-field checkbox-field">
@@ -945,26 +946,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Export-Buttons -->
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('kassenbon','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
-                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('kassenbon','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('kassenbon','svg')" 
-                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('kassenbon','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('kassenbon','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
-                aria-label="Als HTML-Code in Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
-                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('kassenbon','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage herunterladen" 
+                aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
+            
         </button>
-    </nav>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('kassenbonContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
 
 <!-- EMAIL SECTION -->
@@ -973,25 +971,24 @@ document.addEventListener('DOMContentLoaded', function() {
         <h2>Mail</h2>
     </header>
 
-    <form class="box email-form">
-        <section class="form-section">
-            <div class="form-field">
-                <label for="emailSubjectInput">E-Mail-Betreff</label>
-                <input type="text" id="emailSubjectInput" placeholder="Betreff" />
-            </div>
-            
-            <div class="form-field">
-                <label for="emailInputText">E-Mail-Text</label>
-                <textarea id="emailInputText" name="emailInputText" rows="4" cols="50"></textarea>
-            </div>
-            
-            <div class="form-field">
-                <label for="svgDropdownEmail">Vorlage</label>
-                <select id="svgDropdownEmail">
-                    <option value="mail1.html">Klassisch</option>
-                    <option value="mail2.html">Modern</option>
+   
 
-                </select>
+    <form class="box email-form">
+             <p><ol>
+                <li>Wählen Sie Absender und Empfänger.</li>
+                <li>Bearbeiten Sie die Anrede direkt in der Mail.</li>
+                <li>Schreiben Sie dann Betreff und Mailtext direkt in die Mail.</li>
+                <li>Mit dem Button „Zurücksetzen" stellen Sie die Platzhalter wieder her.</li></ol></p>
+        <section class="form-section">
+            <!-- Betreff/Text werden direkt in der editierbaren Mailvorschau geändert;
+                 der Platzhaltertext kommt aus der gewählten Vorlage. -->
+            <div class="form-field" style="width: 200px">
+                <label for="svgDropdownEmail">Vorlage</label>
+                <select id="svgDropdownEmail" onchange="emailVorlageAnwenden();">
+                    <option value="mail3.html" selected>Klassisch</option>
+                    <option value="mail2.html">Modern</option>
+                    <option value="mail1.html">Retro</option>
+                   </select>
             </div>
         </section>
 
@@ -1014,40 +1011,38 @@ document.addEventListener('DOMContentLoaded', function() {
             
         </section>
 
-        <!-- Aktionen -->
-        <section class="form-section form-actions">
-            <button type="button" onclick="applySVGholen()">Daten übernehmen</button>
+        <!-- Vorlagenwechsel wendet die Vorlage automatisch an;
+             „Zurücksetzen" stellt die Platzhalter wieder her -->
+        <section class="form-section flex-row">
+            <button type="button" onclick="emailZuruecksetzen()">Zurücksetzen</button>
         </section>
     </form>
 
     <!-- Vorschau (contenteditable) -->
     <section class="preview-section">
-        <div id="emailContainer" contenteditable="true"></div>
+        <div id="emailContainer" style="width: 700px" contenteditable="true"></div>
     </section>
 
     <!-- Export-Buttons -->
     <nav class="exportButtons" aria-label="Export-Optionen">
     
-        <button class="icon" type="button" id="officeButtonEmail" data-clipboard-target="#emailContainer"
-                data-tooltip="In Zwischenablage kopieren" aria-label="In Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('email','png')"
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            
         </button>
-        <button class="icon" type="button" onclick="emailHerunterladen()"
-                data-tooltip="Als HTML herunterladen" aria-label="Als HTML herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="emailHerunterladen()"
+                data-tooltip="Als HTML herunterladen" aria-label="Als HTML herunterladen">HTML-Datei
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('email','clipboard')" 
+        <button class="card-btn" type="button" onclick="exportDokument('email','clipboard')" 
                 data-tooltip="Als HTML-Code in Zwischenablage herunterladen" 
-                aria-label="Als HTML-Code in Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
-                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-            </svg>
+                aria-label="Als HTML-Code in Zwischenablage kopieren">HTML-Code
+            
         </button>
-    </nav>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('emailContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
 
         <section id="newspaper" class="tabcontent">
@@ -1063,7 +1058,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div>
                     <label for="newspaperHeadlineInput">Überschrift:</label><br>
                     <input type="text" id="newspaperHeadlineInput" size="40" placeholder="Überschrift eingeben"
-                        value="Aktien als attraktive Geldanlage: Chancen und Risiken im Fokus">
+                        value="Aktien als attraktive Geldanlage: Chancen und Risiken im Fokus" maxlength="150">
                 </div>
                 <div>
                     <label for="newspaperTextInput">Text:</label><br>
@@ -1072,7 +1067,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div>
                     <label for="newspaperSourceInput">Quelle:</label><br>
-                    <input type="text" id="newspaperSourceInput" placeholder="Quelle eingeben" value="GPT-News">
+                    <input type="text" id="newspaperSourceInput" placeholder="Quelle eingeben" value="GPT-News" maxlength="150">
                 </div><br>
                 <div class="flex-row">
                     <div>
@@ -1111,30 +1106,12 @@ document.addEventListener('DOMContentLoaded', function() {
             </div><br>
                      
             <div class="exportButtons">
-               <button class="icon" type="button" onclick="exportDokument('newspaper','png')" data-tooltip="Als PNG herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                    </svg></button>
-                <button class="icon" type="button" id="officeButtonNewspaper" data-clipboard-target="#newspaperContainer"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" />
-                    </svg></button>
-                <button class="icon" type="button" onclick="newspaperHerunterladen()"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="12"
-                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-                    </svg></button>
-           <button class="icon" type="button" onclick="exportDokument('newspaper','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="16" width="20"
-                        viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-                    </svg></button>
+               <button class="card-btn" type="button" onclick="exportDokument('newspaper','png')" data-tooltip="Als PNG herunterladen">PNG</button>
+                <button class="card-btn" type="button" id="officeButtonNewspaper" data-clipboard-target="#newspaperContainer">Zwischenablage</button>
+                <button class="card-btn" type="button" onclick="newspaperHerunterladen()">HTML-Datei</button>
+           <button class="card-btn" type="button" onclick="exportDokument('newspaper','clipboard')" data-tooltip="Als HTML-Code in Zwischenablage herunterladen">HTML-Code</button>
+                <button class="card-btn" type="button" onclick="belegZurSammlung('newspaperContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+                            </button>
             </div>
 
             </div>
@@ -1176,7 +1153,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="lohnabrechnungBruttoInput">Brutto (€)</label>
-                        <input type="number" id="lohnabrechnungBruttoInput" value="3500" min="0" max="99999" step="0.01" />
+                        <input type="number" id="lohnabrechnungBruttoInput" value="3500" min="0" max="20000" step="0.01" />
                     </div>
                 </fieldset>
 
@@ -1242,22 +1219,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="lohnabrechnungKVSatzInput">Krankenversicherung (%)</label>
-                        <input type="number" id="lohnabrechnungKVSatzInput" value="8.1" step="0.1" />
+                        <input type="number" id="lohnabrechnungKVSatzInput" value="8.1" step="0.1" min="0" max="20" />
                     </div>
                     
                     <div class="form-field">
                         <label for="lohnabrechnungPVSatzInput">Pflegeversicherung (%)</label>
-                        <input type="number" id="lohnabrechnungPVSatzInput" value="1.525" step="0.001" />
+                        <input type="number" id="lohnabrechnungPVSatzInput" value="1.525" step="0.001" min="0" max="5" />
                     </div>
                     
                     <div class="form-field">
                         <label for="lohnabrechnungRVSatzInput">Rentenversicherung (%)</label>
-                        <input type="number" id="lohnabrechnungRVSatzInput" value="9.3" />
+                        <input type="number" id="lohnabrechnungRVSatzInput" value="9.3" min="0" max="20" />
                     </div>
                     
                     <div class="form-field">
                         <label for="lohnabrechnungALVSatzInput">Arbeitslosenvers. (%)</label>
-                        <input type="number" id="lohnabrechnungALVSatzInput" value="1.3" />
+                        <input type="number" id="lohnabrechnungALVSatzInput" value="1.3" min="0" max="10" />
                     </div>
                 </fieldset>
 
@@ -1270,6 +1247,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         <select id="svgDropdownLohnabrechnung">
                             <option value="lohnabrechnung.svg">Lohn Klassisch</option>
                             <option value="gehaltsabrechnung.svg">Gehalt Klassisch</option>
+                            <option value="ausbildungsverguetung.svg">Ausbildungsvergütung</option>
+                        </select>
+                    </div>
+
+                    <!-- Ausbildungsberuf: nur bei Vorlage "Ausbildungsvergütung" sichtbar -->
+                    <div class="form-field" id="lohnabrechnungAusbildungsberufFeld" style="display:none;">
+                        <label for="lohnabrechnungAusbildungsberufInput">Ausbildungsberuf</label>
+                        <input type="text" id="lohnabrechnungAusbildungsberufInput" value="Kaufmann/-frau für Büromanagement" maxlength="60" />
+                    </div>
+
+                    <!-- Ausbildungsjahr: nur bei Vorlage "Ausbildungsvergütung" sichtbar;
+                         leer = Zufall (1.–3. AJ). Nötig, damit der Mindestvergütungs-Hinweis
+                         den passenden Mindestsatz prüfen kann. -->
+                    <div class="form-field" id="lohnabrechnungAusbildungsjahrFeld" style="display:none;">
+                        <label for="lohnabrechnungAusbildungsjahrInput">Ausbildungsjahr</label>
+                        <select id="lohnabrechnungAusbildungsjahrInput">
+                            <option value="">Zufällig (1.–3. Jahr)</option>
+                            <option value="1">1. Ausbildungsjahr</option>
+                            <option value="2">2. Ausbildungsjahr</option>
+                            <option value="3">3. Ausbildungsjahr</option>
+                            <option value="4">4. Ausbildungsjahr</option>
                         </select>
                     </div>
                 </fieldset>
@@ -1300,30 +1298,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Vorschau -->
     <section class="preview-section">
+        <div id="lohnabrechnungMindestlohnHinweis" style="display:none;border-left:6px solid #d97706;background:#fef3c7;color:#7c2d12;padding:12px 16px;border-radius:6px;margin-bottom:12px;font-size:0.95em;line-height:1.5;"></div>
         <div id="lohnabrechnungContainer" contenteditable="true"></div>
     </section>
 
     <!-- Export-Buttons -->
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
-                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('lohnabrechnung','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','svg')" 
-                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('lohnabrechnung','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('lohnabrechnung','clipboard')" 
-                data-tooltip="In Zwischenablage" aria-label="In Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
-                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('lohnabrechnung','clipboard')" 
+                data-tooltip="In Zwischenablage" aria-label="In Zwischenablage kopieren">Zwischenablage
         </button>
-    </nav>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('lohnabrechnungContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
 
    <section id="lohnjournal" class="tabcontent">
@@ -1375,19 +1370,19 @@ document.addEventListener('DOMContentLoaded', function() {
     </section>
 
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('lohnjournal','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true"><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" /></svg>
-        </button>
-        <button class="icon" type="button" onclick="exportDokument('lohnjournal','svg')" 
-                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" /></svg>
-        </button>
-        <button class="icon" type="button" onclick="exportDokument('lohnjournal','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage kopieren" aria-label="Als HTML-Code in Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" /></svg>
-        </button>
-    </nav>
+        <button class="card-btn" type="button" onclick="exportDokument('lohnjournal','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            </button>
+        <button class="card-btn" type="button" onclick="exportDokument('lohnjournal','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+            </button>
+        <button class="card-btn" type="button" onclick="exportDokument('lohnjournal','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage kopieren" aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
+            </button>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('lohnjournalContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 
        <!-- Vorschau 1: Buchungssatz -->
     <section class="preview-section">
@@ -1395,23 +1390,22 @@ document.addEventListener('DOMContentLoaded', function() {
     </section>
 
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('lohnjournalBS','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true"><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" /></svg>
+        <button class="card-btn" type="button" onclick="exportDokument('lohnjournalBS','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            </button>
+        <button class="card-btn" type="button" id="officeButtonLohnjournalBuchungssatz" data-clipboard-target="#lohnjournalBuchungssatzContainer" 
+                data-tooltip="In Zwischenablage kopieren" aria-label="In Zwischenablage kopieren">Zwischenablage
         </button>
-        <button class="icon" type="button" id="officeButtonLohnjournalBuchungssatz" data-clipboard-target="#lohnjournalBuchungssatzContainer" 
-                data-tooltip="In Zwischenablage kopieren" aria-label="In Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true"><path d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z" /></svg>
-        </button>
-        <button class="icon" type="button" onclick="lohnjournalBuchungssatzHerunterladen()" 
-                data-tooltip="Als HTML herunterladen" aria-label="Als HTML herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" /></svg>
-        </button>
-        <button class="icon" type="button" onclick="exportDokument('lohnjournalBS','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage kopieren" aria-label="Als HTML-Code in Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" /></svg>
-        </button>
-    </nav>
+        <button class="card-btn" type="button" onclick="lohnjournalBuchungssatzHerunterladen()" 
+                data-tooltip="Als HTML herunterladen" aria-label="Als HTML herunterladen">HTML-Datei
+            </button>
+        <button class="card-btn" type="button" onclick="exportDokument('lohnjournalBS','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage kopieren" aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
+            </button>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('rechnung1Container')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
 
 <section id="bescheid" class="tabcontent">
@@ -1499,7 +1493,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     <div class="form-field">
                         <label for="jahrBescheid">Jahr</label>
-                        <input type="text" id="jahrBescheid" value="" placeholder="Jahr" />
+                        <input type="text" id="jahrBescheid" value="" placeholder="Jahr" maxlength="6" />
                     </div>
 
                     <div class="form-field checkbox-field">
@@ -1517,12 +1511,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     <div class="form-field">
                         <label for="bescheidAbfallgebuehrInput">Gebühr</label>
-                        <input type="number" id="bescheidAbfallgebuehrInput" value="950" />
+                        <input type="number" id="bescheidAbfallgebuehrInput" value="950" min="0" max="999999" />
                     </div>
 
                     <div class="form-field">
                         <label for="bescheidAbfallbezeichnungInput">Bezeichnung</label>
-                        <input type="text" id="bescheidAbfallbezeichnungInput" value="" />
+                        <input type="text" id="bescheidAbfallbezeichnungInput" value="" maxlength="50" />
                     </div>
                 </fieldset>
 
@@ -1532,12 +1526,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     <div class="form-field">
                         <label for="bescheidMessbetragInput">Messbetrag</label>
-                        <input type="number" id="bescheidMessbetragInput" value="300" />
+                        <input type="number" id="bescheidMessbetragInput" value="300" min="0" max="9999" />
                     </div>
 
                     <div class="form-field">
                         <label for="bescheidHebesatzInput">Hebesatz (%)</label>
-                        <input type="number" id="bescheidHebesatzInput" value="200" />
+                        <input type="number" id="bescheidHebesatzInput" value="200" min="0" max="999" />
                     </div>
                 </fieldset>
             </div>
@@ -1565,19 +1559,19 @@ document.addEventListener('DOMContentLoaded', function() {
     </section>
 
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('bescheid','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true"><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" /></svg>
-        </button>
-        <button class="icon" type="button" onclick="exportDokument('bescheid','svg')" 
-                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" /></svg>
-        </button>
-        <button class="icon" type="button" onclick="exportDokument('bescheid','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage kopieren" aria-label="Als HTML-Code in Zwischenablage kopieren">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" /></svg>
-        </button>
-    </nav>
+        <button class="card-btn" type="button" onclick="exportDokument('bescheid','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            </button>
+        <button class="card-btn" type="button" onclick="exportDokument('bescheid','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+            </button>
+        <button class="card-btn" type="button" onclick="exportDokument('bescheid','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage kopieren" aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
+            </button>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('bescheidContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
 
 <script>
@@ -1618,21 +1612,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="anlagenkarteBezeichnungInput">Bezeichnung</label>
-                        <input type="text" id="anlagenkarteBezeichnungInput" value="CNC-Fräse M84" />
+                        <input type="text" id="anlagenkarteBezeichnungInput" value="CNC-Fräse M84" maxlength="20" />
                     </div>
                     
                     <div class="form-field">
                         <label for="anlagenkarteAnlagenkontoInput">Anlagenkonto</label>
-                        <input type="text" id="anlagenkarteAnlagenkontoInput" value="0700 MA" />
+                        <input type="text" id="anlagenkarteAnlagenkontoInput" value="0700 MA" maxlength="20" />
                     </div>
                     
                     <div class="form-field">
                         <label for="anlagenkarteAnschaffungskostenInput">Anschaffungskosten</label>
-                        <input type="number" id="anlagenkarteAnschaffungskostenInput" value="84000" />
+                        <input type="number" id="anlagenkarteAnschaffungskostenInput" value="84000" min="0" max="999999" />
                     </div>
                            <div class="form-field">
                         <label for="anlagenkarteNutzungsdauerInput">Nutzungsdauer (Jahre)</label>
-                        <input type="number" id="anlagenkarteNutzungsdauerInput" value="7" />
+                        <input type="number" id="anlagenkarteNutzungsdauerInput" value="7" min="0" max="99" />
                     </div>
                 
                 </fieldset>
@@ -1698,7 +1692,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="jahrAnlagenkarte">Jahr</label>
-                        <input type="text" id="jahrAnlagenkarte" value="" placeholder="Jahr" />
+                        <input type="text" id="jahrAnlagenkarte" value="" placeholder="Jahr" maxlength="6" />
                     </div>
                     
                     <div class="form-field checkbox-field">
@@ -1759,25 +1753,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Export-Buttons -->
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('anlagenkarte','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
-                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('anlagenkarte','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('anlagenkarte','svg')" 
-                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('anlagenkarte','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('anlagenkarte','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
-                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('anlagenkarte','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage herunterladen">SVG-Code
+            
         </button>
-    </nav>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('anlagenkarteContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 </section>
 
 <!-- WERTPAPIERE SECTION -->
@@ -1803,22 +1794,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="wertpapiereBezeichnungInput">Bezeichnung</label>
-                        <input type="text" id="wertpapiereBezeichnungInput" value="XY-Aktien" />
+                        <input type="text" id="wertpapiereBezeichnungInput" value="XY-Aktien" maxlength="20" />
                     </div>
                     
                     <div class="form-field">
                         <label for="wertpapiereISINInput">ISIN</label>
-                        <input type="text" id="wertpapiereISINInput" value="DE0007100000" />
+                        <input type="text" id="wertpapiereISINInput" value="DE0007100000" maxlength="12" />
                     </div>
                     
                     <div class="form-field">
                         <label for="wertpapiereStueckkursInput">Stückkurs</label>
-                        <input type="number" id="wertpapiereStueckkursInput" value="200" />
+                        <input type="number" id="wertpapiereStueckkursInput" value="200" min="1" max="5000" />
                     </div>
                     
                     <div class="form-field">
                         <label for="wertpapiereAnzahlInput">Anzahl</label>
-                        <input type="number" id="wertpapiereAnzahlInput" value="70" />
+                        <input type="number" id="wertpapiereAnzahlInput" value="70" min="1" max="5000" />
                     </div>
                 </fieldset>
 
@@ -1883,7 +1874,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-field">
                         <label for="jahrWertpapiere">Jahr</label>
-                        <input type="text" id="jahrWertpapiere" value="" placeholder="Jahr" />
+                        <input type="text" id="jahrWertpapiere" value="" placeholder="Jahr" maxlength="6" />
                     </div>
                     
                     <div class="form-field checkbox-field">
@@ -1935,25 +1926,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Export-Buttons -->
     <nav class="exportButtons" aria-label="Export-Optionen">
-        <button class="icon" type="button" onclick="exportDokument('wertpapiere','png')" 
-                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" aria-hidden="true">
-                <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('wertpapiere','png')" 
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('wertpapiere','svg')" 
-                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" aria-hidden="true">
-                <path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('wertpapiere','svg')" 
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+            
         </button>
-        <button class="icon" type="button" onclick="exportDokument('wertpapiere','clipboard')" 
-                data-tooltip="Als HTML-Code in Zwischenablage herunterladen">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" aria-hidden="true">
-                <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z" />
-            </svg>
+        <button class="card-btn" type="button" onclick="exportDokument('wertpapiere','clipboard')" 
+                data-tooltip="Als SVG-Code in Zwischenablage herunterladen">SVG-Code
+            
         </button>
-    </nav>
+    
+        <button class="card-btn" type="button" onclick="belegZurSammlung('wertpapiereContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+            </button>
+</nav>
 
     </main>
     <div w3-include-html="footer.html"></div>
@@ -2007,18 +1995,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 }
 
-// Timing anpassen
 document.addEventListener('DOMContentLoaded', () => {
     initializeURLParameters();           // zuerst!
-    
-    setTimeout(() => {
+
+    // Sobald die Unternehmensdaten geladen sind (belege.js feuert 'yamlDataLoaded')
+    if (typeof yamlData !== 'undefined' && yamlData?.length > 0 &&
+        document.querySelector('select.meinUnternehmen')?.options.length > 0) {
         autoSelectMyCompanyOnlyIfNeeded();
-    }, 400);
+    } else {
+        document.addEventListener('yamlDataLoaded', () => {
+            autoSelectMyCompanyOnlyIfNeeded();
+        }, { once: true });
+    }
 });
     </script>
-        <script src="js/belege.js"></script>
-        <script src="js/beleg_url_parameter.js"></script>
-        <script src="js/beleg_import.js"></script>
+        <script src="js/belege.js?v=21"></script>
+<script src="js/collection.js?v=26"></script>
+<script src="js/belege-zufall.js?v=23"></script>
+        <script src="js/beleg_url_parameter.js?v=22"></script>
+        <script src="js/beleg_import.js?v=11"></script>
 </body>
 
 </html>

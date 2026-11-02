@@ -51,11 +51,12 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/menu.js"></script>
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <script src="js/menu.js?v=14"></script>
   <script src="js/html2canvas.min.js"></script>
   <script src="js/clipboard.min.js"></script>
   <script src="js/filesaver.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
 </head>
 
 <body>
@@ -200,17 +201,17 @@
   <!-- Inputfelder für die Codes -->
   <div style="display: flex">
     <div id="input-container">
-      <input type="text" name="code[]" value=""><input type="number" name="code_weight[]" value="1"><br>
-      <input type="text" name="code[]" value=""><input type="number" name="code_weight[]" value="1"><br>
+      <input type="text" name="code[]" value="" maxlength="20"><input type="number" name="code_weight[]" value="1" min="0" max="1000000"><br>
+      <input type="text" name="code[]" value="" maxlength="20"><input type="number" name="code_weight[]" value="1" min="0" max="1000000"><br>
     </div>
   </div><br>
   <button onclick="addInput()">Weiteren Code hinzufügen</button>
   <!-- Eingabefeld für die Beschriftung der Optionen -->
   <p>Text für die einzelnen Optionen in der Fragestellung:</p>
-  <input id="optionen-beschriftung" type="text" value="Wähle mich!">
+  <input id="optionen-beschriftung" type="text" value="Wähle mich!" maxlength="60">
   <!-- Eingabefeld für die Beschriftung der Optionen -->
   <p>Text für das Einsammeln der Stash-Objekte:</p>
-  <input id="pickup-mitteilung" type="text" value="Sammle mich!">
+  <input id="pickup-mitteilung" type="text" value="Sammle mich!" maxlength="60">
   <!-- Auswahlfeld für die Anzahl der Antwortoptionen -->
   <p>Anzahl der Antwortoptionen:</p>
   <input id="optionen-auswahl" type="number" min="1" max="10" value="4">

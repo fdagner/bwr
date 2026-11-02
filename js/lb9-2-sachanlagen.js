@@ -3,7 +3,6 @@
 // BwR Realschule Bayern, Klasse 9/10
 // ============================================================================
 
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteAufgabe = null;
 
@@ -87,9 +86,6 @@ const monatsnamen = [
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 function rnd(min, max, step = 100) {
   const steps = Math.floor((max - min) / step);
@@ -108,53 +104,9 @@ function formatProzent(p) {
 // YAML / UNTERNEHMEN LADEN
 // ============================================================================
 
-function getUserCompanies() {
-  try { return JSON.parse(localStorage.getItem('userCompanies') || '[]'); } catch(e) { return []; }
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn('localStorage YAML kaputt:', err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => console.error('Konnte unternehmen.yml nicht laden:', err));
-}
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -743,21 +695,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgabe rendern,
+  // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeZufaelligeAufgabe();
   } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligeAufgabe();
+    }, { once: true });
   }
-
-  setTimeout(autoSelectMyCompany, 250);
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) vorschauEl.textContent = KI_BASE_PROMPT.replace('###AUFGABEN###', '(Noch keine Aufgabe generiert.)');
-
-  // Direkt beim Laden: zufällige Werte in Inputs schreiben und Aufgabe rendern
-  setTimeout(zeigeZufaelligeAufgabe, 300);
 });

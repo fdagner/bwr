@@ -1,7 +1,6 @@
 // ============================================================================
 // GLOBALE VARIABLEN
 // ============================================================================
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGfListeEinkauf = [];
 
@@ -50,53 +49,17 @@ const S = {
 // ============================================================================
 // YAML-LADEN
 // ============================================================================
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => (a.unternehmen?.branche || '').localeCompare(b.unternehmen?.branche || ''));
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) { console.warn("localStorage YAML kaputt:", err); }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => { if (!res.ok) throw new Error('nicht gefunden'); return res.text(); })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => console.error("Konnte unternehmen.yml nicht laden:", err));
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   const kaeuferSelect = document.getElementById('einkaufKaeufer');
   if (kaeuferSelect?.value) kunde = kaeuferSelect.value.trim();
   kaeuferSelect.addEventListener('change', () => {
     kunde = kaeuferSelect.value.trim() || '';
-    leereBezeichnungsfelder();
     if (kaeuferSelect.value.trim()) fillBezeichnungsfelderEinkauf(kaeuferSelect.value.trim());
   });
-  if (!loadYamlFromLocalStorage()) loadDefaultYaml();
 });
 
 // ============================================================================
@@ -110,14 +73,16 @@ function fillBezeichnungsfelderEinkauf(unternehmensName) {
   ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
     const liste = werkstoffe[konto];
     if (!Array.isArray(liste)) return;
-    [0, 1, 2].forEach(i => { const el = document.getElementById(`bezeichnung${konto}_${i}`); if (el) el.value = liste[i] ?? ""; });
+    [0, 1, 2].forEach(i => {
+      const el = document.getElementById(`bezeichnung${konto}_${i}`);
+      if (!el) return;
+      const eintragW = liste[i];
+      // neue Struktur: { name, stammlieferant } – alte Struktur: reiner String
+      el.value = (typeof eintragW === 'object' && eintragW !== null)
+        ? (eintragW.name ?? "")
+        : (eintragW ?? "");
+    });
   });
-}
-
-function leereBezeichnungsfelder() {
-  ["AWR", "AWF", "AWH", "AWB"].forEach(konto =>
-    [0, 1, 2].forEach(i => { const el = document.getElementById(`bezeichnung${konto}_${i}`); if (el) el.value = ""; })
-  );
 }
 
 function getBezeichnungFuerKonto(kuerzel) {
@@ -138,12 +103,19 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
+    autoSelectMyCompany();
+    const sel = document.getElementById('einkaufKaeufer');
+    if (sel?.value) fillBezeichnungsfelderEinkauf(sel.value.trim());
+    befuelleZufallswerte();
+    zeigeZufaelligenSatz();
   } else {
     document.addEventListener('yamlDataLoaded', () => {
       fillCompanyDropdowns();
       autoSelectMyCompany();
       const sel = document.getElementById('einkaufKaeufer');
       if (sel?.value) fillBezeichnungsfelderEinkauf(sel.value.trim());
+      befuelleZufallswerte();
+      zeigeZufaelligenSatz();
     }, { once: true });
   }
 });
@@ -159,10 +131,10 @@ function aktualisierAvWerkstoffName() {
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-function roundToTwoDecimals(num) { return Math.round(num * 100) / 100; }
+
 function rndInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function rndOf(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-function formatCurrency(value) { return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
+
 function bzk_anzeige(bzk) { return bzk > 0 ? formatCurrency(bzk) : 'frei Haus'; }
 
 // ============================================================================
@@ -307,10 +279,6 @@ function fillCompanyDropdowns() {
 // ============================================================================
 // BELEG-URL
 // ============================================================================
-function parseNumericValue(v) {
-  if (!v) return '0';
-  return v.toString().replace(/[€\s]/g, '').replace(/\./g, '').replace(',', '.');
-}
 
 function erzeugeURLFuerAngebotsvergleich(d) {
   const p = new URLSearchParams();
@@ -776,12 +744,6 @@ document.addEventListener('DOMContentLoaded', function () {
     zBtn.onclick = befuelleZufallswerte;
     aufgabeBtn.insertAdjacentElement('beforebegin', zBtn);
   }
-
-  setTimeout(function () {
-    autoSelectMyCompany();
-    befuelleZufallswerte();  // Felder beim ersten Laden befüllen
-    zeigeZufaelligenSatz();  // Aufgabe sofort rendern
-  }, 500);
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) vorschauEl.textContent = erstelleKiPromptText();

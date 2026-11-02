@@ -126,14 +126,6 @@ const aussagenDatenbank = [
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 // ============================================================================
 // SVG ABSCHREIBUNGSKREISLAUF – AUSGEFÜLLT
@@ -312,19 +304,6 @@ function zeigeZufaelligeWahrFalsch() {
     vorschau.textContent = erstelleKiPromptTextAbschreibung();
   }
 }
-
-function kopiereKiPromptAbschreibung() {
-  const text = erstelleKiPromptTextAbschreibung();
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    if (btn) {
-      const original = btn.textContent;
-      btn.textContent = '✅ Kopiert!';
-      setTimeout(() => { btn.textContent = original; }, 2500);
-    }
-  }).catch(() => alert('Kopieren nicht möglich.'));
-}
-
 function toggleKiPromptVorschau() {
   const v = document.getElementById('kiPromptVorschau');
   const b = document.getElementById('kiPromptToggleBtn');

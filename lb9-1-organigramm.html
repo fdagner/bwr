@@ -56,11 +56,16 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/jodit.min.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/jodit.min.js"></script>
+  <script src="js/joditeditor.js?v=67"></script>
+<script src="js/collection.js?v=26"></script>
   <script src="js/clipboard.min.js"></script>
-  <script src="js/menu.js"></script>
+  <script src="js/menu.js?v=14"></script>
   <style>
     .ao-zeile {
       display: flex;
@@ -93,6 +98,28 @@
 
     .ao-optionen label {
       margin-right: 18px;
+    }
+
+    /* Mobile: Bezeichnungen über den Feldern, jedes Feld volle Breite –
+       vorher rückten Label (150px fix) und mehrere Inputs auf engem
+       Handy-Format ineinander. */
+    @media (max-width: 640px) {
+      .ao-zeile {
+        flex-wrap: wrap;
+        gap: 4px 8px;
+      }
+
+      .ao-zeile span {
+        width: 100%;
+        flex-basis: 100%;
+        font-weight: 600;
+        padding-top: 2px;
+      }
+
+      .ao-zeile input {
+        flex: 1 1 100%;
+        min-width: 100%;
+      }
     }
   </style>
 </head>
@@ -155,6 +182,14 @@
       
           <label><input type="checkbox" id="stab">Stabsstelle</label><br><br>
           <label><input type="checkbox" id="titel" checked> Firmenname als Überschrift</label>
+          <br><br>
+          <label for="farbschema">Farbschema:</label>
+          <select id="farbschema">
+            <option value="weiss" selected>Weiß (Standard)</option>
+            <option value="pastell">Pastell</option>
+            <option value="retro">Retro</option>
+            <option value="kontrast">Kontrast</option>
+          </select>
        
           </fieldset>
 
@@ -171,20 +206,20 @@
       <div class="box" style="margin-top: 16px;">
         <h3>Bezeichnungen und Personen bearbeiten</h3>
         <p id="inhaberHinweis" style="color:#b71c1c;"></p>
-        <div class="ao-zeile"><span>Firmenname</span><input id="firma" aria-label="Firmenname"></div>
+        <div class="ao-zeile"><span>Firmenname</span><input id="firma" aria-label="Firmenname" maxlength="60"></div>
         <div id="editor"></div>
       </div>
 
       <div class="output-wrapper" style="display: flex; gap: 20px; margin-top: 20px;">
-        <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
-     
+        <div id="Container" style="min-width: 580px; flex: 1;" data-jodit-skip="1"></div>
+
       </div>
 
       <div w3-include-html="downloads2.html"></div>
   </main>
 
-  <script src="js/lb9-1-organigramm.js"></script>
-  <script src="js/download2.js"></script>
+  <script src="js/lb9-1-organigramm.js?v=4"></script>
+  <script src="js/download2.js?v=3"></script>
   <div w3-include-html="footer.html"></div>
   <script>
     includeHTML();

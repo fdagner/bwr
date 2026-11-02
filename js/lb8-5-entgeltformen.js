@@ -2,7 +2,6 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteEntgeltAufgaben = [];
 
@@ -10,56 +9,9 @@ let letzteEntgeltAufgaben = [];
 // YAML-DATEN LADEN (identisch zu den anderen Generatoren)
 // ============================================================================
 
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-    });
-}
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -109,18 +61,6 @@ function fillCompanyDropdowns() {
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 // Zufallszahl von min bis max in festen Schritten
 function rnd(min, max, step) {
@@ -345,7 +285,7 @@ function zeigeZufaelligeEntgeltformen() {
   letzteEntgeltAufgaben = faelle.map(f => ({ text: f.text, label: f.label }));
 
   let aufgabenHTML = '<h2>Aufgaben</h2>';
-  aufgabenHTML += '<p>Ordne jedem Fall die passende Entgeltform zu: <strong>Zeitentgelt</strong>, <strong>Leistungsentgelt</strong> oder <strong>Gewinnbeteiligung</strong>.</p><ol>';
+  aufgabenHTML += '<h3>Ordne jedem Fall die passende Entgeltform zu: <strong>Zeitentgelt</strong>, <strong>Leistungsentgelt</strong> oder <strong>Gewinnbeteiligung</strong>.</h3><ol>';
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   faelle.forEach((f, idx) => {
@@ -561,23 +501,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeZufaelligeEntgeltformen();
   } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligeEntgeltformen();
+    }, { once: true });
   }
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) {
     vorschauEl.textContent = KI_ASSISTENT_PROMPT;
   }
-
-  setTimeout(function () {
-    autoSelectMyCompany();
-    zeigeZufaelligeEntgeltformen();
-  }, 500);
 });

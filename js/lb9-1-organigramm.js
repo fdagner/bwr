@@ -20,6 +20,15 @@ const ABTEILUNGEN = [
 ];
 const STAB_TITEL = [['Stabsstelle', 'Recht'], ['Stabsstelle', 'Controlling'], ['Stabsstelle', 'Qualität'], ['Stabsstelle', 'Datenschutz']];
 
+// Farbschemata für die Organigramm-Karten (Hintergrund + Schriftfarbe je Hierarchieebene)
+const FARBSCHEMEN = {
+  weiss:     { 0:['#ffffff','#000000'], 1:['#ffffff','#000000'], 2:['#ffffff','#000000'], produkt:['#ffffff','#000000'], stab:['#eeeeee','#000000'] },
+  pastell:   { 0:['#dbeafe','#1e3a8a'], 1:['#dcfce7','#14532d'], 2:['#fef9c3','#713f12'], produkt:['#fce7f3','#831843'], stab:['#f3f4f6','#1f2937'] },
+  retro:     { 0:['#fde68a','#1c1917'], 1:['#fdba74','#1c1917'], 2:['#fca5a5','#1c1917'], produkt:['#c4b5fd','#1c1917'], stab:['#d6d3d1','#1c1917'] },
+  kontrast:  { 0:['#1e3a8a','#ffffff'], 1:['#166534','#ffffff'], 2:['#7c2d12','#ffffff'], produkt:['#581c87','#ffffff'], stab:['#374151','#ffffff'] },
+};
+const farbeEbene = (schema, key) => (FARBSCHEMEN[schema] || FARBSCHEMEN.weiss)[key] || ['#ffffff','#000000'];
+
 // Nur Platzhalter, falls weder localStorage noch js/unternehmen.yml Daten liefern
 const FALLBACK_UNTERNEHMEN = [
   { unternehmen: { name: 'Konrad Outdoor', rechtsform: 'GmbH', branche: 'Handel', inhaber: 'Anna Konrad' } },
@@ -37,6 +46,17 @@ const zufall = a => a[Math.floor(Math.random() * a.length)];
 const mischen = a => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+// Dateiname für den Export: datum-organigramm-unternehmen.<ext>
+window.exportDateiname = function (format) {
+  const d = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const datum = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const firma = (modell && modell.firma ? modell.firma : 'organigramm')
+    .replace(/\s+/g, '_')
+    .replace(/[^a-zA-Z0-9äöüÄÖÜß_\-]/g, '');
+  return `${datum}-organigramm-${firma || 'organigramm'}.${format}`;
+};
+
 function neuePerson(used) {
   let p;
   do { p = zufall(VORNAMEN) + ' ' + zufall(NACHNAMEN); } while (used.has(p));
@@ -52,16 +72,35 @@ function getUserCompanies() {
 }
 
 async function ladeUnternehmen() {
-  let daten = null;
-  try { const s = localStorage.getItem('uploadedYamlCompanyData'); if (s) daten = JSON.parse(s); } catch (e) { /* ignorieren */ }
-  if (!daten) {
-    try {
-      const antwort = await fetch('js/unternehmen.yml');
-      if (!antwort.ok) throw new Error('nicht gefunden');
-      daten = jsyaml.load(await antwort.text());
-    } catch (e) { console.warn('Konnte unternehmen.yml nicht laden:', e); }
+  let coreData = null;
+  try {
+    const antwort = await fetch('js/unternehmen.yml?v=' + Date.now());
+    if (antwort.ok) coreData = jsyaml.load(await antwort.text());
+    if (Array.isArray(coreData)) localStorage.setItem('standardYamlData', JSON.stringify(coreData));
+  } catch (e) { console.warn('Konnte unternehmen.yml nicht laden:', e); }
+  if (!Array.isArray(coreData)) {
+    try { coreData = JSON.parse(localStorage.getItem('standardYamlData') || '[]'); } catch (e) { coreData = []; }
   }
-  yamlData = [...(Array.isArray(daten) ? daten : []), ...getUserCompanies()].filter(c => c && c.unternehmen && c.unternehmen.name);
+  if (!Array.isArray(coreData)) coreData = [];
+
+  let zusaetzliche = [];
+  const uploadedJSON = localStorage.getItem('uploadedYamlCompanyData');
+  if (uploadedJSON) {
+    try {
+      const uploaded = JSON.parse(uploadedJSON);
+      zusaetzliche = uploaded.filter(u => {
+        const key = String(u?.unternehmen?.id ?? '') + '|' + String(u?.unternehmen?.name ?? '').trim().toLowerCase();
+        return !(coreData || []).some(c => (String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase()) === key);
+      });
+      if (zusaetzliche.length === 0) {
+        localStorage.removeItem('uploadedYamlCompanyData');
+      } else if (zusaetzliche.length !== uploaded.length) {
+        localStorage.setItem('uploadedYamlCompanyData', JSON.stringify(zusaetzliche));
+      }
+    } catch (e) { localStorage.removeItem('uploadedYamlCompanyData'); }
+  }
+
+  yamlData = [...coreData, ...zusaetzliche, ...getUserCompanies()].filter(c => c && c.unternehmen && c.unternehmen.name);
   if (!yamlData.length) yamlData = FALLBACK_UNTERNEHMEN;
   yamlData.sort((a, b) => (a.unternehmen.branche || '').localeCompare(b.unternehmen.branche || '') || a.unternehmen.name.localeCompare(b.unternehmen.name));
 }
@@ -189,6 +228,7 @@ function baueEditor() {
 
 function baueSvg() {
   const typ = modell.typ, mitStab = $('stab').checked, mitTitel = $('titel').checked;
+  const schema = $('farbschema')?.value || 'weiss';
   const matrix = typ === 'matrix', produkte = matrix ? modell.produkte : [];
   const L = modell.ebenen.length, n = modell.ebenen[1].length;
 
@@ -213,10 +253,10 @@ function baueSvg() {
 
   const ln = 'fill="none" stroke="#000" stroke-width="1.5"';
   const pf = 'marker-end="url(#pfeil)"';
-  const box = (x, yy, h, lines, fuellung = '#fff') => {
+  const box = (x, yy, h, lines, fuellung = '#fff', textfarbe = '#000') => {
     const y0 = yy + h / 2 - (lines.length - 1) * ZH / 2 + 5;
     return `<rect x="${x}" y="${yy}" width="${W}" height="${h}" fill="${fuellung}" stroke="#000" stroke-width="2"/>` +
-      lines.map((z, k) => `<text x="${x + W / 2}" y="${y0 + k * ZH}" text-anchor="middle"${k === 0 ? ' font-weight="bold"' : ''}>${esc(z)}</text>`).join('');
+      lines.map((z, k) => `<text x="${x + W / 2}" y="${y0 + k * ZH}" text-anchor="middle" fill="${textfarbe}"${k === 0 ? ' font-weight="bold"' : ''}>${esc(z)}</text>`).join('');
   };
 
   // Kanten: Geschäftsleitung → Abteilungen / Funktionsbereiche über eine Sammelschiene
@@ -247,10 +287,10 @@ function baueSvg() {
   }
   if (mitStab) kanten += `<path d="M${ceoX + W} ${yL[0] + hL[0] / 2}H${stabX}" ${ln}/>`;
 
-  let boxen = box(ceoX, yL[0], hL[0], modell.ebenen[0][0].lines);
-  modell.ebenen.slice(1).forEach((eb, i) => eb.forEach((nd, j) => { boxen += box(cx(j) - W / 2, yL[i + 1], hL[i + 1], nd.lines); }));
-  produkte.forEach((nd, r) => { boxen += box(pX, yL[r + 2], hL[r + 2], nd.lines); });
-  if (mitStab) boxen += box(stabX, yL[0], hL[0], modell.stab.lines, '#eeeeee');
+  let boxen = box(ceoX, yL[0], hL[0], modell.ebenen[0][0].lines, farbeEbene(schema, 0)[0], farbeEbene(schema, 0)[1]);
+  modell.ebenen.slice(1).forEach((eb, i) => eb.forEach((nd, j) => { const lvl = Math.min(i + 1, 2); const [f, t] = farbeEbene(schema, lvl); boxen += box(cx(j) - W / 2, yL[i + 1], hL[i + 1], nd.lines, f, t); }));
+  produkte.forEach((nd, r) => { const [f, t] = farbeEbene(schema, 'produkt'); boxen += box(pX, yL[r + 2], hL[r + 2], nd.lines, f, t); });
+  if (mitStab) { const [f, t] = farbeEbene(schema, 'stab'); boxen += box(stabX, yL[0], hL[0], modell.stab.lines, f, t); }
 
   const titel = mitTitel ? `<text x="${M}" y="30" font-size="17" font-weight="bold">${esc(modell.firma)}</text>` : '';
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${breite} ${hoehe}" width="${breite}" height="${hoehe}" font-family="Arial, Helvetica, sans-serif" font-size="13">` +
@@ -270,6 +310,7 @@ async function startOrganigramm() {
   fuelleUnternehmenDropdown();
   ['unternehmen', 'typ', 'anzahl', 'tiefe', 'personen'].forEach(id => $(id).addEventListener('change', erstelleModell));
   ['stab', 'titel'].forEach(id => $(id).addEventListener('change', () => { baueEditor(); zeichne(); }));
+  $('farbschema').addEventListener('change', zeichne);
   $('firma').addEventListener('input', () => { modell.firma = $('firma').value; zeichne(); });
   erstelleModell();
 }

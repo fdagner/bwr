@@ -51,11 +51,16 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/jodit.min.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/jodit.min.js"></script>
+  <script src="js/joditeditor.js?v=67"></script>
+<script src="js/collection.js?v=26"></script>
   <script src="js/clipboard.min.js"></script>
-  <script src="js/menu.js"></script>
+  <script src="js/menu.js?v=14"></script>
 </head>
 
 <body>
@@ -115,15 +120,7 @@
             <!-- Wird automatisch befüllt -->
           </select>
         </div>
-        <div>
-          <label for="produktBezeichnung">Bezeichnung des Fertigerzeugnisses:</label>
-          <input
-            type="text"
-            id="produktBezeichnung"
-            placeholder="z. B. Mountainbikes"
-            style="padding:6px 10px;font-size:14px;border:1px solid #ccc;border-radius:4px;min-width:220px;"
-          >
-        </div>
+        
       </div>
 
       <br>
@@ -138,7 +135,6 @@
       </div>
     </div>
 
-    <div w3-include-html="downloads.html"></div>
 
     <!-- KI-ASSISTENT PROMPT -->
     <div class="ki-assistent-box">
@@ -203,7 +199,6 @@
 </main>
 
 <script src="js/lb7-4-verkauf.js"></script>
-<script src="js/download.js"></script>
 <div w3-include-html="footer.html"></div>
 <script>
   includeHTML();

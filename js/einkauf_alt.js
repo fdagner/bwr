@@ -49,9 +49,6 @@ function generateRandomNettoWert() {
 }
 
 // Währung nach DIN 5008
-function formatCurrency(value) {
-  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
 
 // Kontenplan
 const kontenWerkstoffe = {
@@ -400,39 +397,6 @@ function zeigeZufaelligenSatz() {
 }
 
 // Export
-
-function einkaufHerunterladen() {
-  const einkaufHTML = document.getElementById('einkaufContainer').innerHTML;
-  const blob = new Blob([einkaufHTML], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'einkauf.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-function einkaufKopiereInZwischenablage() {
-  const einkaufHTML = document.getElementById('einkaufContainer').innerHTML;
-  navigator.clipboard.writeText(einkaufHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function einkaufHerunterladenAlsPNG() {
-  const einkaufContainer = document.getElementById('einkaufContainer');
-
-  html2canvas(einkaufContainer, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = 'einkauf.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-}
-
 let clipboardeinkauf = new ClipboardJS('#officeButtoneinkauf');
 
 clipboardeinkauf.on('success', function (e) {

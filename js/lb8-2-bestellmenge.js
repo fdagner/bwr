@@ -38,16 +38,36 @@ let bestellChart = null;
   }
 
   async function ladeUnternehmen() {
-    let daten = null;
-    try { const s = localStorage.getItem('uploadedYamlCompanyData'); if (s) daten = JSON.parse(s); } catch (e) { /* ignorieren */ }
-    if (!daten) {
-      try {
-        const antwort = await fetch('js/unternehmen.yml');
-        if (!antwort.ok) throw new Error('nicht gefunden');
-        daten = jsyaml.load(await antwort.text());
-      } catch (e) { console.warn('Konnte unternehmen.yml nicht laden:', e); }
+    let coreData = null;
+    try {
+      const antwort = await fetch('js/unternehmen.yml?v=' + Date.now());
+      if (antwort.ok) coreData = jsyaml.load(await antwort.text());
+      if (Array.isArray(coreData)) localStorage.setItem('standardYamlData', JSON.stringify(coreData));
+    } catch (e) { console.warn('Konnte unternehmen.yml nicht laden:', e); }
+    if (!coreData) {
+      try { coreData = JSON.parse(localStorage.getItem('standardYamlData') || '[]'); } catch (e) { coreData = []; }
     }
-    yamlData = [...(Array.isArray(daten) ? daten : []), ...getUserCompanies()].filter(c => c && c.unternehmen && c.unternehmen.name);
+    if (!Array.isArray(coreData)) coreData = [];
+
+    // Hochgeladene Datei: nur zusätzliche Unternehmen (Dedup gegen Core)
+    let zusaetzliche = [];
+    const uploadedJSON = localStorage.getItem('uploadedYamlCompanyData');
+    if (uploadedJSON) {
+      try {
+        const uploaded = JSON.parse(uploadedJSON);
+        zusaetzliche = uploaded.filter(u => {
+          const key = String(u?.unternehmen?.id ?? '') + '|' + String(u?.unternehmen?.name ?? '').trim().toLowerCase();
+          return !(coreData || []).some(c => (String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase()) === key);
+        });
+        if (zusaetzliche.length === 0) {
+          localStorage.removeItem('uploadedYamlCompanyData');
+        } else if (zusaetzliche.length !== uploaded.length) {
+          localStorage.setItem('uploadedYamlCompanyData', JSON.stringify(zusaetzliche));
+        }
+      } catch (e) { localStorage.removeItem('uploadedYamlCompanyData'); }
+    }
+
+    yamlData = [...coreData, ...zusaetzliche, ...getUserCompanies()].filter(c => c && c.unternehmen && c.unternehmen.name);
     yamlData.sort((a, b) => (a.unternehmen.branche || '').localeCompare(b.unternehmen.branche || '') || a.unternehmen.name.localeCompare(b.unternehmen.name));
   }
 
@@ -165,15 +185,8 @@ ${rede(inhaber, `Wir suchen die optimale Bestellmenge. Das ist die Menge, bei de
 })();
 
 // Formatieren der Währung mit Euro-Symbol, Tausenderpunkt und Dezimalkomma
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);
-}
 
 // Auf 2 Dezimalstellen runden
-function roundToTwoDecimals(num) {
-    return Math.round(num * 100) / 100;
-}
-
 
 // Formatieren der Zahl mit Leerzeichen als Tausendertrennzeichen, ohne Dezimalkomma
 function formatNumberWithSpace(number) {
@@ -193,11 +206,6 @@ function roundUpToNearest(number) {
         return Math.ceil(number / 1000) * 1000;
     }
 }
-
-function escHtml(s) {
-  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
 
 let lagerkosten;
 let bedarf;
@@ -390,32 +398,32 @@ function drawChart(werteArray) {
             type: 'line',
             height: 500,
             toolbar: {
-                show: true, // Hier aktivierst du die Toolbar
+                show: true,                      // Toolbar bleibt – NUR für Export
                 offsetX: 0,
                 offsetY: 0,
                 tools: {
-                    download: true,  // Download Button aktivieren
-                    selection: true,
-                    zoom: true,
-                    zoomin: true,
-                    zoomout: true,
-                    pan: true,
-                    reset: true | '<img src="/static/icons/reset.png" width="20">',
+                    download: true,              // Export (SVG/PNG/CSV) aktiv
+                    selection: false,
+                    zoom: false,
+                    zoomin: false,
+                    zoomout: false,
+                    pan: false,
+                    reset: false,
                     customIcons: []
                 },
                 export: {
                     svg: {
-                        filename: 'chart-export.svg',  // SVG-Dateiname
+                        filename: 'chart-export.svg',
                     },
                     png: {
-                        filename: 'chart-export.png', // PNG-Dateiname
+                        filename: 'chart-export.png',
                     },
                     csv: {
-                        filename: 'chart-export.csv', // CSV-Dateiname
+                        filename: 'chart-export.csv',
                     }
-                },
-                autoSelected: 'zoom'
+                }
             },
+            zoom: { enabled: false }             // Zoom-Interaktion im Diagramm aus
         },
         dataLabels: {
             enabled: false
@@ -502,10 +510,11 @@ function drawChart(werteArray) {
             }
         },
         legend: {
-            position: 'top', // Legende nach oben verschieben
-            horizontalAlign: 'center', // Horizontal zentrieren
-            verticalAlign: 'top', // Vertikal oben ausrichten
-            floating: true, // Optional: floatet die Legende oben über dem Diagramm
+            position: 'top',                      // Legende nach oben verschieben
+            horizontalAlign: 'center',            // Horizontal zentrieren
+            verticalAlign: 'top',                 // Vertikal oben ausrichten
+            floating: true,                       // Floatet die Legende oben über dem Diagramm
+            markers: { size: 10 }                 // Sichtbare Legende – ohne Klick-Ausblendung (Pointer-events via CSS aus)
         },
     };
     // Entferne den Inhalt des Containers und erstelle das Diagramm neu
@@ -515,6 +524,17 @@ function drawChart(werteArray) {
 
     bestellChart = new ApexCharts(chartContainer, options);
     bestellChart.render().then(aktualisiereDiagrammPng).catch(err => console.error('Diagramm-Fehler:', err));
+
+    //~Ansichtsoptionen aus: Legende nur informativ (kein Ein-/Ausblende-Klick)
+    chartContainer.style.position = 'relative';
+    let pe = chartContainer.querySelector('style.peDis');
+    if (!pe) {
+        pe = document.createElement('style');
+        pe.className = 'peDis';
+        pe.textContent = '#chart .apexcharts-legend{text-align:center;pointer-events:none;cursor:default!important;} ' +
+            '#chart .apexcharts-toolbar .apexcharts-zoom-icon, #chart .apexcharts-toolbar .apexcharts-zoomin-icon, #chart .apexcharts-toolbar .apexcharts-zoomout-icon, #chart .apexcharts-toolbar .apexcharts-pan-icon, #chart .apexcharts-toolbar .apexcharts-reset-zoom-icon{display:none!important;}';
+        chartContainer.appendChild(pe);
+    }
 }
 
 // Diagramm als PNG unter die Tabelle im Container setzen (oder wieder entfernen)
@@ -579,6 +599,14 @@ function aktualisiereLoesung() {
 <p style="${p}"><strong>3. Optimale Bestellmenge</strong></p>
 <p style="${p}">Die optimale Bestellmenge beträgt <strong>${formatNumberWithSpace(menge)} Stück</strong> bei <strong>${haeuf} Bestellungen</strong> im Jahr. In der Tabelle sind hier die Gesamtkosten mit <strong>${formatCurrency(gesamt)}</strong> am niedrigsten. Bestellkosten (${formatCurrency(bestellGes)}) und Lagerkosten (${formatCurrency(lagerGes)}) sind (ungefähr) gleich hoch. In der Grafik liegt das Minimum der Gesamtkosten beim Schnittpunkt der Kurven für Bestell- und Lagerhaltungskosten.</p>`;
     container.appendChild(div);
+
+    // Editor initialisieren (einmalig), sobald die Aufgabe vollständig steht
+    // (Aufgabe + Tabelle + Diagramm-PNG + Lösung). data-jodit-init erlaubt den
+    // Jodit-Adopt auch für Container mit generierten Bildern.
+    if (window.JoditEditor && !container._jodit) {
+        container.setAttribute('data-jodit-init', '1');
+        try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {

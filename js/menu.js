@@ -36,13 +36,21 @@ function includeHTML() {
         xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4) {
-            if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+            if (this.status == 200) {
+             elmnt.innerHTML = this.responseText;
+             // Inline-Skripte in eingefügtem HTML ausführen
+             elmnt.querySelectorAll('script').forEach(function (s) {
+               var ns = document.createElement('script');
+               if (s.src) ns.src = s.src; else ns.textContent = s.textContent;
+               document.head.appendChild(ns);
+             });
+           }
             if (this.status == 404) {elmnt.textContent = "Page not found.";}
             elmnt.removeAttribute("w3-include-html");
             includeHTML();
           }
         }
-        xhttp.open("GET", file, true);
+        xhttp.open("GET", file + "?t=" + Date.now(), true);
         xhttp.send();
         return;
       }

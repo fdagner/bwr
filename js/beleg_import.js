@@ -72,6 +72,21 @@ const BELEG_DETECTION_PATTERNS = {
     }
 };
 
+function parseBelegMarkup(rawContent) {
+    const parser = new DOMParser();
+    const trimmed = String(rawContent || '').trim();
+    if (trimmed.startsWith('<svg') || trimmed.startsWith('<?xml')) {
+        const cleaned = trimmed
+            .replace(/&nbsp;/g, '&#160;')
+            .replace(/&copy;/g, '&#169;')
+            .replace(/&reg;/g, '&#174;')
+            .replace(/&trade;/g, '&#8482;');
+        const svgDoc = parser.parseFromString(cleaned, 'image/svg+xml');
+        if (!svgDoc.querySelector('parsererror')) return svgDoc;
+    }
+    return parser.parseFromString(trimmed, 'text/html');
+}
+
 /**
  * Hauptfunktion für Beleg-Import
  */
@@ -86,9 +101,10 @@ async function handleBelegImport(fileArg) {
         return;
     }
 
-    // Prüfe Dateityp
-    if (!file.name.toLowerCase().endsWith('.svg')) {
-        updateBelegImportStatus('Bitte wählen Sie eine SVG-Datei aus', 'error');
+    // Prüfe Dateityp (SVG oder HTML)
+    const lowerName = file.name.toLowerCase();
+    if (!lowerName.endsWith('.svg') && !lowerName.endsWith('.html') && !lowerName.endsWith('.htm')) {
+        updateBelegImportStatus('Bitte wählen Sie eine SVG- oder HTML-Datei aus', 'error');
         return;
     }
 
@@ -98,14 +114,13 @@ async function handleBelegImport(fileArg) {
         // Lese Datei
         const svgContent = await readFileAsText(file);
 
-        // Parse SVG
-        const parser = new DOMParser();
-        const svgDoc = parser.parseFromString(svgContent, 'image/svg+xml');
+        // Parse SVG oder HTML
+        const svgDoc = parseBelegMarkup(svgContent);
 
         // Prüfe auf Parser-Fehler
         const parserError = svgDoc.querySelector('parsererror');
         if (parserError) {
-            throw new Error('SVG-Datei konnte nicht gelesen werden');
+            throw new Error('Datei konnte nicht gelesen werden');
         }
 
         updateBelegImportStatus('Belegtyp wird erkannt...', 'info');
@@ -149,7 +164,8 @@ function showImportSummary(belegType, extractedData, tabName) {
         bescheid:     ['bescheidName', 'bescheidTag', 'bescheidMonat', 'bescheidMessbetrag', 'bescheidJahressteuer'],
         lohnjournal:  ['lohnjournalName', 'lohnjournalMonat'],
         lohnabrechnung: ['lohnabrechnungFirmaName', 'lohnabrechnungMonat', 'lohnabrechnungBrutto', 'lohnabrechnungNetto'],
-        email:        ['emailName', 'emailSubject']
+        email:        ['emailName', 'emailKunde', 'emailSubject'],
+        newspaper:    ['ueberschrift', 'quelle']
     };
 
     const FIELD_LABELS = {
@@ -170,13 +186,15 @@ function showImportSummary(belegType, extractedData, tabName) {
         bescheidMessbetrag: 'Messbetrag', bescheidJahressteuer: 'Jahressteuer',
         lohnjournalMonat: 'Monat', lohnabrechnungMonat: 'Monat',
         lohnabrechnungBrutto: 'Brutto', lohnabrechnungNetto: 'Netto',
-        emailSubject: 'Betreff'
+        emailName: 'Absender', emailKunde: 'Empfänger', emailSubject: 'Betreff',
+        ueberschrift: 'Überschrift', quelle: 'Quelle'
     };
 
     const BELEG_LABELS = {
         rechnung: 'Rechnung', kontoauszug: 'Kontoauszug', quittung: 'Quittung',
         kassenbon: 'Kassenbon', anlagenkarte: 'Anlagenkarte', wertpapiere: 'Wertpapiere',
-        bescheid: 'Bescheid', lohnjournal: 'Lohnjournal', lohnabrechnung: 'Lohnabrechnung', email: 'E-Mail'
+        bescheid: 'Bescheid', lohnjournal: 'Lohnjournal', lohnabrechnung: 'Lohnabrechnung',
+        email: 'E-Mail', newspaper: 'Zeitungsartikel'
     };
 
     statusEl.style.backgroundColor = '#e8f5e9';
@@ -252,6 +270,17 @@ async function jumpToBeleg(belegType, tabName) {
  * Erkenne Belegtyp anhand der SVG-ID und fallback auf Pattern-Matching
  */
 function detectBelegType(svgDoc) {
+    // 0. HTML-Belege direkt erkennen (E-Mail, Zeitungsartikel, E-Rechnung)
+    if (svgDoc.querySelector('#mailHtml, #emailSubject, #emailTextMessage')) {
+        return 'email';
+    }
+    if (svgDoc.querySelector('#newspaperDiv, #newspaperHeadline, #newspaperContent')) {
+        return 'newspaper';
+    }
+    if (svgDoc.querySelector('div#rechnungSVG')) {
+        return 'rechnung';
+    }
+
     // 1. Versuche anhand der SVG root ID
     const svgRoot = svgDoc.querySelector('svg');
     if (svgRoot && svgRoot.id) {
@@ -314,7 +343,9 @@ function extractBelegData(svgDoc, belegType) {
         if (textContent === '') return;
         
         // Überspringen wenn Platzhalter-/Spaltenüberschrift aus dem SVG
-const PLATZHALTER = ['Bezeichnung', 'Artikelbezeichnung', 'Menge', 'Einheit', 'Einzelpreis', 'Artikel'];
+const PLATZHALTER = ['Bezeichnung', 'Artikelbezeichnung', 'Menge', 'Einheit', 'Einzelpreis', 'Artikel', 'Leistung', 'Leistungen'];
+// Spaltenüberschriften (ohne Ziffer) immer überspringen
+if (/^(artikel|menge|einheit|einzelpreis)$/i.test(id)) return;
 if (/^(artikel|menge|einheit|einzelpreis)\d*$/i.test(id) && PLATZHALTER.includes(textContent)) return;
 
         // Überspringen wenn identisch mit Placeholder des Ziel-Inputs
@@ -381,6 +412,47 @@ if (data['menge2']) {
             }
         }
     });
+
+    // HTML-Belege: Zusatzfelder für E-Mail, Zeitungsartikel und E-Rechnung extrahieren
+    if (belegType === 'email') {
+        const mailRoot = svgDoc.querySelector('#mailHtml');
+        const rootStyle = mailRoot ? (mailRoot.getAttribute('style') || '') : '';
+        if (rootStyle.includes('#2b4a73')) data.vorlage = 'mail3.html';
+        else if (rootStyle.includes('#e6d8ca')) data.vorlage = 'mail2.html';
+        else data.vorlage = 'mail1.html';
+        const kundeEl = svgDoc.querySelector('.emailNameKunde, #emailNameKunde, .emailAdresseKunde, #emailAdresseKunde');
+        if (kundeEl && kundeEl.textContent.trim()) data.emailKunde = kundeEl.textContent.trim();
+        if (svgDoc.body && svgDoc.body.innerHTML.trim()) data._rawHtml = svgDoc.body.innerHTML;
+    } else if (belegType === 'newspaper') {
+        const hl = svgDoc.querySelector('#newspaperHeadline');
+        const ct = svgDoc.querySelector('#newspaperContent');
+        const sr = svgDoc.querySelector('#newspaperSource');
+        const nd = svgDoc.querySelector('#newspaperDiv');
+        if (hl) data.ueberschrift = hl.textContent.trim();
+        if (ct) {
+            data.text = ct.textContent.trim();
+            if (ct.style && ct.style.columnCount) data.spalten = ct.style.columnCount;
+        }
+        if (sr) data.quelle = sr.textContent.replace(/^\s*Quelle:\s*/i, '').trim();
+        if (nd && nd.style && nd.style.backgroundColor) {
+            const bg = nd.style.backgroundColor.trim();
+            const m = bg.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i);
+            data.farbe = m
+                ? '#' + [m[1], m[2], m[3]].map(x => Number(x).toString(16).padStart(2, '0')).join('')
+                : bg;
+        }
+    } else if (belegType === 'rechnung' && svgDoc.querySelector('div#rechnungSVG')) {
+        const allText = svgDoc.documentElement.textContent || '';
+        if (allText.includes('E-Rechnung im Posteingang')) data.vorlage = 'e-rechnung-er.html';
+        else if (allText.includes('E-Rechnung im Postausgang')) data.vorlage = 'e-rechnung-ar.html';
+        if (data.rabatt) {
+            const rm = String(data.rabatt).match(/(\d+(?:[.,]\d+)?)\s*%/);
+            if (rm) data.rabatt = rm[1];
+        }
+        if (data.bezugskostenSumme && (!data.bezugskosten || !/\d/.test(data.bezugskosten))) {
+            data.bezugskosten = data.bezugskostenSumme;
+        }
+    }
 
     return data;
 }
@@ -534,15 +606,20 @@ async function fillFormWithExtractedData(belegType, extractedData) {
     }
     
     
-    // WICHTIG: Zuerst SVG-Template laden, bevor Daten gesetzt werden
+    // Vorlage (z. B. e-rechnung-er.html, mail3.html) VOR applySVGholen setzen
+    if (extractedData.vorlage && config.vorlage) {
+        setFieldValue(config.vorlage.elementId, extractedData.vorlage, 'select');
+    }
+
+    // WICHTIG: Zuerst SVG/HTML-Template laden, bevor Daten gesetzt werden
     const needsSVGLoad = ['rechnung', 'kontoauszug', 'email', 'quittung', 'kassenbon', 
                           'lohnjournal', 'bescheid', 'anlagenkarte', 'wertpapiere', 'lohnabrechnung'];
     
     if (needsSVGLoad.includes(belegType)) {
         console.log(`⏳ Lade SVG-Template für ${belegType}...`);
         if (typeof window.applySVGholen === 'function') {
-            await window.applySVGholen();
-            await new Promise(resolve => setTimeout(resolve, 800));
+            await window.applySVGholen(true);
+            await new Promise(resolve => setTimeout(resolve, 400));
         }
     }
     
@@ -620,7 +697,8 @@ async function fillFormWithExtractedData(belegType, extractedData) {
         bescheid:       [{ key: 'bescheidName',             elementId: 'datenBescheid' }],
         lohnjournal:    [{ key: 'lohnjournalName',          elementId: 'datenLohnjournal' }],
         lohnabrechnung: [{ key: 'lohnabrechnungFirmaName',  elementId: 'datenLohnabrechnung' }],
-        email:          [{ key: 'emailName',                elementId: 'datenEmail' }]
+        email:          [{ key: 'emailName',                elementId: 'datenEmail' },
+                         { key: 'emailKunde',               elementId: 'datenEmailKunde' }]
     };
 
       (FIRMEN_FELDER[belegType] || []).forEach(({ key, elementId }) => {
@@ -713,6 +791,25 @@ async function fillFormWithExtractedData(belegType, extractedData) {
         }
     }
     
+    if (belegType === 'email' && extractedData._rawHtml) {
+        const emailContainer = document.getElementById('emailContainer');
+        if (emailContainer) {
+            emailContainer.innerHTML = extractedData._rawHtml;
+            fieldsSet++;
+        }
+    } else if (belegType === 'newspaper') {
+        const colRange = document.getElementById('newspaperColumnRange');
+        const colVal = document.getElementById('newspaperColumnValue');
+        if (colRange && colVal) colVal.innerText = colRange.value;
+        const applyBtn = document.getElementById('newspaperApplyChangesButton');
+        if (applyBtn) applyBtn.click();
+        const nd = document.getElementById('newspaperDiv');
+        const nc = document.getElementById('newspaperContent');
+        const colorIn = document.getElementById('newspaperColorInput');
+        if (nd && colorIn) nd.style.backgroundColor = colorIn.value;
+        if (nc && colRange) nc.style.columnCount = colRange.value;
+    }
+
     console.log(`${fieldsSet} Felder wurden befüllt`);
     return fieldsSet;
 }

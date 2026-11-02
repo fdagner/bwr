@@ -2,7 +2,6 @@
 // GESCHÄFTSFÄLLE MIT KONTO-AUSWAHL
 // ============================================================================
 // Globale Variablen
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGeschaeftsfaelle = [];
 
@@ -19,59 +18,9 @@ const kontenDefinitionen = {
 // ============================================================================
 // YAML-DATEN LADEN
 // ============================================================================
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-    console.log(`${userCompanies.length} Benutzerunternehmen hinzugefügt. Gesamt: ${yamlData.length} Unternehmen`);
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-    });
-}
 
 // ============================================================================
 // KONTO-AUSWAHL FUNKTIONEN
@@ -226,23 +175,13 @@ const geschaeftsfallTypen = {
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-function formatCurrency(value) {
-  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
 
-function roundToTwoDecimals(num) {
-  return Math.round(num * 100) / 100;
-}
 
 function generateRandomBetrag(min = 100, max = 1000) {
   const steps = Math.floor((max - min) / 5);
   return min + (Math.floor(Math.random() * steps) * 5);
 }
 
-function parseNumericValue(value) {
-  if (!value) return '0';
-  return value.toString().replace(/[€\s]/g, '').replace(/\./g, '').replace(',', '.');
-}
 
 const wertFormulierungen = [
   ' in Höhe von ',
@@ -695,14 +634,16 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Kunde geändert:', kunde);
   });
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeZufaelligeGeschaeftsfaelle();
   } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligeGeschaeftsfaelle();
+    }, { once: true });
   }
 
   // Prompt-Text in Vorschau einfügen
@@ -728,7 +669,4 @@ function autoSelectMyCompany() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  setTimeout(autoSelectMyCompany, 250);
-  setTimeout(zeigeZufaelligeGeschaeftsfaelle, 500)
-});
+// (Aufruf erfolgt jetzt event-basiert über 'yamlDataLoaded' im ersten DOMContentLoaded-Handler)

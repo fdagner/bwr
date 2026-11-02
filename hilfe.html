@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hilfe – meinbwr.de BwR</title>
+  <meta name="description" content="Hilfe zur Nutzung von meinbwr.de: Überblick, Schnellstart, FAQ, Tipps und Tricks.">
+  <link rel="canonical" href="https://www.meinbwr.de/hilfe.html">
+  <link rel="stylesheet" href="css/style.css?v=9" />
+  <script src="js/menu.js?v=14"></script>
+  <script src="js/utils.js?v=11"></script>
+  <style>
+    /* ===== Hilfe: FAQ-Design (klar & kantig) ===== */
+    .faq-item {
+      margin-bottom: 10px;
+      background: #fff;
+      border: 1px solid #ccd6e0;
+      border-left: 3px solid #2c5f2d;
+      border-radius: 4px;
+      padding: 0 14px;
+    }
+    .faq-item:hover { background: #fafbfc; }
+    .faq-item[open] { border-left-color: #007bff; background: #fff; }
+    .faq-frage {
+      font-weight: 600;
+      cursor: pointer;
+      padding: 12px 4px;
+      color: #1f2d3d;
+      font-size: 1rem;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq-frage::-webkit-details-marker { display: none; }
+    .faq-frage::after {
+      content: '▾';
+      color: #7a8a99;
+      flex: 0 0 auto;
+      transition: transform .15s ease;
+    }
+    .faq-item[open] .faq-frage::after { transform: rotate(180deg); color: #007bff; }
+    .faq-antwort {
+      padding: 2px 4px 12px 4px;
+      color: #444;
+      line-height: 1.55;
+      border-top: 1px solid #e4e9ef;
+    }
+    .faq-antwort p { margin: 10px 0; }
+    .faq-antwort p:first-child { margin-top: 12px; }
+    .faq-antwort ul, .faq-antwort ol { margin: 8px 0; padding-left: 20px; }
+    .faq-antwort li { margin-bottom: 4px; }
+    .faq-antwort strong { color: #1f2d3d; }
+    .faq-tipp {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: #f4f8fb;
+      border: 1px solid #c9dcea;
+      border-left: 3px solid #007bff;
+      border-radius: 4px;
+      color: #2c3e50;
+    }
+    /* ===== Erste Schritte: Schritt-Karten (flach) ===== */
+    .schritt-karte {
+      background: #fff;
+      border: 1px solid #ccd6e0;
+      border-top: 3px solid var(--karten-aczent, #2c5f2d);
+      border-radius: 4px;
+      padding: 14px 16px;
+    }
+    .schritt-kopf {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .schritt-nummer {
+      flex: 0 0 28px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--karten-aczent, #2c5f2d);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+    .schritt-kopf strong { font-size: 1rem; color: #1f2d3d; }
+    .schritt-karte p { margin: 0; color: #444; line-height: 1.55; }
+  </style>
+</head>
+<body>
+  <main>
+    <div w3-include-html="navigation.html"></div>
+    <h1>Hilfe</h1>
+    <p class="lead">Kurze Einführung in die Nutzung von meinbwr.de – von der ersten Nutzung bis zu nützlichen Tipps.</p>
+
+    <nav class="tab">
+          <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'schnellstart')">Erste Schritte</button>
+      <button class="tablinks" onclick="openCity(event, 'faq')">FAQ</button>
+    </nav>
+
+ 
+    <section id="schnellstart" class="tabcontent">
+      <h2>Erste Schritte</h2>
+      <ol class="grid3" style="list-style: none; margin: 0; padding: 0; align-items: stretch;">
+
+        <li class="schritt-karte" style="--karten-aczent: #2c5f2d;">
+          <div class="schritt-kopf">
+            <span class="schritt-nummer">1</span>
+            <strong>🏢 Modellunternehmen wählen</strong>
+          </div>
+          <p>
+            Auf der Startseite ein Unternehmen auswählen und mit
+            <strong>„★&nbsp;Als Modellunternehmen verwenden“</strong> speichern.
+            Es wird bei der Beleg- und Aufgabenerstellung automatisch verwendet.
+            Eigene Modellunternehmen können Sie manuell hinzufügen.
+          </p>
+        </li>
+
+        <li class="schritt-karte" style="--karten-aczent: #007bff;">
+          <div class="schritt-kopf">
+            <span class="schritt-nummer">2</span>
+            <strong>📄 Belege erstellen</strong>
+          </div>
+          <p>
+            Menüpunkt <strong>„Belege“</strong> öffnen – alle Belege werden automatisch mit
+            den Daten des Modellunternehmens erzeugt und lassen sich als
+            <strong>PNG oder SVG</strong> herunterladen. Mit dem
+            <strong>„+&nbsp;Sammlung“-Button</strong> parken Sie Belege zum späteren Wiederverwenden.
+          </p>
+        </li>
+
+        <li class="schritt-karte" style="--karten-aczent: #6f42c1;">
+          <div class="schritt-kopf">
+            <span class="schritt-nummer">3</span>
+            <strong>✏️ Aufgaben generieren</strong>
+          </div>
+          <p>
+            In den Lernbereichen eine Aufgabenart wählen und Eigenschaften festlegen. Belege können kontextbezogen von den Aufgaben erstellt werden.
+            Der Rich-Text-Editor bietet Formatierung, <strong>Beleg-Einfügen aus der Sammlung</strong>,
+            <strong>Druck</strong>, <strong>Zwischenablage</strong> (z.&nbsp;B. für Office)
+            und <strong>HTML-Export</strong>.
+          </p>
+        </li>
+
+      </ol>
+    </section>
+
+    <section id="faq" class="tabcontent">
+      <h2 style="margin: 20px 0 12px 0; color: #2c3e50; font-size: 1.5rem;">
+        Häufig gestellte Fragen (FAQ)
+      </h2>
+
+      <div>
+        
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Wo werden meine Daten gespeichert?
+          </summary>
+          <div class="faq-antwort">
+            <p><strong>Alle Funktionen dieser Webanwendung laufen vollständig lokal in Ihrem Browser.</strong></p>
+            <p>Das bedeutet:</p>
+            <ul style="margin: 8px 0; padding-left: 20px;">
+              <li>✓ Alle Daten (Modellunternehmen, Belege, Einstellungen) bleiben auf Ihrem Gerät</li>
+              <li>✓ Es werden <strong>keine Daten an einen Server übertragen</strong></li>
+              <li>✓ Vollständige Kontrolle und Privatsphäre</li>
+              <li>⚠ Daten gehen beim Löschen des Browser-Caches verloren</li>
+              <li>⚠ Daten sind nicht automatisch auf anderen Geräten oder Browsern verfügbar</li>
+            </ul>
+            <p style="margin-top: 12px;"><strong>Empfehlung:</strong> Exportieren Sie regelmäßig Ihre Modellunternehmen als .yml-Datei, um ein Backup zu haben!</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Wie setze ich ein Modellunternehmen als "Mein Unternehmen"?
+          </summary>
+          <div class="faq-antwort">
+            <ol style="margin: 8px 0; padding-left: 20px;">
+              <li>Wählen Sie aus dem Dropdown-Menü "Alle verfügbaren Unternehmen" ein Unternehmen aus</li>
+              <li>Prüfen Sie die Unternehmensdetails in der Vorschau</li>
+              <li>Klicken Sie auf <strong>"★ Als Modellunternehmen verwenden"</strong></li>
+              <li>Das Unternehmen wird im Browser gespeichert und bei der Belegerstellung automatisch verwendet</li>
+            </ol>
+            <p style="margin-top: 12px;"><em>Tipp: Sie können jederzeit ein anderes Unternehmen auswählen oder das aktuelle mit "✕ Entfernen" löschen.</em></p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Wie kann ich Modellunternehmen exportieren und importieren?
+          </summary>
+          <div class="faq-antwort">
+            <p><strong>Exportieren:</strong></p>
+            <ol style="margin: 8px 0; padding-left: 20px;">
+              <li>Klappen Sie den Bereich "Unternehmen importieren/exportieren" auf</li>
+              <li>Klicken Sie auf "Aktuelle Unternehmen exportieren"</li>
+            </ol>
+            <p style="margin-top: 12px;"><strong>Importieren:</strong></p>
+            <ol style="margin: 8px 0; padding-left: 20px;">
+              <li>Ziehen Sie eine .yml-Datei per Drag & Drop in den Upload-Bereich</li>
+              <li>Oder klicken Sie auf den Bereich und wählen Sie eine Datei aus</li>
+              <li>Die Unternehmen werden importiert und stehen sofort zur Verfügung. Importieren Sie immer die ganze Liste!</li>
+            </ol>
+            <p style="margin-top: 12px;"><em>Praktisch für: Datensicherung, Nutzung auf mehreren Geräten, Austausch mit Kollegen</em></p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Wie erstelle ich ein eigenes Modellunternehmen?
+          </summary>
+          <div class="faq-antwort">
+            <ol style="margin: 8px 0; padding-left: 20px;">
+              <li>Klappen Sie den Bereich <strong>"Unternehmen manuell hinzufügen"</strong> auf</li>
+              <li>Füllen Sie alle Felder (*) aus:
+                <ul style="margin: 4px 0; padding-left: 20px;">
+                  <li>Basisdaten (Name, Rechtsform, Branche, Motto, Inhaber)</li>
+                  <li>Adresse & Kontakt (Straße, PLZ, Ort, Telefon, E-Mail, Internet)</li>
+                  <li>Finanz- & Steuerdaten (Bank, IBAN, BIC, USt-IdNr., Steuernummer, Akzentfarbe)</li>
+                </ul>
+              </li>
+              <li>Optional: Laden Sie ein Logo als SVG-Datei hoch (max. 500KB)</li>
+              <li>Klicken Sie auf <strong>"✓ Unternehmen hinzufügen"</strong></li>
+            </ol>
+             </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Auf welche Weise können Belege erstellt werden?
+          </summary>
+          <div class="faq-antwort">
+            <p><strong>Manuelle Belege:</strong></p>
+            <ul style="margin: 8px 0; padding-left: 20px;">
+              <li>Werden unter dem Menüpunkt <strong>"Belege"</strong> erstellt</li>
+              <li>Sie geben alle Informationen manuell ein (Datum, Beträge, Positionen etc.)</li>
+              <li>Ideal für: Einzelne Übungsbelege, individuelle Szenarien, freie Gestaltung</li>
+            </ul>
+            <p style="margin-top: 12px;"><strong>Verlinkte Belege:</strong></p>
+            <ul style="margin: 8px 0; padding-left: 20px;">
+              <li>Werden unter Menüpunkten wie zum Beispiel <strong>"Einkauf"</strong> oder <strong>"Verkauf"</strong> erstellt</li>
+              <li>Basieren auf zusammenhängenden Geschäftsvorfällen</li>
+              <li>Belege werden automatisch miteinander verknüpft (z. B. Geschäftsfall → Rechnung)</li>
+            </ul>
+             </div>
+        </details>
+
+<details class="faq-item">
+  <summary class="faq-frage">
+    Welches Exportformat soll ich verwenden?
+  </summary>
+  <div class="faq-antwort">
+
+    <p><strong>Hinweis:</strong> Die meisten Exportfunktionen (PNG, SVG, HTML, HTML-Code, Zwischenablage, Drucken) sind jetzt als sprechende Text-Buttons neben der Vorschau verfügbar. Im Texteditor stehen zusätzlich Drucken und „Als HTML speichern“ als Toolbar-Buttons zur Verfügung.</p>
+
+    <p><strong>
+      PNG:</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Schnelle Integration</li>
+      <li>H5P-Aktivitäten in der ByCS Lernplattform</li>
+      <li>Wenn keine nachträgliche Bearbeitung nötig ist</li>
+    </ul>
+
+    <p><strong>
+      Office:</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Direktes Einfügen in Textverarbeitung, Tabellenkalkulation...</li>
+      <li>Wenn Sie die Aufgaben in Office-Dokumenten weiterbearbeiten möchten</li>
+      <li>Meist ist ein Nachbearbeiten notwendig, da das Format auf die Darstellung im Browser optimiert ist.</li>
+    </ul>
+
+    <p><strong>
+      SVG:</strong></p>
+        <ul style="margin: 4px 0 12px 20px;">
+      <li>Nachträgliche Bearbeitung möglich (z. B. unter "Belege importieren" oder mit Inkscape)</li>
+      <li>Skalierbare Grafiken ohne Qualitätsverlust</li>
+      <li>ByCS Lernplattform (Text-/Medienfelder, Textseiten, Tests)</li>
+    </ul>
+
+    <p><strong>
+    HTML/Inline SVG:</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Direktes Einbinden in Textfeld, Freitext-Aufgabe...</li>
+      <li>Fortgeschrittene Nutzer mit HTML-Kenntnissen</li>
+      <li>Dynamische Inhalte (z.B. automatisches Datum)</li>
+      <li>Direktes Einbinden in Moodle/ByCS-Kurse mit Scripting</li>
+    </ul>
+
+    <p><strong>
+      Drucken (Arbeitsblatt):</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Öffnet den Druckdialog des Browsers mit einer aufbereiteten Ansicht</li>
+      <li>Alternativ im Druckdialog „Als PDF speichern" wählen, um ein PDF zu erzeugen</li>
+    </ul>
+
+    <p><strong>
+      Moodle-Fragetyp:</strong></p>
+    <ul style="margin: 4px 0 12px 20px;">
+      <li>Exportiert die Aufgabe als XML-Datei, die in die Moodle-/ByCS-Fragensammlung importiert werden kann</li>
+      <li>Die Aufgabe steht danach als Frage in Tests zur Verfügung und kann automatisch bewertet werden</li>
+    </ul>
+
+  </div>
+</details>
+
+<details class="faq-item">
+          <summary class="faq-frage">
+            Was ist die Sammlung und wie nutze ich sie?
+          </summary>
+          <div class="faq-antwort">
+            <p>Die <strong>Sammlung</strong> ist ein lokaler Speicher (IndexedDB) für Belege.</p>
+            <ul style="margin: 8px 0; padding-left: 20px;">
+              <li><strong>Beleg hinzufügen:</strong> Auf jeder Beleg-Seite den Button „+ Sammlung" klicken und einen Titel vergeben.</li>
+              <li><strong>Öffnen:</strong> In der Sammlung auf „Öffnen" klicken – der Beleg wird mit allen Daten wiederhergestellt (auch Mails und Zeitungsartikel).</li>
+              <li><strong>Downloads:</strong> PNG, SVG oder HTML herunterladen.</li>
+              <li><strong>Link teilen:</strong> „Link" kopiert eine URL, mit der der Beleg wieder geöffnet werden kann.</li>
+              <li><strong>Import/Export:</strong> Ganze Sammlungen als JSON exportieren/importieren – ideal für Backup oder Austausch.</li>
+              </ul>
+            <p style="margin-top: 12px;"><em>Hinweis: Die Sammlung liegt nur im Browser. Regelmäßig exportieren!</em></p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Wie organisiere ich mehrere Belege-Sammlungen?
+          </summary>
+          <div class="faq-antwort">
+            <p>Unter <strong>„Vorlagen → Sammlung“</strong> können Sie mehrere getrennte Sammlungen führen –
+            z.&nbsp;B. eine pro Klasse oder Kurs:</p>
+            <ul>
+              <li><strong>„+ Neue Sammlung“</strong> – legt eine leere, gleichnamige Sammlung an.</li>
+              <li><strong>„Umbenennen“</strong> – ändert den Namen der aktuell offenen Sammlung.</li>
+              <li><strong>Dropdown „Sammlung auswählen“</strong> – wechselt zwischen Ihren Sammlungen; neue Belege
+                  landen immer in der aktuell ausgewählten.</li>
+              <li><strong>Beleg hinzufügen:</strong> Der „+&nbsp;Sammlung“-Button auf jeder Belegseite speichert den
+                  Beleg in der gerade aktiven Sammlung.</li>
+            </ul>
+            <p class="faq-tipp"><strong>Aufräumen:</strong> Mit „Alle Einträge entfernen“ leeren Sie eine Sammlung,
+            mit „Diese Sammlung löschen“ entfernen Sie sie komplett – andere Sammlungen bleiben unberührt.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Wie übertrage ich eine Belege-Sammlung auf ein anderes Gerät oder an Kollegen?
+          </summary>
+          <div class="faq-antwort">
+            <p>Da die Sammlung nur lokal im Browser gespeichert wird, nutzen Sie das eingebaute Backup:</p>
+            <ol>
+              <li>Sammlung öffnen und auf <strong>„Backup (diese Sammlung)“</strong> klicken – Sie erhalten eine JSON-Datei.</li>
+              <li>Auf dem anderen Gerät <strong>„Backup importieren“</strong> wählen und die Datei auswählen.</li>
+              <li>Bei Namenskonflikt entscheiden Sie: <strong>„Überschreiben“</strong> (bestehende Einträge ersetzen)
+                  oder <strong>„Neue Sammlung anlegen“</strong>.</li>
+            </ol>
+            <p class="faq-tipp"><strong>Tipp:</strong> Bewahren Sie die JSON-Datei z.&nbsp;B. in Ihrem
+            ByCS-/Cloud-Ordner auf – so haben Sie vor jedem Geräte- oder Browserwechsel ein aktuelles Backup.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Wie funktioniert der Texteditor?
+          </summary>
+          <div class="faq-antwort">
+            <p>In den Aufgabenbereichen (z. B. Buchungssatz, Einkauf) steht ein Rich-Text-Editor zur Verfügung.</p>
+            <ul style="margin: 8px 0; padding-left: 20px;">
+              <li><strong>Formatierung:</strong> Fett, Kursiv, Unterstrichen, Schriftgröße, Absätze, Listen.</li>
+              <li><strong>Beleg einfügen:</strong> Über den Button „📄 Beleg einfügen" einen Beleg aus der Sammlung (mit Größenwahl) einfügen.</li>
+              <li><strong>Formatierung kopieren:</strong> Button „Formatierung kopieren" überträgt das Format des markierten Texts.</li>
+              <li><strong>Ausrichtung:</strong> Bilder/Absätze linksbündig oder zentriert ausrichten.</li>
+              <li><strong>Drucken:</strong> Button „Drucken" öffnet den Druckdialog (alternativ „Als PDF speichern").</li>
+              <li><strong>HTML-Export:</strong> Button „Als HTML speichern" speichert den Inhalt als HTML-Datei.</li>
+              <li><strong>Quellcode:</strong> Button „source" zeigt den HTML-Code zum Bearbeiten.</li>
+            </ul>
+            <p style="margin-top: 12px;"><em>Tipp: Beim Drucken werden Seitenumbrüche automatisch vor der Lösung eingefügt.</em></p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Wie kann ich Aufgaben sinnvoll auf der ByCS Lernplattform einbinden?
+          </summary>
+
+           <div class="faq-antwort">
+            Am besten bauen Sie sich mit der Aktivität Test ein digitales Arbeitsheft. 
+            Die notwendigen Einstellungen können Sie in <a href="https://oer.fdagner.de/2026/04/12/digitales-arbeitsheft-lernplattform/">diesem Blogbeitrag</a> nachlesen.
+           </div>
+           </details>
+
+
+          <details class="faq-item">
+          <summary class="faq-frage">
+            Wie nutze ich die Prompts für die KI-Bots?
+          </summary>
+          <div class="faq-antwort">
+            <p>Legen Sie in der ByCS Lernplattform die Aktivität KI-Chat an. Dort können Sie den Prompt direkt reinkopieren.
+           </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-frage">
+            Was kann ich tun, wenn meine Daten verloren gegangen sind?
+          </summary>
+          <div class="faq-antwort">
+            <p><strong>Wenn Sie ein Backup haben:</strong></p>
+            <ol style="margin: 8px 0; padding-left: 20px;">
+              <li>Öffnen Sie den Bereich "Unternehmen importieren/exportieren"</li>
+              <li>Importieren Sie Ihre gesicherte .yml-Datei</li>
+              <li>Ihre Modellunternehmen sind wiederhergestellt</li>
+            </ol>
+           </div>
+        </details>
+           <details class="faq-item">
+          <summary class="faq-frage">
+             Wie lauten die Nutzungsbedingungen?
+          </summary>
+          <div class="faq-antwort">
+            <p>Alle Materialien werden, soweit nicht anders angegeben, unter der Lizenz <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.de" style="color:#0077cc; text-decoration: none;">CC0 1.0 Universell</a> veröffentlicht.
+              Kurz gesagt: Sie dürfen alle Materialien kopieren, verändern, verbreiten, auch zu kommerziellen Zwecken, ohne um weitere Erlaubnis bitten zu müssen.
+              </p>
+    
+           </div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <div w3-include-html="footer.html"></div>
+  <script>
+    includeHTML();
+    document.getElementById("defaultOpen").click();
+  </script>
+</body>
+</html>

@@ -266,16 +266,6 @@ const saetze_schluss = [
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function pickN(arr, n) { return shuffle(arr).slice(0, n); }
 
@@ -344,17 +334,17 @@ function badge(kw, farbe) {
 // HILFSFUNKTION: EIN LEITBILD ALS HTML-BLOCK RENDERN
 // ============================================================================
 function renderLeitbildBlock(lb, nr, gesamt) {
-  const titel = gesamt > 1 ? `Aufgabe ${nr}` : 'Aufgabe';
+  const titel = gesamt > 1 ? `Fallbeispiel: Leitbild ${nr}` : 'Fallbeispiel: Leitbild';
   let html = '';
 
   // Überschrift
   html += `<h2 style="margin-top:${nr > 1 ? '2.5em' : '0'};">${titel}</h2>`;
-  html += `<p style="font-style:italic; color:#555; font-size:0.95rem;">
+  html += `<h3>
     Lies das folgende Unternehmens-Leitbild sorgfältig durch.
     Leite daraus in Stichworten die
     <strong>ökonomischen</strong>, <strong>ökologischen</strong> und <strong>sozialen</strong>
     Ziele des Unternehmens ab.
-  </p>`;
+  </h3>`;
 
   // Leitbild-Kasten
   html += `<div style="border:1px solid #ccc; border-left:5px solid #1a237e; border-radius:6px; padding:20px 24px; margin:16px 0; background:#fafafa; max-width:680px;">`;

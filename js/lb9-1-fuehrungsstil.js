@@ -322,14 +322,6 @@ function stilLabel(k) {
   return k === 'autoritativ' ? 'Autoritativer Führungsstil' : 'Kooperativer Führungsstil';
 }
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 function generiereAufgaben() {
   const anzahl = parseInt(document.getElementById('anzahl').value) || 4;
@@ -354,7 +346,7 @@ function generiereAufgaben() {
     };
   });
 
-  let aufgabenHTML = `<h2>Aufgaben</h2><p><strong>Arbeitsauftrag:</strong><br>Lies die Fallbeispiels. Entscheide jeweils, welchen Führungsstil die Führungskraft anwendet (autoritativ oder kooperativ) und begründe deine Antwort.</p>`;
+  let aufgabenHTML = `<h2>Aufgabe</h2><h3>Lies die Fallbeispiels. Entscheide jeweils, welchen Führungsstil die Führungskraft anwendet (autoritativ oder kooperativ) und begründe deine Antwort.</h3>`;
 
    letzteGenerierteAufgaben.forEach(({fall, sachverhalt}, idx) => {
     aufgabenHTML += `<div class="fs-aufgabe" data-stil="${fall.stil}" style="margin-bottom: 10px;font-size: 16px; line-height: 1.6; font-family: var(--font-mono); border: 0.5px solid #333; padding: 8px 12px;"><strong>Aufgabe ${idx+1}: ${fall.situation}</strong>

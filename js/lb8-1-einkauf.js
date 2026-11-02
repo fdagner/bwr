@@ -1,5 +1,4 @@
 // Globale Variable – wird von einkauf.js benötigt
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 
 // ── Vermischte Aufgaben ──────────────────────────────────────────────────
@@ -14,77 +13,11 @@ function getModus() {
 // ============================================================================
 
 // Funktion zum Abrufen der benutzerdefinierten Unternehmen aus dem Local Storage
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
 // Funktion zum Zusammenführen der benutzerdefinierten Unternehmen mit den Standard-YAML-Daten
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-
-  if (userCompanies.length > 0) {
-    // Füge Benutzerunternehmen zu yamlData hinzu
-    yamlData = [...yamlData, ...userCompanies];
-
-    // Sortiere nach Branche
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-
-    console.log(`${userCompanies.length} Benutzerunternehmen hinzugefügt. Gesamt: ${yamlData.length} Unternehmen`);
-  }
-}
-
 
 // Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
 
-      // ← NEU: Benutzerdefinierte Unternehmen hinzufügen
-      mergeUserCompaniesIntoYamlData();
-
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
-
-// Versuch 2: Standard-Datei laden
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-
-      // ← NEU: Standard-Daten im LocalStorage speichern (falls noch nicht vorhanden)
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-
-      // ← NEU: Benutzerdefinierte Unternehmen hinzufügen
-      mergeUserCompaniesIntoYamlData();
-
-      console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-      // Optional: leere Liste oder Fehlermeldung im UI
-    });
-}
 
 // Start: zuerst localStorage, sonst Standard
 document.addEventListener('DOMContentLoaded', () => {
@@ -103,9 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (kaeuferSelect.value.trim()) fillBezeichnungsfelderEinkauf(kaeuferSelect.value.trim());
   });
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
 });
 
 
@@ -119,12 +49,16 @@ function fillBezeichnungsfelderEinkauf(unternehmensName) {
   const werkstoffe = eintrag?.unternehmen?.werkstoffe;
   if (!werkstoffe) return;
 
-  ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
+ ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
     const liste = werkstoffe[konto];
     if (!Array.isArray(liste)) return;
     [0, 1, 2].forEach(i => {
       const el = document.getElementById(`bezeichnung${konto}_${i}`);
-      if (el) el.value = liste[i] ?? "";
+      if (el) {
+        // Hier greifen wir nun auf .name zu, falls es ein Objekt ist, ansonsten direkt auf den Wert (Fallback)
+        const wert = liste[i];
+        el.value = (typeof wert === 'object' && wert !== null) ? (wert.name ?? "") : (wert ?? "");
+      }
     });
   });
 }
@@ -209,8 +143,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initialisiere den Zustand der "mitBezugskosten"-Checkbox beim Laden der Seite
   updateMitBezugskostenState();
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Felder befüllen → Aufgabe,
+  // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
+    autoSelectMyCompany();
+    const sel = document.getElementById('einkaufKaeufer');
+    if (sel?.value) fillBezeichnungsfelderEinkauf(sel.value.trim());
+    zeigeZufaelligenSatz();
   } else {
     // Falls yamlData noch nicht geladen → auf Event warten oder fetch auslösen
     document.addEventListener('yamlDataLoaded', () => {
@@ -219,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // ← NEU: Felder für vorausgewähltes Unternehmen befüllen
       const sel = document.getElementById('einkaufKaeufer');
       if (sel?.value) fillBezeichnungsfelderEinkauf(sel.value.trim());
+      zeigeZufaelligenSatz();
     }, { once: true });
   }
 });
@@ -226,10 +167,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // Auf 2 Dezimalstellen runden
-function roundToTwoDecimals(num) {
-  return Math.round(num * 100) / 100;
-}
-
 
 // Funktion für zufällige Zahlen Rabatt und Bezugskosten
 function getRandomIntegerWithSteps(min, max, step) {
@@ -256,14 +193,8 @@ function generateRandomNettoWert() {
 }
 
 // Währung nach DIN 5008
-function formatCurrency(value) {
-  return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
 
 // Auf 2 Dezimalstellen runden
-function roundToTwoDecimals(num) {
-  return Math.round(num * 100) / 100;
-}
 
 // Kontenplan
 const kontenWerkstoffe = {
@@ -345,7 +276,7 @@ function erstelleZufallssatz() {
   const array_Subjekt = [`${kunde} kauft`, `${kunde} bezieht `, `${kunde} kauft `, `${kunde} erwirbt `, `Ein Lieferant sendet an ${kunde} `];
   const array_Subjekt_2 = [`${kunde} kauft`, `${kunde} bezieht `, `${kunde} kauft `, `${kunde} erwirbt `, `Ein Lieferant sendet an ${kunde} `];
   const array_Subjekt_3 = [`Berechne den Einstandspreis: ${kunde} erhält ein Angebot für `, `Berechne den Einstandspreis, wenn ${kunde} ein Angebot erhält für `];
-  const array_Subjekt_4 = ['Berechne den Einstandspreis: Unser Lieferant sendet ein Angebot für den Bezug', 'Berechne den Einstandspreis eines Angebots für den Kauf '];
+  const array_Subjekt_4 = ['Berechne den Einstandspreis: Unser Lieferant sendet ein Angebot für den Bezug von', 'Berechne den Einstandspreis eines Angebots für den Kauf von'];
   const array_Subjekt_5 = [`${kunde} bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${random_Skonto} % Skonto`, `Die Rechnung wird mit ${random_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${random_Skonto} % Skonto per Bank`,];
   const array_Werkstoffe = Object.keys(kontenWerkstoffe);
   const array_Werkstoffe_2 = Object.keys(kontenWerkstoffe_2);
@@ -576,7 +507,7 @@ function fillCompanyDropdowns() {
   });
 
   const kaueferSelect = document.getElementById('einkaufKaeufer');
-  const liefererSelect = document.getElementById('einkaufLieferer');
+
 
   // Leeren + Option "Bitte auswählen" hinzufügen
   const clearAndAddPlaceholder = (select) => {
@@ -591,7 +522,7 @@ function fillCompanyDropdowns() {
   };
 
   clearAndAddPlaceholder(kaueferSelect);
-  clearAndAddPlaceholder(liefererSelect);
+
 
   // Alle Unternehmen einfügen
   sortedCompanies.forEach(company => {
@@ -613,7 +544,7 @@ function fillCompanyDropdowns() {
 
     // Kopie für beide Dropdowns
     if (kaueferSelect) kaueferSelect.appendChild(option.cloneNode(true));
-    if (liefererSelect) liefererSelect.appendChild(option);
+
   });
 
   console.log(`Dropdowns befüllt mit ${sortedCompanies.length} Unternehmen`);
@@ -624,29 +555,6 @@ function fillCompanyDropdowns() {
 // NEUE HILFSFUNKTIONEN FÜR BELEG-BUTTONS
 // ============================================================================
 
-function parseNumericValue(value) {
-  if (!value) return '0';
-  return value.toString().replace(/[€\s]/g, '').replace(/\./g, '').replace(',', '.');
-}
-
-function extractZahlungsart(kontoCode) {
-  const zahlungsarten = {
-    '2880 KA': 'bar',
-    '2800 BK': 'Banküberweisung',
-    '4400 VE': 'Rechnung'
-  };
-  return zahlungsarten[kontoCode] || 'Rechnung';
-}
-
-function extractWerkstoffName(kontoCode) {
-  const werkstoffe = {
-    '6000 AWR': 'Rohstoffe',
-    '6010 AWF': 'Fremdbauteile',
-    '6020 AWH': 'Hilfsstoffe',
-    '6030 AWB': 'Betriebsstoffe'
-  };
-  return werkstoffe[kontoCode] || 'Werkstoffe';
-}
 
 function getBelegtypAusKonto(konto_2) {
   if (konto_2 === "2880 KA") return "quittung";
@@ -665,41 +573,114 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
   if (isGutschrift || typ === 'gutschrift') params.set('vorlage', 'gutschrift2.svg');
 
   const kaeuferSelect = document.getElementById('einkaufKaeufer');
-  const liefererSelect = document.getElementById('einkaufLieferer');
+  const aktuellesUnternehmenName = kaeuferSelect?.value?.trim();
+  const werkstoffName = geschaeftsfallDaten.werkstoff;
+
   const now = new Date();
   const tag   = now.getDate().toString().padStart(2, '0');
   const monat = (now.getMonth() + 1).toString().padStart(2, '0');
 
+  // Hilfsfunktion: Findet den Unternehmensnamen in den YAML-Daten anhand der ID
+  function getUnternehmensNamePerId(id) {
+    if (id === undefined || id === null || typeof yamlData === 'undefined') return null;
+    const searchId = String(id).trim();
+    const eintrag = yamlData.find(e => String(e.unternehmen?.id).trim() === searchId);
+    return eintrag?.unternehmen?.name || null;
+  }
+
+  // 1. ID des Stammlieferanten automatisch über den Werkstoff ermitteln
+  let lieferantenId = null;
+
+  if (typeof yamlData !== 'undefined' && yamlData.length > 0 && aktuellesUnternehmenName && werkstoffName) {
+    const modellUnternehmenEintrag = yamlData.find(e => e.unternehmen?.name === aktuellesUnternehmenName);
+    
+    if (modellUnternehmenEintrag?.unternehmen?.werkstoffe) {
+      const werkstoffe = modellUnternehmenEintrag.unternehmen.werkstoffe;
+      for (const kontoKey of ["AWR", "AWF", "AWH", "AWB"]) {
+        const liste = werkstoffe[kontoKey];
+        if (Array.isArray(liste)) {
+          const gefunden = liste.find(w => {
+            if (typeof w === 'object' && w !== null) return w.name === werkstoffName;
+            return w === werkstoffName;
+          });
+          if (gefunden && typeof gefunden === 'object' && gefunden.stammlieferant) {
+            lieferantenId = gefunden.stammlieferant;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  // Fallback über alle Unternehmen
+  if (!lieferantenId && typeof yamlData !== 'undefined' && yamlData.length > 0 && werkstoffName) {
+    for (const eintrag of yamlData) {
+      const werkstoffe = eintrag.unternehmen?.werkstoffe;
+      if (!werkstoffe) continue;
+      for (const kontoKey of ["AWR", "AWF", "AWH", "AWB"]) {
+        const liste = werkstoffe[kontoKey];
+        if (Array.isArray(liste)) {
+          const gefunden = liste.find(w => (typeof w === 'object' && w !== null ? w.name === werkstoffName : w === werkstoffName));
+          if (gefunden && typeof gefunden === 'object' && gefunden.stammlieferant) {
+            lieferantenId = gefunden.stammlieferant;
+            break;
+          }
+        }
+      }
+      if (lieferantenId) break;
+    }
+  }
+
+  // 2. Firmennamen über die ermittelte ID holen
+  const lieferantenName = getUnternehmensNamePerId(lieferantenId);
+
+  // Generellen Kunden (Modellunternehmen) setzen
+  if (kaeuferSelect?.value) {
+    params.set('kunde', kaeuferSelect.value.trim());
+  }
+
   if (belegtyp === 'kontoauszug') {
     if (kaeuferSelect?.value) params.set('kontoinhaber', kaeuferSelect.value.trim());
-    params.set('vorgang1', geschaeftsfallDaten.werkstoff || 'Werkstoffe');
+    params.set('vorgang1', werkstoffName || 'Werkstoffe');
     if (geschaeftsfallDaten.bruttoBetrag) {
       params.set('wertstellung1', `-${parseNumericValue(geschaeftsfallDaten.bruttoBetrag)}`);
+    }
+    // Falls der Kontoauszug ebenfalls den Empfänger nutzt:
+    if (lieferantenName) {
+      params.set('empfaenger', lieferantenName);
     }
     params.set('tag', tag);
     params.set('monat', monat);
 
   } else if (belegtyp === 'quittung') {
-    if (kaeuferSelect?.value) params.set('kunde', kaeuferSelect.value.trim());
-    params.set('zweck', geschaeftsfallDaten.werkstoff || 'Werkstoffe');
+    params.set('zweck', werkstoffName || 'Werkstoffe');
     if (geschaeftsfallDaten.listeneinkaufspreis) {
       params.set('netto', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
     }
+    
+    // ---> HIER WIRD DER EMPFÄNGER FÜR DIE QUITTUNG GESETZT <---
+    if (lieferantenName) {
+      params.set('empfaenger', lieferantenName);
+    }
+
     params.set('ust', '19');
     params.set('tag', tag);
     params.set('monat', monat);
 
   } else {
-    // rechnung, angebot, gutschrift
+    // rechnung, angebot, gutschrift (nutzen weiterhin 'lieferer')
     if (geschaeftsfallDaten.listeneinkaufspreis)
       params.set('einzelpreis1', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
     if (geschaeftsfallDaten.rabattSatz) params.set('rabatt', geschaeftsfallDaten.rabattSatz);
     if (geschaeftsfallDaten.bezugskostenWert)
       params.set('bezugskosten', parseNumericValue(geschaeftsfallDaten.bezugskostenWert));
     if (geschaeftsfallDaten.skontoSatz) params.set('skonto', geschaeftsfallDaten.skontoSatz);
-    if (geschaeftsfallDaten.werkstoff) params.set('artikel1', geschaeftsfallDaten.werkstoff);
-    if (kaeuferSelect?.value) params.set('kunde', kaeuferSelect.value.trim());
-    if (liefererSelect?.value) params.set('lieferer', liefererSelect.value.trim());
+    if (werkstoffName) params.set('artikel1', werkstoffName);
+
+    if (lieferantenName) {
+      params.set('lieferer', lieferantenName);
+    }
+
     params.set('menge1', '1');
     params.set('einheit1', 'PAL');
     params.set('umsatzsteuer', '19');
@@ -709,7 +690,6 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
 
   return `belege.html?${params.toString()}`;
 }
-
 function erstelleGeschaeftsfallButton(nummer, daten, isGutschrift = false) {
   const url = erzeugeURLFuerGeschaeftsfall(daten, isGutschrift ? 'gutschrift' : 'rechnung', isGutschrift);
 
@@ -1470,17 +1450,10 @@ function toggleKiPromptVorschau() {
 }
 
 
-// WICHTIG: Warte bis die Seite vollständig geladen ist
+// Prompt-Text in Vorschau einfügen (Aufgaben werden event-basiert gestartet)
 document.addEventListener('DOMContentLoaded', function () {
-  // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
-  setTimeout(function () {
-    autoSelectMyCompany();
-    zeigeZufaelligenSatz()
-  }, 500);
-
-  // Prompt-Text in Vorschau einfügen
   const vorschauEl = document.getElementById('kiPromptVorschau');
-if (vorschauEl) {
-  vorschauEl.textContent = erstelleKiPromptText();
-}
+  if (vorschauEl) {
+    vorschauEl.textContent = erstelleKiPromptText();
+  }
 });

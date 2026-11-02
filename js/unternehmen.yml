@@ -23,21 +23,91 @@
     akzent: "#7db9f5"
     werkstoffe:
       AWR:
-        - "Aluminiumrohre"
-        - "Stahlrahmenprofile"
-        - "Carbonfasergewebe"
+        - name: "Aluminiumrohre"
+          stammlieferant: "7"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Stahlrahmenprofile"
+          stammlieferant: "104"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Carbonfasergewebe"
+          stammlieferant: "64"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Schaltwerke"
-        - "Bremssättel"
-        - "Tretlager"
+        - name: "Schaltwerke"
+          stammlieferant: "43"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Bremssättel"
+          stammlieferant: "43"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Tretlager"
+          stammlieferant: "43"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Schrauben"
-        - "Kabelhüllen"
-        - "Klebstoffe"
+        - name: "Schrauben"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
+        - name: "Kabelhüllen"
+          stammlieferant: "67"
+          einheit: "Krt."
+          preis_min: 2
+          preis_max: 30
+        - name: "Klebstoffe"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Kettenöle"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Kettenöle"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Citybikes"
+          preis_min: 450
+          preis_max: 1200
+          einheit: "Stück"
+        - name: "Trekkingräder"
+          preis_min: 700
+          preis_max: 1800
+          einheit: "Stück"
+        - name: "Mountainbikes"
+          preis_min: 900
+          preis_max: 3500
+          einheit: "Stück"
+        - name: "Rennräder"
+          preis_min: 1200
+          preis_max: 5000
+          einheit: "Stück"
+        - name: "E-Bikes"
+          preis_min: 1800
+          preis_max: 6500
+          einheit: "Stück"
 
 - unternehmen:
     id: "2"
@@ -61,6 +131,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Max Merlin"
     akzent: "#ff5500"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Acryllacke"
+          preis_min: 8
+          preis_max: 35
+          einheit: l
+        - name: "Klarlacke"
+          preis_min: 12
+          preis_max: 45
+          einheit: l
+        - name: "Holzlasuren"
+          preis_min: 10
+          preis_max: 40
+          einheit: l
+        - name: "Rostschutzgrundierungen"
+          preis_min: 9
+          preis_max: 40
+          einheit: l
+        - name: "Wandfarben weiß"
+          preis_min: 25
+          preis_max: 90
+          einheit: Eimer
 
 - unternehmen:
     id: "3"
@@ -84,6 +176,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Markus Schatt"
     akzent: "#9e9fa0"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Stahlbleche"
+          preis_min: 20
+          preis_max: 80
+          einheit: m²
+        - name: "Aluminiumprofile"
+          preis_min: 8
+          preis_max: 45
+          einheit: m
+        - name: "Kupferrohre"
+          preis_min: 6
+          preis_max: 30
+          einheit: m
+        - name: "Edelstahlrohre"
+          preis_min: 15
+          preis_max: 70
+          einheit: m
+        - name: "Messingstangen"
+          preis_min: 12
+          preis_max: 55
+          einheit: m
 
 - unternehmen:
     id: "4"
@@ -109,21 +223,91 @@
     akzent: "#fcd54b"
     werkstoffe:
       AWR:
-        - "Eichenholzplatten"
-        - "Fichtenholzbretter"
-        - "Sperrholzplatten"
+        - name: "Eichenholzplatten"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 25
+          preis_max: 50
+        - name: "Fichtenholzbretter"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
+        - name: "Sperrholzplatten"
+          stammlieferant: "19"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Metallbeschläge"
-        - "Schubladenführungen"
-        - "Scharniere"
+        - name: "Metallbeschläge"
+          stammlieferant: "3"
+          einheit: "Krt."
+          preis_min: 20
+          preis_max: 200
+        - name: "Schubladenführungen"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Scharniere"
+          stammlieferant: "3"
+          einheit: "Krt."
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Holzleime"
-        - "Schrauben"
-        - "Dübel"
+        - name: "Holzleime"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Schrauben"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
+        - name: "Dübel"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Maschinenöle"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Maschinenöle"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Esstische aus Massivholz"
+          preis_min: 600
+          preis_max: 2800
+          einheit: "Stück"
+        - name: "Sideboards"
+          preis_min: 450
+          preis_max: 2200
+          einheit: "Stück"
+        - name: "Kleiderschränke"
+          preis_min: 800
+          preis_max: 3500
+          einheit: "Stück"
+        - name: "Schreibtische"
+          preis_min: 350
+          preis_max: 1600
+          einheit: "Stück"
+        - name: "Regale"
+          preis_min: 150
+          preis_max: 900
+          einheit: "Stück"
 
 - unternehmen:
     id: "5"
@@ -146,6 +330,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Nicole Mustermann"
     akzent: "#557c3b"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Fichtenrundhölzer"
+          preis_min: 60
+          preis_max: 110
+          einheit: m²
+        - name: "Eichenstammhölzer"
+          preis_min: 150
+          preis_max: 450
+          einheit: m²
+        - name: "Kiefernschnitthölzer"
+          preis_min: 180
+          preis_max: 320
+          einheit: m²
+        - name: "Buchenbrennhölzer"
+          preis_min: 70
+          preis_max: 130
+          einheit: Rm
+        - name: "Holzhackschnitzel"
+          preis_min: 20
+          preis_max: 55
+          einheit: m²
 
 - unternehmen:
     id: "6"
@@ -191,6 +397,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Maria Eisemann"
     akzent: "#D3D3D3"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Stahlträger"
+          preis_min: 40
+          preis_max: 150
+          einheit: m
+        - name: "Stahlrohre"
+          preis_min: 12
+          preis_max: 60
+          einheit: m
+        - name: "Aluminiumbleche"
+          preis_min: 15
+          preis_max: 70
+          einheit: m²
+        - name: "Edelstahlbleche"
+          preis_min: 45
+          preis_max: 160
+          einheit: m²
+        - name: "Kupferbleche"
+          preis_min: 60
+          preis_max: 180
+          einheit: m²
 
 - unternehmen:
     id: "8"
@@ -214,6 +442,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Tobias Kasch"
     akzent: "#4747d7"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Baumwollstoffe"
+          preis_min: 4
+          preis_max: 18
+          einheit: m
+        - name: "Leinenstoffe"
+          preis_min: 9
+          preis_max: 30
+          einheit: m
+        - name: "Seidenstoffe"
+          preis_min: 25
+          preis_max: 90
+          einheit: m
+        - name: "Jeansstoffe"
+          preis_min: 6
+          preis_max: 20
+          einheit: m
+        - name: "Wollstoffe"
+          preis_min: 15
+          preis_max: 55
+          einheit: m
 
 - unternehmen:
     id: "9"
@@ -238,6 +488,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Katharina Blass"
     akzent: "#8f4e99"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Fassadenfarben"
+          preis_min: 45
+          preis_max: 130
+          einheit: Eimer
+        - name: "Buntlacke"
+          preis_min: 10
+          preis_max: 38
+          einheit: l
+        - name: "Lasurfarben"
+          preis_min: 12
+          preis_max: 40
+          einheit: l
+        - name: "Abtönfarben"
+          preis_min: 4
+          preis_max: 18
+          einheit: l
+        - name: "Acrylfarben-Sets"
+          preis_min: 15
+          preis_max: 60
+          einheit: Set
 
 - unternehmen:
     id: "10"
@@ -262,6 +534,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Karl Schlächter"
     akzent: "#f4a460"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Fichtenholzbretter"
+          preis_min: 180
+          preis_max: 320
+          einheit: m³
+        - name: "Lärchenholzbretter"
+          preis_min: 350
+          preis_max: 700
+          einheit: m³
+        - name: "Douglasienbalken"
+          preis_min: 220
+          preis_max: 420
+          einheit: m³
+        - name: "Eichenparkette"
+          preis_min: 25
+          preis_max: 85
+          einheit: m²
+        - name: "Holzpellets"
+          preis_min: 220
+          preis_max: 400
+          einheit: t
 
 - unternehmen:
     id: "11"
@@ -286,6 +580,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Karolina Messner"
     akzent: "#2d5016"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Fichtenstammhölzer"
+          preis_min: 70
+          preis_max: 120
+          einheit: m³
+        - name: "Buchenstammhölzer"
+          preis_min: 80
+          preis_max: 160
+          einheit: m³
+        - name: "Weißtannenhölzer"
+          preis_min: 90
+          preis_max: 170
+          einheit: m³
+        - name: "Brennhölzer"
+          preis_min: 60
+          preis_max: 110
+          einheit: Rm
+        - name: "Holzhackschnitzel"
+          preis_min: 20
+          preis_max: 50
+          einheit: m³
 
 - unternehmen:
     id: "12"
@@ -358,6 +674,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Aleya Mintal"
     akzent: "#31b218"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Düngemittel"
+          preis_min: 250
+          preis_max: 550
+          einheit: t
+        - name: "Kunststoffgranulate"
+          preis_min: 800
+          preis_max: 1600
+          einheit: t
+        - name: "Epoxidharze"
+          preis_min: 8
+          preis_max: 35
+          einheit: kg
+        - name: "Industriereiniger"
+          preis_min: 3
+          preis_max: 15
+          einheit: l
+        - name: "Isopropanole"
+          preis_min: 2
+          preis_max: 9
+          einheit: l
 
 - unternehmen:
     id: "15"
@@ -406,6 +744,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Thorsten Fiedler"
     akzent: "#666666"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Zemente"
+          preis_min: 80
+          preis_max: 140
+          einheit: t
+        - name: "Kiese"
+          preis_min: 15
+          preis_max: 35
+          einheit: t
+        - name: "Betonstähle"
+          preis_min: 700
+          preis_max: 1100
+          einheit: t
+        - name: "Porenbetonsteine"
+          preis_min: 80
+          preis_max: 160
+          einheit: m³
+        - name: "Bauhölzer"
+          preis_min: 350
+          preis_max: 550
+          einheit: m³
 
 - unternehmen:
     id: "17"
@@ -456,21 +816,91 @@
     akzent: "#FFD700"
     werkstoffe:
       AWR:
-        - "Solarzellenwafer"
-        - "Aluminiumrahmenprofile"
-        - "Verbundfolien"
+        - name: "Solarzellenwafer"
+          stammlieferant: "67"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Aluminiumrahmenprofile"
+          stammlieferant: "7"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Verbundfolien"
+          stammlieferant: "20"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Wechselrichter"
-        - "Anschlussdosen"
-        - "Kabelstecker"
+        - name: "Wechselrichter"
+          stammlieferant: "67"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Anschlussdosen"
+          stammlieferant: "13"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Kabelstecker"
+          stammlieferant: "13"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Laminierfolien"
-        - "Dichtmassen"
-        - "Isolierbänder"
+        - name: "Laminierfolien"
+          stammlieferant: "20"
+          einheit: "Krt."
+          preis_min: 2
+          preis_max: 30
+        - name: "Dichtmassen"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Isolierbänder"
+          stammlieferant: "20"
+          einheit: "Krt."
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Druckluftmengen"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Druckluftmengen"
+          stammlieferant: "53"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Photovoltaikmodule"
+          preis_min: 120
+          preis_max: 350
+          einheit: "Stück"
+        - name: "Solarstromspeicher"
+          preis_min: 2500
+          preis_max: 12000
+          einheit: "Stück"
+        - name: "Solar-Carports"
+          preis_min: 8000
+          preis_max: 22000
+          einheit: "Stück"
+        - name: "Balkonkraftwerke"
+          preis_min: 400
+          preis_max: 1200
+          einheit: "Stück"
+        - name: "PV-Komplettanlagen"
+          preis_min: 6000
+          preis_max: 25000
+          einheit: "Stück"
 
 - unternehmen:
     id: "19"
@@ -495,6 +925,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Hans Holzmeister"
     akzent: "#9f7f01"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Fichtenschnitthölzer"
+          preis_min: 200
+          preis_max: 380
+          einheit: m³
+        - name: "Kiefernschnitthölzer"
+          preis_min: 180
+          preis_max: 340
+          einheit: m³
+        - name: "Eichenschnitthölzer"
+          preis_min: 600
+          preis_max: 1100
+          einheit: m³
+        - name: "Hobeldielen"
+          preis_min: 12
+          preis_max: 40
+          einheit: m²
+        - name: "Leimholzplatten"
+          preis_min: 40
+          preis_max: 110
+          einheit: m²
 
 - unternehmen:
     id: "20"
@@ -519,6 +971,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Sophie Kunstmann"
     akzent: "#008080"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Recyclinggranulate"
+          preis_min: 600
+          preis_max: 1400
+          einheit: t
+        - name: "PET-Platten"
+          preis_min: 15
+          preis_max: 60
+          einheit: m²
+        - name: "Acrylglasplatten"
+          preis_min: 40
+          preis_max: 150
+          einheit: m²
+        - name: "PVC-Rohre"
+          preis_min: 4
+          preis_max: 22
+          einheit: m
+        - name: "Kunststofffolien"
+          preis_min: 20
+          preis_max: 80
+          einheit: Rolle
 
 - unternehmen:
     id: "21"
@@ -545,21 +1019,91 @@
     akzent: "#1E90FF"
     werkstoffe:
       AWR:
-        - "Holzkerne"
-        - "Carbonfaserlagen"
-        - "Glasfasergewebe"
+        - name: "Holzkerne"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
+        - name: "Carbonfaserlagen"
+          stammlieferant: "64"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Glasfasergewebe"
+          stammlieferant: "83"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Skibindungen"
-        - "Stahlkanten"
-        - "Dämpfungselemente"
+        - name: "Skibindungen"
+          stammlieferant: "43"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Stahlkanten"
+          stammlieferant: "104"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Dämpfungselemente"
+          stammlieferant: "66"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Epoxidharze"
-        - "Schleifpapiere"
-        - "Klebstoffe"
+        - name: "Epoxidharze"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Schleifpapiere"
+          stammlieferant: "61"
+          einheit: "Krt."
+          preis_min: 2
+          preis_max: 30
+        - name: "Klebstoffe"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Druckluftmengen"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Druckluftmengen"
+          stammlieferant: "53"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Alpinskier"
+          preis_min: 250
+          preis_max: 1100
+          einheit: "Stück"
+        - name: "Tourenskier"
+          preis_min: 350
+          preis_max: 1300
+          einheit: "Stück"
+        - name: "Langlaufskier"
+          preis_min: 150
+          preis_max: 550
+          einheit: "Stück"
+        - name: "Snowboards"
+          preis_min: 220
+          preis_max: 850
+          einheit: "Stück"
+        - name: "Kinderskier"
+          preis_min: 100
+          preis_max: 350
+          einheit: "Stück"
 
 - unternehmen:
     id: "22"
@@ -584,6 +1128,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Emma Grün"
     akzent: "#44aa00"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Holzpellets"
+          preis_min: 220
+          preis_max: 400
+          einheit: t
+        - name: "Holzbriketts"
+          preis_min: 250
+          preis_max: 480
+          einheit: t
+        - name: "Holzhackschnitzel"
+          preis_min: 20
+          preis_max: 50
+          einheit: m³
+        - name: "Pelletöfen"
+          preis_min: 1500
+          preis_max: 4500
+          einheit: "Stück"
+        - name: "Pelletsilos"
+          preis_min: 900
+          preis_max: 2200
+          einheit: "Stück"
 
 - unternehmen:
     id: "23"
@@ -634,21 +1200,91 @@
     akzent: "#9932CC"
     werkstoffe:
       AWR:
-        - "Fichtenholzdecken"
-        - "Ahornholzböden"
-        - "Ebenholzgriffbretter"
+        - name: "Fichtenholzdecken"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
+        - name: "Ahornholzböden"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
+        - name: "Ebenholzgriffbretter"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Mechaniken"
-        - "Saitensets"
-        - "Stege"
+        - name: "Mechaniken"
+          stammlieferant: "13"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Saitensets"
+          stammlieferant: "43"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Stege"
+          stammlieferant: "10"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Holzleime"
-        - "Schellacklösungen"
-        - "Schleifpapiere"
+        - name: "Holzleime"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Schellacklösungen"
+          stammlieferant: "9"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Schleifpapiere"
+          stammlieferant: "61"
+          einheit: "Krt."
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Maschinenöle"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Maschinenöle"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Konzertgitarren"
+          preis_min: 500
+          preis_max: 3500
+          einheit: "Stück"
+        - name: "E-Gitarren"
+          preis_min: 300
+          preis_max: 2500
+          einheit: "Stück"
+        - name: "Akustikgitarren"
+          preis_min: 250
+          preis_max: 1800
+          einheit: "Stück"
+        - name: "Geigen"
+          preis_min: 400
+          preis_max: 4000
+          einheit: "Stück"
+        - name: "Ukulelen"
+          preis_min: 50
+          preis_max: 350
+          einheit: "Stück"
 
 - unternehmen:
     id: "25"
@@ -697,6 +1333,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Emma Eberhirte"
     akzent: "#fbd245"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Heizöle"
+          preis_min: 80
+          preis_max: 130
+          einheit: 100 l
+        - name: "Dieselkraftstoffe"
+          preis_min: 140
+          preis_max: 190
+          einheit: 100 l
+        - name: "Flüssiggase"
+          preis_min: 700
+          preis_max: 1100
+          einheit: t
+        - name: "Holzpellets"
+          preis_min: 220
+          preis_max: 400
+          einheit: t
+        - name: "Motorenöle"
+          preis_min: 5
+          preis_max: 18
+          einheit: l
 
 - unternehmen:
     id: "27"
@@ -842,7 +1500,6 @@
     inhaber: "Dr. jur. Werner Weidner"
     akzent: "#800000"
 
-
 - unternehmen:
     id: "33"
     branche: "Logistik"
@@ -892,21 +1549,91 @@
     akzent: "#f5f5f5"
     werkstoffe:
       AWR:
-        - "Eichenholz"
-        - "Buchenholzplatten"
-        - "Furnierstämmen"
+        - name: "Eichenholz"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
+        - name: "Buchenholzplatten"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
+        - name: "Furnierstämmen"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Scharniere"
-        - "Schubladenführungen"
-        - "Türgriffe"
+        - name: "Scharniere"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Schubladenführungen"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Türgriffe"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Holzleime"
-        - "Schrauben"
-        - "Dübel"
+        - name: "Holzleime"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Schrauben"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
+        - name: "Dübel"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Maschinenöle"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Maschinenöle"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Einbauküchen nach Maß"
+          preis_min: 6000
+          preis_max: 25000
+          einheit: "Stück"
+        - name: "Massivholztische"
+          preis_min: 700
+          preis_max: 3200
+          einheit: "Stück"
+        - name: "Schlafzimmerschränke nach Maß"
+          preis_min: 1500
+          preis_max: 6500
+          einheit: "Stück"
+        - name: "Holzhaustüren"
+          preis_min: 1200
+          preis_max: 4500
+          einheit: "Stück"
+        - name: "Bücherregale nach Maß"
+          preis_min: 400
+          preis_max: 2200
+          einheit: "Stück"
 
 - unternehmen:
     id: "35"
@@ -933,21 +1660,91 @@
     akzent: "#b7d5ac"
     werkstoffe:
       AWR:
-        - "Funktionsstoffe"
-        - "Membranlaminatgewebe"
-        - "Fleecematerialien"
+        - name: "Funktionsstoffe"
+          stammlieferant: "45"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Membranlaminatgewebe"
+          stammlieferant: "47"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Fleecematerialien"
+          stammlieferant: "45"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Reißverschlüsse"
-        - "Druckknöpfe"
-        - "Klettverschlüsse"
+        - name: "Reißverschlüsse"
+          stammlieferant: "47"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Druckknöpfe"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Klettverschlüsse"
+          stammlieferant: "47"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Nähgarne"
-        - "Thermobänder"
-        - "Klebebänder"
+        - name: "Nähgarne"
+          stammlieferant: "47"
+          einheit: "m"
+          preis_min: 2
+          preis_max: 30
+        - name: "Thermobänder"
+          stammlieferant: "83"
+          einheit: "Krt."
+          preis_min: 2
+          preis_max: 30
+        - name: "Klebebänder"
+          stammlieferant: "83"
+          einheit: "Krt."
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Dampfmengen"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Dampfmengen"
+          stammlieferant: "53"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Outdoorjacken"
+          preis_min: 90
+          preis_max: 450
+          einheit: "Stück"
+        - name: "Wanderhosen"
+          preis_min: 50
+          preis_max: 220
+          einheit: "Stück"
+        - name: "Funktionsshirts"
+          preis_min: 25
+          preis_max: 100
+          einheit: "Stück"
+        - name: "Regenhosen"
+          preis_min: 40
+          preis_max: 180
+          einheit: "Stück"
+        - name: "Fleecejacken"
+          preis_min: 45
+          preis_max: 200
+          einheit: "Stück"
 
 - unternehmen:
     id: "36"
@@ -974,21 +1771,91 @@
     akzent: "#f5f5f5"
     werkstoffe:
       AWR:
-        - "Naturkautschuke"
-        - "Synthetikkautschuke"
-        - "Kunstlederbahnen"
+        - name: "Naturkautschuke"
+          stammlieferant: "20"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Synthetikkautschuke"
+          stammlieferant: "20"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Kunstlederbahnen"
+          stammlieferant: "38"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Ventile"
-        - "Bladder-Innenblasen"
-        - "Nylongewebe"
+        - name: "Ventile"
+          stammlieferant: "13"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Bladder-Innenblasen"
+          stammlieferant: "20"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Nylongewebe"
+          stammlieferant: "56"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Klebstoffe"
-        - "Nähgarne"
-        - "Vulkanisierungsmittel"
+        - name: "Klebstoffe"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Nähgarne"
+          stammlieferant: "47"
+          einheit: "m"
+          preis_min: 2
+          preis_max: 30
+        - name: "Vulkanisierungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Druckluftmengen"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Druckluftmengen"
+          stammlieferant: "53"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Fußbälle"
+          preis_min: 20
+          preis_max: 150
+          einheit: "Stück"
+        - name: "Basketbälle"
+          preis_min: 20
+          preis_max: 120
+          einheit: "Stück"
+        - name: "Volleybälle"
+          preis_min: 15
+          preis_max: 90
+          einheit: "Stück"
+        - name: "Handbälle"
+          preis_min: 20
+          preis_max: 100
+          einheit: "Stück"
+        - name: "Trainingsball-Sets"
+          preis_min: 60
+          preis_max: 250
+          einheit: "Stück"
 
 - unternehmen:
     id: "37"
@@ -1015,30 +1882,6 @@
     akzent: "#000000"
 
 - unternehmen:
-    id: "370"
-    branche: "Handwerk"
-    name: "Schlotfegerin Kehrer"
-    motto: "Schornsteinfegermeisterin"
-    bank: "Hausbank"
-    rechtsform: "e. Kfr."
-    logo: "media/pic/kleeblatt.svg"
-    adresse:
-      strasse: "Neue Straße 124"
-      plz: "91710"
-      ort: "Gunzenhausen"
-      land: "Deutschland"
-    kontakt:
-      telefon: "09831 1333560"
-      email: "info@lisa-kehrer.de"
-      internet: "lisa-kehrer.de"
-    ust_id: "DE983452231"
-    steuernummer: "181/106/11653"
-    iban: "DE89300000445300013034"
-    bic: "GENODEF1NGH"
-    inhaber: "Lisa Kehrer"
-    akzent: "#f4f8f4"
-
-- unternehmen:
     id: "38"
     branche: "Modellunternehmen"
     name: "Sprezzatura Lederkunst"
@@ -1063,21 +1906,91 @@
     akzent: "#6b14b8"
     werkstoffe:
       AWR:
-        - "Rindsleder"
-        - "Ziegenleder"
-        - "Kunstleder"
+        - name: "Rindsleder"
+          stammlieferant: "46"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Ziegenleder"
+          stammlieferant: "46"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Kunstleder"
+          stammlieferant: "20"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Reißverschlüsse"
-        - "Schnallen"
-        - "Karabinerhaken"
+        - name: "Reißverschlüsse"
+          stammlieferant: "47"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Schnallen"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Karabinerhaken"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Lederklebstoffe"
-        - "Nähgarne"
-        - "Kantenlacke"
+        - name: "Lederklebstoffe"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Nähgarne"
+          stammlieferant: "47"
+          einheit: "m"
+          preis_min: 2
+          preis_max: 30
+        - name: "Kantenlacke"
+          stammlieferant: "9"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Maschinenöle"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Maschinenöle"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Ledertaschen"
+          preis_min: 180
+          preis_max: 1200
+          einheit: "Stück"
+        - name: "Aktentaschen aus Leder"
+          preis_min: 250
+          preis_max: 1500
+          einheit: "Stück"
+        - name: "Ledergürtel"
+          preis_min: 45
+          preis_max: 180
+          einheit: "Stück"
+        - name: "Ledergeldbörsen"
+          preis_min: 60
+          preis_max: 300
+          einheit: "Stück"
+        - name: "Reisetaschen aus Leder"
+          preis_min: 300
+          preis_max: 1800
+          einheit: "Stück"
 
 - unternehmen:
     id: "39"
@@ -1198,6 +2111,28 @@
     bic: "COERDBERXXX"
     inhaber: "Bertram Radler"
     akzent: "#7bc7e3"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Aluminium-Fahrradrahmen"
+          preis_min: 80
+          preis_max: 450
+          einheit: "Stück"
+        - name: "Laufradsätze"
+          preis_min: 60
+          preis_max: 380
+          einheit: "Stück"
+        - name: "Schaltwerke"
+          preis_min: 15
+          preis_max: 120
+          einheit: "Stück"
+        - name: "Fahrradsättel"
+          preis_min: 15
+          preis_max: 110
+          einheit: "Stück"
+        - name: "Fahrradketten"
+          preis_min: 6
+          preis_max: 35
+          einheit: "Stück"
 
 - unternehmen:
     id: "44"
@@ -1246,6 +2181,28 @@
     bic: "GDFBADNBGXXX"
     inhaber: "Lisa Hammer"
     akzent: "#004fba"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Baumwollstoffe"
+          preis_min: 4
+          preis_max: 18
+          einheit: m
+        - name: "Fleecestoffe"
+          preis_min: 6
+          preis_max: 22
+          einheit: m
+        - name: "Polsterstoffe"
+          preis_min: 12
+          preis_max: 45
+          einheit: m
+        - name: "Vorhangstoffe"
+          preis_min: 8
+          preis_max: 35
+          einheit: m
+        - name: "Funktionsstoffe"
+          preis_min: 15
+          preis_max: 60
+          einheit: m
 
 - unternehmen:
     id: "46"
@@ -1294,6 +2251,28 @@
     bic: "NMMTADFUEXXX"
     inhaber: "Ilkay Sahin"
     akzent: "purple"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Jerseystoffe"
+          preis_min: 5
+          preis_max: 20
+          einheit: m
+        - name: "Webstoffe"
+          preis_min: 6
+          preis_max: 24
+          einheit: m
+        - name: "Strickstoffe"
+          preis_min: 8
+          preis_max: 30
+          einheit: m
+        - name: "Nähgarne"
+          preis_min: 8
+          preis_max: 30
+          einheit: kg
+        - name: "Stoffballen"
+          preis_min: 60
+          preis_max: 240
+          einheit: Ballen
 
 - unternehmen:
     id: "48"
@@ -1340,7 +2319,7 @@
     bic: "SPARKDEFFXXX"
     inhaber: "Anna Schmitz"
     akzent: "#FFFFFF"
-  
+
 - unternehmen:
     id: "50"
     branche: "Recht und Ordnung"
@@ -1358,7 +2337,6 @@
       email: "kontakt@rechtsschutz.de"
       internet: "rechtsschutz-gbr.de"
     ust_id: "DE456789012"
-    
     steuernummer: "55/666/77777"
     iban: "DE89370400440532013005"
     bic: "DEUTDEFFXXX"
@@ -1502,6 +2480,28 @@
     bic: "DEUTDEFFXXX"
     inhaber: "Petra Schneider"
     akzent: "#bd2019"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Baumwollgarne"
+          preis_min: 9
+          preis_max: 28
+          einheit: kg
+        - name: "Wollgarne"
+          preis_min: 14
+          preis_max: 50
+          einheit: kg
+        - name: "Polyestergewebe"
+          preis_min: 3
+          preis_max: 14
+          einheit: m
+        - name: "Viskosestoffe"
+          preis_min: 5
+          preis_max: 19
+          einheit: m
+        - name: "Nylongewebe"
+          preis_min: 6
+          preis_max: 24
+          einheit: m
 
 - unternehmen:
     id: "57"
@@ -1691,6 +2691,28 @@
     bic: "GENODNBGS1XXX"
     inhaber: "Lisa Kühne"
     akzent: "#333333"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Carbonplatten"
+          preis_min: 40
+          preis_max: 120
+          einheit: m²
+        - name: "Carbonrohre"
+          preis_min: 25
+          preis_max: 80
+          einheit: m
+        - name: "Carbonprofile"
+          preis_min: 30
+          preis_max: 95
+          einheit: m
+        - name: "Carbongewebe"
+          preis_min: 15
+          preis_max: 60
+          einheit: m²
+        - name: "Carbon-Prepregs"
+          preis_min: 60
+          preis_max: 180
+          einheit: m²
 
 - unternehmen:
     id: "65"
@@ -1739,6 +2761,28 @@
     bic: "GENODNBGA1XXX"
     inhaber: "Achmed Dincer"
     akzent: "#fbcf3c"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Dieselkraftstoffe"
+          preis_min: 140
+          preis_max: 190
+          einheit: 100 l
+        - name: "Superbenzin E10"
+          preis_min: 150
+          preis_max: 200
+          einheit: 100 l
+        - name: "Motorenöle"
+          preis_min: 8
+          preis_max: 30
+          einheit: l
+        - name: "AdBlue"
+          preis_min: 15
+          preis_max: 40
+          einheit: Kanister
+        - name: "Frostschutzmittel"
+          preis_min: 4
+          preis_max: 14
+          einheit: l
 
 - unternehmen:
     id: "67"
@@ -1763,6 +2807,28 @@
     bic: "GENODNBGS1XXX"
     inhaber: "Carmen Lohmeier"
     akzent: "#ff851f"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Lithium-Akkus"
+          preis_min: 25
+          preis_max: 180
+          einheit: "Stück"
+        - name: "Leiterplatten"
+          preis_min: 4
+          preis_max: 40
+          einheit: "Stück"
+        - name: "Netzteile"
+          preis_min: 10
+          preis_max: 60
+          einheit: "Stück"
+        - name: "Sensormodule"
+          preis_min: 8
+          preis_max: 45
+          einheit: "Stück"
+        - name: "Kupferkabel"
+          preis_min: 2
+          preis_max: 12
+          einheit: m
 
 - unternehmen:
     id: "68"
@@ -1789,21 +2855,91 @@
     akzent: "#4b4534"
     werkstoffe:
       AWR:
-        - "Eichenholz"
-        - "Fichtenholz"
-        - "Buchenholz"
+        - name: "Eichenholz"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
+        - name: "Fichtenholz"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
+        - name: "Buchenholz"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Aluminiumtischbeinen"
-        - "Schließzylindern"
-        - "Scharnieren"
+        - name: "Aluminiumtischbeine"
+          stammlieferant: "7"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Schließzylindern"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Scharnieren"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Schrauben"
-        - "Holzleim"
-        - "Dübel"
+        - name: "Schrauben"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
+        - name: "Holzleim"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Dübel"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Schmierstoff"
-        - "Reinigungsmittel"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Schmierstoff"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Reinigungsmittel"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Schultische"
+          preis_min: 200
+          preis_max: 550
+          einheit: "Stück"
+        - name: "Stühle"
+          preis_min: 180
+          preis_max: 500
+          einheit: "Stück"
+        - name: "Büroregale"
+          preis_min: 450
+          preis_max: 2400
+          einheit: "Stück"
+        - name: "Schreibtische"
+          preis_min: 850
+          preis_max: 4300
+          einheit: "Stück"
+        - name: "Büroschränke"
+          preis_min: 2300
+          preis_max: 5500
+          einheit: "Stück"
 
 - unternehmen:
     id: "69"
@@ -2045,7 +3181,6 @@
     inhaber: "Bgm. Martin Kessler"
     akzent: "#8c5fd1"
 
-
 - unternehmen:
     id: "79"
     branche: "Reisen"
@@ -2165,6 +3300,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Markus Stahl"
     akzent: "#888888"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Stahlplatten"
+          preis_min: 90
+          preis_max: 280
+          einheit: m²
+        - name: "Aluminiumplatten"
+          preis_min: 70
+          preis_max: 240
+          einheit: m²
+        - name: "Kunststoffplatten"
+          preis_min: 25
+          preis_max: 95
+          einheit: m²
+        - name: "Glasfasermatten"
+          preis_min: 4
+          preis_max: 18
+          einheit: m²
+        - name: "Gummidichtungen"
+          preis_min: 2
+          preis_max: 10
+          einheit: m
 
 - unternehmen:
     id: "84"
@@ -2189,6 +3346,28 @@
     bic: "COBADEFFXXX"
     inhaber: "Clara Holzmann"
     akzent: "#87e57e "
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Recyclingkunststoffe"
+          preis_min: 500
+          preis_max: 1100
+          einheit: t
+        - name: "Biokunststoff-Granulate"
+          preis_min: 1500
+          preis_max: 3200
+          einheit: t
+        - name: "Altpapierballen"
+          preis_min: 80
+          preis_max: 180
+          einheit: t
+        - name: "Holzfaserdämmplatten"
+          preis_min: 12
+          preis_max: 45
+          einheit: m²
+        - name: "Hanfdämmstoffe"
+          preis_min: 8
+          preis_max: 28
+          einheit: m²
 
 - unternehmen:
     id: "85"
@@ -2669,6 +3848,28 @@
     bic: "BYLADEM1SWU"
     inhaber: "Harald Eisen"
     akzent: "#464646"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Baustähle"
+          preis_min: 600
+          preis_max: 1000
+          einheit: t
+        - name: "Stahlträger"
+          preis_min: 40
+          preis_max: 150
+          einheit: m
+        - name: "Stahlrohre"
+          preis_min: 12
+          preis_max: 60
+          einheit: m
+        - name: "Edelstahlbleche"
+          preis_min: 45
+          preis_max: 160
+          einheit: m²
+        - name: "Betonstahlmatten"
+          preis_min: 8
+          preis_max: 30
+          einheit: m²
 
 - unternehmen:
     id: "105"
@@ -2693,6 +3894,28 @@
     bic: "GENODEF1R01"
     inhaber: "Sandra Polymer"
     akzent: "#4747d7"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "PE-Rohre"
+          preis_min: 3
+          preis_max: 18
+          einheit: m
+        - name: "PVC-Platten"
+          preis_min: 20
+          preis_max: 85
+          einheit: m²
+        - name: "Polycarbonatplatten"
+          preis_min: 30
+          preis_max: 110
+          einheit: m²
+        - name: "Acrylglasplatten"
+          preis_min: 40
+          preis_max: 150
+          einheit: m²
+        - name: "Kunststoffgranulate"
+          preis_min: 800
+          preis_max: 1600
+          einheit: t
 
 - unternehmen:
     id: "106"
@@ -2717,6 +3940,28 @@
     bic: "BYLADEM1ING"
     inhaber: "Franz Kaiser"
     akzent: "#8686bf"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Zemente"
+          preis_min: 80
+          preis_max: 140
+          einheit: t
+        - name: "Sande"
+          preis_min: 12
+          preis_max: 30
+          einheit: t
+        - name: "Transportbetone"
+          preis_min: 90
+          preis_max: 140
+          einheit: m³
+        - name: "Gipskartonplatten"
+          preis_min: 4
+          preis_max: 12
+          einheit: m²
+        - name: "Dämmplatten"
+          preis_min: 8
+          preis_max: 35
+          einheit: m²
 
 - unternehmen:
     id: "107"
@@ -2813,6 +4058,28 @@
     bic: "GENODZO1M02"
     inhaber: "Anna Witzling"
     akzent: "#00000"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Motorenöle"
+          preis_min: 5
+          preis_max: 18
+          einheit: l
+        - name: "Getriebeöle"
+          preis_min: 6
+          preis_max: 22
+          einheit: l
+        - name: "Hydrauliköle"
+          preis_min: 4
+          preis_max: 14
+          einheit: l
+        - name: "Schmierfette"
+          preis_min: 4
+          preis_max: 16
+          einheit: kg
+        - name: "Kettensprays"
+          preis_min: 5
+          preis_max: 14
+          einheit: l
 
 - unternehmen:
     id: "111"
@@ -2839,18 +4106,68 @@
     akzent: "#FFD700"
     werkstoffe:
       AWR:
-        - "Aluminiumbleche"
-        - "Carbongewebe"
+        - name: "Aluminiumbleche"
+          stammlieferant: "104"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Carbongewebe"
+          stammlieferant: "64"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Elektromotoren"
-        - "Lithium-Akkus"
+        - name: "Elektromotoren"
+          stammlieferant: "13"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Lithium-Akkus"
+          stammlieferant: "23"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Schrauben"
-        - "Lacke"
+        - name: "Schrauben"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
+        - name: "Lacke"
+          stammlieferant: "9"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Schmierstoffe"
-        - "Strom"
-        - "Gas"
+        - name: "Schmierstoffe"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Gas"
+          stammlieferant: "26"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Elektro-Scooter"
+          preis_min: 450
+          preis_max: 1800
+          einheit: "Stück"
+        - name: "E-Scooter"
+          preis_min: 700
+          preis_max: 2200
+          einheit: "Stück"
+        - name: "Cargo-E-Scooter"
+          preis_min: 1800
+          preis_max: 5500
+          einheit: "Stück"
 
 - unternehmen:
     id: "112"
@@ -2877,18 +4194,60 @@
     akzent: "#c4e4ff"
     werkstoffe:
       AWR:
-        - "Metallrohre"
-        - "Holzfaserplatten"
+        - name: "Metallrohre"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Holzfaserplatten"
+          stammlieferant: "10"
+          einheit: "m²"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Räder"
-        - "Tischtennisnetze"
+        - name: "Räder"
+          stammlieferant: "7"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Tischtennisnetze"
+          stammlieferant: "47"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Klebstoff"
-        - "Schrauben"
+        - name: "Klebstoff"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
+        - name: "Schrauben"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Benzin"
-        - "Schmieröl"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Benzin"
+          stammlieferant: "26"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Schmieröl"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Tischtennisplatten"
+          preis_min: 50
+          preis_max: 2500
+          einheit: "Stück"
 
 - unternehmen:
     id: "113"
@@ -2939,17 +4298,71 @@
     akzent: "#e2afa3"
     werkstoffe:
       AWR:
-        - "Nylongewebe"
-        - "Polyestergewebe"
+        - name: "Nylongewebe"
+          stammlieferant: "56"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Polyestergewebe"
+          stammlieferant: "56"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Reißverschlüsse"
-        - "Powerbanks"
+        - name: "Reißverschlüsse"
+          stammlieferant: "47"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Powerbanks"
+          stammlieferant: "67"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Fäden"
-        - "Textilkleber"
+        - name: "Fäden"
+          stammlieferant: "47"
+          einheit: "m"
+          preis_min: 2
+          preis_max: 30
+        - name: "Textilkleber"
+          stammlieferant: "14"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Schmierstoffe"
-        - "Strom"
+        - name: "Schmierstoffe"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Wanderrucksäcke"
+          preis_min: 60
+          preis_max: 280
+          einheit: "Stück"
+        - name: "Trekkingrucksäcke"
+          preis_min: 120
+          preis_max: 450
+          einheit: "Stück"
+        - name: "Reiserucksäcke"
+          preis_min: 70
+          preis_max: 320
+          einheit: "Stück"
+        - name: "Daypacks"
+          preis_min: 25
+          preis_max: 130
+          einheit: "Stück"
+        - name: "Fotorucksäcke"
+          preis_min: 80
+          preis_max: 350
+          einheit: "Stück"
 
 - unternehmen:
     id: "115"
@@ -2974,6 +4387,28 @@
     bic: "SBNKDEF1SON"
     inhaber: "Dr. Elias Wolf"
     akzent: "#ff2e2e"
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Polyethylen-Granulate"
+          preis_min: 900
+          preis_max: 1700
+          einheit: t
+        - name: "Polypropylen-Granulate"
+          preis_min: 950
+          preis_max: 1800
+          einheit: t
+        - name: "PVC-Granulate"
+          preis_min: 800
+          preis_max: 1500
+          einheit: t
+        - name: "Polyamid-Granulate"
+          preis_min: 2200
+          preis_max: 4200
+          einheit: t
+        - name: "Kunststofffolien"
+          preis_min: 25
+          preis_max: 90
+          einheit: Rolle
 
 - unternehmen:
     id: "116"
@@ -3000,19 +4435,105 @@
     akzent: "#87CEFA"
     werkstoffe:
       AWR:
-        - "Stahlblech"
-        - "Aluminium"
+        - name: "Stahlblech"
+          stammlieferant: "104"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
+        - name: "Aluminium"
+          stammlieferant: "7"
+          einheit: "kg"
+          preis_min: 5
+          preis_max: 50
       AWF:
-        - "Räder"
-        - "Achsen"
-        - "Elektromotoren"
+        - name: "Räder"
+          stammlieferant: "7"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Achsen"
+          stammlieferant: "3"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
+        - name: "Elektromotoren"
+          stammlieferant: "13"
+          einheit: "Stück"
+          preis_min: 20
+          preis_max: 200
       AWH:
-        - "Schrauben"
-        - "Farben"
+        - name: "Schrauben"
+          stammlieferant: "3"
+          einheit: "kg"
+          preis_min: 2
+          preis_max: 30
+        - name: "Farben"
+          stammlieferant: "9"
+          einheit: "Liter"
+          preis_min: 2
+          preis_max: 30
       AWB:
-        - "Strom"
-        - "Gas"
-        - "Öl"
+        - name: "Strom"
+          stammlieferant: "22"
+          einheit: "MWh"
+          preis_min: 300
+          preis_max: 500
+        - name: "Gas"
+          stammlieferant: "26"
+          einheit: "l"
+          preis_min: 1
+          preis_max: 15
+        - name: "Öl"
+          stammlieferant: "110"
+          einheit: "Liter"
+          preis_min: 1
+          preis_max: 15
+    fertigerzeugnisse:
+      hauptwerk:
+        - name: "Elektrogabelstapler"
+          preis_min: 8000
+          preis_max: 40000
+          einheit: "Stück"
+        - name: "Elektro-Hochhubwagen"
+          preis_min: 2500
+          preis_max: 8000
+          einheit: "Stück"
+        - name: "Elektro-Schubmaststapler"
+          preis_min: 12000
+          preis_max: 35000
+          einheit: "Stück"
+        - name: "Elektro-Niederhubwagen"
+          preis_min: 1500
+          preis_max: 5000
+          einheit: "Stück"
+        - name: "Elektro-Seitenstapler"
+          preis_min: 15000
+          preis_max: 40000
+          einheit: "Stück"
+
+- unternehmen:
+    id: "370"
+    branche: "Handwerk"
+    name: "Schlotfegerin Kehrer"
+    motto: "Schornsteinfegermeisterin"
+    bank: "Hausbank"
+    rechtsform: "e. Kfr."
+    logo: "media/pic/kleeblatt.svg"
+    adresse:
+      strasse: "Neue Straße 124"
+      plz: "91710"
+      ort: "Gunzenhausen"
+      land: "Deutschland"
+    kontakt:
+      telefon: "09831 1333560"
+      email: "info@lisa-kehrer.de"
+      internet: "lisa-kehrer.de"
+    ust_id: "DE983452231"
+    steuernummer: "181/106/11653"
+    iban: "DE89300000445300013034"
+    bic: "GENODEF1NGH"
+    inhaber: "Lisa Kehrer"
+    akzent: "#f4f8f4"
 
 - unternehmen:
     id: "501"

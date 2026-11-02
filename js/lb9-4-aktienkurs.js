@@ -1,7 +1,6 @@
 // ============================================================================
 // YAML-Daten und Unternehmen laden
 // ============================================================================
-let yamlData = [];
 
 let kunde = '<i>[Modellunternehmen]</i>';
 
@@ -10,87 +9,26 @@ let kunde = '<i>[Modellunternehmen]</i>';
 // ============================================================================
 
 // Funktion zum Abrufen der benutzerdefinierten Unternehmen aus dem Local Storage
-function getUserCompanies() {
-    const stored = localStorage.getItem('userCompanies');
-    return stored ? JSON.parse(stored) : [];
-}
 
 // Funktion zum Zusammenführen der benutzerdefinierten Unternehmen mit den Standard-YAML-Daten
-function mergeUserCompaniesIntoYamlData() {
-    const userCompanies = getUserCompanies();
-
-    if (userCompanies.length > 0) {
-        // Füge Benutzerunternehmen zu yamlData hinzu
-        yamlData = [...yamlData, ...userCompanies];
-
-        // Sortiere nach Branche
-        yamlData.sort((a, b) => {
-            const brancheA = a.unternehmen?.branche || '';
-            const brancheB = b.unternehmen?.branche || '';
-            return brancheA.localeCompare(brancheB);
-        });
-
-        console.log(`${userCompanies.length} Benutzerunternehmen hinzugefügt. Gesamt: ${yamlData.length} Unternehmen`);
-    }
-}
-
 
 // Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
-function loadYamlFromLocalStorage() {
-    const saved = localStorage.getItem('uploadedYamlCompanyData');
-    if (saved) {
-        try {
-            yamlData = JSON.parse(saved);
-            console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
 
-            // ← NEU: Benutzerdefinierte Unternehmen hinzufügen
-            mergeUserCompaniesIntoYamlData();
-
-            document.dispatchEvent(new Event('yamlDataLoaded'));
-            return true;
-        } catch (err) {
-            console.warn("localStorage YAML kaputt:", err);
-        }
-    }
-    return false;
-}
-
-// Versuch 2: Standard-Datei laden
-// Versuch 2: Standard-Datei laden
-function loadDefaultYaml() {
-    fetch('js/unternehmen.yml')
-        .then(res => {
-            if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-            return res.text();
-        })
-        .then(yamlText => {
-            yamlData = jsyaml.load(yamlText) || [];
-
-            // ← NEU: Standard-Daten im LocalStorage speichern (falls noch nicht vorhanden)
-            if (!localStorage.getItem('standardYamlData')) {
-                localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-            }
-
-            // ← NEU: Benutzerdefinierte Unternehmen hinzufügen
-            mergeUserCompaniesIntoYamlData();
-
-            console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
-            document.dispatchEvent(new Event('yamlDataLoaded'));
-        })
-        .catch(err => {
-            console.error("Konnte unternehmen.yml nicht laden:", err);
-            // Optional: leere Liste oder Fehlermeldung im UI
-        });
-}
 
 
 
 async function loadYAML() {
+    // Bevorzugt die bereits geladenen Unternehmensdaten (inkl. benutzerdefinierte
+    // Unternehmen aus localStorage) verwenden – nur bei leerem Stand erneut fetchen
+    if (Array.isArray(yamlData) && yamlData.length > 0) {
+        return yamlData.map(item => item.unternehmen).filter(Boolean);
+    }
+
     try {
         const response = await fetch('js/unternehmen.yml');
         const yamlText = await response.text();
         const data = jsyaml.load(yamlText);
-        return data.map(item => item.unternehmen) || [];
+        return (data || []).map(item => item.unternehmen).filter(Boolean);
     } catch (error) {
         console.error('Fehler beim Laden der YAML-Datei:', error);
         return [];
@@ -182,6 +120,7 @@ async function populateDropdown() {
     if (agUnternehmen.length > 0) {
         dropdown.value = agUnternehmen[0].id;
         // Initial das Chart und Text erstellen
+        updateChartAndText();
 
     }
 }
@@ -430,9 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Währung nach DIN 5008
-function formatCurrency(value) {
-    return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-}
 
 function generateRandomStep() {
     const possibleValues = [-0.2, -0.1, -0.05, 0.05, 0.1, 0.2];
@@ -649,9 +585,15 @@ ${imgURI ? `<p><img src="${imgURI}" alt="Aktienkurs ${company.name}" style="max-
         }
     }
 
-    // Ausgabe im HTML
+    // Ausgabe im HTML – läuft der Editor schon, über JoditEditor.setContent schreiben,
+    // damit Editor-Wert und Quelle synchron bleiben (sonst wäre innerHTML nach dem
+    // ersten Adopt nur noch die ausgeblendete Alt-Kopie).
     const dynamicTextElement = document.getElementById("Container");
-    dynamicTextElement.innerHTML = text;
+    if (window.JoditEditor && dynamicTextElement._jodit) {
+        window.JoditEditor.setContent(dynamicTextElement, text);
+    } else {
+        dynamicTextElement.innerHTML = text;
+    }
 
     // Button-Column aktualisieren
     const buttonColumn = document.getElementById('aktien-button-column');
@@ -660,42 +602,17 @@ ${imgURI ? `<p><img src="${imgURI}" alt="Aktienkurs ${company.name}" style="max-
     } else {
         console.warn("aktien-button-column nicht gefunden");
     }
+
+    // Aufgabe steht komplett (Text + Diagramm-PNG + Lösung): Editor (Jodit) aktivieren.
+    // data-jodit-init erlaubt den Adopt auch für Container mit generierten Bildern
+    // (entspricht dem Muster aus lb8-2-bestellmenge).
+    if (window.JoditEditor && !dynamicTextElement._jodit) {
+        dynamicTextElement.setAttribute('data-jodit-init', '1');
+        try { window.JoditEditor.init(dynamicTextElement); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+    }
 }
 
 // Export-Funktionen
-
-function aktienHerunterladen() {
-    const aktienHTML = document.getElementById('Container').innerHTML;
-    const blob = new Blob([aktienHTML], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'aktien.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-function aktienKopiereInZwischenablage() {
-    const aktienHTML = document.getElementById('Container').innerHTML;
-    navigator.clipboard.writeText(aktienHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
-        .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
-}
-
-function aktienHerunterladenAlsPNG() {
-    const Container = document.getElementById('Container');
-
-    html2canvas(Container, optionshtml2canvas).then(canvas => {
-        const dataURL = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'aktien.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
-}
-
 let clipboardaktien = new ClipboardJS('#aktienOfficeButton');
 
 clipboardaktien.on('success', function (e) {
@@ -716,18 +633,25 @@ document.addEventListener('DOMContentLoaded', () => {
         yearInput.value = new Date().getFullYear();
     }
 
-    if (!loadYamlFromLocalStorage()) {
-        loadDefaultYaml();
-    }
-
-    // Warte auf yamlData, dann fülle Käufer-Dropdown
+    // Warte auf yamlData, dann fülle Käufer-Dropdown und wähle "Mein Unternehmen"
     if (yamlData && yamlData.length > 0) {
         fillKaeuferDropdown();
+        autoSelectMyCompany();
     } else {
-        document.addEventListener('yamlDataLoaded', fillKaeuferDropdown, { once: true });
+        document.addEventListener('yamlDataLoaded', () => {
+            fillKaeuferDropdown();
+            autoSelectMyCompany();
+        }, { once: true });
     }
 
-    populateDropdown();
+    // AG-Dropdown befüllen, sobald Unternehmensdaten bereit sind
+    if (yamlData && yamlData.length > 0) {
+        populateDropdown();
+    } else {
+        document.addEventListener('yamlDataLoaded', () => {
+            populateDropdown();
+        }, { once: true });
+    }
 });
 
 function autoSelectMyCompany() {
@@ -755,11 +679,75 @@ function autoSelectMyCompany() {
     });
 }
 
-// WICHTIG: Warte bis die Seite vollständig geladen ist
-document.addEventListener('DOMContentLoaded', function () {
-    // Warte kurz, damit meinunternehmen.js das Dropdown befüllen kann
-    setTimeout(function () {
-        autoSelectMyCompany();
-        updateChartAndText();
-    }, 500);
-});
+// (Auto-Select und Chart-Update erfolgen jetzt event-basiert: autoSelectMyCompany()
+// läuft im 'yamlDataLoaded'-Pfad, updateChartAndText() nach populateDropdown())
+
+
+async function aktienZurSammlung() {
+    const container = document.getElementById('Container');
+    if (!container) { alert('Keine Aufgabe vorhanden.'); return; }
+    // Bei aktivem Editor den Editor-Wert nehmen (container.innerHTML wäre nach dem
+    // Jodit-Adopt die ausgeblendete Ursprungs-Kopie).
+    const html = (window.JoditEditor && container._jodit)
+        ? window.JoditEditor.getHTML(container)
+        : container.innerHTML;
+    // DOM-basierte Trennung: loesung ueber class="loesung"
+    let aufgabeHtml = html;
+    let loesungHtml = '';
+    try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString('<div id="root">' + html + '</div>', 'text/html');
+        const root = doc.getElementById('root');
+        const loesungEl = root ? root.querySelector('.loesung') : null;
+        if (loesungEl) {
+            // aufgabe = alles vor dem loesung-element (outerHTML)
+            // Finde Position im Original-HTML
+            const loesungOuter = loesungEl.outerHTML;
+            const idx = html.indexOf(loesungOuter);
+            if (idx >= 0) {
+                aufgabeHtml = html.substring(0, idx);
+                loesungHtml = html.substring(idx);
+            } else {
+                // Fallback: suche nach dem Textinhalt des loesung elements
+                const txt = loesungEl.textContent.trim();
+                const pos = html.indexOf(txt);
+                if (pos >= 0) {
+                    const h2pos = html.lastIndexOf('<h2', pos);
+                    if (h2pos >= 0) {
+                        aufgabeHtml = html.substring(0, h2pos);
+                        loesungHtml = html.substring(h2pos);
+                    }
+                }
+            }
+        }
+    } catch (e) { console.warn('DOM-Parse fehlgeschlagen', e); }
+    // Fallback: Textsuche
+    if (!loesungHtml) {
+        const low = html.toLowerCase();
+        const pos = low.indexOf('lösung');
+        if (pos >= 0) {
+            const h2pos = html.lastIndexOf('<h2', pos);
+            if (h2pos >= 0) {
+                aufgabeHtml = html.substring(0, h2pos);
+                loesungHtml = html.substring(h2pos);
+            }
+        }
+    }
+    const res = await Collection.showCollectDialog({ defaultTitle: 'Aktienaufgabe', hasSolution: !!loesungHtml });
+    if (!res) return;
+    try {
+        await Collection.collectItem({
+            collectionId: res.collectionId,
+            type: 'grafik',
+            title: res.title,
+            content: aufgabeHtml,
+            thumbnail: '',
+            solutionContent: (res.includeSolution ? (loesungHtml || null) : null)
+        });
+        alert('Zur Sammlung hinzugefügt.');
+    } catch (e) {
+        if (e && e.message === 'MAX_ITEMS') alert('Sammlung voll (max. 100).');
+        else { console.error(e); alert('Fehler beim Hinzufügen.'); }
+    }
+}
+

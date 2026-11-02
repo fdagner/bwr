@@ -1,66 +1,12 @@
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 
 // ============================================================================
 // YAML-DATEN LADEN
 // ============================================================================
 
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-    console.log(`${userCompanies.length} Benutzerunternehmen hinzugefügt. Gesamt: ${yamlData.length} Unternehmen`);
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      console.log(`yamlData aus localStorage geladen (${yamlData.length} Unternehmen)`);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      
-      mergeUserCompaniesIntoYamlData();
-      console.log(`Standard yamlData geladen (${yamlData.length} Unternehmen)`);
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-    });
-}
 
 // ============================================================================
 // LINEARE ABSCHREIBUNG – DIAGRAMM-AUFGABEN GENERATOR
@@ -70,9 +16,6 @@ function loadDefaultYaml() {
 
 // ── Hilfsfunktionen ──────────────────────────────────────────────────────────
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 function formatEuro(val) {
   return val.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
@@ -719,34 +662,6 @@ function erstelleAnlagenkarteURL(anlage, ak, nd) {
 
   return `belege.html?${params.toString()}`;
 }
-
-function erstelleAfaBelegButtons(nummer, anlage, ak, nd) {
-  const rechnungURL     = erstelleRechnungURL(anlage, ak, nd);
-  const anlagenkarteURL = erstelleAnlagenkarteURL(anlage, ak, nd);
-
-  return `
-    <div style="margin: 12px 0;">
-      <button
-        class="geschaeftsfall-beleg-button"
-        onclick="window.open('${rechnungURL}', '_blank')"
-        title="Rechnung (Kauf) für Aufgabe ${nummer} erstellen"
-        style="width: 100%; padding: 10px 12px; font-size: 14px; margin-bottom: 8px; background:#1976D2; color:white; border:none; border-radius:6px;"
-      >
-        📄 ${nummer}. Rechnung (Kauf) erstellen
-      </button>
-      
-      <button
-        class="geschaeftsfall-beleg-button"
-        onclick="window.open('${anlagenkarteURL}', '_blank')"
-        title="Anlagenkarte für Aufgabe ${nummer} erstellen"
-        style="width: 100%; padding: 10px 12px; font-size: 14px; background:#388E3C; color:white; border:none; border-radius:6px;"
-      >
-        🗂️ ${nummer}. Anlagenkarte erstellen
-      </button>
-    </div>
-  `;
-}
-
 // ============================================================================
 // KI-ASSISTENT PROMPT
 // ============================================================================
@@ -919,19 +834,18 @@ const kundeSelect = document.getElementById('marketingKunde');
     console.log('Kunde geändert:', kunde);
   });
   
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-  
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
-  } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
-  }
-  setTimeout(function() {
     autoSelectMyCompany();
-  }, 250);
+    zeigeZufaelligeAbschreibungsAufgabe();
+  } else {
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligeAbschreibungsAufgabe();
+    }, { once: true });
+  }
+
   const vorschauEl = document.getElementById('kiPromptVorschau');
   if (vorschauEl) vorschauEl.textContent = KI_BASE_PROMPT.replace('###AUFGABEN###', '(Noch keine Aufgabe generiert.)');
-  setTimeout(zeigeZufaelligeAbschreibungsAufgabe, 300);
 });

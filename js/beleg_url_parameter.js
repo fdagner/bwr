@@ -120,14 +120,14 @@ const URL_PARAM_CONFIG = {
         vorlage: { elementId: 'svgDropdownKassenbon', type: 'select' },
         
         // Unternehmen
-        empfaenger: { elementId: 'datenKassenbon', type: 'select' },
+        iceer: { elementId: 'datenKassenbon', type: 'select' },
         kunde: { elementId: 'datenKassenbonKunde', type: 'select' }
     },
     
     // ========== EMAIL ==========
     email: {
-        betreff: { elementId: 'emailSubjectInput', type: 'input' },
-        text: { elementId: 'emailInputText', type: 'textarea' },
+        // Betreff/Text werden direkt in der editierbaren Mailvorschau geändert
+        // (Platzhaltertext kommt aus der Vorlage, "Zurücksetzen"-Button stellt ihn wieder her)
         
         // Vorlage
         vorlage: { elementId: 'svgDropdownEmail', type: 'select' },
@@ -252,6 +252,7 @@ const TAB_MAPPING = {
     'kassenbuch': 'kassenbon',
     'email': 'email',
     'mail': 'email',
+    'newspaper': 'newspaper',
     'zeitungsartikel': 'newspaper',
     'zeitung': 'newspaper',
     'artikel': 'newspaper',
@@ -288,45 +289,6 @@ const APPLY_FUNCTIONS = {
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-
-/**
- * Sicher ein Element per ID holen und setzen
- * Gibt false zurück wenn Element nicht existiert (statt Error zu werfen)
- */
-function safeSetElement(elementId, value, property = 'textContent') {
-    const element = document.getElementById(elementId);
-    if (!element) {
-        console.warn(`⚠️ Element nicht gefunden: ${elementId}`);
-        return false;
-    }
-    
-    try {
-        element[property] = value;
-        return true;
-    } catch (error) {
-        console.error(`✗ Fehler beim Setzen von ${elementId}:`, error);
-        return false;
-    }
-}
-
-/**
- * Prüft ob alle erforderlichen Elemente für einen Beleg existieren
- */
-function checkRequiredElements(elementIds) {
-    const missing = [];
-    for (const id of elementIds) {
-        if (!document.getElementById(id)) {
-            missing.push(id);
-        }
-    }
-    
-    if (missing.length > 0) {
-        console.warn(`⚠️ Fehlende Elemente:`, missing);
-        return false;
-    }
-    
-    return true;
-}
 
 // ============================================================================
 // HAUPTFUNKTIONEN
@@ -390,6 +352,31 @@ function loadURLParametersForBeleg(belegType, params) {
             setFieldValue(paramConfig.elementId, paramConfig.default, paramConfig.type);
         }
     }
+
+    // E-Mail: Betreff/Text aus URL wiederherstellen (contenteditable) –
+    // verzögert, weil die Vorlage erst später (belegeInitialisiert) gerendert wird.
+    if (belegType === 'email') {
+        window._pendingEmailParams = {
+            subject: params.has('betreff') ? params.get('betreff') : null,
+            body: params.has('text') ? params.get('text') : null
+        };
+    }
+
+    // Zeitungsartikel: Vorschau aktualisieren
+    if (belegType === 'newspaper') {
+        setTimeout(function () {
+            const colRange = document.getElementById('newspaperColumnRange');
+            const colVal = document.getElementById('newspaperColumnValue');
+            if (colRange && colVal) colVal.innerText = colRange.value;
+            const applyBtn = document.getElementById('newspaperApplyChangesButton');
+            if (applyBtn) applyBtn.click();
+            const nd = document.getElementById('newspaperDiv');
+            const nc = document.getElementById('newspaperContent');
+            const colorIn = document.getElementById('newspaperColorInput');
+            if (nd && colorIn) nd.style.backgroundColor = colorIn.value;
+            if (nc && colRange) nc.style.columnCount = colRange.value;
+        }, 300);
+    }
     
     console.log(`✓ ${setCount} Parameter für ${belegType} gesetzt`);
     return setCount > 0;
@@ -399,7 +386,7 @@ function loadURLParametersForBeleg(belegType, params) {
  * Öffnet den Tab basierend auf URL-Parameter
  */
 function openTabFromURL(tabName) {
-    const tabId = TAB_MAPPING[tabName];
+    const tabId = TAB_MAPPING[tabName] || tabName;
     if (!tabId) return false;
     
     // Finde den Tab-Button
@@ -554,7 +541,17 @@ function initializeURLParameters() {
     }
     
     console.log(`✓ Tab geöffnet: ${belegType}`);
-    
+
+    // E-Mail-Inhalte (Betreff/Text) sofort vormerken, damit sie nach dem
+    // Beleg-Aufbau (belegeInitialisiert) gesetzt werden können.
+    if (belegType === 'email') {
+        const p = new URLSearchParams(window.location.search);
+        window._pendingEmailParams = {
+            subject: p.has('betreff') ? p.get('betreff') : null,
+            body: p.has('text') ? p.get('text') : null
+        };
+    }
+
     // 3. Warte, bis Tab vollständig geladen ist
     setTimeout(() => {
         // 4. Lade Parameter für diesen Beleg
@@ -619,11 +616,40 @@ function initializeURLParameters() {
     });
 }
 
-// Timing anpassen
 document.addEventListener('DOMContentLoaded', () => {
     initializeURLParameters();           // zuerst!
-    
-    setTimeout(() => {
+
+    // Sobald die Unternehmensdaten geladen sind (belege.js feuert 'yamlDataLoaded',
+    // sobald updateAllDropdowns() die Dropdowns befüllt hat)
+    if (typeof yamlData !== 'undefined' && yamlData?.length > 0 &&
+        document.querySelector('select.meinUnternehmen')?.options.length > 0) {
         autoSelectMyCompanyOnlyIfNeeded();
-    }, 400);
+    } else {
+        document.addEventListener('yamlDataLoaded', () => {
+            autoSelectMyCompanyOnlyIfNeeded();
+        }, { once: true });
+    }
 });
+
+// Nach vollständigem Beleg-Aufbau (applySVG etc.) ausstehende E-Mail-Inhalte setzen
+document.addEventListener('belegeInitialisiert', function () {
+    const p = window._pendingEmailParams;
+    // E-Mail-Daten (Absendername etc.) nachladen
+    try { if (typeof loadEmailData === 'function') loadEmailData(); } catch (e) {}
+    try { if (typeof loadCompanyDataforEmail === 'function') loadCompanyDataforEmail(); } catch (e) {}
+    if (!p) return;
+    function applyEmailContent() {
+        if (p.subject) {
+            const el = document.getElementById('emailSubject');
+            if (el) el.textContent = p.subject;
+        }
+        if (p.body) {
+            const el = document.getElementById('emailTextMessage');
+            if (el) el.textContent = p.body;
+        }
+    }
+    applyEmailContent();
+    setTimeout(applyEmailContent, 300);
+    setTimeout(applyEmailContent, 1000);
+    setTimeout(function () { window._pendingEmailParams = null; }, 1100);
+}, { once: true });

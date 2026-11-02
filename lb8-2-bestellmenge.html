@@ -51,11 +51,16 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/menu.js"></script>
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/jodit.min.css">
+  <script src="js/menu.js?v=14"></script>
   <script src="js/html2canvas.min.js"></script>
   <script src="js/clipboard.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/jodit.min.js"></script>
+  <script src="js/joditeditor.js?v=67"></script>
+<script src="js/collection.js?v=26"></script>
   <script src="js/apexcharts.min.js"></script>
 </head>
 
@@ -124,18 +129,16 @@
         <div style="overflow-x:auto;">
         <div id="chart" style="width: 100%;min-width: 750px;"></div>
       </div>
-      <p style="text-align:center">Klicken Sie in die Legende, um Kurven ein- und auszublenden.</p>
+      <p style="text-align:center">Über das Diagramm-Menü lässt sich die Grafik als CSV, SVG oder PNG exportieren.</p>
       </div>
       <div id="Container" style="min-width: 700px" contenteditable="true"></div>  
 
     </div>
       <br>
-          <div w3-include-html="downloads.html"></div> 
     <br>
   
   </main>
   <script src="js/lb8-2-bestellmenge.js"></script>
-  <script src="js/download.js"></script>
   <div w3-include-html="footer.html"></div>
   <script>
     includeHTML();

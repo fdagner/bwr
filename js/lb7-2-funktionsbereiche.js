@@ -167,14 +167,6 @@ const aussagenDatenbank = [
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 // ============================================================================
 // HAUPTFUNKTION
@@ -191,7 +183,7 @@ function zeigeZufaelligeWahrFalsch() {
 
   // ── SVG Übersicht ─────────────────────────────────────────────────────────
   const svgHTML = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" style="width:100%;max-width:980px;display:block;margin-bottom:16px;font-family:Arial,sans-serif;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" style="width:100%;height: auto;max-width:980px;display:block;margin-bottom:16px;font-family:Arial,sans-serif;">
 
     <!-- Wandfläche -->
     <rect x="110" y="120" width="750" height="400" fill="#f0f4fa" stroke="none"/>
@@ -279,7 +271,7 @@ function zeigeZufaelligeWahrFalsch() {
   </svg>`;
 
   const svgHTMLLeer = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" style="width:100%;max-width:980px;display:block;margin-bottom:24px;font-family:Arial,sans-serif;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" style="width:100%;height: auto;max-width:980px;display:block;margin-bottom:24px;font-family:Arial,sans-serif;">
 
     <!-- Wandfläche -->
     <rect x="110" y="120" width="750" height="400" fill="#f5f5f5" stroke="none"/>

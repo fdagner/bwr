@@ -49,13 +49,6 @@ function moodleZahl(betrag) {
 }
 
 // Moodle SHORTANSWER-Cloze: akzeptiert "1.710,00 €" und "1.710,00"
-function clozeFeld(label, betrag) {
-  const mitEuro  = moodleZahl(betrag) + " €";
-  const ohneEuro = moodleZahl(betrag);
-  const cloze    = `{1:SHORTANSWER:=${mitEuro}~=${ohneEuro}}`;
-  return label ? `${label} ${cloze}` : cloze;
-}
-
 // Inline-Cloze-Syntax mit € als Pflichtantwort, ohne € als Alternative
 function clozeInline(betrag) {
   const mitEuro  = moodleZahl(betrag) + " €";
@@ -81,28 +74,40 @@ function genNettoOhneRabattVD() {
 // YAML
 // ============================================================================
 
+function existiertInCoreVD(unternehmen, coreData) {
+  const key = String(unternehmen?.unternehmen?.id ?? '') + '|' + String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+  const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
+  return (coreData || []).some(c => (String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase()) === key || String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name);
+}
+
 function ladeYamlVD() {
-  const saved =
-    localStorage.getItem("uploadedYamlCompanyData") ||
-    localStorage.getItem("standardYamlData");  // ← Tippfehler korrigiert
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);             // ← yamlDataVerkauf → yamlData
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event("yamlDataLoaded"));
-      return true;
-    } catch (e) { /* ignorieren */ }
-  }
-  fetch("js/unternehmen.yml")
+  fetch("js/unternehmen.yml?v=" + Date.now())
     .then((r) => (r.ok ? r.text() : Promise.reject()))
     .then((txt) => {
-      yamlData = jsyaml.load(txt) || [];        // ← yamlDataVerkauf → yamlData
+      const coreData = jsyaml.load(txt) || [];
+      try { localStorage.setItem("standardYamlData", JSON.stringify(coreData)); } catch (e) {}
+      const saved = localStorage.getItem("uploadedYamlCompanyData");
+      let zusaetzliche = [];
+      if (saved) {
+        try {
+          const uploaded = JSON.parse(saved);
+          zusaetzliche = uploaded.filter(u => !existiertInCoreVD(u, coreData));
+          if (zusaetzliche.length === 0) {
+            localStorage.removeItem("uploadedYamlCompanyData");
+          } else if (zusaetzliche.length !== uploaded.length) {
+            localStorage.setItem("uploadedYamlCompanyData", JSON.stringify(zusaetzliche));
+          }
+        } catch (e) { localStorage.removeItem("uploadedYamlCompanyData"); }
+      }
+      yamlData = [...coreData, ...zusaetzliche];
       mergeUserCompaniesIntoYamlData();
       document.dispatchEvent(new Event("yamlDataLoaded"));
     })
     .catch(() => {});
   return false;
 }
+
+
 
 function fuellDropdownVD() {
   const sel = document.getElementById("vdKunde");
@@ -419,7 +424,7 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
 
 <!-- ⑥ Lösungsblock -->
 <div style="max-width:700px;margin-top:10px;">
-  <div style="background:#f8f7f4;border:1px solid #ddd;border-radius:4px;padding:10px 14px;font-size:13px;line-height:1.9;color:#333;">
+  <div style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:10px 14px;font-size:13px;line-height:1.9;color:#333;">
     ${loesungHTML}
   </div>
 </div>`;

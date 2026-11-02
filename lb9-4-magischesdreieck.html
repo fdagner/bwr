@@ -51,11 +51,16 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/jodit.min.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/jodit.min.js"></script>
+  <script src="js/joditeditor.js?v=67"></script>
+<script src="js/collection.js?v=26"></script>
   <script src="js/clipboard.min.js"></script>
-  <script src="js/menu.js"></script>
+  <script src="js/menu.js?v=14"></script>
 </head>
 
 <body>
@@ -93,7 +98,6 @@
     <div class="output-wrapper">
       <div id="Container" style="min-width: 880px; flex: 1;" contenteditable="true"></div>
       <div id="button-column" style="width: 180px; flex-shrink: 0;"></div>
-      <div w3-include-html="downloads.html"></div>
 
       <h2>Schema</h2>
       <div id="svgContainer"></div>
@@ -150,7 +154,6 @@
 </main>
 
   <script src="js/lb9-4-magischesdreieck.js"></script>
-  <script src="js/download.js"></script>
   <script src="js/download_svg.js"></script>
   <script src="js/download_svg_leer.js"></script>
   <div w3-include-html="footer.html"></div>

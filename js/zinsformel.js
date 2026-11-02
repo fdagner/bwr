@@ -16,19 +16,7 @@ function zinsformelHerunterladen() {
       .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
   }
   
-  function zinsformelHerunterladenAlsPNG() {
-    const zinsformelContainer = document.getElementById('zinsformelContainer');
   
-    html2canvas(zinsformelContainer, optionshtml2canvas).then(canvas => {
-      const dataURL = canvas.toDataURL('image/png');
-      const a = document.createElement('a');
-      a.href = dataURL;
-      a.download = 'zinsformel.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
-  }
   
   function umstellen() {
     const variable = document.getElementById('variable').value;  // Die aktuell ausgewählte Variable aus dem Dropdown

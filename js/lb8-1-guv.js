@@ -6,12 +6,6 @@ let unternehmen = '<i>[Modellunternehmen]</i>';
 
 // (Die YAML-Ladefunktionen können wie zuvor bleiben – hier nur der relevante Teil)
 
-function formatBetrag(value) {
-  return value.toLocaleString('de-DE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
 
 // Zufällige Salden – angepasst für breitere Streuung
 function generateRandomSaldo(min, max) {
@@ -62,8 +56,8 @@ function zeigeZufaelligenAbschluss() {
   html += `<p>Übertrage die Salden in das GuV-Konto, schließ es ab und ermittle Art und Höhe des Unternehmenserfolgs.</p>`;
 
   // Leeres T-Konto
-  html += `<div style="width:100%;display:flex;flex-direction:row;flex-wrap:wrap;gap:12px">`;
-  html += `<table style="margin: 0 auto;border-collapse: collapse;width:650px;background-color:#fff"><tbody>`;
+  html += `<div style="width:100%">`;
+  html += `<table style="margin: 0 auto !important;border-collapse: collapse;table-layout:fixed;width:650px !important;max-width:100% !important;background-color:#fff"><tbody>`;
   html += `<tr><th style="width:25%;text-align:left">Soll</th><th style="text-align:center;" colspan="2">8020 GUV</th><th style="width:25%;text-align:right;">Haben</th></tr>`;
   for (let i = 0; i < 6; i++) {
     html += `<tr style="border-top: 2px solid #AAAAAA">`;
@@ -73,7 +67,7 @@ function zeigeZufaelligenAbschluss() {
     html += `<td style="border-top: 2px solid #AAAAAA;width:25%; text-align:right; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; max-width: 160px">&nbsp; </td>`;
     html += `</tr>`;
   }
-  html += `</tbody></table><br><div></div></div>`;
+  html += `</tbody></table></div>`;
 
   // ── LÖSUNG ────────────────────────────────────────────────────────────────
   html += '<h2 style="margin-top:2.5em" class="loesung">Lösung</h2>';
@@ -134,8 +128,8 @@ html += `
 
  // ── T-KONTO ───────────────────────────────────────────────────────────────
 html += `<strong style="margin-top:2em; display:block;">T-Konto 8020 GUV:</strong><br>`;
-html += `<div style="width:100%;display:flex;flex-direction:row;flex-wrap:wrap;gap:12px">`;
-html += `<table style="margin: 0 auto;border-collapse: collapse;width:650px;background-color:#fff"><tbody>`;
+html += `<div style="width:100%">`;
+html += `<table style="margin: 0 auto !important;border-collapse: collapse;table-layout:fixed;width:650px !important;max-width:100% !important;background-color:#fff"><tbody>`;
 html += `<tr><th style="width:25%;text-align:left">Soll</th><th style="text-align:center;" colspan="2">8020 GUV</th><th style="width:25%;text-align:right;">Haben</th></tr>`;
 
 // Zeile 1: AWR + UEFE
@@ -224,7 +218,7 @@ html += `
   </td>
 </tr>`;
 
-html += `</tbody></table><br><div></div></div>`;
+html += `</tbody></table></div>`;
 
   // Endergebnis
   html += `<p style="font-size:1.15em; margin-top:1.8em; font-weight:bold;">`;

@@ -51,12 +51,18 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/jodit.min.css">
   <script src="js/html2canvas.min.js"></script>
   <script src="js/kontenplan.js"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/jodit.min.js"></script>
+  <script src="js/joditeditor.js?v=67"></script>
+<script src="js/collection.js?v=26"></script>
+  <script src="js/company-loader.js"></script>
   <script src="js/clipboard.min.js"></script>
-  <script src="js/menu.js"></script>
+  <script src="js/menu.js?v=14"></script>
 </head>
 <main>
   <div w3-include-html="navigation.html"></div>
@@ -118,102 +124,109 @@
       ════════════════════════════════════════════════════════════ -->
       <hr class="av-section-hr">
       <h3 style="margin-bottom:10px;">⚖️ Angebotsvergleich – Einstellungen</h3>
-      <div class="flex-row" style="gap: 10px">
-        <div style="margin-bottom:12px;">
-          <label for="avWerkstoffTyp">Zu beschaffender Werkstoff:</label>
 
-          <select id="avWerkstoffTyp">
-            <option value="AWR">Rohstoffe (AWR)</option>
-            <option value="AWF">Fremdbauteile (AWF)</option>
-            <option value="AWH">Hilfsstoffe (AWH)</option>
-            <option value="AWB">Betriebsstoffe (AWB)</option>
-          </select>
-          <span id="avWerkstoffName"></span>
-        </div>
+      <div class="grid3">
+        <!-- Werkstoff & Einheit -->
+        <fieldset class="vorlage-blue" style="max-width: 350px">
+          <legend>Werkstoff &amp; Einheit</legend>
 
+          <div class="form-field">
+            <label for="avWerkstoffTyp">Zu beschaffender Werkstoff</label>
+            <select id="avWerkstoffTyp">
+              <option value="AWR">Rohstoffe (AWR)</option>
+              <option value="AWF">Fremdbauteile (AWF)</option>
+              <option value="AWH">Hilfsstoffe (AWH)</option>
+              <option value="AWB">Betriebsstoffe (AWB)</option>
+            </select>
+            <span id="avWerkstoffName"></span>
+          </div>
 
-        <!-- Mengeneinheit – gilt für beide Angebote -->
-        <div>
-          <label for="avEinheit">Mengeneinheit</label>
-          <select id="avEinheit">
-            <option value="Einh.">Einh. – Einheiten</option>
-            <option value="Stk.">Stk. – Stück</option>
-            <option value="Pal.">Pal. – Paletten</option>
-            <option value="kg">kg – Kilogramm</option>
-            <option value="t">t – Tonnen</option>
-            <option value="l">l – Liter</option>
-            <option value="m">m – Meter</option>
-            <option value="m²">m² – Quadratmeter</option>
-            <option value="m³">m³ – Kubikmeter</option>
-            <option value="Pkg.">Pkg. – Pakete</option>
-            <option value="Rol.">Rol. – Rollen</option>
-            <option value="Krt.">Krt. – Kartons</option>
-            <option value="lfm.">lfm. – laufende Meter</option>
-          </select>
-        </div>
-      </div>
-      <div style="margin-bottom:12px;">
-        <label class="av-keine-konten-label">
-          <input type="checkbox" id="avOhneKontonummern">
-          Buchungssatz ohne Kontonummern (Jahrgangsst. 7)
-        </label>
-      </div>
+          <div class="form-field">
+            <label for="avEinheit">Mengeneinheit</label>
+            <select id="avEinheit">
+              <option value="Einh.">Einh. – Einheiten</option>
+              <option value="Stk.">Stk. – Stück</option>
+              <option value="Pal.">Pal. – Paletten</option>
+              <option value="kg">kg – Kilogramm</option>
+              <option value="t">t – Tonnen</option>
+              <option value="l">l – Liter</option>
+              <option value="m">m – Meter</option>
+              <option value="m²">m² – Quadratmeter</option>
+              <option value="m³">m³ – Kubikmeter</option>
+              <option value="Pkg.">Pkg. – Pakete</option>
+              <option value="Rol.">Rol. – Rollen</option>
+              <option value="Krt.">Krt. – Kartons</option>
+              <option value="lfm.">lfm. – laufende Meter</option>
+            </select>
+          </div>
 
+          <div class="form-field checkbox-field">
+            <label class="av-keine-konten-label">
+              <input type="checkbox" id="avOhneKontonummern">
+              Buchungssatz ohne Kontonummern (Jahrgangsst. 7)
+            </label>
+          </div>
+        </fieldset>
 
+        <!-- ── Angebot A ─────────────────────────────────────────── -->
+        <fieldset class="vorlage-green" style="max-width: 350px">
+          <legend>Angebot A – vorgegeben</legend>
 
-      <!-- ── Angebot A ─────────────────────────────────────────── -->
-      <h3>
-        Angebot A – vorgegeben
-      </h3>
+          <div class="form-field">
+            <label for="avMengeA">Menge</label>
+            <input type="number" id="avMengeA" min="1" max="10000" step="1" placeholder="zufällig">
+          </div>
 
-      <div class="flex-row">
-        <div>
-          <label for="avMengeA">Menge A</label>
-          <input type="number" id="avMengeA" min="1" max="10000" step="1" placeholder="zufällig">
-        </div>
-        <div>
-          <label for="avEinzelpreisA">Einzelpreis A (€)</label>
-          <input type="number" id="avEinzelpreisA" min="0.01" max="50000" step="0.01" placeholder="zufällig">
-        </div>
-        <div>
-          <label for="avRabattA">Rabatt A (%)</label>
-          <input type="number" id="avRabattA" min="0" max="40" step="1" placeholder="zufällig">
-        </div>
-        <div>
-          <label for="avSkontoA">Skonto A (%)</label>
-          <input type="number" id="avSkontoA" min="0" max="5" step="0.5" placeholder="zufällig">
-        </div>
-        <div>
-          <label for="avBzkA">Bezugskosten A (€)</label>
-          <input type="number" id="avBzkA" min="25" max="500" step="5" placeholder="zufällig">
-        </div>
-      </div>
-      <!-- ── Angebot B ─────────────────────────────────────────── -->
-      <h3>
-        Angebot B – Schüler berechnet
-      </h3>
+          <div class="form-field">
+            <label for="avEinzelpreisA">Einzelpreis (€)</label>
+            <input type="number" id="avEinzelpreisA" min="0.01" max="50000" step="0.01" placeholder="zufällig">
+          </div>
 
-      <div class="flex-row">
-        <div>
-          <label for="avMengeB">Menge B</label>
-          <input type="number" id="avMengeB" min="1" max="10000" step="1" placeholder="zufällig">
-        </div>
-        <div>
-          <label for="avEinzelpreisB">Einzelpreis B (€)</label>
-          <input type="number" id="avEinzelpreisB" min="0.01" max="50000" step="0.01" placeholder="zufällig">
-        </div>
-        <div>
-          <label for="avRabattB">Rabatt B (%)</label>
-          <input type="number" id="avRabattB" min="0" max="40" step="1" placeholder="zufällig">
-        </div>
-        <div>
-          <label for="avSkontoB">Skonto B (%)</label>
-          <input type="number" id="avSkontoB" min="0" max="5" step="0.5" placeholder="zufällig">
-        </div>
-        <div>
-          <label for="avBzkB">Bezugskosten B (€)</label>
-          <input type="number" id="avBzkB" min="25" max="500" step="5" placeholder="zufällig">
-        </div>
+          <div class="form-field">
+            <label for="avRabattA">Rabatt (%)</label>
+            <input type="number" id="avRabattA" min="0" max="40" step="1" placeholder="zufällig">
+          </div>
+
+          <div class="form-field">
+            <label for="avSkontoA">Skonto (%)</label>
+            <input type="number" id="avSkontoA" min="0" max="5" step="0.5" placeholder="zufällig">
+          </div>
+
+          <div class="form-field">
+            <label for="avBzkA">Bezugskosten (€)</label>
+            <input type="number" id="avBzkA" min="25" max="500" step="5" placeholder="zufällig">
+          </div>
+        </fieldset>
+
+        <!-- ── Angebot B ─────────────────────────────────────────── -->
+        <fieldset class="vorlage-red" style="max-width: 350px">
+          <legend>Angebot B – Schüler berechnet</legend>
+
+          <div class="form-field">
+            <label for="avMengeB">Menge</label>
+            <input type="number" id="avMengeB" min="1" max="10000" step="1" placeholder="zufällig">
+          </div>
+
+          <div class="form-field">
+            <label for="avEinzelpreisB">Einzelpreis (€)</label>
+            <input type="number" id="avEinzelpreisB" min="0.01" max="50000" step="0.01" placeholder="zufällig">
+          </div>
+
+          <div class="form-field">
+            <label for="avRabattB">Rabatt (%)</label>
+            <input type="number" id="avRabattB" min="0" max="40" step="1" placeholder="zufällig">
+          </div>
+
+          <div class="form-field">
+            <label for="avSkontoB">Skonto (%)</label>
+            <input type="number" id="avSkontoB" min="0" max="5" step="0.5" placeholder="zufällig">
+          </div>
+
+          <div class="form-field">
+            <label for="avBzkB">Bezugskosten (€)</label>
+            <input type="number" id="avBzkB" min="25" max="500" step="5" placeholder="zufällig">
+          </div>
+        </fieldset>
       </div>
       <br>
       <button onclick="zeigeZufaelligenSatz()">Aufgabe erstellen</button>
@@ -224,7 +237,6 @@
     </div>
 
 
-    <div w3-include-html="downloads.html"></div>
 
     <!-- KI-ASSISTENT PROMPT -->
     <div class="ki-assistent-box">
@@ -269,7 +281,6 @@
   </div>
 </main>
 <script src="js/lb8-2-angebotsvergleich.js"></script>
-<script src="js/download.js"></script>
 <div w3-include-html="footer.html"></div>
 <script>includeHTML();</script>
 </body>

@@ -57,9 +57,10 @@
   }
   </script>
 
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/menu.js"></script>
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <script src="js/menu.js?v=14"></script>
   <script src="js/js-yaml.min.js"></script>
+  <script src="js/utils.js?v=11"></script>
 </head>
 
 <body>
@@ -276,156 +277,207 @@
         <div class="box" style="margin-top: 15px;">
           <form id="addCompanyForm" onsubmit="handleAddCompanyForm(event)">
             <div class="grid3">
-              <div>
-                <h4>Basisdaten</h4>
-                <label for="newCompanyName">Firmenname: *</label><br>
-                <input type="text" id="newCompanyName" required placeholder="z.B. ABC-Bikes" maxlength="50"
-                  title="Keine Sonderzeichen wie <, >, {, } erlaubt"><br>
 
-                <label for="newCompanyRechtsform">Rechtsformzusatz: *</label><br>
-                <select id="newCompanyRechtsform" required>
-                  <option value="">-- Bitte wählen --</option>
-                  <option value="e. K.">e. K.</option>
-                  <option value="e. Kfr.">e. Kfr.</option>
-                  <option value="GmbH">GmbH</option>
-                  <option value="UG">UG</option>
-                  <option value="AG">AG</option>
-                  <option value="OHG">OHG</option>
-                  <option value="KG">KG</option>
-                  <option value="GmbH & Co. KG">GmbH & Co. KG</option>
-                </select><br>
+              <fieldset class="vorlage-green" style="max-width: none;">
+                <legend>🏢 Basisdaten</legend>
 
-                <label for="newCompanyBranche">Branche: *</label><br>
-                <input type="text" id="newCompanyBranche" required placeholder="z.B. Fahrradhandel" maxlength="50"
-                  title="Keine Sonderzeichen wie <, >, {, } erlaubt"><br>
-
-                <label for="newCompanyMotto">Motto: *</label><br>
-                <input type="text" id="newCompanyMotto" required placeholder="z.B. Fahrräder von A bis Z!"
-                  maxlength="100" title="Keine Sonderzeichen wie <, >, {, } erlaubt"><br>
-
-                <label for="newCompanyInhaber">Inhaber/Geschäftsführer: *</label><br>
-                <input type="text" id="newCompanyInhaber" required placeholder="z.B. Erna Kistner" maxlength="50"
-                  pattern="[a-zA-ZäöüÄÖÜß\s\.,'\-]*"
-                  title="Nur Buchstaben und Sonderzeichen wie Bindestrich, Punkt, Komma, Apostroph"><br>
-
-                <label for="newCompanyLogo">Logo hochladen:</label><br>
-                <input type="file" id="newCompanyLogo" accept="image/svg+xml" onchange="handleLogoUpload(event)"><br>
-                <small style="color: #666;">Max. 500KB | Nur SVG (optional)</small><br>
-                <div id="logoPreview" style="margin-top: 10px;">
-                  <small style="color: #666;">Keine Datei ausgewählt</small>
+                <div class="form-field">
+                  <label for="newCompanyName">Firmenname: *</label>
+                  <input type="text" id="newCompanyName" required placeholder="z.B. ABC-Bikes" maxlength="50"
+                    title="Keine Sonderzeichen wie <, >, {, } erlaubt">
                 </div>
-              </div>
 
-              <div>
-                <h4>Adresse & Kontakt</h4>
-                <label for="newCompanyStrasse">Straße & Hausnummer: *</label><br>
-                <input type="text" id="newCompanyStrasse" required placeholder="z.B. Schwabacher Weg 50" maxlength="60"
-                  pattern="[a-zA-Z0-9äöüÄÖÜß\s\.,'\-]*"
-                  title="Buchstaben, Zahlen und gängige Sonderzeichen erlaubt"><br>
+                <div class="form-field">
+                  <label for="newCompanyRechtsform">Rechtsformzusatz: *</label>
+                  <select id="newCompanyRechtsform" required>
+                    <option value="">-- Bitte wählen --</option>
+                    <option value="e. K.">e. K.</option>
+                    <option value="e. Kfr.">e. Kfr.</option>
+                    <option value="GmbH">GmbH</option>
+                    <option value="UG">UG</option>
+                    <option value="AG">AG</option>
+                    <option value="OHG">OHG</option>
+                    <option value="KG">KG</option>
+                    <option value="GmbH & Co. KG">GmbH & Co. KG</option>
+                  </select>
+                </div>
 
-                <label for="newCompanyPLZ">PLZ: *</label><br>
-                <input type="text" id="newCompanyPLZ" required placeholder="z.B. 85049" maxlength="5" pattern="[0-9]{5}"
-                  title="Genau 5 Ziffern"><br>
+                <div class="form-field">
+                  <label for="newCompanyBranche">Branche: *</label>
+                  <input type="text" id="newCompanyBranche" required placeholder="z.B. Fahrradhandel" maxlength="50"
+                    title="Keine Sonderzeichen wie <, >, {, } erlaubt">
+                </div>
 
-                <label for="newCompanyOrt">Ort: *</label><br>
-                <input type="text" id="newCompanyOrt" required placeholder="z.B. Ingolstadt" maxlength="50"
-                  pattern="[a-zA-ZäöüÄÖÜß\s\-]*" title="Nur Buchstaben, Leerzeichen und Bindestrich"><br>
+                <div class="form-field">
+                  <label for="newCompanyMotto">Motto: *</label>
+                  <input type="text" id="newCompanyMotto" required placeholder="z.B. Fahrräder von A bis Z!"
+                    maxlength="100" title="Keine Sonderzeichen wie <, >, {, } erlaubt">
+                </div>
 
-                <label for="newCompanyTelefon">Telefon: *</label><br>
-                <input type="tel" id="newCompanyTelefon" required placeholder="z.B. 0841 0802020" maxlength="25"
-                  pattern="[0-9\s+\(\)\-]*" title="Nur Zahlen und Zeichen: + - ( ) Leerzeichen"><br>
+                <div class="form-field">
+                  <label for="newCompanyInhaber">Inhaber/Geschäftsführer: *</label>
+                  <input type="text" id="newCompanyInhaber" required placeholder="z.B. Erna Kistner" maxlength="50"
+                    pattern="[a-zA-ZäöüÄÖÜß\s\.,'\-]*"
+                    title="Nur Buchstaben und Sonderzeichen wie Bindestrich, Punkt, Komma, Apostroph">
+                </div>
 
-                <label for="newCompanyEmail">E-Mail: *</label><br>
-                <input type="email" id="newCompanyEmail" required placeholder="z.B. info@firma.de" maxlength="60"
-                  title="Gültige E-Mail-Adresse erforderlich"><br>
+                <div class="form-field">
+                  <label for="newCompanyLogo">Logo hochladen:</label>
+                  <input type="file" id="newCompanyLogo" accept="image/svg+xml" onchange="handleLogoUpload(event)">
+                  <small style="color: #666;">Max. 500KB | Nur SVG (optional)</small>
+                  <div id="logoPreview" style="margin-top: 10px;">
+                    <small style="color: #666;">Keine Datei ausgewählt</small>
+                  </div>
+                </div>
+              </fieldset>
 
-                <label for="newCompanyInternet">Internet: *</label><br>
-                <input type="text" id="newCompanyInternet" required placeholder="z.B. www.firma.de" maxlength="60"
-                  pattern="[a-zA-Z0-9\.\:\-]*" title="Nur Buchstaben, Zahlen und . - :">
-              </div>
+              <fieldset class="vorlage-blue" style="max-width: none;">
+                <legend>📍 Adresse &amp; Kontakt</legend>
 
-<div>
-  <h4>Finanz- & Steuerdaten</h4>
+                <div class="form-field">
+                  <label for="newCompanyStrasse">Straße &amp; Hausnummer: *</label>
+                  <input type="text" id="newCompanyStrasse" required placeholder="z.B. Schwabacher Weg 50" maxlength="60"
+                    pattern="[a-zA-Z0-9äöüÄÖÜß\s\.,'\-]*"
+                    title="Buchstaben, Zahlen und gängige Sonderzeichen erlaubt">
+                </div>
 
-  <label for="newCompanyBank">Bank: *</label><br>
-  <input type="text" id="newCompanyBank" required placeholder="z.B. BavarianBank" maxlength="50"
-         pattern="[a-zA-Z0-9äöüÄÖÜß\s\.\-]*"><br>
+                <div class="form-field">
+                  <label for="newCompanyPLZ">PLZ: *</label>
+                  <input type="text" id="newCompanyPLZ" required placeholder="z.B. 85049" maxlength="5" pattern="[0-9]{5}"
+                    title="Genau 5 Ziffern">
+                </div>
 
-  <!-- IBAN -->
-  <label for="newCompanyIBAN">IBAN: *</label><br>
-  <div style="display:flex; gap:8px; align-items:center;">
-    <input type="text" id="newCompanyIBAN" required placeholder="DE89370400440532013000" maxlength="34"
-           style="flex:1; text-transform:uppercase">
-    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;">
-      <input type="checkbox" id="randomIBAN" onchange="generateRandomField('iban')"> 
-      🎲
-    </label>
-  </div><br>
+                <div class="form-field">
+                  <label for="newCompanyOrt">Ort: *</label>
+                  <input type="text" id="newCompanyOrt" required placeholder="z.B. Ingolstadt" maxlength="50"
+                    pattern="[a-zA-ZäöüÄÖÜß\s\-]*" title="Nur Buchstaben, Leerzeichen und Bindestrich">
+                </div>
 
-  <!-- BIC -->
-  <label for="newCompanyBIC">BIC: *</label><br>
-  <div style="display:flex; gap:8px; align-items:center;">
-    <input type="text" id="newCompanyBIC" required placeholder="COBADEFFXXX" maxlength="11"
-           style="flex:1; text-transform:uppercase">
-    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;">
-      <input type="checkbox" id="randomBIC" onchange="generateRandomField('bic')"> 
-      🎲
-    </label>
-  </div><br>
+                <div class="form-field">
+                  <label for="newCompanyTelefon">Telefon: *</label>
+                  <input type="tel" id="newCompanyTelefon" required placeholder="z.B. 0841 0802020" maxlength="25"
+                    pattern="[0-9\s+\(\)\-]*" title="Nur Zahlen und Zeichen: + - ( ) Leerzeichen">
+                </div>
 
-  <!-- USt-IdNr. -->
-  <label for="newCompanyUstID">USt-IdNr.: *</label><br>
-  <div style="display:flex; gap:8px; align-items:center;">
-    <input type="text" id="newCompanyUstID" required placeholder="DE123456789" maxlength="25"
-           style="flex:1; text-transform:uppercase">
-    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;">
-      <input type="checkbox" id="randomUstID" onchange="generateRandomField('ustid')"> 
-      🎲
-    </label>
-  </div><br>
+                <div class="form-field">
+                  <label for="newCompanyEmail">E-Mail: *</label>
+                  <input type="email" id="newCompanyEmail" required placeholder="z.B. info@firma.de" maxlength="60"
+                    title="Gültige E-Mail-Adresse erforderlich">
+                </div>
 
-  <!-- Steuernummer -->
-  <label for="newCompanySteuernummer">Steuernummer: *</label><br>
-  <div style="display:flex; gap:8px; align-items:center;">
-    <input type="text" id="newCompanySteuernummer" required placeholder="181/001/11111" maxlength="20">
-    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;">
-      <input type="checkbox" id="randomSteuernummer" onchange="generateRandomField('steuernummer')"> 
-      🎲
-    </label>
-  </div><br>
+                <div class="form-field">
+                  <label for="newCompanyInternet">Internet: *</label>
+                  <input type="text" id="newCompanyInternet" required placeholder="z.B. www.firma.de" maxlength="60"
+                    pattern="[a-zA-Z0-9\.\:\-]*" title="Nur Buchstaben, Zahlen und . - :">
+                </div>
+              </fieldset>
 
-  <label for="newCompanyAkzent">Akzentfarbe: *</label><br>
-  <input type="color" id="newCompanyAkzent" required value="#7db9f5">
-</div>
-<div style="margin-top: 10px;width: 400px">
-  <h4>Werkstoffe</h4>
-  <p style="color:#666; font-size:0.9rem; margin-bottom:12px;">
-    Optional: Tragen Sie Werkstoffe ein (eine Zeile pro Eintrag).
-  </p>
-  <div class="grid3" style="gap:12px;">
-    <div>
-      <label for="newCompanyAWR"><strong>AWR</strong> – Rohstoffe:</label><br>
-      <textarea id="newCompanyAWR" rows="5" placeholder="z.B. Fichtenholzdecken&#10;Ahornholzböden"
-        style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
-    </div>
-    <div>
-      <label for="newCompanyAWF"><strong>AWF</strong> – Fremdbauteile:</label><br>
-      <textarea id="newCompanyAWF" rows="5" placeholder="z.B. Mechaniken&#10;Saitensets"
-        style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
-    </div>
-    <div>
-      <label for="newCompanyAWH"><strong>AWH</strong> – Hilfsstoffe:</label><br>
-      <textarea id="newCompanyAWH" rows="5" placeholder="z.B. Holzleime&#10;Schellacklösungen"
-        style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
-    </div>
-    <div>
-      <label for="newCompanyAWB"><strong>AWB</strong> – Betriebsstoffe:</label><br>
-      <textarea id="newCompanyAWB" rows="5" placeholder="z.B. Strom&#10;Maschinenöle"
-        style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
-    </div>
-  </div>
-</div>
-</div>
+              <fieldset class="vorlage-red" style="max-width: none;">
+                <legend>💶 Finanz- &amp; Steuerdaten</legend>
+
+                <div class="form-field">
+                  <label for="newCompanyBank">Bank: *</label>
+                  <input type="text" id="newCompanyBank" required placeholder="z.B. BavarianBank" maxlength="50"
+                         pattern="[a-zA-Z0-9äöüÄÖÜß\s\.\-]*">
+                </div>
+
+                <div class="form-field">
+                  <label for="newCompanyIBAN">IBAN: *</label>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <input type="text" id="newCompanyIBAN" required placeholder="DE89370400440532013000" maxlength="34"
+                           style="flex:1; text-transform:uppercase">
+                    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
+                      <input type="checkbox" id="randomIBAN" onchange="generateRandomField('iban')">
+                      🎲
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="newCompanyBIC">BIC: *</label>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <input type="text" id="newCompanyBIC" required placeholder="COBADEFFXXX" maxlength="11"
+                           style="flex:1; text-transform:uppercase">
+                    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
+                      <input type="checkbox" id="randomBIC" onchange="generateRandomField('bic')">
+                      🎲
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="newCompanyUstID">USt-IdNr.: *</label>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <input type="text" id="newCompanyUstID" required placeholder="DE123456789" maxlength="25"
+                           style="flex:1; text-transform:uppercase">
+                    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
+                      <input type="checkbox" id="randomUstID" onchange="generateRandomField('ustid')">
+                      🎲
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="newCompanySteuernummer">Steuernummer: *</label>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <input type="text" id="newCompanySteuernummer" required placeholder="181/001/11111" maxlength="20">
+                    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
+                      <input type="checkbox" id="randomSteuernummer" onchange="generateRandomField('steuernummer')">
+                      🎲
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="newCompanyAkzent">Akzentfarbe: *</label>
+                  <input type="color" id="newCompanyAkzent" required value="#7db9f5" style="height: 38px; padding: 2px;">
+                </div>
+              </fieldset>
+              <fieldset class="vorlage-grey" style="max-width: none; grid-column: 1 / -1;">
+                <legend>🪵 Werkstoffe</legend>
+                <p style="color:#666; font-size:0.9rem; margin:0 0 12px;">
+                  Optional: Tragen Sie Werkstoffe ein. <strong>Bezeichnungen bitte im Plural</strong>
+                  (z.&nbsp;B. „Mechaniken", „Holzleime"), jeweils mit Einheit sowie Preis min. und max.
+                  Der passende <strong>Stammlieferer</strong> wird je Kategorie automatisch im Hintergrund hinterlegt.
+                </p>
+                <div class="grid3" style="gap:16px;">
+                  <div class="form-field">
+                    <label for="newCompanyAWR"><strong>AWR</strong> – Rohstoffe</label>
+                    <textarea id="newCompanyAWR" rows="5" placeholder="z.B. Fichtenholzdecken&#10;Ahornholzböden"
+                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
+                  </div>
+                  <div class="form-field">
+                    <label for="newCompanyAWF"><strong>AWF</strong> – Fremdbauteile</label>
+                    <textarea id="newCompanyAWF" rows="5" placeholder="z.B. Mechaniken&#10;Saitensets"
+                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
+                  </div>
+                  <div class="form-field">
+                    <label for="newCompanyAWH"><strong>AWH</strong> – Hilfsstoffe</label>
+                    <textarea id="newCompanyAWH" rows="5" placeholder="z.B. Holzleime&#10;Schellacklösungen"
+                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
+                  </div>
+                  <div class="form-field">
+                    <label for="newCompanyAWB"><strong>AWB</strong> – Betriebsstoffe</label>
+                    <textarea id="newCompanyAWB" rows="5" placeholder="z.B. Strom&#10;Maschinenöle"
+                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="vorlage-pink" style="max-width: none; grid-column: 1 / -1;">
+                <legend>📦 Fertigerzeugnisse</legend>
+                <p style="color:#666; font-size:0.9rem; margin:0 0 12px;">
+                  Optional: Erzeugnisse des Hauptwerks eintragen. <strong>Bezeichnungen bitte im Plural</strong>
+                  (z.&nbsp;B. „Bürostühle", „Konferenztische"), jeweils mit Preis min. und max.
+                </p>
+                <div class="form-field" style="margin-bottom: 10px;">
+                  <div id="newCompanyFertigerzeugnisse"></div>
+                </div>
+                <button type="button" onclick="addFertigerzeugnisRow()"
+                  style="background:#28a745; color:white; border:0; border-radius:4px; padding:7px 12px; cursor:pointer;">
+                  + Fertigerzeugnis hinzufügen
+                </button>
+              </fieldset>
+            </div>
 
             <br>
             <button type="submit"
@@ -440,210 +492,7 @@
 
     </section>
 
-    <section id="faq">
-      <h2 style="margin: 20px 0 12px 0; color: #2c3e50; font-size: 1.5rem;">
-        Häufig gestellte Fragen (FAQ)
-      </h2>
-
-      <div>
-        
-        <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Wo werden meine Daten gespeichert?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <p><strong>Alle Funktionen dieser Webanwendung laufen vollständig lokal in Ihrem Browser.</strong></p>
-            <p>Das bedeutet:</p>
-            <ul style="margin: 8px 0; padding-left: 20px;">
-              <li>✓ Alle Daten (Modellunternehmen, Belege, Einstellungen) bleiben auf Ihrem Gerät</li>
-              <li>✓ Es werden <strong>keine Daten an einen Server übertragen</strong></li>
-              <li>✓ Vollständige Kontrolle und Privatsphäre</li>
-              <li>⚠ Daten gehen beim Löschen des Browser-Caches verloren</li>
-              <li>⚠ Daten sind nicht automatisch auf anderen Geräten oder Browsern verfügbar</li>
-            </ul>
-            <p style="margin-top: 12px;"><strong>Empfehlung:</strong> Exportieren Sie regelmäßig Ihre Modellunternehmen als .yml-Datei, um ein Backup zu haben!</p>
-          </div>
-        </details>
-
-        <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Wie setze ich ein Modellunternehmen als "Mein Unternehmen"?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <ol style="margin: 8px 0; padding-left: 20px;">
-              <li>Wählen Sie aus dem Dropdown-Menü "Alle verfügbaren Unternehmen" ein Unternehmen aus</li>
-              <li>Prüfen Sie die Unternehmensdetails in der Vorschau</li>
-              <li>Klicken Sie auf <strong>"★ Als Modellunternehmen verwenden"</strong></li>
-              <li>Das Unternehmen wird im Browser gespeichert und bei der Belegerstellung automatisch verwendet</li>
-            </ol>
-            <p style="margin-top: 12px;"><em>Tipp: Sie können jederzeit ein anderes Unternehmen auswählen oder das aktuelle mit "✕ Entfernen" löschen.</em></p>
-          </div>
-        </details>
-
-        <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Wie kann ich Modellunternehmen exportieren und importieren?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <p><strong>Exportieren:</strong></p>
-            <ol style="margin: 8px 0; padding-left: 20px;">
-              <li>Klappen Sie den Bereich "Unternehmen importieren/exportieren" auf</li>
-              <li>Klicken Sie auf "Aktuelle Unternehmen exportieren"</li>
-            </ol>
-            <p style="margin-top: 12px;"><strong>Importieren:</strong></p>
-            <ol style="margin: 8px 0; padding-left: 20px;">
-              <li>Ziehen Sie eine .yml-Datei per Drag & Drop in den Upload-Bereich</li>
-              <li>Oder klicken Sie auf den Bereich und wählen Sie eine Datei aus</li>
-              <li>Die Unternehmen werden importiert und stehen sofort zur Verfügung. Importieren Sie immer die ganze Liste!</li>
-            </ol>
-            <p style="margin-top: 12px;"><em>Praktisch für: Datensicherung, Nutzung auf mehreren Geräten, Austausch mit Kollegen</em></p>
-          </div>
-        </details>
-
-        <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Wie erstelle ich ein eigenes Modellunternehmen?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <ol style="margin: 8px 0; padding-left: 20px;">
-              <li>Klappen Sie den Bereich <strong>"Unternehmen manuell hinzufügen"</strong> auf</li>
-              <li>Füllen Sie alle Felder (*) aus:
-                <ul style="margin: 4px 0; padding-left: 20px;">
-                  <li>Basisdaten (Name, Rechtsform, Branche, Motto, Inhaber)</li>
-                  <li>Adresse & Kontakt (Straße, PLZ, Ort, Telefon, E-Mail, Internet)</li>
-                  <li>Finanz- & Steuerdaten (Bank, IBAN, BIC, USt-IdNr., Steuernummer, Akzentfarbe)</li>
-                </ul>
-              </li>
-              <li>Optional: Laden Sie ein Logo als SVG-Datei hoch (max. 500KB)</li>
-              <li>Klicken Sie auf <strong>"✓ Unternehmen hinzufügen"</strong></li>
-            </ol>
-             </div>
-        </details>
-
-        <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Auf welche Weise können Belege erstellt werden?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <p><strong>Manuelle Belege:</strong></p>
-            <ul style="margin: 8px 0; padding-left: 20px;">
-              <li>Werden unter dem Menüpunkt <strong>"Belege"</strong> erstellt</li>
-              <li>Sie geben alle Informationen manuell ein (Datum, Beträge, Positionen etc.)</li>
-              <li>Ideal für: Einzelne Übungsbelege, individuelle Szenarien, freie Gestaltung</li>
-            </ul>
-            <p style="margin-top: 12px;"><strong>Verlinkte Belege:</strong></p>
-            <ul style="margin: 8px 0; padding-left: 20px;">
-              <li>Werden unter Menüpunkten wie zum Beispiel <strong>"Einkauf"</strong> oder <strong>"Verkauf"</strong> erstellt</li>
-              <li>Basieren auf zusammenhängenden Geschäftsvorfällen</li>
-              <li>Belege werden automatisch miteinander verknüpft (z. B. Geschäftsfall → Rechnung)</li>
-            </ul>
-             </div>
-        </details>
-
-<details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-  <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-    Welches Exportformat soll ich verwenden?
-  </summary>
-  <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-
-    <p><strong>
-      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>PNG:</strong></p>
-    <ul style="margin: 4px 0 12px 20px;">
-      <li>Schnelle Integration</li>
-      <li>H5P-Aktivitäten in der ByCS Lernplattform</li>
-      <li>Wenn keine nachträgliche Bearbeitung nötig ist</li>
-    </ul>
-
-    <p><strong>
-      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-17.2-19.9-29.9-16.1s-19.9 17.2-16.1 29.9l48 160c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l25-83.4 25 83.4c3 10.2 12.4 17.1 23 17.1s19.9-7 23-17.1l48-160c3.8-12.7-3.4-26.1-16.1-29.9s-26.1 3.4-29.9 16.1l-25 83.4-25-83.4c-3-10.2-12.4-17.1-23-17.1s-19.9 7-23 17.1l-25 83.4-25-83.4z"/></svg>Office:</strong></p>
-    <ul style="margin: 4px 0 12px 20px;">
-      <li>Direktes Einfügen in Textverarbeitung, Tabellenkalkulation...</li>
-      <li>Wenn Sie die Aufgaben in Office-Dokumenten weiterbearbeiten möchten</li>
-      <li>Meist ist ein Nachbearbeiten notwendig, da das Format auf die Darstellung im Browser optimiert ist.</li>
-    </ul>
-
-    <p><strong>
-      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm97 289c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0L79 303c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-31-31 31-31zM257 255c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l31 31-31 31c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9l-48-48z"/></svg>SVG:</strong></p>
-        <ul style="margin: 4px 0 12px 20px;">
-      <li>Nachträgliche Bearbeitung möglich (z. B. unter "Belege importieren" oder mit Inkscape)</li>
-      <li>Skalierbare Grafiken ohne Qualitätsverlust</li>
-      <li>ByCS Lernplattform (Text-/Medienfelder, Textseiten, Tests)</li>
-    </ul>
-
-    <p><strong>
-    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/></svg>HTML/Inline SVG:</strong></p>
-    <ul style="margin: 4px 0 12px 20px;">
-      <li>Direktes Einbinden in Textfeld, Freitext-Aufgabe...</li>
-      <li>Fortgeschrittene Nutzer mit HTML-Kenntnissen</li>
-      <li>Dynamische Inhalte (z.B. automatisches Datum)</li>
-      <li>Direktes Einbinden in Moodle/ByCS-Kurse mit Scripting</li>
-    </ul>
-
-    <p><strong>
-      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 640 640" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M128 128C128 92.7 156.7 64 192 64L405.5 64C422.5 64 438.8 70.7 450.8 82.7L493.3 125.2C505.3 137.2 512 153.5 512 170.5L512 208L128 208L128 128zM64 320C64 284.7 92.7 256 128 256L512 256C547.3 256 576 284.7 576 320L576 416C576 433.7 561.7 448 544 448L512 448L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 448L96 448C78.3 448 64 433.7 64 416L64 320zM192 480L192 512L448 512L448 416L192 416L192 480zM520 336C520 322.7 509.3 312 496 312C482.7 312 472 322.7 472 336C472 349.3 482.7 360 496 360C509.3 360 520 349.3 520 336z"/></svg>Drucken (Arbeitsblatt):</strong></p>
-    <ul style="margin: 4px 0 12px 20px;">
-      <li>Öffnet den Druckdialog des Browsers mit einer aufbereiteten Ansicht</li>
-      <li>Alternativ im Druckdialog „Als PDF speichern" wählen, um ein PDF zu erzeugen</li>
-    </ul>
-
-    <p><strong>
-      <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 640 640" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M80 259.8L289.2 345.9C299 349.9 309.4 352 320 352C330.6 352 341 349.9 350.8 345.9L593.2 246.1C602.2 242.4 608 233.7 608 224C608 214.3 602.2 205.6 593.2 201.9L350.8 102.1C341 98.1 330.6 96 320 96C309.4 96 299 98.1 289.2 102.1L46.8 201.9C37.8 205.6 32 214.3 32 224L32 520C32 533.3 42.7 544 56 544C69.3 544 80 533.3 80 520L80 259.8zM128 331.5L128 448C128 501 214 544 320 544C426 544 512 501 512 448L512 331.4L369.1 390.3C353.5 396.7 336.9 400 320 400C303.1 400 286.5 396.7 270.9 390.3L128 331.4z"/></svg>Moodle-Fragetyp:</strong></p>
-    <ul style="margin: 4px 0 12px 20px;">
-      <li>Exportiert die Aufgabe als XML-Datei, die in die Moodle-/ByCS-Fragensammlung importiert werden kann</li>
-      <li>Die Aufgabe steht danach als Frage in Tests zur Verfügung und kann automatisch bewertet werden</li>
-    </ul>
-
-  </div>
-</details>
-
-<details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Wie kann ich Aufgaben sinnvoll auf der ByCS Lernplattform einbinden?
-          </summary>
-
-           <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            Am besten bauen Sie sich mit der Aktivität Test ein digitales Arbeitsheft. 
-            Die notwendigen Einstellungen können Sie in <a href="https://oer.fdagner.de/2026/04/12/digitales-arbeitsheft-lernplattform/">diesem Blogbeitrag</a> nachlesen.
-           </div>
-           </details>
-
-
-          <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Wie nutze ich die Prompts für die KI-Bots?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <p>Legen Sie in der ByCS Lernplattform die Aktivität KI-Chat an. Dort können Sie den Prompt direkt reinkopieren.
-           </div>
-        </details>
-        <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-            Was kann ich tun, wenn meine Daten verloren gegangen sind?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <p><strong>Wenn Sie ein Backup haben:</strong></p>
-            <ol style="margin: 8px 0; padding-left: 20px;">
-              <li>Öffnen Sie den Bereich "Unternehmen importieren/exportieren"</li>
-              <li>Importieren Sie Ihre gesicherte .yml-Datei</li>
-              <li>Ihre Modellunternehmen sind wiederhergestellt</li>
-            </ol>
-           </div>
-        </details>
-           <details style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 6px; border: 0px solid #ddd;">
-          <summary style="font-weight: 600; cursor: pointer; padding: 8px; color: #2c3e50; font-size: 1rem;">
-             Wie lauten die Nutzungsbedingungen?
-          </summary>
-          <div style="padding: 12px 8px 8px 8px; color: #555; line-height: 1.6;">
-            <p>Alle Materialien werden, soweit nicht anders angegeben, unter der Lizenz <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.de" style="color:#0077cc; text-decoration: none;">CC0 1.0 Universell</a> veröffentlicht.
-              Kurz gesagt: Sie dürfen alle Materialien kopieren, verändern, verbreiten, auch zu kommerziellen Zwecken, ohne um weitere Erlaubnis bitten zu müssen.
-              </p>
     
-           </div>
-        </details>
-      </div>
-    </section>
-
-
 
    
 
@@ -693,7 +542,7 @@
     </script>
 
   </main>
-  <script src="js/index.js"></script>
+  <script src="js/index.js?v=5"></script>
   <div w3-include-html="footer.html"></div>
 
   <script>

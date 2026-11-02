@@ -179,74 +179,9 @@
     }
 
     // Export-Funktionen
-    function ewbHerunterladenAlsPNG() {
-      const element = document.getElementById('Container');
-      if (!element.innerHTML) {
-        alert('Bitte erstellen Sie zuerst eine Aufgabe!');
-        return;
-      }
-      
-      html2canvas(element).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'einzelwertberichtigung.png';
-        link.href = canvas.toDataURL();
-        link.click();
-      });
-    }
-
-    function ewbHerunterladen() {
-      const element = document.getElementById('Container');
-      if (!element.innerHTML) {
-        alert('Bitte erstellen Sie zuerst eine Aufgabe!');
-        return;
-      }
-      
-      const htmlContent = `<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <title>Einzelwertberichtigung</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #000; padding: 8px; }
-    th { background-color: #d0d0d0; text-align: center; }
-  </style>
-</head>
-<body>
-  ${element.innerHTML}
-</body>
-</html>`;
-      
-      const blob = new Blob([htmlContent], { type: 'text/html' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'einzelwertberichtigung.html';
-      link.click();
-    }
-
-    function ewbKopiereInZwischenablage() {
-      const element = document.getElementById('Container');
-      if (!element.innerHTML) {
-        alert('Bitte erstellen Sie zuerst eine Aufgabe!');
-        return;
-      }
-      
-      const range = document.createRange();
-      range.selectNode(element);
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-      
-      try {
-        document.execCommand('copy');
-        alert('In Zwischenablage kopiert!');
-      } catch (err) {
-        alert('Fehler beim Kopieren');
-      }
-      
-      window.getSelection().removeAllRanges();
-    }
-
+    
+    
+    
     // Beim Laden der Seite automatisch einen BAB erstellen
     document.addEventListener("DOMContentLoaded", function() {
       ewbZeigeZufaelligeTabelle();

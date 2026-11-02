@@ -1,15 +1,6 @@
 // Auf 2 Dezimalstellen runden
-function roundToTwoDecimals(num) {
-  return Math.round(num * 100) / 100;
-}
 
 // Formatieren der Währung mit Euro-Symbol, Tausenderpunkt und Dezimalkomma
-function formatCurrency(amount) {
-  return new Intl.NumberFormat("de-DE", {
-    style: "currency",
-    currency: "EUR",
-  }).format(amount);
-}
 
 // Formatieren der Währung mit Euro-Symbol, Tausenderpunkt und Dezimalkomma
 function formatDecimal(amount) {
@@ -539,12 +530,45 @@ function generateChart() {
   loesungSatz += `<br><br>`;
   loesungSatz += `Es müssen ${gewinnzone} Fertigerzeugnisse produziert und abgesetzt werden, um den Beginn der Gewinnzone zu erreichen.`;
 
-  document.getElementById("gewinnschwelleAufgabeContainer").innerHTML =
-    aufgabeSatz + loesungSatz;
+  // Ausgabe: läuft schon ein Editor, über JoditEditor.setContent schreiben,
+  // damit Editor-Wert und Quelle synchron bleiben.
+  const gsContainer = document.getElementById("gewinnschwelleAufgabeContainer");
+  if (window.JoditEditor && gsContainer._jodit) {
+    window.JoditEditor.setContent(gsContainer, aufgabeSatz + loesungSatz);
+  } else {
+    gsContainer.innerHTML = aufgabeSatz + loesungSatz;
+  }
+
+  // Aufgabe steht: Editor (Jodit) aktivieren – einmalig. data-jodit-init erlaubt
+  // den Adopt auch auf ApexCharts-Seiten (Muster aus lb8-2-bestellmenge).
+  if (window.JoditEditor && !gsContainer._jodit) {
+    gsContainer.setAttribute('data-jodit-init', '1');
+    try { window.JoditEditor.init(gsContainer); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+  }
+}
+
+// Hilfsfunktionen: Inhalt bzw. sichtbares Element des Aufgaben-Containers,
+// unabhängig davon ob der Jodit-Editor aktiv ist.
+function gsAufgabeHtml() {
+  const el = document.getElementById('gewinnschwelleAufgabeContainer');
+  if (!el) return '';
+  let html = (window.JoditEditor && el._jodit) ? window.JoditEditor.getHTML(el) : el.innerHTML;
+  // Seitenumbruch-Marker (nur für den Druck) entfernen
+  return html.replace(/<div class="seitenumbruch"[^>]*>[\s\S]*?<\/div>/g, '')
+             .replace(/<div class="seitenumbruch"[^>]*><\/div>/g, '');
+}
+
+function gsAufgabeElement() {
+  const el = document.getElementById('gewinnschwelleAufgabeContainer');
+  if (window.JoditEditor && el && el._jodit) {
+    // nach dem Adopt ist el ausgeblendet – sichtbaren Editor-Inhalt erfassen
+    return el._jodit.editor || el.closest('.jodit-container') || el;
+  }
+  return el;
 }
 
 function gewinnschwelleHerunterladenAlsPNG() {
-  const wertetabelle = document.getElementById("gewinnschwelleAufgabeContainer");
+  const wertetabelle = gsAufgabeElement();
 
   html2canvas(wertetabelle, optionshtml2canvas).then((canvas) => {
     const dataURL = canvas.toDataURL("image/png");
@@ -558,14 +582,14 @@ function gewinnschwelleHerunterladenAlsPNG() {
 }
 
 function gewinnschwelleKopiereInZwischenablage() {
-  const gewinnschwelleHTML = document.getElementById('gewinnschwelleAufgabeContainer').innerHTML.replace(/&nbsp;/g, ' ');
+  const gewinnschwelleHTML = gsAufgabeHtml().replace(/&nbsp;/g, ' ');
   navigator.clipboard.writeText(gewinnschwelleHTML)
     .then(() => alert('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
 function gewinnschwelleHerunterladen() {
-  const emailHTML = document.getElementById('gewinnschwelleAufgabeContainer').innerHTML.replace(/&nbsp;/g, ' ');
+  const emailHTML = gsAufgabeHtml().replace(/&nbsp;/g, ' ');
   const blob = new Blob([emailHTML], { type: 'html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -574,4 +598,9 @@ function gewinnschwelleHerunterladen() {
   a.click();
   document.body.removeChild(a);
 }
+
+// Aufgabe beim Seitenaufruf automatisch erzeugen (Defaultwerte des Formulars)
+document.addEventListener('DOMContentLoaded', function () {
+  validateAndGenerateChart();
+});
 

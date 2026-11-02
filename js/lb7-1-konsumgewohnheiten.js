@@ -219,7 +219,6 @@ const kriterienLabel = {
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function rnd(min, max, step = 5) {
   const steps = Math.floor((max - min) / step);

@@ -1,9 +1,19 @@
+function dateinameExport(format) {
+  if (typeof window.exportDateiname === 'function') {
+    try {
+      const name = window.exportDateiname(format);
+      if (name) return name;
+    } catch (e) { /* Fallback */ }
+  }
+  return 'download.' + format;
+}
+
     function Herunterladen() {
       const CodeHTML = document.getElementById('Container').innerHTML;
       const blob = new Blob([CodeHTML], { type: 'text/html' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'page.html';
+      a.download = dateinameExport('html');
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -22,7 +32,7 @@
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;
-        a.download = 'grafik.png';
+        a.download = dateinameExport('png');
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -30,7 +40,7 @@
     }
 
   // SVG-Export
-function exportSVG(containerId, filename = 'download.svg') {
+function exportSVG(containerId, filename) {
     const container = document.getElementById('Container');
     if (!container) return;
     const svg = container.querySelector('svg');
@@ -40,7 +50,7 @@ function exportSVG(containerId, filename = 'download.svg') {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = filename;
+    link.download = filename || dateinameExport('svg');
     link.click();
     URL.revokeObjectURL(url);
 }

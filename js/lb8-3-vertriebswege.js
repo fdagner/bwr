@@ -2,63 +2,15 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 
-let yamlData = [];
 let kunde = '<i>[Modellunternehmen]</i>';
 
 // ============================================================================
 // YAML-DATEN LADEN (identisch zum Marketing-Generator)
 // ============================================================================
 
-function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
-  return stored ? JSON.parse(stored) : [];
-}
 
-function mergeUserCompaniesIntoYamlData() {
-  const userCompanies = getUserCompanies();
-  if (userCompanies.length > 0) {
-    yamlData = [...yamlData, ...userCompanies];
-    yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
-      return brancheA.localeCompare(brancheB);
-    });
-  }
-}
 
-function loadYamlFromLocalStorage() {
-  const saved = localStorage.getItem('uploadedYamlCompanyData');
-  if (saved) {
-    try {
-      yamlData = JSON.parse(saved);
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-      return true;
-    } catch (err) {
-      console.warn("localStorage YAML kaputt:", err);
-    }
-  }
-  return false;
-}
 
-function loadDefaultYaml() {
-  fetch('js/unternehmen.yml')
-    .then(res => {
-      if (!res.ok) throw new Error('unternehmen.yml nicht gefunden');
-      return res.text();
-    })
-    .then(yamlText => {
-      yamlData = jsyaml.load(yamlText) || [];
-      if (!localStorage.getItem('standardYamlData')) {
-        localStorage.setItem('standardYamlData', JSON.stringify(yamlData));
-      }
-      mergeUserCompaniesIntoYamlData();
-      document.dispatchEvent(new Event('yamlDataLoaded'));
-    })
-    .catch(err => {
-      console.error("Konnte unternehmen.yml nicht laden:", err);
-    });
-}
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -228,13 +180,6 @@ const ICONS = {
 };
 
 // Pfeil zwischen Stationen
-function pfeilSVG() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="48" viewBox="0 0 32 48" fill="none" stroke="#aaa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="4" y1="24" x2="26" y2="24"/>
-    <polyline points="18,16 26,24 18,32"/>
-  </svg>`;
-}
-
 // ============================================================================
 // VERTRIEBSWEG-DEFINITIONEN
 // Jeder Eintrag hat:
@@ -367,18 +312,6 @@ const vertriebswege = {
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 const unternehmensVarianten = [
   (name) => name,
@@ -523,7 +456,7 @@ function erstelleKettenGrafik(stationen) {
   stationen.forEach((station, idx) => {
     const b64 = iconBase64Cache[station.iconKey] || '';
     const iconTag = b64
-      ? `<img src="${b64}" width="48" height="48" style="display:block; margin:0 auto 4px;" alt="${station.bezeichnung}">`
+      ? `<img src="${b64}" width="48" height="48" style="display:block; margin:0 auto 4px; max-width:48px !important; height:48px !important; width:48px !important;" alt="${station.bezeichnung}">`
       : '';
 
     html += `<td style="border:1px solid #bbb; padding:8px 14px; text-align:center; vertical-align:bottom; font-weight:bold; font-size:0.82rem; background:#fff; min-width:70px;">`;
@@ -568,7 +501,7 @@ function zeigeZufaelligeVertriebswege() {
   }
   aufgabenListe = aufgabenListe.slice(0, anzahl);
 
-  let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
+  let aufgabenHTML = '<h2>Aufgaben Vertriebswege</h2><ol>';
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   aufgabenListe.forEach((key, idx) => {
@@ -703,14 +636,18 @@ document.addEventListener('DOMContentLoaded', () => {
     kunde = kundeSelect.value.trim() || '';
   });
 
-  if (!loadYamlFromLocalStorage()) {
-    loadDefaultYaml();
-  }
-
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeZufaelligeVertriebswege();
   } else {
-    document.addEventListener('yamlDataLoaded', fillCompanyDropdowns, { once: true });
+    document.addEventListener('yamlDataLoaded', () => {
+      fillCompanyDropdowns();
+      autoSelectMyCompany();
+      zeigeZufaelligeVertriebswege();
+    }, { once: true });
   }
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
@@ -736,11 +673,17 @@ function autoSelectMyCompany() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Icons zuerst als Base64-PNGs rendern, dann Aufgaben erstellen
+  // Erst Icons als Base64 rendern UND auf YAML-Daten warten, dann Aufgaben starten
   renderIconsToBase64().then(function () {
-    setTimeout(function () {
+    const startAufgaben = function () {
       autoSelectMyCompany();
       zeigeZufaelligeVertriebswege();
-    }, 300);
+    };
+
+    if (yamlData && yamlData.length > 0) {
+      startAufgaben();
+    } else {
+      document.addEventListener('yamlDataLoaded', startAufgaben, { once: true });
+    }
   });
 });
