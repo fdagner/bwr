@@ -260,16 +260,34 @@ async function belegZurSammlung(containerId) {
     const container = document.getElementById(cid);
     if (!container) { alert('Keine Beleg-Vorschau gefunden.'); return; }
     const belegType = BELEG_CONTAINER_TYPE[cid] || 'rechnung';
+    // Open-Beleg-Flow: Wenn dieser Beleg aus der Sammlung geöffnet wurde,
+    // wird beim Speichern der URSPRÜNGLICHE Eintrag ersetzt (updateItem).
+    let updateZiel = null;
+    let alterTitel = null;
+    if (window.belegAusSammlung && window.belegAusSammlung.id) {
+        try {
+            const alt = await Collection.getItem(window.belegAusSammlung.id);
+            if (alt && alt.collectionId) {
+                updateZiel = window.belegAusSammlung;
+                alterTitel = alt.title || null;
+            } else {
+                window.belegAusSammlung = null;   // Eintrag gelöscht → normal
+                aktualisiereSammlungButtons();
+            }
+        } catch (e) { window.belegAusSammlung = null; }
+    }
     // Standard-Titel wie beim Export (Datum_Titel), ohne Endung
     let defaultTitle = 'Rechnung';
     try {
-        if (typeof buildExportFilename === 'function') {
+        if (alterTitel) {
+            defaultTitle = alterTitel;   // Titel des Original-Eintrags vorschlagen
+        } else if (typeof buildExportFilename === 'function') {
             defaultTitle = buildExportFilename(belegType, 'png').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '').trim();
         } else if (typeof buildExportTitel === 'function' && typeof exportDatumString === 'function') {
             defaultTitle = (exportDatumString() + '_' + buildExportTitel(belegType)).trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '').trim();
         }
     } catch (e) { console.warn('defaultTitle failed', e); }
-    const res = await Collection.showCollectDialog({ defaultTitle: defaultTitle, hasSolution: false, hasFormat: false });
+    const res = await Collection.showCollectDialog({ defaultTitle: defaultTitle, hasSolution: false, hasFormat: false, okLabel: updateZiel ? 'Speichern' : undefined, preselectCollection: updateZiel ? updateZiel.collectionId : undefined });
     if (!res) return;
     try {
         const isSvg = !!(container.querySelector(':scope > svg'));
@@ -283,7 +301,7 @@ async function belegZurSammlung(containerId) {
                 .replace(/&trade;/g, '&#8482;')
             : null;
         const htmlContent = isSvg ? null : rawInner;
-        await Collection.collectItem({
+        const payload = {
             collectionId: res.collectionId,
             type: 'beleg',
             title: (res.title || 'Rechnung').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '').trim(),
@@ -296,8 +314,16 @@ async function belegZurSammlung(containerId) {
             svgContent: svgContent,
             htmlContent: htmlContent,
             formState: captureBelegFormState(belegType, container)
-        });
-        alert('Beleg zur Sammlung hinzugefügt.');
+        };
+        if (updateZiel) {
+            // Original-Eintrag ersetzen (Titel/Reihenfolge/Sammlung bleiben erhalten)
+            payload.collectionId = updateZiel.collectionId;
+            await Collection.updateItem(updateZiel.id, payload);
+            alert('Beleg in der Sammlung aktualisiert.');
+        } else {
+            await Collection.collectItem(payload);
+            alert('Beleg zur Sammlung hinzufügt.');
+        }
     } catch (e) {
         if (e && e.message === 'MAX_ITEMS') {
             alert('Sammlung voll (max. 100 Einträge).');
@@ -307,7 +333,26 @@ async function belegZurSammlung(containerId) {
         }
     }
 }
+
+// Button-Beschriftung: im Open-Beleg-Flow „Speichern" statt „+ Sammlung"
+function aktualisiereSammlungButtons() {
+    const offene = !!(window.belegAusSammlung && window.belegAusSammlung.id);
+    document.querySelectorAll('button[onclick*="belegZurSammlung("]').forEach(function (btn) {
+        if (offene) {
+            btn.textContent = '+ Speichern';
+            btn.title = 'Aktualisiert den ursprünglichen Sammlungseintrag';
+            btn.setAttribute('aria-label', 'Aktualisiert den ursprünglichen Sammlungseintrag');
+            btn.setAttribute('data-tooltip', 'Aktualisiert den ursprünglichen Sammlungseintrag');
+        } else {
+            btn.textContent = '+ Sammlung';
+            btn.title = 'Zur Sammlung hinzufügen';
+            btn.setAttribute('aria-label', 'Zur Sammlung hinzufügen');
+            btn.setAttribute('data-tooltip', 'Zur Sammlung hinzufügen');
+        }
+    });
+}
 window.belegZurSammlung = belegZurSammlung;
+window.aktualisiereSammlungButtons = aktualisiereSammlungButtons;
 
 window.setRechnungDatumHeute = setRechnungDatumHeute;
 window.zufaelligeAusgangsrechnungErstellen = zufaelligeAusgangsrechnungErstellen;

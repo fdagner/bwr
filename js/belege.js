@@ -788,8 +788,35 @@ if (ref) {
     xhr.send();
 }
 
+// Beleg als Grafik (PNG) in die Zwischenablage kopieren – genutzt von den
+// „Zwischenablage"-Buttons in belege.html und der Sammlung
+function grafikInZwischenablageSchreiben(blob) {
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+        alert('Die Zwischenablage-Unterstützung (Grafik) ist in diesem Browser nicht verfügbar.');
+        return;
+    }
+    try {
+        navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+            .then(() => alert('Beleg-Grafik wurde in die Zwischenablage kopiert.'))
+            .catch(err => alert('Kopieren in die Zwischenablage fehlgeschlagen: ' + err));
+    } catch (err) {
+        alert('Kopieren in die Zwischenablage fehlgeschlagen: ' + err);
+    }
+}
+
+function kopiereGrafikInZwischenablage(typ) {
+    const config = EXPORT_CONFIG[typ];
+    if (!config) {
+        console.error('Unbekannter Dokumenttyp:', typ);
+        alert('Unbekannter Dokumenttyp: ' + typ);
+        return;
+    }
+    const htmlTypes = ['email', 'newspaper', 'lohnjournalBS'];
+    exportPNG(config.id, buildExportFilename(typ, 'png'), null, htmlTypes.includes(typ), 'clipboard');
+}
+
 // PNG-Export
-function exportPNG(containerId, filename = 'download.png', exportWidth = null, forceRaster = false) {
+function exportPNG(containerId, filename = 'download.png', exportWidth = null, forceRaster = false, ziel = 'download') {
     const container = document.getElementById(containerId);
     if (!container) return;
 
@@ -801,6 +828,10 @@ function exportPNG(containerId, filename = 'download.png', exportWidth = null, f
 
     const download = (canvas) => {
         canvas.toBlob(blob => {
+            if (ziel === 'clipboard') {
+                grafikInZwischenablageSchreiben(blob);
+                return;
+            }
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = filename;
@@ -1177,7 +1208,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const id = params.get('openBeleg');
         if (!id || !window.Collection) return;
         const run = function () {
-            Collection.getItem(id).then(restoreOpenedBeleg).catch(function (e) { console.warn('openBeleg failed', e); });
+            Collection.getItem(id).then(function (item) {
+                // Merken, dass dieser Beleg über „Öffnen" (openBeleg=<id>) aus der
+                // Sammlung kam → „+ Sammlung" wird dann zu „Speichern" (updateItem
+                // statt addItem). Reine Parameter-Links (shareUrl ohne openBeleg)
+                // bleiben NEUTRAL und erzeugen einen neuen Eintrag.
+                if (item && item.collectionId) {
+                    window.belegAusSammlung = { id: item.id, collectionId: item.collectionId };
+                } else {
+                    window.belegAusSammlung = null;
+                }
+                if (typeof aktualisiereSammlungButtons === 'function') aktualisiereSammlungButtons();
+                restoreOpenedBeleg(item);
+            }).catch(function (e) { console.warn('openBeleg failed', e); });
         };
         if (window._belegeInitialisiert) run();
         else document.addEventListener('belegeInitialisiert', run, { once: true });

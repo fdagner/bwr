@@ -327,14 +327,14 @@
                 (options.hasSolution ? '<label style="display:block;margin-bottom:10px;"><input id="cdSolution" type="checkbox" checked /> Lösung mitspeichern</label>' : '') +
                 '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">' +
                   '<button type="button" id="cdCancel" style="padding:6px 12px;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;cursor:pointer;">Abbrechen</button>' +
-                  '<button type="button" id="cdOk" style="padding:6px 12px;border:none;border-radius:4px;background:#2c5f2d;color:#fff;cursor:pointer;">Hinzufügen</button>' +
+                  '<button type="button" id="cdOk" style="padding:6px 12px;border:none;border-radius:4px;background:#2c5f2d;color:#fff;cursor:pointer;">' + (options.okLabel || 'Speichern') + '</button>' +
                 '</div>';
             overlay.appendChild(box);
             document.body.appendChild(overlay);
 
             const sel = box.querySelector('#cdCollection');
             getCollections().then(function (cols) {
-                const active = getActiveCollectionId();
+                const active = options.preselectCollection || getActiveCollectionId();
                 sel.innerHTML = '';
                 cols.forEach(function (c) {
                     const o = document.createElement('option');

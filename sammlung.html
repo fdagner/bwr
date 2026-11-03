@@ -12,7 +12,7 @@
   <script src="js/menu.js?v=14"></script>
   <script src="js/js-yaml.min.js"></script>
   <script src="js/utils.js?v=11"></script>
-  <script src="js/collection.js?v=26"></script>
+  <script src="js/collection.js?v=27"></script>
 
 <body>
   <main>
@@ -36,7 +36,7 @@
 
       </section>
     </div>
-    <h2 id="collectionTitle"></h2> 
+    <h3 id="collectionTitle" style="border-bottom: 1px solid #000"></h3>
     <section>
        
            <div class="sammlung-toolbar" style="gap:8px; border-top:0px solid #eee; padding-bottom:8px;">  
@@ -147,15 +147,17 @@
         const hasHtml = !!(it.htmlContent || (!hasSvg && it.content && String(it.content).trim().startsWith('<')));
         const btnSvg = hasSvg ? '<button type="button" class="card-btn" onclick="downloadBeleg(\'' + it.id + '\',\'svg\')" title="SVG herunterladen">SVG</button>' : '';
         const btnHtml = hasHtml ? '<button type="button" class="card-btn" onclick="downloadBeleg(\'' + it.id + '\',\'html\')" title="HTML herunterladen">HTML</button>' : '';
+        const hasGrafik = !!(it.pngContent || it.thumbnail || hasSvg || hasHtml);
+        const btnClipboard = hasGrafik ? '<button type="button" class="card-btn" onclick="kopiereBelegGrafik(\'' + it.id + '\')" title="Grafik in die Zwischenablage kopieren">Zwischenablage</button>' : '';
         const btnLink = it.shareUrl ? '<button type="button" class="card-btn" onclick="kopiereLink(\'' + it.id + '\')" title="Link kopieren">Link</button>' : '';
         card.innerHTML =
           '<textarea class="title-edit" rows="2" title="' + escapeHtml(it.title) + '" onchange="renameItem(\'' + it.id + '\', this.value)">' + escapeHtml(String(it.title || '').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '').trim()) + '</textarea>' +
-          '<div class="preview">' + (it.thumbnail || it.content || '') + '</div>' +
+          '<div class="preview" style="cursor:zoom-in;" title="Vergrößern" onclick="oeffneVorschau(\'' + it.id + '\')">' + (it.thumbnail || it.content || '') + '</div>' +
           '<div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 2px;">' +
           '<span class="badge ' + it.type + '">' + it.type + '</span>' +
           '</div>' +
           '<div class="card-actions">' +
-          btnOpen + btnPng + btnSvg + btnHtml + btnLink +
+          btnOpen + btnPng + btnSvg + btnHtml + btnLink + btnClipboard +
           '<button type="button" class="card-btn card-btn-danger" onclick="deleteItem(\'' + it.id + '\')" title="Löschen">Löschen</button>' +
           '</div>';
         grid.appendChild(card);
@@ -459,6 +461,125 @@
 
     function oeffneBeleg(id) {
       window.location.href = 'belege.html?openBeleg=' + encodeURIComponent(id);
+    }
+
+    // ── Beleg als Grafik (PNG) in die Zwischenablage ──────────────────────
+    function svgMarkupZuBild(svgMarkup) {
+      return new Promise(function (aufs, fehler) {
+        const temp = document.createElement('div');
+        temp.innerHTML = svgMarkup;
+        const svgEl = temp.querySelector('svg');
+        if (!svgEl) { fehler(new Error('Keine SVG-Daten')); return; }
+        svgEl.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        let breite = parseFloat(svgEl.getAttribute('width')) || 0;
+        let hoehe = parseFloat(svgEl.getAttribute('height')) || 0;
+        const vb = (svgEl.getAttribute('viewBox') || '').match(/(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)/);
+        if (vb) { breite = +vb[3]; hoehe = +vb[4]; }
+        if (!breite || !hoehe) { breite = 800; hoehe = 600; }
+        svgEl.setAttribute('width', breite);
+        svgEl.setAttribute('height', hoehe);
+        const quelle = new XMLSerializer().serializeToString(svgEl);
+        const img = new Image();
+        img.onload = function () {
+          const cv = document.createElement('canvas');
+          cv.width = Math.round(breite * 2);
+          cv.height = Math.round(hoehe * 2);
+          const cx = cv.getContext('2d');
+          cx.fillStyle = '#ffffff';
+          cx.fillRect(0, 0, cv.width, cv.height);
+          cx.drawImage(img, 0, 0, cv.width, cv.height);
+          aufs(cv.toDataURL('image/png'));
+        };
+        img.onerror = fehler;
+        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(quelle);
+      });
+    }
+
+    function htmlBelegZuBild(htmlMarkup) {
+      return new Promise(function (aufs, fehler) {
+        function renderUndExportieren() {
+          const temp = document.createElement('div');
+          temp.style.cssText = 'position:fixed;left:-9999px;top:0;background:#fff;width:760px;';
+          temp.innerHTML = htmlMarkup;
+          document.body.appendChild(temp);
+          html2canvas(temp, { scale: 1.5, backgroundColor: '#ffffff' }).then(function (cv) {
+            temp.remove();
+            aufs(cv.toDataURL('image/png'));
+          }).catch(function (err) { temp.remove(); fehler(err); });
+        }
+        if (typeof html2canvas === 'function') { renderUndExportieren(); return; }
+        const sk = document.createElement('script');
+        sk.src = 'js/html2canvas.min.js';
+        sk.onload = renderUndExportieren;
+        sk.onerror = function () { fehler(new Error('html2canvas konnte nicht geladen werden')); };
+        document.head.appendChild(sk);
+      });
+    }
+
+    async function kopiereBelegGrafik(id) {
+      const it = items.find(i => i.id === id);
+      if (!it) return;
+      try {
+        let dataUrl = null;
+        if (it.pngContent && String(it.pngContent).startsWith('data:image/png')) {
+          dataUrl = it.pngContent;
+        } else if (it.thumbnail && String(it.thumbnail).startsWith('data:image/png')) {
+          dataUrl = it.thumbnail;
+        } else if (it.svgContent || (it.content && String(it.content).trim().startsWith('<svg'))) {
+          dataUrl = await svgMarkupZuBild(it.svgContent || it.content);
+        } else if (it.htmlContent || (it.content && String(it.content).trim().startsWith('<'))) {
+          dataUrl = await htmlBelegZuBild(it.htmlContent || it.content);
+        }
+        if (!dataUrl) { alert('Kein Grafikinhalt für diesen Eintrag vorhanden.'); return; }
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+        if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+          alert('Die Zwischenablage-Unterstützung (Grafik) ist in diesem Browser nicht verfügbar.');
+          return;
+        }
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        alert('Beleg-Grafik wurde in die Zwischenablage kopiert.');
+      } catch (err) {
+        console.error(err);
+        alert('Kopieren in die Zwischenablage fehlgeschlagen: ' + (err.message || err));
+      }
+    }
+
+    // Vorschaubild vergrößert anzeigen (Lightbox)
+    function oeffneVorschau(id) {
+      const it = items.find(i => i.id === id);
+      if (!it) return;
+      const inhalt = it.thumbnail || it.content || '';
+      if (!inhalt) return;
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:10000;cursor:zoom-out;';
+      const box = document.createElement('div');
+      box.style.cssText = 'position:relative;background:#fff;border-radius:8px;padding:34px 14px 14px;max-width:94vw;max-height:90vh;box-shadow:0 10px 40px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;';
+      const inhaltBox = document.createElement('div');
+      inhaltBox.style.cssText = 'overflow:auto;max-width:88vw;max-height:78vh;display:flex;align-items:center;justify-content:center;';
+      inhaltBox.innerHTML = inhalt;
+      inhaltBox.querySelectorAll('svg').forEach(function (s) {
+        s.style.maxWidth = '86vw'; s.style.maxHeight = '72vh';
+        s.style.width = 'auto'; s.style.height = 'auto'; s.style.display = 'block';
+      });
+      inhaltBox.querySelectorAll('img').forEach(function (im) {
+        im.style.maxWidth = '86vw'; im.style.maxHeight = '72vh';
+        im.style.width = 'auto'; im.style.height = 'auto'; im.style.objectFit = 'contain';
+      });
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.textContent = '✕';
+      closeBtn.setAttribute('aria-label', 'Schließen');
+      closeBtn.style.cssText = 'position:absolute;top:6px;right:8px;border:none;background:transparent;font-size:22px;cursor:pointer;line-height:1;';
+      closeBtn.onclick = function (e) { e.stopPropagation(); overlay.remove(); };
+      box.appendChild(inhaltBox);
+      box.appendChild(closeBtn);
+      overlay.appendChild(box);
+      overlay.onclick = function () { overlay.remove(); };
+      box.onclick = function (e) { e.stopPropagation(); };
+      const escHandler = function (e) { if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', escHandler); } };
+      document.addEventListener('keydown', escHandler);
+      document.body.appendChild(overlay);
     }
 
     async function kopiereLink(id) {
