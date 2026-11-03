@@ -9,11 +9,12 @@ let letzteGenerierteGfListeEinkauf = [];
 // ============================================================================
 const S = {
   kartenGrid: 'display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0 20px;',
-  karte: 'border:2px solid #ddd;border-radius:8px;padding:16px 18px;background:#fafafa;font-size:0.93em;font-family:inherit;',
-  karteAufgabe: 'border:2px solid #1565c0;border-radius:8px;padding:16px 18px;background:#f0f4ff;font-size:0.93em;font-family:inherit;',
-  karteGuenstig: 'border:2px solid #2e7d32;border-radius:8px;padding:16px 18px;background:#f1f8f1;font-size:0.93em;font-family:inherit;',
-  karteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;color:#1a237e;display:flex;align-items:center;gap:8px;flex-wrap:wrap;',
-  badgeGuenstig: 'font-size:0.72em;padding:2px 8px;border-radius:10px;font-weight:600;background:#2e7d32;color:#fff;',
+  loesungStack: 'display:grid;grid-template-columns:1fr;gap:18px;margin:14px 0 20px;',
+  aKarte: 'border:2px solid #ddd;border-radius:8px;padding:16px 18px;background:#fafafa;font-size:0.93em;font-family:inherit;',
+  aKarteAufgabe: 'border:2px solid #1565c0;border-radius:8px;padding:16px 18px;background:#f0f4ff;font-size:0.93em;font-family:inherit;',
+  aKarteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;color:#1a237e;display:flex;align-items:center;gap:8px;flex-wrap:wrap;',
+  lKarte: 'border:1px solid #ccc;border-radius:6px;padding:16px 18px;background:#fff;font-size:0.93em;font-family:inherit;',
+  lKarteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;flex-wrap:wrap;',
   kalkTable: 'width:100%;border-collapse:collapse;font-size:0.91em;margin-bottom:10px;',
   kalkTd: 'padding:2px 4px;',
   kalkTdRight: 'padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;',
@@ -21,6 +22,8 @@ const S = {
   kalkErgebnisTdR: 'padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;font-weight:700;border-top:1px solid #bbb;',
   kalkNormalTd: 'padding:2px 4px;',
   kalkNormalTdR: 'padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;',
+  kalkPctTd: 'padding:2px 4px;text-align:right;white-space:nowrap;min-width:58px;',
+  kalkPctResultTd: 'padding:2px 4px;text-align:right;white-space:nowrap;min-width:58px;font-weight:700;border-top:1px solid #bbb;',
   nmAbschnitt: 'font-size:0.83em;color:#666;margin:10px 0 4px;font-weight:600;',
   nmGrid: 'display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:0.88em;margin-top:8px;',
   nmItem: 'display:flex;flex-direction:column;',
@@ -443,8 +446,15 @@ function renderBuchungssatzBlock(kalk, kontoHauptStr, kontoBzkStr, konto2Str, oh
 function kalkZeileNormal(label, wert) {
   return `<tr><td style="${S.kalkNormalTd}">${label}</td><td style="${S.kalkNormalTdR}">${wert}</td></tr>`;
 }
+// Zeilen mit Prozent-Layout (wie Einkaufskalkulation): Betrag + zwei Prozent-Spalten
+function kalkZeileNormalPct(label, wert, pct1 = '', pct2 = '') {
+  return `<tr><td style="${S.kalkNormalTd}">${label}</td><td style="${S.kalkNormalTdR}">${wert}</td><td style="${S.kalkPctTd}">${pct1}</td><td style="${S.kalkPctTd}">${pct2}</td></tr>`;
+}
 function kalkZeileErgebnis(label, wert) {
   return `<tr><td style="${S.kalkErgebnisTd}">${label}</td><td style="${S.kalkErgebnisTdR}">${wert}</td></tr>`;
+}
+function kalkZeileErgebnisPct(label, wert, pct1 = '', pct2 = '') {
+  return `<tr><td style="${S.kalkErgebnisTd}">${label}</td><td style="${S.kalkErgebnisTdR}">${wert}</td><td style="${S.kalkPctResultTd}">${pct1}</td><td style="${S.kalkPctResultTd}">${pct2}</td></tr>`;
 }
 
 // ============================================================================
@@ -535,8 +545,8 @@ function zeigeZufaelligenSatz() {
 
   // ── AUFGABE ──────────────────────────────────────────────────────────
   const karteA_aufgabe = `
-<div style="${S.karte}">
-  <div style="${S.karteTitel}">Angebot A </div>
+<div style="${S.aKarte}">
+  <div style="${S.aKarteTitel}">Angebot A </div>
   <div style="${S.liefererLabel}">Lieferer: <strong>${nameA}</strong></div>
   <table style="${S.kalkTable}">
     ${kalkZeileErgebnis('<strong>Einstandspreis (ESP)</strong>', `<strong>${formatCurrency(kalkA.esp)}</strong>`)}
@@ -549,8 +559,8 @@ function zeigeZufaelligenSatz() {
 </div>`;
 
   const karteB_aufgabe = `
-<div style="${S.karteAufgabe}">
-  <div style="${S.karteTitel}">Angebot B</div>
+<div style="${S.aKarteAufgabe}">
+  <div style="${S.aKarteTitel}">Angebot B</div>
   <div style="${S.liefererLabel}">Lieferer: <strong>${nameB}</strong></div>
   <table style="${S.kalkTable}">
     ${kalkZeileNormal('Einzelpreis', formatCurrency(epB))}
@@ -590,50 +600,48 @@ function zeigeZufaelligenSatz() {
 
   // ── LÖSUNG ───────────────────────────────────────────────────────────
   const karteA_loesung = `
-<div style="${istAGuenstig ? S.karteGuenstig : S.karte}">
-  <div style="${S.karteTitel}">
+<div style="${S.lKarte}">
+  <div style="${S.lKarteTitel}">
     Lösung: Kalkulation Angebot A – ${nameA}
-    ${istAGuenstig ? `<span style="${S.badgeGuenstig}">✓ Günstigster ESP</span>` : ''}
+    ${istAGuenstig ? '<strong>(günstigster Einstandspreis)</strong>' : ''}
   </div>
   <table style="${S.kalkTable}">
-    ${kalkZeileNormal('Einzelpreis × Menge', `${formatCurrency(epA)} × ${mengeA}&nbsp;${einheit}`)}
-    ${kalkZeileErgebnis('= Listeneinkaufspreis', formatCurrency(kalkA.lep))}
-    ${kalkZeileNormal(`− Liefererrabatt (${kalkA.rabatt}&nbsp;%)`, `− ${formatCurrency(kalkA.rabattBetrag)}`)}
-    ${kalkZeileErgebnis('= Zieleinkaufspreis', formatCurrency(kalkA.zep))}
-    ${kalkZeileNormal(`− Liefererskonto (${kalkA.skonto}&nbsp;%)`, `− ${formatCurrency(kalkA.skontoBetrag)}`)}
-    ${kalkZeileErgebnis('= Bareinkaufspreis', formatCurrency(kalkA.bep))}
-    ${kalkZeileNormal('+ Bezugskosten', bzk_anzeige(kalkA.bezugskosten))}
-    ${kalkZeileErgebnis('= Einstandspreis', `<strong>${formatCurrency(kalkA.esp)}</strong>`)}
+    ${kalkZeileNormalPct('Listeneinkaufspreis', formatCurrency(kalkA.lep), '100&nbsp;%')}
+    ${kalkZeileNormalPct('− Liefererrabatt', `− ${formatCurrency(kalkA.rabattBetrag)}`, `${kalkA.rabatt}&nbsp;%`)}
+    ${kalkZeileErgebnisPct('= Zieleinkaufspreis', formatCurrency(kalkA.zep), '100&nbsp;%', '100&nbsp;%')}
+    ${kalkZeileNormalPct('− Liefererskonto', `− ${formatCurrency(kalkA.skontoBetrag)}`, '', `${kalkA.skonto}&nbsp;%`)}
+    ${kalkZeileErgebnisPct('= Bareinkaufspreis', formatCurrency(kalkA.bep), '', `${100 - kalkA.skonto}&nbsp;%`)}
+    ${kalkZeileNormalPct('+ Bezugskosten', bzk_anzeige(kalkA.bezugskosten))}
+    ${kalkZeileErgebnisPct('= Einstandspreis', `<strong>${formatCurrency(kalkA.esp)}</strong>`)}
   </table>
 </div>`;
 
   const karteB_loesung = `
-<div style="${!istAGuenstig ? S.karteGuenstig : S.karte}">
-  <div style="${S.karteTitel}">
+<div style="${S.lKarte}">
+  <div style="${S.lKarteTitel}">
     Lösung: Kalkulation Angebot B – ${nameB}
-    ${!istAGuenstig ? `<span style="${S.badgeGuenstig}">✓ Günstigster ESP</span>` : ''}
+    ${!istAGuenstig ? '<strong>(günstigster Einstandspreis)</strong>' : ''}
   </div>
   <table style="${S.kalkTable}">
-    ${kalkZeileNormal('Einzelpreis × Menge', `${formatCurrency(epB)} × ${mengeB}&nbsp;${einheit}`)}
-    ${kalkZeileErgebnis('= Listeneinkaufspreis', formatCurrency(kalkB.lep))}
-    ${kalkZeileNormal(`− Liefererrabatt (${kalkB.rabatt}&nbsp;%)`, `− ${formatCurrency(kalkB.rabattBetrag)}`)}
-    ${kalkZeileErgebnis('= Zieleinkaufspreis', formatCurrency(kalkB.zep))}
-    ${kalkZeileNormal(`− Liefererskonto (${kalkB.skonto}&nbsp;%)`, `− ${formatCurrency(kalkB.skontoBetrag)}`)}
-    ${kalkZeileErgebnis('= Bareinkaufspreis', formatCurrency(kalkB.bep))}
-    ${kalkZeileNormal('+ Bezugskosten', bzk_anzeige(kalkB.bezugskosten))}
-    ${kalkZeileErgebnis('= Einstandspreis', `<strong>${formatCurrency(kalkB.esp)}</strong>`)}
+    ${kalkZeileNormalPct('Listeneinkaufspreis', formatCurrency(kalkB.lep), '100&nbsp;%')}
+    ${kalkZeileNormalPct('− Liefererrabatt', `− ${formatCurrency(kalkB.rabattBetrag)}`, `${kalkB.rabatt}&nbsp;%`)}
+    ${kalkZeileErgebnisPct('= Zieleinkaufspreis', formatCurrency(kalkB.zep), '100&nbsp;%', '100&nbsp;%')}
+    ${kalkZeileNormalPct('− Liefererskonto', `− ${formatCurrency(kalkB.skontoBetrag)}`, '', `${kalkB.skonto}&nbsp;%`)}
+    ${kalkZeileErgebnisPct('= Bareinkaufspreis', formatCurrency(kalkB.bep), '', `${100 - kalkB.skonto}&nbsp;%`)}
+    ${kalkZeileNormalPct('+ Bezugskosten', bzk_anzeige(kalkB.bezugskosten))}
+    ${kalkZeileErgebnisPct('= Einstandspreis', `<strong>${formatCurrency(kalkB.esp)}</strong>`)}
   </table>
 </div>`;
 
   const fazitHtml = `
-<div style="${S.fazit}">
+<div style="margin-top:16px;line-height:1.7;">
   <strong>Preisvergleich:</strong>
   Angebot ${guenstigerBrief} (${guenstigerName}) ist mit einem Einstandspreis von
   <strong>${formatCurrency(istAGuenstig ? kalkA.esp : kalkB.esp)}</strong>
   um <strong>${diff}</strong> günstiger als Angebot ${istAGuenstig ? 'B' : 'A'}
   (${formatCurrency(teuerEsp)}).
 </div>
-<div style="${S.fazitViolett}">
+<div style="margin-top:8px;line-height:1.7;">
   <strong>Beispielhafte Faktoren:</strong>
   Qualität (${nmA.qualitaetText} bei A / ${nmB.qualitaetText} bei B),
   Lieferzeit (${nmA.lieferzeit} Tage / ${nmB.lieferzeit} Tage),
@@ -662,7 +670,7 @@ function zeigeZufaelligenSatz() {
   const loesungHtml = `
 <h2 style="${S.h2}" class="loesung">Lösung</h2>
 <h3 style="${S.h3}">Aufgabe 1 – Einkaufskalkulation Angebot B (${nameB})</h3>
-<div style="${S.kartenGrid}">${karteA_loesung}${karteB_loesung}</div>
+<div style="${S.loesungStack}">${karteA_loesung}${karteB_loesung}</div>
 <h3 style="${S.h3}">Aufgabe 2 – Nichtmonetäre Faktoren &amp; Kaufentscheidung</h3>
 ${fazitHtml}
 <h3 style="${S.h3}">Aufgabe 3 – Buchungssatz</h3>

@@ -12,6 +12,9 @@ const S = {
   karte: 'border:2px solid #e625cc;border-radius:8px;padding:16px 18px;background-color: #f7e5f7;font-size:0.93em;font-family:inherit;',
   karteAufgabe: 'border:2px solid #1565c0;border-radius:8px;padding:16px 18px;background:#f0f4ff;font-size:0.93em;font-family:inherit;',
   karteGuenstig: 'border:2px solid #2e7d32;border-radius:8px;padding:16px 18px;background:#f1f8f1;font-size:0.93em;font-family:inherit;',
+  loesungStack: 'display:grid;grid-template-columns:1fr;gap:18px;margin:14px 0 20px;',
+  lKarte: 'border:1px solid #ccc;border-radius:6px;padding:16px 18px;background:#fff;font-size:0.93em;font-family:inherit;',
+  lKarteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;',
   karteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;color:#1a237e;display:flex;align-items:center;gap:8px;flex-wrap:wrap;',
   badgeGuenstig: 'font-size:0.72em;padding:2px 8px;border-radius:10px;font-weight:600;background:#2e7d32;color:#fff;',
   kalkTable: 'width:100%;border-collapse:collapse;font-size:0.91em;margin-bottom:10px;',
@@ -19,6 +22,8 @@ const S = {
   kalkErgebnisTdR: 'padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;font-weight:700;border-top:1px solid #bbb;',
   kalkNormalTd: 'padding:2px 4px;',
   kalkNormalTdR: 'padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;',
+  kalkPctTd: 'padding:2px 4px;text-align:right;white-space:nowrap;min-width:58px;',
+  kalkPctResultTd: 'padding:2px 4px;text-align:right;white-space:nowrap;min-width:58px;font-weight:700;border-top:1px solid #bbb;',
   fazit: 'margin-top:16px;padding:12px 16px;background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;font-size:0.93em;line-height:1.7;',
   fazitViolett: 'margin-top:8px;padding:12px 16px;background:#f9f0ff;border-left:4px solid #7b1fa2;border-radius:0 6px 6px 0;font-size:0.93em;line-height:1.7;',
   aufgabeBox: 'background:#fff;border:1px solid #ddd;border-radius:6px;padding:14px 18px;margin-bottom:16px;line-height:1.7;',
@@ -350,8 +355,14 @@ function fillCompanyDropdown() {
 function kalkZeileNormal(label, wert) {
   return `<tr><td style="${S.kalkNormalTd}">${label}</td><td style="${S.kalkNormalTdR}">${wert}</td></tr>`;
 }
+function kalkZeileNormalPct(label, wert, pct = '') {
+  return `<tr><td style="${S.kalkNormalTd}">${label}</td><td style="${S.kalkNormalTdR}">${wert}</td><td style="${S.kalkPctTd}">${pct}</td></tr>`;
+}
 function kalkZeileErgebnis(label, wert) {
   return `<tr><td style="${S.kalkErgebnisTd}">${label}</td><td style="${S.kalkErgebnisTdR}">${wert}</td></tr>`;
+}
+function kalkZeileErgebnisPct(label, wert, pct = '') {
+  return `<tr><td style="${S.kalkErgebnisTd}">${label}</td><td style="${S.kalkErgebnisTdR}">${wert}</td><td style="${S.kalkPctResultTd}">${pct}</td></tr>`;
 }
 
 // ============================================================================
@@ -450,22 +461,16 @@ function zeigeZufaelligenSatz() {
 function loesungKarte(brief, bank, kal, guenstig) {
   const proz = fmtZahl(100 - kal.disagio, 0, 2);
 
-  // Originalfarben beibehalten, nur das günstigere Angebot grün machen
-  let stil = brief === 'A' ? S.karte : S.karteAufgabe;
-  if (guenstig && !gleich) {
-    stil = S.karteGuenstig;
-  }
-
   return `
-<div style="${stil}">
-  <div style="${S.karteTitel}">
+<div style="${S.lKarte}">
+  <div style="${S.lKarteTitel}">
     Lösung: Angebot ${brief} – ${bank}
-    ${guenstig && !gleich ? `<span style="${S.badgeGuenstig}">✓ Niedrigster effektiver Zins</span>` : ''}
+    ${guenstig && !gleich ? '<strong>(niedrigster effektiver Zins)</strong>' : ''}
   </div>
   <table style="${S.kalkTable}">
-    ${kalkZeileNormal('Kreditbetrag (100&nbsp;%)', formatCurrency(kal.kredit))}
-    ${kalkZeileNormal(`− Disagio (${fmtProzent(kal.disagio)})`, `− ${formatCurrency(kal.disagioBetrag)}`)}
-    ${kalkZeileErgebnis(`= Auszahlungsbetrag (${proz}&nbsp;%)`, formatCurrency(kal.auszahlung))}
+    ${kalkZeileNormalPct('Kreditbetrag', formatCurrency(kal.kredit), '100&nbsp;%')}
+    ${kalkZeileNormalPct('− Disagio', `− ${formatCurrency(kal.disagioBetrag)}`, fmtProzent(kal.disagio))}
+    ${kalkZeileErgebnisPct('= Auszahlungsbetrag', formatCurrency(kal.auszahlung), `${proz}&nbsp;%`)}
   </table>
   <div style="${S.formelLabel}">Zinsen in Euro: ${fmtZahl(kal.kredit, 2, 2)} · ${fmtZahl(kal.zins, 0, 2)} · ${fmtZahl(kal.tage, 0, 0)} ÷ (100 · 360)</div>
   <table style="${S.kalkTable}">
@@ -501,11 +506,11 @@ function loesungKarte(brief, bank, kal, guenstig) {
   }
 
   const fazitHtml = gleich
-    ? `<div style="${S.fazit}">
+    ? `<div style="margin-top:16px;line-height:1.7;">
   <strong>Kreditvergleich:</strong> Beide Angebote haben einen effektiven Zinssatz von <strong>${fmtEffektiv(kalkA.effektiv)}</strong>.
 </div>
-<div style="${S.fazitViolett}"><strong>Hinweis:</strong> ${hinweisText}</div>`
-    : `<div style="${S.fazit}">
+<div style="margin-top:8px;line-height:1.7;"><strong>Hinweis:</strong> ${hinweisText}</div>`
+    : `<div style="margin-top:16px;line-height:1.7;">
   <strong>Kreditvergleich:</strong>
   Angebot ${guenstigerBrief} (${guenstigerName}) ist mit einem effektiven Zinssatz von
   <strong>${fmtEffektiv(kalkGuenstig.effektiv)}</strong>
@@ -513,15 +518,15 @@ function loesungKarte(brief, bank, kal, guenstig) {
   (${teurerName}, ${fmtEffektiv(kalkTeuer.effektiv)}).
   ${nehmer} sollte sich daher für die <strong>${guenstigerName}</strong> entscheiden.
 </div>
-<div style="${S.fazitViolett}"><strong>Hinweis:</strong> ${hinweisText}</div>`;
+<div style="margin-top:8px;line-height:1.7;"><strong>Hinweis:</strong> ${hinweisText}</div>`;
 
   const loesungHtml = (variante === 1) ? `
 <h2 style="${S.h2}" class="loesung">Lösung</h2>
 <h3 style="${S.h3}">Aufgabe – Effektiver Zinssatz ${nameA}</h3>
-<div style="${S.kartenGrid}">${karteA_loesung}</div>` : `
+<div style="${S.loesungStack}">${karteA_loesung}</div>` : `
 <h2 style="${S.h2}" class="loesung">Lösung</h2>
 <h3 style="${S.h3}">Aufgabe 1 – Effektiver Zinssatz Angebot B (${nameB})</h3>
-<div style="${S.kartenGrid}">${karteA_loesung}${karteB_loesung}</div>
+<div style="${S.loesungStack}">${karteA_loesung}${karteB_loesung}</div>
 <h3 style="${S.h3}">Aufgabe 2 – Kreditvergleich &amp; Entscheidung</h3>
 ${fazitHtml}`;
 
