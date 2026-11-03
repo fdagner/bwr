@@ -1757,6 +1757,12 @@ function applyOrderData(validationUeberspringen = false) {
         SafeDOM.setText('gesamtpreis2', '');
     }
 
+    // 2. Artikelzeile nur anzeigen, wenn ausgefüllt (angebot3.svg Post-it)
+    const artikel2Zeile = document.getElementById('artikel2Zeile');
+    if (artikel2Zeile) {
+        artikel2Zeile.style.display = (menge2 && einzelpreis2) ? '' : 'none';
+    }
+
 
 
     let angebotLieferzeitSVG = document.getElementById('angebotLieferzeit');
@@ -1764,6 +1770,15 @@ function applyOrderData(validationUeberspringen = false) {
         // Die ID wurde gefunden, also füge den Text ein
         angebotLieferzeitSVG.textContent = angebotLieferzeit;
     }
+
+const elemSkontoSuffix = document.getElementById('skontoSuffix');
+if (elemSkontoSuffix) {
+    if (zahlungszielRaw !== '' && skontoInput > 0) {
+        elemSkontoSuffix.textContent = `, ${skontoInput}% Skonto`;
+    } else {
+        elemSkontoSuffix.textContent = '';
+    }
+}
 
 const elemZahlungsziel = document.getElementById('zahlungsziel');
 if (elemZahlungsziel) {
@@ -1807,8 +1822,22 @@ if (elemZahlungsziel) {
 
     // Setze die Zwischensumme in das SVG-Textelement
     SafeDOM.setText('zwischensumme', FormatHelper.currency(zwischensumme));
-    SafeDOM.setText('bezugskostenSumme', FormatHelper.currency(bezugskostenInput));
-    SafeDOM.setText('bezugskosten', bezugskostenArtInput);
+    const hatWarenwertBlock = !!document.getElementById('warenwertUstRechnungsbetrag');
+    if (bezugskostenInput > 0) {
+      SafeDOM.setText('bezugskosten', bezugskostenArtInput);
+      SafeDOM.setText('bezugskostenSumme', FormatHelper.currency(bezugskostenInput));
+    } else if (!hatWarenwertBlock) {
+      // Einfache Vorlagen (z. B. Post-it): „frei Haus" nur wenn Lieferbedingung angekreuzt
+      if (document.getElementById('lieferbedingungInput')?.checked) {
+        SafeDOM.setText('bezugskosten', 'frei Haus');
+      } else {
+        SafeDOM.setText('bezugskosten', '');
+      }
+      SafeDOM.setText('bezugskostenSumme', '');
+    } else {
+      SafeDOM.setText('bezugskosten', bezugskostenArtInput);
+      SafeDOM.setText('bezugskostenSumme', FormatHelper.currency(bezugskostenInput));
+    }
 
     // Rabatt-Bereich
     if (rabattInput > 0) {
@@ -1890,12 +1919,8 @@ if (elemZahlungsziel) {
 
     const elemBezugskostenBedingung = document.getElementById('bezugskostenBedingung');
     if (elemBezugskostenBedingung) {
-        if (inputLieferbedingung && inputLieferbedingung.checked) {  // ← Prüfe auch inputLieferbedingung
-            if (bezugskostenInput > 0) {
-                elemBezugskostenBedingung.textContent = "ab Werk";
-            } else {
-                elemBezugskostenBedingung.textContent = "frei Haus";
-            }
+        if (inputLieferbedingung && inputLieferbedingung.checked && bezugskostenInput > 0) {
+            elemBezugskostenBedingung.textContent = "ab Werk";
         } else {
             elemBezugskostenBedingung.textContent = "";
         }
