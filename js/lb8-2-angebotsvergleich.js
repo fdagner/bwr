@@ -287,7 +287,17 @@ function erzeugeURLFuerAngebotsvergleich(d) {
   const p = new URLSearchParams();
   const now = new Date();
   p.set('beleg', 'rechnung');
-  if (d.listeneinkaufspreis) p.set('einzelpreis1', parseNumericValue(d.listeneinkaufspreis));
+  // Menge und Einheit aus dem jeweiligen Angebot übernehmen; als Einzelpreis den
+  // Preis je Einheit übergeben (die Rechnung rechnet: Menge × Einzelpreis = GEsamtpreis)
+  const menge = (d.menge !== undefined && !isNaN(d.menge)) ? String(d.menge) : '1';
+  const einheit = (d.einheit || 'Stk.').trim();
+  if (d.einzelpreis) {
+    // Plain number übergeben (parseFloat im Beleg erwartet "105.5"),
+    // parseNumericValue würde den Punkt als Tausendertrenner entfernen!
+    p.set('einzelpreis1', String(d.einzelpreis));
+  } else if (d.listeneinkaufspreis) {
+    p.set('einzelpreis1', parseNumericValue(d.listeneinkaufspreis));
+  }
   if (d.rabattSatz && parseFloat(d.rabattSatz) > 0) p.set('rabatt', d.rabattSatz);
   if (d.bezugskostenWert && parseFloat(parseNumericValue(d.bezugskostenWert)) > 0) p.set('bezugskosten', parseNumericValue(d.bezugskostenWert));
   if (d.skontoSatz && parseFloat(d.skontoSatz) > 0) p.set('skonto', d.skontoSatz);
@@ -295,7 +305,7 @@ function erzeugeURLFuerAngebotsvergleich(d) {
   const ks = document.getElementById('einkaufKaeufer');
   if (ks?.value) p.set('kunde', ks.value.trim());
   if (d.lieferer) p.set('lieferer', d.lieferer);
-  p.set('menge1', '1'); p.set('einheit1', 'PAL'); p.set('umsatzsteuer', '19');
+  p.set('menge1', menge); p.set('einheit1', einheit); p.set('umsatzsteuer', '19');
   p.set('tag', now.getDate().toString().padStart(2, '0'));
   p.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
   return `belege.html?${p.toString()}`;
