@@ -29,8 +29,7 @@
         </div>
             <div class="sammlung-toolbar" style="gap:10px;">
         <button type="button" onclick="neueSammlung()">+ Neue Sammlung</button>  
-            <button type="button" onclick="sammlungUmbenennen()">Umbenennen</button>
-                <button type="button" onclick="document.getElementById('importJson').click()">Backup importieren</button>
+                    <button type="button" onclick="document.getElementById('importJson').click()">Backup importieren</button>
            <button type="button" id="btnAlleLoeschen" onclick="alleSammlungenLoeschen()"
             style="background:#fde8e8;border-color:#f5c6c6;color:#c0392b;">Alle Sammlungen löschen</button>
         </div>
@@ -41,6 +40,7 @@
     <section>
        
            <div class="sammlung-toolbar" style="gap:8px; border-top:0px solid #eee; padding-bottom:8px;">  
+                    <button type="button" onclick="sammlungUmbenennen()">Umbenennen</button>
              <button type="button" onclick="exportJSON()">Backup (diese Sammlung)</button>
         <input type="file" id="importJson" accept=".json" style="display:none" onchange="importJSON(event)" />
             <button type="button" id="btnAlleEintraegeEntfernen" onclick="sammlungLeeren()" style="background:#fde8e8;border-color:#f5c6c6;color:#c0392b;">Alle Einträge entfernen</button>
