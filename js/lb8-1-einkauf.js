@@ -4,6 +4,7 @@ let kunde = '<i>[Modellunternehmen]</i>';
 // Zuletzt gewählte Werkstoff-Art im Dativ Plural (z. B. "Rohstoffen") –
 // für den Mail-Text bei der Rücksendung der Leihverpackung
 let letzteWerkstoffArtEinkauf = '';
+let letzteWerkstoffKuerzelEinkauf = null;
 
 // ── Vermischte Aufgaben ──────────────────────────────────────────────────
 let modusUeberschreibung = null;
@@ -102,6 +103,15 @@ function getWerkstoffAnzeigeName(werkstoffTyp) {
   if (!kuerzel) return werkstoffTyp;
   const benutzerdefiniert = getBezeichnungFuerKonto(kuerzel);
   return benutzerdefiniert || werkstoffTyp;
+}
+
+// Liefert das Konto-Kürzel (AWR/AWF/AWH/AWB) zu einem Werkstoff-Typ
+function getWerkstoffKuerzel(werkstoffTyp) {
+  const kuerzelMap = {
+    "Rohstoffe": "AWR", "Fremdbauteile": "AWF", "Hilfsstoffe": "AWH", "Betriebsstoffe": "AWB",
+    "von Rohstoffen": "AWR", "von Fremdbauteilen": "AWF", "von Hilfsstoffen": "AWH", "von Betriebsstoffen": "AWB",
+  };
+  return kuerzelMap[werkstoffTyp] || kuerzelMap[(werkstoffTyp || '').replace(/^von\s+/i, '')] || null;
 }
 
 
@@ -340,6 +350,7 @@ function erstelleZufallssatz() {
   letzteWerkstoffArtEinkauf = (randomWerkstoff || '').replace(/^von\s+/i, '');
   if (!letzteWerkstoffArtEinkauf.endsWith('n')) letzteWerkstoffArtEinkauf += 'n';
   const werkstoffAnzeigeName = getWerkstoffAnzeigeName(randomWerkstoff);
+  letzteWerkstoffKuerzelEinkauf = getWerkstoffKuerzel(randomWerkstoff);
   const randomSupply_Wert = array_Supply_Wert[Math.floor(Math.random() * array_Supply_Wert.length)];
   const antwortWerkstoff = kontenWerkstoffe[randomWerkstoff]?.Hauptkonto || kontenWerkstoffe_2[randomWerkstoff]?.Hauptkonto;
   const antwortBezugskosten = kontenWerkstoffe[randomWerkstoff]?.Unterkonto || kontenWerkstoffe_2[randomWerkstoff]?.Unterkonto;
@@ -679,6 +690,49 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
         }
       }
       if (lieferantenId) break;
+    }
+  }
+
+  // 1b. Kategorie-basierte Ermittlung (Fallback, falls der Anzeigename des
+  //     Werkstoffs kein konkreter YAML-Werkstoffname ist, z. B. bei Leihverpackung).
+  //     Der Stammlieferant ist pro Kategorie (AWR/AWF/AWH/AWB) einheitlich.
+  if (!lieferantenId) {
+    let kuerzel = geschaeftsfallDaten?.werkstoffKuerzel || null;
+    if (!kuerzel) {
+      const kuerzelMap = { 'Rohstoffe':'AWR','Fremdbauteile':'AWF','Hilfsstoffe':'AWH','Betriebsstoffe':'AWB','von Rohstoffen':'AWR','von Fremdbauteilen':'AWF','von Hilfsstoffen':'AWH','von Betriebsstoffen':'AWB' };
+      kuerzel = kuerzelMap[werkstoffName] || kuerzelMap[(werkstoffName || '').replace(/^von\s+/i, '')] || null;
+      if (!kuerzel) {
+        for (const k of ['AWR','AWF','AWH','AWB']) {
+          if (getBezeichnungFuerKonto(k) === werkstoffName) { kuerzel = k; break; }
+        }
+      }
+    }
+    const modellEintrag = (typeof yamlData !== 'undefined' && yamlData.length > 0 && aktuellesUnternehmenName)
+      ? yamlData.find(e => e.unternehmen?.name === aktuellesUnternehmenName) : null;
+    if (kuerzel && modellEintrag?.unternehmen?.werkstoffe) {
+      const liste = modellEintrag.unternehmen.werkstoffe[kuerzel];
+      if (Array.isArray(liste)) {
+        const gefunden = liste.find(w => typeof w === 'object' && w !== null && w.stammlieferant);
+        if (gefunden) lieferantenId = gefunden.stammlieferant;
+      }
+    }
+    if (!lieferantenId && kuerzel && typeof yamlData !== 'undefined' && yamlData.length > 0) {
+      for (const eintrag of yamlData) {
+        const liste = eintrag.unternehmen?.werkstoffe?.[kuerzel];
+        if (Array.isArray(liste)) {
+          const gefunden = liste.find(w => typeof w === 'object' && w !== null && w.stammlieferant);
+          if (gefunden) { lieferantenId = gefunden.stammlieferant; break; }
+        }
+      }
+    }
+    if (!lieferantenId && modellEintrag?.unternehmen?.werkstoffe) {
+      for (const k of ['AWR','AWF','AWH','AWB']) {
+        const liste = modellEintrag.unternehmen.werkstoffe[k];
+        if (Array.isArray(liste)) {
+          const gefunden = liste.find(w => typeof w === 'object' && w !== null && w.stammlieferant);
+          if (gefunden) { lieferantenId = gefunden.stammlieferant; break; }
+        }
+      }
     }
   }
 
@@ -1044,6 +1098,7 @@ const geschaeftsfallDaten = {
   bezugskostenWert: antwort_bezugskostenWert,
   skontoSatz: antwort_skontoSatz,
   werkstoff: werkstoffAnzeigeName,
+  werkstoffKuerzel: letzteWerkstoffKuerzelEinkauf,
   konto_2: konto_2,         
   bruttoBetrag: betrag_2,     
   mailRuecksendung: mailTextRuecksendungLV,  
