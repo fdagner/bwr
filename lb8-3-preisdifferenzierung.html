@@ -3,6 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Preisdifferenzierung – Zufallsaufgaben & Arten | meinbwr.de BwR</title>
   <meta name="description" content="Kostenloses BwR-Tool: Zufällige Aufgaben zu Preisdifferenzierungsarten (zeitlich, räumlich, mengenmäßig) für Klasse 8 Realschule Bayern.">
@@ -70,7 +72,18 @@
     <h2>Preisdifferenzierung</h2>
     <div id="generator-container">
       <div class="box">
-        <p>Sie können hier zufällige Aufgaben zur Preisdifferenzierung generieren. Schüler ordnen jeder Beschreibung den passenden Fachbegriff zu: <strong>personenbezogene, mengenbezogene, zeitbezogene</strong> oder <strong>raumbezogene Preisdifferenzierung</strong>.</p>
+        <p>Sie können hier zufällige Aufgaben zur Preisdifferenzierung generieren – wahlweise als <strong>Textaufgaben</strong>, in denen Schüler jede Beschreibung dem passenden Fachbegriff zuordnen (<strong>personenbezogene, mengenbezogene, zeitbezogene</strong> oder <strong>raumbezogene Preisdifferenzierung</strong>), oder als <strong>Fallbeispiel</strong>: eine Preisliste als Tabelle, in der Schüler für jedes Modell mit den Fachbegriffen die passende Art der Preisdifferenzierung zuordnen.</p>
+
+        <h3>Aufgabentyp auswählen</h3>
+        <div class="flex-row">
+          <div>
+            <label for="aufgabenTyp">Aufgabentyp:</label>
+            <select id="aufgabenTyp" onchange="generiereAufgaben()">
+              <option value="text" selected>Textaufgaben – Fachbegriffe zuordnen</option>
+              <option value="fallbeispiel">Fallbeispiel – Tabelle: Fachbegriffe zuordnen</option>
+            </select>
+          </div>
+        </div>
 
         <h3>Unternehmen auswählen</h3>
         <div class="flex-row">
@@ -99,9 +112,10 @@
           </div>
         </div>
         <div id="preisHinweis" style="display:none; color: #a00; font-size: 0.85rem; margin-top: 6px;"></div>
+        <div id="preisRahmenHinweis" style="font-size: 0.85rem; margin-top: 6px;"></div>
 
         <br>
-        <button onclick="zeigeZufaelligePreisdifferenzierung()">Aufgaben erstellen</button>
+        <button onclick="generiereAufgaben()">Aufgaben erstellen</button>
 </div>
           <div id="Container" style="min-width: 580px; flex: 1;" contenteditable="true"></div>
 
@@ -176,7 +190,7 @@
   </div>
   </main>
 
-    <script src="js/lb8-3-preisdifferenzierung.js"></script>
+    <script src="js/lb8-3-preisdifferenzierung.js?v=6"></script>
   <div w3-include-html="footer.html"></div>
   <script>
     includeHTML();

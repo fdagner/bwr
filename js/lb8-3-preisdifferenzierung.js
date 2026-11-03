@@ -4,6 +4,71 @@
 
 let kunde = '<i>[Modellunternehmen]</i>';
 let letztePreisAufgaben = [];
+let letzteFallZeilen = [];   // Fallbeispiel: Tabellenzeilen für den Moodle-Cloze-Export
+let letzteFallName = '';     // Anzeigename des Unternehmens beim Generieren
+
+// ============================================================================
+// PREISRAHMEN AUS YAML-PRODUKTDATEN ÜBERNEHMEN
+// Bei ausgewähltem Unternehmen mit Produktdaten (fertigerzeugnisse.hauptwerk)
+// werden Min./Max.-Preis automatisch übernommen und die Felder ausgegraut.
+// Nur ohne solche Daten bleibt der manuelle Preisrahmen aktiv.
+// ============================================================================
+
+function setzePreisfelderGesperrt(gesperrt) {
+  ['preisMin', 'preisMax'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.disabled = gesperrt;
+    el.style.backgroundColor = gesperrt ? '#e9e9e9' : '';
+    el.style.color = gesperrt ? '#777' : '';
+  });
+}
+
+function wendePreisrahmenAn() {
+  const kundeSelect = document.getElementById('diffKunde');
+  const name = kundeSelect?.value?.trim() || '';
+  const minInput = document.getElementById('preisMin');
+  const maxInput = document.getElementById('preisMax');
+  const hinweis = document.getElementById('preisRahmenHinweis');
+
+  const company = name ? (yamlData || []).find(c => c?.unternehmen?.name === name) : null;
+  const produkte = (company?.unternehmen?.fertigerzeugnisse?.hauptwerk || [])
+    .filter(p => Number.isFinite(p?.preis_min) && Number.isFinite(p?.preis_max) && p.preis_max > p.preis_min);
+
+  if (produkte.length > 0 && minInput && maxInput) {
+    const min = Math.min(...produkte.map(p => p.preis_min));
+    const max = Math.max(...produkte.map(p => p.preis_max));
+    if (min < max) {
+      minInput.value = min;
+      maxInput.value = max;
+      setzePreisfelderGesperrt(true);
+      if (hinweis) {
+        hinweis.textContent = `🔒 Preisrahmen automatisch aus den Produktdaten von „${name}“ übernommen (${min.toLocaleString('de-DE')} € – ${max.toLocaleString('de-DE')} €).`;
+        hinweis.style.color = '#155724';
+      }
+      return;
+    }
+  }
+
+  setzePreisfelderGesperrt(false);
+  if (hinweis) {
+    hinweis.textContent = 'Preisrahmen frei einstellbar (kein Unternehmen mit Produktdaten ausgewählt).';
+    hinweis.style.color = '#666';
+  }
+}
+
+// ============================================================================
+// AUFGABENTYP-ADAPTER (Dropdown #aufgabenTyp)
+// ============================================================================
+
+function generiereAufgaben() {
+  const typ = document.getElementById('aufgabenTyp')?.value || 'text';
+  if (typ === 'fallbeispiel') {
+    zeigeFallbeispielTabelle();
+  } else {
+    zeigeZufaelligePreisdifferenzierung();
+  }
+}
 
 // ============================================================================
 // YAML-DATEN LADEN (identisch zum Marketing-Generator)
@@ -199,6 +264,192 @@ const unternehmensVarianten = [
 ];
 
 // ============================================================================
+// AUFGABENTYP 2: FALLBEISPIEL – PREISLISTE
+// Tabelle im Stil von Arbeitsblatt-Aufgaben (Modell | Nettopreis 1/2 |
+// Preisdifferenzierung), letzte Spalte als Schreiblinie zum Eintragen.
+// ============================================================================
+
+// Beschriftungspaare je Differenzierungsart:
+// „hoch" = Beschriftung Nettopreis 1, „niedrig" = Beschriftung Nettopreis 2
+const preisLabelVarianten = {
+  person: [
+    { hoch: 'Normalpreis',           niedrig: 'Bestandskunden-Preis' },
+    { hoch: 'Privatkunden',          niedrig: 'Geschäftskunden' },
+    { hoch: 'Regulärer Preis',       niedrig: 'Mitarbeiterpreis' },
+    { hoch: 'Listenpreis',           niedrig: 'Stammkunden-Preis' }
+  ],
+  menge: [
+    { hoch: 'Normalpreis',           niedrig: 'Stückpreis ab 10 Stück' },
+    { hoch: 'Einzelpreis',           niedrig: 'Staffelpreis ab 25 Stück' },
+    { hoch: 'Einzelpreis',           niedrig: 'Stückpreis ab größerer Stückzahl' },
+    { hoch: 'Kleinbestellung',       niedrig: 'Großabnehmer' },
+    { hoch: 'Einzelkauf',            niedrig: 'Mengenrabatt ab 20 Stück' }
+  ],
+  zeit: [
+    { hoch: 'Frühling/Sommer',       niedrig: 'Herbst/Winter' },
+    { hoch: 'Hochsaison',            niedrig: 'Nebensaison' },
+    { hoch: 'Vor Weihnachten',       niedrig: 'Nach den Feiertagen' },
+    { hoch: 'Messetage',             niedrig: 'Rest der Saison' },
+    { hoch: 'Wirtschaftsboom',       niedrig: 'Rezession' }
+  ],
+  raum: [
+    { hoch: 'Fachhandel',            niedrig: 'Werkverkauf' },
+    { hoch: 'Fachhandel',            niedrig: 'Online-Shop' },
+    { hoch: 'Inland',                niedrig: 'Export' },
+    { hoch: 'Innenstadt-Geschäft',   niedrig: 'Ländliche Region' },
+    { hoch: 'Eigenes Ladengeschäft', niedrig: 'Internet-Marktplatz' },
+    { hoch: 'Deutschland',           niedrig: 'Ausland' }
+  ]
+};
+
+// Begründungssätze wurden entfernt – Lösung ist die Aufgaben-Tabelle
+// mit ausgefüllter Spalte „Preisdifferenzierung“ (siehe unten).
+
+// Zuständige Kurzform je Differenzierungsart (u. a. Lösungstabelle & Moodle-Cloze-Dropdowns)
+const FALL_CLOZE_OPTIONEN = {
+  person: 'personenbezogen',
+  menge:  'mengenbezogen',
+  zeit:   'zeitbezogen',
+  raum:   'raumbezogen'
+};
+
+function erzeugeFallPreise(pmin, pmax) {
+  let min = Number.isFinite(pmin) ? pmin : 100;
+  let max = Number.isFinite(pmax) ? pmax : 1000;
+  if (min < 1) min = 1;
+  if (max <= min) max = min + 5;
+  // Normalpreis im oberen Drittel, damit genügend Spielraum nach unten bleibt
+  const drittel = Math.round((max - min) / 3);
+  const start = Math.min(min + drittel, max);
+  let hoch = zufallsPreisInBereich(start, max);
+  // Zweiter Preis 5–15 % günstiger, bleibt im Bereich des Produkts
+  const rabatt = 0.05 + Math.random() * 0.10;
+  let niedrig = Math.round((hoch * (1 - rabatt)) / 5) * 5;
+  niedrig = Math.max(min, Math.min(niedrig, hoch - 5));
+  if (niedrig >= hoch) niedrig = hoch - 5;      // immer echt günstiger
+  if (niedrig < min) {                           // sehr kleinen Bereich anheben
+    niedrig = min;
+    if (hoch - niedrig < 5) hoch = niedrig + 5;
+  }
+  return { hoch, niedrig };
+}
+
+function zeigeFallbeispielTabelle() {
+  const container = document.getElementById('Container');
+  if (!container) {
+    console.error('Container nicht gefunden');
+    return;
+  }
+
+  validierePreisEingabe();
+
+  const kundeSelect = document.getElementById('diffKunde');
+  const name = kundeSelect?.value?.trim() || '';
+  const anzeigeName = name || '[Modellunternehmen]';
+
+  // Modelle: aus den YAML-Produktdaten des Unternehmens, sonst Platzhalter
+  const company = name ? (yamlData || []).find(c => c?.unternehmen?.name === name) : null;
+  const produkte = (company?.unternehmen?.fertigerzeugnisse?.hauptwerk || [])
+    .filter(p => p?.name && Number.isFinite(p?.preis_min) && Number.isFinite(p?.preis_max) && p.preis_max > p.preis_min)
+    .filter((p, i, liste) => liste.findIndex(x => x.name === p.name) === i);
+
+  let modelle;
+  if (produkte.length >= 2) {
+    const anzahl = Math.min(produkte.length, 4); // 2–4 Zeilen
+    modelle = shuffle([...produkte]).slice(0, anzahl);
+  } else {
+    // Platzhalter-Modelle auf Basis des (evtl. manuellen) Preisrahmens
+    const { min, max } = getPreisBereich();
+    const namen = ['Modell 1', 'Modell 2', 'Modell 3', 'Modell 4'];
+    const anzahl = Math.random() < 0.5 ? 3 : 4;
+    modelle = [];
+    for (let i = 0; i < anzahl; i++) {
+      modelle.push({ name: namen[i], preis_min: min, preis_max: max });
+    }
+  }
+
+  // Je Zeile eine andere Differenzierungsart (max. 4 Zeilen = alle 4 Arten)
+  const diffKeys = shuffle(['person', 'menge', 'zeit', 'raum']).slice(0, modelle.length);
+
+  const zelle  = 'border:1px solid #555; padding:4px 10px;';
+  const zelleZ = 'border:1px solid #555; padding:4px 10px; text-align:center;';
+  const kopf   = 'border:1px solid #555; padding:4px 10px; background-color:#d9d9d9;';
+  const preis = v => v.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+
+  let aufgabenHTML = `
+    <p>In der Marketingabteilung von <strong>„${anzeigeName}“</strong> liegt eine Preisliste für verschiedene Modelle vor. Nenne mit dem Fachbegriff jeweils die Art der Preisdifferenzierung:</p>
+    <table style="border-collapse: collapse; font-family: inherit; min-width: 560px;">
+      <thead>
+        <tr>
+          <th style="${zelle}">Modell</th>
+          <th style="${kopf}">Nettopreis 1</th>
+          <th style="${kopf}">Nettopreis 2</th>
+          <th style="${kopf}">Preisdifferenzierung</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+  const zeilen = letzteFallZeilen;   // global: für den Moodle-Cloze-Export
+  zeilen.length = 0;
+  letzteFallName = anzeigeName;
+  letztePreisAufgaben = [];
+
+  modelle.forEach((modell, idx) => {
+    const diffKey = diffKeys[idx];
+    const diff = differenzierungen[diffKey];
+    const vari = pick(preisLabelVarianten[diffKey]);
+    const { hoch, niedrig } = erzeugeFallPreise(modell.preis_min, modell.preis_max);
+    const hochText = preis(hoch);
+    const niedrigText = preis(niedrig);
+    zeilen.push({ name: modell.name, vari, hochText, niedrigText, diffKey, diff });
+
+    aufgabenHTML += `
+        <tr>
+          <td style="${zelle}">&bdquo;${modell.name}&ldquo;</td>
+          <td style="${zelleZ}">${vari.hoch}<br><strong>${hochText}</strong></td>
+          <td style="${zelleZ}">${vari.niedrig}<br><strong>${niedrigText}</strong></td>
+          <td style="${zelleZ} min-width:140px;">&nbsp;</td>
+        </tr>`;
+
+    // Moodle-Export (Zuordnungs-Export fallback / Textausgabe): Tabellenzeile = Teilfrage
+    letztePreisAufgaben.push({
+      text: `Preisliste &bdquo;${modell.name}&ldquo;: ${vari.hoch} → ${hochText} / ${vari.niedrig} → ${niedrigText}`,
+      label: diff.label
+    });
+  });
+
+  aufgabenHTML += '</tbody></table>';
+
+  let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
+  // Identische Tabelle wie in der Aufgabe – letzte Spalte mit dem Fachbegriff gefüllt
+  loesungenHTML += `
+    <table style="border-collapse: collapse; font-family: inherit; min-width: 560px;">
+      <thead>
+        <tr>
+          <th style="${zelle}">Modell</th>
+          <th style="${kopf}">Nettopreis 1</th>
+          <th style="${kopf}">Nettopreis 2</th>
+          <th style="${kopf}">Preisdifferenzierung</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+  zeilen.forEach(z => {
+    loesungenHTML += `
+        <tr>
+          <td style="${zelle}">&bdquo;${z.name}&ldquo;</td>
+          <td style="${zelleZ}">${z.vari.hoch}<br><strong>${z.hochText}</strong></td>
+          <td style="${zelleZ}">${z.vari.niedrig}<br><strong>${z.niedrigText}</strong></td>
+          <td style="${zelle}"><strong>${FALL_CLOZE_OPTIONEN[z.diffKey]}</strong></td>
+        </tr>`;
+  });
+
+  loesungenHTML += '</tbody></table>';
+
+  container.innerHTML = aufgabenHTML + loesungenHTML;
+}
+
+// ============================================================================
 // HAUPTFUNKTION – PREISDIFFERENZIERUNG ANZEIGEN
 // ============================================================================
 
@@ -353,20 +604,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   kundeSelect.addEventListener('change', () => {
     kunde = kundeSelect.value.trim() || '';
+    wendePreisrahmenAn();
   });
 
-  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
-  // sobald die YAML-Daten tatsächlich geladen sind
-  if (yamlData && yamlData.length > 0) {
+  const starteGenerator = () => {
     fillCompanyDropdowns();
     autoSelectMyCompany();
-    zeigeZufaelligePreisdifferenzierung();
+    wendePreisrahmenAn();
+    generiereAufgaben();
+  };
+
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Preisrahmen übernehmen →
+  // Aufgaben starten, sobald die YAML-Daten tatsächlich geladen sind
+  if (yamlData && yamlData.length > 0) {
+    starteGenerator();
   } else {
-    document.addEventListener('yamlDataLoaded', () => {
-      fillCompanyDropdowns();
-      autoSelectMyCompany();
-      zeigeZufaelligePreisdifferenzierung();
-    }, { once: true });
+    document.addEventListener('yamlDataLoaded', starteGenerator, { once: true });
   }
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
@@ -381,6 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const MOODLE_PREIS_PRAEFIX = '8.3-03';
 const MOODLE_PREIS_TITELENDE = 'meinBwR-Zuordnen';
+const MOODLE_FALL_TITELENDE = 'meinBwR-Cloze';
 const MOODLE_PREIS_ANWEISUNG = 'Ordne die jeweilige Art der Preisdifferenzierung zu!';
 const MOODLE_PREIS_PUNKTE_PRO_AUFGABE = 1;
 
@@ -431,7 +685,107 @@ function mxBaueMatchingXml(aufgaben) {
   return xml;
 }
 
+// ============================================================================
+// MOODLE-XML-EXPORT FALLBEISPIEL – Fragetyp „Cloze“ (Lückentext)
+// Die Preislisten-Tabelle wird als Frage übernommen, in jeder Zeile sitzt
+// in der Spalte „Preisdifferenzierung“ ein Inline-Dropdown (MULTICHOICE).
+// ============================================================================
+
+// Kurzform der vier Differenzierungsarten für die Inline-Dropdowns
+// (FALL_CLOZE_OPTIONEN ist im Fallbeispiel-Abschnitt oben definiert)
+
+// Sonderzeichen, die in Cloze-Antworten maskiert werden müssen
+function clozeEsc(s) {
+  return String(s ?? '').replace(/([\\}#~\/])/g, '\\$1');
+}
+
+// Ein MULTICHOICE-Dropdown mit 4 shuffled Optionen (richtig = „=“)
+function fallClozeSelect(diffKey) {
+  const richtig = FALL_CLOZE_OPTIONEN[diffKey];
+  const optionen = shuffle(Object.keys(FALL_CLOZE_OPTIONEN))
+    .map(k => (FALL_CLOZE_OPTIONEN[k] === richtig ? '=' : '') + clozeEsc(FALL_CLOZE_OPTIONEN[k]));
+  return '{1:MULTICHOICE:' + optionen.join('~') + '}';
+}
+
+function baueFallClozeXml() {
+  if (!letzteFallZeilen.length) return null;
+
+  const zelle  = 'border:1px solid #555; padding:4px 10px;';
+  const zelleZ = 'border:1px solid #555; padding:4px 10px; text-align:center;';
+  const kopf   = 'border:1px solid #555; padding:4px 10px; background-color:#d9d9d9;';
+
+  let table = `
+    <table style="border-collapse: collapse; font-family: inherit; min-width: 560px;">
+      <thead>
+        <tr>
+          <th style="${zelle}">Modell</th>
+          <th style="${kopf}">Nettopreis 1</th>
+          <th style="${kopf}">Nettopreis 2</th>
+          <th style="${kopf}">Preisdifferenzierung</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+  letzteFallZeilen.forEach(z => {
+    table += `
+        <tr>
+          <td style="${zelle}">&bdquo;${z.name}&ldquo;</td>
+          <td style="${zelleZ}">${z.vari.hoch}<br><strong>${z.hochText}</strong></td>
+          <td style="${zelleZ}">${z.vari.niedrig}<br><strong>${z.niedrigText}</strong></td>
+          <td style="${zelleZ} min-width:140px;">${fallClozeSelect(z.diffKey)}</td>
+        </tr>`;
+  });
+
+  table += '</tbody></table>';
+
+  const fragetext = `
+    <p>In der Marketingabteilung von <strong>„${letzteFallName}“</strong> liegt eine Preisliste für verschiedene Modelle vor. Nenne mit dem Fachbegriff jeweils die Art der Preisdifferenzierung:</p>
+    <p>In der Spalte <em>Preisdifferenzierung</em> jeweils die passende Art über das Dropdown auswählen: personenbezogen, mengenbezogen, zeitbezogen oder raumbezogen.</p>
+    ${table}`;
+
+  const punkte = letzteFallZeilen.length * MOODLE_PREIS_PUNKTE_PRO_AUFGABE;
+  const titel = `${MOODLE_PREIS_PRAEFIX}T${mxIdBasis()}${MOODLE_FALL_TITELENDE}`;
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+  xml += `  <question type="cloze">\n`;
+  xml += `    <name>\n      <text>${mxEsc(titel)}</text>\n    </name>\n`;
+  xml += `    <questiontext format="html">\n      <text>${mxCdata(fragetext)}</text>\n    </questiontext>\n`;
+  xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <shuffleanswers>false</shuffleanswers>\n`;
+  xml += `  </question>\n\n</quiz>\n`;
+  return xml;
+}
+
+function exportiereMoodleFallCloze() {
+  const xml = baueFallClozeXml();
+  if (!xml) {
+    alert('Bitte zuerst Fallbeispiel-Aufgaben erstellen.');
+    return;
+  }
+
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const dateiname = `cloze-preisdifferenzierung-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function exportiereMoodle() {
+  // Fallbeispiel → eigener Fragetyp „Cloze“ mit Inline-Dropdowns in der Tabelle
+  const typ = document.getElementById('aufgabenTyp')?.value || 'text';
+  if (typ === 'fallbeispiel') {
+    exportiereMoodleFallCloze();
+    return;
+  }
   if (!letztePreisAufgaben.length) {
     alert('Bitte zuerst Aufgaben erstellen.');
     return;
