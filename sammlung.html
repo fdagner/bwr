@@ -12,7 +12,7 @@
   <script src="js/menu.js?v=14"></script>
   <script src="js/js-yaml.min.js"></script>
   <script src="js/utils.js?v=11"></script>
-  <script src="js/collection.js?v=33"></script>
+  <script src="js/collection.js?v=35"></script>
 
 <body>
   <main>
@@ -23,9 +23,10 @@
 
     <div class="box">
       <section class="form-section">
-        <div style="gap:10px;">
+        <div style="gap:10px; display:flex; align-items:center; flex-wrap:wrap;">
           <label for="collectionSelect" style="font-weight:600;">Sammlung auswählen:</label>
           <select id="collectionSelect" class="collection-select" style="min-width:180px;"></select>
+          <span id="countInfoTop" style="margin-left:auto; font-size:.9rem; color:#555;"></span>
         </div>
             <div class="sammlung-toolbar" style="gap:10px;">
         <button type="button" onclick="neueSammlung()">+ Neue Sammlung</button>  
@@ -128,7 +129,12 @@
       const grid = document.getElementById('grid');
       aktualisiereUeberschrift();
       const shown = items;
-      document.getElementById('countInfo').textContent = shown.length + ' von ' + items.length + ' Einträgen (max. 100)';
+      document.getElementById('countInfo').textContent = shown.length + ' von ' + items.length + ' Einträge (max. ' + Collection.MAX_ITEMS + ')';
+      const countInfoTop = document.getElementById('countInfoTop');
+      if (countInfoTop) {
+        countInfoTop.textContent = 'Sammlungen: ' + collections.length + ' (max. ' + Collection.MAX_COLLECTIONS + ')';
+        countInfoTop.title = 'Anzahl angelegter Sammlungen (max. ' + Collection.MAX_COLLECTIONS + ' gesamt)';
+      }
       document.getElementById('btnAlleEintraegeEntfernen').style.display = items.length ? '' : 'none';
       if (shown.length === 0) {
         grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #666; font-style: italic; margin: 32px 0;">Keine Einträge. Füge über „+ Sammlung“ Inhalte hinzu.</p>';
@@ -167,6 +173,10 @@
     function escapeHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
     async function neueSammlung() {
+      if (collections.length >= Collection.MAX_COLLECTIONS) {
+        alert('Maximale Anzahl von ' + Collection.MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte l�schen Sie zuerst eine Sammlung.');
+        return;
+      }
       const name = prompt('Name der neuen Sammlung:');
       if (!name) return;
       const c = await Collection.createCollection(name);
@@ -353,6 +363,16 @@
       }
 
       const existingCols = await Collection.getCollections();
+      // Sammlungs-Platzcheck: wie viele NEUE Sammlungen w�rde der Import erzeugen?
+      const neueCols = (data.collections || []).filter(c =>
+        !existingCols.some(x => (x.name || '').trim().toLowerCase() === (c.name || '').trim().toLowerCase()));
+      if (existingCols.length + neueCols.length > Collection.MAX_COLLECTIONS) {
+        alert('Zu viele Sammlungen: Der Import br�uchte ' + neueCols.length + ' neue Sammlung/en, '
+          + 'es sind aber insgesamt maximal ' + Collection.MAX_COLLECTIONS + ' Sammlungen erlaubt (aktuell ' + existingCols.length + ').\n\n'
+          + 'Tipp: L�schen Sie zuerst �ltere oder leere Sammlungen.');
+        event.target.value = '';
+        return;
+      }
       const idMap = {};
       let firstImportedId = null;
       for (const c of (data.collections || [])) {
@@ -366,6 +386,12 @@
             targetId = dup.id;
             await Collection.updateCollectionCover(dup.id, c.cover || {});
           } else {
+            const aktuelleCols = await Collection.getCollections();
+            if (aktuelleCols.length >= Collection.MAX_COLLECTIONS) {
+              alert('Maximale Anzahl von ' + Collection.MAX_COLLECTIONS + ' Sammlungen erreicht. Seit dem Laden der Datei wurde bereits eine Sammlung angelegt (z. B. im zweiten Tab).');
+              event.target.value = '';
+              return;
+            }
             const dateStr = new Date().toISOString().slice(0, 10);
             const newC = await Collection.createCollection(c.name + ' ' + dateStr);
             targetId = newC.id;

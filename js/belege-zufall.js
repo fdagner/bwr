@@ -327,7 +327,7 @@ async function belegZurSammlung(containerId) {
         }
     } catch (e) {
         if (e && e.message === 'MAX_ITEMS') {
-            alert('Sammlung voll (max. 100 Einträge).');
+            alert('Sammlung voll (max. 25 Einträge).');
         } else {
             console.error(e);
             alert('Fehler beim Hinzufügen zur Sammlung: ' + (e && e.message ? e.message : e));

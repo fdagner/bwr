@@ -1,6 +1,10 @@
 // Globale Variable – wird von einkauf.js benötigt
 let kunde = '<i>[Modellunternehmen]</i>';
 
+// Zuletzt gewählte Werkstoff-Art im Dativ Plural (z. B. "Rohstoffen") –
+// für den Mail-Text bei der Rücksendung der Leihverpackung
+let letzteWerkstoffArtEinkauf = '';
+
 // ── Vermischte Aufgaben ──────────────────────────────────────────────────
 let modusUeberschreibung = null;
 const EINKAUF_MODI = ['buchungssatz', 'einkaufskalkulation', 'skontobuchungssatz'];
@@ -131,6 +135,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (getModus() === 'buchungssatz') {
       mitBezugskosten.disabled = false;
       mitRuecksendung.disabled = false;
+    };
+
+    if (getModus() === 'leihverpackung') {
+      // Geschäftsfall erzwingt Bezugskosten (Leihverpackung) und Rücksendung:
+      // Häkchen automatisch gesetzt und ausgegraut
+      mitBezugskosten.disabled = true;
+      mitBezugskosten.checked = true;
+      mitRuecksendung.disabled = true;
+      mitRuecksendung.checked = true;
     };
 
       if (getModus() === 'gemischt') {
@@ -282,6 +295,8 @@ function erstelleZufallssatz() {
   const array_Werkstoffe_2 = Object.keys(kontenWerkstoffe_2);
   const array_Supply_Wert = ['im Wert von', 'mit', 'in Höhe von', 'mit einem Warenwert von ', ' '];
   const array_Zahlung = Object.keys(kontenZahlung);
+  // Leihverpackung: Einkauf immer auf Ziel (Eingangsrechnung), damit Rechnung + Rücksende-Mail zusammenpassen
+  const array_ZahlungLeihverpackung = array_Zahlung.filter(k => kontenZahlung[k] === '4400 VE');
   const array_Supply_Rabatt = [`, abzüglich ${random_Rabatt} % Rabatt`];
   const array_Supply_Rabatt_2 = [
     `. Ausgehandelt wurden zusätzlich ${random_Rabatt} % Treuerabatt`,
@@ -309,12 +324,21 @@ function erstelleZufallssatz() {
 
   // Zufällige Auswahl der Elemente und der alternativen Arrays
   const selectedarray_Subjekt = Math.random() < 0.5 ? array_Subjekt : array_Subjekt_2;
-  const selectedarray_Werkstoffe = selectedarray_Subjekt === array_Subjekt_2 ? array_Werkstoffe_2 : array_Werkstoffe;
+  const selectedarray_WerkstoffeBasis = selectedarray_Subjekt === array_Subjekt_2 ? array_Werkstoffe_2 : array_Werkstoffe;
+  let selectedarray_Werkstoffe = selectedarray_WerkstoffeBasis;
+  // Leihverpackung: nur Rohstoffe, Fremdbauteile und Hilfsstoffe (AWR/AWF/AWH) verwenden
+  if (getModus() === 'leihverpackung') {
+    selectedarray_Werkstoffe = selectedarray_Werkstoffe.filter(w => !w.includes('Betriebsstoffe'));
+  }
   const selectedarray_Angebot = selectedarray_Werkstoffe === array_Werkstoffe ? array_Subjekt_3 : array_Subjekt_4;
   // Zufällige Auswahl der Elemente aus den ausgewählten Arrays
   const randomSubjekt = selectedarray_Subjekt[Math.floor(Math.random() * selectedarray_Subjekt.length)];
   const randomAngebot = selectedarray_Angebot[Math.floor(Math.random() * selectedarray_Angebot.length)];
   const randomWerkstoff = selectedarray_Werkstoffe[Math.floor(Math.random() * selectedarray_Werkstoffe.length)];
+  // Werkstoff-Art merken ("von Rohstoffen" → "Rohstoffe") – für den Rücksende-Mail-Text;
+  // nach "von" steht Dativ Plural ("Rohstoffen", "Fremdbauteilen", "Hilfsstoffen")
+  letzteWerkstoffArtEinkauf = (randomWerkstoff || '').replace(/^von\s+/i, '');
+  if (!letzteWerkstoffArtEinkauf.endsWith('n')) letzteWerkstoffArtEinkauf += 'n';
   const werkstoffAnzeigeName = getWerkstoffAnzeigeName(randomWerkstoff);
   const randomSupply_Wert = array_Supply_Wert[Math.floor(Math.random() * array_Supply_Wert.length)];
   const antwortWerkstoff = kontenWerkstoffe[randomWerkstoff]?.Hauptkonto || kontenWerkstoffe_2[randomWerkstoff]?.Hauptkonto;
@@ -332,7 +356,8 @@ function erstelleZufallssatz() {
   randomNettowertbeiAngebot = `Listenpreis ${nettoWert} netto`;
 
 
-  const randomZahlung = array_Zahlung[Math.floor(Math.random() * array_Zahlung.length)];
+  const array_ZahlungBasis = getModus() === 'leihverpackung' ? array_ZahlungLeihverpackung : array_Zahlung;
+  const randomZahlung = array_ZahlungBasis[Math.floor(Math.random() * array_ZahlungBasis.length)];
   const antwortZahlung = kontenZahlung[randomZahlung]
 
 
@@ -373,7 +398,12 @@ function erstelleZufallssatz() {
 
   // Berechnung mit Bezugskosten
   if (mitBezugskosten.checked) {
-    randomSupply_Bezugskosten = array_Supply_Bezugskosten[Math.floor(Math.random() * array_Supply_Bezugskosten.length)];
+    if (getModus() === 'leihverpackung') {
+      // Geschäftsfall "Leihverpackung": immer diese Bezugskosten-Aussage
+      randomSupply_Bezugskosten = `. Die Leihverpackung in Höhe von ${random_Bezugskosten} netto wird zusätzlich berechnet`;
+    } else {
+      randomSupply_Bezugskosten = array_Supply_Bezugskosten[Math.floor(Math.random() * array_Supply_Bezugskosten.length)];
+    }
     berechnung_USTWert = (berechnung_nettoWert + parseFloat(random_Bezugskosten)) * 0.19;
     berechnung_USTWert = roundToTwoDecimals(berechnung_USTWert);
     berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert) + parseFloat(random_Bezugskosten);
@@ -679,6 +709,18 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
     return `belege.html?${params.toString()}`;
   }
 
+  // Rücksende-Mail (Leihverpackung): der Lieferer schreibt dem Modellunternehmen,
+  // welchen Betrag er für die zurückgesendete Leihverpackung gutbringt
+  if (typ === 'mailrueck') {
+    params.set('beleg', 'email');
+    params.set('vorlage', 'mail3.html');
+    if (lieferantenName) params.set('absender', lieferantenName);
+    if (kaeuferSelect?.value) params.set('empfaenger', kaeuferSelect.value.trim());
+    params.set('betreff', 'Rücksendung Leihverpackung');
+    params.set('text', geschaeftsfallDaten.mailRuecksendung || '');
+    return `belege.html?${params.toString()}`;
+  }
+
   // 2. Firmennamen über die ermittelte ID holen
   const lieferantenName2 = lieferantenName;
 
@@ -720,8 +762,11 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
     if (geschaeftsfallDaten.listeneinkaufspreis)
       params.set('einzelpreis1', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
     if (geschaeftsfallDaten.rabattSatz) params.set('rabatt', geschaeftsfallDaten.rabattSatz);
-    if (geschaeftsfallDaten.bezugskostenWert)
+    if (geschaeftsfallDaten.bezugskostenWert) {
       params.set('bezugskosten', parseNumericValue(geschaeftsfallDaten.bezugskostenWert));
+      // Geschäftsfall Leihverpackung: Bezeichnung auf der Rechnung statt "Versand"
+      if (getModus() === 'leihverpackung') params.set('bezugskostenart', 'Leihverpackung');
+    }
     if (geschaeftsfallDaten.skontoSatz) params.set('skonto', geschaeftsfallDaten.skontoSatz);
     if (werkstoffName) params.set('artikel1', werkstoffName);
 
@@ -801,6 +846,22 @@ function erstelleAngebotMailButton(nummer, daten) {
     `;
 }
 
+// Rücksende-Mail (Leihverpackung): der Lieferer schreibt, welchen Betrag er
+// für die zurückgesendete Leihverpackung brutto gutschreibt
+function erstelleMailRuecksendungButton(nummer, daten, buchstabe = 'b') {
+  const quelle = einkaufMailQuelleAnlegen('mailrueck', daten);
+  return `
+        <button
+            class="geschaeftsfall-beleg-button angebot-mail-button"
+            onclick="window.open(einkaufMailUrlErzeugen(${quelle}), '_blank')"
+            title="Mail vom Lieferer (Gutschrift für die Leihverpackung) für Aufgabe ${nummer} öffnen"
+            style="width: 100%; padding: 10px 12px; font-size: 14px;"
+        >
+            📧 ${nummer}${buchstabe}. Mail vom Lieferer (Rücksendung)
+        </button>
+    `;
+}
+
 function erstelleRechnungButton(nummer, daten, buchstabe = 'b') {
   const url = erzeugeURLFuerGeschaeftsfall(daten, 'rechnung');   // → KEIN vorlage-Parameter
   return `
@@ -846,10 +907,18 @@ function zeigeZufaelligenSatz() {
 
   for (let i = 1; i <= anzahl; i++) {
         if (gemischt) {
-      modusUeberschreibung = EINKAUF_MODI[Math.floor(Math.random() * EINKAUF_MODI.length)];
-      // Nebenbedingungen je Typ: Skonto ohne Bezugskosten/Rücksendung, Kalkulation ohne Rücksendung
-      mitBezugskosten.checked = origBezug && modusUeberschreibung !== 'skontobuchungssatz';
-      mitRuecksendung.checked = origRueck && modusUeberschreibung === 'buchungssatz';
+      // Leihverpackung nur einbeziehen, wenn der Nutzer Bezugskosten UND Rücksendungen angehakt hat
+      const gemischtKandidaten = (origBezug && origRueck) ? [...EINKAUF_MODI, 'leihverpackung'] : EINKAUF_MODI;
+      modusUeberschreibung = gemischtKandidaten[Math.floor(Math.random() * gemischtKandidaten.length)];
+      if (modusUeberschreibung === 'leihverpackung') {
+        // Geschäftsfall erzwingt Bezugskosten (Leihverpackung) und Rücksendung
+        mitBezugskosten.checked = true;
+        mitRuecksendung.checked = true;
+      } else {
+        // Nebenbedingungen je Typ: Skonto ohne Bezugskosten/Rücksendung, Kalkulation ohne Rücksendung
+        mitBezugskosten.checked = origBezug && modusUeberschreibung !== 'skontobuchungssatz';
+        mitRuecksendung.checked = origRueck && modusUeberschreibung === 'buchungssatz';
+      }
     }
     const currentI = i;
     const [
@@ -864,11 +933,19 @@ function zeigeZufaelligenSatz() {
       berechnung_bruttoWertRuecksendung, werkstoffAnzeigeName
     ] = erstelleZufallssatz();
 
+    // ── Leihverpackung: Beträge für die Rücksendung (anteilig zu den Bezugskosten) ──
+    const bezugskostenNumLV = parseFloat(parseNumericValue(antwort_bezugskostenWert)) || 0;
+    const vorsteuerRuecksendungLV = formatCurrency(roundToTwoDecimals(bezugskostenNumLV * 0.19));
+    const bruttoRuecksendungLV = formatCurrency(roundToTwoDecimals(bezugskostenNumLV * 1.19));
+    const mailTextRuecksendungLV = `Für die zurückgesendete Leihverpackung für die Lieferung von ${letzteWerkstoffArtEinkauf} schreiben wir Ihnen ${bruttoRuecksendungLV} brutto gut.`;
+    const ruecksendungLVText = `${kunde} sendet die Leihverpackung an den Lieferer zurück`;
+
     // Aufgabe und Lösung für KI-Prompt merken
 const aufgabeText = (() => {
   switch (getModus()) {
     case 'einkaufskalkulation': return angebotSatz.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     case 'skontobuchungssatz':  return (zufaelligerSatz + ' ' + skontoSatz).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    case 'leihverpackung':      return (zufaelligerSatz + ' ' + ruecksendungLVText).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     default:                    return zufaelligerSatz.replace(/\s+/g, ' ').trim();
   }
 })();
@@ -940,6 +1017,11 @@ letzteGenerierteGfListeEinkauf.push({ aufgabe: aufgabeText, loesung: loesungText
         }
         break;
 
+      case 'leihverpackung':
+        aufgabeHtml += `<div>${formattedSatz}</div>`;
+        aufgabeHtml += `<div style="margin: 8px 0 20px;"><ol style="list-style-type: lower-latin;"><li>Bilde den Buchungssatz.</li><li>Bilde den Buchungssatz: ${ruecksendungLVText}.</li></ol></div>`;
+        break;
+
       case 'skontobuchungssatz':
         aufgabeHtml += `<div>${formattedSatz}</div>`;
         aufgabeHtml += `<div style="margin: 8px 0 20px;">${formattedSkonto}</div>`;
@@ -964,12 +1046,21 @@ const geschaeftsfallDaten = {
   werkstoff: werkstoffAnzeigeName,
   konto_2: konto_2,         
   bruttoBetrag: betrag_2,     
+  mailRuecksendung: mailTextRuecksendungLV,  
 };
 
     const buttonDiv = document.createElement('div');
     buttonDiv.style.margin = '12px 0';
 
-    if (getModus() === 'einkaufskalkulation') {
+    if (getModus() === 'leihverpackung') {
+      // 1a: Eingangsrechnung (Wareneingang inkl. Leihverpackung)
+      // 1b: Mail vom Lieferer (Gutschrift für die zurückgesendete Leihverpackung)
+      buttonDiv.innerHTML = `
+        ${erstelleRechnungButton(currentI, geschaeftsfallDaten, 'a')}
+        <div style="margin-top:8px;"></div>
+        ${erstelleMailRuecksendungButton(currentI, geschaeftsfallDaten, 'b')}
+    `;
+    } else if (getModus() === 'einkaufskalkulation') {
       // Angebot per Mail (vom Lieferer) + Angebot als Beleg + Eingangsrechnung –
       // beide Angebots-Belege gehören zu 1a
       buttonDiv.innerHTML = `
@@ -1003,7 +1094,9 @@ const geschaeftsfallDaten = {
     buttonColumn.appendChild(buttonDiv);
 
     // ── Lösung / Antwort (wird exportiert) ─────────────────────────────
-    antwortOutput += `<div style="margin-top: 1.5em;"><strong>${parseInt(i)}.</strong><br>`;
+    // Lösung 1a (Leihverpackung) bzw. 1 (andere Modi)
+    const loesungsNummer = getModus() === 'leihverpackung' ? `${parseInt(i)}a.` : `${parseInt(i)}.`;
+    antwortOutput += `<div style="margin-top: 1.5em;"><strong>${loesungsNummer}</strong><br>`;
 
     if (getModus() === 'einkaufskalkulation') {
       antwortOutput += `
@@ -1098,6 +1191,52 @@ const geschaeftsfallDaten = {
     }
 
     antwortOutput += `</div>`;
+
+    // ── Leihverpackung: Lösung 1b (Rücksendung nur der Verpackung) ───────
+    if (getModus() === 'leihverpackung') {
+      // KI-Prompt: Rücksendung als zweite Teilaufgabe erfassen
+      letzteGenerierteGfListeEinkauf.push({
+        aufgabe: `${ruecksendungLVText}.`,
+        loesung: `Buchungssatz Rücksendung Leihverpackung:\n${konto_2} ${bruttoRuecksendungLV} an ${antwort_bezugskosten} ${antwort_bezugskostenWert} / 2600 VORST ${vorsteuerRuecksendungLV}`,
+      });
+
+      if (typeof moodleFragen !== 'undefined') {
+        const nrLV = String(currentI).padStart(2, '0');
+        moodleFragen.push({
+          name: `Leihverpackung_${nrLV}`,
+          text: '<p>Bilde den Buchungssatz mit Kontennummern.</p>' +
+                `<p>Ausgangsfall (bereits gebucht): ${formattedSatz}</p>` +
+                `<p>Es wird nur die Leihverpackung zurückgesendet – der Lieferer schreibt die bezahlten Bezugskosten anteilig brutto gut.</p>` +
+                `<p>Bilde den Buchungssatz zur Rücksendung der Leihverpackung.</p>`,
+          feedback: '',
+          zeilen: [
+            { d: konto_2, da: moodleBetrag(bruttoRuecksendungLV), c: antwort_bezugskosten, ca: moodleBetrag(antwort_bezugskostenWert) },
+            { d: '', da: 0, c: '2600 VORST', ca: moodleBetrag(vorsteuerRuecksendungLV) },
+          ],
+        });
+      }
+
+      antwortOutput += `<strong>${parseInt(i)}b.</strong><br>`;
+      antwortOutput += `<table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
+          <tbody>
+            <tr>
+              <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${konto_2}</td>
+              <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${bruttoRuecksendungLV}</td>
+              <td style="text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
+              <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${antwort_bezugskosten}</td>
+              <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${antwort_bezugskostenWert}</td>
+            </tr>
+            <tr>
+              <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1"></td>
+              <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1"></td>
+              <td style="text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1"></td>
+              <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">2600 VORST</td>
+              <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${vorsteuerRuecksendungLV}</td>
+            </tr>
+          </tbody>
+        </table><br>`;
+    }
+
 if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && getModus() === 'buchungssatz') {
     letzteGenerierteGfListeEinkauf.push({
     aufgabe: `${formattedRuecksendung} aus Geschäftsfall ${currentI} zurück und erhält dafür eine Gutschrift.`,

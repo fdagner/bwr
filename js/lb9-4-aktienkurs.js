@@ -746,7 +746,7 @@ async function aktienZurSammlung() {
         });
         alert('Zur Sammlung hinzugefügt.');
     } catch (e) {
-        if (e && e.message === 'MAX_ITEMS') alert('Sammlung voll (max. 100).');
+        if (e && e.message === 'MAX_ITEMS') alert('Sammlung voll (max. 25).');
         else { console.error(e); alert('Fehler beim Hinzufügen.'); }
     }
 }

@@ -265,6 +265,9 @@ Netto (AK): ${formatEuro(ak)} &nbsp;|&nbsp; Vorsteuer 19&nbsp;%: ${formatEuro(ka
 
 let letzteAfaAufgabe = null;
 let renderedCharts   = [];
+// Hochzähler pro Generierung: veraltete Chart-Exporte (async nach destroy())
+// werden abgebrochen, statt "Element not found"-Fehler zu werfen
+let chartGeneration = 0;
 
 function getSelectedKategorie() {
   const sel = document.getElementById('anlageSelect');
@@ -285,6 +288,7 @@ function zeigeAbschreibungMitManuellen() {
 function zeigeZufaelligeAbschreibungsAufgabe(manuelleAK = null, manuelleND = null) {
   renderedCharts.forEach(c => { try { c.destroy(); } catch (e) {} });
   renderedCharts = [];
+  const chartGen = ++chartGeneration;
 
   const katKey  = getSelectedKategorie();
   const anlagen = afaTabelle[katKey];
@@ -481,6 +485,7 @@ stroke: {
   renderedCharts.push(chart);
   try {
     await chart.render();
+    if (chartGen !== chartGeneration) return; // neue Generierung → Export veraltet
 
     // Legende nach Render einfügen
     const wrapper = document.getElementById('afaChartInner');
@@ -488,12 +493,27 @@ stroke: {
 
     // Diagramm als Bild in die Aufgabe einsetzen
     const { imgURI } = await chart.dataURI({ scale: 2 });
-    const platz = document.getElementById(`afaImg-${chartId}`);
+    if (chartGen !== chartGeneration) return;
+    // PNG in den ROH-Container schreiben und dann den Jodit-Editor
+    // synchronisieren (Muster aus lb8-2-bestellmenge). Ein direkter Insert
+    // in den Editor-Layer wird von der Jodit-Synchronisierung mit dem
+    // (bildlosen) Roh-Container-Stand überschrieben → Diagramm verschwände.
+    const cont = document.getElementById('Container');
+    const platz = (cont && cont.querySelector('#afaImg-' + chartId)) ||
+                  document.getElementById('afaImg-' + chartId);
     if (platz && imgURI) {
       platz.innerHTML = `<p><img src="${imgURI}" alt="Diagramm zur linearen Abschreibung" style="max-width:90%;height:auto;"></p>`;
+      // Editor sofort auf den neuen Stand bringen, damit die Jodit-Sync-Logik
+      // (MutationObserver, 300 ms) das Diagramm nicht wieder herauslöst
+      if (window.JoditEditor && cont && cont._jodit && cont._jodit.editor && cont._jodit.editor.isConnected) {
+        try {
+          cont._jodit.value = cont.innerHTML;
+          cont._joditSrc = cont.innerHTML;
+        } catch (e) { console.warn('Editor-Sync nach Diagramm-Export fehlgeschlagen', e); }
+      }
     }
   } catch (e) {
-    console.warn('Diagramm-Export übersprungen:', e);
+    if (chartGen === chartGeneration) console.warn('Diagramm-Export übersprungen:', e);
   }
 }, 50);
 
@@ -509,7 +529,6 @@ stroke: {
 
   const aufgaben = erstelleAufgabenSet(anlage, ak, nd, afaBetrag);
 
-  container.innerHTML = '';
   buttonColumn.innerHTML = '';
 
   // Aufgaben anzeigen
@@ -521,7 +540,6 @@ stroke: {
   <div id="afaImg-${chartId}"></div>
   <ol>${aufgaben.map(a => `<li>${a.text}</li>`).join('')}</ol>
 `;
-  container.appendChild(aufgabenSection);
 
   // Lösungen anzeigen
   const loesungDiv = document.createElement('div');
@@ -533,7 +551,25 @@ stroke: {
              </div>`;
   });
   loesungDiv.innerHTML = html;
-  container.appendChild(loesungDiv);
+
+  // Ausgabe: läuft schon ein Editor, über JoditEditor.setContent schreiben,
+  // damit Editor-Wert und Quelle synchron bleiben.
+  const aufgabeHtml = aufgabenSection.outerHTML + '<br>' + loesungDiv.outerHTML;
+  if (window.JoditEditor && container._jodit) {
+    window.JoditEditor.setContent(container, aufgabeHtml);
+  } else {
+    container.innerHTML = '';
+    container.appendChild(aufgabenSection);
+    container.appendChild(loesungDiv);
+  }
+
+  // Aufgabe steht: Editor (Jodit) aktivieren – einmalig. data-jodit-init erlaubt
+  // den Adopt auch auf ApexCharts-Seiten (Diagramm-PNG im Container) –
+  // Muster aus lb8-2-bestellmenge / lb10-4-gewinnschwelle.
+  if (window.JoditEditor && !container._jodit) {
+    container.setAttribute('data-jodit-init', '1');
+    try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+  }
 
   // === BELEG-BUTTONS – nur bei Aufgabe 7 und 8 ===
   for (let i = 1; i <= aufgaben.length; i++) {

@@ -218,6 +218,9 @@ function erstelleAufgaben(art, K, n, p, plan) {
 // ============================================================================
 let letzteDarlehensAufgabe = null;
 let renderedCharts = [];
+// Hochzähler pro Generierung: veraltete Chart-Exporte (async nach destroy())
+// werden abgebrochen, statt "Element not found"-Fehler zu werfen
+let chartGeneration = 0;
 
 
 function zufallswerteSetzen() {
@@ -231,6 +234,7 @@ function zufallswerteSetzen() {
 function zeigeDarlehensAufgabe() {
   renderedCharts.forEach(c => { try { c.destroy(); } catch (e) {} });
   renderedCharts = [];
+  const chartGen = ++chartGeneration;
 
   let art = document.getElementById('darlehenSelect').value;
   if (art === 'zufall') art = pick(Object.keys(ARTEN));
@@ -345,10 +349,30 @@ stroke: {
     renderedCharts.push(chart);
     try {
       await chart.render();
+      if (chartGen !== chartGeneration) return; // neue Generierung → Export veraltet
       const { imgURI } = await chart.dataURI({ scale: 2 });
-      const platz = document.getElementById(`darlehenImg-${chartId}`);
-      if (platz && imgURI) platz.innerHTML = `<p><img src="${imgURI}" alt="Diagramm zum ${info.name}" style="max-width:90%;height:auto;"></p>`;
-    } catch (e) { console.warn('Diagramm-Export übersprungen:', e); }
+      if (chartGen !== chartGeneration) return;
+      // PNG in den ROH-Container schreiben und dann den Jodit-Editor
+      // synchronisieren (Muster aus lb8-2-bestellmenge). Ein direkter Insert
+      // in den Editor-Layer wird von der Jodit-Synchronisierung mit dem
+      // (bildlosen) Roh-Container-Stand überschrieben → Diagramm verschwände.
+      const cont = document.getElementById('Container');
+      const platz = (cont && cont.querySelector('#darlehenImg-' + chartId)) ||
+                    document.getElementById('darlehenImg-' + chartId);
+      if (platz && imgURI) {
+        platz.innerHTML = `<p><img src="${imgURI}" alt="Diagramm zum ${info.name}" style="max-width:90%;height:auto;"></p>`;
+        // Editor sofort auf den neuen Stand bringen, damit die Jodit-Sync-Logik
+        // (MutationObserver, 300 ms) das Diagramm nicht wieder herauslöst
+        if (window.JoditEditor && cont && cont._jodit && cont._jodit.editor && cont._jodit.editor.isConnected) {
+          try {
+            cont._jodit.value = cont.innerHTML;
+            cont._joditSrc = cont.innerHTML;
+          } catch (e) { console.warn('Editor-Sync nach Diagramm-Export fehlgeschlagen', e); }
+        }
+      }
+    } catch (e) {
+      if (chartGen === chartGeneration) console.warn('Diagramm-Export übersprungen:', e);
+    }
   }, 50);
 
   // ── Aufgaben & Lösungen ──
@@ -360,7 +384,7 @@ stroke: {
   const aufgaben = erstelleAufgaben(art, K, n, p, plan);
   const zinsText = formatProzent(p);
 
-  container.innerHTML = `
+  const aufgabenHtml = `
     <div class="aufgaben-section">
       <h2>Aufgaben</h2>
       <p>${kunde} nimmt zu Jahresbeginn ein <strong>${info.name}</strong> über ${formatEuro(K)} mit einer Laufzeit von ${n} Jahren und einem Zinssatz von ${zinsText} auf. Die Tilgungstabelle und das Diagramm zeigen den jährlichen Schuldendienst.</p>
@@ -374,15 +398,29 @@ stroke: {
       <ol>${aufgaben.map(a => `<li>${a.text}</li>`).join('')}</ol>
     </div>`;
 
-  const loesungDiv = document.createElement('div');
-  loesungDiv.className = 'loesung-section';
-  let html = '<h2 class="loesung">Lösung</h2>';
+  let loesungHtml = '<h2 class="loesung">Lösung</h2>';
   aufgaben.forEach((a, i) => {
-    html += `<div style="background:#fff; border:1px solid #dde3ea; border-radius:8px; padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
+    loesungHtml += `<div style="background:#fff; border:1px solid #dde3ea; border-radius:8px; padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
       <strong>Aufgabe ${i + 1}:</strong><br>${a.loesung}</div>`;
   });
-  loesungDiv.innerHTML = html;
-  container.appendChild(loesungDiv);
+
+  const gesamtHtml = aufgabenHtml + `<div class="loesung-section">${loesungHtml}</div>`;
+
+  // Ausgabe: läuft schon ein Editor, über JoditEditor.setContent schreiben,
+  // damit Editor-Wert und Quelle synchron bleiben.
+  if (window.JoditEditor && container._jodit) {
+    window.JoditEditor.setContent(container, gesamtHtml);
+  } else {
+    container.innerHTML = gesamtHtml;
+  }
+
+  // Aufgabe steht: Editor (Jodit) aktivieren – einmalig. data-jodit-init erlaubt
+  // den Adopt auch auf ApexCharts-Seiten (Diagramm-PNG im Container) –
+  // Muster aus lb8-2-bestellmenge / lb10-4-gewinnschwelle.
+  if (window.JoditEditor && !container._jodit) {
+    container.setAttribute('data-jodit-init', '1');
+    try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+  }
 
   letzteDarlehensAufgabe = { art, K, n, p, plan, aufgaben };
   const vorschau = document.getElementById('kiPromptVorschau');

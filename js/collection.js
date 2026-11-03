@@ -85,19 +85,24 @@
     }
 
     function createCollection(name) {
-        const col = {
-            id: genId(),
-            name: name || 'Neue Sammlung',
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            cover: { title: name || 'Neue Sammlung', school: '', date: new Date().toLocaleDateString('de-DE') }
-        };
-        return ensureDB().then(function (db) {
-            const t = db.transaction('collections', 'readwrite');
-            t.objectStore('collections').add(col);
-            return new Promise(function (resolve, reject) {
-                t.oncomplete = function () { dispatchChanged(); resolve(col); };
-                t.onerror = function () { reject(t.error); };
+        return getCollections().then(function (cols) {
+            if (cols.length >= MAX_COLLECTIONS) {
+                return Promise.reject(new Error('MAX_COLLECTIONS'));
+            }
+            const col = {
+                id: genId(),
+                name: name || 'Neue Sammlung',
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                cover: { title: name || 'Neue Sammlung', school: '', date: new Date().toLocaleDateString('de-DE') }
+            };
+            return ensureDB().then(function (db) {
+                const t = db.transaction('collections', 'readwrite');
+                t.objectStore('collections').add(col);
+                return new Promise(function (resolve, reject) {
+                    t.oncomplete = function () { dispatchChanged(); resolve(col); };
+                    t.onerror = function () { reject(t.error); };
+                });
             });
         });
     }
@@ -181,7 +186,8 @@
         return getItems(collectionId).then(function (items) { return items.length; });
     }
 
-    const MAX_ITEMS = 100;
+    const MAX_ITEMS = 25;
+    const MAX_COLLECTIONS = 10;
 
     function addItem(item) {
         return getItemCount(item.collectionId).then(function (count) {
@@ -311,9 +317,18 @@
             if (sel.value === '__new__') {
                 const name = prompt('Name der neuen Sammlung:');
                 if (!name) { sel.value = active; return; }
-                const c = await createCollection(name);
-                setActiveCollectionId(c.id);
-                await populateSelect(selectId);
+                try {
+                    const c = await createCollection(name);
+                    setActiveCollectionId(c.id);
+                    await populateSelect(selectId);
+                } catch (e) {
+                    if (e && e.message === 'MAX_COLLECTIONS') {
+                        alert('Maximale Anzahl von ' + MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte löschen oder leeren Sie zuerst eine Sammlung.');
+                    } else {
+                        console.error(e);
+                    }
+                    sel.value = active;
+                }
             } else {
                 setActiveCollectionId(sel.value);
             }
@@ -370,9 +385,18 @@
                 if (cid === '__new__') {
                     const name = prompt('Name der neuen Sammlung:');
                     if (!name) { close(null); return; }
-                    const c = await createCollection(name);
-                    cid = c.id;
-                    setActiveCollectionId(cid);
+                    try {
+                        const c = await createCollection(name);
+                        cid = c.id;
+                        setActiveCollectionId(cid);
+                    } catch (e) {
+                        if (e && e.message === 'MAX_COLLECTIONS') {
+                            alert('Maximale Anzahl von ' + MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte löschen oder leeren Sie zuerst eine Sammlung.');
+                        } else {
+                            console.error(e);
+                        }
+                        return;
+                    }
                 } else {
                     setActiveCollectionId(cid);
                 }
@@ -531,7 +555,8 @@
         buildExportHTML: buildExportHTML,
         downloadHTML: downloadHTML,
         druckenPDF: druckenPDF,
-        MAX_ITEMS: MAX_ITEMS
+        MAX_ITEMS: MAX_ITEMS,
+        MAX_COLLECTIONS: MAX_COLLECTIONS
     };
 
     ensureDefaultCollection().catch(function (e) { console.warn('Collection init failed', e); });

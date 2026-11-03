@@ -1416,7 +1416,7 @@ async function aufgabenZurSammlung() {
         });
         alert('Zur Sammlung hinzugefügt (Lösung als separates Objekt).');
     } catch (e) {
-        if (e && e.message === 'MAX_ITEMS') alert('Sammlung voll (max. 100).');
+        if (e && e.message === 'MAX_ITEMS') alert('Sammlung voll (max. 25).');
         else { console.error(e); alert('Fehler beim Hinzufügen.'); }
     }
 }
