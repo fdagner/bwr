@@ -8,6 +8,7 @@
     const DB_NAME = 'meinbwr_sammlung';
     const DB_VERSION = 1;
     let db = null;
+    let openPromise = null;
 
     function genId() {
         return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
@@ -16,6 +17,7 @@
     function openDB() {
         return new Promise(function (resolve, reject) {
             const req = indexedDB.open(DB_NAME, DB_VERSION);
+            let fertig = false;
             req.onupgradeneeded = function (e) {
                 const db = e.target.result;
                 if (!db.objectStoreNames.contains('collections')) {
@@ -27,14 +29,27 @@
                     store.createIndex('type', 'type', { unique: false });
                 }
             };
-            req.onsuccess = function (e) { db = e.target.result; resolve(db); };
+            req.onsuccess = function (e) {
+                if (!fertig) { fertig = true; db = e.target.result; resolve(db); }
+            };
             req.onerror = function (e) { reject(e.target.error); };
+            // Blockade (andere Tab hält alte Version): nur melden, kein automatischer Reload
+            req.onblocked = function () {
+                console.error('[bwR-Sammlung] IndexedDB blockiert. Alle Tabs der Website schließen und neu öffnen.');
+            };
         });
     }
 
     function ensureDB() {
         if (db) return Promise.resolve(db);
-        return openDB();
+        if (!openPromise) {
+            openPromise = openDB().catch(function (err) {
+                console.error('[bwR-Sammlung] IndexedDB konnte nicht geöffnet werden', err);
+                openPromise = null;
+                throw err;
+            });
+        }
+        return openPromise;
     }
 
     function tx(storeNames, mode) {
@@ -376,6 +391,7 @@
         return localStorage.getItem('activeCollectionId');
     }
     function setActiveCollectionId(id) {
+        if (localStorage.getItem('activeCollectionId') === id) return;
         localStorage.setItem('activeCollectionId', id);
         dispatchChanged();
     }

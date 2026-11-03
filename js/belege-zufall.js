@@ -316,8 +316,9 @@ async function belegZurSammlung(containerId) {
             formState: captureBelegFormState(belegType, container)
         };
         if (updateZiel) {
-            // Original-Eintrag ersetzen (Titel/Reihenfolge/Sammlung bleiben erhalten)
-            payload.collectionId = updateZiel.collectionId;
+            // Original-Eintrag ersetzen; die im Dialog gewählte Sammlung
+            // wird respektiert (damit lässt sich der Beleg beim Speichern umziehen)
+            payload.collectionId = res.collectionId;
             await Collection.updateItem(updateZiel.id, payload);
             alert('Beleg in der Sammlung aktualisiert.');
         } else {
