@@ -234,6 +234,32 @@ const geschaeftsfallTypen = {
     },
 
     // --------------------------------------------------------------------------
+    // Zusammengesetzte Bankabrechnung: KGV und ZAW gemeinsam gebucht
+    // --------------------------------------------------------------------------
+    kontoabrechnung: {
+        name: 'Kontoabrechnung (Gebühren + Sollzinsen)',
+        sollKonto: '6750 KGV',
+        habenKonto: '2800 BK',
+        belegtyp: 'kontoauszug',
+        kontoauszugArt: 'kontoauszug2.svg',
+        zahlungsarten: [
+            { text: 'vom Geschäftskonto abgebucht', konto: '2800 BK' },
+            { text: 'vom Bankkonto abgebucht', konto: '2800 BK' },
+        ],
+        mitVorsteuer: false,
+        mitUSt: false,
+        zusammengesetzt: true,
+        bestandteile: [
+            { konto: '6750 KGV', name: 'Kontoführungsgebühr', vorgangText: 'Kontoführungsgebühren', min: 25, max: 120 },
+            { konto: '7510 ZAW', name: 'Sollzinsen', vorgangText: 'Sollzinsen', min: 60, max: 450 },
+        ],
+        geschaeftsfaelle: [
+            { beschreibung: 'Die monatliche Abrechnung ', vorgang: 'Kontoabrechnung Gebühren & Sollzinsen' },
+        ],
+        betragsbereich: { min: 100, max: 600 }
+    },
+
+    // --------------------------------------------------------------------------
     // Kreditrückzahlung (Tilgung langfristiger Bankverbindlichkeiten)
     // --------------------------------------------------------------------------
     tilgung: {
@@ -374,6 +400,28 @@ function erstelleZufallsGeschaeftsfall() {
                 .replace('{kunde}', kunde);
             break;
         }
+        case 'kontoabrechnung': {
+            // Zusammengesetzter Buchungssatz: mehrere Beträge im Soll (z. B. KGV + ZAW),
+            // Haben mit der Summe
+            const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
+            const teile = typ.bestandteile.map(t => {
+                // Beträge auf 5-Cent-Schritte (typisch für Bankabrechnungen)
+                const betrag = Math.round((t.min + Math.random() * (t.max - t.min)) * 20) / 20;
+                return { konto: t.konto, name: t.name, vorgangText: t.vorgangText, betrag: roundToTwoDecimals(betrag), formatted: formatCurrency(roundToTwoDecimals(betrag)) };
+            });
+            const total = roundToTwoDecimals(teile.reduce((summe, t) => summe + t.betrag, 0));
+
+            ausgabeData.zusammengesetzt = true;
+            ausgabeData.bestandteile = teile;
+            ausgabeData.gesamtFormatted = formatCurrency(total);
+            ausgabeData.betrag = total;
+            ausgabeData.betragFormatted = formatCurrency(total);
+            ausgabeData.zahlungsart = zahlungsart;
+
+            ausgabeData.text = `Die Bank bucht die ${teile[0].name} in Höhe von ${teile[0].formatted} und die ${teile[1].name} in Höhe von ${teile[1].formatted} ${zahlungsart.text}.`;
+            break;
+        }
+
         case 'tilgung': {
             const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
             const variantenHaben = [
@@ -383,7 +431,36 @@ function erstelleZufallsGeschaeftsfall() {
             const habenero = variantenHaben[Math.floor(Math.random() * variantenHaben.length)];
             const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
 
-            ausgabeData.text = `${geschaeftsfall.beschreibung}${habenero}${wertPhrase}${ausgabeData.betragFormatted} ${zahlungsart.text}.`;
+            const rateVariante = Math.random();
+            if (rateVariante < 0.3) {
+                // Ratentilgung MIT Zinszahlung (zusammengesetzter Buchungssatz):
+                // Tilgung im Soll an 2800 BK, zusätzlich Sollzinsen im Soll
+                const rate = 500 + Math.floor(Math.random() * 71) * 50; // 500 – 4 000 €
+                const zinsen = Math.round((40 + Math.random() * 210) / 5) * 5; // 40 – 245 €
+                const teile = [
+                    { konto: '4250 LBKV', name: 'Tilgung', vorgangText: 'Tilgung Darlehen', betrag: rate, formatted: formatCurrency(rate) },
+                    { konto: '7510 ZAW', name: 'Sollzinsen', vorgangText: 'Sollzinsen', betrag: zinsen, formatted: formatCurrency(zinsen) },
+                ];
+                const total = roundToTwoDecimals(rate + zinsen);
+
+                ausgabeData.zusammengesetzt = true;
+                ausgabeData.bestandteile = teile;
+                ausgabeData.gesamtFormatted = formatCurrency(total);
+                ausgabeData.betrag = total;
+                ausgabeData.betragFormatted = formatCurrency(total);
+
+                ausgabeData.text = `Die Bank bucht die Rate für das Darlehen in Höhe von ${ausgabeData.gesamtFormatted} – bestehend aus Tilgung in Höhe von ${teile[0].formatted} und Sollzinsen in Höhe von ${teile[1].formatted} – vom Bankkonto von ${kunde} ab.`;
+            } else if (rateVariante < 0.6) {
+                // Ratentilgung ohne Zinszahlung: kleinere Beträge, Hinweis Tilgungsrate
+                const rate = 500 + Math.floor(Math.random() * 71) * 50; // 500 – 4 000 €
+                ausgabeData.betrag = rate;
+                ausgabeData.betragFormatted = formatCurrency(rate);
+                ausgabeData.istRatentilgung = true;
+
+                ausgabeData.text = `Die monatliche Tilgungsrate für das Darlehen in Höhe von ${ausgabeData.betragFormatted} ${habenero}wird abgebucht.`;
+            } else {
+                ausgabeData.text = `${geschaeftsfall.beschreibung}${habenero}${wertPhrase}${ausgabeData.betragFormatted} ${zahlungsart.text}.`;
+            }
             ausgabeData.zahlungsart = zahlungsart;
             break;
         }
@@ -459,6 +536,25 @@ function erstelleBuchungssatz(geschaeftsfall) {
     </table><br>`;
     }
 
+    // Zusammengesetzte Buchungssätze: mehrere Beträge im Soll,
+    // Haben mit der Gesamtsumme (z. B. KGV + ZAW an BK; Ratentilgung + Zinsen)
+    if (geschaeftsfall.zusammengesetzt && Array.isArray(geschaeftsfall.bestandteile)) {
+        const teile = geschaeftsfall.bestandteile;
+        const spalten = `border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;`;
+        const zeilen = teile.map((te, dgl) => `
+        <tr>
+          <td style="border-width: 0; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${te.konto}</td>
+          <td style="${spalten}" tabindex="1">${te.formatted}</td>
+          ${dgl === 0 ? `<td rowspan="${teile.length}" style="border-width: 0; text-align: center; width: 40px; vertical-align: top;" tabindex="1">an</td>
+          <td rowspan="${teile.length}" style="border-width: 0; text-align: left; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${typ.habenKonto}</td>
+          <td rowspan="${teile.length}" style="border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${geschaeftsfall.gesamtFormatted}</td>` : ''}
+        </tr>`).join('');
+        return `
+    <table style="border: 1px solid #ccc; white-space: nowrap; background-color: #fff; font-family: courier; width: 600px; margin: 0 0 6px;">
+      <tbody>${zeilen}</tbody>
+    </table><br>`;
+    }
+
     // Standard-Buchungssatz für alle anderen Fälle
     return `
     <table style="border: 1px solid #ccc; white-space: nowrap; background-color: #fff; font-family: courier; width: 600px; margin: 0 0 6px;">
@@ -475,6 +571,10 @@ function erstelleBuchungssatz(geschaeftsfall) {
 }
 function erstellePlainBuchungssatz(geschaeftsfall) {
     const typ = geschaeftsfall.typDaten;
+    if (geschaeftsfall.zusammengesetzt && Array.isArray(geschaeftsfall.bestandteile)) {
+        return geschaeftsfall.bestandteile.map(te => `${te.konto} ${te.formatted}`).join(' / ')
+            + ` an ${typ.habenKonto} ${geschaeftsfall.gesamtFormatted}`;
+    }
     if (typ.mitDisagio) {
         return `2800 BK ${geschaeftsfall.auszahlungFormatted} / 7510 ZAW ${geschaeftsfall.disagioFormatted} an ${typ.habenKonto} ${geschaeftsfall.kreditsummeFormatted}`;
     }
@@ -498,6 +598,17 @@ function erstelleBelegURL(geschaeftsfall) {
     params.set('tag', now.getDate().toString().padStart(2, '0'));
     params.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
     params.set('jahr', now.getFullYear().toString());
+
+    // Zusammengesetzt: Kontoauszug2 mit ZWEI Vorgängen (z. B. Gebühren + Sollzinsen
+    // oder Tilgung + Sollzinsen als Rate)
+    if (geschaeftsfall.zusammengesetzt && Array.isArray(geschaeftsfall.bestandteile)) {
+        params.set('vorlage', 'kontoauszug2.svg');
+        geschaeftsfall.bestandteile.forEach((te, lauf) => {
+            params.set('vorgang' + (lauf + 1), te.vorgangText || te.name);
+            params.set('wertstellung' + (lauf + 1), '-' + Math.abs(te.betrag));
+        });
+        return `belege.html?${params.toString()}`;
+    }
 
     // HIER DIE ANPASSUNG FÜR DEN VORGANG:
     let vorgangText = geschaeftsfall.vorgang || typ.name;

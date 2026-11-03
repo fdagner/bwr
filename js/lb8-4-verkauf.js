@@ -1082,14 +1082,28 @@ function verkaufErstelleAngebotButton(nummer, daten, buchstabe = 'a') {
     `;
 }
 
+// Registrierung der Mail-Belege: Die URL wird erst beim KLICK aufgebaut, damit
+// die aktuellen Dropdown-Auswahlwerten (Kunde/Lieferer) zuverlässig übernommen
+// werden – auch wenn die Auswahl nach dem Generieren geändert wurde.
+let verkaufMailRegistrierung = [];
+function verkaufMailQuelleAnlegen(typ, daten) {
+    verkaufMailRegistrierung.push({ typ: typ, daten: daten });
+    return verkaufMailRegistrierung.length - 1;
+}
+function verkaufMailUrlErzeugen(quelleIdx) {
+    const eintrag = verkaufMailRegistrierung[quelleIdx] || {};
+    return verkaufErzeugeURLFuerBeleg(eintrag.daten || {}, eintrag.typ || 'mail');
+}
+window.verkaufMailUrlErzeugen = verkaufMailUrlErzeugen;
+
 // Kundenanfrage als Mail-Beleg (Differenzkalkulation): Der Kunde fragt
 // höflich per Mail an und nennt Listenpreis, ggf. Rabatt und Skonto.
 // Kennzeichnung: einfach "1" (kein a/b/c), wie der Rechnungs-Beleg daneben.
 function verkaufErstelleMailButton(nummer, daten) {
-    const url = verkaufErzeugeURLFuerBeleg(daten, 'mail');
+    const quelle = verkaufMailQuelleAnlegen('mail', daten);
     return `
         <button class="geschaeftsfall-beleg-button mail-button"
-                onclick="window.open('${url}', '_blank')"
+                onclick="window.open(verkaufMailUrlErzeugen(${quelle}), '_blank')"
                 title="Anfrage-Mail des Kunden für Aufgabe ${nummer} öffnen"
                 style="width:100%; padding:10px 12px; font-size:14px;">
             📧 ${nummer}. Anfrage per Mail (Kunde)
@@ -1099,10 +1113,10 @@ function verkaufErstelleMailButton(nummer, daten) {
 
 // Angebots-Mail (Verkaufskalkulation): der Lieferer versendet das Angebot an den Kunden
 function verkaufErstelleAngebotMailButton(nummer, daten) {
-    const url = verkaufErzeugeURLFuerBeleg(daten, 'mailangebot');
+    const quelle = verkaufMailQuelleAnlegen('mailangebot', daten);
     return `
         <button class="geschaeftsfall-beleg-button angebot-mail-button"
-                onclick="window.open('${url}', '_blank')"
+                onclick="window.open(verkaufMailUrlErzeugen(${quelle}), '_blank')"
                 title="Angebot-Mail des Lieferers für Aufgabe ${nummer} öffnen"
                 style="width:100%; padding:10px 12px; font-size:14px;">
             📧 ${nummer}a. Angebot per Mail (Lieferer)

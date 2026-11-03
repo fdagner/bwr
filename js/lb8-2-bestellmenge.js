@@ -198,7 +198,6 @@ ${rede(inhaber, `Wir suchen die optimale Bestellmenge. Das ist die Menge, bei de
     if (!yamlData.length) { console.warn('Keine Unternehmen gefunden – keine Aufgabe erzeugt.'); return; }
     fuelleDropdown();
     $('bmUnternehmen').addEventListener('change', () => aktualisiere(true));
-    $('bmNeuePersonen').addEventListener('click', () => aktualisiere(true));
     aktualisiere(true);
     beobachter.observe(container, { childList: true });
   }

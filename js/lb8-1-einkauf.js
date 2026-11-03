@@ -659,14 +659,16 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
   if (typ === 'mail') {
     params.set('beleg', 'email');
     params.set('vorlage', 'mail3.html');
-    // Lieferant: Stammunternehmen des Werkstoffs; Fallback: zufälliges Unternehmen
+    // Lieferant: Stammunternehmen des Werkstoffs; Fallback: deterministisch das
+    // erste Nicht-Käufer-Unternehmen (damit wiederholte Klicks denselben
+    // Absender liefern)
     let lieferantMail = lieferantenName;
     if (!lieferantMail && typeof yamlData !== 'undefined' && yamlData.length > 0) {
       const kaeuferName = kaeuferSelect?.value?.trim();
       const kandidaten = yamlData
         .map(e => e.unternehmen?.name)
         .filter(n => n && n !== kaeuferName);
-      if (kandidaten.length) lieferantMail = kandidaten[Math.floor(Math.random() * kandidaten.length)];
+      if (kandidaten.length) lieferantMail = kandidaten[0];
     }
     if (lieferantMail) params.set('absender', lieferantMail);
     if (kaeuferSelect?.value) params.set('empfaenger', kaeuferSelect.value.trim());
@@ -769,14 +771,28 @@ function erstelleAngebotButton(nummer, daten, buchstabe = 'a') {
     `;
 }
 
+// Registrierung der Mail-Belege: Die URL wird erst beim KLICK aufgebaut, damit
+// die aktuellen Dropdown-Auswahlwerte (Modellunternehmen) zuverlässig übernommen
+// werden – auch wenn die Auswahl nach dem Generieren geändert wurde.
+let einkaufMailRegistrierung = [];
+function einkaufMailQuelleAnlegen(typ, daten) {
+    einkaufMailRegistrierung.push({ typ: typ, daten: daten });
+    return einkaufMailRegistrierung.length - 1;
+}
+function einkaufMailUrlErzeugen(quelleIdx) {
+    const eintrag = einkaufMailRegistrierung[quelleIdx] || {};
+    return erzeugeURLFuerGeschaeftsfall(eintrag.daten || {}, eintrag.typ || 'mail');
+}
+window.einkaufMailUrlErzeugen = einkaufMailUrlErzeugen;
+
 // Angebots-Mail (Einkaufskalkulation): der Lieferer (Stammunternehmen) versendet
 // das Angebot an das Modellunternehmen per E-Mail
 function erstelleAngebotMailButton(nummer, daten) {
-  const url = erzeugeURLFuerGeschaeftsfall(daten, 'mail');
+  const quelle = einkaufMailQuelleAnlegen('mail', daten);
   return `
         <button
             class="geschaeftsfall-beleg-button angebot-mail-button"
-            onclick="window.open('${url}', '_blank')"
+            onclick="window.open(einkaufMailUrlErzeugen(${quelle}), '_blank')"
             title="Angebots-Mail des Lieferers für Aufgabe ${nummer} öffnen"
             style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >

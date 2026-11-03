@@ -298,14 +298,31 @@ function erzeugeURLFuerAngebotsvergleich(d) {
   return `belege.html?${p.toString()}`;
 }
 
+// Registrierung der Angebots-Mail-Belege: URL erst beim Klick erzeugen, damit
+// die aktuellen Dropdown-Auswahlwerte zuverlässig übernommen werden
+let avMailRegistrierung = [];
+function avMailQuelleAnlegen(buchstabe, daten) {
+  avMailRegistrierung.push({ buchstabe: buchstabe, daten: daten });
+  return avMailRegistrierung.length - 1;
+}
+function avMailUrlErzeugen(quelleIdx) {
+  const eintrag = avMailRegistrierung[quelleIdx] || {};
+  return erzeugeMailURLAngebotsvergleich(eintrag.daten || {}, eintrag.buchstabe || 'A');
+}
+window.avMailUrlErzeugen = avMailUrlErzeugen;
+
 // Mail-URL für ein einzelnes Angebot (A oder B) im Angebotsvergleich:
-// der Lieferer versendet das Angebot per E-Mail an den Käufer.
-function erzeugeMailURLAngebotsvergleich(d, liefererName, buchstabe) {
+// der Lieferer versendet das Angebot per E-Mail an den Käufer. Der Lieferer
+// wird ZUM KLICK-ZEITPUNKT aus dem Dropdown gelesen (zuverlässig bei
+// nachträglichen Änderungen).
+function erzeugeMailURLAngebotsvergleich(d, buchstabe) {
   const p = new URLSearchParams();
   const ks = document.getElementById('einkaufKaeufer');
+  const lfSel = document.getElementById(buchstabe === 'A' ? 'einkaufLiefererA' : 'einkaufLiefererB');
+  const liefererName = (lfSel?.value || '').trim() || ('Lieferant ' + buchstabe);
   p.set('beleg', 'email');
   p.set('vorlage', 'mail3.html');
-  if (liefererName) p.set('absender', liefererName.trim());
+  if (liefererName) p.set('absender', liefererName);
   if (ks?.value) p.set('empfaenger', ks.value.trim());
   p.set('betreff', `Angebot ${buchstabe} – ${d.werkstoff || 'Werkstoffe'}`);
   p.set('text', erzeugeAngebotsvergleichMailText(d));
@@ -365,7 +382,7 @@ function nmRand() {
   };
 }
 
-function renderNmParameterTabelle(nm) {
+function renderNmParameterTabelle(nm, einheit) {
   const item = (l, w) => `<div style="${S.nmItem}"><span style="${S.nmLabel}">${l}</span><span style="${S.nmWert}">${w}</span></div>`;
   return `
 <div style="${S.nmAbschnitt}">Weitere Angaben</div>
@@ -373,7 +390,7 @@ function renderNmParameterTabelle(nm) {
   ${item('Qualität', `${sterne(nm.qualitaet)} (${nm.qualitaetText})`)}
   ${item('Lieferzeit', `${nm.lieferzeit} Tage`)}
   ${item('Zahlungsziel', `${nm.zahlungsziel} Tage`)}
-  ${item('Mindestbestellmenge', `${nm.mindestmenge} Einh.`)}
+  ${item('Mindestbestellmenge', `${nm.mindestmenge} ${einheit || 'Einh.'}`)}
   ${item('Lieferzuverlässigkeit', sterne(nm.zuverlaessigkeit))}
   ${item('Service / Support', sterne(nm.service))}
 </div>`;
@@ -504,8 +521,9 @@ function zeigeZufaelligenSatz() {
   };
   const belegDaten = istAGuenstig ? belegDatenA : belegDatenB;
   const belegUrl = erzeugeURLFuerAngebotsvergleich(belegDaten);
-  const mailUrlA = erzeugeMailURLAngebotsvergleich(belegDatenA, nameA, 'A');
-  const mailUrlB = erzeugeMailURLAngebotsvergleich(belegDatenB, nameB, 'B');
+  // Mail-Belege: URL erst beim Klick erzeugen (Dropdown-Werte zuverlässig)
+  const mailQuelleA = avMailQuelleAnlegen('A', belegDatenA);
+  const mailQuelleB = avMailQuelleAnlegen('B', belegDatenB);
 
   const guenstigerNm = istAGuenstig ? nmA : nmB;
   const teurerNm = istAGuenstig ? nmB : nmA;
@@ -527,7 +545,7 @@ function zeigeZufaelligenSatz() {
       <td style="${S.kalkNormalTdR};color:#555;font-size:0.92em;">${bzk_anzeige(kalkA.bezugskosten)}</td>
     </tr>
   </table>
-  ${renderNmParameterTabelle(nmA)}
+  ${renderNmParameterTabelle(nmA, einheit)}
 </div>`;
 
   const karteB_aufgabe = `
@@ -540,7 +558,7 @@ function zeigeZufaelligenSatz() {
     ${kalkZeileNormal('Liefererskonto', `${kalkB.skonto}&nbsp;%`)}
     ${kalkZeileNormal('Lieferung', bzk_anzeige(bzkB))}
   </table>
-  ${renderNmParameterTabelle(nmB)}
+  ${renderNmParameterTabelle(nmB, einheit)}
 </div>`;
 
   const aufgabeHtml = `
@@ -556,11 +574,11 @@ function zeigeZufaelligenSatz() {
 
   const belegHtml = `
   <div style="${S.belegZeile}; margin-top:20px;">
-    <button class="geschaeftsfall-beleg-button" onclick="window.open('${mailUrlA}','_blank')"
+    <button class="geschaeftsfall-beleg-button" onclick="window.open(avMailUrlErzeugen(${mailQuelleA}),'_blank')"
             style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
       📧 Angebot A per Mail (${nameA})
     </button>
-    <button class="geschaeftsfall-beleg-button" onclick="window.open('${mailUrlB}','_blank')"
+    <button class="geschaeftsfall-beleg-button" onclick="window.open(avMailUrlErzeugen(${mailQuelleB}),'_blank')"
             style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
       📧 Angebot B per Mail (${nameB})
     </button>
