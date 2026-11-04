@@ -569,6 +569,15 @@ function loadLogoToSVG(logoUrl, svgContainerId, placeholderId) {
                 const mess = content.getBBox();
                 if (mess && mess.width > 0 && mess.height > 0) bb = mess;
             } catch (e) { /* nicht verlegbar/gerendert – Fallback unten */ }
+            // Pathologische BBox abfangen: manche Logos enthalten Elemente,
+            // die weit außerhalb liegen (Inkscape-Artefakte; chemie.svg hat z. B.
+            // einen Punkt bei y ≈ -13.000). Die deklarierte viewBox ist dann die
+            // verlässliche Referenz – sonst würde das Logo winzig skaliert und
+            // wäre unsichtbar. Bewusste kleine Überstände (z. B. lur.svg)
+            // bleiben unangetastet.
+            if (bb && (bb.height > vh * 20 || bb.width > vw * 20)) {
+                bb = { x: vx, y: vy, width: vw, height: vh };
+            }
             if (!bb) bb = { x: vx, y: vy, width: vw, height: vh };
             const zugabe = Math.max(bb.width, bb.height) * 0.025; // Linien-Überstand
             const ew = bb.width + zugabe * 2, eh = bb.height + zugabe * 2;
