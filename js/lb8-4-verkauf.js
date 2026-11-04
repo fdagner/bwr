@@ -897,9 +897,9 @@ function verkaufBaueKundenanfrageText(daten) {
     let text = `wir möchten ${mengeText}${einheitText}${produkt} bei Ihnen bestellen und bitten Sie höflich um ein Angebot. `;
     if (daten.produkt && parseFloat(daten.einzelpreis) > 0) {
         // Mit Fertigerzeugnis: realistischer Listenpreis je Stück
-        text += `Ihrer Preisliste entnehmen wir einen Listenpreis von ${formatCurrency(daten.einzelpreis)} je Stück, den wir gerne zahlen würden. `;
+        text += `Wir möchten diese zum Listenpreis von ${formatCurrency(daten.einzelpreis)} je Stück bei Ihnen beziehen. `;
     } else {
-        text += `Ihrer Preisliste entnehmen wir einen Listenpreis von ${daten.listenverkaufspreis || ''}${gesamtliefer}, den wir gerne zahlen würden. `;
+        text += `Wir möchten diese zum Listenpreis von ${daten.listenverkaufspreis || ''}${gesamtliefer} bei Ihnen beziehen. `;
     }
     if (parseFloat(verkaufParseNumericValue(daten.rabattSatz)) > 0) {
         text += `Aufgrund der größeren Abnahmemenge bitten wir Sie um einen Rabatt von ${daten.rabattSatz} %. `;
@@ -907,7 +907,7 @@ function verkaufBaueKundenanfrageText(daten) {
     if (parseFloat(verkaufParseNumericValue(daten.skontoSatz)) > 0) {
         text += `Da wir unsere Rechnungen zuverlässig innerhalb der Skontofrist begleichen, würden wir ${daten.skontoSatz} % Skonto nutzen. `;
     }
-    text += `Bitte senden Sie uns zeitnah ein passendes Angebot zu – wir freuen uns auf Ihre Rückmeldung.`;
+    text += `Bitte senden Sie uns alsbald ein passendes Angebot zu – wir freuen uns auf Ihre Rückmeldung.`;
     return text;
 }
 
