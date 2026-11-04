@@ -428,3 +428,182 @@ window.roundToTwoDecimals = roundToTwoDecimals;
 window.parseNumericValue = parseNumericValue;
 window.pick = pick;
 window.shuffle = shuffle;
+
+// ============================================================================
+// KONTENPLAN (BwR 8+) – ZENTRALE KONTENLISTE
+// ============================================================================
+// DIE EINE Quelle für alle Konten: Kontonummer, Abkürzung, Langname und
+// Kontenklasse. HIER einfach ergänzen/ändern – alle abgeleiteten Stellen
+// (Kontenplan-Widget in js/kontenplan.js, kontenplan.html, Generatoren mit
+// kontoLabel()/kontoName()) übernehmen die Änderung automatisch.
+//
+// Felder:
+//   nr     – vierstellige Kontonummer (String, z. B. '2800')
+//   abk    – offizielle Abkürzung (z. B. BK, VORST, UEFE)
+//   name   – Langname (z. B. „Bank“, „Umsatzerlöse für eigene Erzeugnisse“)
+//   klasse – erste Ziffer der Kontonummer = Kontenklasse (0–8, automatisch)
+//   art    – aktiv | passiv | ertrag | aufwand | abschluss (automatisch, für
+//            die Farb-/Filterlogik im Kontenplan)
+// ============================================================================
+
+const KONTENPLAN = [
+  // Kontenklasse 0 (Sachanlagen)
+  { nr: '0500', abk: 'GR',    name: 'Grundstücke' },
+  { nr: '0530', abk: 'BVG',   name: 'Betriebs- und Verwaltungsgebäude' },
+  { nr: '0700', abk: 'MA',    name: 'Maschinen und Anlagen' },
+  { nr: '0840', abk: 'FP',    name: 'Fuhrpark' },
+  { nr: '0860', abk: 'BM',    name: 'Büromaschinen' },
+  { nr: '0870', abk: 'BGA',   name: 'Büromöbel und Geschäftsausstattung' },
+  { nr: '0890', abk: 'GWG',   name: 'Geringwertige Wirtschaftsgüter' },
+  // Kontenklasse 1 (Finanzanlagen)
+  { nr: '1500', abk: 'WP',    name: 'Wertpapiere des Anlagevermögens' },
+  // Kontenklasse 2 (Umlaufvermögen)
+  { nr: '2000', abk: 'R',     name: 'Rohstoffe' },
+  { nr: '2010', abk: 'F',     name: 'Fremdbauteile' },
+  { nr: '2020', abk: 'H',     name: 'Hilfsstoffe' },
+  { nr: '2030', abk: 'B',     name: 'Betriebsstoffe' },
+  { nr: '2400', abk: 'FO',    name: 'Forderungen aus Lieferungen und Leistungen' },
+  { nr: '2470', abk: 'ZWFO',  name: 'Zweifelhafte Forderungen' },
+  { nr: '2600', abk: 'VORST', name: 'Vorsteuer' },
+  { nr: '2800', abk: 'BK',    name: 'Bank' },
+  { nr: '2880', abk: 'KA',    name: 'Kasse' },
+  { nr: '2900', abk: 'ARA',   name: 'Aktive Rechnungsabgrenzung' },
+  // Kontenklasse 3 (Eigenkapital und Rückstellungen)
+  { nr: '3000', abk: 'EK',    name: 'Eigenkapital' },
+  { nr: '3001', abk: 'P',     name: 'Privatkonto' },
+  { nr: '3670', abk: 'EWB',   name: 'Einzelwertberichtigung' },
+  { nr: '3680', abk: 'PWB',   name: 'Pauschalwertberichtigung' },
+  { nr: '3900', abk: 'RST',   name: 'Rückstellungen' },
+  // Kontenklasse 4 (Verbindlichkeiten)
+  { nr: '4200', abk: 'KBKV',  name: 'Kurzfristige Bankverbindlichkeiten' },
+  { nr: '4250', abk: 'LBKV',  name: 'Langfristige Bankverbindlichkeiten' },
+  { nr: '4400', abk: 'VE',    name: 'Verbindlichkeiten aus LL' },
+  { nr: '4800', abk: 'UST',   name: 'Umsatzsteuer' },
+  { nr: '4830', abk: 'VFA',   name: 'Sonst. Steuerverbindlichkeiten' },
+  { nr: '4840', abk: 'VSV',   name: 'Verbindlichkeiten gegenüber Sozialversicherungsträgern' },
+  { nr: '4900', abk: 'PRA',   name: 'Passive Rechnungsabgrenzung' },
+  // Kontenklasse 5 (Ertragskonten)
+  { nr: '5000', abk: 'UEFE',  name: 'Umsatzerlöse für eigene Erzeugnisse' },
+  { nr: '5001', abk: 'EBFE',  name: 'Erlösberichtigungen' },
+  { nr: '5400', abk: 'EMP',   name: 'Erlöse aus Vermietung und Verpachtung' },
+  { nr: '5430', abk: 'ASBE',  name: 'Andere sonst. betriebl. Erträge' },
+  { nr: '5490', abk: 'PFE',   name: 'Periodenfremde Erträge' },
+  { nr: '5495', abk: 'EFO',   name: 'Erträge aus abgeschriebenen Forderungen' },
+  { nr: '5650', abk: 'EAWP',  name: 'Erträge aus dem Abgang von Wertpapieren des Anlagevermögens' },
+  { nr: '5710', abk: 'ZE',    name: 'Zinserträge' },
+  { nr: '5780', abk: 'DDE',   name: 'Dividendenerträge' },
+  // Kontenklasse 6 (Aufwandskonten)
+  { nr: '6000', abk: 'AWR',   name: 'Aufwendungen für Rohstoffe' },
+  { nr: '6001', abk: 'BZKR',  name: 'Bezugskosten für Rohstoffe' },
+  { nr: '6002', abk: 'NR',    name: 'Nachlässe für Rohstoffe' },
+  { nr: '6010', abk: 'AWF',   name: 'Aufwendungen für Fremdbauteile' },
+  { nr: '6011', abk: 'BZKF',  name: 'Bezugskosten für Fremdbauteile' },
+  { nr: '6012', abk: 'NF',    name: 'Nachlässe für Fremdbauteile' },
+  { nr: '6020', abk: 'AWH',   name: 'Aufwendungen für Hilfsstoffe' },
+  { nr: '6021', abk: 'BZKH',  name: 'Bezugskosten für Hilfsstoffe' },
+  { nr: '6022', abk: 'NH',    name: 'Nachlässe für Hilfsstoffe' },
+  { nr: '6030', abk: 'AWB',   name: 'Aufwendungen für Betriebsstoffe' },
+  { nr: '6031', abk: 'BZKB',  name: 'Bezugskosten für Betriebsstoffe' },
+  { nr: '6032', abk: 'NB',    name: 'Nachlässe für Betriebsstoffe' },
+  { nr: '6040', abk: 'AWVM',  name: 'Aufwendungen für Verpackungsmaterial' },
+  { nr: '6140', abk: 'AFR',   name: 'Ausgangsfrachten' },
+  { nr: '6160', abk: 'FRI',   name: 'Fremdinstandhaltung' },
+  { nr: '6200', abk: 'LG',    name: 'Löhne und Gehälter' },
+  { nr: '6400', abk: 'AGASV', name: 'Arbeitgeberanteil zur Sozialversicherung' },
+  { nr: '6520', abk: 'ABSA',  name: 'Abschr. auf Sachanlagen' },
+  { nr: '6540', abk: 'ABGWG', name: 'Abschreibungen auf GWG' },
+  { nr: '6700', abk: 'AWMP',  name: 'Mieten, Pachten' },
+  { nr: '6730', abk: 'GEB',   name: 'Gebühren' },
+  { nr: '6750', abk: 'KGV',   name: 'Kosten des Geldverkehrs' },
+  { nr: '6760', abk: 'PROV',  name: 'Provisionen' },
+  { nr: '6770', abk: 'RBK',   name: 'Rechts- und Beratungskosten' },
+  { nr: '6800', abk: 'BMK',   name: 'Büromaterial und Kleingüter' },
+  { nr: '6820', abk: 'KOM',   name: 'Kommunikationsgebühren' },
+  { nr: '6850', abk: 'REK',   name: 'Reisekosten' },
+  { nr: '6870', abk: 'WER',   name: 'Werbung' },
+  { nr: '6900', abk: 'VBEI',  name: 'Versicherungsbeiträge' },
+  { nr: '6950', abk: 'ABFO',  name: 'Abschreibungen auf Forderungen' },
+  { nr: '6990', abk: 'PFAW',  name: 'Periodenfremde Aufwendungen' },
+  // Kontenklasse 7 (Aufwandskonten)
+  { nr: '7000', abk: 'GWST',  name: 'Gewerbesteuer' },
+  { nr: '7020', abk: 'GRST',  name: 'Grundsteuer' },
+  { nr: '7030', abk: 'KFZST', name: 'Kraftfahrzeugsteuer' },
+  { nr: '7460', abk: 'VAWP',  name: 'Verluste aus dem Abgang von Wertpapieren des Anlagevermögens' },
+  { nr: '7510', abk: 'ZAW',   name: 'Zinsaufwendungen' },
+  // Kontenklasse 8 (Ergebnisrechnung)
+  { nr: '8010', abk: 'SBK',   name: 'Schlussbilanzkonto' },
+  { nr: '8020', abk: 'GUV',   name: 'Gewinn- und Verlustkonto' }
+];
+
+// Kontenklasse 0–2 = Aktiv, 3–4 = Passiv, 5 = Ertrag, 6–7 = Aufwand, 8 = Abschluss
+const KONTENKLASSE_ART = {
+  0: 'aktiv', 1: 'aktiv', 2: 'aktiv',
+  3: 'passiv', 4: 'passiv',
+  5: 'ertrag', 6: 'aufwand', 7: 'aufwand',
+  8: 'abschluss'
+};
+
+// charmäß Kontenklasse + Art ergänzen und Nachschlage-Indizes aufbauen
+const KONTENPLAN_NACH_NR = {};
+const KONTENPLAN_NACH_ABK = {};
+KONTENPLAN.forEach(k => {
+  k.klasse = k.nr.charAt(0);
+  k.art = KONTENKLASSE_ART[k.klasse] || null;
+  KONTENPLAN_NACH_NR[k.nr] = k;
+  if (!KONTENPLAN_NACH_ABK[k.abk]) KONTENPLAN_NACH_ABK[k.abk] = k;
+});
+
+// Löst ein Kontokennzeichen auf: '2800' / 2800 / 'BK' / '2800 BK' / Kontenobjekt
+// → Kontenobjekt aus KONTENPLAN, sonst null.
+function getKonto(kennzeichen) {
+  if (kennzeichen == null) return null;
+  if (typeof kennzeichen === 'object' && kennzeichen.nr) {
+    return KONTENPLAN_NACH_NR[kennzeichen.nr] || null;
+  }
+  const s = String(kennzeichen).trim();
+  if (!s) return null;
+  if (KONTENPLAN_NACH_NR[s]) return KONTENPLAN_NACH_NR[s];
+  if (KONTENPLAN_NACH_ABK[s]) return KONTENPLAN_NACH_ABK[s];
+  const m = s.match(/^(\d{3,4})\b/);   // z. B. "2800 BK" → 2800
+  if (m) return KONTENPLAN_NACH_NR[m[1]] || null;
+  return null;
+}
+
+// Kurzes Label: '2800 BK' – mit ohneNummern=true nur die Abkürzung ('BK').
+// Unbekannte Kennzeichen werden unverändert zurückgegeben (kein Crash).
+function kontoLabel(kennzeichen, ohneNummern) {
+  const k = getKonto(kennzeichen);
+  if (!k) return String(kennzeichen ?? '');
+  return ohneNummern ? k.abk : (k.nr + ' ' + k.abk);
+}
+
+// Langname: kontoName('2800 BK') → 'Bank'. Unbekannt → Leerstring.
+function kontoName(kennzeichen) {
+  const k = getKonto(kennzeichen);
+  return k ? k.name : '';
+}
+
+// Komplette Bez.: kontoLangBez('2800 BK') → '2800 BK (Bank)' (wie auf kontenplan.html)
+function kontoLangBez(kennzeichen) {
+  const k = getKonto(kennzeichen);
+  return k ? (k.nr + ' ' + k.abk + ' (' + k.name + ')') : String(kennzeichen ?? '');
+}
+
+// Alle Konten einer Kontenklasse ('0'–'8', z. B. kontenplan-Filter)
+function kontenDerKlasse(klasse) {
+  const s = String(klasse).charAt(0);
+  return KONTENPLAN.filter(k => k.klasse === s);
+}
+
+// Alle Konten einer Art ('aktiv' | 'passiv' | 'ertrag' | 'aufwand' | 'abschluss')
+function kontenDerArt(art) {
+  return KONTENPLAN.filter(k => k.art === art);
+}
+
+window.KONTENPLAN = KONTENPLAN;
+window.getKonto = getKonto;
+window.kontoLabel = kontoLabel;
+window.kontoName = kontoName;
+window.kontoLangBez = kontoLangBez;
+window.kontenDerKlasse = kontenDerKlasse;
+window.kontenDerArt = kontenDerArt;

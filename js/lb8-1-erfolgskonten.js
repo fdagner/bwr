@@ -5,44 +5,66 @@ function generateRandomSaldo(min, max, round = 100) {
 
 // ── Buchungstyp-Bezeichnungen ────────────────────────────────────────────────
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur die Kontonummer eintragen – Abkürzung und Langname liefert utils.js.
+// Bei Nr-/Abkürzungs-Änderungen nur KONTENPLAN in utils.js anpassen.
+
 const BUCHUNGSTYP_LABEL = {
-  'VE': '4400 VE',
-  'BK': '2800 BK',
-  'KA': '2880 KA',
+  'VE': kontoLabel('4400'),
+  'BK': kontoLabel('2800'),
+  'KA': kontoLabel('2880'),
 };
 
 // ── Nachlässe-Unterkonten (Haben-Buchungen → mindern Aufwand) ──────────────
 
 const NACHLASS_MAP = {
-  '6000 AWR': { nr: '6002 NR', label: 'Nachlässe für Rohstoffe',      hauptkonto: '6000 AWR' },
-  '6010 AWF': { nr: '6012 NF', label: 'Nachlässe für Fremdbauteile',  hauptkonto: '6010 AWF' },
-  '6020 AWH': { nr: '6022 NH', label: 'Nachlässe für Hilfsstoffe',    hauptkonto: '6020 AWH' },
-  '6030 AWB': { nr: '6032 NB', label: 'Nachlässe für Betriebsstoffe', hauptkonto: '6030 AWB' },
+  [kontoLabel('6000')]: { nr: kontoLabel('6002'), label: kontoName('6002'), hauptkonto: kontoLabel('6000') },
+  [kontoLabel('6010')]: { nr: kontoLabel('6012'), label: kontoName('6012'), hauptkonto: kontoLabel('6010') },
+  [kontoLabel('6020')]: { nr: kontoLabel('6022'), label: kontoName('6022'), hauptkonto: kontoLabel('6020') },
+  [kontoLabel('6030')]: { nr: kontoLabel('6032'), label: kontoName('6032'), hauptkonto: kontoLabel('6030') },
 };
 
 // ── Bezugskosten-Unterkonten (Soll-Buchungen → erhöhen Aufwand) ────────────
 
 const BZK_UNTERKONTO_MAP = {
-  '6000 AWR': { nr: '6001 BZKR', label: 'Bezugskosten für Rohstoffe',      hauptkonto: '6000 AWR' },
-  '6010 AWF': { nr: '6011 BZKF', label: 'Bezugskosten für Fremdbauteile',  hauptkonto: '6010 AWF' },
-  '6020 AWH': { nr: '6021 BZKH', label: 'Bezugskosten für Hilfsstoffe',    hauptkonto: '6020 AWH' },
-  '6030 AWB': { nr: '6031 BZKB', label: 'Bezugskosten für Betriebsstoffe', hauptkonto: '6030 AWB' },
+  [kontoLabel('6000')]: { nr: kontoLabel('6001'), label: kontoName('6001'), hauptkonto: kontoLabel('6000') },
+  [kontoLabel('6010')]: { nr: kontoLabel('6011'), label: kontoName('6011'), hauptkonto: kontoLabel('6010') },
+  [kontoLabel('6020')]: { nr: kontoLabel('6021'), label: kontoName('6021'), hauptkonto: kontoLabel('6020') },
+  [kontoLabel('6030')]: { nr: kontoLabel('6031'), label: kontoName('6031'), hauptkonto: kontoLabel('6030') },
 };
+
+// Einzelkonten, die hier häufig per Label auftauchen (zentral verwaltet)
+const KUEFE = kontoLabel('5000');   // Umsatzerlöse für eigene Erzeugnisse
+const KGUV  = kontoLabel('8020');   // Gewinn- und Verlustkonto
+const KEK   = kontoLabel('3000');   // Eigenkapital
+
+// ── Werkstoff-Hauptkonten ───────────────────────────────────────────────────
+// Intern wird ALLEIN über die Kontonummer gearbeitet. Die bisherigen Tags
+// (AWR/AWF/AWH/AWB) werden oben aus dem zentralen Kontenplan abgeleitet und
+// sind NUR wieder interne Nutzungs-Variablen (Objekt-Schlüssel, Checkbox-IDs):
+// Ändert sich eine Abkürzung im Kontenplan, aktualisiert sich hier automatisch.
+
+const WERKSTOFF_NUMMERN = ['6000', '6010', '6020', '6030'];
+
+const AWR = getKonto('6000').abk;   // z. B. 'AWR' – Rohstoffe
+const AWF = getKonto('6010').abk;   // 'AWF' – Fremdbauteile
+const AWH = getKonto('6020').abk;   // 'AWH' – Hilfsstoffe
+const AWB = getKonto('6030').abk;   // 'AWB' – Betriebsstoffe
 
 // ── Buchungen für Nachlässe (Haben-Buchungen im Unterkonto) ─────────────────
 
 function erzeugeNachlassBuchungen(hauptTyp) {
   const rahmen = {
-    AWR: [1000, 8000],
-    AWF: [100,   800],
-    AWH: [20,    200],
-    AWB: [30,    300],
+    [AWR]: [1000, 8000],
+    [AWF]: [100,   800],
+    [AWH]: [20,    200],
+    [AWB]: [30,    300],
   };
   const [min, max] = rahmen[hauptTyp];
   const anzahl = 1 + Math.floor(Math.random() * 2);
   const buchungen = [];
   for (let i = 0; i < anzahl; i++) {
-    const betrag = generateRandomSaldo(min, max, hauptTyp === 'AWR' ? 100 : 10);
+    const betrag = generateRandomSaldo(min, max, hauptTyp === AWR ? 100 : 10);
     buchungen.push({ typ: 'VE', nr: i + 1, betrag });
   }
   const saldo = buchungen.reduce((s, b) => s + b.betrag, 0);
@@ -53,16 +75,16 @@ function erzeugeNachlassBuchungen(hauptTyp) {
 
 function erzeugeBzkUnterkontoBuchungen(hauptTyp) {
   const rahmen = {
-    AWR: [500, 5000],
-    AWF: [50,   500],
-    AWH: [10,   150],
-    AWB: [20,   200],
+    [AWR]: [500, 5000],
+    [AWF]: [50,   500],
+    [AWH]: [10,   150],
+    [AWB]: [20,   200],
   };
   const [min, max] = rahmen[hauptTyp];
   const anzahl = 1 + Math.floor(Math.random() * 2);
   const buchungen = [];
   for (let i = 0; i < anzahl; i++) {
-    const betrag = generateRandomSaldo(min, max, hauptTyp === 'AWR' ? 100 : 10);
+    const betrag = generateRandomSaldo(min, max, hauptTyp === AWR ? 100 : 10);
     buchungen.push({ typ: 'VE', nr: i + 1, betrag });
   }
   const saldo = buchungen.reduce((s, b) => s + b.betrag, 0);
@@ -74,10 +96,10 @@ function erzeugeBzkUnterkontoBuchungen(hauptTyp) {
 function erzeugeKontoBuchungen(typ) {
   const buchungsTypen = ['VE', 'VE', 'VE', 'VE', 'VE', 'BK', 'BK', 'KA'];
   const rahmen = {
-    AWR: { VE: [80000, 280000], BK: [20000, 80000], KA: [5000,  15000] },
-    AWF: { VE: [8000,   28000], BK: [2000,   8000], KA: [500,    1500] },
-    AWH: { VE: [1500,    6000], BK: [400,    1500], KA: [100,     400] },
-    AWB: { VE: [2000,    8000], BK: [500,    2000], KA: [100,     500] },
+    [AWR]: { VE: [80000, 280000], BK: [20000, 80000], KA: [5000,  15000] },
+    [AWF]: { VE: [8000,   28000], BK: [2000,   8000], KA: [500,    1500] },
+    [AWH]: { VE: [1500,    6000], BK: [400,    1500], KA: [100,     400] },
+    [AWB]: { VE: [2000,    8000], BK: [500,    2000], KA: [100,     500] },
   };
   const anzahl = 2 + Math.floor(Math.random() * 3);
   const buchungen = [];
@@ -125,17 +147,16 @@ function erzeugeUefeBuchungen(zielSaldo) {
 
 // ── Gesamtdaten zusammenstellen ──────────────────────────────────────────────
 
-const ALLE_KONTENTYPEN = {
-  '6000 AWR': 'AWR',
-  '6010 AWF': 'AWF',
-  '6020 AWH': 'AWH',
-  '6030 AWB': 'AWB',
-};
+// Auswahl-Konto → Werkstoff-Tag (Label-Schlüssel, z. B. '6000 AWR' → 'AWR')
+const ALLE_KONTENTYPEN = Object.fromEntries(
+  WERKSTOFF_NUMMERN.map(nr => [kontoLabel(nr), getKonto(nr).abk])
+);
 
+// Checkbox-IDs sind die Kontonummern (chk6000 …) – HTML trägt daher nur Nummern.
 function getAusgewaehlteKonten() {
   const auswahl = {};
-  for (const [nr, typ] of Object.entries(ALLE_KONTENTYPEN)) {
-    if (document.getElementById('chk' + typ)?.checked) auswahl[nr] = typ;
+  for (const nr of WERKSTOFF_NUMMERN) {
+    if (document.getElementById('chk' + nr)?.checked) auswahl[kontoLabel(nr)] = getKonto(nr).abk;
   }
   return auswahl;
 }
@@ -275,7 +296,7 @@ function renderTKontoUEFEAufgabe(buchungen, minZeilen) {
   let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;min-width:80px;">Soll</th>
-      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">5000 UEFE</span></th>
+      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${KUEFE}</span></th>
       <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
     </tr></thead><tbody>`;
   for (let i = 0; i < alleZeilen; i++) {
@@ -300,7 +321,7 @@ function renderTKontoGUVAufgabe(minZeilen) {
   let html = `<table class="tkonto tkonto-guv" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
-      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">8020 GUV</span></th>
+      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${KGUV}</span></th>
       <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
     </tr></thead><tbody>`;
   for (let i = 0; i < alleZeilen; i++) {
@@ -389,7 +410,7 @@ function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkS
     const nachlassNr = NACHLASS_MAP[kontoNr]?.nr || '';
     habenZeilen.push({ label: nachlassNr, betrag: nachlassSaldo });
   }
-  habenZeilen.push({ label: ' 8020 GUV', betrag: guvSaldo });
+  habenZeilen.push({ label: ` ${KGUV}`, betrag: guvSaldo });
 
   const alleZeilen = Math.max(sollZeilen.length, habenZeilen.length, minZeilen || 3);
 
@@ -427,13 +448,13 @@ function renderTKontoUEFELoesung(buchungen, saldo, minZeilen) {
   let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
-      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">5000 UEFE</span></th>
+      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${KUEFE}</span></th>
       <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
     </tr></thead><tbody>`;
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ' 8020 GUV' : ''}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ` ${KGUV}` : ''}</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ''}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
@@ -455,10 +476,10 @@ function renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt) {
   const isGewinn = erfolgArt === 'Gewinn';
 
   const sollZeilen = Object.entries(guvSaldos).map(([nr, betrag]) => ({ label: nr, betrag }));
-  if (isGewinn) sollZeilen.push({ label: '3000 EK', betrag: erfolgHoehe, fett: true });
+  if (isGewinn) sollZeilen.push({ label: KEK, betrag: erfolgHoehe, fett: true });
 
-  const habenZeilen = [{ label: '5000 UEFE', betrag: uefe }];
-  if (!isGewinn) habenZeilen.push({ label: '3000 EK', betrag: erfolgHoehe, fett: true });
+  const habenZeilen = [{ label: KUEFE, betrag: uefe }];
+  if (!isGewinn) habenZeilen.push({ label: KEK, betrag: erfolgHoehe, fett: true });
 
   const maxZeilen  = Math.max(sollZeilen.length, habenZeilen.length);
   const sollSumme  = isGewinn ? gesamtAufwand + erfolgHoehe : gesamtAufwand;
@@ -467,7 +488,7 @@ function renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt) {
   let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
-      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">8020 GUV</span></th>
+      <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${KGUV}</span></th>
       <th style="width:25%;text-align:right;font-weight:600;padding:4px 0;">Haben</th>
     </tr></thead><tbody>`;
 
@@ -638,7 +659,7 @@ function zeigeZufaelligenBestandsabschluss() {
 
   Object.entries(konten).forEach(([nr, data]) => {
     html += `<tr>
-      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">8020 GUV</td>
+      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KGUV}</td>
       <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
       <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${nr}</td>
       <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(data.guvSaldo)} €</td>
@@ -647,9 +668,9 @@ function zeigeZufaelligenBestandsabschluss() {
 
   html += `<tr><td colspan="4" style="padding:4px 0;"></td></tr>`;
   html += `<tr>
-    <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">5000 UEFE</td>
+    <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KUEFE}</td>
     <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-    <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">8020 GUV</td>
+    <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${KGUV}</td>
     <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(uefe)} €</td>
   </tr>`;
 
@@ -657,16 +678,16 @@ function zeigeZufaelligenBestandsabschluss() {
 
   if (erfolg >= 0) {
     html += `<tr style="font-weight:700;">
-      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">8020 GUV</td>
+      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KGUV}</td>
       <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">3000 EK</td>
+      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${KEK}</td>
       <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
     </tr>`;
   } else {
     html += `<tr style="font-weight:700;">
-      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">3000 EK</td>
+      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KEK}</td>
       <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">8020 GUV</td>
+      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${KGUV}</td>
       <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
     </tr>`;
   }
@@ -970,6 +991,11 @@ function addPrintCSS() {
 
 // Sofort beim Laden ausführen
 document.addEventListener('DOMContentLoaded', function () {
+  // Checkbox-Bezeichner aus dem zentralen Kontenplan befüllen (HTML trägt nur Nummern)
+  document.querySelectorAll('.kontoCheckboxBez[data-konto]').forEach(el => {
+    el.textContent = kontoLabel(el.dataset.konto);
+  });
+
   zeigeZufaelligenBestandsabschluss();
   addPrintCSS();
 

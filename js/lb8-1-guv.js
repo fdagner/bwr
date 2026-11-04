@@ -1,9 +1,5 @@
 // js/guv.js – Version mit strikter oberer Ausrichtung + UEFE ganz oben Haben + EK direkt darunter
 
-// Globale Variable
-let yamlData = [];
-let unternehmen = '<i>[Modellunternehmen]</i>';
-
 // (Die YAML-Ladefunktionen können wie zuvor bleiben – hier nur der relevante Teil)
 
 
@@ -11,6 +7,17 @@ let unternehmen = '<i>[Modellunternehmen]</i>';
 function generateRandomSaldo(min, max) {
   return Math.round((Math.random() * (max - min) + min) / 100) * 100;
 }
+
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Im Generator wird nur die Kontonummer angegeben – Abkürzung und Langname
+// liefert kontoLabel()/kontoName(). Bei Änderungen nur KONTENPLAN (utils.js) anpassen.
+const AWR  = kontoLabel('6000');   // Aufwendungen für Rohstoffe
+const AWF  = kontoLabel('6010');   // Aufwendungen für Fremdbauteile
+const AWH  = kontoLabel('6020');   // Aufwendungen für Hilfsstoffe
+const AWB  = kontoLabel('6030');   // Aufwendungen für Betriebsstoffe
+const UEFE = kontoLabel('5000');   // Umsatzerlöse für eigene Erzeugnisse
+const GUV  = kontoLabel('8020');   // Gewinn- und Verlustkonto
+const EK   = kontoLabel('3000');   // Eigenkapital
 
 function erstelleZufaelligenAbschluss() {
   const awr = generateRandomSaldo( 50000, 400000);
@@ -21,11 +28,11 @@ function erstelleZufaelligenAbschluss() {
   const uefe = generateRandomSaldo(300000, 600000);
 
   const salden = {
-    "6000 AWR":  awr,
-    "6010 AWF":  awf,
-    "6020 AWH":  awh,
-    "6030 AWB":  awb,
-    "5000 UEFE": uefe
+    [AWR]:  awr,
+    [AWF]:  awf,
+    [AWH]:  awh,
+    [AWB]:  awb,
+    [UEFE]: uefe
   };
 
   const gesamtAufwand = awr + awf + awh + awb;
@@ -58,7 +65,7 @@ function zeigeZufaelligenAbschluss() {
   // Leeres T-Konto
   html += `<div style="width:100%">`;
   html += `<table style="margin: 0 auto !important;border-collapse: collapse;table-layout:fixed;width:650px !important;max-width:100% !important;background-color:#fff"><tbody>`;
-  html += `<tr><th style="width:25%;text-align:left">Soll</th><th style="text-align:center;" colspan="2">8020 GUV</th><th style="width:25%;text-align:right;">Haben</th></tr>`;
+  html += `<tr><th style="width:25%;text-align:left">Soll</th><th style="text-align:center;" colspan="2">${GUV}</th><th style="width:25%;text-align:right;">Haben</th></tr>`;
   for (let i = 0; i < 6; i++) {
     html += `<tr style="border-top: 2px solid #AAAAAA">`;
     html += `<td style="border-top: 2px solid #AAAAAA;width:25%; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; max-width: 160px">&nbsp;</td>`;
@@ -79,11 +86,11 @@ html += `
 <table style="white-space:nowrap; background-color:#fff; font-family:courier; min-width:700px; border-collapse:collapse; margin:1em 0 1.8em 0;">
   <tbody>`;
 
-// Alle vier Aufwandsbuchungen – 8020 GUV steht jetzt immer links
-["6000 AWR", "6010 AWF", "6020 AWH", "6030 AWB"].forEach(konto => {
+// Alle vier Aufwandsbuchungen – GuV steht jetzt immer links
+[AWR, AWF, AWH, AWB].forEach(konto => {
   html += `
   <tr>
-    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">8020 GUV</td>
+    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">${GUV}</td>
     <td style="border-with:0;text-align:right; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px" tabindex="1"></td>
     <td style="border-with:0;text-align: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 80px" tabindex="1">an</td>
     <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">${konto}</td>
@@ -94,30 +101,30 @@ html += `
 // Ertragsbuchung (umgekehrt → Ertrag an GuV)
 html += `
   <tr>
-    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">5000 UEFE</td>
+    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">${UEFE}</td>
     <td style="border-with:0;text-align:right; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px" tabindex="1"></td>
     <td style="border-with:0;text-align: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 80px" tabindex="1">an</td>
-    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">8020 GUV</td>
-    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px; text-align: right" tabindex="1">${formatBetrag(salden["5000 UEFE"])}</td>
+    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">${GUV}</td>
+    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px; text-align: right" tabindex="1">${formatBetrag(salden[UEFE])}</td>
   </tr>`;
 
 // Abschlussbuchung
 if (erfolg >= 0) {
   html += `
   <tr>
-    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px; font-weight:bold;" tabindex="1">8020 GUV</td>
+    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px; font-weight:bold;" tabindex="1">${GUV}</td>
     <td style="border-with:0;text-align:right; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px; font-weight:bold;" tabindex="1"></td>
     <td style="border-with:0;text-align: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 80px; font-weight:bold;" tabindex="1">an</td>
-    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px; font-weight:bold;" tabindex="1">3000 EK</td>
+    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px; font-weight:bold;" tabindex="1">${EK}</td>
     <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px; text-align: right; font-weight:bold;" tabindex="1">${formatBetrag(erfolgHoehe)}</td>
   </tr>`;
 } else {
   html += `
   <tr>
-    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px; font-weight:bold;" tabindex="1">3000 EK</td>
+    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px; font-weight:bold;" tabindex="1">${EK}</td>
     <td style="border-with:0;text-align:right; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px; font-weight:bold;" tabindex="1"></td>
     <td style="border-with:0;text-align: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 80px; font-weight:bold;" tabindex="1">an</td>
-    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px; font-weight:bold;" tabindex="1">8020 GUV</td>
+    <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px; font-weight:bold;" tabindex="1">${GUV}</td>
     <td style="border-with:0;white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px; text-align: right; font-weight:bold;" tabindex="1">${formatBetrag(erfolgHoehe)}</td>
   </tr>`;
 }
@@ -127,27 +134,27 @@ html += `
 </table>`;
 
  // ── T-KONTO ───────────────────────────────────────────────────────────────
-html += `<strong style="margin-top:2em; display:block;">T-Konto 8020 GUV:</strong><br>`;
+html += `<strong style="margin-top:2em; display:block;">T-Konto ${GUV}:</strong><br>`;
 html += `<div style="width:100%">`;
 html += `<table style="margin: 0 auto !important;border-collapse: collapse;table-layout:fixed;width:650px !important;max-width:100% !important;background-color:#fff"><tbody>`;
-html += `<tr><th style="width:25%;text-align:left">Soll</th><th style="text-align:center;" colspan="2">8020 GUV</th><th style="width:25%;text-align:right;">Haben</th></tr>`;
+html += `<tr><th style="width:25%;text-align:left">Soll</th><th style="text-align:center;" colspan="2">${GUV}</th><th style="width:25%;text-align:right;">Haben</th></tr>`;
 
 // Zeile 1: AWR + UEFE
 html += `
 <tr style="border-top: 2px solid #AAAAAA">
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px">6000 AWR</td>
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden["6000 AWR"])}</td>
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;border-left:1px solid #AAAAAA;padding-left:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">5000 UEFE</td>
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden["5000 UEFE"])}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px">${AWR}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden[AWR])}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;border-left:1px solid #AAAAAA;padding-left:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${UEFE}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden[UEFE])}</td>
 </tr>`;
 
 // Zeile 2: AWF + bei Verlust EK
 html += `
 <tr style="border-top: 2px solid #AAAAAA">
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">6010 AWF</td>
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden["6010 AWF"])}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${AWF}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden[AWF])}</td>
   <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;border-left:1px solid #AAAAAA;padding-left:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">`;
-if (erfolg < 0) html += `3000 EK`;
+if (erfolg < 0) html += EK;
 html += `</td>
   <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">`;
 if (erfolg < 0) html += `${formatBetrag(erfolgHoehe)}`;
@@ -157,8 +164,8 @@ html += `</td>
 // Zeile 3: AWH
 html += `
 <tr style="border-top: 2px solid #AAAAAA">
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">6020 AWH</td>
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden["6020 AWH"])}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${AWH}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden[AWH])}</td>
   <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;border-left:1px solid #AAAAAA;padding-left:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">&nbsp;</td>
   <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">&nbsp;</td>
 </tr>`;
@@ -166,8 +173,8 @@ html += `
 // Zeile 4: AWB
 html += `
 <tr style="border-top: 2px solid #AAAAAA">
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">6030 AWB</td>
-  <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden["6030 AWB"])}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${AWB}</td>
+  <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(salden[AWB])}</td>
   <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;border-left:1px solid #AAAAAA;padding-left:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">&nbsp;</td>
   <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">&nbsp;</td>
 </tr>`;
@@ -176,7 +183,7 @@ html += `
 if (erfolg >= 0) {
   html += `
   <tr style="border-top: 2px solid #AAAAAA">
-    <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">3000 EK</td>
+    <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${EK}</td>
     <td style="border-with:0;border-top: 2px solid #AAAAAA;border-right:2px solid #AAAAAA;width:25%;text-align:right;padding-right:2px;height:2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${formatBetrag(erfolgHoehe)}</td>
     <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;border-left:1px solid #AAAAAA;padding-left:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">&nbsp;</td>
     <td style="border-with:0;border-top: 2px solid #AAAAAA;width:25%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">&nbsp;</td>
@@ -196,8 +203,8 @@ for (let i = 0; i < leerZeilenAnzahl; i++) {
 }
 
 // ── SUMMENZEILE ───────────────────────────────────────────────────────────
-let sollSumme = salden["6000 AWR"] + salden["6010 AWF"] + salden["6020 AWH"] + salden["6030 AWB"];
-let habenSumme = salden["5000 UEFE"];
+let sollSumme = salden[AWR] + salden[AWF] + salden[AWH] + salden[AWB];
+let habenSumme = salden[UEFE];
 
 if (erfolg >= 0) {
   sollSumme += erfolgHoehe;  // EK im Soll bei Gewinn

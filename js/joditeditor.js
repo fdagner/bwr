@@ -452,6 +452,11 @@
                 minHeight: 120,
                 toolbar: true,
                 toolbarAdaptive: false,
+                // Kein externes CDN (cdnjs.cloudflare.com) - Ace und Beautify werden
+                // lokal aus js/ geladen. Ace haengt seine Untermodule (mode-html,
+                // theme-idle_fingers, worker-html, ext-searchbox) an dieselbe Basis-URL an.
+                sourceEditorCDNUrlsJS: ['js/ace.js'],
+                beautifyHTMLCDNUrlsJS: ['js/beautify.min.js', 'js/beautify-html.min.js'],
                 buttons: [
                     'bold', 'italic', 'underline', '|',
                     'fontsize', 'paragraph', '|',

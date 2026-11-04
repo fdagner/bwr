@@ -58,8 +58,8 @@
   <script src="js/clipboard.min.js"></script>
   <script src="js/menu.js?v=14"></script>
   <script src="js/utils.js?v=11"></script>
-  <script src="js/jodit.min.js"></script>
-  <script src="js/joditeditor.js?v=67"></script>
+  <script src="js/jodit.min.js?v=68"></script>
+  <script src="js/joditeditor.js?v=68"></script>
 <script src="js/collection.js?v=35"></script>
 </head>
 <body>
@@ -76,22 +76,22 @@
 
       <div class="flex-row" id="aktivAuswahl">
         <strong>Aktivkonten:</strong>
-        <label><input type="checkbox" id="chk0500" onchange="zeigeZufaelligenBestandsabschluss()"> <span>0500 GR</span></label>
-        <label><input type="checkbox" id="chk0530" onchange="zeigeZufaelligenBestandsabschluss()"> <span>0530 BVG</span></label>
-        <label><input type="checkbox" id="chk0700" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>0700 MA</span></label>
-        <label><input type="checkbox" id="chk0840" onchange="zeigeZufaelligenBestandsabschluss()"> <span>0840 FP</span></label>
-        <label><input type="checkbox" id="chk0860" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>0860 BM</span></label>
-        <label><input type="checkbox" id="chk0870" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>0870 BGA</span></label>
-        <label><input type="checkbox" checked disabled> <span>2400 FO</span></label>
-        <label><input type="checkbox" checked disabled> <span>2800 BK</span></label>
-        <label><input type="checkbox" id="chk2880" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>2880 KA</span></label>
+        <label><input type="checkbox" id="chk0500" onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="0500"></span></label>
+        <label><input type="checkbox" id="chk0530" onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="0530"></span></label>
+        <label><input type="checkbox" id="chk0700" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="0700"></span></label>
+        <label><input type="checkbox" id="chk0840" onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="0840"></span></label>
+        <label><input type="checkbox" id="chk0860" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="0860"></span></label>
+        <label><input type="checkbox" id="chk0870" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="0870"></span></label>
+        <label><input type="checkbox" checked disabled> <span class="kontoCheckboxBez" data-konto="2400"></span></label>
+        <label><input type="checkbox" checked disabled> <span class="kontoCheckboxBez" data-konto="2800"></span></label>
+        <label><input type="checkbox" id="chk2880" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="2880"></span></label>
       </div>
 
       <div class="flex-row" id="passivAuswahl">
         <strong>Passivkonten:</strong>
         <label><input type="checkbox" checked disabled> <span>3000 EK</span></label>
-        <label><input type="checkbox" id="chk4200" onchange="zeigeZufaelligenBestandsabschluss()"> <span>4200 KBKV</span></label>
-        <label><input type="checkbox" id="chk4250" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span>4250 LBKV</span></label>
+        <label><input type="checkbox" id="chk4200" onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="4200"></span></label>
+        <label><input type="checkbox" id="chk4250" checked onchange="zeigeZufaelligenBestandsabschluss()"> <span class="kontoCheckboxBez" data-konto="4250"></span></label>
         <label><input type="checkbox" checked disabled> <span>4400 VE</span></label>
       </div>
 
