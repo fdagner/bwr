@@ -999,7 +999,7 @@ const aufgabeText = (() => {
   switch (getModus()) {
     case 'einkaufskalkulation': return angebotSatz.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     case 'skontobuchungssatz':  return (zufaelligerSatz + ' ' + skontoSatz).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    case 'leihverpackung':      return (zufaelligerSatz + ' ' + ruecksendungLVText).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    case 'leihverpackung':      return (zufaelligerSatz + ' Bilde den Buchungssatz.').replace(/\s+/g, ' ').trim();
     default:                    return zufaelligerSatz.replace(/\s+/g, ' ').trim();
   }
 })();
@@ -1030,7 +1030,10 @@ const loesungText = (() => {
   }
 })();
 
-letzteGenerierteGfListeEinkauf.push({ aufgabe: aufgabeText, loesung: loesungText });
+letzteGenerierteGfListeEinkauf.push({
+  aufgabe: aufgabeText, loesung: loesungText,
+  label: getModus() === 'leihverpackung' ? 'a' : null,
+});
 
 
     const formattedSatz = zufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
@@ -1251,8 +1254,9 @@ const geschaeftsfallDaten = {
     if (getModus() === 'leihverpackung') {
       // KI-Prompt: Rücksendung als zweite Teilaufgabe erfassen
       letzteGenerierteGfListeEinkauf.push({
-        aufgabe: `${ruecksendungLVText}.`,
+        aufgabe: `Bilde den Buchungssatz: ${ruecksendungLVText}.`,
         loesung: `Buchungssatz Rücksendung Leihverpackung:\n${konto_2} ${bruttoRuecksendungLV} an ${antwort_bezugskosten} ${antwort_bezugskostenWert} / 2600 VORST ${vorsteuerRuecksendungLV}`,
+        label: 'b',
       });
 
       if (typeof moodleFragen !== 'undefined') {
@@ -1378,11 +1382,30 @@ function erstelleKiPromptText() {
   if (letzteGenerierteGfListeEinkauf.length === 0) {
     aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
   } else {
-    aufgabenUndLoesungen = letzteGenerierteGfListeEinkauf
-      .map((eintrag, idx) => {
-        return `Aufgabe ${idx + 1}:\n${eintrag.aufgabe}\n\nMusterlösung ${idx + 1}:\n${eintrag.loesung}`;
-      })
-      .join("\n\n---\n\n");
+    aufgabenUndLoesungen = (() => {
+      // Durchlaufende Geschäftsfall-Nummerierung: Teilaufgaben (label "a"/"b",
+      // z. B. Leihverpackung) teilen sich eine Nummer → 1a/1b, 2a/2b, …
+      let gfNummer = 0;
+      let imPaar = false;
+      const teile = [];
+      for (const eintrag of letzteGenerierteGfListeEinkauf) {
+        let nr;
+        if (eintrag.label === 'a' || eintrag.label === 'b') {
+          if (eintrag.label === 'a' || !imPaar) gfNummer++;
+          imPaar = true;
+          nr = `${gfNummer}${eintrag.label}`;
+        } else {
+          gfNummer++;
+          imPaar = false;
+          nr = String(gfNummer);
+        }
+        teile.push(`Aufgabe ${nr}:\n${eintrag.aufgabe}\n\nMusterlösung ${nr}:\n${eintrag.loesung}`);
+      }
+      return teile.length ? teile.join("\n\n---\n\n") : "";
+    })();
+    if (!aufgabenUndLoesungen) {
+      aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+    }
   }
   return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
 }
