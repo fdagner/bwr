@@ -1,11 +1,13 @@
 let kunde = '<i>[Modellunternehmen]</i>';
 
 // ============================================================================
-// KONTEN (hier zentral anpassbar)
+// KONTEN – ZENTRAL AUS DEM KONTENPLAN (js/utils.js)
 // ============================================================================
-const KONTO_BANK     = '2800 BK';
-const KONTO_DARLEHEN = '4250 LBKV';   // Langfristige Bankverbindlichkeiten
-const KONTO_ZINS     = '7510 ZAW';    // Zinsaufwendungen
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+// Bei Änderungen nur KONTENPLAN in utils.js anpassen.
+const KONTO_BANK     = kontoLabel('2800');   // Bank
+const KONTO_DARLEHEN = kontoLabel('4250');   // Langfristige Bankverbindlichkeiten
+const KONTO_ZINS     = kontoLabel('7510');   // Zinsaufwendungen
 
 // ============================================================================
 // YAML / UNTERNEHMEN

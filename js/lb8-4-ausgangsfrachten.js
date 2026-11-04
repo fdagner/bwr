@@ -5,12 +5,22 @@
 // Globale Variablen
 let kunde = '<i>[Modellunternehmen]</i>';
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+// Bei Änderungen nur KONTENPLAN in utils.js anpassen.
+const AWVM  = kontoLabel('6040');   // Aufwendungen für Verpackungsmaterial
+const AFR   = kontoLabel('6140');   // Ausgangsfrachten
+const VORST = kontoLabel('2600');   // Vorsteuer
+const KA    = kontoLabel('2880');   // Kasse
+const BK    = kontoLabel('2800');   // Bank
+const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
+
 // Konten-Definitionen
 const kontenDefinitionen = {
-  '6040 AWVM': {
+  [AWVM]: {
     beschreibung: '',
   },
-  '6140 AFR': {
+  [AFR]: {
     beschreibung: '',
   }
 };
@@ -111,13 +121,13 @@ function getAusgewaehlteKonten() {
 const geschaeftsfallTypen = {
   verpackungsmaterial: {
     name: 'Verpackungsmaterial',
-    konto: '6040 AWVM',
+    konto: AWVM,
     lieferanten: ['PackDesign Pro', 'GreenWrap Solutions'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: '. Hierfür liegt eine Rechnung vor', konto: '4400 VE' },
-      { text: ' auf Ziel', konto: '4400 VE' },
-      { text: '. Die Rechnung geht ein', konto: '4400 VE' }
+      { text: '. Hierfür liegt eine Rechnung vor', konto: VE },
+      { text: ' auf Ziel', konto: VE },
+      { text: '. Die Rechnung geht ein', konto: VE }
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
@@ -133,13 +143,13 @@ const geschaeftsfallTypen = {
 
   ausgangsfrachten: {
     name: 'Ausgangsfrachten',
-    konto: '6140 AFR',
+    konto: AFR,
     lieferanten: ['TransMove', 'SpeedyDelivery'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: '. Hierfür liegt eine Rechnung vor', konto: '4400 VE' },
-      { text: ' auf Ziel', konto: '4400 VE' },
-      { text: '. Es geht eine Rechnung ein', konto: '4400 VE' }
+      { text: '. Hierfür liegt eine Rechnung vor', konto: VE },
+      { text: ' auf Ziel', konto: VE },
+      { text: '. Es geht eine Rechnung ein', konto: VE }
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
@@ -314,7 +324,7 @@ function erstelleBuchungssatz(geschaeftsfall) {
           <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px; text-align:right" tabindex="1"></td>
         </tr>
         <tr>
-          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">2600 VORST</td>
+          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${VORST}</td>
           <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.vorsteuerFormatted}</td>
           <td style="border-with:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
           <td style="border-with:0;text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
@@ -436,7 +446,7 @@ function zeigeZufaelligeGeschaeftsfaelle() {
     const klartext = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '').trim();
     letzteGenerierteGfListeFrachten.push({
       aufgabe: klartext(geschaeftsfall.text),
-      loesung: `Buchungssatz: ${geschaeftsfall.typDaten.konto} ${geschaeftsfall.nettoFormatted} / 2600 VORST ${geschaeftsfall.vorsteuerFormatted} an ${geschaeftsfall.zahlungsart.konto} ${geschaeftsfall.bruttoFormatted}`
+      loesung: `Buchungssatz: ${geschaeftsfall.typDaten.konto} ${geschaeftsfall.nettoFormatted} / ${VORST} ${geschaeftsfall.vorsteuerFormatted} an ${geschaeftsfall.zahlungsart.konto} ${geschaeftsfall.bruttoFormatted}`
     });
         if (typeof moodleErfasseAusgangsfrachten === 'function') {
       moodleErfasseAusgangsfrachten({

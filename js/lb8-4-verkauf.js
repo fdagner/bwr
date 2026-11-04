@@ -44,24 +44,49 @@ const verkaufMitRabatt = document.getElementById('verkaufMitRabatt');
 const verkaufMitBezugskosten = document.getElementById('verkaufMitBezugskosten');
 const verkaufMitVerkaufskalkulation = document.getElementById('verkaufMitVerkaufskalkulation');
 const verkaufSkontobuchungssatz = document.getElementById('verkaufMitSkontobuchungssatz');
+const verkaufMitRuecksendung = document.getElementById('verkaufMitRuecksendung');
 
-document.addEventListener('DOMContentLoaded', function () {
-  const verkaufMitBezugskosten = document.getElementById('verkaufMitBezugskosten');
-  const verkaufBuchungsoptionDropdown = document.getElementById('verkaufBuchungsoptionDropdown');
+// ============================================================================
+// OPTIONS-STATE: Wechselwirkung Rücksendungen ↔ Bezugskosten
+// - verkaufskalkulation / verkaufDifferenzkalkulation: beide Checkboxen aus
+// - reine Buchungssatz-Modi + Rücksendungen aktiv: Bezugskosten gesperrt
+//   (Rücksendebeträge sind reine Warenwerte)
+// - vermischt (gemischt): beide verfügbar, pro Geschäftsfall gegenseitig
+//   ausgeschlossen (bzk-Fälle werden nie zurückgesendet)
+// ============================================================================
+function verkaufAktualisiereOptionenState() {
+  const modus = verkaufGetModus();
+  const rueckAktiv = !!verkaufMitRuecksendung?.checked;
 
-  function verkaufUpdateMitBezugskostenState() {
-    if (verkaufGetModus() === 'verkaufskalkulation' || verkaufGetModus() === 'verkaufDifferenzkalkulation') {
-      verkaufMitBezugskosten.disabled = true;
-      verkaufMitBezugskosten.checked = false;
-    } else {
-      verkaufMitBezugskosten.disabled = false;
+  if (modus === 'verkaufskalkulation' || modus === 'verkaufDifferenzkalkulation') {
+    verkaufMitBezugskosten.disabled = true;
+    verkaufMitBezugskosten.checked = false;
+    if (verkaufMitRuecksendung) {
+      verkaufMitRuecksendung.disabled = true;
+      verkaufMitRuecksendung.checked = false;
     }
+    return;
   }
 
-  verkaufBuchungsoptionDropdown.addEventListener('change', verkaufUpdateMitBezugskostenState);
+  if (verkaufMitRuecksendung) verkaufMitRuecksendung.disabled = false;
 
-  // Initialisiere den Zustand der "mitBezugskosten"-Checkbox beim Laden der Seite
-  verkaufUpdateMitBezugskostenState();
+  const bzkGesperrt = rueckAktiv &&
+    (modus === 'verkaufBuchungssatz' || modus === 'verkaufSkontobuchungssatz');
+  verkaufMitBezugskosten.disabled = bzkGesperrt;
+  if (bzkGesperrt) verkaufMitBezugskosten.checked = false;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const verkaufMitBezugskostenEl = document.getElementById('verkaufMitBezugskosten');
+  const verkaufBuchungsoptionDropdown = document.getElementById('verkaufBuchungsoptionDropdown');
+
+  verkaufBuchungsoptionDropdown.addEventListener('change', verkaufAktualisiereOptionenState);
+  if (verkaufMitRuecksendung) {
+    verkaufMitRuecksendung.addEventListener('change', verkaufAktualisiereOptionenState);
+  }
+
+  // Initialisiere den Zustand der Checkboxen beim Laden der Seite
+  verkaufAktualisiereOptionenState();
 
   // Dropdown befüllen → "Modellunternehmen" wählen → Aufgaben starten,
   // sobald die YAML-Daten tatsächlich geladen sind
@@ -122,17 +147,26 @@ function generateRandomNettoWert() {
 // Währung nach DIN 5008
 
 // Kontenplan
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+const UEFE = kontoLabel('5000');   // Umsatzerlöse für eigene Erzeugnisse
+const EBFE = kontoLabel('5001');   // Erlösberichtigungen (Nachlässe)
+const FO   = kontoLabel('2400');   // Forderungen aus LL
+const UST  = kontoLabel('4800');   // Umsatzsteuer
+const KA   = kontoLabel('2880');   // Kasse
+const BK   = kontoLabel('2800');   // Bank
+
 const kontenUmsatzserloese = {
   "Fertigerzeugnisse": {
-    "Hauptkonto": "5000 UEFE",
-    "Nachlasskonto": "5001 EBFE",
+    "Hauptkonto": UEFE,
+    "Nachlasskonto": EBFE,
   },
 };
 
 const kontenUmsatzerloese_2 = {
   "von Fertigerzeugnissen": {
-    "Hauptkonto": "5000 UEFE",
-    "Nachlasskonto": "5001 EBFE",
+    "Hauptkonto": UEFE,
+    "Nachlasskonto": EBFE,
   },
 };
 
@@ -140,15 +174,15 @@ let verkaufKontenZahlung;
 function inputSellChangeCategory() {
   if (verkaufGetModus() === 'verkaufskalkulation' || verkaufGetModus() === 'verkaufSkontobuchungssatz') {
     verkaufKontenZahlung = {
-      " gegen Rechnung": "2400 FO",
-      " auf Rechnung": "2400 FO",
+      " gegen Rechnung": FO,
+      " auf Rechnung": FO,
     }
   } else {
     verkaufKontenZahlung = {
-      "gegen Rechnung": "2400 FO",
-      "mit Versenden einer Ausgangsrechnung": "2400 FO",
-      "auf Rechnung": "2400 FO",
-      "auf Ziel": "2400 FO",
+      "gegen Rechnung": FO,
+      "mit Versenden einer Ausgangsrechnung": FO,
+      "auf Rechnung": FO,
+      "auf Ziel": FO,
     }
   }
 }
@@ -304,7 +338,7 @@ function verkaufErstelleZufallssatz() {
   let verkaufWert = verkaufPosten.gesamt;
   const verkaufRandomZahlung = verkaufArray_Zahlung[Math.floor(Math.random() * verkaufArray_Zahlung.length)];
   const verkaufAntwortZahlung = verkaufKontenZahlung[verkaufRandomZahlung]
-  if (verkaufAntwortZahlung === "2880 KA") {
+  if (verkaufAntwortZahlung === KA) {
     verkaufWert = parseFloat(verkaufWert) / 10;
   }
   const verkaufNettoWert = formatCurrency(verkaufWert);
@@ -362,6 +396,10 @@ function verkaufErstelleZufallssatz() {
     verkaufRandomSupply_Bezugskosten = "";
     verkaufBerechnung_USTWert = verkaufBerechnung_USTWert;
   }
+  // Reiner Waren-Netto-Wert (BEVOR Bezugskosten aufgeschlagen werden) –
+  // Basis für die Rücksende-Berechnung: Bei der Rücksendung zählen nur die
+  // Fertigerzeugnisse, die Bezugskosten (direkt auf UEFE gebucht) nicht.
+  const verkaufNettoWertWare = verkaufBerechnung_nettoWert;
   verkaufBerechnung_nettoWert = parseFloat(verkaufBerechnung_nettoWert) + parseFloat(verkaufRandom_Bezugskosten);
   verkaufBerechnung_nettoWert = roundToTwoDecimals(verkaufBerechnung_nettoWert);
   verkaufBerechnung_nettoWert = parseFloat(verkaufBerechnung_nettoWert);
@@ -418,6 +456,26 @@ function verkaufErstelleZufallssatz() {
   let verkaufUeberweisungsbetrag = formatCurrency(verkaufUeberweisungsbetrag_berechnung);
   let verkaufAntwortBruttowert = formatCurrency(verkaufBerechnung_bruttoWert);
   const verkaufAntwort_Selbstkostenpreis = `${verkaufSelbstkostenpreis}`;
+
+  // ── Rücksendung von Fertigerzeugnissen (analog Einkauf: Falschlieferung /
+  //    Sachmangel) – Beträge anteilig auf den gebuchten Zielverkaufspreis
+  //    (netto, inkl. ggf. Bezugskosten). Weil der Saldo des SOLL-Aufwands-
+  //    kontos UEFE den Wert der Ware + Bezugskosten enthält, wird im
+  //    Geschäftsfall IMMER der konkrete Betrag der Rücksendung genannt – so
+  //    ist der Umsatz unabhängig von Rabatt/Bezugskosten nachvollziehbar.
+  let verkaufGesendeteProzent = Math.random() < 0.33
+    ? 100
+    : 10 + Math.floor(Math.random() * 14) * 5;                       // 10 – 75 %
+  let verkaufNettoRuecksendung = roundToTwoDecimals(parseFloat(verkaufNettoWertWare) * verkaufGesendeteProzent / 100);
+  let verkaufUSTWertRuecksendung = roundToTwoDecimals(verkaufNettoRuecksendung * 0.19);
+  let verkaufBruttoRuecksendung = roundToTwoDecimals(verkaufNettoRuecksendung + verkaufUSTWertRuecksendung);
+  const verkaufUSTRuecksendung = formatCurrency(verkaufUSTWertRuecksendung);
+  const verkaufZielverkaufspreisRuecksendung = formatCurrency(verkaufNettoRuecksendung);
+  const verkaufBruttoRuecksendungFormatted = formatCurrency(verkaufBruttoRuecksendung);
+  const wertTextRuecksendung = ` im Wert von ${verkaufZielverkaufspreisRuecksendung} netto`;
+  const verkaufRuecksendungSatz = verkaufGesendeteProzent === 100
+    ? `Aufgrund einer Falschlieferung sendet der Kunde alle Fertigerzeugnisse${wertTextRuecksendung} `
+    : `Aufgrund eines Sachmangels sendet der Kunde Fertigerzeugnisse${wertTextRuecksendung} `;
 
   const listenverkaufspreis = `${verkaufNettoWert}`;
   const verkaufAntwort_rabattWert = `${verkaufRabattWert}`;
@@ -487,12 +545,15 @@ function verkaufErstelleZufallssatz() {
 
 
 
-  return [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, listenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_Gewinn_berechnet, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz];
+  return [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, listenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_Gewinn_berechnet, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz, verkaufRuecksendungSatz, verkaufUSTRuecksendung, verkaufZielverkaufspreisRuecksendung, verkaufBruttoRuecksendungFormatted];
 
 }
 
 
 function verkaufZeigeZufaelligenSatz() {
+
+  // Checkbox-Wechselwirkung (Rücksendungen vs. Bezugskosten) aktuell halten
+  if (typeof verkaufAktualisiereOptionenState === 'function') verkaufAktualisiereOptionenState();
 
   const verkaufAnzahl = parseInt(verkaufAnzahlDropdown.value);
   const container = document.getElementById('Container');
@@ -520,18 +581,24 @@ function verkaufZeigeZufaelligenSatz() {
   for (let i = 1; i <= verkaufAnzahl; i++) {
         if (gemischt) {
       verkaufModusUeberschreibung = VERKAUF_MODI[Math.floor(Math.random() * VERKAUF_MODI.length)];
-      // Kalkulation und Differenzkalkulation kennen keine Bezugskosten
+      const rueckAktivGemischt = !!verkaufMitRuecksendung?.checked;
+      // Kalkulation und Differenzkalkulation kennen keine Bezugskosten.
+      // Im verkaufBuchungssatz-Fall bleibt der Fall ohne Bezugskosten, wenn
+      // Rücksendungen aktiv sind – damit Rücksendungen überhaupt vorkommen
+      // (Bezugskosten-Fälle werden nie zurückgesendet). Die bezugskosten-
+      // Fälle bleiben im verkaufSkontobuchungssatz erhalten.
       verkaufMitBezugskosten.checked = origBezug &&
-        !['verkaufskalkulation', 'verkaufDifferenzkalkulation'].includes(verkaufModusUeberschreibung);
+        !['verkaufskalkulation', 'verkaufDifferenzkalkulation'].includes(verkaufModusUeberschreibung) &&
+        !(rueckAktivGemischt && verkaufModusUeberschreibung === 'verkaufBuchungssatz');
     }
-    const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_Gewinn_berechnet, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz] = verkaufErstelleZufallssatz();
+    const [verkaufZufaelligerSatz, verkaufAngebotSatz, verkaufDifferenzSatz, verkaufSkontoSatz, verkaufListenverkaufspreis, verkaufAntwort_rabattWert, verkaufAntwort_Selbstkostenpreis, verkaufAntwort_rabattSatz, verkaufAntwort_GewinnWert, verkaufAntwort_GewinnSatz, verkaufAntwort_Gewinn_berechnet, verkaufAntwort_wunschGewinn, verkaufAntwort_Kundenanfrage, verkaufAntwort_skontoSatz, verkaufAntwort_skontoBetrag, verkaufAntwort_skontoBetrag_brutto, verkaufAntwort_vorsteuer_berichtigung, verkaufAntwort_ueberweisungsbetrag, verkaufAntwort_barverkaufspreis, verkaufKonto_1, Zielverkaufspreis, verkaufAntwort_bezugskosten, verkaufAntwort_bezugskostenWert, verkaufUSTWert, verkaufKonto_2, verkaufBetrag_2, verkaufKonto_Skontobuchungssatz, verkaufRuecksendungSatz, verkaufUSTRuecksendung, verkaufZielverkaufspreisRuecksendung, verkaufBruttoRuecksendungFormatted] = verkaufErstelleZufallssatz();
     const verkaufFormattedSatz = verkaufZufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedAngebot = verkaufAngebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedSkonto = verkaufSkontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
     const verkaufFormattedDifferenz = verkaufDifferenzSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
         // Aufgabe und Lösung für KI-Prompt merken
     const klartext = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '').trim();
-    const buchung = `${verkaufKonto_2} ${verkaufBetrag_2} an ${verkaufKonto_1} ${Zielverkaufspreis} / 4800 UST ${verkaufUSTWert}`;
+    const buchung = `${verkaufKonto_2} ${verkaufBetrag_2} an ${verkaufKonto_1} ${Zielverkaufspreis} / ${UST} ${verkaufUSTWert}`;
     const kalkulation = [
       `Selbstkostenpreis: ${verkaufAntwort_Selbstkostenpreis} (100 %)`,
       `+ Gewinn: ${verkaufAntwort_GewinnWert} (${verkaufAntwort_GewinnSatz} %)`,
@@ -552,7 +619,7 @@ function verkaufZeigeZufaelligenSatz() {
         aufgabeText = klartext(verkaufFormattedSatz + ' ' + verkaufFormattedSkonto);
         loesungText = [
           `Buchungssatz 1: ${buchung}`,
-          `Buchungssatz 2: 2800 BK ${verkaufAntwort_ueberweisungsbetrag} / ${verkaufKonto_Skontobuchungssatz} ${verkaufAntwort_skontoBetrag} / 4800 UST ${verkaufAntwort_vorsteuer_berichtigung} an 2400 FO ${verkaufBetrag_2}`,
+          `Buchungssatz 2: ${BK} ${verkaufAntwort_ueberweisungsbetrag} / ${verkaufKonto_Skontobuchungssatz} ${verkaufAntwort_skontoBetrag} / ${UST} ${verkaufAntwort_vorsteuer_berichtigung} an ${FO} ${verkaufBetrag_2}`,
           `Skonto brutto: ${verkaufAntwort_skontoBetrag_brutto}, Skonto netto: ${verkaufAntwort_skontoBetrag}, Umsatzsteuerberichtigung: ${verkaufAntwort_vorsteuer_berichtigung}`,
           `Überweisungsbetrag: ${verkaufAntwort_ueberweisungsbetrag}`,
         ].join('\n');
@@ -582,6 +649,16 @@ function verkaufZeigeZufaelligenSatz() {
     kontoNachlass: verkaufKonto_Skontobuchungssatz
   });
 }
+    // ── Rücksendung (nur bei FO-Buchungssatz, analog Einkauf) ────────────────
+    //  Früh berechnet, damit der Aufgaben-Satz ohne den unnötigen
+    //  Unterabstand (<br><br>) gerendert werden kann, wenn eine
+    //  Rücksendung folgt.
+    const mitRuecksendung = verkaufMitRuecksendung?.checked &&
+                            verkaufGetModus() === 'verkaufBuchungssatz' &&
+                            verkaufKonto_2 === FO &&
+                            !verkaufMitBezugskosten.checked &&
+                            i < verkaufAnzahl;
+
     // Generierte Sätze hinzufügen
 
     verkaufSatzOutput += `<li>`;
@@ -598,7 +675,12 @@ function verkaufZeigeZufaelligenSatz() {
         verkaufSatzOutput += `${verkaufFormattedDifferenz}<br><br>`;
         break;
       default:
-        verkaufSatzOutput += `${verkaufFormattedSatz}<br><br>`;
+        // Wenn eine Rücksendung folgt, keinen doppelten Zusatzabstand erzeugen
+        verkaufSatzOutput += `${verkaufFormattedSatz}${mitRuecksendung ? '' : '<br><br>'}`;
+    }
+
+    if (mitRuecksendung) {
+      verkaufSatzOutput += `<li>${verkaufRuecksendungSatz}aus Geschäftsfall ${i} zurück und erhält dafür eine Gutschrift.</li>`;
     }
 
     verkaufSatzOutput += `</li>`;
@@ -723,7 +805,7 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1"></td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 120px" tabindex="1"></td>`;
       verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
-      verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">4800 UST</td>`;
+      verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">${UST}</td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">${verkaufUSTWert}</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `</tbody>`;
@@ -769,10 +851,10 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;width:600px;margin:0 0;margin-bottom:6px;">`;
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
-      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">2800 BK</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">${BK}</td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">${verkaufAntwort_ueberweisungsbetrag}</td>`;
       verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 40px" tabindex="1">an</td>`;
-      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px;text-align:left" tabindex="1">2400 FO</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px;text-align:left" tabindex="1">${FO}</td>`;
       verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px;text-align:right" tabindex="1">${verkaufBetrag_2}</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr>`;
@@ -783,7 +865,7 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1"></td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr>`;
-      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">4800 UST</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">${UST}</td>`;
       verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1">${verkaufAntwort_vorsteuer_berichtigung}</td>`;
       verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
       verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:140px;min-width: 140px" tabindex="1"></td>`;
@@ -792,6 +874,35 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `</tbody>`;
       verkaufAntwortOutput += `</table>`;
       verkaufAntwortOutput += `<br>`;
+    }
+
+    // ── Rücksendung: umgedrehter Buchungssatz (nur FO-Fall), analog Einkauf ──
+    if (mitRuecksendung) {
+      i++;   // Rücksendung erhält eine eigene Nummerierung
+
+      letzteGenerierteGfListeVerkauf.push({
+        aufgabe: `${verkaufRuecksendungSatz}aus Geschäftsfall ${i - 1} zurück und erhält dafür eine Gutschrift.`,
+        loesung: `Buchungssatz Rücksendung:\n${UEFE} ${verkaufZielverkaufspreisRuecksendung} / ${UST} ${verkaufUSTRuecksendung} an ${FO} ${verkaufBruttoRuecksendungFormatted}`,
+      });
+
+      verkaufAntwortOutput += `<strong>${parseInt(i)}.</strong>`;
+      verkaufAntwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;width:600px;margin:0 0;margin-bottom:6px;">`;
+      verkaufAntwortOutput += `<tbody>`;
+      verkaufAntwortOutput += `<tr>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${UEFE}</td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${verkaufZielverkaufspreisRuecksendung}</td>`;
+      verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">${FO}</td>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${verkaufBruttoRuecksendungFormatted}</td>`;
+      verkaufAntwortOutput += `</tr>`;
+      verkaufAntwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1"></td>`;
+      verkaufAntwortOutput += `<td style="text-align:left;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${UST}</td>`;
+      verkaufAntwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${verkaufUSTRuecksendung}</td>`;
+      verkaufAntwortOutput += `</tr>`;
+      verkaufAntwortOutput += `</tbody>`;
+      verkaufAntwortOutput += `</table><br>`;
     }
     }
 

@@ -3109,7 +3109,7 @@ dataFunction: () => {
                 2: { titel: 'Mahnung',
                      hinweis: 'Die Kosten des Verfahrens gehen zu Ihren Lasten.' },
                 3: { titel: 'Letzte Mahnung',
-                     hinweis: 'Bei fruchtlosem Fristablauf leiten wir das Mahnverfahren ein.' }
+                     hinweis: 'Bei fruchtlosem Fristablauf leiten wir das gerichtliche Mahnverfahren ein.' }
             };
             const stufeNr = parseInt(document.getElementById('mahnungStufeInput')?.value, 10) || 1;
             const stufe = STUFEN[stufeNr] || STUFEN[1];

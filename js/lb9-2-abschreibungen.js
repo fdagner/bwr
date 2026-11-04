@@ -75,22 +75,30 @@ function fillCompanyDropdowns() {
 // AfA-TABELLEN-DATEN – nur Maschinen und Fuhrpark
 // ============================================================================
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel()/getKonto().
+const MA    = kontoLabel('0700');   // Maschinen & Anlagen
+const FP    = kontoLabel('0840');   // Fuhrpark
+const VORST = kontoLabel('2600');   // Vorsteuer
+const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
+const ABSA  = kontoLabel('6520');   // Abschreibungen auf Sachanlagen
+
 const afaTabelle = {
   maschinen: [
-    { bezeichnung: 'Drehmaschine',            nd: 13, kontoHaben: '0700 MA', kontoHabenKurz: 'MA', icon: '⚙️' },
-    { bezeichnung: 'Fräsmaschine',            nd: 13, kontoHaben: '0700 MA', kontoHabenKurz: 'MA', icon: '⚙️' },
-    { bezeichnung: 'CNC-Maschine', nd: 13, kontoHaben: '0700 MA', kontoHabenKurz: 'MA', icon: '🦾' },
-    { bezeichnung: 'Schweißmaschine',         nd: 10, kontoHaben: '0700 MA', kontoHabenKurz: 'MA', icon: '🔧' },
-    { bezeichnung: 'Kompressor',              nd: 10, kontoHaben: '0700 MA', kontoHabenKurz: 'MA', icon: '🔧' },
-    { bezeichnung: 'Förderanlage',            nd: 13, kontoHaben: '0700 MA', kontoHabenKurz: 'MA', icon: '⚙️' },
+    { bezeichnung: 'Drehmaschine',            nd: 13, kontoHaben: MA, kontoHabenKurz: getKonto('0700').abk, icon: '⚙️' },
+    { bezeichnung: 'Fräsmaschine',            nd: 13, kontoHaben: MA, kontoHabenKurz: getKonto('0700').abk, icon: '⚙️' },
+    { bezeichnung: 'CNC-Maschine', nd: 13, kontoHaben: MA, kontoHabenKurz: getKonto('0700').abk, icon: '🦾' },
+    { bezeichnung: 'Schweißmaschine',         nd: 10, kontoHaben: MA, kontoHabenKurz: getKonto('0700').abk, icon: '🔧' },
+    { bezeichnung: 'Kompressor',              nd: 10, kontoHaben: MA, kontoHabenKurz: getKonto('0700').abk, icon: '🔧' },
+    { bezeichnung: 'Förderanlage',            nd: 13, kontoHaben: MA, kontoHabenKurz: getKonto('0700').abk, icon: '⚙️' },
   ],
   fuhrpark: [
-    { bezeichnung: 'LKW (7,5 t)',             nd:  9, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚛' },
-    { bezeichnung: 'LKW (über 7,5 t)',        nd:  9, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚛' },
-    { bezeichnung: 'Lieferwagen',             nd:  6, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚚' },
-    { bezeichnung: 'PKW / Kombi',             nd:  6, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚗' },
-    { bezeichnung: 'Transporter',             nd:  6, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚐' },
-    { bezeichnung: 'Anhänger / Auflieger',    nd: 10, kontoHaben: '0840 FP', kontoHabenKurz: 'FP', icon: '🚛' },
+    { bezeichnung: 'LKW (7,5 t)',             nd:  9, kontoHaben: FP, kontoHabenKurz: getKonto('0840').abk, icon: '🚛' },
+    { bezeichnung: 'LKW (über 7,5 t)',        nd:  9, kontoHaben: FP, kontoHabenKurz: getKonto('0840').abk, icon: '🚛' },
+    { bezeichnung: 'Lieferwagen',             nd:  6, kontoHaben: FP, kontoHabenKurz: getKonto('0840').abk, icon: '🚚' },
+    { bezeichnung: 'PKW / Kombi',             nd:  6, kontoHaben: FP, kontoHabenKurz: getKonto('0840').abk, icon: '🚗' },
+    { bezeichnung: 'Transporter',             nd:  6, kontoHaben: FP, kontoHabenKurz: getKonto('0840').abk, icon: '🚐' },
+    { bezeichnung: 'Anhänger / Auflieger',    nd: 10, kontoHaben: FP, kontoHabenKurz: getKonto('0840').abk, icon: '🚛' },
   ],
 };
 
@@ -222,10 +230,10 @@ Abschreibungssatz: <span class="val">${prozent}&nbsp;%</span>`
     <td style="border-with:0;min-width:145px;"></td>
   </tr>
   <tr>
-    <td>2600 VORST</td>
+    <td>${VORST}</td>
     <td style="border-with:0;text-align:right;">${formatEuro(kaufVorst)}</td>
     <td style="border-with:0;text-align:center;">an</td>
-    <td style="border-with:0;">4400 VE</td>
+    <td style="border-with:0;">${VE}</td>
     <td style="border-with:0;text-align:right;">${formatEuro(kaufBrutto)}</td>
   </tr>
 </table>
@@ -237,7 +245,7 @@ Netto (AK): ${formatEuro(ak)} &nbsp;|&nbsp; Vorsteuer 19&nbsp;%: ${formatEuro(ka
       loesung: `
 <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
   <tr>
-    <td style="border-with:0;min-width:160px;">6520 ABSA</td>
+    <td style="border-with:0;min-width:160px;">${ABSA}</td>
     <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(afaBetrag)}</td>
     <td style="border-with:0;text-align:center;min-width:50px;">an</td>
     <td style="border-with:0;min-width:120px;">${kontoHaben}</td>
@@ -780,8 +788,8 @@ function erstelleKiPromptTextAfa(anlage, ak, nd, afaBetrag, aufgaben) {
   const kontext = `Sachanlage: ${anlage.icon} ${anlage.bezeichnung}
 Anschaffungskosten: ${f(ak)}  |  Nutzungsdauer: ${nd} Jahre  |  Abschreibungsbetrag: ${f(afaBetrag)}
 Restbuchwert nach Jahr ${nd}: 1,00 € (Erinnerungswert)
-Buchungssatz Kauf (19 % USt, auf Ziel): ${anlage.kontoHaben} ${f(ak)} / 2600 VORST ${f(kaufVorst)} an 4400 VE ${f(kaufBrutto)}
-Buchungssatz AfA: 6520 ABSA ${f(afaBetrag)} an ${anlage.kontoHaben} ${f(afaBetrag)}`;
+Buchungssatz Kauf (19 % USt, auf Ziel): ${anlage.kontoHaben} ${f(ak)} / ${VORST} ${f(kaufVorst)} an ${VE} ${f(kaufBrutto)}
+Buchungssatz AfA: ${ABSA} ${f(afaBetrag)} an ${anlage.kontoHaben} ${f(afaBetrag)}`;
 
   const aufgabenText = aufgaben.map((a, i) => {
     const textKlar = a.text

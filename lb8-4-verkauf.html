@@ -85,7 +85,9 @@
         <br>
       <label for="verkaufMitRabatt">Rabatt:</label>
       <input type="checkbox" id="verkaufMitRabatt">  <label for="verkaufMitBezugskosten">Bezugskosten:</label><input
-        type="checkbox" id="verkaufMitBezugskosten"><br>
+        type="checkbox" id="verkaufMitBezugskosten"><label
+        for="verkaufMitRuecksendung">Rücksendungen integrieren:</label><input
+        type="checkbox" id="verkaufMitRuecksendung" onchange="verkaufZeigeZufaelligenSatz()"><br>
                    
       <label for="verkaufAnzahlDropdown">Anzahl der Geschäftsfälle:</label>
       <select id="verkaufAnzahlDropdown">

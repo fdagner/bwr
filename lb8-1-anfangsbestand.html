@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bestandskonten eröffnen | meinbwr.de BwR</title>
+  <meta name="description" content="Kostenloses BwR-Tool: Generiere zufällige Aufgaben zum Eintragen des Anfangsbestands (AB) in Aktiv- und Passiv-T-Konten. Ideal für BwR Jahrgangsstufe 8 Realschule Bayern (LehrplanPLUS), Eröffnungsbilanz, Bestandskonten, Prüfungsvorbereitung. Mit Druckansicht und KI-Prompt für sokratischen Chatbot.">
+  <link rel="canonical" href="https://www.meinbwr.de/lb8-1-anfangsbestand.html">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Bestandskonten eröffnen – BwR Aufgabe Generator | meinbwr.de">
+  <meta property="og:description" content="Zufällige Bilanz, dann AB in zufällige Aktiv- und Passiv-T-Konten eintragen. Perfekt für BwR 8 Realschule Bayern – Eröffnungsbilanz, Bestandskonten, Prüfungen. Mit Druckansicht plus fertiger KI-Prompt (sokratisch, lösungsfrei).">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.meinbwr.de/lb8-1-anfangsbestand.html">
+  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
+  <meta property="og:locale" content="de_DE">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bestandskonten eröffnen – BwR Aufgabe Generator | meinbwr.de">
+  <meta name="twitter:description" content="Zufällige Bilanz, dann AB in zufällige Aktiv- und Passiv-T-Konten eintragen. Perfekt für BwR 8 Realschule Bayern.">
+
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="color-scheme" content="light">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Bestandskonten eröffnen",
+    "description": "Kostenloses BwR-Tool: Generiere zufällige Aufgaben zum Eintragen des Anfangsbestands (AB) in Aktiv- und Passiv-T-Konten. Ideal für BwR Jahrgangsstufe 8 Realschule Bayern (LehrplanPLUS), Eröffnungsbilanz, Bestandskonten, Prüfungsvorbereitung.",
+    "url": "https://www.meinbwr.de/lb8-1-anfangsbestand.html",
+    "inLanguage": "de-DE",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "meinbwr.de – BwR Realschule Bayern",
+      "url": "https://www.meinbwr.de/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 2, "name": "BwR 8", "item": "https://www.meinbwr.de/" },
+        { "@type": "ListItem", "position": 3, "name": "Anfangsbestand", "item": "https://www.meinbwr.de/lb8-1-anfangsbestand.html" }
+      ]
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/jodit.min.css">
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/clipboard.min.js"></script>
+  <script src="js/menu.js?v=14"></script>
+  <script src="js/utils.js?v=11"></script>
+  <script src="js/jodit.min.js?v=68"></script>
+  <script src="js/joditeditor.js?v=68"></script>
+  <script src="js/collection.js?v=35"></script>
+</head>
+<body>
+<main>
+  <div w3-include-html="navigation.html"></div>
+
+  <h2>Bestandskonten eröffnen</h2>
+
+  <div id="generator-container">
+    <div class="box">
+      <p>Aus einer zufälligen Bilanz werden ein zufälliges Aktivkonto und ein zufälliges
+      Passivkonto für die Konteneröffnung ausgewählt.</p>
+
+      <div class="flex-row">
+        <button onclick="zeigeZufaelligenAnfangsbestand()">Neue Aufgabe erstellen</button>
+      </div>
+    </div>
+
+    <div id="Container" style="max-width:960px;margin:0 auto;" contenteditable="true"></div>
+
+    <!-- KI-ASSISTENT -->
+    <div class="ki-assistent-box">
+      <div class="ki-assistent-header">
+        <span class="ki-icon">🤖</span>
+        <div>
+          <h3>KI-Assistent – System-Prompt</h3>
+          <p>Prompt für einen lernfördernden Chatbot (z.&nbsp;B. KI-Persona in ByCS, AIS.chat&nbsp;…)</p>
+        </div>
+      </div>
+      <div class="ki-assistent-body">
+        <div class="ki-hinweis">
+          <span class="hinweis-icon">💡</span>
+          <span>Kopieren Sie den Prompt und fügen Sie ihn als <strong>System-Prompt</strong> in einen KI-Chatbot ein.
+          Der Bot hilft Schülerinnen und Schülern mit gezielten Hinweisen – ohne Lösungen vorwegzunehmen.</span>
+        </div>
+        <div class="ki-chips">
+          <span class="ki-chip">📚 BwR Realschule</span>
+          <span class="ki-chip">🧾 Anfangsbestand</span>
+          <span class="ki-chip">✅ Sokrat. Methode</span>
+          <span class="ki-chip">🔒 Keine direkten Lösungen</span>
+        </div>
+        <div class="ki-actions" style="margin-top:14px;">
+          <button class="ki-prompt-btn ki-prompt-btn--primary"
+                  id="kiPromptKopierenBtn"
+                  onclick="kopiereKiPrompt()"
+                  title="Prompt in die Zwischenablage kopieren">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Prompt kopieren
+          </button>
+          <button class="ki-prompt-btn ki-prompt-btn--ghost"
+                  id="kiPromptToggleBtn"
+                  onclick="toggleKiPromptVorschau()">
+            Prompt anzeigen ▼
+          </button>
+        </div>
+        <div class="ki-prompt-vorschau-wrapper">
+          <textarea id="kiPromptVorschau" readonly spellcheck="false"
+                    aria-label="KI-Assistent System-Prompt Vorschau"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/lb8-1-anfangsbestand.js?v=1"></script>
+  <div w3-include-html="footer.html"></div>
+  <script>includeHTML();</script>
+</main>
+</body>
+</html>

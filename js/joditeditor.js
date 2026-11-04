@@ -122,9 +122,9 @@
               '<option value="200">200 px</option>' +
               '<option value="300">300 px</option>' +
               '<option value="400">400 px</option>' +
-              '<option value="500">500 px</option>' +
+              '<option value="500" selected>500 px</option>' +
               '<option value="600">600 px</option>' +
-              '<option value="700" selected>700 px</option>' +
+              '<option value="700">700 px</option>' +
               '<option value="800">800 px</option>' +
             '</select>' +
             '<div id="pickList" style="display:grid;gap:8px;flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:4px;"></div>';

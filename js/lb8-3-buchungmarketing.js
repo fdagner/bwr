@@ -5,18 +5,30 @@
 // Globale Variablen
 let kunde = '<i>[Modellunternehmen]</i>';
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+// Bei Änderungen nur KONTENPLAN in utils.js anpassen.
+const KOM   = kontoLabel('6820');   // Kommunikationsaufwendungen
+const RBK   = kontoLabel('6770');   // Rechts- und Beratungskosten
+const WER   = kontoLabel('6870');   // Werbeaufwendungen
+const REK   = kontoLabel('6850');   // Reisekosten
+const VORST = kontoLabel('2600');   // Vorsteuer
+const KA    = kontoLabel('2880');   // Kasse
+const BK    = kontoLabel('2800');   // Bank
+const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
+
 // NEU: Konten-Definitionen mit Beschreibungen
 const kontenDefinitionen = {
-  '6820 KOM': {
+  [KOM]: {
     beschreibung: '',
   },
-  '6770 RBK': {
+  [RBK]: {
     beschreibung: '',
   },
-  '6870 WER': {
+  [WER]: {
     beschreibung: '',
   },
-  '6850 REK': {
+  [REK]: {
     beschreibung: '',
   }
 };
@@ -118,12 +130,12 @@ function getAusgewaehlteKonten() {
 const geschaeftsfallTypen = {
   postwertzeichen: {
     name: 'Postwertzeichen/Briefmarken',
-    konto: '6820 KOM',
+    konto: KOM,
     lieferanten: ['Post und Shop'],
     belegtyp: 'kassenbon',
     zahlungsarten: [
-      { text: 'in bar', konto: '2880 KA' },
-      { text: 'per Girocard', konto: '2800 BK' }
+      { text: 'in bar', konto: KA },
+      { text: 'per Girocard', konto: BK }
     ],
     mitVorsteuer: false,
     geschaeftsfaelle: [
@@ -137,13 +149,13 @@ const geschaeftsfallTypen = {
   
   telefonInternet: {
     name: 'Telefon/Internet',
-    konto: '6820 KOM',
+    konto: KOM,
     lieferanten: ['EU Glasfaser'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: ', es geht eine Rechnung ein', konto: '4400 VE' },
-      { text: ' auf Ziel', konto: '4400 VE' },
-      { text: '. Es geht eine Rechnung ein', konto: '4400 VE' }
+      { text: ', es geht eine Rechnung ein', konto: VE },
+      { text: ' auf Ziel', konto: VE },
+      { text: '. Es geht eine Rechnung ein', konto: VE }
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
@@ -157,11 +169,11 @@ const geschaeftsfallTypen = {
 
   notar: {
     name: 'Notarkosten',
-    konto: '6770 RBK',
+    konto: RBK,
     lieferanten: ['Notariat Weidner'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-       { text: ', hierfür geht eine Rechnung ein', konto: '4400 VE' }
+       { text: ', hierfür geht eine Rechnung ein', konto: VE }
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
@@ -175,11 +187,11 @@ const geschaeftsfallTypen = {
   
   anwalt: {
     name: 'Anwaltskosten',
-    konto: '6770 RBK',
+    konto: RBK,
     lieferanten: ['Meininger und Partner','Mona Klingenbeil'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: ', wobei eine Rechnung eingeht', konto: '4400 VE' }
+      { text: ', wobei eine Rechnung eingeht', konto: VE }
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
@@ -193,11 +205,11 @@ const geschaeftsfallTypen = {
   
   werbung: {
     name: 'Werbekosten',
-    konto: '6870 WER',
+    konto: WER,
     lieferanten: ['Werbeagentur Mandic', 'WebKreativ Studio'],
     belegtyp: 'rechnung',
     zahlungsarten: [
-      { text: ', per Rechnung', konto: '4400 VE' }
+      { text: ', per Rechnung', konto: VE }
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
@@ -213,13 +225,13 @@ const geschaeftsfallTypen = {
   
   reisekosten: {
     name: 'Reisekosten',
-    konto: '6850 REK',
+    konto: REK,
     lieferanten: ['Hotel Sonne', 'RelaxInn Hostel', 'CityStay Hotel'],
     belegtyp: 'rechnung',
     vorlage: 'template10.svg',
     zahlungsarten: [
-      { text: ', es geht eine Rechnung ein', konto: '4400 VE' },
-      { text: ' auf Ziel', konto: '4400 VE' }
+      { text: ', es geht eine Rechnung ein', konto: VE },
+      { text: ' auf Ziel', konto: VE }
     ],
     mitVorsteuer: true,
     umsatzsteuerSatz: 0.07,
@@ -233,13 +245,13 @@ const geschaeftsfallTypen = {
 
   reisekosten_pauschal: {
     name: 'Reisekosten pauschal',
-    konto: '6850 REK',
+    konto: REK,
     lieferanten: ['Horozont Reisebüro', 'Reisewelt Entdecker'],
     belegtyp: 'rechnung',
     vorlage: 'template10.svg',
     zahlungsarten: [
-      { text: ', hierfür geht eine Rechnung ein', konto: '4400 VE' },
-      { text: ' auf Ziel', konto: '4400 VE' }
+      { text: ', hierfür geht eine Rechnung ein', konto: VE },
+      { text: ' auf Ziel', konto: VE }
     ],
     mitVorsteuer: true,
     umsatzsteuerSatz: 0.19,
@@ -415,7 +427,7 @@ function erstelleBuchungssatz(geschaeftsfall) {
           <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px; text-align:right" tabindex="1"></td>
         </tr>
         <tr>
-          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">2600 VORST</td>
+          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${VORST}</td>
           <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.vorsteuerFormatted}</td>
           <td style="border-with:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
           <td style="border-with:0;text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
@@ -584,7 +596,7 @@ function zeigeZufaelligeGeschaeftsfaelle() {
     const gk = geschaeftsfall.typDaten.konto;
     const zk = geschaeftsfall.zahlungsart.konto;
     const loesung = geschaeftsfall.typDaten.mitVorsteuer
-      ? `Buchungssatz: ${gk} ${geschaeftsfall.nettoFormatted} / 2600 VORST ${geschaeftsfall.vorsteuerFormatted} an ${zk} ${geschaeftsfall.bruttoFormatted}\nSteuersatz: ${geschaeftsfall.ustProzent} %`
+      ? `Buchungssatz: ${gk} ${geschaeftsfall.nettoFormatted} / ${VORST} ${geschaeftsfall.vorsteuerFormatted} an ${zk} ${geschaeftsfall.bruttoFormatted}\nSteuersatz: ${geschaeftsfall.ustProzent} %`
       : `Buchungssatz: ${gk} ${geschaeftsfall.nettoFormatted} an ${zk} ${geschaeftsfall.nettoFormatted}\nKeine Vorsteuer (kein Ausweis von Umsatzsteuer)`;
     letzteGenerierteGfListeMarketing.push({ aufgabe: klartext(geschaeftsfall.text), loesung });
 

@@ -6,15 +6,26 @@ let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGeschaeftsfaelle = [];
 let verwendeteSchluessel = new Set();
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+// Bei Änderungen nur KONTENPLAN in utils.js anpassen.
+const FRI   = kontoLabel('6160');   // Fremdinstandhaltung
+const AWMP  = kontoLabel('6700');   // Mieten, Pachten
+const VBEI  = kontoLabel('6900');   // Versicherungsbeiträge
+const VORST = kontoLabel('2600');   // Vorsteuer
+const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
+const BK    = kontoLabel('2800');   // Bank
+const KA    = kontoLabel('2880');   // Kasse
+
 // Konten-Definitionen
 const kontenDefinitionen = {
-  '6160 FRI': {
+  [FRI]: {
     beschreibung: 'Fremdinstandhaltung',
   },
-  '6700 AWMP': {
+  [AWMP]: {
     beschreibung: 'Mieten, Pachten',
   },
-  '6900 VBEI': {
+  [VBEI]: {
     beschreibung: 'Versicherungsbeiträge',
   },
 };
@@ -116,15 +127,15 @@ const geschaeftsfallTypen = {
   // --------------------------------------------------------------------------
   fri_bank: {
     name: 'Fremdinstandhaltung (Rechnung)',
-    konto: '6160 FRI',
+    konto: FRI,
     belegtyp: 'rechnung',
     zahlungsarten: [
-      {konto: '4400 VE', belegArt: 'rechnung' },
+      {konto: VE, belegArt: 'rechnung' },
     ],
     mitVorsteuer: true,
     mitUSt: false,
     vstSatz: 19,
-    vstKonto: '2600 VORST',
+    vstKonto: VORST,
     geschaeftsfaelle: [
       { beschreibung: 'Für den jährlichen Kundendienst an einem Transporter liegt bei {kunde} eine Rechnung vor', vorgang: 'Kfz-Inspektion', branche: 'Fuhrpark', zahlungsweg: 'rechnung', betragNetto: 930 },
       { beschreibung: 'Eingang einer Rechnung bei {kunde} für die Reparatur der Heizungsanlage', vorgang: 'Reparatur Heizung', branche: 'Fuhrpark', zahlungsweg: 'rechnung', betragNetto: null },
@@ -142,15 +153,15 @@ const geschaeftsfallTypen = {
 
   fri_kasse: {
     name: 'Fremdinstandhaltung (Kasse)',
-    konto: '6160 FRI',
+    konto: FRI,
     belegtyp: 'quittung',
     zahlungsarten: [
-      {text: '', konto: '2880 KA', belegArt: 'quittung' },
+      {text: '', konto: KA, belegArt: 'quittung' },
     ],
     mitVorsteuer: true,
     mitUSt: false,
     vstSatz: 19,
-    vstKonto: '2600 VORST',
+    vstKonto: VORST,
     geschaeftsfaelle: [
       { beschreibung: 'Barzahlung der Wartungskosten für ein Kopiergerät', vorgang: 'Wartung Kopiergerät', branche: 'Büro', zahlungsweg: 'quittung', betragNetto: 79 },
       { beschreibung: 'Für die Reparatur eines Druckers liegt bei {kunde} eine Quittung vor', vorgang: 'Reparatur Drucker',  branche: 'Büro', zahlungsweg: 'quittung', betragNetto: null },
@@ -169,18 +180,18 @@ const geschaeftsfallTypen = {
  
   awmp_bank: {
     name: 'Miete & Pacht (Bankabbuchung)',
-    konto: '6700 AWMP',
+    konto: AWMP,
     belegtyp: 'kontoauszug',
     kontoauszugArt: 'kontoauszug3.svg',
     zahlungsarten: [
-      { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
-      { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
-      { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
+      { text: '', konto: BK, belegArt: 'kontoauszug' },
+      { text: '', konto: BK, belegArt: 'kontoauszug' },
+      { text: '', konto: BK, belegArt: 'kontoauszug' },
     ],
     mitVorsteuer: true,
     mitUSt: false,
     vstSatz: 19,
-    vstKonto: '2600 VORST',
+    vstKonto: VORST,
     geschaeftsfaelle: [
       { beschreibung: 'Lastschrift für die Miete von Ausstellungsflächen auf einer Messe', vorgang: 'Miete Messefläche', zahlungsweg: 'kontoauszug', betragBrutto: null },
       { beschreibung: 'Vom Bankkonto bei {kunde} wird der Mietbetrag für Geschäftsräume abgebucht', vorgang: 'Miete Geschäftsräume', zahlungsweg: 'kontoauszug', betragBrutto: null },
@@ -198,13 +209,13 @@ const geschaeftsfallTypen = {
   // --------------------------------------------------------------------------
   vbei: {
     name: 'Versicherungsbeiträge',
-    konto: '6900 VBEI',
+    konto: VBEI,
     belegtyp: 'kontoauszug',
     kontoauszugArt: 'kontoauszug3.svg',
     zahlungsarten: [
-      { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
-      { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
-      { text: '', konto: '2800 BK', belegArt: 'kontoauszug' },
+      { text: '', konto: BK, belegArt: 'kontoauszug' },
+      { text: '', konto: BK, belegArt: 'kontoauszug' },
+      { text: '', konto: BK, belegArt: 'kontoauszug' },
     ],
     mitVorsteuer: false,
     mitUSt: false,

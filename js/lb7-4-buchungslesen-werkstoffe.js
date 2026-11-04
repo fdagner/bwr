@@ -8,7 +8,16 @@ function fillUnternehmenSelect() {
   const select = document.getElementById('unternehmenSelect');
   if (!select || !yamlData.length) return;
 
-  select.innerHTML = '<option value="">– allgemein (Rohstoffe usw.) –</option>';
+  select.innerHTML = '';
+
+  // Platzhalter (wie auf den anderen Generator-Seiten):
+  // gesperrt, solange nichts gewählt ist → Standard-Werkstoffbezeichnungen
+  const opt = document.createElement('option');
+  opt.value = '';
+  opt.text = '— bitte Unternehmen auswählen —';
+  opt.disabled = true;
+  opt.selected = true;
+  select.appendChild(opt);
 
   [...yamlData]
     .sort((a, b) => {
@@ -55,11 +64,20 @@ function getWerkstoffName(key) {
       return Math.round((Math.random() * (max - min) + min) / step) * step;
     }
 
+    // ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────
+    // Nr und Abkürzung (name) kommen aus KONTENPLAN – hier nicht mehr pflegen.
+    // Die Schlüssel (AWR/AWF/AWH/AWB) sind die Werkstoffe-Schema-Schlüssel
+    // der Nutzer-YAML und bleiben bewusst unverändert.
+    function kontoCfg(nr, label, rahmen) {
+      const k = getKonto(nr);
+      return { nr, name: k ? k.abk : nr, label, rahmen };
+    }
+
     const KONTEN_CONFIG = {
-      AWR: { nr: '6000', name: 'AWR', label: 'Rohstoffe',       rahmen: { VE: [5000,20000], BK: [1000,10000], KA: [500,3000] } },
-      AWF: { nr: '6010', name: 'AWF', label: 'Fremdbauteile',   rahmen: { VE: [1000, 5000], BK: [500,  3000], KA: [100, 800]  } },
-      AWH: { nr: '6020', name: 'AWH', label: 'Hilfsstoffe',     rahmen: { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  } },
-      AWB: { nr: '6030', name: 'AWB', label: 'Betriebsstoffe',  rahmen: { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  } }
+      AWR: kontoCfg('6000', 'Rohstoffe',      { VE: [5000,20000], BK: [1000,10000], KA: [500,3000] }),
+      AWF: kontoCfg('6010', 'Fremdbauteile',  { VE: [1000, 5000], BK: [500,  3000], KA: [100, 800]  }),
+      AWH: kontoCfg('6020', 'Hilfsstoffe',    { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  }),
+      AWB: kontoCfg('6030', 'Betriebsstoffe', { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  })
     };
 
     const POOL = ['VE','VE','VE','BK','BK','KA'];

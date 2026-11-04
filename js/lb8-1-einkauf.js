@@ -220,49 +220,57 @@ function generateRandomNettoWert() {
 // Auf 2 Dezimalstellen runden
 
 // Kontenplan
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Im Generator wird nur die Kontonummer angegeben – Abkürzung und Label
+// liefert kontoLabel(). Bei Änderungen nur KONTENPLAN in utils.js anpassen.
+const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
+const KA    = kontoLabel('2880');   // Kasse
+const BK    = kontoLabel('2800');   // Bank
+const VORST = kontoLabel('2600');   // Vorsteuer
+
 const kontenWerkstoffe = {
   "Rohstoffe": {
-    "Hauptkonto": "6000 AWR",
-    "Unterkonto": "6001 BZKR",
-    "Nachlasskonto": "6002 NR"
+    "Hauptkonto": kontoLabel('6000'),
+    "Unterkonto": kontoLabel('6001'),
+    "Nachlasskonto": kontoLabel('6002')
   },
   "Fremdbauteile": {
-    "Hauptkonto": "6010 AWF",
-    "Unterkonto": "6011 BZKF",
-    "Nachlasskonto": "6012 NF"
+    "Hauptkonto": kontoLabel('6010'),
+    "Unterkonto": kontoLabel('6011'),
+    "Nachlasskonto": kontoLabel('6012')
   },
   "Hilfsstoffe": {
-    "Hauptkonto": "6020 AWH",
-    "Unterkonto": "6021 BZKH",
-    "Nachlasskonto": "6022 NH"
+    "Hauptkonto": kontoLabel('6020'),
+    "Unterkonto": kontoLabel('6021'),
+    "Nachlasskonto": kontoLabel('6022')
   },
   "Betriebsstoffe": {
-    "Hauptkonto": "6030 AWB",
-    "Unterkonto": "6031 BZKB",
-    "Nachlasskonto": "6032 NB"
+    "Hauptkonto": kontoLabel('6030'),
+    "Unterkonto": kontoLabel('6031'),
+    "Nachlasskonto": kontoLabel('6032')
   },
 };
 
 const kontenWerkstoffe_2 = {
   "von Rohstoffen": {
-    "Hauptkonto": "6000 AWR",
-    "Unterkonto": "6001 BZKR",
-    "Nachlasskonto": "6002 NR"
+    "Hauptkonto": kontoLabel('6000'),
+    "Unterkonto": kontoLabel('6001'),
+    "Nachlasskonto": kontoLabel('6002')
   },
   "von Fremdbauteilen": {
-    "Hauptkonto": "6010 AWF",
-    "Unterkonto": "6011 BZKF",
-    "Nachlasskonto": "6012 NF"
+    "Hauptkonto": kontoLabel('6010'),
+    "Unterkonto": kontoLabel('6011'),
+    "Nachlasskonto": kontoLabel('6012')
   },
   "von Hilfsstoffen": {
-    "Hauptkonto": "6020 AWH",
-    "Unterkonto": "6021 BZKH",
-    "Nachlasskonto": "6022 NH"
+    "Hauptkonto": kontoLabel('6020'),
+    "Unterkonto": kontoLabel('6021'),
+    "Nachlasskonto": kontoLabel('6022')
   },
   "von Betriebsstoffen": {
-    "Hauptkonto": "6030 AWB",
-    "Unterkonto": "6031 BZKB",
-    "Nachlasskonto": "6032 NB"
+    "Hauptkonto": kontoLabel('6030'),
+    "Unterkonto": kontoLabel('6031'),
+    "Nachlasskonto": kontoLabel('6032')
   },
 };
 
@@ -270,19 +278,19 @@ let kontenZahlung;
 function inputChangeCategory() {
   if (getModus() === 'einkaufskalkulation' || getModus() === 'skontobuchungssatz') {
     kontenZahlung = {
-      ", wobei eine Eingangsrechnung eingeht": "4400 VE",
-      ". Die Werkstoffe werden geliefert und der Lieferer sendet eine Eingangsrechnung": "4400 VE",
-      ", wobei die Rechnung des Lieferers eingeht": "4400 VE",
+      ", wobei eine Eingangsrechnung eingeht": VE,
+      ". Die Werkstoffe werden geliefert und der Lieferer sendet eine Eingangsrechnung": VE,
+      ", wobei die Rechnung des Lieferers eingeht": VE,
     }
   } else {
     kontenZahlung = {
-      "per Barzahlung": "2880 KA",
-      "per Banküberweisung": "2800 BK",
-      "gegen Rechnung": "4400 VE",
-      "auf Rechnung": "4400 VE",
-      "auf Ziel": "4400 VE",
-      "per Eingangsrechnung": "4400 VE",
-      "per Rechnung": "4400 VE",
+      "per Barzahlung": KA,
+      "per Banküberweisung": BK,
+      "gegen Rechnung": VE,
+      "auf Rechnung": VE,
+      "auf Ziel": VE,
+      "per Eingangsrechnung": VE,
+      "per Rechnung": VE,
     }
   }
 }
@@ -306,7 +314,7 @@ function erstelleZufallssatz() {
   const array_Supply_Wert = ['im Wert von', 'mit', 'in Höhe von', 'mit einem Warenwert von ', ' '];
   const array_Zahlung = Object.keys(kontenZahlung);
   // Leihverpackung: Einkauf immer auf Ziel (Eingangsrechnung), damit Rechnung + Rücksende-Mail zusammenpassen
-  const array_ZahlungLeihverpackung = array_Zahlung.filter(k => kontenZahlung[k] === '4400 VE');
+  const array_ZahlungLeihverpackung = array_Zahlung.filter(k => kontenZahlung[k] === VE);
   const array_Supply_Rabatt = [`, abzüglich ${random_Rabatt} % Rabatt`];
   const array_Supply_Rabatt_2 = [
     `. Ausgehandelt wurden zusätzlich ${random_Rabatt} % Treuerabatt`,
@@ -598,9 +606,9 @@ function fillCompanyDropdowns() {
 
 
 function getBelegtypAusKonto(konto_2) {
-  if (konto_2 === "2880 KA") return "quittung";
-  if (konto_2 === "2800 BK") return "kontoauszug";
-  return "rechnung"; // 4400 VE → Eingangsrechnung
+  if (konto_2 === KA) return "quittung";
+  if (konto_2 === BK) return "kontoauszug";
+  return "rechnung"; // VE → Eingangsrechnung
 }
 
 // Mailtext des Angebots (Einkaufskalkulation): der Lieferer (Stammunternehmen)
@@ -1016,17 +1024,17 @@ const loesungText = (() => {
         `= Bareinkaufspreis: ${antwort_bareinkaufspreis}`,
         `+ Bezugskosten: ${antwort_bezugskostenWert}`,
         `= Einstandspreis: ${antwort_einstandspreis}`,
-        `Buchungssatz: ${konto_1} ${zieleinkaufspreis} / 2600 VORST ${USTWert} an ${konto_2} ${betrag_2}`,
+        `Buchungssatz: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`,
       ].join('\n');
     case 'skontobuchungssatz':
       return [
-        `Buchungssatz 1: ${konto_1} ${zieleinkaufspreis} / 2600 VORST ${USTWert} an ${konto_2} ${betrag_2}`,
-        `Buchungssatz 2: 4400 VE ${betrag_2} an 2800 BK ${antwort_ueberweisungsbetrag} / ${konto_Skontobuchungssatz} ${antwort_skontoBetrag} / 2600 VORST ${antwort_vorsteuer_berichtigung}`,
+        `Buchungssatz 1: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`,
+        `Buchungssatz 2: ${VE} ${betrag_2} an ${BK} ${antwort_ueberweisungsbetrag} / ${konto_Skontobuchungssatz} ${antwort_skontoBetrag} / ${VORST} ${antwort_vorsteuer_berichtigung}`,
         `Skonto brutto: ${antwort_skontoBetrag_brutto}, Skonto netto: ${antwort_skontoBetrag}, Vorsteuerberichtigung: ${antwort_vorsteuer_berichtigung}`,
         `Überweisungsbetrag: ${antwort_ueberweisungsbetrag}`,
       ].join('\n');
     default:
-      return `Buchungssatz: ${konto_1} ${zieleinkaufspreis} / 2600 VORST ${USTWert} an ${konto_2} ${betrag_2}`;
+      return `Buchungssatz: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`;
   }
 })();
 
@@ -1067,7 +1075,7 @@ letzteGenerierteGfListeEinkauf.push({
         aufgabeHtml += `<div>${formattedSatz}</div>`;
 
         // ← Hier kommen die Rücksendungen – als bedingter Block innerhalb dieses Cases
-        if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE") {
+        if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === VE) {
           aufgabeHtml += `<li>${formattedRuecksendung} aus Geschäftsfall ${currentI} zurück und erhält dafür eine Gutschrift.
         </div></li>
       `;
@@ -1135,7 +1143,7 @@ const geschaeftsfallDaten = {
     }
 
     // Gutschrift-Button (Rücksendung) – bleibt wie bisher
-    if (mitRuecksendung.checked && currentI > 0 && currentI < anzahl && konto_2 === "4400 VE" && getModus() === 'buchungssatz') {
+    if (mitRuecksendung.checked && currentI > 0 && currentI < anzahl && konto_2 === VE && getModus() === 'buchungssatz') {
       const gutschriftNummer = currentI + 1;
       const gutschriftButtonHtml = erstelleGeschaeftsfallButton(gutschriftNummer, geschaeftsfallDaten, true);
       const gutschriftDiv = document.createElement('div');
@@ -1195,7 +1203,7 @@ const geschaeftsfallDaten = {
 
     antwortOutput += `
           <tr>
-            <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">2600 VORST</td>
+            <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${VORST}</td>
             <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:120px" tabindex="1">${USTWert}</td>
             <td style="text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
             <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${konto_2}</td>
@@ -1224,10 +1232,10 @@ const geschaeftsfallDaten = {
         <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
           <tbody>
             <tr>
-              <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">4400 VE</td>
+              <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${VE}</td>
               <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${betrag_2}</td>
               <td style="text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
-              <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">2800 BK</td>
+              <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${BK}</td>
               <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${antwort_ueberweisungsbetrag}</td>
             </tr>
             <tr>
@@ -1241,7 +1249,7 @@ const geschaeftsfallDaten = {
               <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1"></td>
               <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1"></td>
               <td style="text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1"></td>
-              <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">2600 VORST</td>
+              <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${VORST}</td>
               <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${antwort_vorsteuer_berichtigung}</td>
             </tr>
           </tbody>
@@ -1255,7 +1263,7 @@ const geschaeftsfallDaten = {
       // KI-Prompt: Rücksendung als zweite Teilaufgabe erfassen
       letzteGenerierteGfListeEinkauf.push({
         aufgabe: `Bilde den Buchungssatz: ${ruecksendungLVText}.`,
-        loesung: `Buchungssatz Rücksendung Leihverpackung:\n${konto_2} ${bruttoRuecksendungLV} an ${antwort_bezugskosten} ${antwort_bezugskostenWert} / 2600 VORST ${vorsteuerRuecksendungLV}`,
+        loesung: `Buchungssatz Rücksendung Leihverpackung:\n${konto_2} ${bruttoRuecksendungLV} an ${antwort_bezugskosten} ${antwort_bezugskostenWert} / ${VORST} ${vorsteuerRuecksendungLV}`,
         label: 'b',
       });
 
@@ -1270,7 +1278,7 @@ const geschaeftsfallDaten = {
           feedback: '',
           zeilen: [
             { d: konto_2, da: moodleBetrag(bruttoRuecksendungLV), c: antwort_bezugskosten, ca: moodleBetrag(antwort_bezugskostenWert) },
-            { d: '', da: 0, c: '2600 VORST', ca: moodleBetrag(vorsteuerRuecksendungLV) },
+            { d: '', da: 0, c: VORST, ca: moodleBetrag(vorsteuerRuecksendungLV) },
           ],
         });
       }
@@ -1289,17 +1297,17 @@ const geschaeftsfallDaten = {
               <td style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1"></td>
               <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1"></td>
               <td style="text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1"></td>
-              <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">2600 VORST</td>
+              <td style="text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${VORST}</td>
               <td style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${vorsteuerRuecksendungLV}</td>
             </tr>
           </tbody>
         </table><br>`;
     }
 
-if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === "4400 VE" && getModus() === 'buchungssatz') {
+if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === VE && getModus() === 'buchungssatz') {
     letzteGenerierteGfListeEinkauf.push({
     aufgabe: `${formattedRuecksendung} aus Geschäftsfall ${currentI} zurück und erhält dafür eine Gutschrift.`,
-    loesung: `Buchungssatz Rücksendung:\n${konto_2} ${berechnung_bruttoWertRuecksendung} an 2600 VORST ${USTWertRuecksendung} / ${konto_1} ${zieleinkaufspreis_Ruecksendung}`,
+    loesung: `Buchungssatz Rücksendung:\n${konto_2} ${berechnung_bruttoWertRuecksendung} an ${VORST} ${USTWertRuecksendung} / ${konto_1} ${zieleinkaufspreis_Ruecksendung}`,
   });
 
 if (typeof moodleErfasseRuecksendung === 'function') {
@@ -1319,7 +1327,7 @@ if (typeof moodleErfasseRuecksendung === 'function') {
       antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1">${konto_2}</td>`;
       antwortOutput += `<td style="text-align:right;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:120px;min-width: 120px" tabindex="1">${berechnung_bruttoWertRuecksendung}</td>`;
       antwortOutput += `<td style="text-align: center;width:100px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;min-width: 50px" tabindex="1">an</td>`;
-      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">2600 VORST</td>`;
+      antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:left" tabindex="1">${VORST}</td>`;
       antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px;text-align:right" tabindex="1">${USTWertRuecksendung}</td>`;
       antwortOutput += `</tr>`;
       antwortOutput += `<td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;max-width:145px;min-width: 120px" tabindex="1"></td>`;

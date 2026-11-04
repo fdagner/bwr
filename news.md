@@ -1,3 +1,11 @@
+## 2026-11-04 | November 2026
+- [neu] **Neuer Beleg** - [Mahnung](belege.html?beleg=mahnung)
+- [neu] **Neue Aufgabe** - [Eröffnung Bestandskonten](lb8-1-anfangsbestand.html)
+- [update] **Aufgabe Einkauf 8** - Rücksendung der Leihverpackung integriert [Einkauf](lb8-1-einkauf.html)
+- [update] **Aufgabe Verkauf 8** - Rücksendungen integriert [Verkauf](lb8-4-verkauf.html)
+- [update] **Aufgabe Gewinnschwelle** - Grafische Ermittlung [Gewinnschwelle](lb10-4-gewinnschwelle.html)
+
+
 ## 2026-11-02 | November 2026
 - [neu] **Fertigerzeugnisse und Stammlieferer** - Unternehmen können nun Angaben zu Fertigerzeugnissen und Stammlieferanten erhalten. So können Aufgaben und Belege noch effizienter erstellt werden.
 - [neu] **Belege-Sammlung** – Belege können in einer Sammlung gespeichert, gesichert und wieder bearbeitet werden. [+ Sammlung](sammlung.html)

@@ -1,11 +1,13 @@
 // js/bestand.js
 
-// Konten für Werkstoffe
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+// Bei Änderungen nur KONTENPLAN in utils.js anpassen.
 const werkstoffe = [
-  { name: "Rohstoffe", aufwand: "6000 AWR", bestand: "2000 R", faktor: 2 }, // ← Rohstoffe 10x höher
-  { name: "Fremdbauteile", aufwand: "6010 AWF", bestand: "2010 F" },
-  { name: "Hilfsstoffe", aufwand: "6020 AWH", bestand: "2020 H" },
-  { name: "Betriebsstoffe", aufwand: "6030 AWB", bestand: "2030 B" }
+  { name: "Rohstoffe",      aufwand: kontoLabel('6000'), bestand: kontoLabel('2000'), faktor: 2 }, // Rohstoffe: größerer Zahlenbereich
+  { name: "Fremdbauteile",  aufwand: kontoLabel('6010'), bestand: kontoLabel('2010') },
+  { name: "Hilfsstoffe",    aufwand: kontoLabel('6020'), bestand: kontoLabel('2020') },
+  { name: "Betriebsstoffe", aufwand: kontoLabel('6030'), bestand: kontoLabel('2030') }
 ];
 
 // Hilfsfunktion für zufällige Bestände

@@ -5,12 +5,20 @@
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGeschaeftsfaelle = [];
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+// Bei Änderungen nur KONTENPLAN in utils.js anpassen.
+const ZE   = kontoLabel('5710');   // Zinserträge
+const EMP  = kontoLabel('5400');   // Erlöse aus V+V
+const BK   = kontoLabel('2800');   // Bank
+const UST  = kontoLabel('4800');   // Umsatzsteuer
+
 // Konten-Definitionen
 const kontenDefinitionen = {
-  '5710 ZE': {
+  [ZE]: {
     beschreibung: 'Zinserträge',
   },
-  '5400 EMP': {
+  [EMP]: {
     beschreibung: 'Erlöse aus Vermietung und Verpachtung',
   },
 };
@@ -111,11 +119,11 @@ const geschaeftsfallTypen = {
   // --------------------------------------------------------------------------
   zinsertraege: {
     name: 'Zinserträge',
-    konto: '5710 ZE',
+    konto: ZE,
     belegtyp: 'kontoauszug',
     kontoauszugArt: 'kontoauszug1.svg',
     zahlungsarten: [
-      { text: 'gut', konto: '2800 BK' },
+      { text: 'gut', konto: BK },
     ],
     mitVorsteuer: false,
     mitUSt: false,
@@ -143,19 +151,19 @@ const geschaeftsfallTypen = {
   // --------------------------------------------------------------------------
   emp: {
     name: 'Vermietung',
-    konto: '5400 EMP',
+    konto: EMP,
     belegtyp: 'kontoauszug',
     kontoauszugArt: 'kontoauszug1.svg',
     zahlungsarten: [
-      { text: 'eine Überweisung ein', konto: '2800 BK' },
-      { text: 'ein Zahlungseingang ein', konto: '2800 BK' },
-      { text: 'der Mietbetrag ein', konto: '2800 BK' },
-      { text: 'die Mietzahlung ein', konto: '2800 BK' },
+      { text: 'eine Überweisung ein', konto: BK },
+      { text: 'ein Zahlungseingang ein', konto: BK },
+      { text: 'der Mietbetrag ein', konto: BK },
+      { text: 'die Mietzahlung ein', konto: BK },
     ],
     mitVorsteuer: false,
     mitUSt: true,
     ustSatz: 19,
-    ustKonto: '4800 UST',
+    ustKonto: UST,
     geschaeftsfaelle: [
       { beschreibung: 'Für eine vermietete Lagerhalle geht auf dem betrieblichen Bankkonto ', vorgang:'Vermietung Lagerhalle'  },
       { beschreibung: 'Per Bankkonto geht für eine vermietete Garage ', vorgang: 'Vermietung Garage'  },

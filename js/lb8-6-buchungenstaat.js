@@ -5,18 +5,28 @@
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGeschaeftsfaelle = [];
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+// Bei Änderungen nur KONTENPLAN in utils.js anpassen.
+const GRST  = kontoLabel('7020');   // Grundsteuer
+const GWST  = kontoLabel('7000');   // Gewerbesteuer
+const KFZST = kontoLabel('7030');   // KFZ-Steuer
+const GEB   = kontoLabel('6730');   // Gebühren
+const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
+const BK    = kontoLabel('2800');   // Bank
+
 // Konten-Definitionen
 const kontenDefinitionen = {
-  '7020 GRST': {
+  [GRST]: {
     beschreibung: 'Grundsteuer',
   },
-  '7000 GWST': {
+  [GWST]: {
     beschreibung: 'Gewerbesteuer',
   },
-  '7030 KFZST': {
+  [KFZST]: {
     beschreibung: 'KFZ-Steuer',
   },
-  '6730 GEB': {
+  [GEB]: {
     beschreibung: 'Gebühren',
   }
 };
@@ -117,13 +127,13 @@ const geschaeftsfallTypen = {
   // --------------------------------------------------------------------------
   grundsteuer: {
     name: 'Grundsteuer',
-    konto: '7020 GRST',
+    konto: GRST,
     behoerden: ['Stadtsteueramt', 'Stadtkasse', 'Gemeindekasse'],
     belegtyp: 'bescheid',
     bescheidArt: 'bescheid1.svg',  // → URL-Parameter art=bescheid1.svg
     zahlungsarten: [
-      { text: ' geht ein ', konto: '4400 VE' },
-      { text: ' liegt vor ', konto: '4400 VE' },
+      { text: ' geht ein ', konto: VE },
+      { text: ' liegt vor ', konto: VE },
     ],
     mitVorsteuer: false,
     geschaeftsfaelle: [
@@ -138,13 +148,13 @@ const geschaeftsfallTypen = {
   // --------------------------------------------------------------------------
   gewerbesteuer: {
     name: 'Gewerbesteuer',
-    konto: '7000 GWST',
+    konto: GWST,
     behoerden: ['Stadtsteueramt', 'Gewerbesteueramt', 'Stadtkasse', 'Gemeindekasse'],
     belegtyp: 'bescheid',
     bescheidArt: null,        // → URL-Parameter art=Gewerbesteuer
     zahlungsarten: [
-      { text: ' geht ein ', konto: '4400 VE' },
-      { text: ' liegt vor ', konto: '4400 VE' },
+      { text: ' geht ein ', konto: VE },
+      { text: ' liegt vor ', konto: VE },
 
     ],
     mitVorsteuer: false,
@@ -161,13 +171,13 @@ const geschaeftsfallTypen = {
   // --------------------------------------------------------------------------
   kfzsteuer: {
     name: 'KFZ-Steuer',
-    konto: '7030 KFZST',
+    konto: KFZST,
     behoerden: ['Hauptzollamt', 'Zollamt'],
     belegtyp: 'kontoauszug',
     bescheidArt: null,
     zahlungsarten: [
-      { text: ' per Lastschrift abgebucht ', konto: '2800 BK' },
-      { text: ' per Lastschrift vom Bankkonto eingezogen ', konto: '2800 BK' },
+      { text: ' per Lastschrift abgebucht ', konto: BK },
+      { text: ' per Lastschrift vom Bankkonto eingezogen ', konto: BK },
     ],
     wertFormulierungen: [' in Höhe von ', ' mit einem Betrag von '],
     mitVorsteuer: false,
@@ -184,14 +194,14 @@ const geschaeftsfallTypen = {
   // --------------------------------------------------------------------------
   gebuehren_abfall: {
     name: 'Abfallgebühren',
-    konto: '6730 GEB',
+    konto: GEB,
     behoerden: ['Stadtentsorgung', 'AWM', 'Abfallwirtschaftsbetrieb', 'Kreisbauhof'],
     belegtyp: 'bescheid',
     bescheidArt: 'bescheid2.svg',    // → URL-Parameter art=Abfallentsorgung
     bescheidBezeichnung: 'Abfallentsorgungsgebühren',
     zahlungsarten: [
-      { text: ' liegt vor ', konto: '4400 VE' },
-      { text: ' geht ein ', konto: '4400 VE' },
+      { text: ' liegt vor ', konto: VE },
+      { text: ' geht ein ', konto: VE },
     ],
     mitVorsteuer: false,
     geschaeftsfaelle: [
@@ -205,14 +215,14 @@ const geschaeftsfallTypen = {
 
   gebuehren_abwasser: {
     name: 'Abwassergebühren',
-    konto: '6730 GEB',
+    konto: GEB,
     behoerden: ['Stadtentwässerung', 'Abwasserzweckverband', 'Kommunalbetriebe', 'Klärwerk'],
     belegtyp: 'bescheid',
     bescheidArt: 'bescheid3.svg',        // → URL-Parameter art=Abwasser
     bescheidBezeichnung: 'Abwassergebühren',
     zahlungsarten: [
-      { text: ' liegt vor ', konto: '4400 VE' },
-      { text: ' geht ein ', konto: '4400 VE' },
+      { text: ' liegt vor ', konto: VE },
+      { text: ' geht ein ', konto: VE },
     ],
     mitVorsteuer: false,
     geschaeftsfaelle: [
@@ -225,13 +235,13 @@ const geschaeftsfallTypen = {
 
   gebuehren_sonstige: {
     name: 'Sonstige Gebühren (Gewerbeamt, Genehmigungen)',
-    konto: '6730 GEB',
+    konto: GEB,
     behoerden: ['Gewerbeamt', 'Landratsamt', 'Bauordnungsamt', 'Gemeindeverwaltung'],
     belegtyp: 'bescheid',
     bescheidArt: null,              // kein passender Bescheid
     zahlungsarten: [
-      { text: ' liegt vor ', konto: '4400 VE' },
-      { text: ' geht ein ', konto: '4400 VE' },
+      { text: ' liegt vor ', konto: VE },
+      { text: ' geht ein ', konto: VE },
     ],
     mitVorsteuer: false,
     geschaeftsfaelle: [

@@ -72,8 +72,8 @@
       <div class="box">
         <p>
           Es wird eine zufällige Aufgabe zur Berechnung der Gewinnschwelle
-          erstellt, mit zusätzlich grafischer Lösung. Es gibt zwei
-          unterschiedliche Varianten.
+          erstellt. Es gibt drei unterschiedliche Varianten – bei Variante 3 ist nur die
+          Grafik gegeben: die Gewinnschwellenmenge soll aus dem Diagramm abgelesen werden.
         </p>
         <form>
           <label for="fixkosten">Fixkosten:</label>
@@ -116,9 +116,15 @@
           <select id="aufgabenVariante" name="aufgabenVariante">
             <option value="variante1">Variante 1: Planungsaufgabe</option>
             <option value="variante2">Variante 2: Verlustberechnung</option>
-          </select><br><br>
-
-          <button
+            <option value="variante3">Variante 3: Aufgabengrafik ohne Beschriftung</option>
+          </select><br><br>   <div
+        id="gewinnschwelleContainer"
+        style="min-width: 700px; height: 500px; width: 100%"
+      >
+      
+ <div id="gewinnschwelleChart"></div>
+  </div>     <br>
+ <button
             type="button"
             value="Generate Chart"
             onclick="validateAndGenerateChart()"
@@ -135,21 +141,14 @@
         contenteditable="true"
       ></div>
       <br>
-      <div
-        id="gewinnschwelleContainer"
-        style="min-width: 700px; height: 500px; width: 100%"
-      >
-        <div id="gewinnschwelleChart"></div>
-      </div>
-      <p style="text-align: center">
-        Klicken Sie in die Legende, um einzelne Bestandteile auszublenden.
-      </p>
+   
+    
        </main>
     <div w3-include-html="footer.html"></div>
     <script>
       includeHTML();
     </script>
-    <script src="js/lb10-4-gewinnschwelle.js?v=3"></script>
+    <script src="js/lb10-4-gewinnschwelle.js?v=8"></script>
   </body>
 </html>
 

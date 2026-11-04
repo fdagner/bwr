@@ -228,8 +228,17 @@ function befuelleZufallswerte() {
 // ============================================================================
 // KONTENPLAN
 // ============================================================================
-const kuerzelZuKonto = { AWR: "6000 AWR", AWF: "6010 AWF", AWH: "6020 AWH", AWB: "6030 AWB" };
-const kuerzelZuBZKKonto = { AWR: "6001 BZKR", AWF: "6011 BZKF", AWH: "6021 BZKH", AWB: "6031 BZKB" };
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Im Generator wird nur die Kontonummer angegeben – Abkürzung und Label
+// liefert kontoLabel()/getKonto(). Bei Änderungen nur KONTENPLAN (utils.js)
+// anpassen. AWR/AWF/AWH/AWB als Schlüssel = Werkstoffe-Schema der Nutzer-YAML
+// und bleibt davon unberührt.
+const VE         = kontoLabel('4400');        // Verbindlichkeiten aus LL
+const VORST      = kontoLabel('2600');        // Vorsteuer
+const VORST_ABK  = kontoLabel('2600', true);  // nur 'VORST' (für Aufgaben ohne Kontonummern)
+
+const kuerzelZuKonto    = { AWR: kontoLabel('6000'), AWF: kontoLabel('6010'), AWH: kontoLabel('6020'), AWB: kontoLabel('6030') };
+const kuerzelZuBZKKonto = { AWR: kontoLabel('6001'), AWF: kontoLabel('6011'), AWH: kontoLabel('6021'), AWB: kontoLabel('6031') };
 const kuerzelZuWerkstoff = { AWR: "Rohstoffe", AWF: "Fremdbauteile", AWH: "Hilfsstoffe", AWB: "Betriebsstoffe" };
 
 function formatKonto(kontoStr, ohneNummern) {
@@ -416,7 +425,7 @@ function renderBuchungssatzBlock(kalk, kontoHauptStr, kontoBzkStr, konto2Str, oh
   const k1 = formatKonto(kontoHauptStr, ohneNummern);
   const kBzk = formatKonto(kontoBzkStr, ohneNummern);
   const k2 = formatKonto(konto2Str, ohneNummern);
-  const kVst = ohneNummern ? 'VORST' : '2600 VORST';
+  const kVst = ohneNummern ? VORST_ABK : VORST;
   const fmt = v => formatCurrency(v);
   const hasBzk = kalk.bezugskosten > 0;
   const nettoGes = roundToTwoDecimals(kalk.zep + kalk.bezugskosten);
@@ -482,11 +491,11 @@ function zeigeZufaelligenSatz() {
   letzteGenerierteGfListeEinkauf = [];
 
   const kuerzel = document.getElementById('avWerkstoffTyp')?.value || 'AWR';
-  const kontoHauptStr = kuerzelZuKonto[kuerzel] || '6000 AWR';
-  const kontoBzkStr = kuerzelZuBZKKonto[kuerzel] || '6001 BZKR';
+  const kontoHauptStr = kuerzelZuKonto[kuerzel] || kontoLabel('6000');
+  const kontoBzkStr = kuerzelZuBZKKonto[kuerzel] || kontoLabel('6001');
   const werkstoffTypName = kuerzelZuWerkstoff[kuerzel] || 'Rohstoffe';
   const werkstoffAnzeige = getBezeichnungFuerKonto(kuerzel) || werkstoffTypName;
-  const konto2Str = '4400 VE';
+  const konto2Str = VE;
   const ohneNummern = document.getElementById('avOhneKontonummern')?.checked || false;
 
   const nameA = document.getElementById('einkaufLiefererA')?.value || 'Lieferant A';
@@ -663,7 +672,7 @@ function zeigeZufaelligenSatz() {
   const kalkNichtGewaehlt = istAGuenstig ? kalkB : kalkA;
   const nameNichtGewaehlt = istAGuenstig ? nameB : nameA;
   const briefNichtGewaehlt = istAGuenstig ? 'B' : 'A';
-  const kVorstLabel = ohneNummern ? 'VORST' : '2600 VORST';
+  const kVorstLabel = ohneNummern ? kontoLabel('2600', true) : kontoLabel('2600');
 
   const buchungssatzGewaehlt_html = `
 <div style="margin-top:4px;">

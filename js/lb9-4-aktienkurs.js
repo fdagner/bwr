@@ -4,6 +4,13 @@
 
 let kunde = '<i>[Modellunternehmen]</i>';
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+const WP   = kontoLabel('1500');   // Wertpapiere des Anlagevermögens
+const BK   = kontoLabel('2800');   // Bank
+const EAWP = kontoLabel('5650');   // Erträge aus Abgang von WP
+const VAWP = kontoLabel('7460');   // Verluste aus Abgang von WP
+
 // ============================================================================
 // BENUTZERDEFINIERTE UNTERNEHMEN - Integration
 // ============================================================================
@@ -525,9 +532,9 @@ ${imgURI ? `<p><img src="${imgURI}" alt="Aktienkurs ${company.name}" style="max-
         <h4>Buchungssatz</h4>
         <table style="margin:0;white-space:nowrap;font-family:courier;min-width:540px;"><tbody>
             <tr>
-            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">1500 WP</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">${WP}</td>
             <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
-            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">2800 BK</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">${BK}</td>
             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 160px;text-align: right" tabindex="1">${banklastschrift}</td>
             </tr></tbody></table>
     `;
@@ -554,10 +561,10 @@ ${imgURI ? `<p><img src="${imgURI}" alt="Aktienkurs ${company.name}" style="max-
         <h4>Buchungssatz</h4>
         <table style="margin:0;white-space:nowrap;font-family:courier;min-width:660px;"><tbody>
             <tr>
-            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">2800 BK</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">${BK}</td>
              <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${bankgutschrift}</td>
                        <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
-            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">1500 WP</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">${WP}</td>
             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${banklastschriftAlt}</td>
             </tr>
               `;
@@ -567,7 +574,7 @@ ${imgURI ? `<p><img src="${imgURI}" alt="Aktienkurs ${company.name}" style="max-
             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1"></td>
              <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1"></td>
                        <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
-            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">5650 EAWP</td>
+             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">${EAWP}</td>
             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${differenzKurswert_betrag}</td>
             </tr></tbody></table>
            
@@ -575,7 +582,7 @@ ${imgURI ? `<p><img src="${imgURI}" alt="Aktienkurs ${company.name}" style="max-
         } else {
             text += `
             <tr>
-            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">7460 VAWP</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">${VAWP}</td>
              <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${differenzKurswert_betrag}</td>
                        <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
             <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1"></td>

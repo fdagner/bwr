@@ -5,18 +5,27 @@
 let kunde = '<i>[Modellunternehmen]</i>';
 let letzteGenerierteGeschaeftsfaelle = [];
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+// Bei Änderungen nur KONTENPLAN in utils.js anpassen.
+const KBKV  = kontoLabel('4200');   // Kurzfristige Bankverbindlichkeiten
+const LBKV  = kontoLabel('4250');   // Langfristige Bankverbindlichkeiten
+const ZAW   = kontoLabel('7510');   // Zinsaufwendungen
+const KGV   = kontoLabel('6750');   // Kosten des Geldverkehrs
+const BK    = kontoLabel('2800');   // Bank
+
 // Konten-Definitionen
 const kontenDefinitionen = {
-    '4200 KBKV': {
+    [KBKV]: {
         beschreibung: 'Kurzfristige Bankverbindlichkeiten',
     },
-    '4250 LBKV': {
+    [LBKV]: {
         beschreibung: 'Langfristige Bankverbindlichkeiten',
     },
-    '7510 ZAW': {
+    [ZAW]: {
         beschreibung: 'Zinsaufwendungen (inkl. Disagio)',
     },
-    '6750 KGV': {
+    [KGV]: {
         beschreibung: 'Kosten des Geldverkehrs',
     },
 };
@@ -98,13 +107,13 @@ const geschaeftsfallTypen = {
     // --------------------------------------------------------------------------
     kbkv: {
         name: 'Kreditaufnahme (kurzfristig)',
-        sollKonto: '2800 BK',
-        habenKonto: '4200 KBKV',
+        sollKonto: BK,
+        habenKonto: KBKV,
         belegtyp: 'kontoauszug',
         kontoauszugArt: 'kontoauszug3.svg',
         zahlungsarten: [
-            { text: 'wird gutgeschrieben', konto: '2800 BK' },
-            { text: 'wird auf dem Konto gutgeschrieben', konto: '2800 BK' },
+            { text: 'wird gutgeschrieben', konto: BK },
+            { text: 'wird auf dem Konto gutgeschrieben', konto: BK },
         ],
         mitVorsteuer: false,
         mitUSt: false,
@@ -123,13 +132,13 @@ const geschaeftsfallTypen = {
     // --------------------------------------------------------------------------
     lbkv: {
         name: 'Kreditaufnahme (langfristig)',
-        sollKonto: '2800 BK',
-        habenKonto: '4250 LBKV',
+        sollKonto: BK,
+        habenKonto: LBKV,
         belegtyp: 'kontoauszug',
         kontoauszugArt: 'kontoauszug3.svg',
         zahlungsarten: [
-            { text: 'wird gutgeschrieben', konto: '2800 BK' },
-            { text: 'wird auf dem Konto gutgeschrieben', konto: '2800 BK' },
+            { text: 'wird gutgeschrieben', konto: BK },
+            { text: 'wird auf dem Konto gutgeschrieben', konto: BK },
         ],
         mitVorsteuer: false,
         mitUSt: false,
@@ -147,13 +156,13 @@ const geschaeftsfallTypen = {
     // --------------------------------------------------------------------------
     zaw: {
         name: 'Zinsaufwendungen',
-        sollKonto: '7510 ZAW',
-        habenKonto: '2800 BK',
+        sollKonto: ZAW,
+        habenKonto: BK,
         belegtyp: 'kontoauszug',
         kontoauszugArt: 'kontoauszug1.svg',
         zahlungsarten: [
-            { text: 'werden vom Geschäftskonto abgebucht', konto: '2800 BK' },
-            { text: 'werden vom Bankkonto abgebucht', konto: '2800 BK' },
+            { text: 'werden vom Geschäftskonto abgebucht', konto: BK },
+            { text: 'werden vom Bankkonto abgebucht', konto: BK },
         ],
         mitVorsteuer: false,
         mitUSt: false,
@@ -172,13 +181,13 @@ const geschaeftsfallTypen = {
     // --------------------------------------------------------------------------
     kgv: {
         name: 'Kontoführungsgebühren',
-        sollKonto: '6750 KGV',
-        habenKonto: '2800 BK',
+        sollKonto: KGV,
+        habenKonto: BK,
         belegtyp: 'kontoauszug',
         kontoauszugArt: 'kontoauszug1.svg',
         zahlungsarten: [
-            { text: 'werden vom Geschäftskonto abgebucht', konto: '2800 BK' },
-            { text: 'werden vom Konto belastet', konto: '2800 BK' },
+            { text: 'werden vom Geschäftskonto abgebucht', konto: BK },
+            { text: 'werden vom Konto belastet', konto: BK },
         ],
         mitVorsteuer: false,
         mitUSt: false,
@@ -196,8 +205,8 @@ const geschaeftsfallTypen = {
     // --------------------------------------------------------------------------
     umwandlung_kredit: {
         name: 'Kreditumwandlung',
-        sollKonto: '4200 KBKV',
-        habenKonto: '4250 LBKV',
+        sollKonto: KBKV,
+        habenKonto: LBKV,
         belegtyp: 'sonstiger',
         zahlungsarten: [],
         mitDisagio: false,
@@ -215,12 +224,12 @@ const geschaeftsfallTypen = {
     // --------------------------------------------------------------------------
     kredit_disagio: {
         name: 'Kreditaufnahme mit Disagio',
-        sollKonto: '2800 BK',
-        habenKonto: '4250 LBKV',
+        sollKonto: BK,
+        habenKonto: LBKV,
         belegtyp: 'kontoauszug',
         kontoauszugArt: 'kontoauszug1.svg',
         zahlungsarten: [
-            { text: 'abzüglich Disagio ausgezahlt', konto: '2800 BK' }
+            { text: 'abzüglich Disagio ausgezahlt', konto: BK }
         ],
         mitDisagio: true,
         disagioSatz: 1.5,
@@ -238,20 +247,20 @@ const geschaeftsfallTypen = {
     // --------------------------------------------------------------------------
     kontoabrechnung: {
         name: 'Kontoabrechnung (Gebühren + Sollzinsen)',
-        sollKonto: '6750 KGV',
-        habenKonto: '2800 BK',
+        sollKonto: KGV,
+        habenKonto: BK,
         belegtyp: 'kontoauszug',
         kontoauszugArt: 'kontoauszug2.svg',
         zahlungsarten: [
-            { text: 'vom Geschäftskonto abgebucht', konto: '2800 BK' },
-            { text: 'vom Bankkonto abgebucht', konto: '2800 BK' },
+            { text: 'vom Geschäftskonto abgebucht', konto: BK },
+            { text: 'vom Bankkonto abgebucht', konto: BK },
         ],
         mitVorsteuer: false,
         mitUSt: false,
         zusammengesetzt: true,
         bestandteile: [
-            { konto: '6750 KGV', name: 'Kontoführungsgebühr', vorgangText: 'Kontoführungsgebühren', min: 25, max: 120 },
-            { konto: '7510 ZAW', name: 'Sollzinsen', vorgangText: 'Sollzinsen', min: 60, max: 450 },
+            { konto: KGV, name: 'Kontoführungsgebühr', vorgangText: 'Kontoführungsgebühren', min: 25, max: 120 },
+            { konto: ZAW, name: 'Sollzinsen', vorgangText: 'Sollzinsen', min: 60, max: 450 },
         ],
         geschaeftsfaelle: [
             { beschreibung: 'Die monatliche Abrechnung ', vorgang: 'Kontoabrechnung Gebühren & Sollzinsen' },
@@ -264,13 +273,13 @@ const geschaeftsfallTypen = {
     // --------------------------------------------------------------------------
     tilgung: {
         name: 'Kreditrückzahlung',
-        sollKonto: '4250 LBKV',
-        habenKonto: '2800 BK',
+        sollKonto: LBKV,
+        habenKonto: BK,
         belegtyp: 'kontoauszug',
         kontoauszugArt: 'kontoauszug1.svg',
         zahlungsarten: [
-            { text: '', konto: '2800 BK' },
-            { text: 'per Banküberweisung', konto: '2800 BK' }
+            { text: '', konto: BK },
+            { text: 'per Banküberweisung', konto: BK }
         ],
         mitVorsteuer: false,
         mitUSt: false,
@@ -438,8 +447,8 @@ function erstelleZufallsGeschaeftsfall() {
                 const rate = 500 + Math.floor(Math.random() * 71) * 50; // 500 – 4 000 €
                 const zinsen = Math.round((40 + Math.random() * 210) / 5) * 5; // 40 – 245 €
                 const teile = [
-                    { konto: '4250 LBKV', name: 'Tilgung', vorgangText: 'Tilgung Darlehen', betrag: rate, formatted: formatCurrency(rate) },
-                    { konto: '7510 ZAW', name: 'Sollzinsen', vorgangText: 'Sollzinsen', betrag: zinsen, formatted: formatCurrency(zinsen) },
+                    { konto: LBKV, name: 'Tilgung', vorgangText: 'Tilgung Darlehen', betrag: rate, formatted: formatCurrency(rate) },
+                    { konto: ZAW, name: 'Sollzinsen', vorgangText: 'Sollzinsen', betrag: zinsen, formatted: formatCurrency(zinsen) },
                 ];
                 const total = roundToTwoDecimals(rate + zinsen);
 
@@ -476,7 +485,7 @@ function erstelleZufallsGeschaeftsfall() {
                 `des Girokontos von ${kunde} `,
                 `der Firma ${kunde} `,
             ];
-            const ausgabe = typ.sollKonto === '2800 BK' ? variantenSoll[Math.floor(Math.random() * variantenSoll.length)] : variantenHaben[Math.floor(Math.random() * variantenHaben.length)];
+            const ausgabe = typ.sollKonto === BK ? variantenSoll[Math.floor(Math.random() * variantenSoll.length)] : variantenHaben[Math.floor(Math.random() * variantenHaben.length)];
             const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
 
             ausgabeData.text = `${geschaeftsfall.beschreibung}${ausgabe}${zahlungsart.text}${wertPhrase}${ausgabeData.betragFormatted}.`;
@@ -522,14 +531,14 @@ function erstelleBuchungssatz(geschaeftsfall) {
     <table style="border: 1px solid #ccc; white-space: nowrap; background-color: #fff; font-family: courier; width: 600px; margin: 0 0 6px;">
       <tbody>
         <tr>
-          <td style="border-width: 0; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">2800 BK</td>
+          <td style="border-width: 0; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${BK}</td>
           <td style="border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${geschaeftsfall.auszahlungFormatted}</td>
           <td rowspan="2" style="border-width: 0; text-align: center; width: 40px; vertical-align: top;" tabindex="1">an</td>
           <td rowspan="2" style="border-width: 0; text-align: left; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${typ.habenKonto}</td>
           <td rowspan="2" style="border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${geschaeftsfall.kreditsummeFormatted}</td>
         </tr>
         <tr>
-          <td style="border-width: 0; text-align: left; white-space: nowrap; max-width: 140px; min-width: 140px;" tabindex="1">7510 ZAW</td>
+          <td style="border-width: 0; text-align: left; white-space: nowrap; max-width: 140px; min-width: 140px;" tabindex="1">${ZAW}</td>
           <td style="border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px;" tabindex="1">${geschaeftsfall.disagioFormatted}</td>
         </tr>
       </tbody>
@@ -576,7 +585,7 @@ function erstellePlainBuchungssatz(geschaeftsfall) {
             + ` an ${typ.habenKonto} ${geschaeftsfall.gesamtFormatted}`;
     }
     if (typ.mitDisagio) {
-        return `2800 BK ${geschaeftsfall.auszahlungFormatted} / 7510 ZAW ${geschaeftsfall.disagioFormatted} an ${typ.habenKonto} ${geschaeftsfall.kreditsummeFormatted}`;
+        return `${BK} ${geschaeftsfall.auszahlungFormatted} / ${ZAW} ${geschaeftsfall.disagioFormatted} an ${typ.habenKonto} ${geschaeftsfall.kreditsummeFormatted}`;
     }
     return `${typ.sollKonto} ${geschaeftsfall.betragFormatted} an ${typ.habenKonto} ${geschaeftsfall.betragFormatted}`;
 }
@@ -588,7 +597,7 @@ function erstellePlainBuchungssatz(geschaeftsfall) {
 function erstelleBelegURL(geschaeftsfall) {
     const typ = geschaeftsfall.typDaten;
 
-    if (!typ.kontoauszugArt || typ.sollKonto === '4200 KBKV') return null;
+    if (!typ.kontoauszugArt || typ.sollKonto === KBKV) return null;
 
     const params = new URLSearchParams();
     params.set('beleg', 'kontoauszug');
@@ -622,7 +631,7 @@ function erstelleBelegURL(geschaeftsfall) {
     // Der Betrag auf dem Kontoauszug ist bei Disagio der Auszahlungsbetrag
     let wertFuerBeleg = typ.mitDisagio ? geschaeftsfall.auszahlungsBetrag : geschaeftsfall.betrag;
 
-    if (typ.sollKonto !== '2800 BK' && !typ.mitDisagio) {
+    if (typ.sollKonto !== BK && !typ.mitDisagio) {
         wertFuerBeleg = -Math.abs(wertFuerBeleg);
     }
 

@@ -10,9 +10,15 @@ let letzteAufgabe = null;
 // AfA-TABELLEN-DATEN
 // ============================================================================
 
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
+// Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
+const VORST = kontoLabel('2600');   // Vorsteuer
+const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
+const ABSA  = kontoLabel('6520');   // Abschreibungen auf Sachanlagen
+
 const anlagenKonfig = {
   MA: {
-    label: 'Maschinen & Anlagen', konto: '0700 MA',
+    label: 'Maschinen & Anlagen', konto: kontoLabel('0700'),
     // Branche-Schlüssel für YAML-Filterung
     yamlBranche: ['Maschinen'],
     positionen: [
@@ -29,7 +35,7 @@ const anlagenKonfig = {
     rabattProzent: [5, 10, 20],
   },
   FP: {
-    label: 'Fuhrpark', konto: '0840 FP',
+    label: 'Fuhrpark', konto: kontoLabel('0840'),
     yamlBranche: ['Fuhrpark'],
     positionen: [
       { bezeichnung: 'LKW',          nd:  9 },
@@ -44,7 +50,7 @@ const anlagenKonfig = {
     rabattProzent: [5, 10, , 15, 20],
   },
   BM: {
-    label: 'Büromaschinen', konto: '0860 BM',
+    label: 'Büromaschinen', konto: kontoLabel('0860'),
     yamlBranche: ['Büro'],
     positionen: [
       { bezeichnung: 'Server (Rack-Server)',    nd: 5 },
@@ -60,7 +66,7 @@ const anlagenKonfig = {
     rabattProzent: [5, 10],
   },
   BGA: {
-    label: 'Büromöbel & Geschäftsausstattung', konto: '0870 BGA',
+    label: 'Büromöbel & Geschäftsausstattung', konto: kontoLabel('0870'),
     yamlBranche: ['Büro'],
     positionen: [
       { bezeichnung: 'Büromöbelgarnitur',         nd: 13 },
@@ -452,10 +458,10 @@ function renderAufgaben() {
     <td style="border-with:0;min-width:145px;"></td>
   </tr>
   <tr>
-    <td>2600 VORST</td>
+    <td>${VORST}</td>
     <td style="border-with:0;text-align:right;">${formatEuro(gesamtVorst)}</td>
     <td style="border-with:0;text-align:center;">an</td>
-    <td style="border-with:0;">4400 VE</td>
+    <td style="border-with:0;">${VE}</td>
     <td style="border-with:0;text-align:right;">${formatEuro(gesamtBrutto)}</td>
   </tr>
 </table>`;
@@ -466,7 +472,7 @@ function renderAufgaben() {
   l3 += `
 <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
   <tr>
-    <td style="border-with:0;min-width:160px;">6520 ABSA</td>
+    <td style="border-with:0;min-width:160px;">${ABSA}</td>
     <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
     <td style="border-with:0;text-align:center;min-width:50px;">an</td>
     <td style="border-with:0;">${conf.konto}</td>
