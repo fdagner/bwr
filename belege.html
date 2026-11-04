@@ -63,7 +63,7 @@
   <script src="js/menu.js?v=14"></script>
   <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
-  <script src="js/utils.js?v=11"></script>
+  <script src="js/utils.js?v=12"></script>
   
   <script src="js/clipboard.min.js"></script>
 </head>
@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="tablinks" onclick="openCity(event, 'lohnabrechnung')">Lohn-/Gehaltsabrechnung</button>
             <button class="tablinks" onclick="openCity(event, 'lohnjournal')">Lohn-/Gehaltsjournal</button>
             <button class="tablinks" onclick="openCity(event, 'bescheid')">Bescheid</button>
+            <button class="tablinks" onclick="openCity(event, 'mahnung')">Mahnung</button>
             <button class="tablinks" onclick="openCity(event, 'anlagenkarte')">Anlagenkarte</button>
             <button class="tablinks" onclick="openCity(event, 'wertpapiere')">Wertpapiere</button>
         </nav>
@@ -1609,6 +1610,317 @@ document.addEventListener('DOMContentLoaded', function() {
              
 
 
+    <section id="mahnung" class="tabcontent">
+    <header>
+        <h2>Mahnung</h2>
+    </header>
+
+    <form class="box mahnung-form">
+        <!-- Hinweis-Banner zum Basiszinssatz (wie Hauptrefinanzierungs-Hinweis in lb9-3) -->
+        <p style="margin:10px 0;padding:10px 14px;background:#eef3fb;border-left:4px solid #1466a6;border-radius:0 6px 6px 0;
+                  font-size:0.95em;line-height:1.6;">
+            ⚖ <strong>Basiszinssatz (EZB-Ankerwert):</strong>
+            <strong id="mahnungBasiszinsBannerWert" style="color:#1466a6;white-space:nowrap;">1,52 %</strong>
+            (gültig seit <strong id="mahnungBasiszinsBannerSeit">01.07.2026</strong>)<br>
+            <span style="font-size:0.9em;color:#555;">
+                Verzugszinsen nach § 288 BGB: <strong>Basiszinssatz + 5 Prozentpunkte</strong> (Verbraucher)
+                bzw. <strong>Basiszinssatz + 9 Prozentpunkte</strong> (Entgeltforderungen zwischen Unternehmen – Standard:
+                <strong id="mahnungB2bBannerWert" style="white-space:nowrap;">10,52 % p. a.</strong>).
+                Zinsberechnung kaufmännisch mit 360 Tagen (Zinsen = Betrag × Satz × Tage / 360 / 100). Anpassbar unter <em>Einstellungen</em>.
+            </span>
+        </p>
+
+        <section class="form-section">
+            <h3>Art, Datum und Daten</h3>
+
+            <div class="grid3">
+                <!-- Vorlage und Mahnstufe -->
+                <fieldset class="vorlage-gruppe">
+                    <legend>Art der Mahnung</legend>
+
+                    <div class="form-field">
+                        <label for="svgDropdownMahnung">Auswählen</label>
+                        <select id="svgDropdownMahnung">
+                            <option value="mahnung.svg">Mahnung (klassisch)</option>
+                            <option value="mahnung2.svg" selected>Mahnung (modern)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="mahnungStufeInput">Mahnstufe</label>
+                        <select id="mahnungStufeInput" onchange="mahnungApplySVGholen()">
+                            <option value="1">1. Mahnung (Zahlungserinnerung)</option>
+                            <option value="2" selected>2. Mahnung</option>
+                            <option value="3">3. Mahnung – letzte Mahnung</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <!-- Datum -->
+                <fieldset class="datum-gruppe">
+                    <legend>Datum (Brief)</legend>
+
+                    <div class="form-field">
+                        <label for="tagMahnung">Tag</label>
+                        <select id="tagMahnung">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="monatMahnung">Monat</label>
+                        <select id="monatMahnung">
+                            <option value="01">Januar</option>
+                            <option value="02">Februar</option>
+                            <option value="03">März</option>
+                            <option value="04">April</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Dezember</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="jahrMahnung">Jahr</label>
+                        <input type="text" id="jahrMahnung" value="" placeholder="Jahr" maxlength="6" />
+                    </div>
+
+                    <div class="form-field checkbox-field">
+                        <label for="scriptJahrMahnung">
+                            <input type="checkbox" id="scriptJahrMahnung"
+                                   onchange="toggleInput('jahrMahnung', 'scriptJahrMahnung');" />
+                            Skript verwenden
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- Rechnungs- und Verzugsdaten -->
+                <fieldset class="mahnung-daten-gruppe">
+                    <legend>Daten</legend>
+
+                    <div class="form-field">
+                        <label for="mahnungRechnungsNrInput">Rechnungsnummer</label>
+                        <input type="text" id="mahnungRechnungsNrInput" value="" placeholder="z. B. 2735/22 (leer = zufällig)" maxlength="8" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="mahnungBetragInput">Rechnungsbetrag (€)</label>
+                        <input type="number" id="mahnungBetragInput" value="2380" min="0" max="9999999" step="0.01" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="mahnungRechnungsdatumInput">Rechnungsdatum</label>
+                        <input type="date" id="mahnungRechnungsdatumInput" value="" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="mahnungFaelligkeitInput">Fälligkeitsdatum</label>
+                        <input type="date" id="mahnungFaelligkeitInput" value="" />
+                    </div>
+
+                    <div class="form-field form-field-group">
+                        <label for="mahnungZinssatzInput">Verzugszinssatz (%)</label>
+                        <div class="input-group">
+                            <input type="number" id="mahnungZinssatzInput" value="10.52" min="0" max="30" step="0.01"
+                                   title="Basiszinssatz + 9 Prozentpunkte (§ 288 Abs. 2 BGB)" />
+                            <button type="button" id="mahnungZinssatzStandard"
+                                    title="Standardwert aus js/utils.js (Basiszinssatz + 9 Prozentpunkte) wiederherstellen">Standard</button>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="mahnungPauschaleInput">Mahngebühren (€, pauschal)</label>
+                        <input type="number" id="mahnungPauschaleInput" value="40" min="0" max="999" step="0.01"
+                               title="Verzugspauschale nach § 288 Abs. 3 BGB" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="mahnungFristInput">Zahlungsfrist (Tage)</label>
+                        <input type="number" id="mahnungFristInput" value="14" min="0" max="365" />
+                    </div>
+                </fieldset>
+            </div>
+        </section>
+
+        <!-- Allgemeine Daten -->
+        <section class="form-section">
+            <h3>Allgemeine Daten</h3>
+
+            <div class="grid3">
+                <div class="form-field">
+                    <label for="datenMahnung">Absender (Gläubiger)</label>
+                    <select id="datenMahnung" class="meinUnternehmen" onchange="mahnungApplySVGholen()"></select>
+                </div>
+
+                <div class="form-field">
+                    <label for="datenMahnungEmpfaenger">Empfänger (Schuldner)</label>
+                    <select id="datenMahnungEmpfaenger" onchange="loadMahnungEmpfaengerData()"></select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Aktionen -->
+        <section class="form-section form-actions">
+            <button type="button" onclick="mahnungApplySVGholen()">Mahnung erstellen / aktualisieren</button>
+        </section>
+    </form>
+
+    <!-- Vorschau -->
+    <section class="preview-section">
+        <div id="mahnungContainer" contenteditable="true"></div>
+    </section>
+
+    <nav class="exportButtons" aria-label="Export-Optionen">
+        <button class="card-btn" type="button" onclick="exportDokument('mahnung','png')"
+                data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
+        </button>
+        <button class="card-btn" type="button" onclick="exportDokument('mahnung','svg')"
+                data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
+        </button>
+        <button class="card-btn" type="button" onclick="exportDokument('mahnung','clipboard')"
+                data-tooltip="Als SVG-Code in Zwischenablage kopieren" aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
+        </button>
+
+        <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('mahnung')" data-tooltip="Beleg-Grafik in die Zwischenablage kopieren" aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage        </button>
+        <button class="card-btn" type="button" onclick="belegZurSammlung('mahnungContainer')" data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
+        </button>
+    </nav>
+</section>
+
+<script>
+    // Zinssatz-Einstellungen und Hinweis-Banner
+    (function () {
+        const bannerWert = document.getElementById('mahnungBasiszinsBannerWert');
+        const bannerSeit = document.getElementById('mahnungBasiszinsBannerSeit');
+        const bannerB2b = document.getElementById('mahnungB2bBannerWert');
+        const zinssatzInput = document.getElementById('mahnungZinssatzInput');
+
+        // Banner-/Lade-Formatierung: deutschen Zinswert "1,52"
+        const mahnungZinsText = (x) =>
+            Number(x).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        function mahnungUpdateZinssatzAnzeige() {
+            if (bannerWert && typeof getBasiszinssatz === 'function') {
+                bannerWert.textContent = mahnungZinsText(getBasiszinssatz()) + ' %';
+            } else if (bannerWert) {
+                bannerWert.textContent = mahnungZinsText(1.52) + ' %';
+            }
+            if (bannerSeit && typeof BASISZINSSATZ_SEIT !== 'undefined') {
+                bannerSeit.textContent = BASISZINSSATZ_SEIT;
+            }
+            if (bannerB2b && typeof verzugszinsSatz === 'function') {
+                bannerB2b.textContent = mahnungZinsText(verzugszinsSatz('unternehmen')) + ' % p. a.';
+            }
+        }
+
+        // Standard-Button: Zinssatz-Feld wieder auf Basiszins + 9 pp setzen
+        document.getElementById('mahnungZinssatzStandard').addEventListener('click', function () {
+            if (typeof verzugszinsSatz === 'function') {
+                zinssatzInput.value = verzugszinsSatz('unternehmen');
+            }
+            if (typeof mahnungApplySVGholen === 'function') mahnungApplySVGholen();
+        });
+
+        // Vorlagenwechsel: Mahnung sofort mit der neu gewählten Vorlage aufbauen
+        document.getElementById('svgDropdownMahnung')?.addEventListener('change', function () {
+            if (typeof mahnungApplySVGholen === 'function') mahnungApplySVGholen();
+        });
+
+        document.addEventListener('basiszinschange', function () {
+            mahnungUpdateZinssatzAnzeige();
+            if (zinssatzInput && document.activeElement !== zinssatzInput &&
+                typeof verzugszinsSatz === 'function') {
+                zinssatzInput.value = verzugszinsSatz('unternehmen');
+            }
+        });
+
+        window.addEventListener('load', function () {
+            // Zinssatz-Feld auf den-gültigenwert bringen
+            if (zinssatzInput && typeof verzugszinsSatz === 'function') {
+                zinssatzInput.value = verzugszinsSatz('unternehmen');
+            }
+            // Datum: (Brief) mit heutigem Datum vorbelegen; Fälligkeit liegt 30 Tage zurück
+            const heute = new Date();
+            const iso = (d) => {
+                const p = (n) => String(n).padStart(2, '0');
+                return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+            };
+            const datumBrief = document.getElementById('mahnungRechnungsdatumInput');
+            const datumFaellig = document.getElementById('mahnungFaelligkeitInput');
+            if (datumFaellig && !datumFaellig.value) {
+                const rueck = new Date(heute);
+                rueck.setDate(rueck.getDate() - 30);
+                datumFaellig.value = iso(rueck);
+            }
+            if (datumBrief && !datumBrief.value) {
+                const rechnung = new Date(heute);
+                rechnung.setDate(rechnung.getDate() - 45);
+                datumBrief.value = iso(rechnung);
+            }
+
+            // Datum-Auswahl des Briefs auf aktuelles Datum setzen
+            const p0 = (n) => String(n).padStart(2, '0');
+            const tagSel = document.getElementById('tagMahnung');
+            const monatSel = document.getElementById('monatMahnung');
+            if (tagSel && tagSel.querySelector(`option[value="${p0(new Date().getDate())}"]`)) {
+                tagSel.value = p0(new Date().getDate());
+            }
+            if (monatSel && monatSel.querySelector(`option[value="${p0(new Date().getMonth() + 1)}"]`)) {
+                monatSel.value = p0(new Date().getMonth() + 1);
+            }
+
+            // Jahr des Briefs vorbelegen (aktuelles Jahr), falls leer
+            const jahrInput = document.getElementById('jahrMahnung');
+            if (jahrInput && !jahrInput.value) {
+                jahrInput.value = String(new Date().getFullYear());
+                // Falls der Beleg schon ohne Jahr gerendert wurde, neu aufbauen
+                const jahrElem = document.querySelector('#mahnungContainer .aktuellesJahrMahnung');
+                if (jahrElem && !jahrElem.textContent && typeof mahnungApplySVGholen === 'function') {
+                    mahnungApplySVGholen();
+                }
+            }
+            mahnungUpdateZinssatzAnzeige();
+        });
+    })();
+</script>
+             
+
+
     <section id="anlagenkarte" class="tabcontent">
     <header>
         <h2>Anlagenkarte</h2>
@@ -2022,11 +2334,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
     </script>
-        <script src="js/belege.js?v=39"></script>
+        <script src="js/belege.js?v=45"></script>
 <script src="js/collection.js?v=35"></script>
-<script src="js/belege-zufall.js?v=25"></script>
-        <script src="js/beleg_url_parameter.js?v=22"></script>
-        <script src="js/beleg_import.js?v=11"></script>
+<script src="js/belege-zufall.js?v=26"></script>
+        <script src="js/beleg_url_parameter.js?v=23"></script>
+        <script src="js/beleg_import.js?v=12"></script>
 </body>
 
 </html>

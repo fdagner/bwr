@@ -125,6 +125,8 @@ const DROPDOWN_CONFIG = {
     'datenKassenbonKunde': { onChange: loadCompanyDataforKassenbon, autoUpdate: false },
     'datenLohnjournal': { onChange: loadLohnjournalData, autoUpdate: false },
     'datenBescheid': { onChange: loadBescheidData, autoUpdate: false },
+    'datenMahnung': { onChange: loadMahnungData, autoUpdate: false },
+    'datenMahnungEmpfaenger': { onChange: loadMahnungEmpfaengerData, autoUpdate: false },
     'datenAnlagenkarte': { onChange: loadAnlagenkarteData, autoUpdate: false },
     'datenWertpapiere': { onChange: loadWertpapiereData, autoUpdate: false },
     'datenLohnabrechnung': { onChange: loadLohnabrechnungFirma, autoUpdate: false },
@@ -210,6 +212,33 @@ const BELEG_FIELD_MAPPING = {
         }
     }
 
+    },
+    mahnung: {
+        fields: {
+            'mahnungName': (data) => `${data.unternehmen.name} ${data.unternehmen.rechtsform}`,
+            'mahnungBank': 'unternehmen.bank',
+            'mahnungIban': 'unternehmen.iban',
+            'mahnungBic': 'unternehmen.bic'
+        },
+        classFields: {
+            'mahnungKontaktzeile': (data) =>
+                `${data.unternehmen.name} ${data.unternehmen.rechtsform || ''} * ${data.unternehmen.adresse.strasse} * ${data.unternehmen.adresse.plz} ${data.unternehmen.adresse.ort}`.trim(),
+            'mahnungOrt': 'unternehmen.adresse.ort'
+        },
+        customLogic: (data) => {
+            loadLogoToSVG(data.unternehmen.logo, 'mahnungSVG', 'logo-placeholderMahnung');
+            // Trennlinie im Briefkopf in der Akzentfarbe des Modells
+            // Unternehmens aus der YAML (Fallback: Rot)
+            SafeDOM.setAttr('mahnungAkzentlinie', 'fill', data.unternehmen.akzent || 'red');
+        }
+    },
+    mahnungEmpfaenger: {
+        fields: {
+            'mahnungKundeName': (data) => `${data.unternehmen.name} ${data.unternehmen.rechtsform || ''}`.trim(),
+            'mahnungKundeInhaber': 'unternehmen.inhaber',
+            'mahnungKundeStrasse': 'unternehmen.adresse.strasse',
+            'mahnungKundeOrt': (data) => `${data.unternehmen.adresse.plz} ${data.unternehmen.adresse.ort}`
+        }
     },
     email: {
         fields: {
@@ -1132,7 +1161,8 @@ document.addEventListener('DOMContentLoaded', function () {
             rechnung: 'rechnung', kontoauszug: 'kontoauszug', quittung: 'quittung',
             kassenbon: 'kassenbon', email: 'email', newspaper: 'newspaper',
             lohnabrechnung: 'lohnabrechnung', lohnjournal: 'lohnjournal',
-            bescheid: 'bescheid', anlagenkarte: 'anlagenkarte', wertpapiere: 'wertpapiere'
+            bescheid: 'bescheid', anlagenkarte: 'anlagenkarte', wertpapiere: 'wertpapiere',
+            mahnung: 'mahnung'
         };
         const rawMarkup = item.htmlContent || item.svgContent || (item.content && item.content.trim().startsWith('<') ? item.content : null);
         if (!rawMarkup && !item.formState && item.content && item.content.startsWith('data:image/')) {
@@ -1483,6 +1513,21 @@ function loadLohnjournalData() {
 
 function loadBescheidData() {
     loadBelegData('bescheid', 'datenBescheid');
+}
+
+
+// Mahnung: Absender (Gläubiger) aus dem Absender-Dropdown laden
+function loadMahnungData() {
+    loadBelegData('mahnung', 'datenMahnung');
+}
+
+// Mahnung: Empfänger (Schuldner) aus dem Empfänger-Dropdown laden
+function loadMahnungEmpfaengerData() {
+    const selectedName = document.getElementById('datenMahnungEmpfaenger')?.value;
+    if (!selectedName) return;
+    const selectedData = yamlData.find(item => item.unternehmen.name === selectedName);
+    if (!selectedData) return;
+    loadBelegData('mahnungEmpfaenger', 'datenMahnungEmpfaenger');
 }
 
 
@@ -2050,6 +2095,28 @@ async function bescheidApplySVGholen(validationUeberspringen = false) {
     await applyBelegWithSVG('bescheid', validationUeberspringen);
 }
 
+async function mahnungApplySVGholen(validationUeberspringen = false) {
+    // Absender automatisch vorbelegen: 'myCompany' (localStorage) oder
+    // das erste erfasste Modellunternehmen – solange nichts gewählt wurde.
+    const absender = document.getElementById('datenMahnung');
+    if (absender && !absender.value) {
+        const meine = (localStorage.getItem('myCompany') || '').trim();
+        const kandidat = yamlData.find(item => item.unternehmen.name === meine)
+            || yamlData.find(item => item.unternehmen.branche?.trim() === 'Modellunternehmen')
+            || yamlData.find(item => item.unternehmen.name);
+        if (kandidat) absender.value = kandidat.unternehmen.name;
+    }
+    // Empfänger automatisch vorbelegen (erstes Unternehmen ≠ Absender),
+    // solange nichts gewählt wurde.
+    const empfaenger = document.getElementById('datenMahnungEmpfaenger');
+    if (empfaenger && !empfaenger.value) {
+        const absenderName = document.getElementById('datenMahnung')?.value;
+        const kandidat = yamlData.find(item => item.unternehmen.name && item.unternehmen.name !== absenderName);
+        if (kandidat) empfaenger.value = kandidat.unternehmen.name;
+    }
+    await applyBelegWithSVG('mahnung', validationUeberspringen);
+}
+
 // ============================================================================
 // START-AUFBAU: ALLE BELEGE SOFORT BEIM SEITENAUFRUF ERSTELLEN
 // (nicht erst beim Klick auf „Alle Daten übernehmen")
@@ -2073,6 +2140,7 @@ async function alleBelegeAutomatischErstellen() {
         ['Quittung', () => quittungApplySVGholen(still)],
         ['Kassenbon', () => kassenbonApplySVGholen(still)],
         ['Bescheid', () => bescheidApplySVGholen(still)],
+        ['Mahnung', () => mahnungApplySVGholen(still)],
         ['Anlagenkarte', () => anlagenkarteApplySVGholen(still)],
         ['Wertpapiere', () => wertpapiereApplySVGholen(still)],
         ['Lohnjournal', () => journalApplySVGholen(still)],
@@ -2434,6 +2502,7 @@ const EXPORT_CONFIG = {
     newspaper:     { id: 'newspaperContainer',     name: 'newspaper',     label: 'Zeitungsartikel',      firmaSelect: null },
     lohnjournalBS: { id: 'lohnjournalBuchungssatzContainer', name: 'lohnjournalBuchungssatz', label: 'Lohnjournal-Buchungssatz', firmaSelect: null },
     bescheid:      { id: 'bescheidContainer',      name: 'bescheid',      label: 'Bescheid',             firmaSelect: 'datenBescheid',      praep: 'für' },
+    mahnung:       { id: 'mahnungContainer',       name: 'mahnung',       label: 'Mahnung',              firmaSelect: 'datenMahnung',       praep: 'für' },
     anlagenkarte:  { id: 'anlagenkarteContainer',  name: 'anlagenkarte',  label: 'Anlagenkarte',         firmaSelect: 'datenAnlagenkarte',  praep: 'von' },
     wertpapiere:   { id: 'wertpapiereContainer',   name: 'wertpapier',    label: 'Wertpapierabrechnung', firmaSelect: 'datenWertpapiere',   praep: 'für' },
     lohnabrechnung:{ id: 'lohnabrechnungContainer',name: 'lohnabrechnung',label: 'Lohnabrechnung',       firmaSelect: 'datenLohnabrechnung',praep: 'von' }
@@ -2666,6 +2735,7 @@ const VALIDATION_RULES = {
         'newspaperTextInput': { max: 5000, label: 'Zeitungs-Text' },
         'newspaperSourceInput': { max: 150, label: 'Zeitungs-Quelle' },
         'anlagenkarteBezeichnungInput': { max: 20, label: 'Anlagenkarte Bezeichnung' },
+        'mahnungRechnungsNrInput': { max: 8, label: 'Rechnungsnummer' },
         'wertpapiereBezeichnungInput': { max: 20, label: 'Wertpapiere Bezeichnung' },
         'wertpapiereISINInput': { max: 12, label: 'ISIN' },
         'jahr': { max: 4, label: 'Jahr (Rechnung)' },
@@ -2694,6 +2764,10 @@ const VALIDATION_RULES = {
         'wertpapiereAnzahlInput': { min: 1, max: 5000, label: 'Wertpapiere Anzahl' },
         'bescheidMessbetragInput': { min: 0, max: 9999, label: 'Messbetrag' },
         'bescheidHebesatzInput': { min: 0, max: 999, label: 'Hebesatz' },
+        'mahnungBetragInput': { min: 0, max: 9999999, label: 'Rechnungsbetrag' },
+        'mahnungZinssatzInput': { min: 0, max: 30, label: 'Verzugszinssatz' },
+        'mahnungPauschaleInput': { min: 0, max: 999, label: 'Mahngebühren' },
+        'mahnungFristInput': { min: 0, max: 365, label: 'Zahlungsfrist' },
         'lohnabrechnungBruttoInput': { min: 0, max: 20000, label: 'Bruttogehalt' },
         'lohnabrechnungKVSatzInput': { min: 0, max: 20, label: 'KV-Satz' },
         'lohnabrechnungPVSatzInput': { min: 0, max: 5, label: 'PV-Satz' },
@@ -3007,6 +3081,176 @@ dataFunction: () => {
 
             loadBescheidData();
 
+        }
+    },
+    mahnung: {
+        svgDropdown: 'svgDropdownMahnung',
+        container: 'mahnungContainer',
+        jahrCheckbox: 'scriptJahrMahnung',
+        jahrInput: 'jahrMahnung',
+        jahrClass: 'aktuellesJahrMahnung',
+        customDefs: 'customDefsMahnung',
+        scriptId: 'customJsMahnung',
+        scriptFunction: 'SVGonLoadMahnung',
+        dataFunction: () => {
+            // Stufenkonfiguration: Titel + Hinweiszeile im Brief
+            const STUFEN = {
+                1: { titel: 'Zahlungserinnerung',
+                     hinweis: 'Für diese Zahlungserinnerung fallen keine Mahngebühren an.' },
+                2: { titel: 'Mahnung',
+                     hinweis: 'Die Kosten des Verfahrens gehen zu Ihren Lasten.' },
+                3: { titel: 'Letzte Mahnung',
+                     hinweis: 'Bei fruchtlosem Fristablauf leiten wir das Mahnverfahren ein.' }
+            };
+            const stufeNr = parseInt(document.getElementById('mahnungStufeInput')?.value, 10) || 1;
+            const stufe = STUFEN[stufeNr] || STUFEN[1];
+            const titelElem = document.getElementById('mahnungTitel');
+            if (titelElem) titelElem.textContent = stufe.titel;
+            const hinweisElem = document.getElementById('mahnungHinweis');
+            if (hinweisElem) hinweisElem.textContent = stufe.hinweis;
+
+            // Stufe 1 (Zahlungserinnerung): keine Zinsen und keine Mahngebühren –
+            // die Eingabefelder werden ausgegraut, der Brief zeigt nur den Betrag.
+            const ohneZusatz = stufeNr === 1;
+            const zinsFeld = document.getElementById('mahnungZinssatzInput');
+            const standardBtn = document.getElementById('mahnungZinssatzStandard');
+            const pauschaleFeld = document.getElementById('mahnungPauschaleInput');
+            if (zinsFeld) zinsFeld.disabled = ohneZusatz;
+            if (standardBtn) standardBtn.disabled = ohneZusatz;
+            if (pauschaleFeld) pauschaleFeld.disabled = ohneZusatz;
+
+            // Formulierung im Anschreiben stufenabhängig
+            const einleitungElem = document.getElementById('mahnungEinleitungEnde');
+            if (einleitungElem) {
+                einleitungElem.textContent = ohneZusatz ? ' Sicherlich handelt es sich um ein Versehen.' : ' Daher belasten wir Sie mit:';
+            }
+            const zahlText1 = document.getElementById('mahnungZahltext1');
+            if (zahlText1) {
+                zahlText1.textContent = ohneZusatz
+                    ? 'Wir bitten Sie, den offenen Betrag spätestens bis zum '
+                    : 'Wir bitten Sie, die Gesamtforderung spätestens bis zum ';
+            }
+            const zahlText2 = document.getElementById('mahnungZahltext2');
+            if (zahlText2) zahlText2.textContent = ' auf';
+
+            // Briefdatum: Tag/Monat aus den Auswahllisten, Jahr aus dem Eingabefeld
+            // (Schutz: falls das Jahr leer ist, zählt das aktuelle Jahr)
+            const tag = document.getElementById('tagMahnung').value;
+            const monat = document.getElementById('monatMahnung').value;
+            const tagElem = document.getElementById('mahnungTag');
+            if (tagElem) tagElem.textContent = tag;
+            const monatElem = document.getElementById('mahnungMonat');
+            if (monatElem) monatElem.textContent = monat;
+            const jahrBrief = parseInt(document.getElementById('jahrMahnung')?.value, 10) || new Date().getFullYear();
+
+            // Datum-Hilfsfunktionen (Anzeigeformat TT.MM.JJJJ)
+            const p2 = (n) => String(n).padStart(2, '0');
+            // ISO-Datum ('yyyy-mm-dd') als LOKALES Datum parsen, damit die
+            // Differenzberechnung (Verzugstage) keine UTC-Verschiebung erhält
+            const isoZuDatum = (iso) => {
+                const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso || ''));
+                if (!m) return null;
+                const d = new Date(+m[1], +m[2] - 1, +m[3]);
+                return isNaN(d) ? null : d;
+            };
+            const de = (d) => d ? `${p2(d.getDate())}.${p2(d.getMonth() + 1)}.${d.getFullYear()}` : '';
+
+            // Rechnungsnummer: Zufalls-Vorbelegung – eine vorhandene
+            // Nutzereingabe wird NICHT überschrieben.
+            const nrInput = document.getElementById('mahnungRechnungsNrInput');
+            if (nrInput && nrInput.value.trim() === '') {
+                nrInput.value = `${Math.floor(Math.random() * 9000) + 1000}/${String(jahrBrief).slice(-2)}`;
+            }
+            const nummerElem = document.getElementById('mahnungRechnungsNummer');
+            if (nummerElem) nummerElem.textContent = nrInput?.value || '';
+
+            // Rechnungsdatum
+            const rechnungsdatum = isoZuDatum(document.getElementById('mahnungRechnungsdatumInput')?.value);
+            const rdElem = document.getElementById('mahnungRechnungsdatum');
+            if (rdElem) rdElem.textContent = de(rechnungsdatum) || '—';
+
+            // Verzugstage: Briefdatum − Fälligkeitsdatum
+            // (ohne Fälligkeit: Fallback Rechnungsdatum + 30 Tage Zahlungsziel)
+            const briefDatum = new Date(jahrBrief, parseInt(monat, 10) - 1, parseInt(tag, 10));
+            let faellig = isoZuDatum(document.getElementById('mahnungFaelligkeitInput')?.value);
+            if (!faellig && rechnungsdatum) {
+                faellig = new Date(rechnungsdatum);
+                faellig.setDate(faellig.getDate() + 30);
+            }
+            const tage = faellig ? Math.max(0, Math.floor((briefDatum - faellig) / 86400000)) : 0;
+            const tageElem = document.getElementById('mahnungTage');
+            if (tageElem) tageElem.textContent = tage;
+
+            // Zinssatz (Standard: Basiszinssatz + 9 Prozentpunkte) und Zinsen
+            // nach der kaufmännischen Methode (360-Tage-Jahr)
+            const zinsEingabe = parseFloat(document.getElementById('mahnungZinssatzInput')?.value);
+            const satz = isNaN(zinsEingabe)
+                ? (typeof verzugszinsSatz === 'function' ? verzugszinsSatz('unternehmen') : 10.52)
+                : zinsEingabe;
+            const satzElem = document.getElementById('mahnungZinssatzText');
+            if (satzElem) {
+                satzElem.textContent = satz.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            const betrag = parseFloat(document.getElementById('mahnungBetragInput')?.value) || 0;
+            const zinsen = ohneZusatz ? 0 : ((typeof verzugszinsen === 'function')
+                ? verzugszinsen(betrag, satz, tage)
+                : Math.round(betrag * satz * tage / (360 * 100) * 100) / 100);
+            const pauschaleEingabe = parseFloat(document.getElementById('mahnungPauschaleInput')?.value);
+            const pauschale = ohneZusatz ? 0
+                : (isNaN(pauschaleEingabe)
+                    ? (typeof MAHNPAUSCHALE !== 'undefined' ? MAHNPAUSCHALE : 40)
+                    : pauschaleEingabe);
+
+            const betragElem = document.getElementById('mahnungBetrag');
+            if (betragElem) betragElem.textContent = FormatHelper.currency(betrag);
+            const zinsenElem = document.getElementById('mahnungZinsen');
+            if (zinsenElem) zinsenElem.textContent = FormatHelper.currency(zinsen);
+            const pauschaleElem = document.getElementById('mahnungPauschale');
+            if (pauschaleElem) pauschaleElem.textContent = FormatHelper.currency(pauschale);
+            const summeElem = document.getElementById('mahnungSumme');
+            if (summeElem) summeElem.textContent = FormatHelper.currency(FormatHelper.roundToTwo(betrag + zinsen + pauschale));
+
+            // Berechnungszeilen ohne Betrag ausblenden und die Summenzeile
+            // nachrücken lassen (Basis-Y: Zins 470, Pauschale 495, Summe 525)
+            const zeige = (id, sichtbar) => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = sichtbar ? '' : 'none';
+            };
+            const sichtbarZins = zinsen !== 0;
+            const sichtbarPauschale = pauschale !== 0;
+            zeige('mahnungZeileZinsen', sichtbarZins);
+            zeige('mahnungZeilePauschale', sichtbarPauschale);
+            let yZeile = 470;
+            const ruecke = (id, basisY) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (yZeile === basisY) el.removeAttribute('transform');
+                else el.setAttribute('transform', `translate(0, ${yZeile - basisY})`);
+                yZeile += 25;
+            };
+            if (sichtbarZins) ruecke('mahnungZeileZinsen', 470);
+            if (sichtbarPauschale) ruecke('mahnungZeilePauschale', 495);
+            const summeY = (sichtbarZins || sichtbarPauschale) ? yZeile + 5 : 475;
+            ['mahnungSummeOp', 'mahnungSummeLabel', 'mahnungSumme'].forEach((id) => {
+                document.getElementById(id)?.setAttribute('y', summeY);
+            });
+            const summenlinie = document.getElementById('mahnungSummeLinie');
+            if (summenlinie) summenlinie.setAttribute('y', summeY + 10);
+            // nur Vorlage 2 (Rahmenbox) vorhanden
+            const berechnungsbox = document.getElementById('mahnungBerechnungsbox');
+            if (berechnungsbox) berechnungsbox.setAttribute('height', (summeY + 12) - 415);
+
+            // Zahlungsfrist: Briefdatum + Frist (Tage)
+            const frist = parseInt(document.getElementById('mahnungFristInput')?.value, 10) || 0;
+            const fristDatum = new Date(briefDatum);
+            fristDatum.setDate(fristDatum.getDate() + frist);
+            const fristElem = document.getElementById('mahnungFrist');
+            if (fristElem) fristElem.textContent = de(fristDatum);
+
+            // Absender- und Empfängerdaten einsetzen
+            loadMahnungData();
+            loadMahnungEmpfaengerData();
         }
     },
     // HINZUFÜGEN nach bescheid (in BELEG_APPLY_CONFIG):

@@ -192,6 +192,33 @@ const URL_PARAM_CONFIG = {
         // Unternehmen
         unternehmen: { elementId: 'datenBescheid', type: 'select' }
     },
+
+    // ========== MAHNUNG ==========
+    mahnung: {
+        // Mahnstufe
+        stufe: { elementId: 'mahnungStufeInput', type: 'select' },
+
+        // Rechnungs- und Verzugsdaten
+        rechnungsnr: { elementId: 'mahnungRechnungsNrInput', type: 'input' },
+        betrag: { elementId: 'mahnungBetragInput', type: 'input' },
+        zinssatz: { elementId: 'mahnungZinssatzInput', type: 'input' },
+        pauschale: { elementId: 'mahnungPauschaleInput', type: 'input' },
+        frist: { elementId: 'mahnungFristInput', type: 'input' },
+        rechnungsdatum: { elementId: 'mahnungRechnungsdatumInput', type: 'input' },
+        faelligkeit: { elementId: 'mahnungFaelligkeitInput', type: 'input' },
+
+        // Briefdatum
+        tag: { elementId: 'tagMahnung', type: 'select' },
+        monat: { elementId: 'monatMahnung', type: 'select' },
+        jahr: { elementId: 'jahrMahnung', type: 'input' },
+
+        // Vorlage
+        vorlage: { elementId: 'svgDropdownMahnung', type: 'select' },
+
+        // Unternehmen
+        unternehmen: { elementId: 'datenMahnung', type: 'select' },
+        empfaenger: { elementId: 'datenMahnungEmpfaenger', type: 'select' }
+    },
     
     // ========== ANLAGENKARTE ==========
     anlagenkarte: {
@@ -260,6 +287,9 @@ const TAB_MAPPING = {
     'gehaltsabrechnung': 'lohnabrechnung',
     'lohnjournal': 'lohnjournal',
     'bescheid': 'bescheid',
+    'mahnung': 'mahnung',
+    'zahlungserinnerung': 'mahnung',
+    'letzte-mahnung': 'mahnung',
     'anlagenkarte': 'anlagenkarte',
     'wertpapiere': 'wertpapiere',
     'modellunternehmen': 'modellunternehmen'
@@ -282,6 +312,7 @@ const APPLY_FUNCTIONS = {
     'lohnabrechnung': 'lohnabrechnungApplySVGholen',
     'lohnjournal': 'journalApplySVGholen',
     'bescheid': 'bescheidApplySVGholen',
+    'mahnung': 'mahnungApplySVGholen',
     'anlagenkarte': 'anlagenkarteApplySVGholen',
     'wertpapiere': 'wertpapiereApplySVGholen'
 };
@@ -473,6 +504,11 @@ function processDatumParameter(params, belegType) {
             monatId = 'monatBescheid';
             jahrId = 'jahrBescheid';
             break;
+        case 'mahnung':
+            tagId = 'tagMahnung';
+            monatId = 'monatMahnung';
+            jahrId = 'jahrMahnung';
+            break;
         case 'anlagenkarte':
             tagId = 'tagAnlagenkarte';
             monatId = 'monatAnlagenkarte';
@@ -567,8 +603,8 @@ function initializeURLParameters() {
         // 6. Warte nochmal kurz, dann SVG laden (falls nötig)
         setTimeout(() => {
             // Für Belege, die SVG-Templates laden müssen
-            const needsSVGLoad = ['rechnung', 'kontoauszug', 'email', 'quittung', 'kassenbon', 
-                                   'lohnjournal', 'bescheid', 'anlagenkarte', 'wertpapiere'];
+            const needsSVGLoad = ['rechnung', 'kontoauszug', 'email', 'quittung', 'kassenbon',
+                                   'lohnjournal', 'bescheid', 'mahnung', 'anlagenkarte', 'wertpapiere'];
             
             if (needsSVGLoad.includes(belegType)) {
                 // Lade SVG zuerst (falls applySVGholen existiert)

@@ -1,0 +1,98 @@
+<svg id="mahnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 760" font-family="Arial" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px">
+ <defs id="customDefsMahnung"/>
+ <!--Papier-->
+ <rect x="0" y="0" width="720" height="755" stroke="#ccc" stroke-width="1" fill="white" />
+ <!--Akzentstreifen links (Farbe aus der YAML über customLogic)-->
+ <rect id="mahnungAkzentlinie" x="0" y="0" width="10" height="755" fill="red" />
+ <!--Kopfband (Neutralton)-->
+ <rect x="10" y="0" width="710" height="120" fill="#f2f5f9" />
+ <!--Briefkopf-->
+ <text id="mahnungName" x="35" y="60" font-size="27" font-weight="bold" fill="#000"/>
+ <text class="mahnungKontaktzeile" x="35" y="88" font-size="12.5" text-decoration="underline" fill="#000"/>
+ <rect id="logo-placeholderMahnung" x="575" y="18" width="115" height="85" Opacity="0"/>
+ <!--Empfängerdaten-->
+ <g font-size="17" fill="#333">
+  <text id="mahnungKundeName" x="35" y="175"/>
+  <text id="mahnungKundeInhaber" x="35" y="195"/>
+  <text id="mahnungKundeStrasse" x="35" y="215"/>
+  <text id="mahnungKundeOrt" x="35" y="235"/>
+ </g>
+ <!--Ort und Datum rechts-->
+ <text x="705" y="175" font-size="17" text-anchor="end" fill="#333"><tspan class="mahnungOrt"/>, <tspan id="mahnungTag">01</tspan>.<tspan id="mahnungMonat">01</tspan>.<tspan class="aktuellesJahrMahnung"/></text>
+ <!--Titel-->
+ <text id="mahnungTitel" x="35" y="292" font-size="25" font-weight="bold" fill="#000">Mahnung</text>
+ <!--Anschreiben-->
+ <g font-size="17" fill="#000">
+  <text x="35" y="330">Sehr geehrte Damen und Herren,</text>
+  <text x="35" y="360">leider konnten wir bis heute keinen Zahlungseingang für die Rechnung Nr. <tspan id="mahnungRechnungsNummer"></tspan></text>
+  <text x="35" y="383">feststellen.<tspan id="mahnungEinleitungEnde"> Daher belasten wir Sie mit:</tspan></text>
+ </g>
+ <!--Berechnungsblock in Rahmenbox-->
+ <g font-size="17" fill="#000">
+  <rect id="mahnungBerechnungsbox" x="30" y="415" width="665" height="122" fill="#f2f5f9" />
+  <text x="50" y="445" text-anchor="start">Rechnungsbetrag vom <tspan id="mahnungRechnungsdatum"></tspan></text>
+  <text id="mahnungBetrag" x="675" y="445" text-anchor="end"></text>
+  <g id="mahnungZeileZinsen">
+   <text x="50" y="470" text-anchor="start">+</text>
+   <text x="70" y="470" text-anchor="start">Verzugszinsen <tspan id="mahnungZinssatzText"></tspan> % p. a. für <tspan id="mahnungTage"></tspan> Tage</text>
+   <text id="mahnungZinsen" x="675" y="470" text-anchor="end"></text>
+  </g>
+  <g id="mahnungZeilePauschale">
+   <text x="50" y="495" text-anchor="start">+</text>
+   <text x="70" y="495" text-anchor="start">Mahngebühren (pauschal)</text>
+   <text id="mahnungPauschale" x="675" y="495" text-anchor="end"></text>
+  </g>
+  <text id="mahnungSummeOp" x="50" y="525" text-anchor="start" font-weight="bold">=</text>
+  <text id="mahnungSummeLabel" x="70" y="525" text-anchor="start" font-weight="bold">Gesamtforderung</text>
+  <text id="mahnungSumme" x="675" y="525" text-anchor="end" font-weight="bold"></text>
+ </g>
+ <!--Zahlungsaufforderung-->
+ <g font-size="17" fill="#000">
+  <text x="35" y="570"><tspan id="mahnungZahltext1">Wir bitten Sie, die Gesamtforderung spätestens bis zum </tspan><tspan id="mahnungFrist"></tspan><tspan id="mahnungZahltext2"> auf</tspan></text>
+  <text x="35" y="593">dieses Bankkonto zu überweisen:</text>
+  <text x="55" y="616"><tspan id="mahnungBank"></tspan></text>
+  <text x="55" y="639">IBAN: <tspan id="mahnungIban"></tspan> · BIC: <tspan id="mahnungBic"></tspan></text>
+  <text id="mahnungHinweis" x="35" y="673"/>
+  <text x="35" y="703">Sollten Sie zwischenzeitlich die Zahlung geleistet haben, betrachten Sie</text>
+  <text x="35" y="726">dieses Schreiben bitte als gegenstandslos.</text>
+ </g>
+ <!--Perforation unten (identisch zum Bescheid-Rand)-->
+ <circle cx="10" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="30" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="50" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="70" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="90" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="110" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="130" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="150" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="170" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="190" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="210" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="230" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="250" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="270" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="290" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="310" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="330" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="350" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="370" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="390" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="410" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="430" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="450" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="470" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="490" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="510" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="530" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="550" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="570" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="590" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="610" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="630" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="650" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="670" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="690" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="710" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="730" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+ <circle cx="750" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+</svg>

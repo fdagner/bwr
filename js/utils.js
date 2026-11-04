@@ -205,6 +205,98 @@ const EINKOMMENSTEUERTARIF = {
 
 window.EINKOMMENSTEUERTARIF = EINKOMMENSTEUERTARIF;
 
+// ============================================================================
+// ZINS-ANKERWERT: BASISZINSSATZ (VERTRAGSSTRafe/BASISZINS § 247 BGB)
+// ============================================================================
+// Zentraler Ankerwert für Verzugszinsen auf der Website (EZB-Basiszinssatz,
+// in % p. a.). HIER einfach anpassen, wenn sich der Satz ändert:
+//
+//   BASISZINSSATZ = 1.52   <-- Standardwert ändern (inklusive "seit"-Datum!
+//   BASISZINSSATZ_SEIT = '01.07.2026'   unten mit anpassen)
+//
+// Nutzer-Override: Ein auf einer Seite geänderter Wert gilt NUR für die
+// laufende Sitzung (Speicher, kein localStorage) und wird beim Neuladen
+// wieder auf den Standard (BASISZINSSATZ) zurückgesetzt.
+//
+// Verzugszinsen nach § 288 BGB = Basiszinssatz + Aufschlag:
+//   Verbrauchergeschäft (§ 288 Abs. 1 BGB):  Basiszinssatz + 5 Prozentpunkte
+//   Entgeltforderungen B2B (§ 288 Abs. 2 BGB): Basiszinssatz + 9 Prozentpunkte
+//   (bei Basiszinssatz 1,52 % → 6,52 % bzw. 10,52 % p. a.)
+// STANDARD (Standardwert von verzugszinsSatz()): B2B = Basiszins + 9 pp.
+// Zinsmethode: kaufmännische Zinsrechnung (Zinstage-Jahr mit 360 Tagen):
+//   Zinsen = Betrag × Zinssatz × Tage / (360 × 100)
+// ============================================================================
+const BASISZINSSATZ = 1.52;                    // Standard-Ankerwert in % p. a. (seit 01.07.2026)
+const BASISZINSSATZ_SEIT = '01.07.2026';       // Gültigkeitsbeginn des Standardwerts
+const VERZUGSZAUSCHLAG_VERBRAUCHER = 5;        // Prozentpunkte (§ 288 Abs. 1 BGB)
+const VERZUGSZAUSCHLAG_B2B = 9;                // Prozentpunkte (§ 288 Abs. 2 BGB)
+let basiszinsNutzerWert = null;                // Sitzungs-Override (nicht persistent)
+
+// Gibt den aktuell gültigen Basiszinssatz zurück (Sitzungs-Override > Standard).
+function getBasiszinssatz() {
+    if (basiszinsNutzerWert !== null && !isNaN(basiszinsNutzerWert) && basiszinsNutzerWert >= 0 && basiszinsNutzerWert <= 20) {
+        return basiszinsNutzerWert;
+    }
+    return BASISZINSSATZ;
+}
+
+// Setzt den Basiszinssatz für diese Sitzung und informiert alle Seiten
+// über das Event 'basiszinschange'. Ungültige Werte werden abgelehnt.
+function setBasiszinssatz(wert) {
+    const v = parseFloat(wert);
+    if (isNaN(v) || v < 0 || v > 20) return getBasiszinssatz();
+    basiszinsNutzerWert = v;
+    document.dispatchEvent(new CustomEvent('basiszinschange', { detail: { satz: v } }));
+    return v;
+}
+
+// Nutzer-Override entfernen → wieder der zentrale Standardwert.
+function resetBasiszinssatz() {
+    basiszinsNutzerWert = null;
+    document.dispatchEvent(new CustomEvent('basiszinschange', { detail: { satz: BASISZINSSATZ } }));
+    return BASISZINSSATZ;
+}
+
+// Verzugszinssatz nach § 288 BGB: 'verbraucher' → Basiszins + 5 pp,
+// (Standard) 'unternehmen'/'b2b' → Basiszins + 9 pp (auf 0,01 gerundet).
+function verzugszinsSatz(wer) {
+    const aufschlag = (String(wer).toLowerCase() === 'verbraucher')
+        ? VERZUGSZAUSCHLAG_VERBRAUCHER
+        : VERZUGSZAUSCHLAG_B2B;
+    return Math.round((getBasiszinssatz() + aufschlag) * 100) / 100;
+}
+
+// Kaufmännische Zinsrechnung (360-Tage-Jahr), auf 2 Nachkommastellen gerundet:
+// Zinsen = Betrag × Zinssatz (in %) × Tage / (360 × 100)
+function verzugszinsen(betrag, satz, tage) {
+    const b = parseFloat(betrag) || 0;
+    const s = parseFloat(satz) || 0;
+    const t = Math.max(0, parseInt(tage, 10) || 0);
+    return Math.round(b * s * t / (360 * 100) * 100) / 100;
+}
+
+// ============================================================================
+// MAHNPAUSCHALE (§ 288 Abs. 3 BGB)
+// ============================================================================
+// Sobald ein Unternehmen mit einer Zahlung in Verzug gerät, kann der Gläubiger
+// eine pauschale Unkostenvergütung von 40 € verlangen (Rechtsgeschäft
+// Unternehmer ↔ natürliche Person, § 288 Abs. 3 BGB). Darüber hinausgehende,
+// nachgewiesene Mahnkosten können zusätzlich geltend gemacht werden.
+// HIER einfach anpassen, wenn sich der gesetzliche Pauschalbetrag ändert.
+// ============================================================================
+const MAHNPAUSCHALE = 40; // € je Mahnung
+
+window.BASISZINSSATZ = BASISZINSSATZ;
+window.BASISZINSSATZ_SEIT = BASISZINSSATZ_SEIT;
+window.MAHNPAUSCHALE = MAHNPAUSCHALE;
+window.getBasiszinssatz = getBasiszinssatz;
+window.setBasiszinssatz = setBasiszinssatz;
+window.resetBasiszinssatz = resetBasiszinssatz;
+window.verzugszinsSatz = verzugszinsSatz;
+window.verzugszinsen = verzugszinsen;
+window.getBasiszins = getBasiszinssatz;
+window.setBasiszins = setBasiszinssatz;
+
 // Währung nach DIN 5008 (z. B. "1.234,56 €")
 function formatCurrency(value) {
     return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });

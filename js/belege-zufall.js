@@ -182,6 +182,7 @@ const BELEG_CONTAINER_TYPE = {
     'lohnabrechnungContainer': 'lohnabrechnung',
     'lohnjournalContainer': 'lohnjournal',
     'bescheidContainer': 'bescheid',
+    'mahnungContainer': 'mahnung',
     'anlagenkarteContainer': 'anlagenkarte',
     'wertpapiereContainer': 'wertpapiere'
 };
@@ -199,6 +200,7 @@ function buildBelegShareUrl(containerId) {
     else if (cid.indexOf('lohnabrechnung') >= 0) belegType = 'lohnabrechnung';
     else if (cid.indexOf('lohnjournal') >= 0) belegType = 'lohnjournal';
     else if (cid.indexOf('bescheid') >= 0) belegType = 'bescheid';
+    else if (cid.indexOf('mahnung') >= 0) belegType = 'mahnung';
     else if (cid.indexOf('anlagenkarte') >= 0) belegType = 'anlagenkarte';
     else if (cid.indexOf('wertpapiere') >= 0) belegType = 'wertpapiere';
 

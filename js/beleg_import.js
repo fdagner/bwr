@@ -14,6 +14,7 @@ const BELEG_SVG_ID_MAPPING = {
     'emailSVG': 'email',
     'lohnjournalSVG': 'lohnjournal',
     'bescheidSVG': 'bescheid',
+    'mahnungSVG': 'mahnung',
     'anlagenkarteSVG': 'anlagenkarte',
     'wertpapiereSVG': 'wertpapiere',
     'lohnabrechnungSVG': 'lohnabrechnung',
@@ -53,6 +54,11 @@ const BELEG_DETECTION_PATTERNS = {
     bescheid: {
         ids: ['bescheidAktenzeichen1', 'bescheidMessbetrag', 'bescheidJahressteuer'],
         texts: ['Bescheid', 'Aktenzeichen'],
+        minMatches: 2
+    },
+    mahnung: {
+        ids: ['mahnungRechnungsNummer', 'mahnungZinsen', 'mahnungSumme', 'mahnungFrist'],
+        texts: ['Mahnung', 'Verzugszinsen', 'Gesamtforderung'],
         minMatches: 2
     },
     anlagenkarte: {
@@ -162,6 +168,7 @@ function showImportSummary(belegType, extractedData, tabName) {
         anlagenkarte: ['anlagenkarteName', 'anlagenkarteTag', 'anlagenkarteMonat', 'anlagenkarteBezeichnung', 'anlagenkarteAnschaffungskosten'],
         wertpapiere:  ['wertpapiereName', 'wertpapiereTag', 'wertpapiereMonat', 'wertpapiereBezeichnung', 'wertpapiereISIN', 'wertpapiereStueckkurs'],
         bescheid:     ['bescheidName', 'bescheidTag', 'bescheidMonat', 'bescheidMessbetrag', 'bescheidJahressteuer'],
+        mahnung:      ['mahnungName', 'mahnungTag', 'mahnungMonat', 'mahnungRechnungsNummer', 'mahnungBetrag', 'mahnungSumme'],
         lohnjournal:  ['lohnjournalName', 'lohnjournalMonat'],
         lohnabrechnung: ['lohnabrechnungFirmaName', 'lohnabrechnungMonat', 'lohnabrechnungBrutto', 'lohnabrechnungNetto'],
         email:        ['emailName', 'emailKunde', 'emailSubject'],
@@ -184,6 +191,8 @@ function showImportSummary(belegType, extractedData, tabName) {
         wertpapiereBezeichnung: 'Bezeichnung', wertpapiereISIN: 'ISIN', wertpapiereStueckkurs: 'Stückkurs',
         bescheidTag: 'Tag', bescheidMonat: 'Monat',
         bescheidMessbetrag: 'Messbetrag', bescheidJahressteuer: 'Jahressteuer',
+        mahnungTag: 'Tag', mahnungMonat: 'Monat',
+        mahnungRechnungsNummer: 'Rechnungsnummer', mahnungBetrag: 'Rechnungsbetrag', mahnungSumme: 'Gesamtforderung',
         lohnjournalMonat: 'Monat', lohnabrechnungMonat: 'Monat',
         lohnabrechnungBrutto: 'Brutto', lohnabrechnungNetto: 'Netto',
         emailName: 'Absender', emailKunde: 'Empfänger', emailSubject: 'Betreff',
@@ -194,6 +203,7 @@ function showImportSummary(belegType, extractedData, tabName) {
         rechnung: 'Rechnung', kontoauszug: 'Kontoauszug', quittung: 'Quittung',
         kassenbon: 'Kassenbon', anlagenkarte: 'Anlagenkarte', wertpapiere: 'Wertpapiere',
         bescheid: 'Bescheid', lohnjournal: 'Lohnjournal', lohnabrechnung: 'Lohnabrechnung',
+        mahnung: 'Mahnung',
         email: 'E-Mail', newspaper: 'Zeitungsartikel'
     };
 
@@ -348,6 +358,10 @@ const PLATZHALTER = ['Bezeichnung', 'Artikelbezeichnung', 'Menge', 'Einheit', 'E
 if (/^(artikel|menge|einheit|einzelpreis)$/i.test(id)) return;
 if (/^(artikel|menge|einheit|einzelpreis)\d*$/i.test(id) && PLATZHALTER.includes(textContent)) return;
 
+// Mahnung: berechnete Anzeige-Felder nicht als Eingabewerte übernehmen
+// (Frist-/Tagesangaben werden aus den Formular-Eingaben neu berechnet)
+if (belegType === 'mahnung' && /^(mahnungFrist|mahnungTage)$/i.test(id)) return;
+
         // Überspringen wenn identisch mit Placeholder des Ziel-Inputs
         const targetInput = document.getElementById(id + 'Input') || document.getElementById(id);
         if (targetInput && targetInput.placeholder && targetInput.placeholder === textContent) return;
@@ -399,6 +413,10 @@ if (data['menge2']) {
         { class: 'bescheidOrt',               key: 'bescheidOrt' },
         { class: 'bescheidStrasse',           key: 'bescheidStrasse' },
         { class: 'bescheidOrtInhaber',        key: 'bescheidOrtInhaber' },
+        // Mahnung
+        { class: 'aktuellesJahrMahnung',      key: 'aktuellesJahrMahnung' },
+        { class: 'mahnungKontaktzeile',       key: 'mahnungKontaktzeile' },
+        { class: 'mahnungOrt',                key: 'mahnungOrt' },
         // Lohnabrechnung
         { class: 'aktuellesJahrLohnabrechnung', key: 'aktuellesJahrLohnabrechnung' },
     ];
@@ -613,7 +631,7 @@ async function fillFormWithExtractedData(belegType, extractedData) {
 
     // WICHTIG: Zuerst SVG/HTML-Template laden, bevor Daten gesetzt werden
     const needsSVGLoad = ['rechnung', 'kontoauszug', 'email', 'quittung', 'kassenbon', 
-                          'lohnjournal', 'bescheid', 'anlagenkarte', 'wertpapiere', 'lohnabrechnung'];
+                          'lohnjournal', 'bescheid', 'mahnung', 'anlagenkarte', 'wertpapiere', 'lohnabrechnung'];
     
     if (needsSVGLoad.includes(belegType)) {
         console.log(`⏳ Lade SVG-Template für ${belegType}...`);
@@ -659,6 +677,11 @@ async function fillFormWithExtractedData(belegType, extractedData) {
             tagId: 'tagBescheid',    tagKey: 'bescheidTag',
             monatId: 'monatBescheid', monatKey: 'bescheidMonat',
             jahrId: 'jahrBescheid',  jahrKey: 'aktuellesJahrBescheid'
+        },
+        mahnung: {
+            tagId: 'tagMahnung',    tagKey: 'mahnungTag',
+            monatId: 'monatMahnung', monatKey: 'mahnungMonat',
+            jahrId: 'jahrMahnung',  jahrKey: 'aktuellesJahrMahnung'
         }
     };
 
@@ -695,6 +718,8 @@ async function fillFormWithExtractedData(belegType, extractedData) {
         anlagenkarte:   [{ key: 'anlagenkarteName',         elementId: 'datenAnlagenkarte' }],
         wertpapiere:    [{ key: 'wertpapiereName',          elementId: 'datenWertpapiere' }],
         bescheid:       [{ key: 'bescheidName',             elementId: 'datenBescheid' }],
+        mahnung:        [{ key: 'mahnungName',              elementId: 'datenMahnung' },
+                         { key: 'mahnungKundeName',         elementId: 'datenMahnungEmpfaenger' }],
         lohnjournal:    [{ key: 'lohnjournalName',          elementId: 'datenLohnjournal' }],
         lohnabrechnung: [{ key: 'lohnabrechnungFirmaName',  elementId: 'datenLohnabrechnung' }],
         email:          [{ key: 'emailName',                elementId: 'datenEmail' },
@@ -808,6 +833,33 @@ async function fillFormWithExtractedData(belegType, extractedData) {
         const colorIn = document.getElementById('newspaperColorInput');
         if (nd && colorIn) nd.style.backgroundColor = colorIn.value;
         if (nc && colRange) nc.style.columnCount = colRange.value;
+    }
+
+    // Mahnung: Anzeige-/Datumswerte korrekt zuordnen (nach dem generischen Lauf)
+    if (belegType === 'mahnung') {
+        // Mahnstufe aus dem Brief-Titel ableiten
+        const titelText = String(extractedData['mahnungTitel'] || '');
+        const stufeSel = document.getElementById('mahnungStufeInput');
+        if (stufeSel) {
+            if (/letzte/i.test(titelText)) stufeSel.value = '3';
+            else if (/erinnerung/i.test(titelText)) stufeSel.value = '1';
+            else if (/mahnung/i.test(titelText)) stufeSel.value = '2';
+        }
+
+        // Rechnungsdatum (TT.MM.JJJJ) → ISO-Format in den Datums-Input
+        const rdMatch = String(extractedData['mahnungRechnungsdatum'] || '').match(/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/);
+        if (rdMatch) {
+            let rdJahr = rdMatch[3];
+            if (rdJahr.length === 2) rdJahr = '20' + rdJahr;
+            const rdInput = document.getElementById('mahnungRechnungsdatumInput');
+            if (rdInput) rdInput.value = `${rdJahr}-${rdMatch[2].padStart(2, '0')}-${rdMatch[1].padStart(2, '0')}`;
+        }
+
+        // Zinssatz aus der Anzeige im Brief ("10,52")
+        const zinsText = String(extractedData['mahnungZinssatzText'] || '').replace(',', '.');
+        const zinsWert = parseFloat(zinsText.replace(/[^\d.]/g, ''));
+        const zinsInput = document.getElementById('mahnungZinssatzInput');
+        if (zinsInput && !isNaN(zinsWert)) zinsInput.value = zinsWert;
     }
 
     console.log(`${fieldsSet} Felder wurden befüllt`);
