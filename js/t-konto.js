@@ -14,7 +14,7 @@ function getKlassenName(kontonummer) {
         '3': 'Klasse 3 – Eigenkapital & Rückstellungen',
         '4': 'Klasse 4 – Verbindlichkeiten und PRA',
         '5': 'Klasse 5 – Erträge',
-        '6': 'Klasse 6 – Betriebliche Aufwanden',
+        '6': 'Klasse 6 – Betriebliche Aufwendungen',
         '7': 'Klasse 7 – Weitere Aufwendungen',
         '8': 'Klasse 8 – Ergebnisrechnungen',
         '9': 'Klasse 9 – Kosten- und Leistungsrechnung'

@@ -6,6 +6,56 @@ let kunde = '<i>[Modellunternehmen]</i>';
 let letztePreisAufgaben = [];
 
 // ============================================================================
+// PREISRAHMEN AUS YAML-PRODUKTDATEN ÜBERNEHMEN
+// Bei ausgewähltem Unternehmen mit Produktdaten (fertigerzeugnisse.hauptwerk)
+// werden Min./Max.-Preis automatisch übernommen und die Felder ausgegraut.
+// Nur ohne solche Daten bleibt der manuelle Preisrahmen aktiv.
+// ============================================================================
+
+function setzePreisfelderGesperrt(gesperrt) {
+  ['preisMin', 'preisMax'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.disabled = gesperrt;
+    el.style.backgroundColor = gesperrt ? '#e9e9e9' : '';
+    el.style.color = gesperrt ? '#777' : '';
+  });
+}
+
+function wendePreisrahmenAn() {
+  const kundeSelect = document.getElementById('preisKunde');
+  const name = kundeSelect?.value?.trim() || '';
+  const minInput = document.getElementById('preisMin');
+  const maxInput = document.getElementById('preisMax');
+  const hinweis = document.getElementById('preisRahmenHinweis');
+
+  const company = name ? (yamlData || []).find(c => c?.unternehmen?.name === name) : null;
+  const produkte = (company?.unternehmen?.fertigerzeugnisse?.hauptwerk || [])
+    .filter(p => Number.isFinite(p?.preis_min) && Number.isFinite(p?.preis_max) && p.preis_max > p.preis_min);
+
+  if (produkte.length > 0 && minInput && maxInput) {
+    const min = Math.min(...produkte.map(p => p.preis_min));
+    const max = Math.max(...produkte.map(p => p.preis_max));
+    if (min < max) {
+      minInput.value = min;
+      maxInput.value = max;
+      setzePreisfelderGesperrt(true);
+      if (hinweis) {
+        hinweis.textContent = `🔒 Preisrahmen automatisch aus den Produktdaten von „${name}“ übernommen (${min.toLocaleString('de-DE')} € – ${max.toLocaleString('de-DE')} €).`;
+        hinweis.style.color = '#155724';
+      }
+      return;
+    }
+  }
+
+  setzePreisfelderGesperrt(false);
+  if (hinweis) {
+    hinweis.textContent = 'Preisrahmen frei einstellbar (kein Unternehmen mit Produktdaten ausgewählt).';
+    hinweis.style.color = '#666';
+  }
+}
+
+// ============================================================================
 // YAML-DATEN LADEN (identisch zum Marketing-Generator)
 // ============================================================================
 
@@ -367,20 +417,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   kundeSelect.addEventListener('change', () => {
     kunde = kundeSelect.value.trim() || '';
+    wendePreisrahmenAn();
   });
 
-  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
-  // sobald die YAML-Daten tatsächlich geladen sind
-  if (yamlData && yamlData.length > 0) {
+  const starteGenerator = () => {
     fillCompanyDropdowns();
     autoSelectMyCompany();
+    wendePreisrahmenAn();
     zeigeZufaelligePreisstrategien();
+  };
+
+  // Dropdown befüllen → "Mein Unternehmen" wählen → Preisrahmen übernehmen →
+  // Aufgaben starten, sobald die YAML-Daten tatsächlich geladen sind
+  if (yamlData && yamlData.length > 0) {
+    starteGenerator();
   } else {
-    document.addEventListener('yamlDataLoaded', () => {
-      fillCompanyDropdowns();
-      autoSelectMyCompany();
-      zeigeZufaelligePreisstrategien();
-    }, { once: true });
+    document.addEventListener('yamlDataLoaded', starteGenerator, { once: true });
   }
 
   const vorschauEl = document.getElementById('kiPromptVorschau');
