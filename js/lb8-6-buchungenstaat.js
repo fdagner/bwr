@@ -762,7 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Kunde geändert:', kunde);
   });
 
-  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // Dropdown befüllen → "Modellunternehmen" wählen → Aufgaben starten,
   // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
@@ -783,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Auto-Select: Mein Unternehmen aus localStorage
+// Auto-Select: Modellunternehmen aus localStorage
 function autoSelectMyCompany() {
   const myCompanyName = localStorage.getItem('myCompany');
   

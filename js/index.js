@@ -238,7 +238,7 @@ document.getElementById('allCompaniesDropdown')?.addEventListener('change', func
         if (isMyCompany) {
             const badge = document.createElement('span');
             badge.style.cssText = 'background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; margin-left: 8px;';
-            badge.textContent = '★ Mein Unternehmen';
+            badge.textContent = '★ Modellunternehmen';
             previewDiv.appendChild(badge);
         }
 
@@ -294,7 +294,7 @@ function populateAllCompaniesDropdown() {
 
     console.log(`Dropdown befüllt mit ${sortedCompanies.length} Unternehmen`);
     
-    // NEU: Aktualisiere "Mein Unternehmen" Status nach dem Befüllen
+    // NEU: Aktualisiere Modellunternehmen Status nach dem Befüllen
     updateMyCompanyStatus();
     
     // NEU: Auto-select in Dropdowns mit class="meinUnternehmen"
@@ -1529,7 +1529,7 @@ function updateMyCompanyStatus() {
             statusDiv.style.display = 'block';
             if (nameSpan) nameSpan.textContent = myCompanyName;
         }
-        // Prüfe ob das aktuell ausgewählte Unternehmen bereits "Mein Unternehmen" ist
+        // Prüfe ob das aktuell ausgewählte Unternehmen bereits Modellunternehmen ist
         const dropdown = document.getElementById('allCompaniesDropdown');
         if (setButton && dropdown) {
             setButton.disabled = (dropdown.value === myCompanyName);

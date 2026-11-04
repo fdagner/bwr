@@ -25,7 +25,7 @@ function fillUnternehmenSelect() {
       select.appendChild(opt);
     });
 
-  // „Mein Unternehmen" vorauswählen, falls vorhanden
+  // "Modellunternehmen" vorauswählen, falls vorhanden
   const mein = localStorage.getItem('myCompany');
   if (mein && [...select.options].some(o => o.value === mein)) select.value = mein;
 }

@@ -1381,7 +1381,7 @@ function updateAllDropdowns() {
         // Sicherstellen, dass wirklich nichts anderes ausgewählt ist
         dropdown.value = '';
 
-        // "Mein Unternehmen" direkt beim Befüllen automatisch wählen (bis der
+        // Modellunternehmen direkt beim Befüllen automatisch wählen (bis der
         // Nutzer selbst ein anderes Unternehmen wählt). Damit funktioniert
         // die Auto-Auswahl unabhängig von Event-/Load-Timing.
         const myCompany = (localStorage.getItem('myCompany') || '').trim();

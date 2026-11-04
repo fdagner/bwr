@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initialisiere den Zustand der "mitBezugskosten"-Checkbox beim Laden der Seite
   verkaufUpdateMitBezugskostenState();
 
-  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // Dropdown befüllen → "Modellunternehmen" wählen → Aufgaben starten,
   // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();

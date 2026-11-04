@@ -633,7 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
         yearInput.value = new Date().getFullYear();
     }
 
-    // Warte auf yamlData, dann fülle Käufer-Dropdown und wähle "Mein Unternehmen"
+    // Warte auf yamlData, dann fülle Käufer-Dropdown und wähle "Modellunternehmen"
     if (yamlData && yamlData.length > 0) {
         fillKaeuferDropdown();
         autoSelectMyCompany();

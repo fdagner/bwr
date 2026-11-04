@@ -653,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Auto-Select: Mein Unternehmen aus localStorage
+// Auto-Select: Modellunternehmen aus localStorage
 function autoSelectMyCompany() {
   const myCompanyName = localStorage.getItem('myCompany');
   if (!myCompanyName) return;

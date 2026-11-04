@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (kundeSelect) {
     kundeSelect.addEventListener('change', () => { kunde = kundeSelect.value.trim() || '<i>[Modellunternehmen]</i>'; });
   }
-  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgabe rendern,
+  // Dropdown befüllen → "Modellunternehmen" wählen → Aufgabe rendern,
   // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();

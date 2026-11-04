@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
     zeigeZufaelligePreisstrategien();
   };
 
-  // Dropdown befüllen → "Mein Unternehmen" wählen → Preisrahmen übernehmen →
+  // Dropdown befüllen → "Modellunternehmen" wählen → Preisrahmen übernehmen →
   // Aufgaben starten, sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     starteGenerator();

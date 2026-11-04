@@ -694,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Dropdown befüllen → "Mein Unternehmen" wählen → Aufgaben starten,
+  // Dropdown befüllen → "Modellunternehmen" wählen → Aufgaben starten,
   // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();

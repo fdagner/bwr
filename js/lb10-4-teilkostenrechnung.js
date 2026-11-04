@@ -2293,7 +2293,7 @@ document.addEventListener('DOMContentLoaded', () => {
     onProduktAnzahlChange();
   }
 
-  // Dropdown befüllen → "Mein Unternehmen" wählen → Info-Zeile + Aufgabe,
+  // Dropdown befüllen → "Modellunternehmen" wählen → Info-Zeile + Aufgabe,
   // sobald die YAML-Daten tatsächlich geladen sind
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
