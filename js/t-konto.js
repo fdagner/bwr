@@ -138,7 +138,7 @@ function generiereTKonto() {
       randomZahlWertHaben = "";
     }
 
-    tkontoHTML += '<table style="margin: 0 auto;border-collapse: collapse;width:650px;background-color:#fff"><tbody><tr><th style="width:25%;text-align:left" >Soll</th><th style="text-align:center;" colspan="2" >' + kontoAuswahl + '</th><th style="width:25%;text-align:right;" >Haben</th></tr>';
+    tkontoHTML += '<table class="t-konto" style="margin: 0 auto;border-collapse: collapse;width:650px;background-color:#fff"><tbody><tr><th style="width:25%;text-align:left" >Soll</th><th style="text-align:center;" colspan="2" >' + kontoAuswahl + '</th><th style="width:25%;text-align:right;" >Haben</th></tr>';
 
     tkontoHTML += '<tr style="border-top: 2px solid #AAAAAA">' +
       `<td style="border-top: 2px solid #AAAAAA;width:25%; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; max-width: 160px">${abSollWert}&nbsp;</td>` +
