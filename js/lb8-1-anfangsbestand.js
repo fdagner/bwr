@@ -72,7 +72,7 @@ function waehleZufallsKonten() {
 const formatBetrag2 = v => v.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 function tkKopf(kontoLabelTitel) {
-  return `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;table-layout:fixed;">
+  return `<table class="tkonto" style="border-collapse:collapse;width:100%;min-width:470px;background:#fff;font-size:1.0em;table-layout:fixed;">
     <thead><tr>
       <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
       <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${kontoLabelTitel}</span></th>
@@ -118,7 +118,7 @@ function renderBilanzTabelle(bilanz) {
   const leerPassiv = 'style="width:25%;border-left: 1px solid #AAAAAA;padding-left: 6px;"';
   const leerWertFirst = 'style="width:25%;text-align:right;padding-right: 4px;"';
   return `
-<table style="border-collapse: collapse;font-family:calibri;background-color:#fff;width:700px;table-layout:fixed;line-height:1;">
+<table style="border-collapse: collapse;font-family:calibri;background-color:#fff;width:700px;min-width: 700px;table-layout:fixed;line-height:1;">
   <tbody>
     <tr style="background-color: #ccc;">
       <th style="width:25%;text-align:left;padding-left:6px;">Aktiva</th>
