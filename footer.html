@@ -14,13 +14,22 @@
     <img src="media/pic/oer.svg" alt="OER-Input" style="min-width: 120px; max-width: 12%; margin-top: 10px;">
 </footer>
 <script>
-  // Aktuelle Seite ermitteln
-  const aktuelleSeite = window.location.pathname || '/';
+  // Prüfen, ob die Seite lokal läuft
+  const isLocal = window.location.hostname === 'localhost' 
+               || window.location.hostname === '127.0.0.1'
+               || window.location.hostname === '';
 
-  fetch('https://counter.meinbwr.de/counter.php?page=' + encodeURIComponent(aktuelleSeite))
-    .then(r => r.json())
-    .then(data => {
-      console.log('Zähler aktualisiert:', data);
-    })
-    .catch(() => {});
+  if (!isLocal) {
+    // Aktuelle Seite ermitteln
+    const aktuelleSeite = window.location.pathname || '/';
+
+      fetch('https://counter.meinbwr.de/counter.php?page=' + encodeURIComponent(aktuelleSeite))
+      .then(response => response.json())
+      .then(data => {
+        console.log('Zähler aktualisiert:', data);
+              })
+      .catch(error => {
+        console.log('Zähler konnte nicht geladen werden');
+      });
+  }
 </script>
