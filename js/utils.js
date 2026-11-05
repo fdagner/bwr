@@ -182,6 +182,14 @@ const KINDERFREIBETRAG = {
 window.KINDERFREIBETRAG = KINDERFREIBETRAG;
 
 // ============================================================================
+// FAMILIE – Sozialleistungen & familienbezogene Beträge
+// ============================================================================
+// ============================================================================
+// Kindergeld pro Kind und Monat (aktueller Satz, Stand 2025/2026: 259,00 €)
+const KINDERGELD = 259; // € pro Kind und Monat
+window.KINDERGELD = KINDERGELD;
+
+// ============================================================================
 // EINKOMMENSTEUERTARIF (aktuell gültiger Jahrgang: jahr-Feld unten)
 // ============================================================================
 // Grundfreibetrag (Ledige) laut jahr-Feld; für Verheiratete gilt der doppelte
@@ -286,10 +294,6 @@ function verzugszinsen(betrag, satz, tage) {
 // ============================================================================
 const MAHNPAUSCHALE = 40; // € je Mahnung
 window.MAHNPAUSCHALE = MAHNPAUSCHALE;
-
-// Kindergeld pro Kind und Monat (aktueller Satz, Stand 2025/2026: 259,00 €)
-const KINDERGELD = 259; // € pro Kind und Monat
-window.KINDERGELD = KINDERGELD;
 
 window.BASISZINSSATZ = BASISZINSSATZ;
 window.BASISZINSSATZ_SEIT = BASISZINSSATZ_SEIT;
@@ -612,3 +616,4 @@ window.kontoName = kontoName;
 window.kontoLangBez = kontoLangBez;
 window.kontenDerKlasse = kontenDerKlasse;
 window.kontenDerArt = kontenDerArt;
+
