@@ -13,3 +13,14 @@
     </p>
     <img src="media/pic/oer.svg" alt="OER-Input" style="min-width: 120px; max-width: 12%; margin-top: 10px;">
 </footer>
+<script>
+  // Aktuelle Seite ermitteln
+  const aktuelleSeite = window.location.pathname || '/';
+
+  fetch('https://counter.meinbwr.de/counter.php?page=' + encodeURIComponent(aktuelleSeite))
+    .then(r => r.json())
+    .then(data => {
+      console.log('Zähler aktualisiert:', data);
+    })
+    .catch(() => {});
+</script>

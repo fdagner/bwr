@@ -141,6 +141,116 @@ button svg {
   height: 20px;
 }
 
+/* ============================================
+   AKTIONS-BUTTONS (Zufallswerte / Daten übernehmen)
+   Einheitliche Aktionsbuttons mit dezentem
+   Rand-Umlauf als Aufmerksamkeits-Hinweis:
+   alle ~9 s läuft ein farbiger Lichtbogen einmal
+   um den Button (Mask-Ring), danach bleibt Ruhe –
+   auf Seiten mit beiden Buttons laufen sie leicht
+   versetzt (nacheinander).
+   ============================================ */
+
+@property --btn-winkel {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.btn-aktion-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-zufall,
+.btn-uebernehmen {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  font-weight: 600;
+  /* Weiß mit blauem Rand, Icons/blauer Text; nur bei Hover blau gefüllt */
+  background-color: var(--surface);
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.btn-zufall:hover:not(:disabled),
+.btn-uebernehmen:hover:not(:disabled) {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+.btn-zufall svg,
+.btn-uebernehmen svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Umlaufender Lichtbogen */
+.btn-zufall::before,
+.btn-uebernehmen::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  padding: 2px;
+  border-radius: 8px;
+
+  background: conic-gradient(
+    from var(--btn-winkel),
+    transparent 0deg,
+    transparent 270deg,
+    #cc2eb2 330deg,
+    transparent 360deg
+  );
+
+  /* Nur den äußeren Rand sichtbar lassen */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  opacity: 0;
+  animation: btn-rand-umlauf 9s linear infinite;
+  pointer-events: none;
+}
+
+.btn-uebernehmen::before {
+  animation-delay: 2.00s;
+}
+
+@keyframes btn-rand-umlauf {
+  0% {
+    --btn-winkel: 0deg;
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  17% {
+    --btn-winkel: 360deg;
+    opacity: 1;
+  }
+  22% {
+    opacity: 0;
+  }
+  100% {
+    --btn-winkel: 360deg;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-zufall::before,
+  .btn-uebernehmen::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 .icon {
   padding: 10px;
   border: none;

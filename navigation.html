@@ -12,7 +12,7 @@
       var name = (localStorage.getItem('myCompany') || '').trim();
       if (name) {
         el.innerHTML = 'Modellunternehmen: <strong>' + name + '</strong>';
-        el.style.background = '#1466a6';
+        el.style.background = '--accent-color';
         el.style.color = '#fff';
         el.style.fontSize = '14px';
       } else {
