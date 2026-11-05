@@ -219,8 +219,13 @@ button svg {
 }
 
 .btn-uebernehmen::before {
+  animation-delay: 4.00s;
+}
+
+.btn-zufall::before {
   animation-delay: 2.00s;
 }
+
 
 @keyframes btn-rand-umlauf {
   0% {

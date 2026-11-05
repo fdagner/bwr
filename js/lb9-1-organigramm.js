@@ -189,19 +189,13 @@ function erstelleModell() {
   zeichne();
 }
 
-function neuePersonen() {
-  if (!modell) return;
-  const used = new Set([modell.ebenen[0][0].lines[1]]);
-  [...modell.ebenen.slice(1).flat(), ...modell.produkte, modell.stab].forEach(nd => nd.namen.forEach(k => { nd.lines[k] = neuePerson(used); }));
-  baueEditor();
-  zeichne();
-}
 
 // ───────────────────────────────────────────────
 // Editor
 
 function baueEditor() {
   const el = $('editor');
+  let orgaFeldNummer = 0;   // eindeutige id/name für die dynamischen Inputs
   el.innerHTML = '';
   const zeile = (titel, node) => {
     const d = document.createElement('div');
@@ -212,6 +206,8 @@ function baueEditor() {
     node.lines.forEach((t, k) => {
       const i = document.createElement('input');
       i.value = t;
+      i.id = `orga-feld-${++orgaFeldNummer}`;
+      i.name = i.id;
       i.setAttribute('aria-label', `${titel}, Zeile ${k + 1}`);
       i.addEventListener('input', () => { node.lines[k] = i.value; zeichne(); });
       d.appendChild(i);

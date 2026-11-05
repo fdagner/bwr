@@ -10,6 +10,7 @@ const WP   = kontoLabel('1500');   // Wertpapiere des Anlagevermögens
 const BK   = kontoLabel('2800');   // Bank
 const EAWP = kontoLabel('5650');   // Erträge aus Abgang von WP
 const VAWP = kontoLabel('7460');   // Verluste aus Abgang von WP
+const DDE  = kontoLabel('5780');   // Dividendenerträge
 
 // ============================================================================
 // BENUTZERDEFINIERTE UNTERNEHMEN - Integration
@@ -189,6 +190,19 @@ function getYearForLastPoint(data) {
 let chart;
 
 async function updateChartAndText() {
+    // Bei Dividenden wird kein Chart gebraucht → direkt die Dividenden-Aufgabe erzeugen.
+    // AG-Unternehmen wird für jede Aufgabe zufällig gewählt.
+    if (wertpapiereArtInput.value === 'dividende') {
+        updateDividendeUI();
+        const agUnternehmen = (await loadYAML()).filter(c => c.rechtsform === 'AG');
+        if (agUnternehmen.length === 0) return;
+        const randomCompany = agUnternehmen[Math.floor(Math.random() * agUnternehmen.length)];
+        insertDynamicText(new Date(), randomCompany, 0, [], '');
+        return;
+    }
+
+    updateDividendeUI();
+
     const timeframe = document.querySelector("#timeframe").value;
     const period = parseInt(document.querySelector("#period").value, 10);
     const year = parseInt(document.querySelector("#year").value, 10);
@@ -346,9 +360,20 @@ function renderChart(data, company, timeframe) {
     return chart.render();
 }
 
-document.querySelector("#wertpapiereArtInput").addEventListener("change", updateChartAndText);
+// Wrapper für den Art-Wechsel: UI umschalten
+function onArtChange() {
+    updateDividendeUI();
+    updateChartAndText();
+}
+
+// Wrapper für „Neue Aufgabe"
+function onNeueAufgabe() {
+    updateChartAndText();
+}
+
+document.querySelector("#wertpapiereArtInput").addEventListener("change", onArtChange);
 document.querySelector("#unternehmen").addEventListener("change", updateChartAndText);
-document.querySelector("#generate-chart").addEventListener("click", updateChartAndText);
+document.querySelector("#generate-chart").addEventListener("click", onNeueAufgabe);
 
 // Event-Listener für Käufer-Dropdown (aktualisiert nur den Text, nicht das Chart)
 document.addEventListener('DOMContentLoaded', () => {
@@ -381,6 +406,28 @@ function generateRandomStep() {
     const possibleValues = [-0.2, -0.1, -0.05, 0.05, 0.1, 0.2];
     const randomIndex = Math.floor(Math.random() * possibleValues.length);
     return possibleValues[randomIndex];
+}
+
+// ============================================================================
+// DIVIDENDENERTRÄGE – Helfer
+// ============================================================================
+
+// Sichtbarkeit der Zeitraum/Einheit-Steuerung + Chart je nach gewählter Art
+function updateDividendeUI() {
+    const art = document.getElementById('wertpapiereArtInput')?.value;
+    const isDividende = art === 'dividende';
+    const chartElement = document.getElementById('chart');
+    const zeitraumControls = document.getElementById('zeitraumControls');
+    const agControls = document.getElementById('agUnternehmenControls');
+    if (chartElement) {
+        chartElement.style.display = isDividende ? 'none' : '';
+    }
+    if (zeitraumControls) {
+        zeitraumControls.style.display = isDividende ? 'none' : '';
+    }
+    if (agControls) {
+        agControls.style.display = isDividende ? 'none' : '';
+    }
 }
 
 // ============================================================================
@@ -464,6 +511,139 @@ function aktienErstelleBelegButton(daten) {
                 `;
 }
 
+// ============================================================================
+// DIVIDENDENERTRÄGE – Aufgabe + Lösung
+// ============================================================================
+
+// Beleg-URL für den Dividenden-Geschäftsfall: Kontoauszug (Gutschrift der Dividende)
+function dividendenErzeugeURLFuerBeleg(daten) {
+    const params = new URLSearchParams();
+
+    params.set('beleg', 'kontoauszug');
+    params.set('vorlage', 'kontoauszug3.svg');
+
+    const d = daten.datum;
+    params.set('tag', d.getDate().toString().padStart(2, '0'));
+    params.set('monat', (d.getMonth() + 1).toString().padStart(2, '0'));
+    params.set('jahr', d.getFullYear().toString());
+
+    // Vorgang auf dem Bankkonto: Gewinnausschüttung der AG (Feld im Beleg begrenzt auf 45 Zeichen)
+    let vorgangText = `Dividende ${daten.bezeichnung} (${daten.anzahl} Stk.)`;
+    if (vorgangText.length > 45) {
+        vorgangText = `Dividende ${daten.bezeichnung}`;
+    }
+    if (vorgangText.length > 45) {
+        vorgangText = 'Gewinnausschüttung';
+    }
+    params.set('vorgang1', vorgangText);
+    // Gutschrift = positiver Betrag
+    params.set('wertstellung1', daten.betrag.toString());
+
+    // Kontoinhaber = eigenes Unternehmen (Kontoauszug-Kontodaten aus der YAML)
+    if (daten.kontoinhaber) {
+        params.set('kontoinhaber', daten.kontoinhaber);
+    }
+
+    return `belege.html?${params.toString()}`;
+}
+
+function dividendenErstelleBelegButton(daten) {
+    const url = dividendenErzeugeURLFuerBeleg(daten);
+    return `
+                    <button class="geschaeftsfall-beleg-button"
+                            onclick="window.open('${url}', '_blank')"
+                            title="Kontoauszug als SVG-Beleg öffnen"
+                            style="width: 100%; padding: 10px 12px; font-size: 14px;">
+                        🏦 Kontoauszug erstellen
+                    </button>
+                `;
+}
+
+function insertDividendenText(date, company, formattedDate, kaeuferName) {
+    // Zufällige Werte für diesen Geschäftsfall
+    const anzahl = (Math.floor(Math.random() * ((1000 - 100) / 10 + 1)) * 10 + 100);
+    const stueck = Math.round((Math.floor(Math.random() * 991) + 10) / 100 * 100) / 100;
+    const gesamt = Math.round(anzahl * stueck * 100) / 100;
+
+    const agName = `${company.name} ${company.rechtsform}`.trim();
+
+    // Zufällige Fall-Variante: 1 = Stückdividende angegeben, 2 = Gesamtdividende laut Kontoauszug
+    const variante = Math.random() < 0.5 ? 1 : 2;
+
+    // Daten für Beleg-Button
+    const belegDaten = {
+        bezeichnung: agName,
+        anzahl: anzahl,
+        betrag: gesamt,
+        datum: date,
+        kontoinhaber: kaeuferName
+    };
+
+    let text = `<h2>Aufgabe</h2>`;
+    if (variante === 1) {
+        text += `Am ${formattedDate} hat ${kaeuferName} im Rahmen der Gewinnausschüttung der „${agName}“
+eine Stückdividende über ${formatBetrag(stueck)} € für ${anzahl} ${agName} Aktien per
+Bankgutschrift erhalten. Bilde den entsprechenden Buchungssatz.`;
+    } else {
+        text += `Laut Kontoauszug erhalten wir eine Gesamtdividende in Höhe von
+${formatCurrency(gesamt)} für ${anzahl} ${agName} Aktien auf dem Bankkonto
+gutgeschrieben. Bilde den entsprechenden Buchungssatz.`;
+    }
+
+    text += `<h2 class="loesung">Lösung</h2>`;
+
+    // Nebenrechnung nur bei der Stückdividende-Variante (Gesamtdividende wird direkt genannt)
+    if (variante === 1) {
+        text += `
+        <h4>Nebenrechnung</h4>
+        <table style="border-collapse: collapse;white-space:nowrap;width:400px;margin: 0 0">
+            <tr>
+                <td>Stückdividende je Aktie</td>
+                <td style="padding-left:6px;text-align:right;">${formatBetrag(stueck)} €</td>
+            </tr>
+            <tr>
+                <td>x Anzahl Aktien</td>
+                <td style="padding-left:6px;text-align:right;">${anzahl}</td>
+            </tr>
+            <tr>
+                <td style="border-top: solid 1px #ccc">= Gesamtdividende</td>
+                <td style="border-top: solid 1px #ccc;padding-left:6px;text-align:right;">${formatCurrency(gesamt)}</td>
+            </tr>
+        </table>`;
+    }
+
+    text += `
+        <h4>Buchungssatz</h4>
+        <table style="margin:0;white-space:nowrap;font-family:courier;min-width:560px;"><tbody>
+            <tr>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">${BK}</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 160px;text-align: right" tabindex="1">${formatCurrency(gesamt)}</td>
+            <td style="text-align: center;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 80px" tabindex="1">an</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 150px;max-width: 150px" tabindex="1">${DDE}</td>
+            <td style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width: 160px;max-width: 140px;text-align: right" tabindex="1">${formatCurrency(gesamt)}</td>
+            </tr></tbody></table>`;
+
+    // Ausgabe im HTML – über JoditEditor.setContent, damit Editor-Wert und Quelle synchron bleiben
+    const dynamicTextElement = document.getElementById("Container");
+    if (window.JoditEditor && dynamicTextElement._jodit) {
+        window.JoditEditor.setContent(dynamicTextElement, text);
+    } else {
+        dynamicTextElement.innerHTML = text;
+    }
+
+    // Button-Column aktualisieren
+    const buttonColumn = document.getElementById('aktien-button-column');
+    if (buttonColumn) {
+        buttonColumn.innerHTML = dividendenErstelleBelegButton(belegDaten);
+    }
+
+    // Aufgabe steht komplett (Text + Lösung): Editor (Jodit) aktivieren
+    if (window.JoditEditor && !dynamicTextElement._jodit) {
+        dynamicTextElement.setAttribute('data-jodit-init', '1');
+        try { window.JoditEditor.init(dynamicTextElement); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+    }
+}
+
 function insertDynamicText(date, company, lastPrice, chartData, imgURI) {
     // Formatierung des Datums ins deutsche Format
     date.setDate(date.getDate() - 1);
@@ -472,6 +652,12 @@ function insertDynamicText(date, company, lastPrice, chartData, imgURI) {
     // Käufer/Verkäufer aus Dropdown holen
     const kaeuferSelect = document.getElementById('aktienKaeufer');
     const kaeuferName = kaeuferSelect?.value || '[Unternehmen]';
+
+    // Dividendenerträge: eigener Aufgaben-Zweig (kein Chart, kein Kurswert)
+    if (wertpapiereArtInput.value === 'dividende') {
+        insertDividendenText(date, company, formattedDate, kaeuferName);
+        return;
+    }
 
     // Berechnung der Anzahl der Aktien (Zufallswert zwischen 100 und 1000, in 10er-Schritten)
     let anzahlAktien = Math.floor(Math.random() * (1000 - 100 + 1) / 10) * 10 + 100;
