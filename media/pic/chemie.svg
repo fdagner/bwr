@@ -49,25 +49,7 @@
     <clipPath id="clipPath168">
       <path id="path170" d="m22 21.48c0-1.386-0.547-2.558-1.641-3.519-1.093-0.961-2.414-1.441-3.961-1.441-1.57 0-2.906 0.48-4 1.441-1.093 0.961-1.636 2.133-1.636 3.519 0 1.36 0.543 2.52 1.636 3.481 1.122 0.984 2.457 1.48 4 1.48 1.547 0 2.868-0.496 3.961-1.48 1.094-0.961 1.641-2.121 1.641-3.481z" inkscape:connector-curvature="0"/>
     </clipPath>
-    <clipPath id="clipPath172">
-      <path id="path174" d="m16328-11.37h13.75v13.244h-13.75v-13.244z" inkscape:connector-curvature="0"/>
-    </clipPath>
-    <radialGradient id="radialGradient176" gradientUnits="userSpaceOnUse" cy="-4.0835" cx="16325" r="18.85">
-      <stop id="stop178" style="stop-color:#ffffff;stop-opacity:0" offset="0"/>
-      <stop id="stop180" style="stop-color:#ffffff;stop-opacity:.74510" offset=".89410"/>
-      <stop id="stop182" style="stop-color:#ffffff" offset="1"/>
-    </radialGradient>
-    <mask id="mask184">
-      <g id="g186">
-        <g id="g188" clip-path="url(#clipPath172)">
-          <path id="path190" style="fill:url(#radialGradient176)" d="m16328-11.37h13.75v13.244h-13.75v-13.244z" inkscape:connector-curvature="0"/>
-        </g>
-      </g>
-    </mask>
-    <radialGradient id="radialGradient192" gradientUnits="userSpaceOnUse" cy="-4.0835" cx="16325" r="18.85">
-      <stop id="stop194" style="stop-color:#ffffff" offset="0"/>
-      <stop id="stop196" style="stop-color:#ffffff" offset="1"/>
-    </radialGradient>
+
   </defs>
   <g id="g10" transform="matrix(1.25 0 0 -1.25 0 45.55)">
     <g id="g12">
@@ -129,13 +111,7 @@
                   <g id="g208" clip-path="url(#clipPath164)">
                     <g id="g210">
                       <g id="g212">
-                        <g id="g214" clip-path="url(#clipPath168)">
-                          <g id="g216" transform="matrix(.00002122 .8 .90608 .00002122 19.955 -13046)">
-                            <g id="g220" mask="url(#mask184)">
-                              <path id="path222" style="fill-rule:evenodd;fill:url(#radialGradient192)" d="m22 21.48c0-1.386-0.547-2.558-1.641-3.519-1.093-0.961-2.414-1.441-3.961-1.441-1.57 0-2.906 0.48-4 1.441-1.093 0.961-1.636 2.133-1.636 3.519 0 1.36 0.543 2.52 1.636 3.481 1.122 0.984 2.457 1.48 4 1.48 1.547 0 2.868-0.496 3.961-1.48 1.094-0.961 1.641-2.121 1.641-3.481z" inkscape:connector-curvature="0"/>
-                            </g>
-                          </g>
-                        </g>
+                        <g id="g214" clip-path="url(#clipPath168)"/>
                       </g>
                     </g>
                   </g>
