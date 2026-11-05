@@ -779,16 +779,32 @@ stripForeignNamespaces(g);
 // Erst anhängen, damit getBBox() messen kann
 svgContainer.appendChild(g);
 
-// Gemessener Inhalt (Fallback)
-const bb = measureRenderedBBox(g);
-
 // viewBox lesen und prüfen
 let ref = null; // {x, y, w, h}
 const vbAttr = svgElement.getAttribute?.('viewBox') || svgElement.getAttribute?.('viewbox');
+let vw = 0, vh = 0;
 if (vbAttr) {
     const p = vbAttr.trim().split(/[\s,]+/).map(Number);
     if (p.length === 4 && p.every(Number.isFinite) && p[2] > 0 && p[3] > 0) {
-        const [vx, vy, vw, vh] = p;
+        vw = p[2]; vh = p[3];
+    }
+}
+
+// Gemessener Inhalt (Fallback)
+let bb = measureRenderedBBox(g);
+// Pathologische BBox abfangen: manche Logos enthalten Elemente, die weit
+// außerhalb liegen (Inkscape-Artefakte; ehemals chemie.svg mit einem Punkt
+// bei y ≈ -13.000). Dann vertraut der Code unten der deklarierten viewBox –
+// sonst würde das Logo winzig skaliert und wäre unsichtbar. Bewusste
+// kleine Überstände (z. B. lur.svg) bleiben unangetastet.
+if (bb && vw > 0 && vh > 0 && (bb.height > vh * 20 || bb.width > vw * 20)) {
+    bb = { x: 0, y: 0, width: 0, height: 0 };
+}
+
+if (vbAttr) {
+    const p = vbAttr.trim().split(/[\s,]+/).map(Number);
+    if (p.length === 4 && p.every(Number.isFinite) && p[2] > 0 && p[3] > 0) {
+        const [vx, vy] = p;
         const tol = 0.05; // 5 % Toleranz
         const inside =
             bb.width === 0 || bb.height === 0 ||   // nicht messbar → viewBox vertrauen
