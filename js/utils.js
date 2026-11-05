@@ -285,6 +285,11 @@ function verzugszinsen(betrag, satz, tage) {
 // HIER einfach anpassen, wenn sich der gesetzliche Pauschalbetrag ändert.
 // ============================================================================
 const MAHNPAUSCHALE = 40; // € je Mahnung
+window.MAHNPAUSCHALE = MAHNPAUSCHALE;
+
+// Kindergeld pro Kind und Monat (aktueller Satz, Stand 2025/2026: 259,00 €)
+const KINDERGELD = 259; // € pro Kind und Monat
+window.KINDERGELD = KINDERGELD;
 
 window.BASISZINSSATZ = BASISZINSSATZ;
 window.BASISZINSSATZ_SEIT = BASISZINSSATZ_SEIT;

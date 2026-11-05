@@ -73,8 +73,8 @@ const einnahmenBausteine = {
     'Als weiteres Einkommen bringt {person2} monatlich {betrag} Euro netto ein.',
   ],
   kindergeld: [
-    'Für {anzahlKinder} {kinderWort} beträgt das Kindergeld {betrag} Euro (je 259 Euro pro Kind).',
-    'Das Familieneinkommen wird durch {betrag} Euro Kindergeld pro Monat ergänzt ({anzahlKinder} {kinderWort} × 259 Euro).',
+    'Für {anzahlKinder} {kinderWort} beträgt das Kindergeld {betrag} Euro (je {kindergeld} Euro pro Kind).',
+    'Das Familieneinkommen wird durch {betrag} Euro Kindergeld pro Monat ergänzt ({anzahlKinder} {kinderWort} × {kindergeld} Euro).',
     'Zusätzlich fließen {betrag} Euro Kindergeld monatlich in die Haushaltskasse – für {anzahlKinder} {kinderWort}.',
   ],
   rente1: [
@@ -336,30 +336,30 @@ function erstelleHaushaltsplan(profil) {
     const g1 = randGlatt(1000, 1800);
     const uh = randGlatt(200, 500);
     const soz = randGlatt(100, 400);
-    const kg = 259; // 1 Kind
+    const kg = KINDERGELD; // 1 Kind
     einnahmen.push({ label: 'Gehalt', betrag: g1, satz: fuelleSatz(pick(einnahmenBausteine.gehalt1), { person1: name, betrag: formatEuro(g1) }) });
-    einnahmen.push({ label: 'Kindergeld (1 Kind)', betrag: kg, satz: fuelleSatz(pick(einnahmenBausteine.kindergeld), { betrag: formatEuro(kg), anzahlKinder: 1, kinderWort: 'Kind' }) });
+    einnahmen.push({ label: 'Kindergeld (1 Kind)', betrag: kg, satz: fuelleSatz(pick(einnahmenBausteine.kindergeld), { betrag: formatEuro(kg), anzahlKinder: 1, kinderWort: 'Kind', kindergeld: KINDERGELD }) });
     einnahmen.push({ label: 'Unterhalt', betrag: uh, satz: fuelleSatz(pick(einnahmenBausteine.unterhalt), { betrag: formatEuro(uh) }) });
     einnahmen.push({ label: 'Staatliche Unterstützung', betrag: soz, satz: fuelleSatz(pick(einnahmenBausteine.sozialhilfe), { betrag: formatEuro(soz) }) });
   } else if (profil.id === 'familie_gross') {
     const g1 = randGlatt(2000, 3500);
     const g2 = randGlatt(800, 1500);
     const anzahlKinder = 3;
-    const kg = 259 * anzahlKinder; // 777 €
+    const kg = KINDERGELD * anzahlKinder; // 3 Kinder
     const kinderWort = 'Kinder';
     einnahmen.push({ label: `Gehalt ${person1}`, betrag: g1, satz: fuelleSatz(pick(einnahmenBausteine.gehalt1), { person1, betrag: formatEuro(g1) }) });
     einnahmen.push({ label: `Gehalt ${person2}`, betrag: g2, satz: fuelleSatz(pick(einnahmenBausteine.gehalt2), { person2, betrag: formatEuro(g2) }) });
-    einnahmen.push({ label: `Kindergeld (${anzahlKinder} Kinder)`, betrag: kg, satz: fuelleSatz(pick(einnahmenBausteine.kindergeld), { betrag: formatEuro(kg), anzahlKinder, kinderWort }) });
+    einnahmen.push({ label: `Kindergeld (${anzahlKinder} Kinder)`, betrag: kg, satz: fuelleSatz(pick(einnahmenBausteine.kindergeld), { betrag: formatEuro(kg), anzahlKinder, kinderWort, kindergeld: KINDERGELD }) });
   } else {
     // junge Familie – 2 Kinder
     const g1 = randGlatt(1500, 3000);
     const g2 = randGlatt(800, 2000);
     const anzahlKinder = 2;
-    const kg = 259 * anzahlKinder; // 518 €
+    const kg = KINDERGELD * anzahlKinder; // 2 Kinder
     const kinderWort = 'Kinder';
     einnahmen.push({ label: `Gehalt ${person1}`, betrag: g1, satz: fuelleSatz(pick(einnahmenBausteine.gehalt1), { person1, betrag: formatEuro(g1) }) });
     einnahmen.push({ label: `Gehalt ${person2}`, betrag: g2, satz: fuelleSatz(pick(einnahmenBausteine.gehalt2), { person2, betrag: formatEuro(g2) }) });
-    einnahmen.push({ label: `Kindergeld (${anzahlKinder} Kinder)`, betrag: kg, satz: fuelleSatz(pick(einnahmenBausteine.kindergeld), { betrag: formatEuro(kg), anzahlKinder, kinderWort }) });
+    einnahmen.push({ label: `Kindergeld (${anzahlKinder} Kinder)`, betrag: kg, satz: fuelleSatz(pick(einnahmenBausteine.kindergeld), { betrag: formatEuro(kg), anzahlKinder, kinderWort, kindergeld: KINDERGELD }) });
   }
 
   // Optionale Mieteinnahmen (20% Chance)

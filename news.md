@@ -2,6 +2,7 @@
 - [neu] **Neuer Beleg** - [Mahnung](belege.html?beleg=mahnung)
 - [neu] **Neue Aufgabe** - [Eröffnung Bestandskonten](lb8-1-anfangsbestand.html)
 - [update] **Aufgabe Einkauf 8** - Rücksendung der Leihverpackung integriert [Einkauf](lb8-1-einkauf.html)
+- [update] **Aufgabe Aktien** - Buchung Dividende [Aktien](lb9-4-aktienkurs.html)
 - [update] **Aufgabe Verkauf 8** - Rücksendungen integriert [Verkauf](lb8-4-verkauf.html)
 - [update] **Aufgabe Gewinnschwelle** - Grafische Ermittlung [Gewinnschwelle](lb10-4-gewinnschwelle.html)
 
