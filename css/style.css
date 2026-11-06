@@ -1382,6 +1382,19 @@ legend {
   border-radius: 8px;
 }
 
+/* Neue einheitliche Export-Buttons (js/export-buttons.js) */
+.export-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 16px;
+  background-color: var(--surface-dark);
+  border-radius: 8px;
+}
+
 /* Responsive Anpassungen */
 @media (max-width: 768px) {
   fieldset {
