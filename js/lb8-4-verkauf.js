@@ -342,7 +342,7 @@ function verkaufErstelleZufallssatz() {
     verkaufWert = parseFloat(verkaufWert) / 10;
   }
   const verkaufNettoWert = formatCurrency(verkaufWert);
-  let verkaufBruttoWert = formatCurrency(Math.round(verkaufWert * 0.19 + verkaufWert));
+  let verkaufBruttoWert = formatCurrency(Math.round(verkaufWert * UST_REGEL / 100 + verkaufWert));
   let verkaufRandomNettowert;
 
   // Anzeige wenn Brutto oder Netto
@@ -370,14 +370,14 @@ function verkaufErstelleZufallssatz() {
   verkaufBerechnung_skontoBetrag = roundToTwoDecimals(verkaufBerechnung_skontoBetrag);
   verkaufBerechnung_skontoBetrag = roundToTwoDecimals(verkaufBerechnung_skontoBetrag);
   verkaufBerechnung_skontoBetrag = parseFloat(verkaufBerechnung_skontoBetrag);
-  let verkaufBerechnung_skontoBetrag_brutto = (verkaufBerechnung_skontoBetrag) + (verkaufBerechnung_skontoBetrag * 0.19);
+  let verkaufBerechnung_skontoBetrag_brutto = (verkaufBerechnung_skontoBetrag) + (verkaufBerechnung_skontoBetrag * UST_REGEL / 100);
   let verkaufBerechnung_vorsteuer_berichtigung = verkaufBerechnung_skontoBetrag_brutto - verkaufBerechnung_skontoBetrag;
   let verkaufVorsteuer_berichtigung = formatCurrency(verkaufBerechnung_vorsteuer_berichtigung);
   let verkaufSkontoBetrag_brutto = formatCurrency(verkaufBerechnung_skontoBetrag_brutto);
 
 
   let verkaufSkontoBetrag = formatCurrency(verkaufBerechnung_skontoBetrag);
-  let verkaufBerechnung_USTWert = verkaufBerechnung_nettoWert * 0.19;
+  let verkaufBerechnung_USTWert = verkaufBerechnung_nettoWert * UST_REGEL / 100;
   verkaufBerechnung_USTWert = roundToTwoDecimals(verkaufBerechnung_USTWert);
   let verkaufBerechnung_bruttoWert = verkaufBerechnung_nettoWert + (verkaufBerechnung_USTWert);
   let verkaufRandomSupply_Bezugskosten;
@@ -385,11 +385,11 @@ function verkaufErstelleZufallssatz() {
   // Berechnung mit Bezugskosten
   if (verkaufMitBezugskosten.checked) {
     verkaufRandomSupply_Bezugskosten = verkaufArray_Supply_Bezugskosten[Math.floor(Math.random() * verkaufArray_Supply_Bezugskosten.length)];
-    verkaufBerechnung_USTWert = (verkaufBerechnung_nettoWert + parseFloat(verkaufRandom_Bezugskosten)) * 0.19;
+    verkaufBerechnung_USTWert = (verkaufBerechnung_nettoWert + parseFloat(verkaufRandom_Bezugskosten)) * UST_REGEL / 100;
     verkaufBerechnung_USTWert = roundToTwoDecimals(verkaufBerechnung_USTWert);
     verkaufBerechnung_bruttoWert = verkaufBerechnung_nettoWert + (verkaufBerechnung_USTWert) + parseFloat(verkaufRandom_Bezugskosten);
     verkaufBerechnung_bruttoWert = roundToTwoDecimals(verkaufBerechnung_bruttoWert);
-    verkaufBruttoWert = roundToTwoDecimals((verkaufWert * 0.19 + verkaufWert) + parseFloat(verkaufRandom_Bezugskosten) * 0.19 + parseFloat(verkaufRandom_Bezugskosten));
+    verkaufBruttoWert = roundToTwoDecimals((verkaufWert * UST_REGEL / 100 + verkaufWert) + parseFloat(verkaufRandom_Bezugskosten) * UST_REGEL / 100 + parseFloat(verkaufRandom_Bezugskosten));
     verkaufBruttoWert = formatCurrency(verkaufBruttoWert);
   } else {
     verkaufRandom_Bezugskosten = 0;
@@ -467,7 +467,7 @@ function verkaufErstelleZufallssatz() {
     ? 100
     : 10 + Math.floor(Math.random() * 14) * 5;                       // 10 – 75 %
   let verkaufNettoRuecksendung = roundToTwoDecimals(parseFloat(verkaufNettoWertWare) * verkaufGesendeteProzent / 100);
-  let verkaufUSTWertRuecksendung = roundToTwoDecimals(verkaufNettoRuecksendung * 0.19);
+  let verkaufUSTWertRuecksendung = roundToTwoDecimals(verkaufNettoRuecksendung * UST_REGEL / 100);
   let verkaufBruttoRuecksendung = roundToTwoDecimals(verkaufNettoRuecksendung + verkaufUSTWertRuecksendung);
   const verkaufUSTRuecksendung = formatCurrency(verkaufUSTWertRuecksendung);
   const verkaufZielverkaufspreisRuecksendung = formatCurrency(verkaufNettoRuecksendung);
@@ -835,11 +835,11 @@ if (!buttonColumn) {
       verkaufAntwortOutput += `<tbody>`;
       verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td>Skonto (brutto)</td><td style="padding-left:16px;text-align:right;">${verkaufAntwort_skontoBetrag_brutto}</td>`;
-      verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">119 %</td>`;
+      verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">${100 + UST_REGEL} %</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr>`;
       verkaufAntwortOutput += `<td>- Umsatzsteuer</td><td style="padding-left:16px;text-align:right;">${verkaufAntwort_vorsteuer_berichtigung}</td>`;
-      verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">19 %</td>`;
+      verkaufAntwortOutput += `<td style="padding-left:6px;text-align:right;">${UST_REGEL} %</td>`;
       verkaufAntwortOutput += `</tr>`;
       verkaufAntwortOutput += `<tr border-top: solid 1px #ccc>`;
       verkaufAntwortOutput += `<td style="border-top: solid 1px #ccc">= Skonto (netto)</td>`;
@@ -1330,7 +1330,7 @@ Erlöskonto (immer im HABEN):
 - 5000 UEFE – Umsatzerlöse aus Fertigerzeugnissen
 
 Umsatzsteuer (immer im HABEN):
-- 4800 UST – Umsatzsteuer 19 %
+- 4800 UST – Umsatzsteuer ${UST_REGEL} %
 
 Zahlungskonto (immer im SOLL):
 - 2400 FO – Forderungen gegenüber Kunden (Verkauf auf Ziel / Rechnung)
@@ -1351,8 +1351,8 @@ Rabattberechnung:
 - Rabatt mindert den Zielverkaufspreis
 
 Umsatzsteuerberechnung:
-- Wenn Bezugskosten: (Zielverkaufspreis + Bezugskosten) × 19 % = Umsatzsteuer
-- Wenn keine Bezugskosten: Zielverkaufspreis × 19 % = Umsatzsteuer
+- Wenn Bezugskosten: (Zielverkaufspreis + Bezugskosten) × ${UST_REGEL} % = Umsatzsteuer
+- Wenn keine Bezugskosten: Zielverkaufspreis × ${UST_REGEL} % = Umsatzsteuer
 
 Häufige Schülerfehler Buchungssatz:
 - Soll und Haben vertauscht (Forderung gehört ins Soll, Erlös ins Haben)
@@ -1416,8 +1416,8 @@ Nebenrechnung Skonto (Verkäufer-Perspektive):
   − Skonto brutto (= Rechnungsbetrag × Skontosatz %)
   = Überweisungsbetrag (= tatsächlicher Eingang auf dem Bankkonto)
 
-  Skonto brutto           119 %
-  − Umsatzsteueranteil     19 %
+  Skonto brutto           ${100 + UST_REGEL} %
+  − Umsatzsteueranteil     ${UST_REGEL} %
   = Skonto netto          100 %
 
 Buchungssatz Skontobuchungssatz (Verkäufer):
@@ -1478,8 +1478,8 @@ Häufige Schülerfehler Differenzkalkulation:
 
 Allgemeine Hinweise für alle Aufgabentypen:
 - Netto = ohne Umsatzsteuer; Brutto = mit Umsatzsteuer
-- Wenn „netto" angegeben: Brutto = Netto × 1,19
-- Wenn „brutto" angegeben: Netto = Brutto ÷ 1,19
+- Wenn "netto" angegeben: Brutto = Netto × ${1 + UST_REGEL / 100}
+- Wenn "brutto" angegeben: Netto = Brutto ÷ ${1 + UST_REGEL / 100}
 - Erlöskonten stehen immer im Haben beim normalen Buchungssatz
 - Forderungskonten (2400 FO) stehen beim Verkauf immer im Soll
 - Beim Skontobuchungssatz wechselt das Erlösberichtigungskonto (5001 EBFE) ins Soll

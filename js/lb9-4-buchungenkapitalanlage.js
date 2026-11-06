@@ -162,7 +162,7 @@ const geschaeftsfallTypen = {
     ],
     mitVorsteuer: false,
     mitUSt: true,
-    ustSatz: 19,
+    ustSatz: UST_REGEL,
     ustKonto: UST,
     geschaeftsfaelle: [
       { beschreibung: 'Für eine vermietete Lagerhalle geht auf dem betrieblichen Bankkonto ', vorgang:'Vermietung Lagerhalle'  },

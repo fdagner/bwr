@@ -31,7 +31,7 @@ const URL_PARAM_CONFIG = {
         bezugskostenart: { elementId: 'bezugskostenArtInput', type: 'input' },
         
         // Steuer & Zahlung
-        umsatzsteuer: { elementId: 'umsatzsteuerInput', type: 'input', default: '19' },
+        umsatzsteuer: { elementId: 'umsatzsteuerInput', type: 'input', default: String(UST_REGEL) },
         zahlungsziel: { elementId: 'zahlungszielInput', type: 'input', default: '30' },
         skonto: { elementId: 'skontoInput', type: 'input', default: '2' },
         skontofrist: { elementId: 'skontofristInput', type: 'input', default: '20' },
@@ -83,7 +83,7 @@ const URL_PARAM_CONFIG = {
     quittung: {
         // Beträge
         netto: { elementId: 'quittungNettoInput', type: 'input' },
-        ust: { elementId: 'quittungUSTInput', type: 'input', default: '19' },
+        ust: { elementId: 'quittungUSTInput', type: 'input', default: String(UST_REGEL) },
         
         // Weitere Daten
         zweck: { elementId: 'quittungZweckInput', type: 'input' },
@@ -105,7 +105,7 @@ const URL_PARAM_CONFIG = {
     kassenbon: {
         // Beträge
         netto: { elementId: 'kassenbonNettoInput', type: 'input' },
-        ust: { elementId: 'kassenbonUSTInput', type: 'input', default: '19' },
+        ust: { elementId: 'kassenbonUSTInput', type: 'input', default: String(UST_REGEL) },
         
         // Weitere Daten
         bezeichnung: { elementId: 'kassenbonZweckInput', type: 'input' },

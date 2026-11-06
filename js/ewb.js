@@ -42,7 +42,7 @@
 
     // Funktion zum Berechnen der UST
     function ewbBerechneUST(nettobetrag) {
-      return Math.round(nettobetrag * 0.19 * 100) / 100;
+      return Math.round(nettobetrag * UST_REGEL / 100 * 100) / 100;
     }
 
     // Funktion zum Generieren der Tabelle
@@ -91,7 +91,7 @@
             <tr style="background-color: #d0d0d0;">
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Kunde</th>
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Zweifelhafte<br>Forderung</th>
-              <th style="border: 1px solid #000; padding: 8px; text-align: center;">UST 19 %</th>
+              <th style="border: 1px solid #000; padding: 8px; text-align: center;">UST ${UST_REGEL} %</th>
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Zweifelhafte<br>Forderung netto</th>
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Geschätzter<br>Ausfall</th>
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Wertberichtigung</th>
@@ -131,7 +131,7 @@
             <tr style="background-color: #d0d0d0;">
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Kunde</th>
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Zweifelhafte<br>Forderung</th>
-              <th style="border: 1px solid #000; padding: 8px; text-align: center;">UST 19 %</th>
+              <th style="border: 1px solid #000; padding: 8px; text-align: center;">UST ${UST_REGEL} %</th>
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Zweifelhafte<br>Forderung netto</th>
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Geschätzter<br>Ausfall</th>
               <th style="border: 1px solid #000; padding: 8px; text-align: center;">Wertberichtigung</th>

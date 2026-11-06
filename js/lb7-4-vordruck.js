@@ -225,7 +225,7 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
     listennetto = nettoBetrag;
   }
   const rabattBetrag = listennetto - nettoBetrag;
-  const ust    = Math.round(nettoBetrag * 0.19);
+  const ust    = Math.round(nettoBetrag * UST_REGEL / 100);
   const brutto = nettoBetrag + ust;
 
   const mengePool   = [1, 2, 4, 5, 10].filter((m) => listennetto % m === 0);
@@ -317,7 +317,7 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
     }
     if (leerFelder.has("ziel")) {
       if (rueckwaerts)
-        loesungHTML += `Zielverkaufspreis: ${fmtVD(brutto)} ÷ 1,19 = <strong>${fmtVD(nettoBetrag)}</strong><br>`;
+        loesungHTML += `Zielverkaufspreis: ${fmtVD(brutto)} ÷ ${1 + UST_REGEL / 100} = <strong>${fmtVD(nettoBetrag)}</strong><br>`;
       else
         loesungHTML += `Zielverkaufspreis: ${fmtVD(listennetto)} − ${fmtVD(rabattBetrag)} = <strong>${fmtVD(nettoBetrag)}</strong><br>`;
     }
@@ -331,7 +331,7 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
   } else {
     if (leerFelder.has("nettobetrag")) {
       if (rueckwaerts)
-        loesungHTML += `Nettobetrag: ${fmtVD(brutto)} ÷ 1,19 = <strong>${fmtVD(listennetto)}</strong><br>`;
+        loesungHTML += `Nettobetrag: ${fmtVD(brutto)} ÷ ${1 + UST_REGEL / 100} = <strong>${fmtVD(listennetto)}</strong><br>`;
       else
         loesungHTML += `Nettobetrag = Gesamtpreis = <strong>${fmtVD(listennetto)}</strong><br>`;
     }
@@ -475,14 +475,14 @@ Berechnungsschritte auf der Rechnung:
 
 Ohne Rabatt:
   Menge × Einzelpreis = Gesamtpreis (= Nettobetrag)
-  + Umsatzsteuer 19 %
+  + Umsatzsteuer ${UST_REGEL} %
   = Rechnungsbetrag
 
 Mit Rabatt:
   Menge × Einzelpreis = Gesamtpreis (= Nettobetrag / Listenpreis)
   − Rabatt x %
   = Zielverkaufspreis
-  + Umsatzsteuer 19 % (auf den Zielverkaufspreis!)
+  + Umsatzsteuer ${UST_REGEL} % (auf den Zielverkaufspreis!)
   = Rechnungsbetrag
 
 Wichtige Hinweise:

@@ -900,6 +900,87 @@ summary:hover {
    FOOTER
    ============================================ */
 
+
+.site-footer {
+    background-color: var(--surface);
+    color: #444;
+    border-top: 1px solid #e5e5e5;
+    padding: 35px 20px 20px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.footer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 0.6fr;
+    gap: 40px;
+}
+
+.footer-section h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 12px;
+}
+
+.footer-section p {
+    margin: 0 0 10px;
+}
+
+.site-footer a {
+    color: #0077cc;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+    color: #005999;
+    text-decoration: underline;
+}
+
+.footer-legal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.footer-bottom {
+    max-width: 1100px;
+    margin: 30px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+    text-align: center;
+}
+
+.footer-bottom img {
+    width: 120px;
+    max-width: 30%;
+    height: auto;
+}
+
+.footer-bottom p {
+    margin: 5px 0 0;
+    font-size: 0.8rem;
+    color: #777;
+}
+
+/* Responsive Darstellung */
+@media (max-width: 700px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .footer-bottom {
+        margin-top: 25px;
+    }
+}
+
+
+
 footer {
   background-color: var(--surface);
   max-width: 1000px;
@@ -2180,7 +2261,7 @@ svg text[contenteditable="true"] {
 }
 
 .output-wrapper .jodit-container {
-  min-width: 580px !important;
+  min-width: 330px !important;
 }
 
 .jodit-wysiwyg .seitenumbruch {
@@ -2194,13 +2275,18 @@ svg text[contenteditable="true"] {
    überlappt/überläuft dort – erst ab 900 px ist genug Platz. */
 @media (max-width: 900px) {
   .output-wrapper { flex-wrap: wrap; }
-  .output-wrapper > #Container { min-width: 100% !important; }
-  .output-wrapper > #button-column {
+  .output-wrapper > #Container,
+  .output-wrapper > .container-680 {
+    min-width: 100% !important;
     width: 100% !important;
-    flex-shrink: 1 !important;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  }
+  .output-wrapper > #button-column,
+  .output-wrapper > .beleg-button-col {
+    width: 100% !important;
+  }
+  .output-wrapper .jodit-container {
+    min-width: 0 !important;
+    width: 100% !important;
   }
 }
 
@@ -2295,3 +2381,19 @@ svg text[contenteditable="true"] {
   }
 }
 
+
+/* Beleg-Spalten-Layout (einheitlich) */
+.output-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  align-items: flex-start; 
+}
+.container-680 {
+min-width: 680px;
+flex: 1 1 0%;
+}
+.beleg-button-col {
+  min-width: 100px;
+  max-width: 100%;
+}

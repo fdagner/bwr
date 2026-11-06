@@ -205,7 +205,7 @@ function erstelleZufallssatz() {
   const nettoOderBrutto = Math.random() < 0.5 ? 'Netto' : 'Brutto';
   const Wert = generateRandomNettoWert();
   const nettoWert = formatCurrency(Wert);
-  let bruttoWert = formatCurrency(Math.round(Wert * 0.19 + Wert));
+  let bruttoWert = formatCurrency(Math.round(Wert * UST_REGEL / 100 + Wert));
   let randomNettowert;
 
   // Anzeige wenn Brutto oder Netto
@@ -236,16 +236,16 @@ function erstelleZufallssatz() {
   }
 
   let antwortNettowert = formatCurrency(berechnung_nettoWert);
-  let berechnung_USTWert = berechnung_nettoWert * 0.19;
+  let berechnung_USTWert = berechnung_nettoWert * UST_REGEL / 100;
   let berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert);
   let randomSupply_Bezugskosten
 
     // Berechnung mit Bezugskosten
   if (inputWerkstoffe.checked && mitBezugskosten.checked) {
     randomSupply_Bezugskosten = array_Supply_Bezugskosten[Math.floor(Math.random() * array_Supply_Bezugskosten.length)];
-    berechnung_USTWert = (berechnung_nettoWert + parseFloat(random_Bezugskosten)) * 0.19;
+    berechnung_USTWert = (berechnung_nettoWert + parseFloat(random_Bezugskosten)) * UST_REGEL / 100;
     berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert) + parseFloat(random_Bezugskosten);
-    bruttoWert = formatCurrency(Math.round(Wert * 0.19 + Wert) + parseFloat(random_Bezugskosten) * 0.19 + parseFloat(random_Bezugskosten));
+    bruttoWert = formatCurrency(Math.round(Wert * UST_REGEL / 100 + Wert) + parseFloat(random_Bezugskosten) * UST_REGEL / 100 + parseFloat(random_Bezugskosten));
   } else {
     random_Bezugskosten = "";
     randomSupply_Bezugskosten = "";

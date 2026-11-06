@@ -237,7 +237,7 @@ const gfEinfach = [
 const gfEinfachUst = [
   {
     id: 'kauf_lw_ziel_ust',
-    typ: 'einfach_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'einfach_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'FP',
     soll: 'FP', haben: 'VE',
     kontFilter: ['FP', 'VE'],
@@ -257,7 +257,7 @@ const gfEinfachUst = [
   },
   {
     id: 'kauf_ma_ziel_ust',
-    typ: 'einfach_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'einfach_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'MA',
     soll: 'MA', haben: 'VE',
     kontFilter: ['MA', 'VE'],
@@ -279,7 +279,7 @@ const gfEinfachUst = [
   },
   {
     id: 'kauf_bga_ziel_ust',
-    typ: 'einfach_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'einfach_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'BGA',
     soll: 'BGA', haben: 'VE',
     kontFilter: ['BGA', 'VE'],
@@ -299,7 +299,7 @@ const gfEinfachUst = [
   },
     {
     id: 'kauf_bga_kasse_ust',
-    typ: 'einfach_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'einfach_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'BGA',
     soll: 'BGA', haben: 'KA',
     kontFilter: ['BGA', 'KA'],
@@ -317,7 +317,7 @@ const gfEinfachUst = [
   },
   {
     id: 'kauf_bm_ziel_ust',
-    typ: 'einfach_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'einfach_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'BGA',
     soll: 'BM', haben: 'VE',
     kontFilter: ['BM', 'VE'],
@@ -337,7 +337,7 @@ const gfEinfachUst = [
   },
     {
     id: 'kauf_bm_kasse_ust',
-    typ: 'einfach_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'einfach_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'BGA',
     soll: 'BM', haben: 'KA',
     kontFilter: ['BM', 'KA'],
@@ -357,7 +357,7 @@ const gfEinfachUst = [
   },
   {
     id: 'kauf_fp_bank_ust',
-    typ: 'einfach_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'einfach_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'FP',
     soll: 'FP', haben: 'BK',
     kontFilter: ['FP', 'BK'],
@@ -382,7 +382,7 @@ const gfEinfachUst = [
 const gfVerkaufUst = [
   {
     id: 'verkauf_fp_fo_ust',
-    typ: 'verkauf_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'verkauf_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'alle',
     soll: 'FO', haben: 'FP',
     kontFilter: ['FO', 'FP'],
@@ -402,7 +402,7 @@ const gfVerkaufUst = [
   },
   {
     id: 'verkauf_ma_fo_ust',
-    typ: 'verkauf_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'verkauf_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'MA',
     soll: 'FO', haben: 'MA',
     kontFilter: ['FO', 'MA'],
@@ -422,7 +422,7 @@ const gfVerkaufUst = [
   },
   {
     id: 'verkauf_bm_fo_ust',
-    typ: 'verkauf_ust', mitUst: true, ustSatz: 0.19,
+    typ: 'verkauf_ust', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'alle',
     soll: 'FO', haben: 'BM',
     kontFilter: ['FO', 'BM'],
@@ -447,7 +447,7 @@ const gfVerkaufUst = [
 const gfZusammengesetzt = [
   {
     id: 'kauf_lw_ka_ve',
-    typ: 'zusammengesetzt', mitUst: true, ustSatz: 0.19,
+    typ: 'zusammengesetzt', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'FP',
     kontFilter: ['FP', 'KA', 'VE'],
     belegtyp: null,
@@ -471,7 +471,7 @@ const gfZusammengesetzt = [
   },
   {
     id: 'kauf_lw_bk_ve',
-    typ: 'zusammengesetzt', mitUst: true, ustSatz: 0.19,
+    typ: 'zusammengesetzt', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'FP',
     kontFilter: ['FP', 'BK', 'VE'],
     belegtyp: null,
@@ -495,7 +495,7 @@ const gfZusammengesetzt = [
   },
   {
     id: 'kauf_ma_bk_ve',
-    typ: 'zusammengesetzt', mitUst: true, ustSatz: 0.19,
+    typ: 'zusammengesetzt', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'MA',
     kontFilter: ['MA', 'BK', 'VE'],
     belegtyp: null,
@@ -519,7 +519,7 @@ const gfZusammengesetzt = [
   },
   {
     id: 'verkauf_bm_ka_bk',
-    typ: 'zusammengesetzt', mitUst: true, ustSatz: 0.19,
+    typ: 'zusammengesetzt', mitUst: true, ustSatz: UST_REGEL / 100,
     branchenKat: 'alle',
     kontFilter: ['KA', 'BK', 'BM'],
     belegtyp: null,
@@ -889,7 +889,7 @@ function erstelleZufallsGeschaeftsfall() {
   let VorsteuerFormatted = formatCurrency(0), bruttoFormatted = nettoFormatted;
 
   if (typ.mitUst) {
-    const ustSatz = typ.ustSatz || 0.19;
+    const ustSatz = typ.ustSatz || UST_REGEL / 100;
     Vorsteuer    = roundToTwoDecimals(nettoBetrag * ustSatz);
     bruttoBetrag = roundToTwoDecimals(nettoBetrag + Vorsteuer);
     VorsteuerFormatted = formatCurrency(Vorsteuer);
@@ -962,7 +962,7 @@ function erstelleZufallsGeschaeftsfall() {
     bruttoFormatted,
     anteil1,
     anteil2,
-    ustProzent: typ.ustSatz ? roundToTwoDecimals(typ.ustSatz * 100) : 19,
+    ustProzent: typ.ustSatz ? roundToTwoDecimals(typ.ustSatz * 100) : UST_REGEL,
   };
 }
 
@@ -1242,8 +1242,8 @@ Buchungssatz Verkauf mit USt (Verkauf FP auf Rechnung):
 Vorsteuer-/USt-Berechnung:
 - Nettobetrag × 0,19 = VORST / USt
 - Bruttobetrag = Nettobetrag + VORST
-- Wenn „brutto" angegeben: Netto = Brutto ÷ 1,19
-- Wenn „netto" angegeben: Brutto = Netto × 1,19
+- Wenn "brutto" angegeben: Netto = Brutto ÷ ${1 + UST_REGEL / 100}
+- Wenn "netto" angegeben: Brutto = Netto × ${1 + UST_REGEL / 100}
 
 Häufige Schülerfehler:
 - Soll und Haben vertauscht

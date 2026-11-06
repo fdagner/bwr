@@ -362,7 +362,7 @@ if (rbtProzent === 0) {
   // =============================================
 
   // Umsatzsteuer
-  const gesamtVorst  = Math.round(ak * 0.19 * 100) / 100;
+  const gesamtVorst  = Math.round(ak * UST_REGEL / 100 * 100) / 100;
   const gesamtBrutto = Math.round((ak + gesamtVorst) * 100) / 100;
 
   // Abschreibung zeitanteilig
@@ -600,7 +600,7 @@ AK = Anschaffungspreis
    + Anschaffungsnebenkosten (Transport, Montage, Zulassungsgebühren, Zölle)
 Die Umsatzsteuer gehört NICHT zu den AK (→ wird als Vorsteuer abgezogen).
 
-### Buchungssatz Kauf (auf Ziel, 19 % USt)
+### Buchungssatz Kauf (auf Ziel, ${UST_REGEL} % USt)
 Anlagenkonto (z. B. 0700 MA)   Nettobetrag (= AK)
 2600 VORST                      Vorsteuerbetrag     an   4400 VE   Bruttobetrag
 
@@ -647,7 +647,7 @@ ${rbtProzent > 0 ? '− Treuerabatt (' + formatProzent(rbtProzent) + '): − ' +
 ${nbk > 0 ? '+ ' + conf.nebenkostenArt + ': + ' + formatEuro(nbk) : ''}
 = Anschaffungskosten (AK): ${formatEuro(ak)}
 
-Vorsteuer 19 % auf ${formatEuro(ak)}: ${formatEuro(gesamtVorst)}
+Vorsteuer ${UST_REGEL} % auf ${formatEuro(ak)}: ${formatEuro(gesamtVorst)}
 Brutto (VE): ${formatEuro(gesamtBrutto)}
 
 Buchungssatz Kauf:

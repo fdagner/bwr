@@ -423,6 +423,7 @@
         // übernehmen. AUSNAHME: data-jodit-init="1" (expliziter Seiten-Opt-in,
         // z. B. lb8-2-bestellmenge, wo der Container die gerenderte Aufgabe
         // inkl. Diagramm-PNG enthält und trotzdem editierbar sein soll).
+        // JODIT-CUSTOM: Belege-Guard (nicht entfernen bei Updates)
         const hatBelege = el.querySelector && (el.querySelector('svg') || el.querySelector('img'));
         if (hatBelege && el.getAttribute('data-jodit-init') !== '1') return null;
         if (el.closest && el.closest('.jodit-workplace, .jodit-wysiwyg')) return null;
@@ -431,6 +432,7 @@
         if (el._joditInitializing) return null;
         el._joditInitializing = true;
         // Stale cleanup (ohne destruct, um Duplikation zu vermeiden)
+        // JODIT-CUSTOM: Stale-Cleanup ohne destruct (nicht entfernen bei Updates)
         if (el._jodit) {
             el._jodit = null;
             if (el.classList) el.classList.remove('jodit-container', 'jodit-container_editor', 'jodit');
@@ -449,12 +451,15 @@
         try {
             editor = Jodit.make(el, {
                 height: 'auto',
-                minHeight: 120,
+                minHeight: 120,        // Jodits Default (200 px) überschreiben
                 toolbar: true,
                 toolbarAdaptive: false,
                 // Kein externes CDN (cdnjs.cloudflare.com) - Ace und Beautify werden
                 // lokal aus js/ geladen. Ace haengt seine Untermodule (mode-html,
                 // theme-idle_fingers, worker-html, ext-searchbox) an dieselbe Basis-URL an.
+                // JODIT-CUSTOM: Cloudflare/CDN-Vermeidung (nicht entfernen bei Updates)
+                // Bei Jodit-Update: diese Optionen beibehalten, sonst lädt Jodit
+                // von cdnjs.cloudflare.com (Datenabfluss!).
                 sourceEditorCDNUrlsJS: ['js/ace.js'],
                 beautifyHTMLCDNUrlsJS: ['js/beautify.min.js', 'js/beautify-html.min.js'],
                 buttons: [
@@ -524,6 +529,10 @@
                     }
                 }
             });
+            // Jodits inline min-width:200px entfernen, damit CSS (330px / 0 mobil) greift
+            if (editor && editor.container) {
+                editor.container.style.removeProperty('min-width');
+            }
         } catch (e) {
             console.error('Jodit.make failed', e);
             el._joditInitializing = false;

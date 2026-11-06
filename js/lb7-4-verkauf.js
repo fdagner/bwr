@@ -237,17 +237,17 @@ function bsEinfachUstV(gf) {
       startRow("Listenverkaufspreis netto", listennetto) +
       opRow(`- Rabatt ${rabattProzent} %`, "", rabattBetrag) +
       resRow("Zielverkaufspreis", nettoBetrag) +
-      opRow("+ Umsatzsteuer (19 %)", "+", Umsatzsteuer) +
+      opRow("+ Umsatzsteuer (${UST_REGEL} %)", "+", Umsatzsteuer) +
       resRow("Rechnungsbetrag", bruttoBetrag);
   } else if (!rabatt && angabeIstBrutto) {
     rows =
       startRow("Rechnungsbetrag", bruttoBetrag) +
-      opRow("- Umsatzsteuer (19 %)", "", Umsatzsteuer) +
+      opRow("- Umsatzsteuer (${UST_REGEL} %)", "", Umsatzsteuer) +
       resRow("Verkaufspreis netto", nettoBetrag);
   } else {
     rows =
       startRow("Verkaufspreis netto", nettoBetrag) +
-      opRow("+ Umsatzsteuer (19 %)", "+", Umsatzsteuer) +
+      opRow("+ Umsatzsteuer (${UST_REGEL} %)", "+", Umsatzsteuer) +
       resRow("Rechnungsbetrag", bruttoBetrag);
   }
 
@@ -370,9 +370,9 @@ function erstelleZufallsGeschaeftsfallV() {
   }
 
   const rabattBetrag = listennetto - nettoBetrag;
-  const Umsatzsteuer = nettoBetrag * 19 / 100;
+  const Umsatzsteuer = nettoBetrag * UST_REGEL / 100;
   const bruttoBetrag = nettoBetrag + Umsatzsteuer;
-  const listenbrutto = listennetto + Math.round(listennetto * 0.19);
+  const listenbrutto = listennetto + Math.round(listennetto * UST_REGEL / 100);
 
   const angabeIstBrutto = mitRabatt ? false : Math.random() < 0.5;
 
@@ -499,19 +499,19 @@ function erstelleLoesungsTextV(gf) {
       fmtLine("Listenverkaufspreis netto", gf.listennetto),
       fmtLine(`- Rabatt ${gf.rabattProzent} %`, gf.rabattBetrag, "- "),
       fmtLine("= Zielverkaufspreis (netto)", gf.nettoBetrag),
-      fmtLine("+ Umsatzsteuer (19 %)", gf.Umsatzsteuer, "+ "),
+      fmtLine("+ Umsatzsteuer (${UST_REGEL} %)", gf.Umsatzsteuer, "+ "),
       fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
     ].join("\n");
   } else if (gf.angabeIstBrutto) {
     nr = [
       fmtLine("Rechnungsbetrag", gf.bruttoBetrag),
-      fmtLine("- Umsatzsteuer (19 %)", gf.Umsatzsteuer, "- "),
+      fmtLine("- Umsatzsteuer (${UST_REGEL} %)", gf.Umsatzsteuer, "- "),
       fmtLine("= Verkaufspreis netto", gf.nettoBetrag),
     ].join("\n");
   } else {
     nr = [
       fmtLine("Verkaufspreis netto", gf.nettoBetrag),
-      fmtLine("+ Umsatzsteuer (19 %)", gf.Umsatzsteuer, "+ "),
+      fmtLine("+ Umsatzsteuer (${UST_REGEL} %)", gf.Umsatzsteuer, "+ "),
       fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
     ].join("\n");
   }
@@ -571,7 +571,7 @@ Pädagogischer Ablauf (genau so beginnen):
 Konten (nur durch Fragen klären, nicht nennen oder erklären):
 - FO – Forderungen aus Lieferungen und Leistungen (Verkauf auf Ziel)
 - UEFE – Umsatzerlöse aus Fertigerzeugnissen (Nettobetrag nach Rabatt)
-- UST – Umsatzsteuer (19 % auf den Nettobetrag nach Rabatt)
+- UST - Umsatzsteuer (${UST_REGEL} % auf den Nettobetrag nach Rabatt)
 
 Buchungslogik (nur durch Fragen herausfinden lassen):
 Verkauf auf Ziel: Aktivkonto (FO) im Soll, Ertragskonto (UEFE) und Passivkonto (UST) im Haben.
@@ -600,11 +600,11 @@ Ertragskonten (Zugang im HABEN):
 - UEFE – Umsatzerlöse aus Fertigerzeugnissen: Nettobetrag des Verkaufs (nach Rabatt)
 
 Passivkonten (Zugang im HABEN):
-- UST – Umsatzsteuer: 19 % des Nettobetrags, bei jeder Ausgangsrechnung
+- UST - Umsatzsteuer: ${UST_REGEL} % des Nettobetrags, bei jeder Ausgangsrechnung
 
 Buchungslogik (Verkauf auf Ziel):
   FO  | Bruttobetrag  | an | UEFE | Nettobetrag (nach Rabatt)
-      |               |    | UST  | 19 % × Netto
+      |               |    | UST  | ${UST_REGEL} % × Netto
 
 Der Rabatt wird NICHT gebucht! Er erscheint nur in der Nebenrechnung.
 
@@ -612,19 +612,19 @@ Nebenrechnung – 4 Fälle:
 
 Fall 1: Angabe Verkaufspreis netto, kein Rabatt
   Verkaufspreis netto       10.000 €
-  + Umsatzsteuer (19 %)    + 1.900 €
+  + Umsatzsteuer (${UST_REGEL} %)    + 1.900 €
   Rechnungsbetrag           11.900 €
 
 Fall 2: Angabe Rechnungsbetrag (brutto), kein Rabatt
   Rechnungsbetrag           11.900 €
-  − Umsatzsteuer (19 %)    − 1.900 €
+  − Umsatzsteuer (${UST_REGEL} %)    − 1.900 €
   Verkaufspreis netto       10.000 €
 
 Fall 3: Angabe Listenverkaufspreis netto, mit Rabatt (z. B. 10 %)
   Listenverkaufspreis netto   10.000 €
   − Rabatt 10 %               − 1.000 €
   Zielverkaufspreis            9.000 €
-  + Umsatzsteuer (19 %)       + 1.710 €
+  + Umsatzsteuer (${UST_REGEL} %)       + 1.710 €
   Rechnungsbetrag             10.710 €
 
 
@@ -648,7 +648,7 @@ Gib ganz am Ende den Buchungssatz mit einer Tabellenstruktur in html aus (falls 
       <td style="padding:2px 10px 2px 0;">Verkaufspreis netto</td>
       <td style="border-width: 0;padding:1px 0;text-align:right;font-family:courier;" colspan="2">4.000,00&nbsp;€</td>
     </tr><tr>
-      <td style="border-width: 0;padding:1px 10px 1px 2px;color:#444;">+ Umsatzsteuer (19 %)</td>
+      <td style="border-width: 0;padding:1px 10px 1px 2px;color:#444;">+ Umsatzsteuer (${UST_REGEL} %)</td>
       <td style="border-width: 0;padding:1px 0;text-align:right;font-family:courier;color:#444;" colspan="2">+&nbsp;760,00&nbsp;€</td>
     </tr><tr style="border-top:1px solid #aaa;">
       <td style="border-width: 0;padding:2px 10px 2px 0;">Rechnungsbetrag</td>

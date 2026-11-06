@@ -19,7 +19,7 @@
     
     // Funktion zum Berechnen der UST
     function pwbBerechneUST(nettobetrag) {
-      return Math.round(nettobetrag * 0.19 * 100) / 100;
+      return Math.round(nettobetrag * UST_REGEL / 100 * 100) / 100;
     }
 
     // Funktion zum Generieren der Tabelle
@@ -77,13 +77,13 @@
             <tr>
               <td style="border: 1px solid #000; padding: 8px; text-align: left;">einwandfreie Forderungen brutto</td>
               <td style="border: 1px solid #000; padding: 8px; text-align: right; min-width: 120px;">${pwbFormatiereEuro(forderungenBrutto)}</td>
-              <td style="border: 1px solid #000; padding: 8px; text-align: right; min-width: 80px; color: #0066cc;">119 %</td>
+              <td style="border: 1px solid #000; padding: 8px; text-align: right; min-width: 80px; color: #0066cc;">${100 + UST_REGEL} %</td>
               <td style="border: 1px solid #000; padding: 8px; text-align: right; min-width: 80px;"></td>
             </tr>
             <tr style="border-top: 2px solid #000;">
               <td style="border: 1px solid #000; padding: 8px; text-align: left;">- Umsatzsteuer</td>
               <td style="border: 1px solid #000; padding: 8px; text-align: right; color: #0066cc;">${pwbFormatiereEuro(ust)}</td>
-              <td style="border: 1px solid #000; padding: 8px; text-align: right; color: #0066cc;">19 %</td>
+              <td style="border: 1px solid #000; padding: 8px; text-align: right; color: #0066cc;">${UST_REGEL} %</td>
               <td style="border: 1px solid #000; padding: 8px; text-align: right;"></td>
             </tr>
             <tr style="border-top: 2px solid #000;">

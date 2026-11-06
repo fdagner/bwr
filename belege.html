@@ -64,6 +64,14 @@
   <script src="js/html2canvas.min.js"></script>
   <script src="js/js-yaml.min.js"></script>
   <script src="js/utils.js?v=12"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  ['umsatzsteuerInput', 'quittungUSTInput', 'kassenbonUSTInput'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = UST_REGEL;
+  });
+});
+</script>
   
   <script src="js/clipboard.min.js"></script>
 </head>

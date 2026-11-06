@@ -123,7 +123,7 @@ const fallbeispiele = [
   // ── STAATLICHE / SOZIALE LEISTUNGEN ─────────────────────────────────────
   {
     typ: 'transfer',
-    beschreibung: (n) => `Familie ${n} hat zwei minderjährige Kinder. Monatlich überweist die Familienkasse Kindergeld auf das Konto der Eltern.`,
+    beschreibung: (n) => `Familie ${n} hat zwei minderjährige Kinder. Monatlich überweist die Familienkasse Kindergeld (${KINDERGELD} € pro Kind) auf das Konto der Eltern.`,
     quellen: [
       { akteur: 'Familienkasse / Staat', pfeilRechts: '—', pfeilLinks: 'Kindergeld', quelle: 'Staatliche Leistungen', einkommensart: 'Kindergeld' }
     ],

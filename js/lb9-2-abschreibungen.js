@@ -170,7 +170,7 @@ function erstelleAufgabenSet(anlage, ak, nd, afaBetrag) {
   const prozent         = parseFloat(((1 / nd) * 100).toFixed(2)).toLocaleString('de-DE');
 
   // Kauf-Buchungssatz bleibt gleich
-  const kaufVorst  = Math.round(ak * 0.19 * 100) / 100;
+  const kaufVorst  = Math.round(ak * UST_REGEL / 100 * 100) / 100;
   const kaufBrutto = ak + kaufVorst;
 
   const fragen = [
@@ -237,7 +237,7 @@ Abschreibungssatz: <span class="val">${prozent}&nbsp;%</span>`
     <td style="border-with:0;text-align:right;">${formatEuro(kaufBrutto)}</td>
   </tr>
 </table>
-Netto (AK): ${formatEuro(ak)} &nbsp;|&nbsp; Vorsteuer 19&nbsp;%: ${formatEuro(kaufVorst)} &nbsp;|&nbsp; Brutto: ${formatEuro(kaufBrutto)}`,
+Netto (AK): ${formatEuro(ak)} &nbsp;|&nbsp; Vorsteuer ${UST_REGEL}&nbsp;%: ${formatEuro(kaufVorst)} &nbsp;|&nbsp; Brutto: ${formatEuro(kaufBrutto)}`,
     },
     // 8 – Buchungssatz AfA  ← ERSETZT den bisherigen Eintrag
     {
@@ -663,7 +663,7 @@ function erstelleRechnungURL(anlage, ak, nd, lieferant) {
   const monat = (now.getMonth() + 1).toString().padStart(2, '0');
   const jahr  = now.getFullYear().toString();
 
-  const kaufVorst  = Math.round(ak * 0.19 * 100) / 100;
+  const kaufVorst  = Math.round(ak * UST_REGEL / 100 * 100) / 100;
   const brutto     = ak + kaufVorst;
 
   const params = new URLSearchParams();
@@ -753,7 +753,7 @@ Nach vollständiger Abschreibung verbleibt ein **symbolischer Restwert von 1,00 
 
 ### Buchungssätze
 
-**Kauf auf Ziel (Eingangsrechnung, 19 % USt):**
+**Kauf auf Ziel (Eingangsrechnung, ${UST_REGEL} % USt):**
 0700 MA (oder 0840 FP)   Nettobetrag (= AK)
 2600 VORST               Vorsteuerbetrag    an    4400 VE    Bruttobetrag
 
@@ -781,14 +781,14 @@ Wenn der Schüler eine Aufgabe vollständig gelöst hat:
 function erstelleKiPromptTextAfa(anlage, ak, nd, afaBetrag, aufgaben) {
   if (!anlage) return KI_BASE_PROMPT.replace('###AUFGABEN###', '(Noch keine Aufgabe generiert.)');
 
-  const kaufVorst  = Math.round(ak * 0.19 * 100) / 100;
+  const kaufVorst  = Math.round(ak * UST_REGEL / 100 * 100) / 100;
   const kaufBrutto = ak + kaufVorst;
   const f = formatEuro;
 
   const kontext = `Sachanlage: ${anlage.icon} ${anlage.bezeichnung}
 Anschaffungskosten: ${f(ak)}  |  Nutzungsdauer: ${nd} Jahre  |  Abschreibungsbetrag: ${f(afaBetrag)}
 Restbuchwert nach Jahr ${nd}: 1,00 € (Erinnerungswert)
-Buchungssatz Kauf (19 % USt, auf Ziel): ${anlage.kontoHaben} ${f(ak)} / ${VORST} ${f(kaufVorst)} an ${VE} ${f(kaufBrutto)}
+Buchungssatz Kauf (${UST_REGEL} % USt, auf Ziel): ${anlage.kontoHaben} ${f(ak)} / ${VORST} ${f(kaufVorst)} an ${VE} ${f(kaufBrutto)}
 Buchungssatz AfA: ${ABSA} ${f(afaBetrag)} an ${anlage.kontoHaben} ${f(afaBetrag)}`;
 
   const aufgabenText = aufgaben.map((a, i) => {

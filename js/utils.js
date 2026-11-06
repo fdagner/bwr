@@ -190,6 +190,18 @@ const KINDERGELD = 259; // € pro Kind und Monat
 window.KINDERGELD = KINDERGELD;
 
 // ============================================================================
+// STEUER – Umsatzsteuer (Mehrwertsteuer) Sätze
+// ============================================================================
+// HIER einfach anpassen, wenn sich die gesetzlichen Sätze ändern.
+//   UST_REGEL        – Regelsatz (derzeit 19 %)
+//   UST_ERMAESSIGT   – Ermäßigter Satz (derzeit 7 %, z. B. Lebensmittel, Bücher)
+// ============================================================================
+const UST_REGEL = 19;          // % Regelsatz
+const UST_ERMAESSIGT = 7;      // % ermäßigter Satz
+window.UST_REGEL = UST_REGEL;
+window.UST_ERMAESSIGT = UST_ERMAESSIGT;
+
+// ============================================================================
 // EINKOMMENSTEUERTARIF (aktuell gültiger Jahrgang: jahr-Feld unten)
 // ============================================================================
 // Grundfreibetrag (Ledige) laut jahr-Feld; für Verheiratete gilt der doppelte

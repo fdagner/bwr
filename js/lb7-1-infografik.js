@@ -577,7 +577,7 @@ const TEMPLATES = {
     source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "pie", labelPos: "inside", showLabels: "yes", thousandSep: "point", xaxis: "no",
-    data: [["Gehalt Person 1",2800],["Gehalt Person 2",1950],["Kindergeld",250],["Mieteinnahmen",480],["Sonstiges",120]]
+    data: [["Gehalt Person 1",2800],["Gehalt Person 2",1950],["Kindergeld",KINDERGELD],["Mieteinnahmen",480],["Sonstiges",120]]
   },
   haushalt_strom: {
     title: "Stromverbrauch im Jahresverlauf",
@@ -650,7 +650,7 @@ const TEMPLATES = {
     source: "Quelle: Interne Auswertung",
     unit: "€", xlabel: "",
     chartType: "donut", labelPos: "inside", showLabels: "yes", thousandSep: "point", xaxis: "no",
-    data: [["Gehalt (Vollzeit)",3400],["Gehalt (Teilzeit)",1200],["Kindergeld",250],["Mieteinnahmen",650],["Zinsen & Dividenden",120],["Nebentätigkeit",280]]
+    data: [["Gehalt (Vollzeit)",3400],["Gehalt (Teilzeit)",1200],["Kindergeld",KINDERGELD],["Mieteinnahmen",650],["Zinsen & Dividenden",120],["Nebentätigkeit",280]]
   },
   einkommen_entwicklung: {
     title: "Einkommensentwicklung über 10 Jahre",

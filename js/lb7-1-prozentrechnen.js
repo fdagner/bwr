@@ -128,11 +128,11 @@ const AUFGABEN_DB = [
   {
     sache: 'Laptop',
     einheit: '€',
-    kategorie: 'Umsatzsteuer (19 %)',
+    kategorie: `Umsatzsteuer (${UST_REGEL} %)`,
     emoji: '💻',
     daten: [
-      { G: 500,  p: 19 }, { G: 1000, p: 19 }, { G: 200, p: 19 },
-      { G: 300,  p: 19 }, { G: 700,  p: 19 }, { G: 400, p: 19 },
+      { G: 500,  p: UST_REGEL }, { G: 1000, p: UST_REGEL }, { G: 200, p: UST_REGEL },
+      { G: 300,  p: UST_REGEL }, { G: 700,  p: UST_REGEL }, { G: 400, p: UST_REGEL },
     ],
     textW:  (d) => `Der Nettopreis eines Laptops beträgt ${fmtE(d.G)} €. Der Umsatzsteuersatz beträgt ${d.p} %. Berechne den Umsatzsteuerbetrag.`,
     textG:  (d) => `Die Umsatzsteuer (${d.p} %) für einen Laptop beträgt ${fmtE(d.W)} €. Berechne den Nettopreis.`,
@@ -146,11 +146,11 @@ const AUFGABEN_DB = [
   {
     sache: 'Handwerkerrechnung',
     einheit: '€',
-    kategorie: 'Umsatzsteuer (19 %)',
+    kategorie: `Umsatzsteuer (${UST_REGEL} %)`,
     emoji: '🔧',
     daten: [
-      { G: 300,  p: 19 }, { G: 500,  p: 19 }, { G: 400, p: 19 },
-      { G: 600,  p: 19 }, { G: 800,  p: 19 }, { G: 1000, p: 19 },
+      { G: 300,  p: UST_REGEL }, { G: 500,  p: UST_REGEL }, { G: 400, p: UST_REGEL },
+      { G: 600,  p: UST_REGEL }, { G: 800,  p: UST_REGEL }, { G: 1000, p: UST_REGEL },
     ],
     textW:  (d) => `Eine Handwerkerrechnung beläuft sich netto auf ${fmtE(d.G)} €. Der Umsatzsteuersatz beträgt ${d.p} %. Berechne den Umsatzsteuerbetrag.`,
     textG:  (d) => `Auf einer Handwerkerrechnung stehen ${fmtE(d.W)} € Umsatzsteuer (${d.p} %). Berechne den Nettobetrag.`,
@@ -732,11 +732,11 @@ HÄUFIGE DENKFEHLER (nicht benennen, aber durch Fragen korrigieren):
 - Bei Originalpreis aus Rabattpreis: Schüler addieren den %-Satz direkt zum bekannten Preis.
   Frage: „Welche Prozentzahl entspricht dem Preis, den du kennst – 100 % oder weniger?"
 - Bei Nettopreis aus Bruttopreis: Schüler ziehen den %-Satz direkt ab.
-  Frage: „Der Bruttopreis entspricht 119 % – wie viel Prozent hat dann der Nettopreis?"
+  Frage: "Der Bruttopreis entspricht ${100 + UST_REGEL} % - wie viel Prozent hat dann der Nettopreis?"
 (Formuliere die Fragen mit den konkreten Zahlen der aktuellen Aufgabe, ohne Variablennamen.)
 
 UMSATZSTEUER:
-- 19 % Regelsteuersatz (Elektronik, Handwerk) | 7 % ermäßigt (Lebensmittel, Bücher)
+- ${UST_REGEL} % Regelsteuersatz (Elektronik, Handwerk) | ${UST_ERMAESSIGT} % ermäßigt (Lebensmittel, Bücher)
 - Korrekt: „Umsatzsteuer (USt.)" – nicht „Mehrwertsteuer"
 
 GESAMTABLAUF:

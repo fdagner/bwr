@@ -381,7 +381,7 @@ function berechneKalkulation(listenpreis, rabatt, skonto, bezugskosten) {
   const skontoBetrag = roundToTwoDecimals(zep * skonto / 100);
   const bep = roundToTwoDecimals(zep - skontoBetrag);
   const esp = roundToTwoDecimals(bep + bezugskosten);
-  const vorsteuer = roundToTwoDecimals(zep * 0.19);
+  const vorsteuer = roundToTwoDecimals(zep * UST_REGEL / 100);
   const brutto = roundToTwoDecimals(zep + vorsteuer);
   return { lep, rabattBetrag, rabatt, zep, skontoBetrag, skonto, bep, bezugskosten, esp, vorsteuer, brutto };
 }
@@ -429,7 +429,7 @@ function renderBuchungssatzBlock(kalk, kontoHauptStr, kontoBzkStr, konto2Str, oh
   const fmt = v => formatCurrency(v);
   const hasBzk = kalk.bezugskosten > 0;
   const nettoGes = roundToTwoDecimals(kalk.zep + kalk.bezugskosten);
-  const vstGes = roundToTwoDecimals(nettoGes * 0.19);
+  const vstGes = roundToTwoDecimals(nettoGes * UST_REGEL / 100);
   const bruttoGes = roundToTwoDecimals(nettoGes + vstGes);
 
   let rows = `
@@ -709,7 +709,7 @@ ${buchungssatzNichtGewaehlt_html}`;
       `Kalkulation A: LEP ${formatCurrency(kalkA.lep)} − Rabatt ${formatCurrency(kalkA.rabattBetrag)} = ZEP ${formatCurrency(kalkA.zep)} − Skonto ${formatCurrency(kalkA.skontoBetrag)} = BEP ${formatCurrency(kalkA.bep)} + BZK ${bzk_anzeige(kalkA.bezugskosten)} = ESP ${formatCurrency(kalkA.esp)}.`,
       `Kalkulation B: LEP ${formatCurrency(kalkB.lep)} − Rabatt ${formatCurrency(kalkB.rabattBetrag)} = ZEP ${formatCurrency(kalkB.zep)} − Skonto ${formatCurrency(kalkB.skontoBetrag)} = BEP ${formatCurrency(kalkB.bep)} + BZK ${bzk_anzeige(kalkB.bezugskosten)} = ESP ${formatCurrency(kalkB.esp)}.`,
       `Günstigeres Angebot: ${guenstigerBrief} (${guenstigerName}), Differenz ${diff}.`,
-      `Buchungssatz (Angebot ${guenstigerBrief}): ${formatKonto(kontoHauptStr, ohneNummern)} ${formatCurrency(kalkGuenstig.zep)}${kalkGuenstig.bezugskosten > 0 ? ' / ' + formatKonto(kontoBzkStr, ohneNummern) + ' ' + formatCurrency(kalkGuenstig.bezugskosten) : ''} / ${kVorstLabel} ${formatCurrency(kalkGuenstig.bezugskosten > 0 ? roundToTwoDecimals((kalkGuenstig.zep + kalkGuenstig.bezugskosten) * 0.19) : kalkGuenstig.vorsteuer)} an ${formatKonto(konto2Str, ohneNummern)} ${formatCurrency(kalkGuenstig.bezugskosten > 0 ? roundToTwoDecimals((kalkGuenstig.zep + kalkGuenstig.bezugskosten) * 1.19) : kalkGuenstig.brutto)}.`,
+      `Buchungssatz (Angebot ${guenstigerBrief}): ${formatKonto(kontoHauptStr, ohneNummern)} ${formatCurrency(kalkGuenstig.zep)}${kalkGuenstig.bezugskosten > 0 ? ' / ' + formatKonto(kontoBzkStr, ohneNummern) + ' ' + formatCurrency(kalkGuenstig.bezugskosten) : ''} / ${kVorstLabel} ${formatCurrency(kalkGuenstig.bezugskosten > 0 ? roundToTwoDecimals((kalkGuenstig.zep + kalkGuenstig.bezugskosten) * UST_REGEL / 100) : kalkGuenstig.vorsteuer)} an ${formatKonto(konto2Str, ohneNummern)} ${formatCurrency(kalkGuenstig.bezugskosten > 0 ? roundToTwoDecimals((kalkGuenstig.zep + kalkGuenstig.bezugskosten) * (1 + UST_REGEL / 100)) : kalkGuenstig.brutto)}.`,
     ].join('\n'),
   });
 
@@ -784,12 +784,12 @@ Schritt 2 – Preisvergleich:
 
 Schritt 3 – Buchungssatz (nur für das gewählte, günstigere Angebot):
 - Welches Konto für den Werkstoff? (Soll)
-- Vorsteuer 19 % auf den Zieleinkaufspreis? (Soll)
+- Vorsteuer ${UST_REGEL} % auf den Zieleinkaufspreis? (Soll)
 - Gegenkonto Verbindlichkeiten auf Ziel (Haben)?
 
 Kontenplan:
 Aufwandskonten (Soll): 6000 AWR, 6010 AWF, 6020 AWH, 6030 AWB
-Vorsteuer (Soll): 2600 VORST (19 %)
+Vorsteuer (Soll): 2600 VORST (${UST_REGEL} %)
 Kauf auf Ziel (Haben): 4400 VE
 
 Buchungssatz-Schema:
@@ -800,7 +800,7 @@ Buchungssatz-Schema:
 ---
 
 Allgemeine Hinweise:
-- Netto × 1,19 = Brutto; Brutto ÷ 1,19 = Netto
+- Netto × ${1 + UST_REGEL / 100} = Brutto; Brutto ÷ ${1 + UST_REGEL / 100} = Netto
 - Aufwandskonten immer im Soll; Verbindlichkeiten immer im Haben
 - Skonto bezieht sich auf den Zieleinkaufspreis, nicht den Listenpreis
 - Bezugskosten werden absolut addiert

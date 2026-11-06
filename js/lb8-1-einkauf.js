@@ -367,7 +367,7 @@ function erstelleZufallssatz() {
   const nettoOderBrutto = mitRabatt.checked ? 'Netto' : (Math.random() < 0.5 ? 'Netto' : 'Brutto');
   const Wert = generateRandomNettoWert();
   const nettoWert = formatCurrency(Wert);
-  let bruttoWert = formatCurrency(Math.round(Wert * 0.19 + Wert));
+  let bruttoWert = formatCurrency(Math.round(Wert * UST_REGEL / 100 + Wert));
   let randomNettowert;
 
   // Anzeige wenn Brutto oder Netto
@@ -401,7 +401,7 @@ function erstelleZufallssatz() {
   let antwortNettowert = formatCurrency(berechnung_nettoWert);
   let berechnung_skontoBetrag = random_Skonto / 100 * berechnung_nettoWert;
   berechnung_skontoBetrag = roundToTwoDecimals(berechnung_skontoBetrag);
-  let berechnung_skontoBetrag_brutto = (berechnung_skontoBetrag) + (berechnung_skontoBetrag * 0.19);
+  let berechnung_skontoBetrag_brutto = (berechnung_skontoBetrag) + (berechnung_skontoBetrag * UST_REGEL / 100);
   berechnung_skontoBetrag_brutto = roundToTwoDecimals(berechnung_skontoBetrag_brutto);
   let berechnung_vorsteuer_berichtigung = berechnung_skontoBetrag_brutto - berechnung_skontoBetrag;
   let vorsteuer_berichtigung = formatCurrency(berechnung_vorsteuer_berichtigung);
@@ -410,7 +410,7 @@ function erstelleZufallssatz() {
   let skontoBetrag = formatCurrency(berechnung_skontoBetrag);
   let berechnung_bareinkaufspreis = berechnung_nettoWert - berechnung_skontoBetrag;
   let bareinkaufspreis = formatCurrency(berechnung_bareinkaufspreis);
-  let berechnung_USTWert = berechnung_nettoWert * 0.19;
+  let berechnung_USTWert = berechnung_nettoWert * UST_REGEL / 100;
   berechnung_USTWert = roundToTwoDecimals(berechnung_USTWert);
   let berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert);
   let randomSupply_Bezugskosten;
@@ -423,10 +423,10 @@ function erstelleZufallssatz() {
     } else {
       randomSupply_Bezugskosten = array_Supply_Bezugskosten[Math.floor(Math.random() * array_Supply_Bezugskosten.length)];
     }
-    berechnung_USTWert = (berechnung_nettoWert + parseFloat(random_Bezugskosten)) * 0.19;
+    berechnung_USTWert = (berechnung_nettoWert + parseFloat(random_Bezugskosten)) * UST_REGEL / 100;
     berechnung_USTWert = roundToTwoDecimals(berechnung_USTWert);
     berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert) + parseFloat(random_Bezugskosten);
-    bruttoWert = roundToTwoDecimals(Math.round(Wert * 0.19 + Wert) + parseFloat(random_Bezugskosten) * 0.19 + parseFloat(random_Bezugskosten));
+    bruttoWert = roundToTwoDecimals(Math.round(Wert * UST_REGEL / 100 + Wert) + parseFloat(random_Bezugskosten) * UST_REGEL / 100 + parseFloat(random_Bezugskosten));
     bruttoWert = formatCurrency(bruttoWert);
   } else {
     random_Bezugskosten = 0;
@@ -997,8 +997,8 @@ function zeigeZufaelligenSatz() {
 
     // ── Leihverpackung: Beträge für die Rücksendung (anteilig zu den Bezugskosten) ──
     const bezugskostenNumLV = parseFloat(parseNumericValue(antwort_bezugskostenWert)) || 0;
-    const vorsteuerRuecksendungLV = formatCurrency(roundToTwoDecimals(bezugskostenNumLV * 0.19));
-    const bruttoRuecksendungLV = formatCurrency(roundToTwoDecimals(bezugskostenNumLV * 1.19));
+    const vorsteuerRuecksendungLV = formatCurrency(roundToTwoDecimals(bezugskostenNumLV * UST_REGEL / 100));
+    const bruttoRuecksendungLV = formatCurrency(roundToTwoDecimals(bezugskostenNumLV * (1 + UST_REGEL / 100)));
     const mailTextRuecksendungLV = `Für die zurückgesendete Leihverpackung für die Lieferung von ${letzteWerkstoffArtEinkauf} schreiben wir Ihnen ${bruttoRuecksendungLV} brutto gut.`;
     const ruecksendungLVText = `${kunde} sendet die Leihverpackung an den Lieferer zurück`;
 
@@ -1224,8 +1224,8 @@ const geschaeftsfallDaten = {
         </table><br>
         <table style="border-collapse: collapse; white-space:nowrap; width:350px; margin: 0 0">
           <tbody>
-            <tr><td>Skonto (brutto)</td><td style="padding-left:16px;text-align:right;">${antwort_skontoBetrag_brutto}</td><td style="padding-left:6px;text-align:right;">119 %</td></tr>
-            <tr><td>- Umsatzsteuer</td><td style="padding-left:16px;text-align:right;">${antwort_vorsteuer_berichtigung}</td><td style="padding-left:6px;text-align:right;">19 %</td></tr>
+            <tr><td>Skonto (brutto)</td><td style="padding-left:16px;text-align:right;">${antwort_skontoBetrag_brutto}</td><td style="padding-left:6px;text-align:right;">${100 + UST_REGEL} %</td></tr>
+            <tr><td>- Umsatzsteuer</td><td style="padding-left:16px;text-align:right;">${antwort_vorsteuer_berichtigung}</td><td style="padding-left:6px;text-align:right;">${UST_REGEL} %</td></tr>
             <tr><td style="border-top: solid 1px #ccc">= Skonto (netto)</td><td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc">${antwort_skontoBetrag}</td><td style="padding-left:6px;text-align:right;">100 %</td></tr>
           </tbody>
         </table><br>
@@ -1468,7 +1468,7 @@ Bezugskostenkonten (immer im SOLL, nur wenn Bezugskosten anfallen):
 - 6031 BZKB – Bezugskosten Betriebsstoffe
 
 Vorsteuer (immer im SOLL):
-- 2600 VORST – Vorsteuer 19 %
+- 2600 VORST – Vorsteuer ${UST_REGEL} %
 
 Zahlungsarten (immer im HABEN):
 - 2880 KA – Kasse (Barzahlung)
@@ -1492,8 +1492,8 @@ Rabattberechnung:
 - Rabatte werden nicht, sondern sofort abgezogen 
 
 Vorsteuerberechnung:
-- Wenn Bezugskosten: (Zieleinkaufspreis + Bezugskosten) × 19 % = Vorsteuer
-- Wenn keine Bezugskosten: Zieleinkaufspreis × 19 % = Vorsteuer
+- Wenn Bezugskosten: (Zieleinkaufspreis + Bezugskosten) × ${UST_REGEL} % = Vorsteuer
+- Wenn keine Bezugskosten: Zieleinkaufspreis × ${UST_REGEL} % = Vorsteuer
 
 Buchung einer Rücksendung (Gutschrift):
 - Stornobuchung (Buchungssatz wird umgedreht)
@@ -1556,8 +1556,8 @@ Nebenrechnung Skonto:
   − Skonto brutto (= Rechnungsbetrag × Skontosatz %)
   = Überweisungsbetrag
 
-  Skonto brutto           119 %
-  − Umsatzsteueranteil     19 %
+  Skonto brutto           ${100 + UST_REGEL} %
+  − Umsatzsteueranteil     ${UST_REGEL} %
   = Skonto netto          100 %
 
 Buchungssatz Skontobuchungssatz:
@@ -1583,8 +1583,8 @@ Häufige Schülerfehler Skontobuchungssatz:
 
 Allgemeine Hinweise für alle Aufgabentypen:
 - Netto = ohne Umsatzsteuer; Brutto = mit Umsatzsteuer
-- Wenn „netto" angegeben: Brutto = Netto × 1,19
-- Wenn „brutto" angegeben: Netto = Brutto ÷ 1,19
+- Wenn "netto" angegeben: Brutto = Netto × ${1 + UST_REGEL / 100}
+- Wenn "brutto" angegeben: Netto = Brutto ÷ ${1 + UST_REGEL / 100}
 - Wenn nichts angegeben: nachfragen oder Hinweis im Aufgabentext beachten
 - Aufwandskonten stehen immer im Soll
 - Zahlungskonten (Kasse, Bank, Verbindlichkeit) stehen immer im Haben
@@ -1691,8 +1691,8 @@ Gib ganz am Ende den Buchungssatz mit einer Tabellenstruktur in html aus, Beispi
         </table><br>
         <table style="border-collapse: collapse; white-space:nowrap; width:350px; margin: 0 0">
           <tbody>
-            <tr><td>Skonto (brutto)</td><td style="padding-left:16px;text-align:right;">104,72&nbsp;€</td><td style="padding-left:6px;text-align:right;">119 %</td></tr>
-            <tr><td>- Umsatzsteuer</td><td style="padding-left:16px;text-align:right;">16,72&nbsp;€</td><td style="padding-left:6px;text-align:right;">19 %</td></tr>
+            <tr><td>Skonto (brutto)</td><td style="padding-left:16px;text-align:right;">104,72&nbsp;€</td><td style="padding-left:6px;text-align:right;">${100 + UST_REGEL} %</td></tr>
+            <tr><td>- Umsatzsteuer</td><td style="padding-left:16px;text-align:right;">16,72&nbsp;€</td><td style="padding-left:6px;text-align:right;">${UST_REGEL} %</td></tr>
             <tr><td style="border-top: solid 1px #ccc">= Skonto (netto)</td><td style="padding-left:16px;text-align:right;border-top: solid 1px #ccc">88,00&nbsp;€</td><td style="padding-left:6px;text-align:right;">100 %</td></tr>
           </tbody>
         </table><br>

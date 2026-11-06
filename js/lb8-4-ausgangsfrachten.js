@@ -228,7 +228,7 @@ function erstelleZufallsGeschaeftsfall() {
   let bruttoFormatted = nettoFormatted;
 
   if (typ.mitVorsteuer) {
-    const ustSatz = typ.umsatzsteuerSatz || 0.19;
+    const ustSatz = typ.umsatzsteuerSatz || UST_REGEL / 100;
     vorsteuer = roundToTwoDecimals(nettoBetrag * ustSatz);
     vorsteuerFormatted = formatCurrency(vorsteuer);
     bruttoBetrag = roundToTwoDecimals(nettoBetrag + vorsteuer);
@@ -577,7 +577,7 @@ Aufwandskonten (immer im SOLL):
 - 6140 AFR – Ausgangsfrachten (Speditionskosten für den Transport von Fertigerzeugnissen zum Kunden)
 
 Vorsteuer (im SOLL, nur bei Rechnungen mit USt):
-- 2600 VORST – Vorsteuer 19 %
+- 2600 VORST – Vorsteuer ${UST_REGEL} %
 
 Zahlungsarten (immer im HABEN):
 - 2880 KA – Kasse (Barzahlung)
@@ -591,7 +591,7 @@ Buchungslogik:
 - Barzahlung: Gegenkonto = 2880 KA
 - Girocard/Überweisung: Gegenkonto = 2800 BK
 - Vorsteuer (2600 VORST) nur bei Rechnung mit Umsatzsteuer
-- Beide Konten (6040 AWVM und 6140 AFR) sind immer mit 19 % USt – es gibt also immer Vorsteuer
+- Beide Konten (6040 AWVM und 6140 AFR) sind immer mit ${UST_REGEL} % USt – es gibt also immer Vorsteuer
 
 Wichtige Unterscheidung:
 - 6040 AWVM: Das Unternehmen KAUFT Verpackungsmaterial (z. B. Kartons, Folie, Polstermaterial)
@@ -600,8 +600,8 @@ Wichtige Unterscheidung:
 Vorsteuer-Berechnung:
 - Nettobetrag × 0,19 = Vorsteuer
 - Bruttobetrag = Nettobetrag + Vorsteuer
-- Wenn „brutto" angegeben: Netto = Brutto ÷ 1,19
-- Wenn „netto" angegeben: Brutto = Netto × 1,19
+- Wenn "brutto" angegeben: Netto = Brutto ÷ ${1 + UST_REGEL / 100}
+- Wenn "netto" angegeben: Brutto = Netto × ${1 + UST_REGEL / 100}
 - Wenn nichts angegeben: nachfragen oder Hinweis im Text beachten
 
 Buchungssatz-Schema:

@@ -23,8 +23,8 @@ function moodleVerkaufSkontoHtml(d) {
     ['- Skonto (brutto)', d.skontoBrutto, `${d.skontoProzent} %`],
     ['= Überweisungsbetrag', d.ueberweisung, '', true],
   ]) + '<br>' + moodleTabelle([
-    ['Skonto (brutto)', d.skontoBrutto, '119 %'],
-    ['- Umsatzsteuer', d.ustBerichtigung, '19 %'],
+    ['Skonto (brutto)', d.skontoBrutto, `${100 + UST_REGEL} %`],
+    ['- Umsatzsteuer', d.ustBerichtigung, `${UST_REGEL} %`],
     ['= Skonto (netto)', d.skontoBetrag, '100 %', true],
   ]);
 }

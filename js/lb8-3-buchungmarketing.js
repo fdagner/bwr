@@ -234,7 +234,7 @@ const geschaeftsfallTypen = {
       { text: ' auf Ziel', konto: VE }
     ],
     mitVorsteuer: true,
-    umsatzsteuerSatz: 0.07,
+    umsatzsteuerSatz: UST_ERMAESSIGT / 100,
     geschaeftsfaelle: [
       { beschreibung: ' erhält die Kosten für eine Hotelübernachtung aufgrund einer Fortbildung', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
       { beschreibung: ' erhält die Aufstellung für eine Hotelübernachtung aufgrund eines Messebesuchs', artikel: 'Hotelübernachtung', einheit: 'ÜN' },
@@ -254,7 +254,7 @@ const geschaeftsfallTypen = {
       { text: ' auf Ziel', konto: VE }
     ],
     mitVorsteuer: true,
-    umsatzsteuerSatz: 0.19,
+    umsatzsteuerSatz: UST_REGEL / 100,
     geschaeftsfaelle: [
       { beschreibung: ' erhält eine Rechnung für eine Reise aufgrund einer Fortbildung', artikel: 'Reiseleistungen mit Verpflegung', einheit: 'ÜN' },
       { beschreibung: ' erhält eine Rechnung für eine Reise aufgrund eines Messebesuchs', artikel: 'Businessreise Premium++', einheit: 'ÜN' },
@@ -340,7 +340,7 @@ function erstelleZufallsGeschaeftsfall() {
   let bruttoFormatted = nettoFormatted;
   
   if (typ.mitVorsteuer) {
-    const ustSatz = typ.umsatzsteuerSatz || 0.19;
+    const ustSatz = typ.umsatzsteuerSatz || UST_REGEL / 100;
     vorsteuer = roundToTwoDecimals(nettoBetrag * ustSatz);
     vorsteuerFormatted = formatCurrency(vorsteuer);
     bruttoBetrag = roundToTwoDecimals(nettoBetrag + vorsteuer);
@@ -733,7 +733,7 @@ Aufwandskonten (immer im SOLL):
 - 6850 REK – Reisekosten (Hotelübernachtung, Geschäftsreise)
 
 Vorsteuer (im SOLL, nur bei Rechnungen mit USt):
-- 2600 VORST – Vorsteuer 7 % (Hotelübernachtung) oder 19 % (alle anderen Rechnungen)
+- 2600 VORST – Vorsteuer ${UST_ERMAESSIGT} % (Hotelübernachtung) oder ${UST_REGEL} % (alle anderen Rechnungen)
 
 Zahlungsarten (immer im HABEN):
 - 2880 KA – Kasse (Barzahlung)
@@ -750,7 +750,7 @@ Buchungslogik:
 - Keine Vorsteuer bei Briefmarken/Postwertzeichen
 
 Vorsteuer-Berechnung:
-- Nettobetrag × Steuersatz = Vorsteuer (Übernachtung im Hotel: 7 %, sonst 19 %)
+- Nettobetrag × Steuersatz = Vorsteuer (Übernachtung im Hotel: ${UST_ERMAESSIGT} %, sonst ${UST_REGEL} %)
 - Bruttobetrag = Nettobetrag + Vorsteuer
 - Wenn „brutto" angegeben: Netto = Brutto ÷ (1 + Steuersatz)
 - Wenn „netto" angegeben: Brutto = Netto × (1 + Steuersatz)

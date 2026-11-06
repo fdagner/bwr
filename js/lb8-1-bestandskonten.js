@@ -467,7 +467,7 @@ Typische Gegenkonten in den Buchungen:
 - 5000 UEFE bei Ausgangsrechnungen (FO im Soll)
 - 2800 BK bei Zahlungen von Kunden (FO Haben, BK Soll) und an Lieferanten (VE Soll, BK Haben)
 - 6000 AWR / 6020 AWH bei Einkäufen auf Ziel (VE im Haben)
-- Bei Einkäufen und Verkäufen auf Ziel gilt 19 % Umsatzsteuer: Forderungen und Verbindlichkeiten stehen mit dem Bruttobetrag im Konto, Anlage- und Aufwandskonten mit dem Nettobetrag. 2600 VORST und 4800 UST sind schon über die Zahllast abgeschlossen (Zahllast = UST − VORST, steht im Haben von 2800 BK). Der Gewinn (UEFE − AWR − AWH, netto) steht bereits im Haben von 3000 EK (Gegenkonto 8020 GUV).
+- Bei Einkäufen und Verkäufen auf Ziel gilt ${UST_REGEL} % Umsatzsteuer: Forderungen und Verbindlichkeiten stehen mit dem Bruttobetrag im Konto, Anlage- und Aufwandskonten mit dem Nettobetrag. 2600 VORST und 4800 UST sind schon über die Zahllast abgeschlossen (Zahllast = UST − VORST, steht im Haben von 2800 BK). Der Gewinn (UEFE − AWR − AWH, netto) steht bereits im Haben von 3000 EK (Gegenkonto 8020 GUV).
 - 2800 BK bei Darlehensaufnahme (4250 LBKV im Haben, BK im Soll) und bei Barabhebung (2880 KA im Soll, BK im Haben)
 
 Schlussbilanzkonto:

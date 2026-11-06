@@ -384,10 +384,10 @@ function bsEinfachUstW(gf) {
 
   let rows = "";
   if (rabatt && angabeIstBrutto) {
-    const ustLP = roundToTwoDecimalsW(listennetto * 0.19);
+    const ustLP = roundToTwoDecimalsW(listennetto * UST_REGEL / 100);
     rows =
       startRow("Rechnungsbetrag", listenbrutto) +
-      opRow("- Umsatzsteuer (19 %)", "", ustLP) +
+      opRow("- Umsatzsteuer (${UST_REGEL} %)", "", ustLP) +
       resRow("Listeneinkaufspreis netto", listennetto) +
       opRow(`Rabatt ${rabattProzent} %`, "", rabattBetrag) +
       resRow("Bezugspreis", nettoBetrag) +
@@ -398,17 +398,17 @@ function bsEinfachUstW(gf) {
       startRow("Listeneinkaufspreis netto", listennetto) +
       opRow(`- Rabatt ${rabattProzent} %`, "", rabattBetrag) +
       resRow("Bezugspreis", nettoBetrag) +
-      opRow("+ Umsatzsteuer (19 %)", "", Vorsteuer) +
+      opRow("+ Umsatzsteuer (${UST_REGEL} %)", "", Vorsteuer) +
       resRow("Rechnungsbetrag", bruttoBetrag);
   } else if (!rabatt && angabeIstBrutto) {
     rows =
       startRow("Rechnungsbetrag", bruttoBetrag) +
-      opRow("- Umsatzsteuer (19 %)", "", Vorsteuer) +
+      opRow("- Umsatzsteuer (${UST_REGEL} %)", "", Vorsteuer) +
       resRow("Listeneinkaufspreis netto", nettoBetrag);
   } else {
     rows =
       startRow("Bezugspreis", nettoBetrag) +
-      opRow("+ Umsatzsteuer (19 %)", "+", Vorsteuer) +
+      opRow("+ Umsatzsteuer (${UST_REGEL} %)", "+", Vorsteuer) +
       resRow("Rechnungsbetrag", bruttoBetrag);
   }
 
@@ -627,7 +627,7 @@ function erstelleZufallsGeschaeftsfallW() {
 
   const rabattBetrag = rabatt ? Math.round((listennetto * rabattProzent) / 100) : 0;
   const nettoBetrag = listennetto - rabattBetrag;
-  const Vorsteuer = roundToTwoDecimalsW(nettoBetrag * 0.19);
+  const Vorsteuer = roundToTwoDecimalsW(nettoBetrag * UST_REGEL / 100);
   const bruttoBetrag = roundToTwoDecimalsW(nettoBetrag + Vorsteuer);
 
   // ── Aufgabentext ──────────────────────────────────────────────────────────
@@ -639,7 +639,7 @@ function erstelleZufallsGeschaeftsfallW() {
   const angabeIstBrutto = Math.random() < 0.5;
   let betragText;
   if (rabatt) {
-    const listenbrutto = roundToTwoDecimalsW(listennetto * 1.19);
+    const listenbrutto = roundToTwoDecimalsW(listennetto * (1 + UST_REGEL / 100));
     betragText = angabeIstBrutto
       ? `Listenpreis: ${formatCurrencyW(listenbrutto)} (Rechnungsbetrag), es wird ein Rabatt in Höhe von ${rabattProzent}\u00a0% gewährt`
       : `Listenpreis: ${formatCurrencyW(listennetto)} netto, der Rabatt beträgt ${rabattProzent}\u00a0%`;
@@ -654,7 +654,7 @@ function erstelleZufallsGeschaeftsfallW() {
     : "";
   const geschaeftsfallText = `${textVorlage} in Höhe von ${betragText}.${vorstHinweis}`;
 
-  const listenbrutto = roundToTwoDecimalsW(listennetto * 1.19);
+  const listenbrutto = roundToTwoDecimalsW(listennetto * (1 + UST_REGEL / 100));
 
   // ── Belegname ─────────────────────────────────────────────────────────────
   let artikelBelegName;
@@ -686,7 +686,7 @@ function erstelleZufallsGeschaeftsfallW() {
     Vorsteuer,
     bruttoBetrag,
     angabeIstBrutto,
-    ustProzent: 19,
+    ustProzent: UST_REGEL,
   };
 }
 
@@ -716,11 +716,11 @@ function erstelleLoesungsTextW(gf) {
   if (gf.rabatt && gf.angabeIstBrutto) {
     nr = [
       fmtLine("Rechnungsbetrag (Listenpreis brutto)", gf.listenbrutto),
-      fmtLine("- Umsatzsteuer (19 %)", roundToTwoDecimalsW(gf.listennetto * 0.19), "- "),
+      fmtLine("- Umsatzsteuer (${UST_REGEL} %)", roundToTwoDecimalsW(gf.listennetto * UST_REGEL / 100), "- "),
       fmtLine("= Listeneinkaufspreis netto", gf.listennetto),
       fmtLine(`- Rabatt ${gf.rabattProzent} %`, gf.rabattBetrag, "- "),
       fmtLine("= Bezugspreis (netto)", gf.nettoBetrag),
-      fmtLine("+ Umsatzsteuer (19 %)", gf.Vorsteuer, "+ "),
+      fmtLine("+ Umsatzsteuer (${UST_REGEL} %)", gf.Vorsteuer, "+ "),
       fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
     ].join("\n");
   } else if (gf.rabatt && !gf.angabeIstBrutto) {
@@ -728,19 +728,19 @@ function erstelleLoesungsTextW(gf) {
       fmtLine("Listeneinkaufspreis netto", gf.listennetto),
       fmtLine(`- Rabatt ${gf.rabattProzent} %`, gf.rabattBetrag, "- "),
       fmtLine("= Bezugspreis (netto)", gf.nettoBetrag),
-      fmtLine("+ Umsatzsteuer (19 %)", gf.Vorsteuer, "+ "),
+      fmtLine("+ Umsatzsteuer (${UST_REGEL} %)", gf.Vorsteuer, "+ "),
       fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
     ].join("\n");
   } else if (!gf.rabatt && gf.angabeIstBrutto) {
     nr = [
       fmtLine("Rechnungsbetrag", gf.bruttoBetrag),
-      fmtLine("- Umsatzsteuer (19 %)", gf.Vorsteuer, "- "),
+      fmtLine("- Umsatzsteuer (${UST_REGEL} %)", gf.Vorsteuer, "- "),
       fmtLine("= Listenpreis netto (= Bezugspreis)", gf.nettoBetrag),
     ].join("\n");
   } else {
     nr = [
       fmtLine("Bezugspreis (= Listenpreis netto)", gf.nettoBetrag),
-      fmtLine("+ Umsatzsteuer (19 %)", gf.Vorsteuer, "+ "),
+      fmtLine("+ Umsatzsteuer (${UST_REGEL} %)", gf.Vorsteuer, "+ "),
       fmtLine("= Rechnungsbetrag", gf.bruttoBetrag),
     ].join("\n");
   }
@@ -813,7 +813,7 @@ Aktivkonten (Zugang im SOLL):
 - AWF – Aufwendungen für Frendbauteile: werden fremd bezogen und gehen direkt ins Produkt ein.
 - AWH – Aufwendungen für Hilfsstoffe: sind im Gegensatz zu den Rohstofffen nicht Hauptbestandteil, gehen aber ins Produkt ein
 - AWB – Aufwendungen für Betriebsstoffe: werden im Betrieb verbraucht und sind notwendig, gehen aber NICHT ins Produkt ein (z. B. Heizöl, Erdgas, Strom, Schmieröl, Reinigungsmittel...)
-- VORST – Vorsteuer: 19 % des Nettobetrags, bei jeder Eingangsrechnung mit ausgewiesener USt
+- VORST - Vorsteuer: ${UST_REGEL} % des Nettobetrags, bei jeder Eingangsrechnung mit ausgewiesener USt
 
 Passivkonten:
 - VE – Verbindlichkeiten: Kauf auf Ziel (Rechnung)
@@ -822,11 +822,11 @@ Passivkonten:
 Buchungslogik – immer gleich (nur Netto nach Rabatt zählt):
 Bei Kauf auf Ziel:
   AWR  | Nettobetrag (nach Rabatt)  |    |
-  VORST| 19 % × Netto               | an | VE | Bruttobetrag
+  VORST| ${UST_REGEL} % × Netto               | an | VE | Bruttobetrag
 
 Bei Banküberweisung:
   AWR  | Nettobetrag (nach Rabatt)  |    |
-  VORST| 19 % × Netto               | an | BK | Bruttobetrag
+  VORST| ${UST_REGEL} % × Netto               | an | BK | Bruttobetrag
 
 Der Rabatt wird NICHT gebucht! Er erscheint nur in der Nebenrechnung.
 
@@ -834,19 +834,19 @@ Nebenrechnung – 4 Fälle je nach Angabe im Geschäftsfall:
 
 Fall 1: Angabe Listenpreis netto, kein Rabatt
   Listenpreis netto (= Bezugspreis)   10.000 €
-  + Umsatzsteuer (19 %)               + 1.900 €
+  + Umsatzsteuer (${UST_REGEL} %)               + 1.900 €
   Rechnungsbetrag                     11.900 €
 
 Fall 2: Angabe Rechnungsbetrag (brutto), kein Rabatt
   Rechnungsbetrag                     11.900 €
-  − Umsatzsteuer (19 %)               − 1.900 €
+  − Umsatzsteuer (${UST_REGEL} %)               − 1.900 €
   Listenpreis netto (= Bezugspreis)   10.000 €
 
 Fall 3: Angabe Listenpreis netto, mit Rabatt (z. B. 10 %)
   Listenpreis netto                   10.000 €
   − Rabatt 10 %                       − 1.000 €
   Bezugspreis                          9.000 €
-  + Umsatzsteuer (19 % auf Bezugspreis) + 1.710 €
+  + Umsatzsteuer (${UST_REGEL} % auf Bezugspreis) + 1.710 €
   Rechnungsbetrag                     10.710 €
 
 Wichtig: Im Buchungssatz steht immer der Bezugspreis (Listenpreis nach Rabatt).
@@ -870,7 +870,7 @@ Gib ganz am Ende den Buchungssatz mit einer Tabellenstruktur in html aus (falls 
       <td style="padding:2px 10px 2px 0;">Bezugspreis</td>
       <td style="border-width: 0;padding:1px 0;text-align:right;font-family:courier;" colspan="2">18.000,00&nbsp;€</td>
     </tr><tr>
-      <td style="border-width: 0;padding:1px 10px 1px 2px;color:#444;">+ Umsatzsteuer (19 %)</td>
+      <td style="border-width: 0;padding:1px 10px 1px 2px;color:#444;">+ Umsatzsteuer (${UST_REGEL} %)</td>
       <td style="border-width: 0;padding:1px 0;text-align:right;font-family:courier;color:#444;" colspan="2">+&nbsp;3.420,00&nbsp;€</td>
     </tr><tr style="border-top:1px solid #aaa;">
       <td style="border-width: 0;padding:2px 10px 2px 0;">Rechnungsbetrag</td>
