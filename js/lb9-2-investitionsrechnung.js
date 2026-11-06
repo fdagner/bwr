@@ -73,6 +73,12 @@ function euro(n) {
   return Number(n).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
 
+function menge(n) {
+  // Produktionsmengen werden mit Leerzeichen als Tausendertrenner geschrieben
+  // (z. B. „90 000 Stück" statt „90.000 Stück")
+  return Number(n).toLocaleString('de-DE').replace(/\./g, ' ');
+}
+
 function zahl(n) {
   return Number(n).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -403,7 +409,7 @@ function generiereProduktionsmaschineErweitert() {
       ${zeile('Anschaffungskosten', euro(ak))}
       ${zeile('Nutzungsdauer', nd + ' Jahre')}
       ${zeile('Kalkulatorischer Zinssatz', String(zinsSatz).replace('.', ',') + ' %')}
-      ${zeile('Produktionsmenge', qty.toLocaleString('de-DE') + ' Stück pro Jahr')}
+      ${zeile('Produktionsmenge', menge(qty) + ' Stück pro Jahr')}
       ${zeile('Gewinn je Stück', euro(gjs))}
     </table>`;
 
@@ -411,7 +417,7 @@ function generiereProduktionsmaschineErweitert() {
   const loesung =
     `Abschreibung pro Jahr in Euro: ${bruch(betragOhneEuro(ak), nd)} &nbsp;=&nbsp;<strong>${euro(absch)}</strong> &#10004;<br><br>` +
     `Kalkulatorische Zinsen pro Jahr in Euro: ${bruch(betragOhneEuro(ak) + ' · ' + String(zinsSatz).replace('.', ','), '100 · 2')} &nbsp;=&nbsp;<strong>${euro(zins)}</strong> &#10004;<br><br>` +
-    `Gewinn pro Jahr in Euro: ${qty.toLocaleString('de-DE')} Stück · ${euro(gjs)} &nbsp;=&nbsp;<strong>${euro(gewinn)}</strong> &#10004;<br><br>` +
+    `Gewinn pro Jahr in Euro: ${menge(qty)} Stück · ${euro(gjs)} &nbsp;=&nbsp;<strong>${euro(gewinn)}</strong> &#10004;<br><br>` +
     `Amortisationszeit in Jahren: ${bruch(betragOhneEuro(ak), `(${betragOhneEuro(absch)} + ${betragOhneEuro(zins)} + ${betragOhneEuro(gewinn)})`)} &nbsp;=&nbsp;<strong>${zahl(amort)}</strong> &#10004;`;
 
   // ── HTML zusammensetzen ──────────────────────────────────────────────────
@@ -443,14 +449,172 @@ function generiereProduktionsmaschineErweitert() {
     `  Anschaffungskosten: ${euro(ak)}\n` +
     `  Nutzungsdauer: ${nd} Jahre\n` +
     `  Kalkulatorischer Zinssatz: ${String(zinsSatz).replace('.', ',')} %\n` +
-    `  Produktionsmenge: ${qty.toLocaleString('de-DE')} Stück pro Jahr\n` +
+    `  Produktionsmenge: ${menge(qty)} Stück pro Jahr\n` +
     `  Gewinn je Stück: ${euro(gjs)}\n\n` +
     `Berechne die Amortisationszeit für die Produktionsmaschine „${modell}".\n\n` +
     `Musterlösung:\n` +
     `Abschreibung pro Jahr in Euro = ${euro(ak)} ÷ ${nd} = ${euro(absch)}\n` +
     `Kalkulatorische Zinsen pro Jahr in Euro = (${euro(ak)} · ${String(zinsSatz).replace('.', ',')}) ÷ (100 · 2) = ${euro(zins)}\n` +
-    `Gewinn pro Jahr in Euro = Produktionsmenge × Gewinn je Stück = ${qty.toLocaleString('de-DE')} × ${euro(gjs)} = ${euro(gewinn)}\n` +
+    `Gewinn pro Jahr in Euro = Produktionsmenge × Gewinn je Stück = ${menge(qty)} × ${euro(gjs)} = ${euro(gewinn)}\n` +
     `Amortisationszeit in Jahren = ${euro(ak)} ÷ (${euro(absch)} + ${euro(zins)} + ${euro(gewinn)}) = ${zahl(amort)}`
+  );
+
+  // ── Beleg (Eingangsrechnung des Lieferers) ───────────────────────────────
+  letzteAufgabe = {
+    art,
+    anbieter: [
+      { nummer: 1, ak, modell, lieferer: l1.name },
+    ],
+  };
+  renderBelegButtons();
+}
+
+// ============================================================================
+// AUFGABENTYP: KOSTENVERGLEICHSRECHNUNG (EINZELNE MASCHINE)
+// Prüft, ob die Gesamtkosten pro Jahr eine vorgegebene Obergrenze einhalten.
+// ============================================================================
+function generiereKostenvergleichsrechnung() {
+  // ── Unternehmen + Inhaber aus der YAML ──────────────────────────────────
+  const kundeSelect = document.getElementById('irKunde');
+  const kundenName = kundeSelect && kundeSelect.value ? kundeSelect.value.trim() : '';
+  const u = getUnternehmen(kundenName);
+  const inhaber = (u && u.inhaber) ? u.inhaber : '<i>[Inhaber]</i>';
+  const unternehmensName = (u && u.name) ? u.name : '<i>[Modellunternehmen]</i>';
+
+  // ── Maschine + Lieferer ──────────────────────────────────────────────────
+  const art = { n: 'Fertigungsmaschine', plural: 'Fertigungsmaschinen', g: 'f' };
+  const maschinenLiefererPool = getMaschinenLieferer().map(c => c.unternehmen);
+  const l1 = maschinenLiefererPool.length > 0
+    ? maschinenLiefererPool[Math.floor(Math.random() * maschinenLiefererPool.length)]
+    : { name: 'Maschinenbau KG', adresse: { ort: 'München' } };
+  const modell = MASCHINEN_MODELLE[Math.floor(Math.random() * MASCHINEN_MODELLE.length)];
+
+  // ── Zahlen ───────────────────────────────────────────────────────────────
+  const nd = [8, 10, 12, 14, 15, 16, 20][Math.floor(Math.random() * 7)];
+  const absch = randTo(500, 2000, 10000);          // Abschreibungsbetrag pro Jahr
+  const ak = absch * nd;                            // Anschaffungskosten (glatt)
+  const zinsSatz = randInt(5, 12) / 2;             // 2,5–6,0 % in 0,5er-Schritten
+  const zins = ak * zinsSatz / 200;                // kalk. Zinsen (durchschn. Kapital)
+  const sonstige = randTo(100, 5000, 15000);       // Sonstige fixe Kosten pro Jahr
+
+  const qty = randTo(10000, 50000, 120000);       // Maximale Produktionsmenge pro Jahr
+  const personal = randTo(5, 20, 45) / 100;       // Personalkosten pro Stück (0,20–0,45)
+  const material = randTo(5, 15, 35) / 100;       // Materialkosten pro Stück (0,15–0,35)
+  const energie = randTo(5, 5, 20) / 100;         // Energiekosten pro Stück (0,05–0,20)
+
+  // ── Lösung selbst berechnen ──────────────────────────────────────────────
+  const personalkosten = personal * qty;
+  const materialkosten = material * qty;
+  const energiekosten = energie * qty;
+  const variable = personalkosten + materialkosten + energiekosten;
+  const fix = absch + zins + sonstige;
+  const gesamt = fix + variable;
+  // Obergrenze: nächste glatte 10.000 € über den Gesamtkosten
+  const obergrenze = Math.ceil(gesamt / 10000) * 10000;
+  const nachgewiesen = gesamt <= obergrenze;
+
+  const infos = liefererInfos(l1);
+
+  // ── Aufgabentext ─────────────────────────────────────────────────────────
+  const einleitung =
+    `Im Unternehmen „<strong>${unternehmensName}</strong>" liegen folgende Daten für die ` +
+    `Anschaffung einer ${art.n} vor. Das Modell <strong>&bdquo;${modell}&ldquo;</strong> ` +
+    `steht in der engeren Auswahl und Voraussetzung für die Anschaffung ist, dass die ` +
+    `Gesamtkosten pro Jahr nicht höher als <strong>${euro(obergrenze)}</strong> sind. ` +
+    `Weise dies rechnerisch nach.`;
+
+  function zeile(label, wert) {
+    return `<tr style="border:1px solid #999;">
+      <td style="padding:4px 8px;">${label}</td>
+      <td style="padding:4px 8px; text-align:right; white-space:nowrap;">${wert}</td>
+    </tr>`;
+  }
+
+  const datenblatt =
+    `<table style="border:1px solid #999; font-size:16px; width:560px; max-width:100%; border-collapse:collapse;">
+      <tr style="background-color:#6b7f99; color:#fff; font-weight:bold;">
+        <td colspan="2" style="padding:6px 8px; text-align:center;">${modell}</td>
+      </tr>
+      ${zeile('Anschaffungskosten', euro(ak))}
+      ${zeile('Maximale Produktionsmenge pro Jahr', menge(qty) + ' Stück')}
+      ${zeile('Nutzungsdauer', nd + ' Jahre')}
+      ${zeile('Kalkulatorischer Zinssatz', String(zinsSatz).replace('.', ',') + ' %')}
+      ${zeile('Sonstige fixe Kosten pro Jahr', euro(sonstige))}
+      ${zeile('Personalkosten', euro(personal) + ' pro Stück')}
+      ${zeile('Materialkosten', euro(material) + ' pro Stück')}
+      ${zeile('Energiekosten', euro(energie) + ' pro Stück')}
+      <tr style="border:1px solid #999;">
+        <td style="padding:4px 8px;">Weitere Informationen zum Lieferer</td>
+        <td style="padding:4px 8px; white-space:nowrap;">- ${infos.join(';<br>- ')}</td>
+      </tr>
+    </table>`;
+
+  // ── Lösung ───────────────────────────────────────────────────────────────
+  const loesung =
+    `Abschreibung pro Jahr in Euro: ${bruch(betragOhneEuro(ak), nd)} &nbsp;=&nbsp;<strong>${euro(absch)}</strong> &#10004;<br><br>` +
+    `Kalkulatorische Zinsen pro Jahr in Euro: ${bruch(betragOhneEuro(ak) + ' · ' + String(zinsSatz).replace('.', ','), '100 · 2')} &nbsp;=&nbsp;<strong>${euro(zins)}</strong> &#10004;<br><br>` +
+    `Abschreibung pro Jahr ${euro(absch)}<br>` +
+    `+ kalkulatorische Zinsen pro Jahr ${euro(zins)}<br>` +
+    `+ Sonstige fixe Kosten pro Jahr ${euro(sonstige)}<br>` +
+    `Fixe Kosten pro Jahr ${euro(fix)} &#10004;<br><br>` +
+    `Personalkosten = ${euro(personal)} · ${menge(qty)} = ${euro(personalkosten)}<br>` +
+    `+ Materialkosten = ${euro(material)} · ${menge(qty)} = ${euro(materialkosten)}<br>` +
+    `+ Energiekosten = ${euro(energie)} · ${menge(qty)} = ${euro(energiekosten)}<br>` +
+    `Variable Kosten pro Jahr ${euro(variable)} &#10004;<br><br>` +
+    `Fixe Kosten pro Jahr ${euro(fix)}<br>` +
+    `+ Variable Kosten pro Jahr ${euro(variable)}<br>` +
+    `Gesamtkosten pro Jahr ${euro(gesamt)} &#10004;<br><br>` +
+    `<strong>Ergebnis:</strong> Die Gesamtkosten pro Jahr von ${euro(gesamt)} ` +
+    `liegen ${nachgewiesen ? 'nicht höher als' : 'über'} der Obergrenze von ${euro(obergrenze)} ` +
+    `– die Voraussetzung ist ${nachgewiesen ? 'erfüllt (nachgewiesen) ✔' : 'nicht erfüllt ✘'}.</strong>`;
+
+  // ── HTML zusammensetzen ──────────────────────────────────────────────────
+  const container = document.getElementById('Container');
+  container.innerHTML = `
+    <h2>Aufgabe: Kostenvergleichsrechnung</h2>
+    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
+                padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
+      ${einleitung}
+    </div>
+    ${datenblatt}
+    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
+                padding:12px 18px; margin-top:16px; font-size:16px; line-height:1.7;">
+      <p style="margin:0 0 6px 0;"><strong>Berechne die Gesamtkosten pro Jahr für die ${art.n} &bdquo;${modell}&ldquo; und weise nach, dass sie die Obergrenze von ${euro(obergrenze)} nicht überschreiten.</strong></p>
+    </div>
+    <h2 class="loesung">Lösung</h2>
+    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
+                padding:12px 18px; margin-top:12px; font-size:16px; line-height:2;">
+      ${loesung}
+    </div>
+  `;
+
+  // ── Aufgabenstellung + Musterlösung als Text für den KI-Prompt ───────────
+  setzeAufgabeKiText(
+    `Im Unternehmen „${unternehmensName}" liegen folgende Daten für die Anschaffung ` +
+    `einer ${art.n} vor. Das Modell „${modell}" steht in der engeren Auswahl und ` +
+    `Voraussetzung für die Anschaffung ist, dass die Gesamtkosten pro Jahr nicht ` +
+    `höher als ${euro(obergrenze)} sind. Weise dies rechnerisch nach.\\n\\n` +
+    `${modell}\\n` +
+    `  Anschaffungskosten: ${euro(ak)}\\n` +
+    `  Maximale Produktionsmenge pro Jahr: ${menge(qty)} Stück\\n` +
+    `  Nutzungsdauer: ${nd} Jahre\\n` +
+    `  Kalkulatorischer Zinssatz: ${String(zinsSatz).replace('.', ',')} %\\n` +
+    `  Sonstige fixe Kosten pro Jahr: ${euro(sonstige)}\\n` +
+    `  Personalkosten: ${euro(personal)} pro Stück\\n` +
+    `  Materialkosten: ${euro(material)} pro Stück\\n` +
+    `  Energiekosten: ${euro(energie)} pro Stück\\n` +
+    `  Weitere Informationen zum Lieferer: - ${infos.join('; - ')}\\n\\n` +
+    `Berechne die Gesamtkosten pro Jahr.\\n\\n` +
+    `Musterlösung:\\n` +
+    `Abschreibung pro Jahr in Euro = ${euro(ak)} ÷ ${nd} = ${euro(absch)}\\n` +
+    `Kalkulatorische Zinsen pro Jahr in Euro = (${euro(ak)} · ${String(zinsSatz).replace('.', ',')}) ÷ (100 · 2) = ${euro(zins)}\\n` +
+    `Fixe Kosten pro Jahr = ${euro(absch)} + ${euro(zins)} + ${euro(sonstige)} = ${euro(fix)}\\n` +
+    `Personalkosten = ${euro(personal)} · ${menge(qty)} = ${euro(personalkosten)}\\n` +
+    `Materialkosten = ${euro(material)} · ${menge(qty)} = ${euro(materialkosten)}\\n` +
+    `Energiekosten = ${euro(energie)} · ${menge(qty)} = ${euro(energiekosten)}\\n` +
+    `Variable Kosten pro Jahr = ${euro(personalkosten)} + ${euro(materialkosten)} + ${euro(energiekosten)} = ${euro(variable)}\\n` +
+    `Gesamtkosten pro Jahr = ${euro(fix)} + ${euro(variable)} = ${euro(gesamt)}\\n` +
+    `Ergebnis: ${euro(gesamt)} ≤ ${euro(obergrenze)} – nachgewiesen.`
   );
 
   // ── Beleg (Eingangsrechnung des Lieferers) ───────────────────────────────
@@ -601,7 +765,7 @@ function generiereDatenblatt() {
       </tr>
       ${td('Anschaffungskosten', euro(anlageI), euro(anlageII))}
       ${td('Nutzungsdauer', nutzungsdauer + ' Jahre', nutzungsdauer + ' Jahre')}
-      ${td('Produktionsmenge', quantity.toLocaleString('de-DE') + ' Teile/Jahr', quantity.toLocaleString('de-DE') + ' Teile/Jahr')}
+      ${td('Produktionsmenge', menge(quantity) + ' Teile/Jahr', menge(quantity) + ' Teile/Jahr')}
       ${td('Personalkosten', euro(personalI) + ' /Stück', euro(personalII) + ' /Stück')}
       ${td('Materialkosten', euro(materialI) + ' /Stück', euro(materialII) + ' /Stück')}
       ${td('Energiekosten', euro(energyI) + ' /Stück', euro(energyII) + ' /Stück')}
@@ -675,7 +839,7 @@ function generiereDatenblatt() {
     `  Anlage I / Anlage II\n` +
     `  Anschaffungskosten: ${euro(anlageI)} / ${euro(anlageII)}\n` +
     `  Nutzungsdauer: ${nutzungsdauer} Jahre / ${nutzungsdauer} Jahre\n` +
-    `  Produktionsmenge: ${quantity.toLocaleString('de-DE')} Teile/Jahr\n` +
+    `  Produktionsmenge: ${menge(quantity)} Teile/Jahr\n` +
     `  Personalkosten pro Stück: ${euro(personalI)} / ${euro(personalII)}\n` +
     `  Materialkosten pro Stück: ${euro(materialI)} / ${euro(materialII)}\n` +
     `  Energiekosten pro Stück: ${euro(energyI)} / ${euro(energyII)}\n` +
@@ -832,6 +996,8 @@ function generiereAufgabe() {
     generiereProduktionsmaschine();
   } else if (art === 'produktionsmaschine_ext') {
     generiereProduktionsmaschineErweitert();
+  } else if (art === 'kostenvergleich') {
+    generiereKostenvergleichsrechnung();
   } else {
     generiereErsatzmaschine();
   }
@@ -862,7 +1028,7 @@ Pädagogischer Ansatz:
 - Erst wenn der Schüler die Rechnung selbst erarbeitet hat, vergleichst du sie schrittweise mit der unten stehenden Musterlösung.
 
 Begrüße den Schüler freundlich und gib ihm die folgende Aufgabe vor.
-Arbeitsauftrag: „Berechne die Amortisationszeit. Verwende den Rechenweg: Anschaffungskosten ÷ (Abschreibungsbetrag pro Jahr + kalkulatorische Zinsen pro Jahr + Gewinn pro Jahr)."
+Arbeitsauftrag: „Bearbeite die unten stehende Aufgabe. Führe alle Rechenschritte nachvollziehbar durch und runde kaufmännisch auf zwei Nachkommastellen."
 
 Aufgabe mit Lösung:
 
