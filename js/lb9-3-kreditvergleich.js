@@ -2,7 +2,7 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 let kunde = '<i>[Modellunternehmen]</i>';
-let letzteGenerierteGfListeEinkauf = []; // Name aus der Vorlage beibehalten (Kompatibilität mit download.js)
+let letzteGenerierteGfListeEinkauf = []; // Name aus der Vorlage beibehalten (Kompatibilität mit export-buttons.js)
 
 // ============================================================================
 // INLINE-STYLE-KONSTANTEN (für HTML-Export – kein externes CSS nötig)

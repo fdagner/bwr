@@ -2,7 +2,7 @@
 // ORGANIGRAMM-GENERATOR – Einliniensystem / Mehrliniensystem (BwR 9)
 // Unternehmen aus js/unternehmen.yml (bzw. localStorage), Inhaber = CEO,
 // darunter Abteilungen und Teams mit mehreren Personen, optional Stabsstelle.
-// Alle Texte sind im Editor änderbar; der Export läuft über download.js (#Container).
+// Alle Texte sind im Editor änderbar; der Export läuft über export-buttons.js (#Container).
 // ============================================================================
 
 const VORNAMEN = ['Anna','Lukas','Sarah','Max','Lena','Ahmet','Marie','Tom','Julia','Tim','Laura','Simon','Sophie','Felix','Emma','Paul','Hannah','Elias','Mia','Noah','Clara','Ben','Lea','Jan','Katharina','Stefan','Medina','Markus','Eren','Ali'];
