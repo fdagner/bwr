@@ -1,0 +1,102 @@
+<svg id="wertpapierSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 760 500" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:760px;border: 0px solid #ccc;border-bottom:0px" font-family="Helvetica, Arial, sans-serif">
+  <defs id="customDefsWertpapiere">
+    <clipPath id="wpScreenClip">
+      <rect x="12" y="12" width="736" height="476" rx="16"/>
+    </clipPath>
+  </defs>
+
+  <!-- Tablet-Gehäuse -->
+  <rect x="0" y="0" width="760" height="500" rx="26" fill="#1f2933"/>
+  <circle cx="380" cy="6" r="2" fill="#4b5865"/>
+
+  <!-- Bildschirm -->
+  <g clip-path="url(#wpScreenClip)">
+    <rect x="12" y="12" width="736" height="476" fill="#eef2f6"/>
+
+    <!-- Statusleiste + App-Kopfzeile -->
+    <rect x="12" y="12" width="736" height="64" fill="#0f4c5c"/>
+    <text x="28" y="30" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="start">9:41</text>
+    <!-- WLAN -->
+    <g stroke="#ffffff" stroke-width="1.5" fill="none" stroke-linecap="round">
+      <path d="M677.500 23.500 Q686 17 694.500 23.500"/>
+      <path d="M680.500 26.500 Q686 22 691.500 26.500"/>
+    </g>
+    <circle cx="686" cy="29" r="1.300" fill="#ffffff"/>
+    <!-- Akku -->
+    <rect x="706" y="19" width="22" height="10" rx="2" fill="none" stroke="#ffffff" stroke-width="1"/>
+    <rect x="708" y="21" width="15" height="6" rx="1" fill="#ffffff"/>
+    <rect x="729" y="22" width="2" height="4" rx="1" fill="#ffffff"/>
+
+    <!-- Zurück-Pfeil + Titel -->
+    <path d="M38 47 L30 57 L38 67" stroke="#ffffff" stroke-width="2.500" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="52" y="66" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="start">Wertpapier-Abrechnung</text>
+    <text id="wertpapiereBank" x="732" y="66" font-size="20" font-weight="bold" fill="#b2dfdb" text-anchor="end">HAUSBANK</text>
+
+    <!-- Karte: Kunde -->
+    <rect x="28" y="88" width="380" height="88" rx="10" fill="#ffffff" stroke="#d8e0e8" stroke-width="1"/>
+    <circle cx="372" cy="132" r="20" fill="#e0f2f1"/>
+    <circle cx="372" cy="126" r="6" fill="#0f4c5c"/>
+    <path d="M361 141 Q372 127 383 141 Z" fill="#0f4c5c"/>
+    <text x="44" y="114" font-size="18" font-weight="bold" fill="#1f2933" text-anchor="start">
+      <tspan id="wertpapiereName"></tspan>
+    </text>
+    <text x="44" y="140" font-size="18" fill="#3e4c59" text-anchor="start">
+      <tspan id="wertpapiereStrasse"></tspan>
+    </text>
+    <text x="44" y="166" font-size="18" fill="#3e4c59" text-anchor="start">
+      <tspan id="wertpapiereOrt"></tspan>
+    </text>
+
+    <!-- Karte: Auftrag -->
+    <rect x="28" y="188" width="380" height="84" rx="10" fill="#ffffff" stroke="#d8e0e8" stroke-width="1"/>
+    <text x="44" y="213" font-size="16" fill="#3e4c59" text-anchor="start">Wir haben für Sie <tspan id="wertpapiereArt"></tspan>:</text>
+    <rect x="40" y="224" width="356" height="36" rx="8" fill="#e0f2f1"/>
+    <text x="52" y="248" font-size="16" font-weight="bold" fill="#0f4c5c" text-anchor="start"><tspan id="wertpapiereAnzahl">500</tspan> <tspan id="wertpapiereBezeichnung">XY-AG</tspan> zum Stückkurs von <tspan id="wertpapiereStueckkurs">400,00 €</tspan> </text>
+
+    <!-- Karte: Auftragsdetails -->
+    <rect x="420" y="88" width="312" height="184" rx="10" fill="#ffffff" stroke="#d8e0e8" stroke-width="1"/>
+    <g stroke="#eef1f5" stroke-width="1">
+      <line x1="436" x2="716" y1="122" y2="122"/>
+      <line x1="436" x2="716" y1="150" y2="150"/>
+      <line x1="436" x2="716" y1="178" y2="178"/>
+      <line x1="436" x2="716" y1="206" y2="206"/>
+      <line x1="436" x2="716" y1="234" y2="234"/>
+    </g>
+
+    <text x="436" y="114" font-size="16" fill="#6b7785" text-anchor="start">Auftragsnummer:</text>
+    <text id="wertpapiereAuftragsnummer" x="716" y="114" font-size="17" fill="#1f2933" text-anchor="end"></text>
+
+    <text x="436" y="142" font-size="16" fill="#6b7785" text-anchor="start">Verwahrungsart:</text>
+    <text id="wertpapierAuftrag" x="716" y="142" font-size="17" fill="#1f2933" text-anchor="end">Girosammeldepot</text>
+
+    <text x="436" y="170" font-size="16" fill="#6b7785" text-anchor="start">Depotnummer:</text>
+    <text id="wertpapiereID" x="716" y="170" font-size="17" fill="#1f2933" text-anchor="end"></text>
+
+    <text x="436" y="198" font-size="16" fill="#6b7785" text-anchor="start">Börsenplatz:</text>
+    <text id="wertpapierAuftrag" x="716" y="198" font-size="17" fill="#1f2933" text-anchor="end">München</text>
+
+    <text x="436" y="226" font-size="16" fill="#6b7785" text-anchor="start">ISIN:</text>
+    <text id="wertpapiereISIN" x="716" y="226" font-size="17" fill="#1f2933" text-anchor="end"></text>
+
+    <text x="436" y="254" font-size="16" fill="#6b7785" text-anchor="start">Schlusstag/-zeit:</text>
+    <text id="wertpapierAuftrag" x="716" y="254" font-size="17" fill="#1f2933" text-anchor="end"><tspan id="wertpapiereTag">01</tspan>.<tspan id="wertpapiereMonat">01</tspan>.<tspan class="aktuellesJahrWertpapiere"/>/<tspan id="wertpapiereUhrzeit"></tspan></text>
+
+    <!-- Karte: Abrechnung -->
+    <rect x="28" y="284" width="704" height="180" rx="10" fill="#ffffff" stroke="#d8e0e8" stroke-width="1"/>
+    <text x="44" y="310" font-size="14" font-weight="bold" letter-spacing="1" fill="#6b7785" text-anchor="start">ABRECHNUNG</text>
+
+    <text x="44" y="344" font-size="20" font-weight="bold" fill="#1f2933" text-anchor="start">Kurswert</text>
+    <text id="wertpapiereKurswert" x="716" y="344" font-size="20" fill="#1f2933" text-anchor="end"></text>
+
+    <text id="wertpapiereSpesenart" x="44" y="376" font-size="20" font-weight="bold" fill="#1f2933" text-anchor="start"></text>
+    <text id="wertpapiereSpesen" x="716" y="376" font-size="20" fill="#1f2933" text-anchor="end">100,00 €</text>
+
+    <line x1="44" x2="716" y1="390" y2="390" stroke-width="1" stroke="#c5ced8"/>
+
+    <text id="wertpapiereBankart" x="44" y="428" font-size="24" font-weight="bold" fill="#0f4c5c" text-anchor="start"></text>
+    <text id="wertpapiereBanklastschrift" x="716" y="428" font-size="24" font-weight="bold" fill="#0f4c5c" text-anchor="end">1.100,00 €</text>
+
+    <!-- Home-Indikator -->
+    <rect x="330" y="474" width="100" height="4" rx="2" fill="#9aa5b1"/>
+  </g>
+</svg>

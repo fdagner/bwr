@@ -8,14 +8,15 @@ let letzteGenerierteGfListeEinkauf = [];
 // INLINE-STYLE-KONSTANTEN (für HTML-Export – kein externes CSS nötig)
 // ============================================================================
 const S = {
-  kartenGrid: 'display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0 20px;',
+  kartenGrid: 'display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0 20px;max-width: 700px;',
   loesungStack: 'display:grid;grid-template-columns:1fr;gap:18px;margin:14px 0 20px;',
-  aKarte: 'border:2px solid #ddd;border-radius:8px;padding:16px 18px;background:#fafafa;font-size:0.93em;font-family:inherit;',
-  aKarteAufgabe: 'border:2px solid #1565c0;border-radius:8px;padding:16px 18px;background:#f0f4ff;font-size:0.93em;font-family:inherit;',
+  aKarte: 'max-width: 300px;border:2px solid #ddd;border-radius:8px;padding:16px 18px;background:#fafafa;font-size:0.93em;font-family:inherit;',
+  aKarteAufgabe: 'max-width: 300px;border:2px solid #1565c0;border-radius:8px;padding:16px 18px;background:#f0f4ff;font-size:0.93em;font-family:inherit;',
   aKarteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;color:#1a237e;display:flex;align-items:center;gap:8px;flex-wrap:wrap;',
-  lKarte: 'border:1px solid #ccc;border-radius:6px;padding:16px 18px;background:#fff;font-size:0.93em;font-family:inherit;',
+  lKarte: 'width: 600px;border:1px solid #ccc;border-radius:6px;padding:16px 18px;background:#fff;font-size:0.93em;font-family:inherit;',
   lKarteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;flex-wrap:wrap;',
-  kalkTable: 'width:100%;border-collapse:collapse;font-size:0.91em;margin-bottom:10px;',
+  kalkTable_a: 'width:100%;border-collapse:collapse;font-size:0.91em;margin-bottom:10px;',
+  kalkTable: 'width:500px;border-collapse:collapse;font-size:0.91em;margin-bottom:10px;',
   kalkTd: 'padding:2px 4px;',
   kalkTdRight: 'padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;',
   kalkErgebnisTd: 'padding:2px 4px;font-weight:700;border-top:1px solid #bbb;',
@@ -36,7 +37,7 @@ const S = {
   aufgabeBox: 'background:#fff;border:1px solid #ddd;border-radius:6px;padding:14px 18px;margin-bottom:16px;line-height:1.7;',
   aufgabeOl: 'margin:6px 0 0 18px;padding:0;',
   aufgabeLi: 'margin-bottom:5px;',
-  bsTable: 'border:1px solid #ccc;white-space:nowrap;background:#fff;font-family:Courier New,monospace;width:100%;font-size:0.85em;margin-top:4px;border-collapse:collapse;',
+  bsTable: 'max-width: 650px;border:1px solid #ccc;white-space:nowrap;background:#fff;font-family:Courier New,monospace;width:100%;font-size:0.85em;margin-top:4px;border-collapse:collapse;',
   bsTd: 'padding:3px 5px;',
   bsTdRight: 'padding:3px 5px;text-align:right;',
   bsTdCenter: 'padding:3px 5px;text-align:center;width:36px;',
@@ -567,7 +568,7 @@ function zeigeZufaelligenSatz() {
 <div style="${S.aKarte}">
   <div style="${S.aKarteTitel}">Angebot A </div>
   <div style="${S.liefererLabel}">Lieferer: <strong>${nameA}</strong></div>
-  <table style="${S.kalkTable}">
+  <table style="${S.kalkTable_a}">
     ${kalkZeileErgebnis('<strong>Einstandspreis (ESP)</strong>', `<strong>${formatCurrency(kalkA.esp)}</strong>`)}
     <tr>
       <td style="${S.kalkNormalTd};color:#555;font-size:0.92em;">Lieferung</td>
@@ -581,7 +582,7 @@ function zeigeZufaelligenSatz() {
 <div style="${S.aKarteAufgabe}">
   <div style="${S.aKarteTitel}">Angebot B</div>
   <div style="${S.liefererLabel}">Lieferer: <strong>${nameB}</strong></div>
-  <table style="${S.kalkTable}">
+  <table style="${S.kalkTable_a}">
     ${kalkZeileNormal('Einzelpreis', formatCurrency(epB))}
     ${kalkZeileNormal('Liefererrabatt', `${kalkB.rabatt}&nbsp;%`)}
     ${kalkZeileNormal('Liefererskonto', `${kalkB.skonto}&nbsp;%`)}
