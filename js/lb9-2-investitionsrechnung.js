@@ -295,15 +295,12 @@ function generiereErsatzmaschine() {
   const container = document.getElementById('Container');
   container.innerHTML = `
     <h2>Aufgabe: Amortisationszeit</h2>
+    <h3>Berechne die Amortisationszeit des Angebots 1.</h3>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                 padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
       ${einleitung}
     </div>
     ${datenblatt}
-    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
-                padding:12px 18px; margin-top:16px; font-size:16px; line-height:1.7;">
-      <p style="margin:0 0 6px 0;"><strong>Berechne die Amortisationszeit des Angebots 1.</strong></p>
-    </div>
     <h2 class="loesung">Lösung</h2>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                 padding:12px 18px; margin-top:12px; font-size:16px; line-height:2;">
@@ -424,15 +421,12 @@ function generiereProduktionsmaschineErweitert() {
   const container = document.getElementById('Container');
   container.innerHTML = `
     <h2>Aufgabe: Amortisationszeit</h2>
+    <h3>Berechne die Amortisationszeit für die Produktionsmaschine &bdquo;${modell}&ldquo;.</h3>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                 padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
       ${einleitung}
     </div>
     ${datenblatt}
-    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
-                padding:12px 18px; margin-top:16px; font-size:16px; line-height:1.7;">
-      <p style="margin:0 0 6px 0;"><strong>Berechne die Amortisationszeit für die Produktionsmaschine &bdquo;${modell}&ldquo;.</strong></p>
-    </div>
     <h2 class="loesung">Lösung</h2>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                 padding:12px 18px; margin-top:12px; font-size:16px; line-height:1.7;">
@@ -572,15 +566,12 @@ function generiereKostenvergleichsrechnung() {
   const container = document.getElementById('Container');
   container.innerHTML = `
     <h2>Aufgabe: Kostenvergleichsrechnung</h2>
+    <h3>Berechne die Gesamtkosten pro Jahr für die ${art.n} &bdquo;${modell}&ldquo; und weise nach, dass sie die Obergrenze von ${euro(obergrenze)} nicht überschreiten.</h3>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                 padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
       ${einleitung}
     </div>
     ${datenblatt}
-    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
-                padding:12px 18px; margin-top:16px; font-size:16px; line-height:1.7;">
-      <p style="margin:0 0 6px 0;"><strong>Berechne die Gesamtkosten pro Jahr für die ${art.n} &bdquo;${modell}&ldquo; und weise nach, dass sie die Obergrenze von ${euro(obergrenze)} nicht überschreiten.</strong></p>
-    </div>
     <h2 class="loesung">Lösung</h2>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                 padding:12px 18px; margin-top:12px; font-size:16px; line-height:2;">
@@ -641,16 +632,15 @@ function renderBelegButtons() {
   const jahr = new Date().getFullYear().toString();
 
   letzteAufgabe.anbieter.forEach(a => {
-    // Artikelbezeichnung im Beleg: max. 28 Zeichen (belege.html-Begrenzung)
-    let artikelName = `${letzteAufgabe.art.n} ${a.modell}`;
-    if (artikelName.length > 28) artikelName = letzteAufgabe.art.n;
-
+    // Artikel 1: Maschinentyp (Bezeichnung) mit Menge, Einheit und Einzelpreis
+    // Artikel 2: nur Bezeichnung = Modellname (Rest leer)
     const params = new URLSearchParams();
     params.set('beleg', 'rechnung');
-    params.set('artikel1', artikelName);
+    params.set('artikel1', letzteAufgabe.art.n);
     params.set('menge1', '1');
-    params.set('einheit1', '');
+    params.set('einheit1', 'Stück');
     params.set('einzelpreis1', a.ak.toString());
+    params.set('artikel2', String(a.modell).slice(0, 28));
     params.set('umsatzsteuer', String(UST_REGEL));
     params.set('tag', tag);
     params.set('monat', monatStr);
@@ -939,15 +929,12 @@ function generiereProduktionsmaschine() {
   const container = document.getElementById('Container');
   container.innerHTML = `
     <h2>Aufgabe: Amortisationszeit</h2>
+    <h3>Berechne die Amortisationszeit für die Produktionsmaschine &bdquo;${modell}&ldquo;.</h3>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                 padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
       ${einleitung}
     </div>
     ${datenblatt}
-    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
-                padding:12px 18px; margin-top:16px; font-size:16px; line-height:1.7;">
-      <p style="margin:0 0 6px 0;"><strong>Berechne die Amortisationszeit für die Produktionsmaschine &bdquo;${modell}&ldquo;.</strong></p>
-    </div>
     <h2 class="loesung">Lösung</h2>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                 padding:12px 18px; margin-top:12px; font-size:16px; line-height:1.7;">
