@@ -1,4 +1,5 @@
-## 2026-11-04 | November 2026
+## 2026-11-06 | November 2026
+- [neu] **Neue Aufgabe Amortisation** - [Investitionsrechnung](lb9-2-investitionsrechnung.html)
 - [neu] **Neuer Beleg** - [Mahnung](belege.html?beleg=mahnung)
 - [neu] **Neue Aufgabe** - [Eröffnung Bestandskonten](lb8-1-anfangsbestand.html)
 - [update] **Aufgabe Einkauf 8** - Rücksendung der Leihverpackung integriert [Einkauf](lb8-1-einkauf.html)

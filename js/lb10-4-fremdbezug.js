@@ -400,7 +400,7 @@ function generateProblem() {
         const fremdteil = escFD(waehleFremdbauteil(unternehmensName));
         aufgabeSatz += `
             <p>Für die Ausweitung der Produktion benötigt „${unternehmensName}“ ${f_menge} ${fremdteil}.<br>
-            Entscheiden Sie anhand der Grafik, ob die ${f_menge} ${fremdteil} in Eigenfertigung hergestellt oder per Fremdbezug beschafft werden sollen.</p>`;
+            Begründen Sie anhand der Grafik, ob die ${f_menge} ${fremdteil} in Eigenfertigung hergestellt oder per Fremdbezug beschafft werden sollen.</p>`;
 
         loesungSatz += `
             <h4>Ablesen aus der Grafik</h4>

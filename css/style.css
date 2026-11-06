@@ -2407,6 +2407,6 @@ min-width: 680px;
 flex: 1 1 0%;
 }
 .beleg-button-col {
-  min-width: 100px;
+  min-width: 200px;
   max-width: 100%;
 }

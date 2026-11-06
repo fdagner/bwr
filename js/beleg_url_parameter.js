@@ -653,16 +653,20 @@ function initializeURLParameters() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initializeURLParameters();           // zuerst!
-
-    // Sobald die Unternehmensdaten geladen sind (belege.js feuert 'yamlDataLoaded',
-    // sobald updateAllDropdowns() die Dropdowns befüllt hat)
+    // URL-Parameter (insbesondere Selects wie lieferer/kunde) erst anwenden, nachdem
+    // die YAML-Unternehmensdaten geladen sind – sonst sind die Dropdown-Optionen
+    // noch leer und Select-Parameter gehen verloren.
+    function runInit() {
+        initializeURLParameters();           // zuerst!
+    }
     if (typeof yamlData !== 'undefined' && yamlData?.length > 0 &&
         document.querySelector('select.meinUnternehmen')?.options.length > 0) {
         autoSelectMyCompanyOnlyIfNeeded();
+        runInit();
     } else {
         document.addEventListener('yamlDataLoaded', () => {
             autoSelectMyCompanyOnlyIfNeeded();
+            runInit();
         }, { once: true });
     }
 });
