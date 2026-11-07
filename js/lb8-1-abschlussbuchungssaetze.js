@@ -19,6 +19,7 @@
 
 const SBK_KONTO = kontoLabel('8010');   // Schlussbilanzkonto
 const GUV_KONTO = kontoLabel('8020');   // Gewinn- und Verlustkonto
+const UEFE_KONTO = kontoLabel('5000');  // Umsatzerlöse (Abschlusskonto für Erlösberichtigungen)
 
 // Zufällige Salden – wie in lb8-1-guv.js auf glatte 100 € gerundet
 function zufallsSaldo(min, max) {
@@ -52,7 +53,7 @@ const ABSCHLUSS_GRUPPEN = [
   {
     id: 'berichtigung',
     titel: 'Erlösberichtigungen',
-    hinweis: 'Saldo im Soll → mindert die Erlöse (8020 GUV im Soll)',
+    hinweis: 'Saldo im Soll → abgeschlossen über das Ertragskonto (5000 UEFE im Soll)',
     konten: [
       { nr: '5001', typ: 'berichtigung', range: [2000, 30000] },// kleine Korrekturposten
     ],
@@ -124,7 +125,7 @@ function abschlussSatz(k) {
   const haupt = k.haupt ? kontoLabel(k.haupt) : null;
   switch (k.typ) {
     case 'aufwand':       return { soll: GUV_KONTO, haben: eigen,     merk: 'Saldo im Soll → Aufwand ins Soll der GuV' };
-    case 'berichtigung':  return { soll: GUV_KONTO, haben: eigen,     merk: 'Saldo im Soll → Erlösberichtigung mindert die Erlöse (Soll der GuV)' };
+    case 'berichtigung':  return { soll: UEFE_KONTO, haben: eigen,  merk: 'Erlösberichtigung → Übertrag ins Soll des Ertragskontos (5000 UEFE)' };
     case 'erloes':        return { soll: eigen,     haben: GUV_KONTO, merk: 'Saldo im Haben → Ertrag ins Haben der GuV' };
     case 'bzk':           return { soll: haupt,     haben: eigen,     merk: 'Bezugskosten → Übertrag ins Soll des Hauptkontos' };
     case 'nachlass':      return { soll: eigen,     haben: haupt,     merk: 'Nachlässe → Übertrag ins Haben des Hauptkontos' };
@@ -300,7 +301,7 @@ Arbeitsauftrag: „Bilde zu jedem Konto den passenden Abschlussbuchungssatz bzw.
 
 Regeln (Merkhilfe für dich – erst andeuten, dann erklären):
 - Aufwandskonto (Saldo im Soll) → 8020 GUV an <Konto> (GuV im Soll)
-- Erlösberichtigungen (Saldo im Soll) → 8020 GUV an <Konto> (mindert die Erlöse)
+- Erlösberichtigungen (Saldo im Soll) → 5000 UEFE an <Konto> (Übertrag ins Soll des Ertragskontos)
 - Ertragskonto (Saldo im Haben) → <Konto> an 8020 GUV (GuV im Haben)
 - Unterkonto Bezugskosten (Saldo im Soll) → <Hauptkonto> an <Unterkonto>
 - Unterkonto Nachlässe (Saldo im Haben) → <Unterkonto> an <Hauptkonto>
