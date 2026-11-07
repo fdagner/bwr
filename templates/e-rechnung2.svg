@@ -1,0 +1,224 @@
+```svg
+<svg id="rechnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 1180" preserveAspectRatio="xMidYMid meet" style="height:auto;background-color:#e8eef5;padding:0;width:100%;max-width:1280px;border:1px solid #999">
+  <defs id="customDefs">
+    <linearGradient id="titleBarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a90d9"/>
+      <stop offset="100%" stop-color="#2c6cb0"/>
+    </linearGradient>
+    <linearGradient id="menuGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <filter id="windowShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Desktop background -->
+  <rect x="0" y="0" width="1280" height="1180" fill="#c5d4e8"/>
+
+  <!-- Application window -->
+  <g filter="url(#windowShadow)">
+    <rect x="8" y="8" width="1264" height="1164" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+    
+    <!-- Title bar -->
+    <rect x="8" y="8" width="1264" height="40" rx="8" fill="url(#titleBarGrad)"/>
+    <rect x="8" y="32" width="1264" height="16" fill="url(#titleBarGrad)"/>
+    
+    <circle cx="34" cy="28" r="8" fill="#ff5f57" stroke="#e0443e" stroke-width="0.5"/>
+    <circle cx="58" cy="28" r="8" fill="#febc2e" stroke="#d1a01e" stroke-width="0.5"/>
+    <circle cx="82" cy="28" r="8" fill="#28c840" stroke="#1a9f2e" stroke-width="0.5"/>
+    
+    <text x="115" y="32" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#ffffff" font-weight="600">E-Rechnung Abruf— RechnungsManager Pro 2026</text>
+    
+    <!-- Menu bar -->
+    <rect x="8" y="48" width="1264" height="32" fill="url(#menuGrad)" stroke="#cbd5e1" stroke-width="0.5"/>
+    <text x="30" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1e293b">Datei</text>
+    <text x="95" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1e293b">Bearbeiten</text>
+    <text x="195" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1e293b">Ansicht</text>
+    <text x="280" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1e293b">Einfügen</text>
+    <text x="370" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1e293b">Extras</text>
+    <text x="445" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1e293b">Hilfe</text>
+    
+    <!-- Toolbar -->
+    <rect x="8" y="80" width="1264" height="44" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.5"/>
+    <rect x="22" y="88" width="90" height="30" rx="5" fill="#3b82f6" stroke="#2563eb"/>
+    <text x="67" y="109" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#fff" text-anchor="middle">Neu</text>
+    <rect x="122" y="88" width="90" height="30" rx="5" fill="#e2e8f0" stroke="#94a3b8"/>
+    <text x="167" y="109" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#334155" text-anchor="middle">Öffnen</text>
+    <rect x="222" y="88" width="100" height="30" rx="5" fill="#e2e8f0" stroke="#94a3b8"/>
+    <text x="272" y="109" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#334155" text-anchor="middle">Speichern</text>
+    <rect x="332" y="88" width="115" height="30" rx="5" fill="#10b981" stroke="#059669"/>
+    <text x="390" y="109" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#fff" text-anchor="middle">PDF Export</text>
+    <rect x="457" y="88" width="125" height="30" rx="5" fill="#8b5cf6" stroke="#7c3aed"/>
+    <text x="520" y="109" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#fff" text-anchor="middle">* KI-Buchung *</text>
+    
+    <circle cx="1215" cy="102" r="7" fill="#22c55e"/>
+    <text x="1225" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#64748b">Online</text>
+  </g>
+
+  <!-- Left sidebar -->
+  <rect x="12" y="132" width="230" height="1000" fill="#1e293b"/>
+  <text x="32" y="175" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#94a3b8" font-weight="600">NAVIGATION</text>
+  
+  <rect x="24" y="200" width="206" height="48" rx="8" fill="#3b82f6"/>
+  <text x="50" y="231" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#fff">Rechnung</text>
+  
+  <text x="50" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#cbd5e1">Kundenverwaltung</text>
+  <text x="50" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#cbd5e1">Artikelstamm</text>
+  <text x="50" y="390" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#cbd5e1">Offene Posten</text>
+  <text x="50" y="440" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#cbd5e1">Berichte</text>
+  <text x="50" y="490" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#cbd5e1">Einstellungen</text>
+  
+  <line x1="32" y1="540" x2="220" y2="540" stroke="#334155" stroke-width="1.5"/>
+  
+  <text x="32" y="585" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#94a3b8" font-weight="600">AKTUELLE RECHNUNG</text>
+  <text x="32" y="630" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#64748b">Status:</text>
+  <text x="110" y="630" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#fbbf24" font-weight="600">Prüfung</text>
+  <text x="32" y="670" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#64748b">Zuletzt abgerufen:</text>
+  <text x="32" y="700" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#94a3b8">Heute, 09:07</text>
+
+  <!-- Main invoice panel -->
+  <rect x="250" y="132" width="1010" height="1000" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  
+  <!-- Header band -->
+  <rect x="250" y="140" width="1010" height="55" fill="#fff"/>
+<rect class="colorSVG" x="275" y="255" width="950" height="4" />
+  <g id="liefererInformationen2" fill="#000">
+    <rect id="logo-placeholder" x="1120" y="145" width="120" height="85" opacity="0" />
+    <text id="nameLieferer" x="275" y="185" font-family="Calibri, Segoe UI, sans-serif" font-size="40" font-weight="bold"/>
+    <text id="mottoLieferer" x="275" y="220" font-family="Calibri, Segoe UI, sans-serif" font-size="20" font-weight="bold" />
+    <text id="adresseLieferer" x="275" y="245" font-family="Arial, sans-serif" font-style="italic" font-size="18" />
+  </g>
+
+  <!-- Customer block (left) -->
+  <g id="kundenDaten">
+    <text x="275" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#64748b" font-weight="600">RECHNUNGSEMPFÄNGER</text>
+    <text id="nameKunde" x="275" y="325" font-family="Arial, sans-serif" font-size="22" fill="#0f172a"/>
+    <text id="inhaberKunde" x="275" y="355" font-family="Arial, sans-serif" font-size="20" fill="#334155"/>
+    <text id="strasseKunde" x="275" y="385" font-family="Arial, sans-serif" font-size="20" fill="#334155"/>
+    <text id="plzKunde" x="275" y="415" font-family="Arial, sans-serif" font-size="20" fill="#334155"/>
+  </g>
+
+  <!-- Supplier block (right) -->
+  <g id="liefererDaten">
+    <text x="780" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#64748b" font-weight="600">LIEFERANT</text>
+    
+    <text x="780" y="325" font-family="Arial, sans-serif" font-size="18" text-anchor="end" fill="#64748b">Firma:</text>
+    <text id="nameLangLieferer" x="795" y="325" font-family="Arial, sans-serif" font-size="18" text-anchor="start" fill="#0f172a"/>
+    
+    <text x="780" y="355" font-family="Arial, sans-serif" font-size="18" text-anchor="end" fill="#64748b">Straße:</text>
+    <text id="strasseLieferer" x="795" y="355" font-family="Arial, sans-serif" font-size="18" text-anchor="start" fill="#0f172a"/>
+    
+    <text x="780" y="385" font-family="Arial, sans-serif" font-size="18" text-anchor="end" fill="#64748b">Ort:</text>
+    <text id="plzLieferer" x="795" y="385" font-family="Arial, sans-serif" font-size="18" text-anchor="start" fill="#0f172a"/>
+    
+    <text x="780" y="415" font-family="Arial, sans-serif" font-size="18" text-anchor="end" fill="#64748b">Ansprechpartner:</text>
+    <text id="ansprechpartnerLieferer" x="795" y="415" font-family="Arial, sans-serif" font-size="18" text-anchor="start" fill="#0f172a"/>
+    
+    <text x="780" y="445" font-family="Arial, sans-serif" font-size="18" text-anchor="end" fill="#64748b">Tel.:</text>
+    <text id="telefonLieferer" x="795" y="445" font-family="Arial, sans-serif" font-size="18" text-anchor="start" fill="#0f172a"/>
+    
+    <text x="780" y="475" font-family="Arial, sans-serif" font-size="18" text-anchor="end" fill="#64748b">Mail:</text>
+    <text id="emailLieferer" x="795" y="475" font-family="Arial, sans-serif" font-size="18" text-anchor="start" fill="#0f172a"/>
+    
+    <text x="780" y="505" font-family="Arial, sans-serif" font-size="18" text-anchor="end" fill="#64748b">Internet:</text>
+    <text id="internetLieferer" x="795" y="505" font-family="Arial, sans-serif" font-size="18" text-anchor="start" fill="#0f172a"/>
+  </g>
+
+  <!-- Invoice number + meta bar -->
+  <g id="rechnungsInformationen">
+    <rect x="275" y="540" width="960" height="70" rx="8" fill="#f1f5f9" stroke="#e2e8f0"/>
+    <text x="295" y="585" font-family="Calibri, Segoe UI, sans-serif" font-weight="bold" font-size="28" fill="#0f172a">RECHNUNG NR-<tspan id="rechnungsNummer"/></text>
+    
+    <text id="lieferdatum" x="620" y="570" font-family="Arial, sans-serif" font-size="18" fill="#334155">Lieferung <tspan id="bezugskostenBedingung"></tspan> am <tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+    
+    <text x="620" y="600" font-family="Arial, sans-serif" font-size="18" fill="#334155">Kundennummer: K<tspan id="nummerKunde"/></text>
+    
+    <text id="datum" x="1210" y="585" font-family="Arial, sans-serif" font-size="18" fill="#0f172a" text-anchor="end"><tspan class="rechnungsDatum">01.01.</tspan><tspan class="aktuellesJahr"/></text>
+  </g>
+
+  <!-- Line items -->
+  <g id="bestellDaten">
+    <rect x="275" y="630" width="960" height="42" fill="#1e293b"/>
+    <text id="pos" x="295" y="658" font-family="Arial, sans-serif" font-size="18" fill="#f8fafc" font-weight="bold">Pos</text>
+    <text id="artikel" x="370" y="658" font-family="Arial, sans-serif" font-size="18" fill="#f8fafc" font-weight="bold">Artikelbezeichnung</text>
+    <text id="menge" x="780" y="658" font-family="Arial, sans-serif" font-size="18" fill="#f8fafc" font-weight="bold" text-anchor="end">Menge</text>
+    <text id="einzelpreis" x="980" y="658" font-family="Arial, sans-serif" font-size="18" fill="#f8fafc" font-weight="bold" text-anchor="end">Einzelpreis</text>
+    <text id="gesamtpreis" x="1215" y="658" font-family="Arial, sans-serif" font-size="18" fill="#f8fafc" font-weight="bold" text-anchor="end">Gesamtpreis</text>
+    
+    <!-- Row 1 -->
+    <rect x="275" y="672" width="960" height="40" fill="#f8fafc"/>
+    <text id="pos1" x="295" y="699" font-family="Arial, sans-serif" font-size="20" fill="#0f172a"/>
+    <text id="artikel1" x="370" y="699" font-family="Arial, sans-serif" font-size="20" fill="#0f172a"/>
+    <text id="menge1" x="780" y="699" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+    <text id="einzelpreis1" x="980" y="699" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+    <text id="gesamtpreis1" x="1215" y="699" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+    
+    <!-- Row 2 -->
+    <rect x="275" y="712" width="960" height="40" fill="#ffffff"/>
+    <text id="pos2" x="295" y="739" font-family="Arial, sans-serif" font-size="20" fill="#0f172a"/>
+    <text id="artikel2" x="370" y="739" font-family="Arial, sans-serif" font-size="20" fill="#0f172a"/>
+    <text id="menge2" x="780" y="739" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+    <text id="einzelpreis2" x="980" y="739" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+    <text id="gesamtpreis2" x="1215" y="739" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+    
+    <rect x="275" y="752" width="960" height="2" fill="#cbd5e1"/>
+  </g>
+
+  <!-- Totals card -->
+  <g id="abrechnungsDetails">
+    <rect x="700" y="780" width="535" height="230" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+    
+    <g id="zwischensummeRabattVersand">
+      <text id="warenwert" x="725" y="820" font-family="Arial, sans-serif" font-size="20" fill="#334155" font-weight="600">Warenwert</text>
+      <text id="zwischensumme" x="1215" y="820" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+      
+      <g id="gRabatt">
+        <text id="rabatt" x="725" y="855" font-family="Arial, sans-serif" font-size="20" fill="#334155" font-weight="600"/>
+        <text id="rabattsumme" x="1215" y="855" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+      </g>
+      
+      <g id="gBezugskosten">
+        <text id="bezugskosten" x="725" y="890" font-family="Arial, sans-serif" font-size="20" fill="#334155" font-weight="600">Bezugskosten</text>
+        <text id="bezugskostenSumme" x="1215" y="890" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+      </g>
+    </g>
+    
+    <g id="warenwertUstRechnungsbetrag">
+      <line x1="725" y1="910" x2="1215" y2="910" stroke="#94a3b8" stroke-width="1.5"/>
+      
+      <text x="725" y="945" font-family="Arial, sans-serif" font-size="20" fill="#334155" font-weight="600">Nettowert</text>
+      <text id="nettowert" x="1215" y="945" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+      
+      <text x="725" y="980" font-family="Arial, sans-serif" font-size="20" fill="#334155" font-weight="600"><tspan id="ust"> </tspan> % UST</text>
+      <text id="ustsumme" x="1215" y="980" font-family="Arial, sans-serif" font-size="20" fill="#0f172a" text-anchor="end"/>
+      
+      <rect x="725" y="995" width="490" height="40" rx="6" fill="#1e293b"/>
+      <text x="745" y="1022" font-family="Arial, sans-serif" font-size="20" fill="#f8fafc" font-weight="bold">Rechnungsbetrag</text>
+      <text id="rechnungsbetrag" x="1195" y="1022" font-family="Arial, sans-serif" font-size="20" fill="#f8fafc" font-weight="bold" text-anchor="end"/>
+    </g>
+  </g>
+
+  <!-- Payment terms (left side under table) -->
+  <g id="Zahlungsbedingungen" font-family="Arial, sans-serif" fill="#334155">   
+    <g id="zahlungszielSatz">
+      <text x="275" y="855" font-size="20">Zahlung fällig in <tspan id="zahlungsziel"> </tspan> Tagen rein netto</text>
+    </g>
+    
+    <text id="skontotext" x="275" y="900" font-size="20">Skonto binnen <tspan id="skontofrist"> </tspan> Tagen mit <tspan id="skonto"> </tspan> %</text>   
+    <text id="Eigentumsvorbehalt" x="275" y="945" font-size="18" fill="#334155">Lieferung mit Eigentumsvorbehalt</text>
+  <text id="amtsgerichtLieferer" x="275" y="1100" font-family="Arial, sans-serif" font-size="18"  fill="#334155"/>
+    <text id="ustidLieferer" x="625" y="1100" font-family="Arial, sans-serif" font-size="18" fill="#334155"/>
+    <text id="steuernummerLieferer" x="975" y="1100" font-family="Arial, sans-serif" font-size="18" fill="#334155"/>
+      <text id="bankLieferer" x="275" y="1125" font-family="Arial, sans-serif" font-size="18" fill="#334155"/>
+    <text id="ibanLieferer" x="625" y="1125" font-family="Arial, sans-serif" font-size="18" fill="#334155"/>
+    <text id="bicLieferer" x="975" y="1125" font-family="Arial, sans-serif" font-size="18" fill="#334155"/>
+
+  </g>
+  <!-- Application footer / status bar -->
+  <rect x="8" y="1140" width="1264" height="64" fill="#1e293b"/>
+  <g id="footerText" fill="#e2e8f0">
+  </g>
+</svg>
+```
