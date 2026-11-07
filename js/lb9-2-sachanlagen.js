@@ -671,7 +671,7 @@ function kopiereKiPromptKauf() {
     const orig = btn.innerHTML;
     btn.innerHTML = '✅ Kopiert!';
     setTimeout(() => { btn.innerHTML = orig; }, 2500);
-  }).catch(() => alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
+  }).catch(() => zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
 }
 
 function toggleKiPromptVorschauKauf() {

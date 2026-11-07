@@ -57,6 +57,7 @@
   <script src="js/html2canvas.min.js"></script>
   <script src="js/clipboard.min.js"></script>
   <script src="js/menu.js"></script>
+  <script src="js/utils.js?v=13"></script>
 </head>
 
 <main>
@@ -460,7 +461,7 @@ function investitionsrechnungHerunterladen() {
 function investitionsrechnungKopiereInZwischenablage() {
     const investitionsrechnungHTML = document.getElementById('investitionsrechnungContainer').innerHTML;
     navigator.clipboard.writeText(investitionsrechnungHTML)
-        .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+        .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
         .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
@@ -482,12 +483,12 @@ let clipboardInvestitionsrechnung = new ClipboardJS('#officeButtonInvestitionsre
 
 clipboardInvestitionsrechnung.on('success', function (e) {
     console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+    zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardInvestitionsrechnung.on('error', function (e) {
     console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-    alert("Fehler beim Kopieren der Tabelle.");
+    zeigeModal("Fehler beim Kopieren der Tabelle.");
 });
 
         </script>

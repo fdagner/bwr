@@ -315,7 +315,7 @@
         sel.appendChild(no);
         sel.onchange = async function () {
             if (sel.value === '__new__') {
-                const name = prompt('Name der neuen Sammlung:');
+                const name = await window.frageModal('Name der neuen Sammlung:');
                 if (!name) { sel.value = active; return; }
                 try {
                     const c = await createCollection(name);
@@ -323,7 +323,7 @@
                     await populateSelect(selectId);
                 } catch (e) {
                     if (e && e.message === 'MAX_COLLECTIONS') {
-                        alert('Maximale Anzahl von ' + MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte löschen oder leeren Sie zuerst eine Sammlung.');
+                        zeigeModal('Maximale Anzahl von ' + MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte löschen oder leeren Sie zuerst eine Sammlung.', 'Sammlung voll');
                     } else {
                         console.error(e);
                     }
@@ -383,7 +383,7 @@
                 const title = box.querySelector('#cdTitle').value.trim();
                 let cid = sel.value;
                 if (cid === '__new__') {
-                    const name = prompt('Name der neuen Sammlung:');
+                    const name = await window.frageModal('Name der neuen Sammlung:');
                     if (!name) { close(null); return; }
                     try {
                         const c = await createCollection(name);
@@ -391,7 +391,7 @@
                         setActiveCollectionId(cid);
                     } catch (e) {
                         if (e && e.message === 'MAX_COLLECTIONS') {
-                            alert('Maximale Anzahl von ' + MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte löschen oder leeren Sie zuerst eine Sammlung.');
+                            zeigeModal('Maximale Anzahl von ' + MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte löschen oder leeren Sie zuerst eine Sammlung.', 'Sammlung voll');
                         } else {
                             console.error(e);
                         }
@@ -441,7 +441,7 @@
         if (!col) throw new Error('NO_COLLECTION');
         const count = await getItemCount(cid);
         if (count >= MAX_ITEMS) {
-            alert('Diese Sammlung hat das Maximum von ' + MAX_ITEMS + ' Einträgen erreicht. Bitte leere sie oder lege eine neue an.');
+            zeigeModal('Diese Sammlung hat das Maximum von ' + MAX_ITEMS + ' Einträgen erreicht. Bitte leere sie oder lege eine neue an.', 'Sammlung voll');
             throw new Error('MAX_ITEMS');
         }
         item.collectionId = cid;
@@ -500,7 +500,7 @@
                 const includeSol = confirm('Loesungen in den Druck einschliessen?');
                 const html = buildExportHTML(items, c, includeSol);
                 const w = window.open('', '_blank');
-                if (!w) { alert('Popup blockiert. Bitte Popups erlauben.'); return; }
+                if (!w) { zeigeModal('Popup blockiert. Bitte Popups erlauben.', 'Hinweis'); return; }
                 w.document.open();
                 w.document.write(html);
                 w.document.close();
@@ -515,6 +515,8 @@
     function escapeHtml(s) {
         return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
+
+    // Hinweis-/Eingabedialoge (zeigeModal/frageModal) kommen zentral aus js/utils.js
 
     function downloadHTML(html, filename) {
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });

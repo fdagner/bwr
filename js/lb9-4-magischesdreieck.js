@@ -330,7 +330,7 @@ function kopiereKiPrompt() {
     btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
     btn.classList.add('ki-prompt-btn--success');
     setTimeout(() => { btn.innerHTML = originalHTML; btn.classList.remove('ki-prompt-btn--success'); }, 2500);
-  }).catch(() => alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
+  }).catch(() => zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
 }
 
 function toggleKiPromptVorschau() {

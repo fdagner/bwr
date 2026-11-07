@@ -277,7 +277,7 @@ function kopiereKiPrompt() {
         btn.classList.remove('ki-prompt-btn--success');
       }, 2500);
     })
-    .catch(() => alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
+    .catch(() => zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
 }
 
 function toggleKiPromptVorschau() {
@@ -374,11 +374,11 @@ function maBaueMatchingXml(aufgaben) {
 function exportiereMoodle() {
   const aufgaben = maLeseAufgaben();
   if (!aufgaben.length) {
-    alert('Bitte zuerst Aufgaben erstellen.');
+    zeigeModal('Bitte zuerst Aufgaben erstellen.');
     return;
   }
   if (aufgaben.length < 2) {
-    alert('Moodle benötigt für eine Zuordnungsfrage mindestens 2 Merkmale. Bitte mehr Zeilen erstellen.');
+    zeigeModal('Moodle benötigt für eine Zuordnungsfrage mindestens 2 Merkmale. Bitte mehr Zeilen erstellen.');
     return;
   }
   const xml = maBaueMatchingXml(aufgaben);

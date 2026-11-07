@@ -56,7 +56,7 @@
   <link rel="stylesheet" href="css/style.css?v=14">
   <script src="js/menu.js?v=14"></script>
   <script src="js/js-yaml.min.js"></script>
-  <script src="js/utils.js?v=12"></script>
+  <script src="js/utils.js?v=13"></script>
   <script src="js/apexcharts.min.js"></script>
 </head>
 
@@ -315,20 +315,20 @@
 
             // Validierungen
             if (zuschlagssatzInput < 1 || zuschlagssatzInput > 25) {
-                alert("Der Zuschlagssatz muss zwischen 1 % und 25 % liegen.");
+                zeigeModal("Der Zuschlagssatz muss zwischen 1 % und 25 % liegen.");
                 return;
             }
 
             if (fertigungsmaterialInput < 10 || fertigungsmaterialInput > 99999999) {
-                alert("Der Zuschlagssatz muss zwischen 10 und 99999999 liegen.");
+                zeigeModal("Der Zuschlagssatz muss zwischen 10 und 99999999 liegen.");
                 return;
             }
             if (fertigungslöhneInput < 10 || fertigungsmaterialInput > 99999999) {
-                alert("Der Zuschlagssatz muss zwischen 10 und 99999999 liegen.");
+                zeigeModal("Der Zuschlagssatz muss zwischen 10 und 99999999 liegen.");
                 return;
             }
             if (fertigungsgemeinkostenInput < 100 || fertigungsgemeinkostenInput > 200) {
-                alert("Der Fertigungsgemeinkostensatz muss zwischen 100 % und 200 % liegen.");
+                zeigeModal("Der Fertigungsgemeinkostensatz muss zwischen 100 % und 200 % liegen.");
                 return;
             }
 

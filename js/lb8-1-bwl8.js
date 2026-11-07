@@ -44,7 +44,7 @@ function produktlebenszyklusHerunterladen() {
 function produktlebenszyklusKopiereInZwischenablage() {
   const produktlebenszyklusHTML = document.getElementById('produktlebenszyklusContainer').innerHTML;
   navigator.clipboard.writeText(produktlebenszyklusHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
@@ -169,7 +169,7 @@ function portfolioHerunterladen() {
 function portfolioKopiereInZwischenablage() {
   const portfolioHTML = document.getElementById('portfolioContainer').innerHTML;
   navigator.clipboard.writeText(portfolioHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 

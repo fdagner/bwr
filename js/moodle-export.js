@@ -112,7 +112,7 @@ function baueMoodleXml(fragen, praefix) {
 // ---------------------------------------------------------------------------
 function exportiereMoodle() {
   if (!moodleFragen.length) {
-    alert('Keine exportierbaren Fragen vorhanden. Bitte zuerst Aufgaben erstellen (die Differenzkalkulation enthält keinen Buchungssatz und kann nicht exportiert werden).');
+    zeigeModal('Keine exportierbaren Fragen vorhanden. Bitte zuerst Aufgaben erstellen (die Differenzkalkulation enthält keinen Buchungssatz und kann nicht exportiert werden).');
     return;
   }
   const praefix = (document.getElementById('moodlePraefix')?.value || 'BwR 8 Einkauf').trim();

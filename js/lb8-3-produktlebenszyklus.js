@@ -38,7 +38,7 @@ function produktlebenszyklusHerunterladen() {
 function produktlebenszyklusKopiereInZwischenablage() {
   const produktlebenszyklusHTML = document.getElementById('produktlebenszyklusContainer').innerHTML;
   navigator.clipboard.writeText(produktlebenszyklusHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function addMarkierung() {
   if (markierungen.length >= MAX_MARKIERUNGEN) {
-    alert('Maximale Anzahl von Markierungen erreicht (5)');
+    zeigeModal('Maximale Anzahl von Markierungen erreicht (5)');
     return;
   }
 

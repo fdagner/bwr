@@ -75,7 +75,7 @@ parsedData.konten.forEach(konto => {
   function handleCopyClick() {
       const kontoClipboard = document.getElementById('dragContainer').innerText;
       navigator.clipboard.writeText(kontoClipboard)
-          .then(() => alert('Text wurde in die Zwischenablage kopiert'))
+          .then(() => zeigeModal('Text wurde in die Zwischenablage kopiert'))
           .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
   }
 
@@ -129,6 +129,6 @@ function handleDragStartUST(event) {
 function handleUSTCopyClick() {
   const USTClipboard = document.getElementById('dragContainerUST').innerText;
   navigator.clipboard.writeText(USTClipboard)
-      .then(() => alert('Text wurde in die Zwischenablage kopiert'))
+      .then(() => zeigeModal('Text wurde in die Zwischenablage kopiert'))
       .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }

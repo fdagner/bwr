@@ -34,7 +34,7 @@ function exportHTML() {
 function exportSource() {
   const codeHTML = document.getElementById('Container').innerHTML;
   navigator.clipboard.writeText(codeHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
@@ -55,7 +55,7 @@ function exportSVG() {
   const container = document.getElementById('Container');
   if (!container) return;
   const svg = container.querySelector('svg');
-  if (!svg) return alert('Kein SVG gefunden');
+  if (!svg) return zeigeModal('Kein SVG gefunden');
   const svgData = new XMLSerializer().serializeToString(svg);
   const blob = new Blob([svgData], { type: 'image/svg+xml' });
   const url = URL.createObjectURL(blob);
@@ -72,11 +72,11 @@ function exportOffice() {
     window._clipboardOffice = new ClipboardJS('#officeButton', { target: () => document.getElementById('Container') });
     window._clipboardOffice.on('success', () => {
       console.log('Die Tabelle wurde in die Zwischenablage kopiert.');
-      alert('Die Tabelle wurde in die Zwischenablage kopiert.');
+      zeigeModal('Die Tabelle wurde in die Zwischenablage kopiert.');
     });
     window._clipboardOffice.on('error', (e) => {
       console.error('Fehler beim Kopieren der Tabelle: ', e.action);
-      alert('Fehler beim Kopieren der Tabelle.');
+      zeigeModal('Fehler beim Kopieren der Tabelle.');
     });
   }
   const btn = document.getElementById('officeButton');
@@ -93,7 +93,7 @@ function exportMoodle() {
   if (typeof window.exportiereMoodle === 'function') {
     window.exportiereMoodle();
   } else {
-    alert('Moodle-Export für diese Seite nicht verfügbar.');
+    zeigeModal('Moodle-Export für diese Seite nicht verfügbar.');
   }
 }
 

@@ -202,7 +202,7 @@ function baueKontenplanClozeXml() {
 
 function exportiereMoodle() {
   const xml = baueKontenplanClozeXml();
-  if (!xml) { alert('Bitte zuerst Aufgaben erstellen.'); return; }
+  if (!xml) { zeigeModal('Bitte zuerst Aufgaben erstellen.'); return; }
   const d = new Date();
   const p = n => String(n).padStart(2, '0');
   const dateiname = `cloze-kontenplan-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
@@ -289,7 +289,7 @@ function kopiereKiPrompt() {
     }, 2500);
   }).catch(err => {
     console.error('Fehler beim Kopieren:', err);
-    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
   });
 }
 

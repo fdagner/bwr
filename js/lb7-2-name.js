@@ -754,7 +754,7 @@ function kopiereKiPrompt() {
         btn.classList.remove("ki-prompt-btn--success");
       }, 2500);
     })
-    .catch(() => alert("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."));
+    .catch(() => zeigeModal("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."));
 }
 
 function toggleKiPromptVorschau() {

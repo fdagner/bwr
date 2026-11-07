@@ -380,7 +380,7 @@ function kopiereKiPrompt() {
     btn.textContent = 'Kopiert!';
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Prompt kopieren'; btn.classList.remove('copied'); }, 2500);
-  }).catch(() => alert('Kopieren nicht möglich.'));
+  }).catch(() => zeigeModal('Kopieren nicht möglich.'));
 }
 
 function toggleKiPromptVorschau() {
@@ -479,7 +479,7 @@ function mfBaueMatchingXml(aufgaben) {
 function exportiereMoodle() {
   const aufgaben = mfLeseAufgaben();
   if (!aufgaben.length) {
-    alert('Bitte zuerst Aufgaben erstellen.');
+    zeigeModal('Bitte zuerst Aufgaben erstellen.');
     return;
   }
   const xml = mfBaueMatchingXml(aufgaben);

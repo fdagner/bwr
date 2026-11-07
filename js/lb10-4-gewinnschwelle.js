@@ -49,7 +49,7 @@ function validateAndGenerateChart() {
     nettoverkaufserlösestück < 0 ||
     nettoverkaufserlösestück > 50000
   ) {
-    alert(
+    zeigeModal(
       "Bitte geben Sie gültige positive Werte ein:\nFixkosten: 0 - 999999999\nVariable Stückkosten: 0 - 100000\nNettoverkaufserlöse pro Stück: 0 - 50000"
     );
     return;
@@ -152,7 +152,7 @@ async function generateChart() {
     isNaN(variablestückkosten) ||
     isNaN(nettoverkaufserlösestück)
   ) {
-    alert("Please enter valid numeric values for all fields.");
+    zeigeModal("Please enter valid numeric values for all fields.");
     return;
   }
   
@@ -180,7 +180,7 @@ async function generateChart() {
     
     maxMenge = roundedNormalized * magnitude;
   } else {
-    alert(
+    zeigeModal(
       "Ungültige Werte: die Nettoverkaufserlöse müssen höher als die Variablen Stückkosten sein."
     );
     return;
@@ -707,7 +707,7 @@ function gewinnschwelleHerunterladenAlsPNG() {
 function gewinnschwelleKopiereInZwischenablage() {
   const gewinnschwelleHTML = gsAufgabeHtml().replace(/&nbsp;/g, ' ');
   navigator.clipboard.writeText(gewinnschwelleHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 

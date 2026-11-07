@@ -695,7 +695,7 @@ function kopiereKiPrompt() {
     }, 2500);
   }).catch(err => {
     console.error('Fehler beim Kopieren:', err);
-    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
   });
 }
 

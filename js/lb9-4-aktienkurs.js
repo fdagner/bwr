@@ -810,12 +810,12 @@ let clipboardaktien = new ClipboardJS('#aktienOfficeButton');
 
 clipboardaktien.on('success', function (e) {
     console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+    zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardaktien.on('error', function (e) {
     console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-    alert("Fehler beim Kopieren der Tabelle.");
+    zeigeModal("Fehler beim Kopieren der Tabelle.");
 });
 
 // Initialisierung beim Laden der Seite
@@ -878,7 +878,7 @@ function autoSelectMyCompany() {
 
 async function aktienZurSammlung() {
     const container = document.getElementById('Container');
-    if (!container) { alert('Keine Aufgabe vorhanden.'); return; }
+    if (!container) { zeigeModal('Keine Aufgabe vorhanden.'); return; }
     // Bei aktivem Editor den Editor-Wert nehmen (container.innerHTML wäre nach dem
     // Jodit-Adopt die ausgeblendete Ursprungs-Kopie).
     const html = (window.JoditEditor && container._jodit)
@@ -937,10 +937,10 @@ async function aktienZurSammlung() {
             thumbnail: '',
             solutionContent: (res.includeSolution ? (loesungHtml || null) : null)
         });
-        alert('Zur Sammlung hinzugefügt.');
+        zeigeModal('Zur Sammlung hinzugefügt.');
     } catch (e) {
-        if (e && e.message === 'MAX_ITEMS') alert('Sammlung voll (max. 25).');
-        else { console.error(e); alert('Fehler beim Hinzufügen.'); }
+        if (e && e.message === 'MAX_ITEMS') zeigeModal('Sammlung voll (max. 25).');
+        else { console.error(e); zeigeModal('Fehler beim Hinzufügen.'); }
     }
 }
 

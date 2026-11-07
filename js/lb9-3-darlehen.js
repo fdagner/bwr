@@ -557,7 +557,10 @@ function kopiereKiPromptDarlehen() {
     const orig = btn.innerHTML;
     btn.innerHTML = '✅ Kopiert!';
     setTimeout(() => { btn.innerHTML = orig; }, 2500);
-  }).catch(() => alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
+  }).catch(() => {
+    console.error('Fehler beim Kopieren');
+    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.', 'Kopieren');
+  });
 }
 
 function toggleKiPromptVorschauDarlehen() {

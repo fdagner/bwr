@@ -460,21 +460,21 @@ function handleFileUpload() {
 
                     // Core + zusätzliche neu aufbauen
                     await initializeYamlData();
-                    alert("Datei erfolgreich hochgeladen!");
+                    zeigeModal("Datei erfolgreich hochgeladen!");
                 } else {
                     console.error("Invalid YAML format in the uploaded file.");
-                    alert("Fehler im YAML format. Datei bitte überprüfen.");
+                    zeigeModal("Fehler im YAML format. Datei bitte überprüfen.");
                 }
             } catch (error) {
                 console.error("Error processing uploaded YAML data:", error);
-                alert("Error processing uploaded YAML data. Please check the file format.");
+                zeigeModal("Error processing uploaded YAML data. Please check the file format.");
             }
         };
 
         reader.readAsText(uploadedFile);
 
     } else {
-        alert("No file selected. Please choose a YAML file to upload.");
+        zeigeModal("No file selected. Please choose a YAML file to upload.");
     }
 
 }
@@ -497,7 +497,7 @@ function handleLogoUpload(event) {
     // Prüfe Dateityp
     const validTypes = ['image/svg+xml'];
     if (!validTypes.includes(file.type)) {
-        alert('Bitte nur SVG-Dateien hochladen.');
+        zeigeModal('Bitte nur SVG-Dateien hochladen.');
         event.target.value = '';
         uploadedLogoBase64 = null;
         preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
@@ -506,7 +506,7 @@ function handleLogoUpload(event) {
     
     // Prüfe Dateigröße (max 500KB)
     if (file.size > 500 * 1024) {
-        alert('Die Datei ist zu groß. Maximal 500KB erlaubt.');
+        zeigeModal('Die Datei ist zu groß. Maximal 500KB erlaubt.');
         event.target.value = '';
         uploadedLogoBase64 = null;
         preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
@@ -529,7 +529,7 @@ function handleLogoUpload(event) {
         preview.appendChild(okMsg);
     };
     reader.onerror = function() {
-        alert('Fehler beim Lesen der Datei.');
+        zeigeModal('Fehler beim Lesen der Datei.');
         uploadedLogoBase64 = null;
         preview.innerHTML = '<small style="color: #666;">Keine Datei ausgewählt</small>';
     };
@@ -692,7 +692,7 @@ function handleAddCompanyForm(event) {
             AWB: getWerkstoffeFromForm('newCompanyAWB'),
         };
     } catch (error) {
-        alert(error.message);
+        zeigeModal(error.message);
         return;
     }
 
@@ -703,7 +703,7 @@ try {
         hauptwerk: getFertigerzeugnisseFromForm()
     };
 } catch (error) {
-    alert(error.message);
+    zeigeModal(error.message);
     return;
 }
     
@@ -716,7 +716,7 @@ try {
     
     for (const input of allInputs) {
         if (containsDangerousChars(input)) {
-            alert('Ungültige Eingabe erkannt: Die Zeichen <, >, {, }, <script>, javascript: und Event-Handler sind nicht erlaubt.');
+            zeigeModal('Ungültige Eingabe erkannt: Die Zeichen <, >, {, }, <script>, javascript: und Event-Handler sind nicht erlaubt.');
             return;
         }
     }
@@ -739,12 +739,12 @@ try {
             const currentCompany = userCompanies[editIndex];
             
             if (currentCompany.unternehmen.name.toLowerCase() !== name.toLowerCase()) {
-                alert(`Ein Unternehmen mit dem Namen "${name}" existiert bereits!\n\nBitte wählen Sie einen anderen Namen.`);
+                zeigeModal(`Ein Unternehmen mit dem Namen "${name}" existiert bereits!\n\nBitte wählen Sie einen anderen Namen.`);
                 return;
             }
         } else {
             // Beim Hinzufügen: Kein Duplikat erlaubt
-            alert(`Ein Unternehmen mit dem Namen "${name}" existiert bereits!\n\nBitte wählen Sie einen anderen Namen.`);
+            zeigeModal(`Ein Unternehmen mit dem Namen "${name}" existiert bereits!\n\nBitte wählen Sie einen anderen Namen.`);
             return;
         }
     }
@@ -767,158 +767,158 @@ try {
     
     // ALLE Pflichtfeld-Validierungen
     if (!name || name.length === 0) {
-        alert('Bitte geben Sie einen Firmennamen ein.');
+        zeigeModal('Bitte geben Sie einen Firmennamen ein.');
         return;
     }
     
     if (!rechtsform || rechtsform === '') {
-        alert('Bitte wählen Sie eine Rechtsform aus.');
+        zeigeModal('Bitte wählen Sie eine Rechtsform aus.');
         return;
     }
     
     if (!branche || branche.length === 0) {
-        alert('Bitte geben Sie eine Branche ein.');
+        zeigeModal('Bitte geben Sie eine Branche ein.');
         return;
     }
     
     if (!motto || motto.length === 0) {
-        alert('Bitte geben Sie ein Motto ein.');
+        zeigeModal('Bitte geben Sie ein Motto ein.');
         return;
     }
     
     if (!inhaber || inhaber.length === 0) {
-        alert('Bitte geben Sie einen Inhaber/Geschäftsführer ein.');
+        zeigeModal('Bitte geben Sie einen Inhaber/Geschäftsführer ein.');
         return;
     }
     
     if (!strasse || strasse.length === 0) {
-        alert('Bitte geben Sie eine Straße ein.');
+        zeigeModal('Bitte geben Sie eine Straße ein.');
         return;
     }
     
     if (!plz || plz.length === 0) {
-        alert('Bitte geben Sie eine PLZ ein.');
+        zeigeModal('Bitte geben Sie eine PLZ ein.');
         return;
     }
     
     if (!ort || ort.length === 0) {
-        alert('Bitte geben Sie einen Ort ein.');
+        zeigeModal('Bitte geben Sie einen Ort ein.');
         return;
     }
     
     if (!telefon || telefon.length === 0) {
-        alert('Bitte geben Sie eine Telefonnummer ein.');
+        zeigeModal('Bitte geben Sie eine Telefonnummer ein.');
         return;
     }
     
     if (!email || email.length === 0) {
-        alert('Bitte geben Sie eine E-Mail-Adresse ein.');
+        zeigeModal('Bitte geben Sie eine E-Mail-Adresse ein.');
         return;
     }
     
     if (!internet || internet.length === 0) {
-        alert('Bitte geben Sie eine Internet-Adresse ein.');
+        zeigeModal('Bitte geben Sie eine Internet-Adresse ein.');
         return;
     }
     
     if (!bank || bank.length === 0) {
-        alert('Bitte geben Sie eine Bank ein.');
+        zeigeModal('Bitte geben Sie eine Bank ein.');
         return;
     }
     
     if (!iban || iban.length === 0) {
-        alert('Bitte geben Sie eine IBAN ein.');
+        zeigeModal('Bitte geben Sie eine IBAN ein.');
         return;
     }
     
     if (!bic || bic.length === 0) {
-        alert('Bitte geben Sie einen BIC ein.');
+        zeigeModal('Bitte geben Sie einen BIC ein.');
         return;
     }
     
     if (!ustId || ustId.length === 0) {
-        alert('Bitte geben Sie eine USt-IdNr. ein.');
+        zeigeModal('Bitte geben Sie eine USt-IdNr. ein.');
         return;
     }
     
     if (!steuernummer || steuernummer.length === 0) {
-        alert('Bitte geben Sie eine Steuernummer ein.');
+        zeigeModal('Bitte geben Sie eine Steuernummer ein.');
         return;
     }
     
     // Detaillierte Format-Validierungen
     if (!CompanyValidation.isValidText(name, 50, true)) {
-        alert('Firmenname: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
+        zeigeModal('Firmenname: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
         return;
     }
     
     if (!CompanyValidation.isValidText(branche, 50, true)) {
-        alert('Branche: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
+        zeigeModal('Branche: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
         return;
     }
     
     if (!CompanyValidation.isValidText(motto, 100, true)) {
-        alert('Motto: Maximal 100 Zeichen, keine HTML-Tags oder Scripte.');
+        zeigeModal('Motto: Maximal 100 Zeichen, keine HTML-Tags oder Scripte.');
         return;
     }
     
     if (!CompanyValidation.isValidText(inhaber, 50, false)) {
-        alert('Inhaber: Maximal 50 Zeichen, nur Buchstaben, keine Zahlen.');
+        zeigeModal('Inhaber: Maximal 50 Zeichen, nur Buchstaben, keine Zahlen.');
         return;
     }
     
     if (!CompanyValidation.isValidText(strasse, 60, true)) {
-        alert('Straße: Maximal 60 Zeichen, keine HTML-Tags oder Scripte.');
+        zeigeModal('Straße: Maximal 60 Zeichen, keine HTML-Tags oder Scripte.');
         return;
     }
     
     if (!CompanyValidation.isValidPLZ(plz)) {
-        alert('PLZ: Bitte geben Sie genau 5 Ziffern ein.');
+        zeigeModal('PLZ: Bitte geben Sie genau 5 Ziffern ein.');
         return;
     }
     
     if (!CompanyValidation.isValidText(ort, 50, false)) {
-        alert('Ort: Maximal 50 Zeichen, nur Buchstaben.');
+        zeigeModal('Ort: Maximal 50 Zeichen, nur Buchstaben.');
         return;
     }
     
     if (!CompanyValidation.isValidPhone(telefon)) {
-        alert('Telefon: Ungültiges Format. Nur Zahlen und + - / ( ) erlaubt, maximal 25 Zeichen.');
+        zeigeModal('Telefon: Ungültiges Format. Nur Zahlen und + - / ( ) erlaubt, maximal 25 Zeichen.');
         return;
     }
     
     if (!CompanyValidation.isValidEmail(email)) {
-        alert('E-Mail: Bitte geben Sie eine gültige E-Mail-Adresse ein (maximal 60 Zeichen).');
+        zeigeModal('E-Mail: Bitte geben Sie eine gültige E-Mail-Adresse ein (maximal 60 Zeichen).');
         return;
     }
     
     if (!CompanyValidation.isValidWebsite(internet)) {
-        alert('Internet: Ungültiges Format. Nur Buchstaben, Zahlen und . - : / erlaubt, maximal 60 Zeichen.');
+        zeigeModal('Internet: Ungültiges Format. Nur Buchstaben, Zahlen und . - : / erlaubt, maximal 60 Zeichen.');
         return;
     }
     
     if (!CompanyValidation.isValidText(bank, 50, true)) {
-        alert('Bank: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
+        zeigeModal('Bank: Maximal 50 Zeichen, keine HTML-Tags oder Scripte.');
         return;
     }
     
     if (!CompanyValidation.isValidIBAN(iban)) {
-        alert('IBAN: Ungültiges Format. Erforderlich: DE + 20 Ziffern (z.B. DE89370400440532013000).');
+        zeigeModal('IBAN: Ungültiges Format. Erforderlich: DE + 20 Ziffern (z.B. DE89370400440532013000).');
         return;
     }
     
     if (!CompanyValidation.isValidBIC(bic)) {
-        alert('BIC: Ungültiges Format. Erforderlich: 8 oder 11 Zeichen (z.B. COBADEFFXXX).');
+        zeigeModal('BIC: Ungültiges Format. Erforderlich: 8 oder 11 Zeichen (z.B. COBADEFFXXX).');
         return;
     }
     
     if (!CompanyValidation.isValidUstID(ustId)) {
-        alert('USt-IdNr.: Ungültiges Format. Erforderlich: DE + 9 Ziffern (z.B. DE123456789).');
+        zeigeModal('USt-IdNr.: Ungültiges Format. Erforderlich: DE + 9 Ziffern (z.B. DE123456789).');
         return;
     }
     
     if (!CompanyValidation.isValidSteuernummer(steuernummer)) {
-        alert('Steuernummer: Nur Zahlen und / erlaubt, maximal 20 Zeichen.');
+        zeigeModal('Steuernummer: Nur Zahlen und / erlaubt, maximal 20 Zeichen.');
         return;
     }
     
@@ -981,17 +981,17 @@ if (isEditing) {
     saveUserCompanies(userCompanies);
 
     if (userCompanies[editIndex]._obsolete === undefined) {  // war vorher obsolet
-        alert('Unternehmen erfolgreich wieder hinzugefügt und aktualisiert!');
+        zeigeModal('Unternehmen erfolgreich wieder hinzugefügt und aktualisiert!');
         updateLocalStorageStatus('Unternehmen reaktiviert.');
     } else {
-        alert('Unternehmen erfolgreich aktualisiert!');
+        zeigeModal('Unternehmen erfolgreich aktualisiert!');
         updateLocalStorageStatus('Unternehmen aktualisiert.');
     }
 } else {
     // Neues Unternehmen
     userCompanies.push(newCompany);
     saveUserCompanies(userCompanies);
-    alert('Unternehmen erfolgreich hinzugefügt!');
+    zeigeModal('Unternehmen erfolgreich hinzugefügt!');
     updateLocalStorageStatus('Eigenes Unternehmen hinzugefügt.');
 }
 
@@ -1301,7 +1301,7 @@ function loadStandardYamlData() {
                 displayUserCompanies();
                 populateAllCompaniesDropdown();
             } else {
-                alert('Fehler beim Laden der Unternehmensdaten. Bitte Seite neu laden.');
+                zeigeModal('Fehler beim Laden der Unternehmensdaten. Bitte Seite neu laden.');
             }
         });
 }
@@ -1362,10 +1362,10 @@ function exportCurrentYamlData() {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
 
-        alert(`Export erfolgreich: ${cleanExportData.length} Unternehmen`);
+        zeigeModal(`Export erfolgreich: ${cleanExportData.length} Unternehmen`);
     } catch (error) {
         console.error('Export-Fehler:', error);
-        alert('Fehler beim Exportieren der Daten.');
+        zeigeModal('Fehler beim Exportieren der Daten.');
     }
 }
 
@@ -1424,7 +1424,7 @@ function deleteAndLoadDefaultData() {
     loadStandardYamlData();
     
     updateLocalStorageStatus('Daten wurden zurückgesetzt. Standard-Liste wird vom Server geladen.');
-    alert('Daten erfolgreich zurückgesetzt. Standard-Liste wurde aktualisiert.');
+    zeigeModal('Daten erfolgreich zurückgesetzt. Standard-Liste wurde aktualisiert.');
 }
 
 function markObsoleteUserCompanies() {
@@ -1484,13 +1484,13 @@ function setAsMyCompany() {
     const selectedName = dropdown.value;
     
     if (!selectedName) {
-        alert('Bitte wählen Sie zuerst ein Unternehmen aus.');
+        zeigeModal('Bitte wählen Sie zuerst ein Unternehmen aus.');
         return;
     }
     
     const company = yamlData.find(c => c.unternehmen.name === selectedName);
     if (!company) {
-        alert('Unternehmen nicht gefunden.');
+        zeigeModal('Unternehmen nicht gefunden.');
         return;
     }
     
@@ -1500,7 +1500,7 @@ function setAsMyCompany() {
     // Aktualisiere die Anzeige
     updateMyCompanyStatus();
     
-    alert(`"${selectedName}" wurde als Ihr Standard-Unternehmen gespeichert.`);
+    zeigeModal(`"${selectedName}" wurde als Ihr Standard-Unternehmen gespeichert.`);
     updateLocalStorageStatus('Standard-Unternehmen gespeichert.');
 }
 
@@ -1513,7 +1513,7 @@ function clearMyCompany() {
     localStorage.removeItem('myCompany');
     updateMyCompanyStatus();
     
-    alert('Standard-Unternehmen wurde entfernt.');
+    zeigeModal('Standard-Unternehmen wurde entfernt.');
     updateLocalStorageStatus('Standard-Unternehmen entfernt.');
 }
 

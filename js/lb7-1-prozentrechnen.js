@@ -794,7 +794,7 @@ function kopiereKiPrompt() {
       setTimeout(() => { btn.innerHTML = orig; }, 2500);
     })
     .catch(() => {
-      alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+      zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
     });
 }
 
@@ -934,7 +934,7 @@ function mpBaueXml(aufgaben) {
 // ── Button-Handler ──────────────────────────────────────────────────────────
 function exportiereMoodle() {
   if (typeof letzteGenerierteAufgaben === 'undefined' || !letzteGenerierteAufgaben.length) {
-    alert('Bitte zuerst Aufgaben erstellen.');
+    zeigeModal('Bitte zuerst Aufgaben erstellen.');
     return;
   }
   const xml = mpBaueXml(letzteGenerierteAufgaben);

@@ -846,15 +846,15 @@ if (ref) {
 // „Zwischenablage"-Buttons in belege.html und der Sammlung
 function grafikInZwischenablageSchreiben(blob) {
     if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
-        alert('Die Zwischenablage-Unterstützung (Grafik) ist in diesem Browser nicht verfügbar.');
+        zeigeModal('Die Zwischenablage-Unterstützung (Grafik) ist in diesem Browser nicht verfügbar.');
         return;
     }
     try {
         navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-            .then(() => alert('Beleg-Grafik wurde in die Zwischenablage kopiert.'))
-            .catch(err => alert('Kopieren in die Zwischenablage fehlgeschlagen: ' + err));
+            .then(() => zeigeModal('Beleg-Grafik wurde in die Zwischenablage kopiert.'))
+            .catch(err => zeigeModal('Kopieren in die Zwischenablage fehlgeschlagen: ' + err));
     } catch (err) {
-        alert('Kopieren in die Zwischenablage fehlgeschlagen: ' + err);
+        zeigeModal('Kopieren in die Zwischenablage fehlgeschlagen: ' + err);
     }
 }
 
@@ -862,7 +862,7 @@ function kopiereGrafikInZwischenablage(typ) {
     const config = EXPORT_CONFIG[typ];
     if (!config) {
         console.error('Unbekannter Dokumenttyp:', typ);
-        alert('Unbekannter Dokumenttyp: ' + typ);
+        zeigeModal('Unbekannter Dokumenttyp: ' + typ);
         return;
     }
     const htmlTypes = ['email', 'newspaper', 'lohnjournalBS'];
@@ -929,7 +929,7 @@ function exportPNG(containerId, filename = 'download.png', exportWidth = null, f
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         download(canvas);
     };
-    img.onerror = () => alert('PNG-Export fehlgeschlagen');
+    img.onerror = () => zeigeModal('PNG-Export fehlgeschlagen');
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(data);
 }
 
@@ -1062,11 +1062,11 @@ function copyToClipboard(containerId) {
     const svgData = new XMLSerializer().serializeToString(svg);
     const check = new DOMParser().parseFromString(svgData, 'image/svg+xml');
 if (check.querySelector('parsererror')) {
-    alert('Das SVG enthält Fehler (vermutlich im Logo) und kann nicht exportiert werden. Tauschen Sie das Logo aus.');
+    zeigeModal('Das SVG enthält Fehler (vermutlich im Logo) und kann nicht exportiert werden. Tauschen Sie das Logo aus.');
     return;
 }
     navigator.clipboard.writeText(svgData).then(() => {
-        alert('SVG wurde in die Zwischenablage kopiert');
+        zeigeModal('SVG wurde in die Zwischenablage kopiert');
     });
 }
 
@@ -1075,7 +1075,7 @@ function copyHTMLToClipboard(containerId) {
     if (!container) return;
     const html = container.innerHTML.replace(/&nbsp;/g, ' ');
     navigator.clipboard.writeText(html).then(() => {
-        alert('HTML wurde in die Zwischenablage kopiert');
+        zeigeModal('HTML wurde in die Zwischenablage kopiert');
     }).catch(err => {
         console.error('Fehler beim Kopieren:', err);
     });
@@ -1191,7 +1191,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
         const rawMarkup = item.htmlContent || item.svgContent || (item.content && item.content.trim().startsWith('<') ? item.content : null);
         if (!rawMarkup && !item.formState && item.content && item.content.startsWith('data:image/')) {
-            alert('Dieser Beleg wurde nur als Bild ohne Vorlagendaten gespeichert. Bitte neu sammeln, um ihn bearbeiten zu können.');
+            zeigeModal('Dieser Beleg wurde nur als Bild ohne Vorlagendaten gespeichert. Bitte neu sammeln, um ihn bearbeiten zu können.');
             return;
         }
 
@@ -1355,7 +1355,7 @@ function deleteAndLoadDefaultData() {
     document.getElementById('addCompanyForm').reset();
 
     updateLocalStorageStatus('Alle Daten wurden erfolgreich zurückgesetzt.');
-    alert('Daten erfolgreich zurückgesetzt.');
+    zeigeModal('Daten erfolgreich zurückgesetzt.');
 }
 
 // ============================================================================
@@ -1646,7 +1646,7 @@ function loadLogo(event) {
     const svgContainer = document.getElementById('rechnungSVG');
     // Überprüfe, ob ein SVG-Element vorhanden ist
     if (!(svgContainer instanceof SVGElement)) {
-        alert('In diesem Beleg kann kein Logo hochgeladen werden.');
+        zeigeModal('In diesem Beleg kann kein Logo hochgeladen werden.');
         return;
     }
     // Entferne vorhandene Logos (sowohl <image> als auch SVGs)
@@ -2659,24 +2659,24 @@ let clipboardLohnjournal = new ClipboardJS('#officeButtonLohnjournalBuchungssatz
 
 clipboardLohnjournal.on('success', function (e) {
     console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+    zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardLohnjournal.on('error', function (e) {
     console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-    alert("Fehler beim Kopieren der Tabelle.");
+    zeigeModal("Fehler beim Kopieren der Tabelle.");
 });
 
 let clipboardNewspaper = new ClipboardJS('#officeButtonNewspaper');
 
 clipboardNewspaper.on('success', function (e) {
     console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+    zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardNewspaper.on('error', function (e) {
     console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-    alert("Fehler beim Kopieren der Tabelle.");
+    zeigeModal("Fehler beim Kopieren der Tabelle.");
 });
 
 
@@ -2684,12 +2684,12 @@ let clipboardEmail = new ClipboardJS('#officeButtonEmail');
 
 clipboardEmail.on('success', function (e) {
     console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-    alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+    zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardEmail.on('error', function (e) {
     console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-    alert("Fehler beim Kopieren der Tabelle.");
+    zeigeModal("Fehler beim Kopieren der Tabelle.");
 });
 
 
@@ -2698,7 +2698,7 @@ function validateInputs(still = false) {
     for (const [inputId, rule] of Object.entries(VALIDATION_RULES.text)) {
         const input = document.getElementById(inputId);
         if (input && !isValidText(input.value, rule.max)) {
-            if (!still) alert(`Bitte geben Sie eine gültige ${rule.label} ein. Maximal ${rule.max} Zeichen!`);
+            if (!still) zeigeModal(`Bitte geben Sie eine gültige ${rule.label} ein. Maximal ${rule.max} Zeichen!`);
             return false;
         }
     }
@@ -2707,7 +2707,7 @@ function validateInputs(still = false) {
     for (const [inputId, rule] of Object.entries(VALIDATION_RULES.number)) {
         const input = document.getElementById(inputId);
         if (input && !isValidNumber(input.value, rule.min, rule.max)) {
-            if (!still) alert(`Bitte geben Sie bei ${rule.label} gültige Werte zwischen ${rule.min} und ${rule.max} ein.`);
+            if (!still) zeigeModal(`Bitte geben Sie bei ${rule.label} gültige Werte zwischen ${rule.min} und ${rule.max} ein.`);
             return false;
         }
     }
@@ -2716,7 +2716,7 @@ function validateInputs(still = false) {
     for (const [inputId, rule] of Object.entries(VALIDATION_RULES.percentage)) {
         const input = document.getElementById(inputId);
         if (input && !isValidPercentage(input.value)) {
-            if (!still) alert(`Bitte geben Sie bei ${rule.label} gültige Werte zwischen 0 und 100 ein.`);
+            if (!still) zeigeModal(`Bitte geben Sie bei ${rule.label} gültige Werte zwischen 0 und 100 ein.`);
             return false;
         }
     }
@@ -2725,14 +2725,14 @@ function validateInputs(still = false) {
     const menge1 = parseFloat(document.getElementById('mengeInput')?.value || 0);
     const preis1 = parseFloat(document.getElementById('einzelpreisInput')?.value || 0);
     if (menge1 * preis1 > 999999999) {
-        if (!still) alert('Die Gesamtsumme (Menge * Einzelpreis) Pos. 1 darf nicht höher als 999.999.999,00 sein.');
+        if (!still) zeigeModal('Die Gesamtsumme (Menge * Einzelpreis) Pos. 1 darf nicht höher als 999.999.999,00 sein.');
         return false;
     }
 
     const menge2 = parseFloat(document.getElementById('mengeInput2')?.value || 0);
     const preis2 = parseFloat(document.getElementById('einzelpreisInput2')?.value || 0);
     if (menge2 * preis2 > 999999999) {
-        if (!still) alert('Die Gesamtsumme (Menge * Einzelpreis) Pos. 2 darf nicht höher als 999.999.999,00 sein.');
+        if (!still) zeigeModal('Die Gesamtsumme (Menge * Einzelpreis) Pos. 2 darf nicht höher als 999.999.999,00 sein.');
         return false;
     }
 

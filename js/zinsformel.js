@@ -12,7 +12,7 @@ function zinsformelHerunterladen() {
   function zinsformelKopiereInZwischenablage() {
     const zinsformelHTML = document.getElementById('zinsformelContainer').innerHTML;
     navigator.clipboard.writeText(zinsformelHTML)
-      .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+      .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
       .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
   }
   

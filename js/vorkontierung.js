@@ -55,7 +55,7 @@ function vorkontierungHerunterladen() {
 function vorkontierungKopiereInZwischenablage() {
   const vorkontierungHTML = document.getElementById('vorkontierungContainer').innerHTML;
   navigator.clipboard.writeText(vorkontierungHTML)
-    .then(() => alert('Code wurde in die Zwischenablage kopiert'))
+    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
     .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
 }
 
@@ -77,12 +77,12 @@ let clipboardVorkontierung = new ClipboardJS('#officeButtonVorkontierung');
 
 clipboardVorkontierung.on('success', function (e) {
   console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+  zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardVorkontierung.on('error', function (e) {
   console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-  alert("Fehler beim Kopieren der Tabelle.");
+  zeigeModal("Fehler beim Kopieren der Tabelle.");
 });
 
 

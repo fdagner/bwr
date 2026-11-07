@@ -723,7 +723,7 @@ function kopiereKiPromptProz() {
       setTimeout(() => { btn.innerHTML = orig; }, 2500);
     })
     .catch(() => {
-      alert("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.");
+      zeigeModal("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.");
     });
 }
 
@@ -839,7 +839,7 @@ function pdBaueClozeXml(daten) {
 // ── Button-Handler ──────────────────────────────────────────────────────────
 function exportiereMoodle() {
   if (typeof letzteProzentDaten === 'undefined' || !letzteProzentDaten) {
-    alert('Bitte zuerst eine Aufgabe erstellen und warten, bis das Diagramm angezeigt wird.');
+    zeigeModal('Bitte zuerst eine Aufgabe erstellen und warten, bis das Diagramm angezeigt wird.');
     return;
   }
   const xml = pdBaueClozeXml(letzteProzentDaten);

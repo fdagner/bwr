@@ -574,7 +574,7 @@ function kopiereKiPrompt() {
     }, 2500);
   }).catch(err => {
     console.error('Fehler beim Kopieren:', err);
-    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
   });
 }
 
@@ -760,7 +760,7 @@ function baueFallClozeXml() {
 function exportiereMoodleFallCloze() {
   const xml = baueFallClozeXml();
   if (!xml) {
-    alert('Bitte zuerst Fallbeispiel-Aufgaben erstellen.');
+    zeigeModal('Bitte zuerst Fallbeispiel-Aufgaben erstellen.');
     return;
   }
 
@@ -787,7 +787,7 @@ function exportiereMoodle() {
     return;
   }
   if (!letztePreisAufgaben.length) {
-    alert('Bitte zuerst Aufgaben erstellen.');
+    zeigeModal('Bitte zuerst Aufgaben erstellen.');
     return;
   }
   const xml = mxBaueMatchingXml(letztePreisAufgaben);

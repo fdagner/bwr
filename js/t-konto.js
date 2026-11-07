@@ -93,7 +93,7 @@ function generiereTKonto() {
 
   // Überprüfe, ob Konten ausgewählt wurden
   if (ausgewaehlteKonten.length === 0) {
-    alert('Bitte wählen Sie mindestens ein Konto aus.');
+    zeigeModal('Bitte wählen Sie mindestens ein Konto aus.');
     return; // Beende die Funktion, wenn keine Konten ausgewählt wurden
   }
 

@@ -151,7 +151,7 @@ function validateAllInputs() {
         isNaN(y) || y < 0 || y > 40  ||
         isNaN(u) || u < 1 || u > 10  ||
         name.length < 1 || name.length > 30) {
-      alert("Bitte prüfen:\n• Marktanteil: 0–200\n• Wachstum: 0–40\n• Umsatz: 1–10\n• Name: max. 30 Zeichen");
+      zeigeModal("Bitte prüfen:\n• Marktanteil: 0–200\n• Wachstum: 0–40\n• Umsatz: 1–10\n• Name: max. 30 Zeichen");
       return false;
     }
   }
@@ -290,14 +290,14 @@ function portfolioKopiereInZwischenablage() {
   const svgStr = serializer.serializeToString(svg);
 
   navigator.clipboard.writeText(svgStr)
-    .then(() => alert('SVG-Code in die Zwischenablage kopiert'))
+    .then(() => zeigeModal('SVG-Code in die Zwischenablage kopiert'))
     .catch(err => console.error('Kopieren fehlgeschlagen:', err));
 }
 
 function portfolioHerunterladenAlsPNG() {
   const container = document.getElementById('portfolioContainer') || document.getElementById('portfolioSVG');
   if (!container || typeof html2canvas !== 'function') {
-    alert('html2canvas nicht geladen oder Container nicht gefunden.');
+    zeigeModal('html2canvas nicht geladen oder Container nicht gefunden.');
     return;
   }
 
@@ -311,7 +311,7 @@ function portfolioHerunterladenAlsPNG() {
     link.click();
   }).catch(err => {
     console.error('PNG-Export fehlgeschlagen:', err);
-    alert('Fehler beim PNG-Export.');
+    zeigeModal('Fehler beim PNG-Export.');
   });
 }
 

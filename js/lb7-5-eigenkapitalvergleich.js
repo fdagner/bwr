@@ -209,7 +209,7 @@ function zeigeZufaelligeEkAufgaben() {
   const anzahlGewaehlt = (spalteAufwErtr ? 1 : 0) + (spalteGewinn ? 1 : 0) + (spalteEk ? 1 : 0);
 
   if (anzahlGewaehlt < 2) {
-    alert('Bitte wähle mindestens 2 Spaltengruppen aus, damit sinnvolle Berechnungen möglich sind.');
+    zeigeModal('Bitte wähle mindestens 2 Spaltengruppen aus, damit sinnvolle Berechnungen möglich sind.');
     return;
   }
 
@@ -337,7 +337,7 @@ function kopiereKiPrompt() {
     }, 2500);
   }).catch(err => {
     console.error('Fehler beim Kopieren:', err);
-    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
   });
 }
 
@@ -433,7 +433,7 @@ function mxMoodleBetrag(n) {
 
 function exportiereMoodle() {
   if (!letzteEkAufgaben.length) {
-    alert('Bitte zuerst Aufgaben erstellen.');
+    zeigeModal('Bitte zuerst Aufgaben erstellen.');
     return;
   }
   const xml = mxBaueClozeXml(letzteEkAufgaben);

@@ -401,12 +401,12 @@ let clipboardeinkauf = new ClipboardJS('#officeButtoneinkauf');
 
 clipboardeinkauf.on('success', function (e) {
   console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-  alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+  zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
 clipboardeinkauf.on('error', function (e) {
   console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-  alert("Fehler beim Kopieren der Tabelle.");
+  zeigeModal("Fehler beim Kopieren der Tabelle.");
 });
 
 

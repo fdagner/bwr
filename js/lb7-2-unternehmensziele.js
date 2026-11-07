@@ -265,7 +265,7 @@ function mzBaueMatchingXml(aufgaben) {
 function exportiereMoodle() {
   const aufgaben = mzLeseAufgaben();
   if (!aufgaben.length) {
-    alert('Bitte zuerst Unternehmensziele erstellen.');
+    zeigeModal('Bitte zuerst Unternehmensziele erstellen.');
     return;
   }
   const xml = mzBaueMatchingXml(aufgaben);

@@ -247,7 +247,7 @@ function berechneOptimaleBestellmengeUndHaeufigkeit() {
 
         for (const input of inputs) {
             if (isNaN(input.value) || input.value < input.min || input.value > input.max) {
-                alert(`Bitte eine gültige Zahl eingeben: ${input.message}.`);
+                zeigeModal(`Bitte eine gültige Zahl eingeben: ${input.message}.`);
                 return false;
             }
         }
@@ -262,7 +262,7 @@ function berechneOptimaleBestellmengeUndHaeufigkeit() {
     const haeufigkeitVon = parseInt(document.getElementById("haeufigkeitVon").value, 10);
     const haeufigkeitBis = parseInt(document.getElementById("haeufigkeitBis").value, 10);
     if (isNaN(haeufigkeitVon) || isNaN(haeufigkeitBis) || haeufigkeitVon < 1 || haeufigkeitBis > 100 || haeufigkeitVon >= haeufigkeitBis) {
-        alert('Bitte einen gültigen Bereich für die Bestellhäufigkeit eingeben (1 bis 100, "von" kleiner als "bis").');
+        zeigeModal('Bitte einen gültigen Bereich für die Bestellhäufigkeit eingeben (1 bis 100, "von" kleiner als "bis").');
         return;
     }
 

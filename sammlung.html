@@ -13,8 +13,8 @@
   <link rel="stylesheet" href="css/style.css?v=14">
   <script src="js/menu.js?v=14"></script>
   <script src="js/js-yaml.min.js"></script>
-  <script src="js/utils.js?v=12"></script>
-  <script src="js/collection.js?v=35"></script>
+  <script src="js/utils.js?v=13"></script>
+  <script src="js/collection.js?v=36"></script>
 
 <body>
   <main>
@@ -176,10 +176,10 @@
 
     async function neueSammlung() {
       if (collections.length >= Collection.MAX_COLLECTIONS) {
-        alert('Maximale Anzahl von ' + Collection.MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte l�schen Sie zuerst eine Sammlung.');
+        zeigeModal('Maximale Anzahl von ' + Collection.MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte löschen Sie zuerst eine Sammlung.');
         return;
       }
-      const name = prompt('Name der neuen Sammlung:');
+      const name = await frageModal('Name der neuen Sammlung:');
       if (!name) return;
       const c = await Collection.createCollection(name);
       await loadCollections();
@@ -192,7 +192,7 @@
     async function sammlungUmbenennen() {
       const c = collections.find(x => x.id === activeId);
       if (!c) return;
-      const name = prompt('Neuer Name:', c.name);
+      const name = await frageModal('Neuer Name:', c.name);
       if (!name) return;
       await Collection.renameCollection(activeId, name);
       await loadCollections();
@@ -205,7 +205,7 @@
     }
 
     async function sammlungLoeschen() {
-      if (collections.length <= 1) { alert('Die letzte Sammlung kann nicht gelöscht werden.'); return; }
+      if (collections.length <= 1) { zeigeModal('Die letzte Sammlung kann nicht gelöscht werden.'); return; }
       if (!confirm('Sammlung und alle Einträge löschen?')) return;
       // Nach dem Löschen die nächste Sammlung (Listenende springt wieder auf Anfang) aktivieren
       const idx = collections.findIndex(c => c.id === activeId);
@@ -238,7 +238,7 @@
 
     async function exportJSON() {
       const col = collections.find(x => x.id === activeId);
-      if (!col) { alert('Keine Sammlung ausgewählt.'); return; }
+      if (!col) { zeigeModal('Keine Sammlung ausgewählt.'); return; }
       const its = await Collection.getItems(activeId);
       const data = JSON.stringify({ collections: [col], items: its }, null, 2);
       const blob = new Blob([data], { type: 'application/json' });
@@ -325,7 +325,7 @@
 
       // 1) Format: .json-Datei?
       if (!/\.json$/i.test(file.name)) {
-        alert('"' + file.name + '" ist keine JSON-Datei.\n\nBitte wählen Sie eine Backup-Datei („.json") aus, die Sie über „Backup (diese Sammlung)" erzeugt haben.');
+        zeigeModal('"' + file.name + '" ist keine JSON-Datei.\n\nBitte wählen Sie eine Backup-Datei („.json") aus, die Sie über „Backup (diese Sammlung)" erzeugt haben.');
         event.target.value = '';
         return;
       }
@@ -336,7 +336,7 @@
       try {
         data = JSON.parse(text);
       } catch (e) {
-        alert('Die Datei konnte nicht als JSON gelesen werden:\n' + e.message + '\n\nDie Datei ist möglicherweise beschädigt oder kein JSON-Backup.');
+        zeigeModal('Die Datei konnte nicht als JSON gelesen werden:\n' + e.message + '\n\nDie Datei ist möglicherweise beschädigt oder kein JSON-Backup.');
         event.target.value = '';
         return;
       }
@@ -344,7 +344,7 @@
       // 3) Inhalt structuriert prüfbar?
       const probleme = validiereBackup(data);
       if (probleme.length > 0) {
-        alert('Die Datei konnte nicht als Backup erkannt werden:\n\n– ' + probleme.join('\n– '));
+        zeigeModal('Die Datei konnte nicht als Backup erkannt werden:\n\n– ' + probleme.join('\n– '));
         event.target.value = '';
         return;
       }
@@ -356,7 +356,7 @@
         const aktiveId = Collection.getActiveCollectionId();
         const bestand = aktiveId ? await Collection.getItemCount(aktiveId) : 0;
         if (bestand + ohneSammlung.length > Collection.MAX_ITEMS) {
-          alert('Zu wenig Platz: Die aktive Sammlung enthält bereits ' + bestand + ' von maximal '
+          zeigeModal('Zu wenig Platz: Die aktive Sammlung enthält bereits ' + bestand + ' von maximal '
             + Collection.MAX_ITEMS + ' Einträgen, importiert werden sollten ' + ohneSammlung.length + '.\n\n'
             + 'Tipp: Legen Sie vorher eine neue Sammlung an und importieren Sie dort hinein.');
           event.target.value = '';
@@ -365,13 +365,13 @@
       }
 
       const existingCols = await Collection.getCollections();
-      // Sammlungs-Platzcheck: wie viele NEUE Sammlungen w�rde der Import erzeugen?
+      // Sammlungs-Platzcheck: wie viele NEUE Sammlungen würde der Import erzeugen?
       const neueCols = (data.collections || []).filter(c =>
         !existingCols.some(x => (x.name || '').trim().toLowerCase() === (c.name || '').trim().toLowerCase()));
       if (existingCols.length + neueCols.length > Collection.MAX_COLLECTIONS) {
-        alert('Zu viele Sammlungen: Der Import br�uchte ' + neueCols.length + ' neue Sammlung/en, '
+        zeigeModal('Zu viele Sammlungen: Der Import bräuchte ' + neueCols.length + ' neue Sammlung/en, '
           + 'es sind aber insgesamt maximal ' + Collection.MAX_COLLECTIONS + ' Sammlungen erlaubt (aktuell ' + existingCols.length + ').\n\n'
-          + 'Tipp: L�schen Sie zuerst �ltere oder leere Sammlungen.');
+          + 'Tipp: Löschen Sie zuerst ältere oder leere Sammlungen.');
         event.target.value = '';
         return;
       }
@@ -390,7 +390,7 @@
           } else {
             const aktuelleCols = await Collection.getCollections();
             if (aktuelleCols.length >= Collection.MAX_COLLECTIONS) {
-              alert('Maximale Anzahl von ' + Collection.MAX_COLLECTIONS + ' Sammlungen erreicht. Seit dem Laden der Datei wurde bereits eine Sammlung angelegt (z. B. im zweiten Tab).');
+              zeigeModal('Maximale Anzahl von ' + Collection.MAX_COLLECTIONS + ' Sammlungen erreicht. Seit dem Laden der Datei wurde bereits eine Sammlung angelegt (z. B. im zweiten Tab).');
               event.target.value = '';
               return;
             }
@@ -428,7 +428,7 @@
         const grund = (e && e.message === 'MAX_ITEMS')
           ? 'die Obergrenze von ' + Collection.MAX_ITEMS + ' Einträgen pro Sammlung ist erreicht'
           : ((e && e.message) || e);
-        alert('Der Import wurde abgebrochen: ' + grund + '.\n\nBereits übertragene Teile bleiben erhalten – bitte importieren Sie ggf. in eine neue Sammlung.');
+        zeigeModal('Der Import wurde abgebrochen: ' + grund + '.\n\nBereits übertragene Teile bleiben erhalten – bitte importieren Sie ggf. in eine neue Sammlung.');
         await loadCollections();
         await loadItems();
         event.target.value = '';
@@ -439,7 +439,7 @@
       }
       await loadCollections();
       await loadItems();
-      alert('Import abgeschlossen: ' + Object.keys(idMap).length + ' Sammlung(en), '
+      zeigeModal('Import abgeschlossen: ' + Object.keys(idMap).length + ' Sammlung(en), '
         + itemsToImport.length + ' Eintrag(e) importiert. Die Sammlung wurde geöffnet.');
       event.target.value = '';
     }
@@ -448,7 +448,7 @@
       const item = items.find(i => i.id === id);
       if (!item) return;
       let content = (format === 'png') ? (item.pngContent || '') : (format === 'html' ? (item.htmlContent || item.content || '') : (item.svgContent || item.content || ''));
-      if (!content) { alert('Keine Daten für diesen Beleg.'); return; }
+      if (!content) { zeigeModal('Keine Daten für diesen Beleg.'); return; }
       const baseName = (item.title || 'beleg').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '');
       const ext = format === 'png' ? '.png' : (format === 'html' ? '.html' : '.svg');
       const filename = baseName + ext;
@@ -558,18 +558,18 @@
         } else if (it.htmlContent || (it.content && String(it.content).trim().startsWith('<'))) {
           dataUrl = await htmlBelegZuBild(it.htmlContent || it.content);
         }
-        if (!dataUrl) { alert('Kein Grafikinhalt für diesen Eintrag vorhanden.'); return; }
+        if (!dataUrl) { zeigeModal('Kein Grafikinhalt für diesen Eintrag vorhanden.'); return; }
         const response = await fetch(dataUrl);
         const blob = await response.blob();
         if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
-          alert('Die Zwischenablage-Unterstützung (Grafik) ist in diesem Browser nicht verfügbar.');
+          zeigeModal('Die Zwischenablage-Unterstützung (Grafik) ist in diesem Browser nicht verfügbar.');
           return;
         }
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        alert('Beleg-Grafik wurde in die Zwischenablage kopiert.');
+        zeigeModal('Beleg-Grafik wurde in die Zwischenablage kopiert.');
       } catch (err) {
         console.error(err);
-        alert('Kopieren in die Zwischenablage fehlgeschlagen: ' + (err.message || err));
+        zeigeModal('Kopieren in die Zwischenablage fehlgeschlagen: ' + (err.message || err));
       }
     }
 
@@ -612,10 +612,10 @@
 
     async function kopiereLink(id) {
       const item = items.find(i => i.id === id);
-      if (!item || !item.shareUrl) { alert('Kein Link verfügbar.'); return; }
+      if (!item || !item.shareUrl) { zeigeModal('Kein Link verfügbar.'); return; }
       try {
         await navigator.clipboard.writeText(item.shareUrl);
-        alert('Link in die Zwischenablage kopiert.');
+        zeigeModal('Link in die Zwischenablage kopiert.');
       } catch (e) {
         const ta = document.createElement('textarea');
         ta.value = item.shareUrl;
@@ -623,7 +623,7 @@
         ta.select();
         document.execCommand('copy');
         ta.remove();
-        alert('Link in die Zwischenablage kopiert.');
+        zeigeModal('Link in die Zwischenablage kopiert.');
       }
     }
 

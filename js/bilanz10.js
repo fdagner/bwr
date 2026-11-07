@@ -28,7 +28,7 @@
     function generateRandomBilanz10() {
       // Validierung durchführen
       if (!validateAllRanges()) {
-        alert('Fehler: Der Minimalwert darf nicht höher als der Maximalwert sein!');
+        zeigeModal('Fehler: Der Minimalwert darf nicht höher als der Maximalwert sein!');
         return;
       }
 

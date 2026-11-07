@@ -86,18 +86,18 @@
     }
 
     async function einfuegenAusSammlungJodit(editor) {
-        if (!window.Collection) { alert('Sammlung nicht verfügbar.'); return; }
+        if (!window.Collection) { zeigeModal('Sammlung nicht verfügbar.'); return; }
         let cols = [];
         let aktiveId = null;
         let items = [];
         try {
             await Collection.ensureDefaultCollection();
             cols = await Collection.getCollections();
-            if (!cols || cols.length === 0) { alert('Es existiert keine Sammlung.'); return; }
+            if (!cols || cols.length === 0) { zeigeModal('Es existiert keine Sammlung.'); return; }
             aktiveId = Collection.getActiveCollectionId();
             if (!cols.some(c => c.id === aktiveId)) aktiveId = cols[0].id;
             items = await Collection.getItems(aktiveId);
-        } catch (e) { console.error(e); alert('Fehler beim Laden der Sammlung.'); return; }
+        } catch (e) { console.error(e); zeigeModal('Fehler beim Laden der Sammlung.'); return; }
 
         let savedRange = null;
         try { editor.selection.save(); } catch (e) {}
@@ -380,7 +380,7 @@
                 toast.style.opacity = '1';
                 clearTimeout(toast._t);
                 toast._t = setTimeout(function () { toast.style.opacity = '0'; }, 2500);
-            } catch (e) { try { ed.message.success(text); } catch (e2) { alert(text); } }
+            } catch (e) { try { ed.message.success(text); } catch (e2) { zeigeModal(text); } }
         };
         const erfolg = 'Formatierter Text wurde in die Zwischenablage kopiert.';
         const htmlPromise = bereiteHtmlZumKopieren(ed);

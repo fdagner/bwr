@@ -381,7 +381,7 @@ function validateInputs(list) {
     for (const entry of (list || [])) {
         const el = document.getElementById(entry.id);
         if (!validateInput(el, entry.opts)) {
-            if (entry.message) alert(entry.message);
+            if (entry.message) zeigeModal(entry.message, 'Eingabe überprüfen');
             try { el && el.focus(); } catch (e) {}
             return false;
         }
@@ -449,6 +449,74 @@ window.roundToTwoDecimals = roundToTwoDecimals;
 window.parseNumericValue = parseNumericValue;
 window.pick = pick;
 window.shuffle = shuffle;
+
+// ============================================================================
+// MODAL (Hinweis- und Eingabedialog im Stil des Sammlungs-Dialogs)
+// ============================================================================
+// Ersetzt die Browser-Dialoge projektweit durch hübsche Overlays:
+//   zeigeModal(text, titel)              → Hinweis-Box mit OK-Button
+//   await frageModal(titel, vorlage)     → Eingabe-Box, Promise → Text | null
+// Aufgebaut wie Collection.showCollectDialog: dunkles Overlay, weiße Box mit
+// Schatten, Button im bwr-Grün. Schließen per OK / Overlay-Klick / Escape.
+// window.zeigeModal/window.frageModal sind global verfügbar.
+// ============================================================================
+
+function escapeHtmlModal(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function zeigeModal(nachricht, titel) {
+    if (!nachricht) return;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999;';
+    const box = document.createElement('div');
+    box.style.cssText = 'background:#fff;border-radius:10px;padding:18px;max-width:420px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,.25);';
+    box.innerHTML =
+        '<h3 style="margin:0 0 12px;">' + escapeHtmlModal(titel || 'Hinweis') + '</h3>' +
+        '<p style="margin:0 0 14px;line-height:1.5;white-space:pre-line;">' + escapeHtmlModal(nachricht) + '</p>' +
+        '<div style="display:flex;gap:8px;justify-content:flex-end;">' +
+          '<button type="button" class="zm-ok" style="padding:6px 12px;border:none;border-radius:4px;background:#2c5f2d;color:#fff;cursor:pointer;">OK</button>' +
+        '</div>';
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    function close() { document.removeEventListener('keydown', onKey); overlay.remove(); }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    box.querySelector('.zm-ok').onclick = close;
+    overlay.onclick = function (e) { if (e.target === overlay) close(); };
+    document.addEventListener('keydown', onKey);
+    box.querySelector('.zm-ok').focus();
+}
+window.zeigeModal = zeigeModal;
+
+function frageModal(titel, defaultWert) {
+    return new Promise(function (resolve) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999;';
+        const box = document.createElement('div');
+        box.style.cssText = 'background:#fff;border-radius:10px;padding:18px;max-width:420px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,.25);';
+        box.innerHTML =
+            '<h3 style="margin:0 0 12px;">' + escapeHtmlModal(titel || 'Eingabe') + '</h3>' +
+            '<input type="text" style="width:100%;padding:6px;margin-bottom:12px;border:1px solid #ccc;border-radius:4px;">' +
+            '<div style="display:flex;gap:8px;justify-content:flex-end;">' +
+              '<button type="button" class="zm-abbr" style="padding:6px 12px;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;cursor:pointer;">Abbrechen</button>' +
+              '<button type="button" class="zm-ok" style="padding:6px 12px;border:none;border-radius:4px;background:#2c5f2d;color:#fff;cursor:pointer;">OK</button>' +
+            '</div>';
+        const input = box.querySelector('input');
+        if (defaultWert != null && defaultWert !== '') input.value = defaultWert;
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+        function close(result) { document.removeEventListener('keydown', onKey); overlay.remove(); resolve(result); }
+        function onKey(e) { if (e.key === 'Escape') close(null); }
+        box.addEventListener('keydown', e => { if (e.key === 'Enter') close(input.value.trim()); });
+        box.querySelector('.zm-abbr').onclick = function () { close(null); };
+        box.querySelector('.zm-ok').onclick = function () { close(input.value.trim()); };
+        overlay.onclick = function (e) { if (e.target === overlay) close(null); };
+        document.addEventListener('keydown', onKey);
+        input.focus();
+        input.select();
+    });
+}
+window.frageModal = frageModal;
 
 // ============================================================================
 // KONTENPLAN (BwR 8+) – ZENTRALE KONTENLISTE

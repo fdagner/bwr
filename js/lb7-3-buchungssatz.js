@@ -1338,7 +1338,7 @@ function kopiereKiPrompt() {
     setTimeout(() => { btn.innerHTML = originalHTML; btn.classList.remove('ki-prompt-btn--success'); }, 2500);
   }).catch(err => {
     console.error('Fehler beim Kopieren:', err);
-    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
   });
 }
 
@@ -1392,7 +1392,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function aufgabenZurSammlung() {
     const container = document.getElementById('Container');
-    if (!container) { alert('Keine Aufgaben vorhanden.'); return; }
+    if (!container) { zeigeModal('Keine Aufgaben vorhanden.'); return; }
     const html = container.innerHTML;
     let aufgabeHtml = html;
     let loesungHtml = '';
@@ -1414,9 +1414,9 @@ async function aufgabenZurSammlung() {
             thumbnail: '',
             solutionContent: (res.includeSolution ? (loesungHtml || null) : null)
         });
-        alert('Zur Sammlung hinzugefügt (Lösung als separates Objekt).');
+        zeigeModal('Zur Sammlung hinzugefügt (Lösung als separates Objekt).');
     } catch (e) {
-        if (e && e.message === 'MAX_ITEMS') alert('Sammlung voll (max. 25).');
-        else { console.error(e); alert('Fehler beim Hinzufügen.'); }
+        if (e && e.message === 'MAX_ITEMS') zeigeModal('Sammlung voll (max. 25).');
+        else { console.error(e); zeigeModal('Fehler beim Hinzufügen.'); }
     }
 }

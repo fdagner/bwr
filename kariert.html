@@ -56,6 +56,7 @@
   <link rel="stylesheet" href="css/style.css?v=14">
   <script src="js/clipboard.min.js"></script>
   <script src="js/menu.js"></script>
+  <script src="js/utils.js?v=13"></script>
 </head>
 
 <body>
@@ -111,13 +112,13 @@
 
             // Validierung
             if (isNaN(rows) || rows < 1 || rows > 56) {
-                alert("Bitte geben Sie eine gültige Anzahl von Zeilen (1-56) ein.");
+                zeigeModal("Bitte geben Sie eine gültige Anzahl von Zeilen (1-56) ein.");
                 rowsInput.focus();
                 return;
             }
 
             if (isNaN(columns) || columns < 1 || columns > 40) {
-                alert("Bitte geben Sie eine gültige Anzahl von Spalten (1-40) ein.");
+                zeigeModal("Bitte geben Sie eine gültige Anzahl von Spalten (1-40) ein.");
                 columnsInput.focus();
                 return;
             }
@@ -178,12 +179,12 @@
 
         clipboardtablecontainer.on('success', function (e) {
             console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
-            alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+            zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
         });
 
         clipboardtablecontainer.on('error', function (e) {
             console.error("Fehler beim Kopieren der Tabelle: ", e.action);
-            alert("Die Tabelle wurde in die Zwischenablage kopiert.");
+            zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
         });
     </script>
 

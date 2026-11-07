@@ -258,7 +258,7 @@ function zeigeZufaelligePreisstrategien() {
   const minVal = parseInt(document.getElementById('preisMin').value);
   const maxVal = parseInt(document.getElementById('preisMax').value);
   if (isNaN(minVal) || isNaN(maxVal) || minVal >= maxVal) {
-    alert('Bitte geben Sie einen gültigen Preisbereich ein (Mindestpreis < Höchstpreis).');
+    zeigeModal('Bitte geben Sie einen gültigen Preisbereich ein (Mindestpreis < Höchstpreis).');
     return;
   }
 
@@ -387,7 +387,7 @@ function kopiereKiPrompt() {
     }, 2500);
   }).catch(err => {
     console.error('Fehler beim Kopieren:', err);
-    alert('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
   });
 }
 
@@ -500,7 +500,7 @@ function mxBaueMatchingXml(aufgaben) {
 
 function exportiereMoodle() {
   if (!letztePreisAufgaben.length) {
-    alert('Bitte zuerst Aufgaben erstellen.');
+    zeigeModal('Bitte zuerst Aufgaben erstellen.');
     return;
   }
   const xml = mxBaueMatchingXml(letztePreisAufgaben);

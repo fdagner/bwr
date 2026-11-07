@@ -199,7 +199,7 @@ function exportiereMoodle() {
     .map(p => p.textContent.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim())
     .filter(t => /^\d+\.\s/.test(t));
 
-  if (!absaetze.length) { alert('Keine Geschäftsfälle im Container gefunden.'); return; }
+  if (!absaetze.length) { zeigeModal('Keine Geschäftsfälle im Container gefunden.'); return; }
 
       const re = /^(\d+)\.\s*(?:(.+?)\s+)?(beschafft|kauft)\s+(.+?)\s+(im Wert von|in Höhe von)\s+([\d.,]+)\s*€\s+(netto|brutto)\s+(auf Ziel|per Banküberweisung|in bar)\.?$/;
       const zahlungen = ['auf Ziel', 'per Banküberweisung', 'in bar'];
@@ -232,9 +232,9 @@ function exportiereMoodle() {
            zeilen += `<p><strong>${nr}.</strong> ${subjekt ? mxEsc(subjekt) + ' ' : ''}${verbDD} ${werkstoffDD} ${wertPhrase} ${betrag}\u00a0€ ${nettoBrutto} ${zahlungDD}.</p>`;
           });
 
-  if (!zeilen) { alert('Kein Geschäftsfall hatte das erwartete Format.'); return; }
+  if (!zeilen) { zeigeModal('Kein Geschäftsfall hatte das erwartete Format.'); return; }
   if (uebersprungen.length) {
-    alert('Nicht erkannt (übersprungen):\n' + uebersprungen.join('\n'));
+    zeigeModal('Nicht erkannt (übersprungen):\n' + uebersprungen.join('\n'));
   }
 
   const titel = `${MOODLE_PREIS_PRAEFIX}${mxIdBasis()}${MOODLE_PREIS_TITELENDE}`;

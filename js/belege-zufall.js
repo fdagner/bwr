@@ -26,7 +26,7 @@ function zufaelligeAusgangsrechnungErstellen() {
     const company = (typeof yamlData !== 'undefined' ? yamlData : []).find(c => c?.unternehmen?.name === liefererName);
     const produkte = company?.unternehmen?.fertigerzeugnisse?.hauptwerk || [];
     if (produkte.length === 0) {
-        alert('Keine Fertigerzeugnisse für den gewählten Lieferer gefunden. Bitte wählen Sie ein Modell- oder Werkstoffunternehmen.');
+        zeigeModal('Keine Fertigerzeugnisse für den gewählten Lieferer gefunden. Bitte wählen Sie ein Modell- oder Werkstoffunternehmen.');
         return;
     }
     const produkt = produkte[Math.floor(Math.random() * produkte.length)];
@@ -75,7 +75,7 @@ function zufaelligeEingangsrechnungErstellen() {
     const werkstoffe = empfaenger?.unternehmen?.werkstoffe || {};
     const kategorien = ['AWR', 'AWF', 'AWH', 'AWB'].filter(k => Array.isArray(werkstoffe[k]) && werkstoffe[k].length > 0);
     if (kategorien.length === 0) {
-        alert('Keine Werkstoffe für den gewählten Empfänger gefunden. Bitte wählen Sie ein Modell- oder Werkstoffunternehmen.');
+        zeigeModal('Keine Werkstoffe für den gewählten Empfänger gefunden. Bitte wählen Sie ein Modell- oder Werkstoffunternehmen.');
         return;
     }
     const kategorie = kategorien[Math.floor(Math.random() * kategorien.length)];
@@ -260,7 +260,7 @@ function buildBelegShareUrl(containerId) {
 async function belegZurSammlung(containerId) {
     const cid = containerId || 'rechnung1Container';
     const container = document.getElementById(cid);
-    if (!container) { alert('Keine Beleg-Vorschau gefunden.'); return; }
+    if (!container) { zeigeModal('Keine Beleg-Vorschau gefunden.'); return; }
     const belegType = BELEG_CONTAINER_TYPE[cid] || 'rechnung';
     // Open-Beleg-Flow: Wenn dieser Beleg aus der Sammlung geöffnet wurde,
     // wird beim Speichern der URSPRÜNGLICHE Eintrag ersetzt (updateItem).
@@ -322,17 +322,17 @@ async function belegZurSammlung(containerId) {
             // wird respektiert (damit lässt sich der Beleg beim Speichern umziehen)
             payload.collectionId = res.collectionId;
             await Collection.updateItem(updateZiel.id, payload);
-            alert('Beleg in der Sammlung aktualisiert.');
+            zeigeModal('Beleg in der Sammlung aktualisiert.');
         } else {
             await Collection.collectItem(payload);
-            alert('Beleg zur Sammlung hinzufügt.');
+            zeigeModal('Beleg zur Sammlung hinzufügt.');
         }
     } catch (e) {
         if (e && e.message === 'MAX_ITEMS') {
-            alert('Sammlung voll (max. 25 Einträge).');
+            zeigeModal('Sammlung voll (max. 25 Einträge).');
         } else {
             console.error(e);
-            alert('Fehler beim Hinzufügen zur Sammlung: ' + (e && e.message ? e.message : e));
+            zeigeModal('Fehler beim Hinzufügen zur Sammlung: ' + (e && e.message ? e.message : e));
         }
     }
 }

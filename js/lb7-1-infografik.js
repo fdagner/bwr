@@ -315,7 +315,7 @@ function previewCsv() {
   const file = document.getElementById("csv-file").files[0];
   if (!file) return;
     if (file.size > 200 * 1024) {
-    alert("Datei zu groß (max. 200 KB).");
+    zeigeModal("Datei zu groß (max. 200 KB).");
     document.getElementById("csv-file").value = "";
     return;
   }
@@ -329,7 +329,7 @@ function previewCsv() {
 }
 
 function importCsv() {
-  if (!csvLines.length) { alert("Bitte erst eine CSV-Datei wählen."); return; }
+  if (!csvLines.length) { zeigeModal("Bitte erst eine CSV-Datei wählen."); return; }
   const skipHeader = document.getElementById("csv-skip-header").checked;
     const lines      = (skipHeader ? csvLines.slice(1) : csvLines).slice(0, 30);
   document.getElementById("data-rows").innerHTML = "";
@@ -363,7 +363,7 @@ function exportPng() {
 function exportSvg() {
   const card    = document.getElementById("ig-chart-card");
   const origSvg = card.querySelector("svg");
-  if (!origSvg) { alert("Bitte erst eine Infografik erstellen."); return; }
+  if (!origSvg) { zeigeModal("Bitte erst eine Infografik erstellen."); return; }
 
   const W       = card.offsetWidth;
   const PAD     = 32;
@@ -1036,7 +1036,7 @@ function validateAll() {
   // Datenpunkte
   const rows = document.querySelectorAll("#data-rows .ig-data-row");
   if (rows.length === 0) {
-    alert("Bitte mindestens einen Datenpunkt eingeben.");
+    zeigeModal("Bitte mindestens einen Datenpunkt eingeben.");
     return false;
   }
   let validRows = 0;
