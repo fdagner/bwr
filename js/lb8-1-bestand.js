@@ -56,7 +56,7 @@ function zeigeZufaelligeBestandsveraenderungen() {
   let html = '<h2>Aufgabe</h2>';
   html += `<p>Berechne die Bestandsveränderungen für die Werkstoffe:</p>`;
   html += `<table style="border-collapse: collapse; width: 100%; max-width: 900px; margin-bottom: 2em; font-family: courier;">`;
-  html += `<thead><tr style="background:#f0f0f0;"><th style="padding:8px; text-align:left;">Werkstoff</th><th style="padding:8px; text-align:right;">Anfangsbestand €</th><th style="padding:8px; text-align:right;">Schlussbestand €</th><th style="padding:8px; text-align:right;">Bestandsveränderung €</th><th style="padding:8px; text-align:right;">Art</th></tr></thead>`;
+  html += `<thead><tr style="background:#f0f0f0;"><th style="padding:8px; text-align:left;">Werkstoff</th><th style="padding:8px; text-align:right;">Anfangsbestand</th><th style="padding:8px; text-align:right;">Schlussbestand</th><th style="padding:8px; text-align:right;">Bestandsveränderung</th><th style="padding:8px; text-align:left;min-width: 25%">Art</th></tr></thead>`;
   html += `<tbody>`;
   bestandsdaten.forEach(d => {
     html += `<tr style="border-bottom:1px solid #ccc;">
@@ -76,7 +76,7 @@ function zeigeZufaelligeBestandsveraenderungen() {
 
   // Tabelle mit Veränderungen (wie in Aufgabe, aber jetzt ausgefüllt)
   html += `<table style="border-collapse: collapse; width: 100%; max-width: 900px; margin-bottom: 2em; font-family: courier;">`;
-  html += `<thead><tr style="background:#f0f0f0;"><th style="padding:8px; text-align:left;">Werkstoff</th><th style="padding:8px; text-align:right;">Anfangsbestand €</th><th style="padding:8px; text-align:right;">Schlussbestand €</th><th style="padding:8px; text-align:right;">Bestandsveränderung €</th><th style="padding:8px; text-align:left;">Art</th></tr></thead>`;
+  html += `<thead><tr style="background:#f0f0f0;"><th style="padding:8px; text-align:left;">Werkstoff</th><th style="padding:8px; text-align:right;">Anfangsbestand</th><th style="padding:8px; text-align:right;">Schlussbestand</th><th style="padding:8px; text-align:right;">Bestandsveränderung</th><th style="padding:8px; text-align:left;min-width: 25%">Art</th></tr></thead>`;
   html += `<tbody>`;
   bestandsdaten.forEach(d => {
     html += `<tr style="border-bottom:1px solid #ccc;">
@@ -90,7 +90,7 @@ function zeigeZufaelligeBestandsveraenderungen() {
   html += `</tbody></table>`;
 
   // ── BUCHUNGSSÄTZE (separat darunter, im gewohnten Tabellen-Format) ───────
-  html += `<strong>Buchungssätze:</strong><br>`;
+  html += `<strong>Buchungssätze:</strong>`;
   html += `
   <table style="white-space:nowrap; background-color:#fff; font-family:courier; min-width:700px; border-collapse:collapse; margin:1em 0 1.8em 0;">
     <tbody>`;

@@ -72,77 +72,88 @@
     <h2>Optimale Bestellmenge</h2>
     <div class="box">
       <p>Hier können Sie automatisch eine vollständige Aufgabe zur optimalen
-        Bestellmenge erstellen. Sie besteht aus einem Interview, Tabelle, Diagramm und drei Arbeitsaufträgen. Alle Werte im Interview werden aus den Eingabefeldern berechnet.      </ul>
+        Bestellmenge erstellen. Sie besteht aus einem Interview, Tabelle, Diagramm und drei Arbeitsaufträgen. Alle Werte im Interview werden aus den Eingabefeldern berechnet.</p>
       <p>Geben Sie Ihre Wunschwerte als Ganzzahlen an. Die Schrittweite sollte ein Teiler der Bestellhäufigkeit sein:
         Je höher die Schrittweite, desto kürzer die Tabelle. Empfehlenswert sind 5er oder 10er Schritte.
         Die Berechnung ergibt immer einen ganzzahligen und passgenauen Schnittpunkt, bei dem Bestellkosten und
         Lagerhaltungskosten gleich hoch sind.
         Sollen die Werte unterschiedlich sein und der Schnittpunkt rechnerisch nicht ganzzahlig, geben Sie bei der
-        optimalen Bestellhäufigkeit eine Kommazahl an. </p>
+        optimalen Bestellhäufigkeit eine Kommazahl an.</p>
 
-        <div class="flex-row">
-  <div>
-    <label for="bmUnternehmen">Modellunternehmen:</label>
-    <select id="bmUnternehmen" class="meinUnternehmen"></select>
-  </div>
-  <div>
-    <label for="bmVariante">Fall-Typ:</label>
-    <select id="bmVariante" onchange="berechneOptimaleBestellmengeUndHaeufigkeit()">
-      <option value="1" selected>Interview, Tabelle und Diagramm</option>
-      <option value="2">Nur Diagramm (Bestellmenge ablesen)</option>
-      <option value="3">Nur Tabelle (Bestellmenge ermitteln)</option>
-    </select>
-  </div>
-  </div>
-<br>
+      <h3>Unternehmen auswählen</h3>
+      <div class="flex-row">
+        <label for="bmUnternehmen">Modellunternehmen:</label>
+        <select id="bmUnternehmen" class="meinUnternehmen"></select>
+      </div>
+
+      <h3>Daten</h3>
+
       <div class="grid3">
-        <div>
-          <label for="optimaleBestellmenge">Optimale Bestellmenge:</label><br>
-          <input type="number" id="optimaleBestellmenge" placeholder="Optimale Bestellmenge eingeben" value="100"
-            required>
-        </div>
-        <div>
-          <label for="optimaleBestellhaeufigkeit">Optimale Bestellhäufigkeit:</label><br>
-          <input type="number" id="optimaleBestellhaeufigkeit" max="365"
-            placeholder="Optimale Bestellhäufigkeit eingeben" value="30" required>
-        </div>
-        <div>
-          <label for="bestellkosten">Bestellkosten pro Bestellung:</label><br>
-          <input type="number" id="bestellkosten" placeholder="Bestellkosten eingeben" value="50" required>
-        </div>
-        <div>
-          <label for="schrittweite">Schrittweite:</label><br>
-          <input type="number" id="schrittweite" value="5" required>
-        </div>
-        <div>
-          <p>Berechnete Lagerkosten je Stück:<br><span id="lagerkosten">...</span></p>
-        </div>
-        <div>
-          <p>Gesamte Bestellmenge (Bedarf):<br><span id="bedarf">...</span></p>
-        </div>
-                <div>
-          <label for="haeufigkeitVon">Bestellhäufigkeit anzeigen von - bis:</label><br>
-          <input type="number" id="haeufigkeitVon" min="1" max="100" value="10" required> - 
-          <input type="number" id="haeufigkeitBis" min="2" max="199" value="50" required>
-        </div>
-      </div><br>
-           <p style="margin-top:10px;" hidden>
+        <fieldset class="vorlage-green" style="max-width: 350px">
+          <legend>Fall-Typ</legend>
+          <div class="form-field">
+            <select class="dropdown" id="bmVariante" onchange="berechneOptimaleBestellmengeUndHaeufigkeit()">
+              <option value="1" selected>Interview, Tabelle und Diagramm</option>
+              <option value="2">Nur Diagramm (Bestellmenge ablesen)</option>
+              <option value="3">Nur Tabelle (Bestellmenge ermitteln)</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset class="vorlage-red" style="max-width: 350px">
+          <legend>Bestellparameter</legend>
+          <div class="form-field">
+            <label for="optimaleBestellmenge">Optimale Bestellmenge</label>
+            <input type="number" id="optimaleBestellmenge" placeholder="Optimale Bestellmenge eingeben" value="100" required>
+
+            <label for="optimaleBestellhaeufigkeit">Optimale Bestellhäufigkeit</label>
+            <input type="number" id="optimaleBestellhaeufigkeit" max="365" placeholder="Optimale Bestellhäufigkeit eingeben" value="30" required>
+
+            <label for="bestellkosten">Bestellkosten pro Bestellung (€)</label>
+            <input type="number" id="bestellkosten" placeholder="Bestellkosten eingeben" value="50" required>
+
+            <label for="schrittweite">Schrittweite</label>
+            <input type="number" id="schrittweite" value="5" required>
+          </div>
+        </fieldset>
+
+        <fieldset class="vorlage-blue" style="max-width: 350px">
+          <legend>Berechnete Werte</legend>
+          <div class="form-field">
+            <label>Berechnete Lagerkosten je Stück</label>
+            <p><span id="lagerkosten">...</span></p>
+
+            <label>Gesamte Bestellmenge (Bedarf)</label>
+            <p><span id="bedarf">...</span></p>
+
+            <label for="haeufigkeitVon">Bestellhäufigkeit anzeigen von – bis</label>
+            <input type="number" id="haeufigkeitVon" min="1" max="100" value="10" required>
+            –
+            <input type="number" id="haeufigkeitBis" min="2" max="199" value="50" required>
+          </div>
+        </fieldset>
+      </div>
+
+      <p style="margin-top:10px;" hidden>
         <label>
           <input type="checkbox" id="chartAlsPng" onchange="aktualisiereDiagrammPng()" checked>
           Diagramm als Grafik in der Aufgabe unter der Tabelle einfügen (wird mit exportiert)
         </label>
-      </p><br>
-  
-                        <button type="button" class="btn-uebernehmen" onclick="berechneOptimaleBestellmengeUndHaeufigkeit()">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"/></svg>
-              Daten übernehmen
-            </button>
-<br><br>
-        <div style="overflow-x:auto;">
+      </p>
+
+      <br>
+      <div class="btn-aktion-row">
+        <button type="button" class="btn-uebernehmen" onclick="berechneOptimaleBestellmengeUndHaeufigkeit()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"/></svg>
+          Daten übernehmen
+        </button>
+      </div>
+
+      <br><br>
+      <div style="overflow-x:auto;">
         <div id="chart" style="width: 100%;min-width: 750px;"></div>
       </div>
       <p style="text-align:center">Über das Diagramm-Menü lässt sich die Grafik als CSV, SVG oder PNG exportieren.</p>
-      </div>
       <div id="Container" style="min-width: 700px" contenteditable="true"></div>  
 
     </div>
@@ -150,7 +161,7 @@
     <br>
   
   </main>
-  <script src="js/lb8-2-bestellmenge.js?v=22"></script>
+  <script src="js/lb8-2-bestellmenge.js?v=23"></script>
   <div w3-include-html="footer.html"></div>
   <script>
     includeHTML();
