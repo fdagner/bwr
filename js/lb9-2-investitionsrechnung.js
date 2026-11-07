@@ -6,6 +6,9 @@
 //      berechnen (Angebotsvergleich zweier Maschinenlieferer aus der YAML)
 //   2. datenblatt     – Datenblatt mit Kostenvergleichs- und
 //      Amortisationsrechnung (Portierung aus investitionsrechnung.html)
+//   3. angebotsvergleich – Angebotsvergleich zweier Maschinen im Tabellenformat
+//      (Kostenvergleichsrechnung + zwei weitere Kaufkriterien + Buchungssatz
+//      für den Rechnungseingang beim Kauf – Aufgabenstil 4.4.x)
 //
 // Die Unternehmensdaten (inkl. Inhaber) kommen aus der über js/company-loader.js
 // geladenen YAML. Lieferer werden aus der Branche "Maschinen" gewählt.
@@ -619,6 +622,297 @@ function generiereKostenvergleichsrechnung() {
 }
 
 // ============================================================================
+// AUFGABENTYP: ANGEBOTSVERGLEICH (KOSTENVERGLEICHSRECHNUNG + BUCHUNGSSATZ)
+// Zwei Angebote im Tabellenvergleich (Aufgabenstil 4.4.x):
+//   1. Gesamtkosten pro Jahr des Angebots 2 berechnen (kalk. Zinssatz gegeben)
+//   2. Zwei weitere Kriterien nennen, die für Angebot 1 sprechen
+//   3. Buchungssatz für den Rechnungseingang beim Kauf bilden
+// ============================================================================
+
+function generiereAngebotsvergleich() {
+  // ── Unternehmen + Inhaber aus der YAML ──────────────────────────────────
+  const kundeSelect = document.getElementById('irKunde');
+  const kundenName = kundeSelect && kundeSelect.value ? kundeSelect.value.trim() : '';
+  const u = getUnternehmen(kundenName);
+  const inhaber = (u && u.inhaber) ? u.inhaber : '<i>[Inhaber]</i>';
+  const unternehmensName = (u && u.name) ? u.name : '<i>[Modellunternehmen]</i>';
+
+  // ── Maschine + Lieferer ──────────────────────────────────────────────────
+  const art = MASCHINEN_ARTEN[Math.floor(Math.random() * MASCHINEN_ARTEN.length)];
+  const maschinenLiefererPool = getMaschinenLieferer().map(c => c.unternehmen)
+    .sort(() => Math.random() - 0.5);
+  const l1 = maschinenLiefererPool[0] || { name: 'Maschinenbau KG', adresse: { ort: 'München' } };
+  const l2 = (maschinenLiefererPool.length > 1
+    ? maschinenLiefererPool[1]
+    : { name: 'TechMachines GmbH', adresse: { ort: 'Nürnberg' } });
+
+  const modell1 = MASCHINEN_MODELLE[Math.floor(Math.random() * MASCHINEN_MODELLE.length)];
+  let modell2 = MASCHINEN_MODELLE[Math.floor(Math.random() * MASCHINEN_MODELLE.length)];
+  if (modell2 === modell1) modell2 = MASCHINEN_MODELLE[(MASCHINEN_MODELLE.indexOf(modell1) + 1) % MASCHINEN_MODELLE.length];
+
+  // ── Zahlen Angebot 1 ────────────────────────────────────────────────────
+  const nd = [4, 5, 8, 10][Math.floor(Math.random() * 4)];    // Nutzungsdauer (beide Angebote gleich)
+  const absch1 = randTo(100, 7000, 18000);                    // Abschreibung pro Jahr
+  const ak1 = absch1 * nd;                                    // Anschaffungskosten (glatt)
+  const zinsSatz = randInt(8, 16) / 2;                        // 4,0–8,0 % in 0,5er-Schritten
+  const zins1 = ak1 * zinsSatz / 200;                         // kalk. Zinsen (durchschn. Kapital)
+  const variable1 = randTo(100, 60000, 120000);               // Variable Kosten pro Jahr
+  const gesamt1 = absch1 + zins1 + variable1;                 // Gesamtkosten pro Jahr
+  const amort1 = randInt(12, 28) / 10;                        // 1,2–2,8 Jahre
+
+  // ── Zahlen Angebot 2 ────────────────────────────────────────────────────
+  const absch2 = absch1 + randTo(100, -600, 600);
+  const ak2 = absch2 * nd;
+  const variable2 = randTo(100, 60000, 120000);
+  const amort2 = amort1 + randInt(2, 8) / 10;                 // länger als Angebot 1
+
+  // ── Lösungswerte Angebot 2 (zu berechnen) ────────────────────────────────
+  const zins2 = ak2 * zinsSatz / 200;
+  const fixe2 = absch2 + zins2;
+  const gesamt2 = fixe2 + variable2;
+
+  // ── Weitere Informationen ────────────────────────────────────────────────
+  // Der Flächenbedarf ist NICHT immer Teil der Aufgabe (Zufall):
+  //  - Ist er dabei und bei Angebot 1 geringer, zählt er neben der kürzeren
+  //    Amortisationszeit als zweites Kriterium zu 2.
+  //  - Ist er dabei, aber größer, ist er (wie ein negatives Zusatzinfo,
+  //    z. B. „Kürzere Garantiezeit") NICHT wirksam; dann besteht das zweite
+  //    Kriterium aus dem positiven Zusatzinfo, das nur Angebot 1 erhalten hat.
+  //  - Fehlt er, ist das positive Zusatzinfo das zweite Kriterium.
+  const mitFlaeche = Math.random() < 0.5;
+  const flKleinerBei1 = mitFlaeche && Math.random() < 0.5;
+  // Immer mindestens eine Vergleichsinfo (Flächenbedarf ODER Lieferzeit),
+  // damit die Zeile „Weitere Informationen" bei BEIDEN Angeboten gefüllt ist.
+  const mitLieferzeit = !mitFlaeche || Math.random() < 0.5;
+
+  const poolPositiv = [
+    'Kostenloser Wartungsservice',
+    'Kostenloser Ersatzteilservice',
+    'Schulung der Bediener inklusive',
+    'Wartungsvertrag für 3 Jahre inklusive',
+    'Längere Garantiezeit',
+  ];
+  const poolNegativ = [
+    'Kürzere Garantiezeit',
+    'Kostenpflichtiger Wartungsservice',
+  ];
+  const klein = s => s.charAt(0).toLowerCase() + s.slice(1);   // kleingeschrieben
+
+  // Kriterien zu 2. (zweites Kriterium: geringerer Flächenbedarf ODER positives Zusatzinfo)
+  const zweitesKriteriumIstFlaeche = mitFlaeche && flKleinerBei1;
+  const zusatzPositiv = zweitesKriteriumIstFlaeche
+    ? null
+    // groß geschrieben (Wartungsvertrag, Schulung ...), wie im Datenblatt
+    : poolPositiv[Math.floor(Math.random() * poolPositiv.length)];
+
+  // Lieferzeit konkret in Tagen – wie der Flächenbedarf bei BEIDEN Angeboten
+  // angegeben (Angebot 1 liefert langsamer: Nachteil, aber nicht wirksam).
+  // Fehlt sie, erscheint stattdessen ein negatives Zusatzinfo nur bei Angebot 1.
+  const lieferzeit1 = randInt(14, 28);     // Tage (Angebot 1: länger)
+  const lieferzeit2 = randInt(3, 10);      // Tage (Angebot 2: kürzer)
+  const negativAuswahl = poolNegativ[Math.floor(Math.random() * poolNegativ.length)];
+
+  // Nicht wirksame Information(en) für die Musterlösung
+  const nachteile = [];
+  if (mitLieferzeit) nachteile.push(`die längere Lieferzeit (${lieferzeit1} Tage gegenüber ${lieferzeit2} Tagen bei Angebot 2)`);
+  else nachteile.push(klein(negativAuswahl));
+  if (mitFlaeche && !flKleinerBei1) nachteile.push('der größere Flächenbedarf');
+  const mehrereNachteile = nachteile.length > 1;
+  const nachteilVerb = mehrereNachteile ? 'sind' : 'ist';
+  const nachteilEndung = mehrereNachteile ? 'e' : '';
+  const nachteilText = `${nachteile.join(' und ')} ${nachteilVerb} Nachteil${nachteilEndung} und spricht${mehrereNachteile ? 'en' : ''} nicht für Angebot&nbsp;1.`;
+  const nachteilPlain = `${nachteile.join(' und ')} – ${nachteilVerb} Nachteil${nachteilEndung} und nicht wirksam`;
+
+  // Flächenbedarf (nur relevant, wenn er Teil der Aufgabe ist)
+  const fl1 = mitFlaeche ? (flKleinerBei1 ? randInt(12, 17) : randInt(18, 30)) : null;
+  const fl2 = mitFlaeche ? (flKleinerBei1 ? randInt(18, 30) : randInt(12, 17)) : null;
+
+  // Zeile „Weitere Informationen" im Datenblatt (HTML) und für den KI-Prompt
+  const zeilen1 = [];
+  const zeilen2 = [];
+  if (fl1 !== null) zeilen1.push(`Flächenbedarf: ${fl1} m²`);
+  if (fl2 !== null) zeilen2.push(`Flächenbedarf: ${fl2} m²`);
+  if (zusatzPositiv) zeilen1.push(zusatzPositiv);
+  if (mitLieferzeit) {
+    zeilen1.push(`Lieferzeit: ${lieferzeit1} Tage`);
+    zeilen2.push(`Lieferzeit: ${lieferzeit2} Tage`);
+  } else {
+    zeilen1.push(klein(negativAuswahl));
+  }
+  // Zeile „Weitere Informationen" im Datenblatt (mit Spiegelstrichen zur
+  // besseren Unterscheidung der Begriffe) und für den KI-Prompt
+  const strich = s => '– ' + s;
+  const zeilen1Html = zeilen1.map(strich).join('<br>');
+  const zeilen2Html = zeilen2.length ? zeilen2.map(strich).join('<br>') : '&ndash;';
+  const info1 = zeilen1Html;
+  const info2 = zeilen2Html;
+  const info1Ki = zeilen1.map(z => '- ' + z).join('; ');
+  const info2Ki = zeilen2.length ? zeilen2.map(z => '- ' + z).join('; ') : '–';
+
+  // Musterlösung zu 2.
+  const kriterienVariante = zweitesKriteriumIstFlaeche
+    ? {
+        html: `kürzere Amortisationszeit &#10004;, geringerer Flächenbedarf &#10004;<br>
+          <small>${nachteile[0].charAt(0).toUpperCase() + nachteile[0].slice(1)} ist ein Nachteil und spricht nicht für Angebot&nbsp;1.</small>`,
+        text: `kürzere Amortisationszeit, geringerer Flächenbedarf (nicht ${nachteile[0]} – ist ein Nachteil und nicht wirksam)`
+      }
+    : {
+        html: `kürzere Amortisationszeit &#10004;, ${zusatzPositiv} &#10004;<br>
+          <small>${nachteilText}</small>`,
+        text: `kürzere Amortisationszeit, ${zusatzPositiv} (nicht ${nachteilPlain})`
+      };
+
+  // ── Zahlenwerte für die Buchung ──────────────────────────────────────────
+  const MA = kontoLabel('0700');        // Maschinen & Anlagen
+  const VORST = kontoLabel('2600');     // Vorsteuer
+  const VE = kontoLabel('4400');        // Verbindlichkeiten aus LL
+  const vorst1 = ak1 * UST_REGEL / 100;
+  const brutto1 = ak1 + vorst1;
+
+  const zsTxt = String(zinsSatz).replace('.', ',');
+
+  // ── Aufgabentext ─────────────────────────────────────────────────────────
+  const einleitung =
+    `<strong>${inhaber}</strong> von <strong>${unternehmensName}</strong> plant die Anschaffung ` +
+    `${art.g === 'f' ? 'einer neuen' : 'eines neuen'} ${art.n}. Zwei Anbieter ` +
+    `für ${art.plural} haben ihre Angebote vorgelegt (Kostenvergleichsrechnung):`;
+
+  // ── Angebotsvergleichstabelle ────────────────────────────────────────────
+  function zelle(label, v1, v2) {
+    return `<tr style="border:1px solid #999;">
+      <td style="padding:4px 8px;">${label}</td>
+      <td style="padding:4px 8px; text-align:center;">${v1}</td>
+      <td style="padding:4px 8px; text-align:center;">${v2}</td>
+    </tr>`;
+  }
+
+  const datenblatt =
+    `<table style="border:1px solid #999; font-size:16px; width:680px; max-width:100%; border-collapse:collapse;">
+      <tr style="background-color:#ccc; font-weight:bold;">
+        <th style="padding:6px 8px; width:28%;"></th>
+        <th style="padding:6px 8px; width:36%; text-align:center;">Angebot 1:<br>${art.n} &bdquo;${modell1}&ldquo;</th>
+        <th style="padding:6px 8px; width:36%; text-align:center;">Angebot 2:<br>${art.n} &bdquo;${modell2}&ldquo;</th>
+      </tr>
+      ${zelle('Anschaffungskosten', euro(ak1), euro(ak2))}
+      ${zelle('Abschreibung pro Jahr', euro(absch1), euro(absch2))}
+      ${zelle('Kalkulatorische Zinsen pro Jahr', euro(zins1), '')}
+      ${zelle('Variable Kosten pro Jahr', euro(variable1), euro(variable2))}
+      ${zelle('Gesamtkosten pro Jahr', euro(gesamt1), '')}
+      ${zelle('Amortisationszeit', zahl(amort1) + ' Jahre', zahl(amort2) + ' Jahre')}
+      ${zelle('Weitere Informationen', info1, info2)}
+    </table>`;
+
+  // ── Arbeitsauftrag (Nummer links, Text mit hängendem Einzug) ─────────────
+  const aufgabeZeile = (nr, text) =>
+    `<tr>
+      <td style="vertical-align:top; padding:4px 16px 4px 0; font-weight:bold; white-space:nowrap; width:40px;">${nr}</td>
+      <td style="padding:4px 0; line-height:1.6;">${text}</td>
+    </tr>`;
+
+  const aufgaben =
+    `<table style="border:none; border-collapse:collapse; font-size:16px; width:100%;">
+      ${aufgabeZeile('1.', `Berechne die Gesamtkosten pro Jahr des Angebots 2 anhand der Kostenvergleichsrechnung, wenn ein kalkulatorischer Zinssatz von <strong>${zsTxt}&nbsp;%</strong> vorliegt.`)}
+      ${aufgabeZeile('2.', `Für den Kauf der Maschine sind nicht nur die Gesamtkosten ausschlaggebend. Nenne auf Grundlage der Informationen zwei weitere Kriterien, die für das Angebot&nbsp;1 sprechen.`)}
+      ${aufgabeZeile('3.', `„Alois" entscheidet sich für Angebot&nbsp;1. Bilde den Buchungssatz für den Rechnungseingang beim Kauf der Maschine &bdquo;${modell1}&ldquo; (Kauf auf Ziel).`)}
+    </table>`;
+
+  // ── Lösung ───────────────────────────────────────────────────────────────
+  const loesung1 =
+    `Kalk. Zinsen/Jahr in Euro: ${bruch(betragOhneEuro(ak2) + ' · ' + zsTxt, '100 · 2')} &nbsp;=&nbsp;<strong>${euro(zins2)}</strong> &#10004;<br><br>` +
+    `Abschreibung/Jahr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${euro(absch2)}<br>` +
+    `+ Kalkulatorische Zinsen/Jahr&nbsp;&nbsp;${euro(zins2)}<br>` +
+    `Fixe Kosten/Jahr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${euro(fixe2)} &#10004;<br><br>` +
+    `Variable Kosten/Jahr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${euro(variable2)}<br>` +
+    `+ Fixe Kosten/Jahr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${euro(fixe2)}<br>` +
+    `Gesamtkosten/Jahr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>${euro(gesamt2)}</strong> &#10004;`;
+
+  const loesung2 = kriterienVariante.html;
+
+  const loesung3 =
+    `<table style="border:1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; max-width:100%; margin:0 0 6px;">
+      <tr>
+        <td style="min-width:160px;">${MA}</td>
+        <td style="text-align:right; min-width:145px;">${euro(ak1)}</td>
+        <td style="text-align:center; min-width:50px;"></td>
+        <td style="min-width:90px;"></td>
+        <td style="min-width:145px;"></td>
+      </tr>
+      <tr>
+        <td>${VORST}</td>
+        <td style="text-align:right;">${euro(vorst1)}</td>
+        <td style="text-align:center;">an</td>
+        <td>${VE}</td>
+        <td style="text-align:right;">${euro(brutto1)}</td>
+      </tr>
+    </table>`;
+
+  // ── HTML zusammensetzen ──────────────────────────────────────────────────
+  const container = document.getElementById('Container');
+  container.innerHTML = `
+    <h2>Aufgabe: Angebotsvergleich</h2>
+    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
+                padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
+      ${einleitung}
+    </div>
+    ${datenblatt}
+    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
+                padding:12px 18px; margin-top:14px; font-size:16px;">
+      <strong style="font-size:16px;">Arbeitsauftrag</strong>
+      ${aufgaben}
+    </div>
+    <h2 class="loesung">Lösung</h2>
+    <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
+                padding:12px 18px; margin-top:12px; font-size:16px; line-height:1.7;">
+      <strong>Zu 1.:</strong><br>${loesung1}<br><br>
+      <strong>Zu 2.:</strong><br>${loesung2}<br><br>
+      <strong>Zu 3.:</strong><br>${loesung3}
+    </div>
+  `;
+
+  // ── Aufgabenstellung + Musterlösung als Text für den KI-Prompt ───────────
+  setzeAufgabeKiText(
+    `${inhaber} von ${unternehmensName} plant die Anschaffung ` +
+    `${art.g === 'f' ? 'einer neuen' : 'eines neuen'} ${art.n}. Zwei Anbieter ` +
+    `für ${art.plural} haben ihre Angebote vorgelegt.\n\n` +
+    `Angebot 1: ${art.n} „${modell1}"\n` +
+    `  Anschaffungskosten: ${euro(ak1)}\n` +
+    `  Abschreibung pro Jahr: ${euro(absch1)}\n` +
+    `  Kalkulatorische Zinsen pro Jahr: ${euro(zins1)}\n` +
+    `  Variable Kosten pro Jahr: ${euro(variable1)}\n` +
+    `  Gesamtkosten pro Jahr: ${euro(gesamt1)}\n` +
+    `  Amortisationszeit: ${zahl(amort1)} Jahre\n` +
+    `  Weitere Informationen: ${info1Ki}\n\n` +
+    `Angebot 2: ${art.n} „${modell2}"\n` +
+    `  Anschaffungskosten: ${euro(ak2)}\n` +
+    `  Abschreibung pro Jahr: ${euro(absch2)}\n` +
+    `  Variable Kosten pro Jahr: ${euro(variable2)}\n` +
+    `  Amortisationszeit: ${zahl(amort2)} Jahre\n` +
+    `  Weitere Informationen: ${info2Ki}\n\n` +
+    `Aufgaben:\n` +
+    `1. Berechne die Gesamtkosten pro Jahr des Angebots 2 anhand der Kostenvergleichsrechnung, wenn ein kalkulatorischer Zinssatz von ${zsTxt} % vorliegt.\n` +
+    `2. Nenne auf Grundlage der Informationen zwei weitere Kriterien, die für das Angebot 1 sprechen.\n` +
+    `3. Bilde den Buchungssatz für den Rechnungseingang beim Kauf der Maschine „${modell1}" (Kauf auf Ziel, ${UST_REGEL} % USt).\n\n` +
+    `Musterlösung:\n` +
+    `1. Kalk. Zinsen/Jahr in Euro = ${euro(ak2)} · ${zsTxt} ÷ (100 · 2) = ${euro(zins2)}\n` +
+    `   Fixe Kosten/Jahr = ${euro(absch2)} + ${euro(zins2)} = ${euro(fixe2)}\n` +
+    `   Gesamtkosten/Jahr = ${euro(variable2)} + ${euro(fixe2)} = ${euro(gesamt2)}\n` +
+    `2. ${kriterienVariante.text}\n` +
+    `3. ${MA} ${euro(ak1)} / ${VORST} ${euro(vorst1)} an ${VE} ${euro(brutto1)}\n` +
+    `   (Maschinen & Anlagen netto, 19 % Vorsteuer, Verbindlichkeiten brutto)`
+  );
+
+  // ── Beleg (Eingangsrechnungen der Lieferer von Angebot 1 und 2) ──────────
+  letzteAufgabe = {
+    art,
+    anbieter: [
+      { nummer: 1, ak: ak1, modell: modell1, lieferer: l1.name },
+      { nummer: 2, ak: ak2, modell: modell2, lieferer: l2.name },
+    ],
+  };
+  renderBelegButtons();
+}
+
+// ============================================================================
 // BELEG-BUTTONS (Eingangsrechnungen je Angebot)
 // ============================================================================
 
@@ -985,6 +1279,8 @@ function generiereAufgabe() {
     generiereProduktionsmaschineErweitert();
   } else if (art === 'kostenvergleich') {
     generiereKostenvergleichsrechnung();
+  } else if (art === 'angebotsvergleich') {
+    generiereAngebotsvergleich();
   } else {
     generiereErsatzmaschine();
   }
