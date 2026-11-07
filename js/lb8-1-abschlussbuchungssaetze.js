@@ -192,11 +192,14 @@ function generiereAufgabe() {
   const anzahlSel = document.getElementById('anzGefaehlle');
   const n = anzahlSel ? Math.max(1, parseInt(anzahlSel.value, 10) || 4) : 4;
 
-  // Auswahl mischen; bei mehr Geschäftsfällen als Konten mit Wiederholung ziehen
+  // Auswahl mischen; jedes Konto nur einmal (keine doppelten Zeilen in der Aufgabe).
+  // Wird mehr als vorhanden angefordert, wird auf die Anzahl ausgewählter Konten
+  // begrenzt — kein Konto wird doppelt gezogen.
   const pool = auswahlKonten().slice().sort(() => Math.random() - 0.5);
-  const ausgewaehlt = [];
-  for (let i = 0; i < n; i++) {
-    ausgewaehlt.push(pool[Math.floor(Math.random() * pool.length)]);
+  const ausgewaehlt = pool.slice(0, Math.min(n, pool.length));
+  if (ausgewaehlt.length === 0) return;
+  if (ausgewaehlt.length < n) {
+    zeigeModal('Es sind nur ' + ausgewaehlt.length + ' Konten ausgewählt – es werden ' + ausgewaehlt.length + ' Aufgaben generiert (kein Konto doppelt).', 'Hinweis');
   }
 
   const gefaehlle = ausgewaehlt.map(k => {
