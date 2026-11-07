@@ -12,7 +12,7 @@
   <title>Sammlung – meinbwr.de</title>
   <link rel="stylesheet" href="css/style.css?v=14">
   <script src="js/menu.js?v=14"></script>
-  <script src="js/js-yaml.min.js"></script>
+  <script src="js/libraries/js-yaml.min.js"></script>
   <script src="js/utils.js?v=13"></script>
   <script src="js/collection.js?v=36"></script>
 
@@ -537,7 +537,7 @@
         }
         if (typeof html2canvas === 'function') { renderUndExportieren(); return; }
         const sk = document.createElement('script');
-        sk.src = 'js/html2canvas.min.js';
+        sk.src = 'js/libraries/html2canvas.min.js';
         sk.onload = renderUndExportieren;
         sk.onerror = function () { fehler(new Error('html2canvas konnte nicht geladen werden')); };
         document.head.appendChild(sk);

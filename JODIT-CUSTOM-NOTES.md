@@ -32,8 +32,8 @@ Standard-Konfiguration abweicht. Bei einem Jodit-Update (`jodit.min.js`,
 - **Marker:** `// JODIT-CUSTOM: Cloudflare/CDN-Vermeidung`
 - **Was:** Ace und Beautify werden lokal aus `js/` geladen:
   ```js
-  sourceEditorCDNUrlsJS: ['js/ace.js'],
-  beautifyHTMLCDNUrlsJS: ['js/beautify.min.js', 'js/beautify-html.min.js'],
+  sourceEditorCDNUrlsJS: ['js/libraries/ace.js'],
+  beautifyHTMLCDNUrlsJS: ['js/libraries/beautify.min.js', 'js/libraries/beautify-html.min.js'],
   ```
 - **Warum:** Verhindert Datenabfluss an `cdnjs.cloudflare.com`.
 - **Bei Update:** Diese Optionen **beibehalten**, sonst lädt Jodit von
@@ -55,7 +55,7 @@ Standard-Konfiguration abweicht. Bei einem Jodit-Update (`jodit.min.js`,
 
 - Unverändert (Original-Jodit-CSS). Nicht manuell editieren.
 
-## 4. `js/jodit.min.js`
+## 4. `js/libraries/jodit.min.js`
 
 - Unverändert (Original-Jodit-JS). Nicht manuell editieren.
 - Bei Update: Datei ersetzen, dann Custom-Stellen in `joditeditor.js`

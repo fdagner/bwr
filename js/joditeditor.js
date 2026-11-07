@@ -460,8 +460,8 @@
                 // JODIT-CUSTOM: Cloudflare/CDN-Vermeidung (nicht entfernen bei Updates)
                 // Bei Jodit-Update: diese Optionen beibehalten, sonst lädt Jodit
                 // von cdnjs.cloudflare.com (Datenabfluss!).
-                sourceEditorCDNUrlsJS: ['js/ace.js'],
-                beautifyHTMLCDNUrlsJS: ['js/beautify.min.js', 'js/beautify-html.min.js'],
+                sourceEditorCDNUrlsJS: ['js/libraries/ace.js'],
+                beautifyHTMLCDNUrlsJS: ['js/libraries/beautify.min.js', 'js/libraries/beautify-html.min.js'],
                 buttons: [
                     'bold', 'italic', 'underline', '|',
                     'fontsize', 'paragraph', '|',
