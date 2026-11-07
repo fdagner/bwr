@@ -15,7 +15,7 @@
 
     <!-- Statusleiste + App-Kopfzeile -->
     <rect x="12" y="12" width="736" height="64" fill="#0f4c5c"/>
-    <text x="28" y="30" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="start">9:41</text>
+    <text x="28" y="30" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="start"></text>
     <!-- WLAN -->
     <g stroke="#ffffff" stroke-width="1.5" fill="none" stroke-linecap="round">
       <path d="M677.500 23.500 Q686 17 694.500 23.500"/>
