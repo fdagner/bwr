@@ -159,6 +159,12 @@ function erstelleAufgaben(art, K, n, p, plan) {
   const buchAufnahme = {
     text: `Bilde den Buchungssatz für die Aufnahme des Darlehens (Gutschrift auf dem Bankkonto).`,
     loesung: bsHtml([[KONTO_BANK, K]], [[KONTO_DARLEHEN, K]]),
+    // Beleg: Bankkontoauszug mit der Gutschrift der Kreditsumme
+    beleg: {
+      titel: 'Kontoauszug – Darlehensaufnahme',
+      monat: '01', jahrOffset: 0,
+      vorgaenge: [{ bez: 'Darlehensgutschrift', wert: K }],
+    },
   };
 
   if (art === 'fest') {
@@ -173,9 +179,19 @@ function erstelleAufgaben(art, K, n, p, plan) {
         loesung: `Bei längerer Laufzeit zahlt das Unternehmen in mehr Jahren Zinsen auf die volle Kreditsumme. Die jährlichen Zinsen bleiben gleich, die <strong>Gesamtzinsen steigen</strong> aber proportional zur Laufzeit.` },
       buchAufnahme,
       { text: `Bilde den Buchungssatz für die Zinszahlung im 1.&nbsp;Jahr per Banküberweisung.`,
-        loesung: bsHtml([[KONTO_ZINS, r1.zins]], [[KONTO_BANK, r1.zins]]) + `Beim Festdarlehen wird im 1. Jahr nur Zins gezahlt, keine Tilgung.` },
+        loesung: bsHtml([[KONTO_ZINS, r1.zins]], [[KONTO_BANK, r1.zins]]) + `Beim Festdarlehen wird im 1. Jahr nur Zins gezahlt, keine Tilgung.`,
+        beleg: {
+          titel: 'Kontoauszug – Zinszahlung 1. Jahr',
+          monat: '12', jahrOffset: 0,
+          vorgaenge: [{ bez: 'Zinsen Darlehen', wert: -r1.zins }],
+        } },
       { text: `Bilde den Buchungssatz für den Schuldendienst im letzten Jahr (${n}.&nbsp;Jahr).`,
-        loesung: bsHtml([[KONTO_DARLEHEN, rl.tilgung], [KONTO_ZINS, rl.zins]], [[KONTO_BANK, rl.sd]]) },
+        loesung: bsHtml([[KONTO_DARLEHEN, rl.tilgung], [KONTO_ZINS, rl.zins]], [[KONTO_BANK, rl.sd]]),
+        beleg: {
+          titel: `Kontoauszug – Schuldendienst ${n}. Jahr`,
+          monat: '12', jahrOffset: n - 1,
+          vorgaenge: [{ bez: 'Tilgung Darlehen', wert: -rl.tilgung }, { bez: 'Zinsen Darlehen', wert: -rl.zins }],
+        } },
     ];
   }
 
@@ -191,7 +207,12 @@ function erstelleAufgaben(art, K, n, p, plan) {
         loesung: `Bei längerer Laufzeit sinkt die jährliche Tilgungsrate (Kreditsumme : Laufzeit), der jährliche Schuldendienst wird geringer. Da die Restschuld aber langsamer sinkt, fallen insgesamt <strong>mehr Zinsen</strong> an.` },
       buchAufnahme,
       { text: `Bilde den Buchungssatz für den Schuldendienst (Tilgung und Zinsen) im 1.&nbsp;Jahr per Banküberweisung.`,
-        loesung: bsHtml([[KONTO_DARLEHEN, r1.tilgung], [KONTO_ZINS, r1.zins]], [[KONTO_BANK, r1.sd]]) + `Zinsen 1. Jahr: ${f(K)} · ${pz} = ${f(r1.zins)}` },
+        loesung: bsHtml([[KONTO_DARLEHEN, r1.tilgung], [KONTO_ZINS, r1.zins]], [[KONTO_BANK, r1.sd]]) + `Zinsen 1. Jahr: ${f(K)} · ${pz} = ${f(r1.zins)}`,
+        beleg: {
+          titel: 'Kontoauszug – Schuldendienst 1. Jahr',
+          monat: '12', jahrOffset: 0,
+          vorgaenge: [{ bez: 'Tilgung Darlehen', wert: -r1.tilgung }, { bez: 'Zinsen Darlehen', wert: -r1.zins }],
+        } },
       { text: `Unterscheide Abzahlungsdarlehen und Annuitätendarlehen.`,
         loesung: `<strong>Abzahlungsdarlehen:</strong> Tilgung konstant, Zinsen sinken, Schuldendienst sinkt.<br><strong>Annuitätendarlehen:</strong> Schuldendienst (Annuität) konstant, Zinsen sinken, Tilgung steigt.` },
     ];
@@ -209,7 +230,12 @@ function erstelleAufgaben(art, K, n, p, plan) {
       loesung: `Bei längerer Laufzeit sinkt die jährliche Annuität, weil die Schuld auf mehr Jahre verteilt wird. Die Restschuld sinkt langsamer, daher steigen die <strong>Gesamtzinsen</strong>.` },
     buchAufnahme,
     { text: `Bilde den Buchungssatz für den Schuldendienst (Tilgung und Zinsen) im 1.&nbsp;Jahr per Banküberweisung.`,
-      loesung: bsHtml([[KONTO_DARLEHEN, r1.tilgung], [KONTO_ZINS, r1.zins]], [[KONTO_BANK, r1.sd]]) },
+      loesung: bsHtml([[KONTO_DARLEHEN, r1.tilgung], [KONTO_ZINS, r1.zins]], [[KONTO_BANK, r1.sd]]),
+      beleg: {
+        titel: 'Kontoauszug – Schuldendienst 1. Jahr',
+        monat: '12', jahrOffset: 0,
+        vorgaenge: [{ bez: 'Tilgung Darlehen', wert: -r1.tilgung }, { bez: 'Zinsen Darlehen', wert: -r1.zins }],
+      } },
     { text: `Unterscheide Annuitätendarlehen und Abzahlungsdarlehen.`,
       loesung: `<strong>Annuitätendarlehen:</strong> Schuldendienst konstant, Tilgung steigt, Zinsen sinken.<br><strong>Abzahlungsdarlehen:</strong> Tilgung konstant, Zinsen sinken, Schuldendienst sinkt.` },
   ];
@@ -425,8 +451,59 @@ stroke: {
   }
 
   letzteDarlehensAufgabe = { art, K, n, p, plan, aufgaben };
+  renderBelegButtonsDarlehen();
   const vorschau = document.getElementById('kiPromptVorschau');
   if (vorschau && vorschau.style.display !== 'none') vorschau.textContent = erstelleKiPromptTextDarlehen();
+}
+
+// ============================================================================
+// BELEG-BUTTONS (Kontoauszüge der Bank für Aufgaben mit Buchungssatz)
+// ============================================================================
+// Für jede Aufgabe, die einen Buchungssatz verlangt, wird ein Button angelegt,
+// der die zugehörige Gutschrift-/Überweisung auf einem Bankkontoauszug
+// (belege.html, beleg=kontoauszug) zeigt. Die Wertstellungen (plus Gutschrift /
+// minus Abbuchung) entsprechen exakt den Buchungsbeträgen der Lösung.
+
+function renderBelegButtonsDarlehen() {
+  const col = document.getElementById('button-column');
+  if (!col || !letzteDarlehensAufgabe) return;
+  col.innerHTML = '';
+
+  const jahr = new Date().getFullYear();
+
+  letzteDarlehensAufgabe.aufgaben.forEach(a => {
+    if (!a || !a.beleg) return;   // nur Buchungssatz-Aufgaben bekommen einen Beleg
+    const info = a.beleg;
+
+    const params = new URLSearchParams();
+    params.set('beleg', 'kontoauszug');
+    info.vorgaenge.forEach((v, k) => {
+      params.set(`vorgang${k + 1}`, v.bez);       // z. B. „Darlehensgutschrift“
+      params.set(`wertstellung${k + 1}`, String(Math.round(v.wert * 100) / 100));
+    });
+    params.set('nummer', String(1 + Math.floor(Math.random() * 24)));
+    params.set('tag', String(1 + Math.floor(Math.random() * 28)).padStart(2, '0'));
+    params.set('monat', info.monat || '12');
+    params.set('jahr', String(jahr + (info.jahrOffset || 0)));
+    // Plausibler alter Kontostand: übersteigt die Abbuchungen (Schuldendienst)
+    // und liegt sonst in einem typischen Rahmen für ein Bankkonto
+    const ausgaben = info.vorgaenge.filter(v => v.wert < 0).reduce((s, v) => s - v.wert, 0);
+    const altSaldo = ausgaben + Math.round((5000 + Math.random() * 130000) / 500) * 500;
+    params.set('kontostand_alt', String(Math.round(altSaldo * 100) / 100));
+    // Kontoinhaber = gewähltes Modellunternehmen (nur bei echtem Namen)
+    if (kunde && !/^</.test(kunde)) params.set('kontoinhaber', kunde);
+    const bankURL = `belege.html?${params.toString()}`;
+
+    const wrap = document.createElement('div');
+    wrap.style.margin = '12px 0';
+    wrap.innerHTML = `
+      <button class="geschaeftsfall-beleg-button"
+        onclick="window.open('${bankURL}','_blank')"
+        style="width:100%; padding:10px 12px; font-size:14px;">
+        🏦 ${info.titel}
+      </button>`;
+    col.appendChild(wrap);
+  });
 }
 
 // ============================================================================

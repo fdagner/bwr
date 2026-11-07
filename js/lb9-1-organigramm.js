@@ -220,10 +220,45 @@ function baueEditor() {
 }
 
 // ───────────────────────────────────────────────
+// Kanten (Pfeile & Linien) – separat, damit sie optional weggelassen werden
+
+function baueKanten(o) {
+  const { typ, matrix, produkte, mitStab, yL, hL, L, n, cx, x0, trunkX, pX, ceoX, stabX, ln, pf, W } = o;
+  let kanten = '';
+  const mid = yL[0] + hL[0] + GY / 2, c0 = ceoX + W / 2;
+  kanten += `<path d="M${c0} ${yL[0] + hL[0]}V${mid}" ${ln}/><path d="M${cx(0)} ${mid}H${cx(n - 1)}" ${ln}/>`;
+  for (let i = 0; i < n; i++) kanten += `<path d="M${cx(i)} ${mid}V${yL[1]}" ${ln} ${pf}/>`;
+
+  if (matrix) {
+    // Funktionsbereiche weisen spaltenweise an, Produktbereiche zeilenweise
+    for (let i = 0; i < n; i++) for (let l = 1; l < L - 1; l++) kanten += `<path d="M${cx(i)} ${yL[l] + hL[l]}V${yL[l + 1]}" ${ln} ${pf}/>`;
+    let letzteMitte = 0;
+    for (let l = 2; l < L; l++) {
+      const my = yL[l] + hL[l] / 2;
+      letzteMitte = my;
+      kanten += `<path d="M${trunkX} ${my}H${pX}" ${ln} ${pf}/><path d="M${pX + W} ${my}H${x0}" ${ln} ${pf}/>`;
+      for (let i = 0; i < n - 1; i++) kanten += `<path d="M${x0 + i * (W + GX) + W} ${my}H${x0 + (i + 1) * (W + GX)}" ${ln} ${pf}/>`;
+    }
+    kanten += `<path d="M${ceoX} ${yL[0] + hL[0] / 2}H${trunkX}V${letzteMitte}" ${ln}/>`;
+  } else {
+    // Einlinie = genau ein Vorgesetzter, Mehrlinie = bis zu drei Vorgesetzte
+    for (let l = 2; l < L; l++) {
+      for (let j = 0; j < n; j++) {
+        const von = typ === 'mehr' ? [Math.max(0, j - 1), Math.min(n - 1, j + 1)] : [j, j];
+        for (let i = von[0]; i <= von[1]; i++) kanten += `<path d="M${cx(i)} ${yL[l - 1] + hL[l - 1]}L${cx(j)} ${yL[l]}" ${ln} ${pf}/>`;
+      }
+    }
+  }
+  if (mitStab) kanten += `<path d="M${ceoX + W} ${yL[0] + hL[0] / 2}H${stabX}" ${ln}/>`;
+  return kanten;
+}
+
+// ───────────────────────────────────────────────
 // Zeichnung (SVG)
 
 function baueSvg() {
   const typ = modell.typ, mitStab = $('stab').checked, mitTitel = $('titel').checked;
+  const ohneLinien = !!$('keineLinien')?.checked;   // nur Karten sichtbar: keine Pfeile/Linien
   const schema = $('farbschema')?.value || 'weiss';
   const matrix = typ === 'matrix', produkte = matrix ? modell.produkte : [];
   const L = modell.ebenen.length, n = modell.ebenen[1].length;
@@ -257,31 +292,7 @@ function baueSvg() {
 
   // Kanten: Geschäftsleitung → Abteilungen / Funktionsbereiche über eine Sammelschiene
   let kanten = '';
-  const mid = yL[0] + hL[0] + GY / 2, c0 = ceoX + W / 2;
-  kanten += `<path d="M${c0} ${yL[0] + hL[0]}V${mid}" ${ln}/><path d="M${cx(0)} ${mid}H${cx(n - 1)}" ${ln}/>`;
-  for (let i = 0; i < n; i++) kanten += `<path d="M${cx(i)} ${mid}V${yL[1]}" ${ln} ${pf}/>`;
-
-  if (matrix) {
-    // Funktionsbereiche weisen spaltenweise an, Produktbereiche zeilenweise
-    for (let i = 0; i < n; i++) for (let l = 1; l < L - 1; l++) kanten += `<path d="M${cx(i)} ${yL[l] + hL[l]}V${yL[l + 1]}" ${ln} ${pf}/>`;
-    let letzteMitte = 0;
-    for (let l = 2; l < L; l++) {
-      const my = yL[l] + hL[l] / 2;
-      letzteMitte = my;
-      kanten += `<path d="M${trunkX} ${my}H${pX}" ${ln} ${pf}/><path d="M${pX + W} ${my}H${x0}" ${ln} ${pf}/>`;
-      for (let i = 0; i < n - 1; i++) kanten += `<path d="M${x0 + i * (W + GX) + W} ${my}H${x0 + (i + 1) * (W + GX)}" ${ln} ${pf}/>`;
-    }
-    kanten += `<path d="M${ceoX} ${yL[0] + hL[0] / 2}H${trunkX}V${letzteMitte}" ${ln}/>`;
-  } else {
-    // Einlinie = genau ein Vorgesetzter, Mehrlinie = bis zu drei Vorgesetzte
-    for (let l = 2; l < L; l++) {
-      for (let j = 0; j < n; j++) {
-        const von = typ === 'mehr' ? [Math.max(0, j - 1), Math.min(n - 1, j + 1)] : [j, j];
-        for (let i = von[0]; i <= von[1]; i++) kanten += `<path d="M${cx(i)} ${yL[l - 1] + hL[l - 1]}L${cx(j)} ${yL[l]}" ${ln} ${pf}/>`;
-      }
-    }
-  }
-  if (mitStab) kanten += `<path d="M${ceoX + W} ${yL[0] + hL[0] / 2}H${stabX}" ${ln}/>`;
+  if (!ohneLinien) kanten = baueKanten({ typ, matrix, produkte, mitStab, yL, hL, L, n, cx, x0, trunkX, pX, ceoX, stabX, ln, pf, W });
 
   let boxen = box(ceoX, yL[0], hL[0], modell.ebenen[0][0].lines, farbeEbene(schema, 0)[0], farbeEbene(schema, 0)[1]);
   modell.ebenen.slice(1).forEach((eb, i) => eb.forEach((nd, j) => { const lvl = Math.min(i + 1, 2); const [f, t] = farbeEbene(schema, lvl); boxen += box(cx(j) - W / 2, yL[i + 1], hL[i + 1], nd.lines, f, t); }));
@@ -289,8 +300,9 @@ function baueSvg() {
   if (mitStab) { const [f, t] = farbeEbene(schema, 'stab'); boxen += box(stabX, yL[0], hL[0], modell.stab.lines, f, t); }
 
   const titel = mitTitel ? `<text x="${M}" y="30" font-size="17" font-weight="bold">${esc(modell.firma)}</text>` : '';
+  const defs = ohneLinien ? '' : '<defs><marker id="pfeil" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L10 4L0 8z" fill="#000"/></marker></defs>';
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${breite} ${hoehe}" width="${breite}" height="${hoehe}" font-family="Arial, Helvetica, sans-serif" font-size="13">` +
-    `<defs><marker id="pfeil" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L10 4L0 8z" fill="#000"/></marker></defs>` +
+    `${defs}` +
     `<rect width="100%" height="100%" fill="#fff"/>${titel}${kanten}${boxen}</svg>`;
 }
 
@@ -306,6 +318,7 @@ async function startOrganigramm() {
   fuelleUnternehmenDropdown();
   ['unternehmen', 'typ', 'anzahl', 'tiefe', 'personen'].forEach(id => $(id).addEventListener('change', erstelleModell));
   ['stab', 'titel'].forEach(id => $(id).addEventListener('change', () => { baueEditor(); zeichne(); }));
+  $('keineLinien').addEventListener('change', zeichne);
   $('farbschema').addEventListener('change', zeichne);
   $('firma').addEventListener('input', () => { modell.firma = $('firma').value; zeichne(); });
   erstelleModell();
