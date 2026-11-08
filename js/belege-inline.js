@@ -64,7 +64,13 @@ function bescheidKfzFristAnzeige() {
 
 document
   .getElementById("svgDropdownBescheid")
-  .addEventListener("change", updateFields);
+  .addEventListener("change", () => {
+    updateFields();
+    // Vorlage unmittelbar auf die gewählte Art umschalten
+    if (typeof bescheidApplySVGholen === "function") {
+      bescheidApplySVGholen(true);
+    }
+  });
 
 // Kaufdatum: Frist-Anzeige live mitberechnen
 document
