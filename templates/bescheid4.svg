@@ -1,0 +1,107 @@
+<svg id="bescheidSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 760" font-family="Arial" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px">
+ <defs id="customDefsBescheid"/>
+ <!--Gruppe für Firmeninformationen-->
+<rect x="0" y="0" width="720" height="755" stroke="#ccc" stroke-width="1" fill="white" />
+ <rect x="0" y="120" width="720" height="5" fill="#1a6f4b" />
+ <g id="liefererInformationen2" fill="#000">
+ <text x="700" y="75" font-size="34" font-weight="bold" text-anchor="end">Zollamt <tspan class="bescheidOrt"></tspan></text>
+ <text id="mottoStadt" x="700" y="110" font-size="22" font-weight="bold" text-anchor="end">Zollverwaltung</text>
+ <text id="adresseStadt" x="20" y="150" font-style="italic" font-size="14" fill="#333">Zollamt <tspan class="bescheidOrt"></tspan>, Zollamtstraße 1, <tspan class="bescheidOrtInhaber"></tspan></text>
+ </g>
+<!--Gruppe für Kunden- und Liefererdaten-->
+ <g id="kundenDaten" font-size="18">
+<!--Kundenanschrift links-->
+ <text id="bescheidName" x="20" y="200" fill="#333"/>
+ <text id="bescheidInhaber" x="20" y="220" fill="#333"/>
+ <text class="bescheidStrasse" x="20" y="240" fill="#333"/>
+ <text class="bescheidOrtInhaber" x="20" y="260" fill="#333"/>
+
+ </g>
+<!--Liefererdaten rechts-->
+ <g id="liefererDaten" font-size="18">
+ <text x="620" y="200" text-anchor="end" fill="#808080" text-anchor="end">Unser Zeichen:</text>
+ <text x="630" y="200"  text-anchor="start" fill="#333">K</text>
+ <text x="620" y="215" text-anchor="end" fill="#808080" text-anchor="end">Zimmer:</text>
+ <text x="630" y="215" text-anchor="start" fill="#333">A138</text>
+ <text x="620" y="230" text-anchor="end" fill="#808080" text-anchor="end">Tel. Durchwahl:</text>
+ <text x="630" y="230" text-anchor="start" fill="#333">11502</text>
+ </g>
+<!--Gruppe für Rechnungsinformationen-->
+ <g id="rechnungsInformationen">
+ <text x="20" y="350" font-weight="bold" font-size="22" fill="#333">Kraftfahrzeugsteuerbescheid</text>
+ <text x="710" y="380" font-size="18" fill="#333" font-weight="bold" text-anchor="end">Kassenzeichen: <tspan id="bescheidNummer">.001</tspan></text>
+ <text x="710" y="400" font-size="16" fill="#333" text-anchor="end">(Bei Schreiben und Zahlung stets angeben!)</text>
+ <text id="datum" x="710" y="350" font-size="18" fill="#333" text-anchor="end"><tspan id="bescheidTag">01</tspan>.<tspan id="bescheidMonat">01</tspan>.</tspan><tspan class="aktuellesJahrBescheid"/></text>
+ </g>
+<!--Gruppe für Objekt (Fahrzeug)-->
+
+ <text x="20" y="450" fill="#000" font-size="18" font-weight="bold" text-anchor="start">Fahrzeug</text>
+ <g font-size="18">
+ <rect x="20" y="470" width="680" height="2" fill="#000"/>
+ <text id="bescheidObjekt" x="20" y="500" fill="#000" font-weight="bold">Nr.</text>
+ <text id="bescheidBezeichnung" x="100" y="500" fill="#000" font-weight="bold">Fahrzeug</text>
+ <text id="bescheidOrtAngabe" x="350" y="500" fill="#000" font-weight="bold">Zulassung</text>
+ <text id="Aktenzeichen" x="550" y="500" fill="#000" font-weight="bold" text-anchor="start">Nummer</text>
+ <text id="bescheidObjekt1" x="25" y="530" fill="#333">001</text>
+ <text id="bescheidFahrzeug" x="100" y="530" fill="#333">–</text>
+ <text id="bescheidZulassung" x="350" y="530" fill="#333">–</text>
+ <text id="bescheidKfzNummer" x="550" y="530" fill="#333" text-anchor="start"></text>
+ </g>
+
+ <!--Gruppe für Festsetzung-->
+ <g id="festsetzungDaten" font-size="18">
+ <rect x="20" y="570" width="680" height="2" fill="#000"/>
+ <text x="20" y="605" fill="#000" font-size="16" font-weight="bold">Festsetzung der jährlichen Fälligkeit</text>
+ <text x="20" y="635" fill="#333">Die Frist beginnt einen Monat nach der Zulassung und wiederholt sich jährlich.</text>
+ <text x="20" y="660" fill="#333">Erstmals fällig am: <tspan id="bescheidFrist" font-weight="bold">–</tspan></text>
+ </g>
+
+ <text x="20" y="700" fill="#000" font-size="17" text-anchor="start">Die Kraftfahrzeugsteuer ist jährlich zum angegebenen Termin zu entrichten.</text>
+
+ <!--Gruppe für Fälligkeit-->
+ <g font-size="18">
+ <rect x="10" y="715" width="700" height="30" fill="#ccc"/>
+ <text x="15" y="736" fill="#000" font-weight="bold">Fälligkeitstermine:</text>
+ <text id="bescheidFristJahr1" x="360" y="736" fill="#000" text-anchor="middle" font-weight="bold">–</text>
+ <text id="bescheidFristJahr2" x="540" y="736" fill="#000" text-anchor="middle" font-weight="bold">–</text>
+ </g>
+
+<circle cx="10" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="30" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="50" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="70" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="90" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="110" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="130" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="150" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="170" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="190" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="210" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="230" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="250" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="270" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="290" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="310" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="330" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="350" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="370" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="390" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="410" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="430" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="450" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="470" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="490" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="510" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="530" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="550" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="570" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="590" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="610" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="630" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="650" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="670" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="690" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="710" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="730" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="750" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+</svg>

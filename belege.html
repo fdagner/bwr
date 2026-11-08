@@ -2419,6 +2419,7 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                     <option value="bescheid1.svg" selected>Grundsteuer</option>
                     <option value="bescheid2.svg">Abfallentsorgung</option>
                     <option value="bescheid3.svg">Abwasser</option>
+                    <option value="bescheid4.svg">Kraftfahrzeugsteuer</option>
                   </select>
                 </div>
               </fieldset>
@@ -2558,6 +2559,53 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                     max="999"
                   />
                 </div>
+              </fieldset>
+
+              <!-- Daten Kraftfahrzeugsteuer (per updateFields ein-/ausgeblendet) -->
+              <fieldset
+                id="bescheidKraftfahrzeugsteuer"
+                class="bescheid-daten-gruppe"
+                style="display: none"
+              >
+                <legend>Daten</legend>
+
+                <div class="form-field">
+                  <label for="bescheidFahrzeugInput">Fahrzeug</label>
+                  <input
+                    type="text"
+                    id="bescheidFahrzeugInput"
+                    value=""
+                    maxlength="50"
+                    placeholder="z. B. Opel Corsa"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="bescheidZulassungInput">Zulassung</label>
+                  <input
+                    type="text"
+                    id="bescheidZulassungInput"
+                    value=""
+                    maxlength="25"
+                    placeholder="TT.MM.JJJJ"
+                  />
+                </div>
+
+                <p
+                  style="
+                    font-size: 0.85em;
+                    color: #6b7280;
+                    margin: 8px 0 0 0;
+                    white-space: normal;
+                  "
+                >
+                  Briefdatum = Zulassung + 7 Tage · Jährliche Frist (Zulassung +
+                  1 Monat): der Termin wird automatisch berechnet – nächste
+                  Fälligkeit:
+                  <strong id="bescheidFristAnzeige">–</strong><br />
+                  Zulassung auch ohne Jahr möglich (z.&nbsp;B. „15.03.“) – dann
+                  erscheint im Beleg kein Jahr.
+                </p>
               </fieldset>
             </div>
           </section>
@@ -3526,10 +3574,10 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
       </section>
     </main>
     <div w3-include-html="footer.html"></div>
-    <script src="js/belege.js?v=47"></script>
+    <script src="js/belege.js?v=49"></script>
     <script src="js/collection.js?v=36"></script>
     <script src="js/belege-zufall.js?v=26"></script>
-    <script src="js/beleg_url_parameter.js?v=25"></script>
+    <script src="js/beleg_url_parameter.js?v=26"></script>
     <script src="js/beleg_import.js?v=12"></script>
     <script src="js/belege-inline.js"></script>
   </body>

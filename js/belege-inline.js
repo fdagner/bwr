@@ -27,26 +27,70 @@ document.addEventListener("DOMContentLoaded", function () {
 function updateFields() {
   const sel = document.getElementById("svgDropdownBescheid").value;
   const grund = sel === "bescheid1.svg";
+  const kfz = sel === "bescheid4.svg";
   document.getElementById("bescheidGrundsteuer").style.display = grund
     ? "block"
     : "none";
-  document.getElementById("bescheidAbfall").style.display = grund
-    ? "none"
-    : "block";
+  document.getElementById("bescheidAbfall").style.display =
+    grund || kfz ? "none" : "block";
+  document.getElementById("bescheidKraftfahrzeugsteuer").style.display = kfz
+    ? "block"
+    : "none";
+}
+
+// Live-Anzeige der berechneten (jährlichen) Frist im Formular
+function bescheidKfzFristAnzeige() {
+  const anzeige = document.getElementById("bescheidFristAnzeige");
+  if (!anzeige) return;
+  const fristen =
+    typeof window.bescheidKfzFristen === "function"
+      ? window.bescheidKfzFristen(
+          document.getElementById("bescheidZulassungInput").value,
+        )
+      : [];
+  anzeige.textContent = fristen.length
+    ? `${fristen[0]}${fristen[1] ? `, danach ${fristen[1]}` : ""}`
+    : "–";
 }
 
 document
   .getElementById("svgDropdownBescheid")
   .addEventListener("change", updateFields);
 
+// Kaufdatum: Frist-Anzeige live mitberechnen
+document
+  .getElementById("bescheidZulassungInput")
+  .addEventListener("input", bescheidKfzFristAnzeige);
+
+// Jahr-Feld: manuelle Änderung (auch Leeren) übernimmt der Nutzer –
+// die automatische Jahr-Befüllung (Briefdatum) greift danach nicht mehr
+const jahrBescheidFeld = document.getElementById("jahrBescheid");
+if (jahrBescheidFeld) {
+  jahrBescheidFeld.addEventListener("input", () => {
+    jahrBescheidFeld.dataset.kfzUser = "1";
+    delete jahrBescheidFeld.dataset.kfzAuto;
+  });
+}
+
 // Ersetzt BEIDE bisherigen load-Handler (addEventListener + window.onload)
 window.addEventListener("load", function () {
+  // Bescheidart aus URL setzen (falls gültig)
   const art = new URLSearchParams(window.location.search).get("art");
   const dropdown = document.getElementById("svgDropdownBescheid");
   if (art && Array.from(dropdown.options).some((o) => o.value === art)) {
     dropdown.value = art;
   }
   updateFields();
+  // Zulassung: Standard = heutiges Datum (TT.MM.JJJJ), nur falls noch leer
+  const zulassungInput = document.getElementById("bescheidZulassungInput");
+  if (zulassungInput && !zulassungInput.value.trim()) {
+    const heute = new Date();
+    const p = (n) => String(n).padStart(2, "0");
+    zulassungInput.value = `${p(heute.getDate())}.${p(
+      heute.getMonth() + 1,
+    )}.${heute.getFullYear()}`;
+  }
+  bescheidKfzFristAnzeige();
 });
 
 // Zinssatz-Einstellungen und Hinweis-Banner

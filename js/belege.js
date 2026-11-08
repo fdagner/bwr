@@ -279,6 +279,32 @@ const BELEG_FIELD_MAPPING = {
       const aktenzeichen = document.getElementById("bescheidAktenzeichen1");
       if (aktenzeichen) aktenzeichen.textContent = "K" + randomNum;
 
+      // Nummer im Kfz-Bescheid: Dokumentennummer der Zulassungsbehörde/
+      // Bundesdruckerei – 2 Buchstaben (Druckerei-Code) + 10-stellige
+      // fortlaufende Seriennummer + Prüfziffer (Luhn) → fälschungssicher
+      const kfzNummer = document.getElementById("bescheidKfzNummer");
+      if (kfzNummer) {
+        const buchstaben = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const praefix =
+          buchstaben.charAt(Math.floor(Math.random() * 26)) +
+          buchstaben.charAt(Math.floor(Math.random() * 26));
+        let seriennummer = "";
+        for (let i = 0; i < 10; i++) {
+          seriennummer += Math.floor(Math.random() * 10);
+        }
+        let summe = 0;
+        for (let i = 0; i < seriennummer.length; i++) {
+          let ziffer = parseInt(seriennummer.charAt(i), 10);
+          if (i % 2 === 0) {
+            ziffer *= 2;
+            if (ziffer > 9) ziffer -= 9;
+          }
+          summe += ziffer;
+        }
+        const pruefziffer = (10 - (summe % 10)) % 10;
+        kfzNummer.textContent = `${praefix} ${seriennummer}-${pruefziffer}`;
+      }
+
       // Nummer
       const nummer = document.getElementById("bescheidNummer");
       if (nummer) nummer.textContent = FormatHelper.roundToTwo(randomNum / 3);
@@ -1891,6 +1917,99 @@ function loadBescheidData() {
   loadBelegData("bescheid", "datenBescheid");
 }
 
+// ============================================================================
+// KRAFTFAHRZEUGSTEUER: jährliche Frist (Zulassung + 1 Monat) berechnen
+// ============================================================================
+// Erkennt "TT.MM.JJJJ", "TT.MM.JJ", "JJJJ-MM-TT" und (ohne Jahr) "TT.MM.".
+// Rückgabe: { datum: Date, mitJahr: boolean } oder null.
+// Die Frist beginnt einen Monat nach der (Erst-)Zulassung und wiederholt sich
+// danach jährlich. Rückgabe: Array mit den nächsten zwei zukünftigen
+// Fälligkeitsterminen (mit Jahr → "TT.MM.JJJJ", ohne Jahr → "TT.MM.").
+function bescheidKfzDatum(zulassungText) {
+  if (!zulassungText || typeof zulassungText !== "string") return null;
+  const text = zulassungText.trim();
+  let tag = null;
+  let monat = null;
+  let jahr = null;
+  let mitJahr = true;
+
+  let treffer = text.match(/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})$/);
+  if (treffer) {
+    tag = parseInt(treffer[1], 10);
+    monat = parseInt(treffer[2], 10);
+    jahr = parseInt(treffer[3], 10);
+  } else if ((treffer = text.match(/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{2})$/))) {
+    tag = parseInt(treffer[1], 10);
+    monat = parseInt(treffer[2], 10);
+    jahr = 2000 + parseInt(treffer[3], 10);
+  } else if ((treffer = text.match(/^(\d{4})-(\d{2})-(\d{2})$/))) {
+    jahr = parseInt(treffer[1], 10);
+    monat = parseInt(treffer[2], 10);
+    tag = parseInt(treffer[3], 10);
+  } else if ((treffer = text.match(/^(\d{1,2})\.\s*(\d{1,2})\.?$/))) {
+    // Ohne Jahr (z. B. "15.03." oder "15.03") → kein Jahr im Beleg
+    tag = parseInt(treffer[1], 10);
+    monat = parseInt(treffer[2], 10);
+    jahr = new Date().getFullYear(); // nur Platzhalter für die Gültigkeitsprüfung
+    mitJahr = false;
+  }
+  if (!tag || !monat) return null;
+
+  // Existiert das Datum wirklich (z. B. 31.02. korrekt abfangen)
+  const datum = new Date(jahr, monat - 1, tag);
+  if (
+    datum.getDate() !== tag ||
+    datum.getMonth() !== monat - 1 ||
+    datum.getFullYear() !== jahr
+  ) {
+    return null;
+  }
+  return { datum, mitJahr };
+}
+
+function bescheidKfzFristen(zulassungText) {
+  const info = bescheidKfzDatum(zulassungText);
+  if (!info) return [];
+  const zulassung = info.datum;
+  const mitJahr = info.mitJahr;
+
+  const heute = new Date();
+  heute.setHours(0, 0, 0, 0);
+
+  // Erste Frist = Zulassung + 1 Monat, danach jährlich wiederkehrend;
+  // überholte Termine werden um je ein Jahr verschoben.
+  // Monatswechsel mit Tag-Klemme (z. B. 31.01. + 1 Monat → 28./29.02.)
+  let termin = new Date(
+    zulassung.getFullYear(),
+    zulassung.getMonth() + 1,
+    Math.min(
+      zulassung.getDate(),
+      new Date(zulassung.getFullYear(), zulassung.getMonth() + 2, 0).getDate(),
+    ),
+  );
+  while (termin < heute) {
+    termin = new Date(
+      termin.getFullYear() + 1,
+      termin.getMonth(),
+      termin.getDate(),
+    );
+  }
+  const termine = [];
+  for (let i = 0; i < 2; i++) {
+    termine.push(
+      new Date(termin.getFullYear() + i, termin.getMonth(), termin.getDate()),
+    );
+  }
+  const alsText = (x) =>
+    `${String(x.getDate()).padStart(2, "0")}.${String(
+      x.getMonth() + 1,
+    ).padStart(2, "0")}${mitJahr ? "." + x.getFullYear() : "."}`;
+  return termine.map(alsText);
+}
+
+window.bescheidKfzFristen = bescheidKfzFristen;
+window.bescheidKfzDatum = bescheidKfzDatum;
+
 // Mahnung: Absender (Gläubiger) aus dem Absender-Dropdown laden
 function loadMahnungData() {
   loadBelegData("mahnung", "datenMahnung");
@@ -2765,10 +2884,11 @@ function zufaelligeAusgangsrechnungErstellen() {
   const dropdown = document.getElementById("svgDropdown");
   if (!dropdown) return;
   const options = Array.from(dropdown.options);
-  const rechnungOptions = options.filter((o) =>
-    o.value.toLowerCase().includes("rechnung") ||
-    o.value.toLowerCase().includes("angebot") ||
-    o.value.toLowerCase().includes("gutschrift"),
+  const rechnungOptions = options.filter(
+    (o) =>
+      o.value.toLowerCase().includes("rechnung") ||
+      o.value.toLowerCase().includes("angebot") ||
+      o.value.toLowerCase().includes("gutschrift"),
   );
   if (rechnungOptions.length > 0) {
     const random =
@@ -2783,10 +2903,11 @@ function zufaelligeEingangsrechnungErstellen() {
   const dropdown = document.getElementById("svgDropdown");
   if (!dropdown) return;
   const options = Array.from(dropdown.options);
-  const rechnungOptions = options.filter((o) =>
-    o.value.toLowerCase().includes("rechnung") ||
-    o.value.toLowerCase().includes("angebot") ||
-    o.value.toLowerCase().includes("gutschrift"),
+  const rechnungOptions = options.filter(
+    (o) =>
+      o.value.toLowerCase().includes("rechnung") ||
+      o.value.toLowerCase().includes("angebot") ||
+      o.value.toLowerCase().includes("gutschrift"),
   );
   if (rechnungOptions.length > 0) {
     const random =
@@ -3308,6 +3429,21 @@ function validateInputs(still = false) {
     }
   }
 
+  // Spezielle Validierung: Kraftfahrzeugsteuer-Zulassungsdatum
+  // (leer ist erlaubt, aber wenn gesetzt: gültiges Datum verlangen)
+  const zulassungInput = document.getElementById("bescheidZulassungInput");
+  if (
+    zulassungInput &&
+    zulassungInput.value.trim() &&
+    bescheidKfzFristen(zulassungInput.value).length === 0
+  ) {
+    if (!still)
+      zeigeModal(
+        "Bitte geben Sie bei der Zulassung ein gültiges Datum ein (z. B. 15.03.2025).",
+      );
+    return false;
+  }
+
   // Spezielle Validierung: Gesamtpreis-Check
   const menge1 = parseFloat(document.getElementById("mengeInput")?.value || 0);
   const preis1 = parseFloat(
@@ -3363,6 +3499,8 @@ const VALIDATION_RULES = {
     mahnungRechnungsNrInput: { max: 8, label: "Rechnungsnummer" },
     wertpapiereBezeichnungInput: { max: 20, label: "Wertpapiere Bezeichnung" },
     wertpapiereISINInput: { max: 12, label: "ISIN" },
+    bescheidFahrzeugInput: { max: 50, label: "Fahrzeug (Kfz-Bescheid)" },
+    bescheidZulassungInput: { max: 25, label: "Zulassung (Kfz-Bescheid)" },
     jahr: { max: 4, label: "Jahr (Rechnung)" },
     jahrKontoauszug: { max: 6, label: "Jahr (Kontoauszug)" },
     jahrWertpapiere: { max: 6, label: "Jahr (Wertpapiere)" },
@@ -3741,6 +3879,47 @@ const BELEG_APPLY_CONFIG = {
     scriptId: "customJsBescheid",
     scriptFunction: "SVGonLoadBescheid",
     dataFunction: () => {
+      // Kraftfahrzeugsteuer: Briefdatum automatisch = Zulassung + 7 Tage
+      // (Tag/Monat/Jahr im Formular werden mitgesetzt, damit Jahr-Skript &
+      // SVG-Datum konsistent bleiben). Ohne Jahr in der Zulassung bleibt
+      // das Jahr leer → kein Jahr im Beleg.
+      const artDropdown = document.getElementById("svgDropdownBescheid");
+      if (artDropdown && artDropdown.value === "bescheid4.svg") {
+        const briefInfo = bescheidKfzDatum(
+          document.getElementById("bescheidZulassungInput").value,
+        );
+        if (briefInfo) {
+          const brief = new Date(briefInfo.datum);
+          brief.setDate(brief.getDate() + 7);
+          const briefTag = String(brief.getDate()).padStart(2, "0");
+          const briefMonat = String(brief.getMonth() + 1).padStart(2, "0");
+
+          const tagSelect = document.getElementById("tagBescheid");
+          if (tagSelect) tagSelect.value = briefTag;
+          const monatSelect = document.getElementById("monatBescheid");
+          if (monatSelect) monatSelect.value = briefMonat;
+
+          const scriptJahrCheckbox =
+            document.getElementById("scriptJahrBescheid");
+          const jahrFeld = document.getElementById("jahrBescheid");
+          if (jahrFeld && !(scriptJahrCheckbox && scriptJahrCheckbox.checked)) {
+            if (!briefInfo.mitJahr) {
+              // Zulassung ohne Jahr → Jahr leeren (kein Jahr im Beleg)
+              jahrFeld.value = "";
+            } else if (
+              jahrFeld.dataset.kfzUser !== "1" &&
+              (jahrFeld.dataset.kfzAuto === "1" || jahrFeld.value.trim() === "")
+            ) {
+              // Auto-Jahr nur solange der Nutzer das Feld nicht selbst
+              // bearbeitet hat (Bearbeiten setzt kfzUser; dann bleibt die
+              // Eingabe stehen – auch nach dem Leeren)
+              jahrFeld.value = String(brief.getFullYear());
+              jahrFeld.dataset.kfzAuto = "1";
+            }
+          }
+        }
+      }
+
       const tag = document.getElementById("tagBescheid").value;
       const monat = document.getElementById("monatBescheid").value;
       document.getElementById("bescheidTag").textContent = tag;
@@ -3790,6 +3969,35 @@ const BELEG_APPLY_CONFIG = {
       );
       if (abfallbezeichnungElem)
         abfallbezeichnungElem.textContent = abfallbezeichnung;
+
+      // Kraftfahrzeugsteuer
+      const fahrzeugInput = document.getElementById("bescheidFahrzeugInput");
+      if (fahrzeugInput) {
+        const fahrzeugElem = document.getElementById("bescheidFahrzeug");
+        if (fahrzeugElem) fahrzeugElem.textContent = fahrzeugInput.value || "–";
+      }
+      const zulassungInput = document.getElementById("bescheidZulassungInput");
+      if (zulassungInput) {
+        const zulassungElem = document.getElementById("bescheidZulassung");
+        if (zulassungElem)
+          zulassungElem.textContent = zulassungInput.value || "–";
+
+        const fristen = bescheidKfzFristen(zulassungInput.value);
+        const fristText = fristen.length ? fristen.join(" und ") : "–";
+        const fristElem = document.getElementById("bescheidFrist");
+        if (fristElem) fristElem.textContent = fristen[0] || "–";
+        const fristJahr1 = document.getElementById("bescheidFristJahr1");
+        if (fristJahr1) fristJahr1.textContent = fristen[0] || "–";
+        const fristJahr2 = document.getElementById("bescheidFristJahr2");
+        if (fristJahr2) fristJahr2.textContent = fristen[1] || "–";
+
+        // Live-Anzeige im Formular mit aktualisieren
+        const anzeigeElem = document.getElementById("bescheidFristAnzeige");
+        if (anzeigeElem)
+          anzeigeElem.textContent = fristen.length
+            ? `${fristen[0]}${fristen[1] ? `, danach ${fristen[1]}` : ""}`
+            : "–";
+      }
 
       loadBescheidData();
     },

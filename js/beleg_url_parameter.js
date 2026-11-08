@@ -221,6 +221,12 @@ const URL_PARAM_CONFIG = {
       type: "input",
     },
 
+    // Kraftfahrzeugsteuer
+    // type "text"/"date": verhindert die Zahlen-Konvertierung von
+    // cleanValueForInput (sonst würde "15.03.2025" zu "15.03" verkürzt)
+    fahrzeug: { elementId: "bescheidFahrzeugInput", type: "text" },
+    zulassung: { elementId: "bescheidZulassungInput", type: "date" },
+
     // Datum
     tag: { elementId: "tagBescheid", type: "select" },
     monat: { elementId: "monatBescheid", type: "select" },
