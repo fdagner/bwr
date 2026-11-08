@@ -90,6 +90,15 @@ window.addEventListener("load", function () {
       heute.getMonth() + 1,
     )}.${heute.getFullYear()}`;
   }
+  // Betrag: Standard = zufälliger Betrag 500–1500 €, nur falls noch leer
+  const betragInput = document.getElementById("bescheidBetragInput");
+  if (betragInput && !betragInput.value.trim()) {
+    const cents = Math.round((500 + Math.random() * 1000) * 100);
+    betragInput.value = (cents / 100).toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
   bescheidKfzFristAnzeige();
 });
 

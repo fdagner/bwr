@@ -54,7 +54,7 @@
  <text x="20" y="605" fill="#000" font-size="16" font-weight="bold">Festsetzung der jährlichen Fälligkeit</text>
  <text x="20" y="635" fill="#333">Die Frist beginnt einen Monat nach der Zulassung und wiederholt sich jährlich.</text>
  <text x="20" y="660" fill="#333">Erstmals fällig am: <tspan id="bescheidFrist" font-weight="bold">–</tspan></text>
- <text x="710" y="660" fill="#333" text-anchor="end">Jahresbetrag: <tspan id="bescheidKfzBetrag" font-weight="bold">–</tspan></text>
+ <text x="550" y="660" fill="#333" text-anchor="end">Jahresbetrag: <tspan id="bescheidKfzBetrag" font-weight="bold">–</tspan></text>
  </g>
 
  <text x="20" y="700" fill="#000" font-size="17" text-anchor="start">Die Kraftfahrzeugsteuer ist jährlich zum angegebenen Termin zu entrichten.</text>
