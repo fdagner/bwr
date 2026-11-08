@@ -10,17 +10,17 @@
 <text id="kassenbonUhrzeit" x="390" y="140" font-family="Arial" fill="#000" font-size="16" text-anchor="end"></text>
 <text x="20" y="200" font-family="Arial" fill="#000" font-size="20"></text>
 <text id="kassenbonZweck" x="20" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="start"></text>
-<text id="kassenbonBetrag1" x="290" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
+<text id="kassenbonBetrag1" x="250" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
 <text class="kassenbonBrutto1" x="390" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
 <!-- Artikel 2 / 3 (werden bei leerer Eingabe ausgeblendet) -->
 <g id="kassenbonArtikel2Zeile">
 <text id="kassenbonZweck2" x="20" y="230" font-family="Arial" fill="#000" font-size="20" text-anchor="start"></text>
-<text id="kassenbonBetrag2" x="290" y="230" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
+<text id="kassenbonBetrag2" x="250" y="230" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
 <text class="kassenbonBrutto2" x="390" y="230" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
 </g>
 <g id="kassenbonArtikel3Zeile">
 <text id="kassenbonZweck3" x="20" y="260" font-family="Arial" fill="#000" font-size="20" text-anchor="start"></text>
-<text id="kassenbonBetrag3" x="290" y="260" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
+<text id="kassenbonBetrag3" x="250" y="260" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
 <text class="kassenbonBrutto3" x="390" y="260" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
 </g>
 <rect x="150" y="280" width="240" height="1" fill="#000" />

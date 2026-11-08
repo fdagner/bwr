@@ -49,17 +49,17 @@
   <text x="44" y="268" font-family="Arial" fill="#8e8e93" font-size="12" font-weight="bold" letter-spacing="1">ARTIKEL</text>
   <text x="356" y="268" font-family="Arial" fill="#8e8e93" font-size="12" font-weight="bold" letter-spacing="1" text-anchor="end">PREIS</text>
   <text id="kassenbonZweck" x="44" y="300" font-family="Arial" fill="#000" font-size="17" text-anchor="start"></text>
-  <text id="kassenbonBetrag1" x="290" y="300" font-family="Arial" fill="#000" font-size="17" text-anchor="middle"></text>
+  <text id="kassenbonBetrag1" x="255" y="300" font-family="Arial" fill="#000" font-size="17" text-anchor="middle"></text>
   <text class="kassenbonBrutto1" x="356" y="300" font-family="Arial" fill="#000" font-size="17" text-anchor="end"></text>
   <!-- Artikel 2 / 3 (werden bei leerer Eingabe ausgeblendet) -->
   <g id="kassenbonArtikel2Zeile">
   <text id="kassenbonZweck2" x="44" y="330" font-family="Arial" fill="#000" font-size="17" text-anchor="start"></text>
-  <text id="kassenbonBetrag2" x="290" y="330" font-family="Arial" fill="#000" font-size="17" text-anchor="middle"></text>
+  <text id="kassenbonBetrag2" x="255" y="330" font-family="Arial" fill="#000" font-size="17" text-anchor="middle"></text>
   <text class="kassenbonBrutto2" x="356" y="330" font-family="Arial" fill="#000" font-size="17" text-anchor="end"></text>
   </g>
   <g id="kassenbonArtikel3Zeile">
   <text id="kassenbonZweck3" x="44" y="360" font-family="Arial" fill="#000" font-size="17" text-anchor="start"></text>
-  <text id="kassenbonBetrag3" x="290" y="360" font-family="Arial" fill="#000" font-size="17" text-anchor="middle"></text>
+  <text id="kassenbonBetrag3" x="255" y="360" font-family="Arial" fill="#000" font-size="17" text-anchor="middle"></text>
   <text class="kassenbonBrutto3" x="356" y="360" font-family="Arial" fill="#000" font-size="17" text-anchor="end"></text>
   </g>
   <line x1="36" y1="392" x2="364" y2="392" stroke="#e5e5ea" stroke-width="1.5"/>
