@@ -194,7 +194,7 @@
 
   </script>
    <!-- Dateiupload -->
-  <p>Codes per Datei hochladen: <input type="file" id="file-input" onchange="handleFileUpload()"></p>
+  <p>Codes per Datei hochladen: <input type="file" id="file-input" data-on-change='[{"fn":"handleFileUpload","args":[]}]'></p>
   <details><summary>Dateiformat</summary>
   <ul>
     <li>Lade eine Datei mit einer Liste der secret-Codes hoch (eine Zeile ein Code, Gewichtung mit Komma getrennt eintragen).<br><br>Beispiel:<br>Ztn87,4<br>6hdhn,2<br>Ize45hn,3<br><br></li>
@@ -208,7 +208,7 @@
       <input type="text" name="code[]" value="" maxlength="20"><input type="number" name="code_weight[]" value="1" min="0" max="1000000"><br>
     </div>
   </div><br>
-  <button onclick="addInput()">Weiteren Code hinzufügen</button>
+  <button data-on-click='[{"fn":"addInput","args":[]}]'>Weiteren Code hinzufügen</button>
   <!-- Eingabefeld für die Beschriftung der Optionen -->
   <p>Text für die einzelnen Optionen in der Fragestellung:</p>
   <input id="optionen-beschriftung" type="text" value="Wähle mich!" maxlength="60">
@@ -227,7 +227,7 @@
   <p>Anzahl der zu generierenden Fragen:</p>
   <input id="anzahl-auswahl" type="number" min="1" max="30" value="10">
   <!-- Button zum Generieren der Fragen -->
-  <button onclick="generateQuestions()">Fragen generieren</button>
+  <button data-on-click='[{"fn":"generateQuestions","args":[]}]'>Fragen generieren</button>
   <!-- Container für die generierten Fragen -->
   <div id="fragen-container"></div>
 

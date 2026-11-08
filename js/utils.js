@@ -451,6 +451,67 @@ window.pick = pick;
 window.shuffle = shuffle;
 
 // ============================================================================
+// EVENT-DELEGATION (Phase 1 der Inline-Handler-Entfernung)
+// ============================================================================
+// Statt inline onX="..."-Attributen werden data-on-click / data-on-change /
+// data-on-input / data-on-blur / data-on-submit mit einem JSON-Array von
+// {fn, args}-Einträgen verwendet. Ein globaler Delegations-Handler (capture
+// phase) ruft die benannten Funktionen auf. '__THIS__'/'__VALUE__'/'__EVENT__'
+// in args werden zur Laufzeit durch das Element / seinen Wert / das Event
+// ersetzt. data-prevent="true" ruft preventDefault() auf.
+// ============================================================================
+function dispatchDataOn(el, attr, e) {
+  const raw = el.getAttribute(attr);
+  if (!raw) return;
+  let actions;
+  try { actions = JSON.parse(raw); } catch (err) { return; }
+  if (!Array.isArray(actions)) actions = [actions];
+  for (const a of actions) {
+    let fn = null;
+    if (a.fn === '__clickElement') fn = (id) => { const t = document.getElementById(id); if (t) t.click(); };
+    else if (a.fn === '__print') fn = () => window.print();
+    else if (a.fn === '__callMethod') fn = null; // (derzeit ungenutzt)
+    else fn = window[a.fn];
+    if (typeof fn !== 'function') continue;
+    const args = (a.args || []).map(x =>
+      x === '__THIS__' ? el :
+      x === '__VALUE__' ? el.value :
+      x === '__EVENT__' ? e : x);
+    try { fn(...args); } catch (err) { console.error('Delegation-Fehler (' + a.fn + '):', err); }
+  }
+}
+
+function setupDelegation() {
+  const events = ['click', 'change', 'input', 'blur', 'submit'];
+  for (const evt of events) {
+    document.addEventListener(evt, (e) => {
+      const el = e.target && e.target.closest ? e.target.closest('[data-on-' + evt + ']') : null;
+      if (!el) return;
+      dispatchDataOn(el, 'data-on-' + evt, e);
+      if (el.getAttribute('data-prevent') === 'true') {
+        try { e.preventDefault(); } catch (err) { /* ignore */ }
+      }
+    }, true);
+  }
+  // SVG/image load-Handler (onload="..."): nach DOMContentLoaded an jedes
+  // Element mit data-on-load binden.
+  const bindLoad = () => {
+    document.querySelectorAll('[data-on-load]').forEach(el => {
+      if (el.__loadBound) return;
+      el.__loadBound = true;
+      const run = () => dispatchDataOn(el, 'data-on-load', null);
+      // Inline-SVGs/Bilder: Aktion beim Laden der Seite ausführen (onload
+      // feuert bei Inline-SVGs oft nicht), plus load-Listener als Fallback.
+      run();
+      el.addEventListener('load', run, { once: true });
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindLoad);
+  else bindLoad();
+}
+setupDelegation();
+
+// ============================================================================
 // MODAL (Hinweis- und Eingabedialog im Stil des Sammlungs-Dialogs)
 // ============================================================================
 // Ersetzt die Browser-Dialoge projektweit durch hübsche Overlays:

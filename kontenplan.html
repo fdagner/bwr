@@ -69,7 +69,7 @@
     <div class="kontenplan">
         
         <div>
-            <select id="kontenplan-dropdown" onchange="handleDropdownChange()">
+            <select id="kontenplan-dropdown" data-on-change='[{"fn":"handleDropdownChange","args":[]}]'>
                 <option>Kontenklasse auswählen...</option>
                 <option value="all">Alle Konten</option>
                 <option class="aktiv" value="0">Kontenklasse 0 (Sachanlagen)</option>
@@ -84,7 +84,7 @@
             </select>
         </div>
         <div>
-            <input type="text" id="search-input" placeholder="Nach Konto suchen..." oninput="handleSearchInput()">
+            <input type="text" id="search-input" placeholder="Nach Konto suchen..." data-on-input='[{"fn":"handleSearchInput","args":[]}]'>
         </div>
         <div>
             <ul id="list-container"></ul>
@@ -142,7 +142,7 @@
             </style>
             <div class="kontenplan">
                 <div>
-                    <select id="kontenplan-dropdown" onchange="handleDropdownChange()">
+                    <select id="kontenplan-dropdown" data-on-change='[{"fn":"handleDropdownChange","args":[]}]'>
                         <option>Kontenklasse auswählen...</option>
                         <option value="all">Alle Konten</option>
                         <option class="aktiv" value="0">Kontenklasse 0 (Sachanlagen)</option>
@@ -157,7 +157,7 @@
                     </select>
                 </div>
                 <div>
-                    <input type="text" id="search-input" placeholder="Nach Konto suchen..." oninput="handleSearchInput()">
+                    <input type="text" id="search-input" placeholder="Nach Konto suchen..." data-on-input='[{"fn":"handleSearchInput","args":[]}]'>
                 </div>
                 <div>
                     <ul id="list-container"></ul>

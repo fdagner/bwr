@@ -109,8 +109,8 @@
       </div>
 
       <!-- Next and previous buttons -->
-      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-      <a class="next" onclick="plusSlides(1)">&#10095;</a>
+      <a class="prev" data-on-click='[{"fn":"plusSlides","args":[-1]}]'>&#10094;</a>
+      <a class="next" data-on-click='[{"fn":"plusSlides","args":[1]}]'>&#10095;</a>
     </div>
     <br>
 
@@ -141,7 +141,7 @@
             <option value="">— Bitte auswählen —</option>
         </select>
         <button id="setMyCompanyButton" 
-                onclick="setAsMyCompany()" 
+                data-on-click='[{"fn":"setAsMyCompany","args":[]}]' 
                 disabled>
             ★ Als Modellunternehmen verwenden
         </button></div>
@@ -152,7 +152,7 @@
     </div>
         <div id="myCompanyStatus" style="margin-top: 8px; padding: 8px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px; display: none;">
         <strong>Aktuell als Modellunternehmen gespeichert:</strong> <span id="myCompanyName">-</span>
-        <button onclick="clearMyCompany()" style="margin-left: 10px; padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 0.85em;">
+        <button data-on-click='[{"fn":"clearMyCompany","args":[]}]' style="margin-left: 10px; padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 0.85em;">
             ✕ Entfernen
         </button>
     </div>
@@ -172,14 +172,14 @@
           style="background: white; padding: 14px; border-radius: 8px; border: 2px dashed #ccc; text-align: center; margin: 12px 0; cursor: pointer; transition: all 0.2s;"
           ondragover="this.style.borderColor='var(--accent-color)'; this.style.background='#f0f8ff';"
           ondragleave="this.style.borderColor='#ccc'; this.style.background='white';"
-          onclick="document.getElementById('fileInput').click();">
+          data-on-click='[{"fn":"__clickElement","args":["fileInput"]}]'>
 
           <label for="fileInput"
             style="display: block; margin-bottom: 6px; font-weight: 500; color: #444; font-size: 0.95rem; cursor: pointer;">
             .yml-Datei hochladen (Drag & Drop oder Klick)
           </label>
 
-          <input type="file" id="fileInput" accept=".yml" onchange="handleFileUpload()" style="display: none;">
+          <input type="file" id="fileInput" accept=".yml" data-on-change='[{"fn":"handleFileUpload","args":[]}]' style="display: none;">
 
           <p id="dropZoneText" style="margin: 8px 0 0; color: #777; font-size: 0.9rem;">
             Datei hierher ziehen oder klicken
@@ -197,7 +197,7 @@
 
 
           <div style="display: flex; gap: 10px;" id="exportbutton">
-            <button onclick="deleteAndLoadDefaultData()">
+            <button data-on-click='[{"fn":"deleteAndLoadDefaultData","args":[]}]'>
               Daten zurücksetzen
             </button>
           </div>
@@ -275,7 +275,7 @@
         <!-- Wird dynamisch gefüllt -->
       </div><br>
         <div class="box" style="margin-top: 15px;">
-          <form id="addCompanyForm" onsubmit="handleAddCompanyForm(event)">
+          <form id="addCompanyForm" data-on-submit='[{"fn":"handleAddCompanyForm","args":["__EVENT__"]}]'>
             <div class="grid3">
 
               <fieldset class="vorlage-green" style="max-width: none;">
@@ -323,7 +323,7 @@
 
                 <div class="form-field">
                   <label for="newCompanyLogo">Logo hochladen:</label>
-                  <input type="file" id="newCompanyLogo" accept="image/svg+xml" onchange="handleLogoUpload(event)">
+                  <input type="file" id="newCompanyLogo" accept="image/svg+xml" data-on-change='[{"fn":"handleLogoUpload","args":["__EVENT__"]}]'>
                   <small style="color: #666;">Max. 500KB | Nur SVG (optional)</small>
                   <div id="logoPreview" style="margin-top: 10px;">
                     <small style="color: #666;">Keine Datei ausgewählt</small>
@@ -387,7 +387,7 @@
                     <input type="text" id="newCompanyIBAN" required placeholder="DE89370400440532013000" maxlength="34"
                            style="flex:1; text-transform:uppercase">
                     <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
-                      <input type="checkbox" id="randomIBAN" onchange="generateRandomField('iban')">
+                      <input type="checkbox" id="randomIBAN" data-on-change='[{"fn":"generateRandomField","args":["iban"]}]'>
                       🎲
                     </label>
                   </div>
@@ -399,7 +399,7 @@
                     <input type="text" id="newCompanyBIC" required placeholder="COBADEFFXXX" maxlength="11"
                            style="flex:1; text-transform:uppercase">
                     <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
-                      <input type="checkbox" id="randomBIC" onchange="generateRandomField('bic')">
+                      <input type="checkbox" id="randomBIC" data-on-change='[{"fn":"generateRandomField","args":["bic"]}]'>
                       🎲
                     </label>
                   </div>
@@ -411,7 +411,7 @@
                     <input type="text" id="newCompanyUstID" required placeholder="DE123456789" maxlength="25"
                            style="flex:1; text-transform:uppercase">
                     <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
-                      <input type="checkbox" id="randomUstID" onchange="generateRandomField('ustid')">
+                      <input type="checkbox" id="randomUstID" data-on-change='[{"fn":"generateRandomField","args":["ustid"]}]'>
                       🎲
                     </label>
                   </div>
@@ -422,7 +422,7 @@
                   <div style="display:flex; gap:8px; align-items:center;">
                     <input type="text" id="newCompanySteuernummer" required placeholder="181/001/11111" maxlength="20">
                     <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
-                      <input type="checkbox" id="randomSteuernummer" onchange="generateRandomField('steuernummer')">
+                      <input type="checkbox" id="randomSteuernummer" data-on-change='[{"fn":"generateRandomField","args":["steuernummer"]}]'>
                       🎲
                     </label>
                   </div>
@@ -472,7 +472,7 @@
                 <div class="form-field" style="margin-bottom: 10px;">
                   <div id="newCompanyFertigerzeugnisse"></div>
                 </div>
-                <button type="button" onclick="addFertigerzeugnisRow()"
+                <button type="button" data-on-click='[{"fn":"addFertigerzeugnisRow","args":[]}]'
                   style="background:#28a745; color:white; border:0; border-radius:4px; padding:7px 12px; cursor:pointer;">
                   + Fertigerzeugnis hinzufügen
                 </button>

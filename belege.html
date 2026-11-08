@@ -103,19 +103,19 @@
         <div w3-include-html="navigation.html"></div>
         <h2>Belege</h2>
         <nav class="tab">
-            <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'import')">Beleg importieren</button>
-            <button class="tablinks" onclick="openCity(event, 'rechnung')">Rechnung/Angebot/Gutschrift</button>
-            <button class="tablinks" onclick="openCity(event, 'kontoauszug')">Kontoauszug</button>
-            <button class="tablinks" onclick="openCity(event, 'quittung')">Quittung</button>
-            <button class="tablinks" onclick="openCity(event, 'kassenbon')">Kassenbon</button>
-            <button class="tablinks" onclick="openCity(event, 'email')">Mail</button>
-            <button class="tablinks" onclick="openCity(event, 'newspaper')">Zeitungsartikel</button>
-            <button class="tablinks" onclick="openCity(event, 'lohnabrechnung')">Lohn-/Gehaltsabrechnung</button>
-            <button class="tablinks" onclick="openCity(event, 'lohnjournal')">Lohn-/Gehaltsjournal</button>
-            <button class="tablinks" onclick="openCity(event, 'bescheid')">Bescheid</button>
-            <button class="tablinks" onclick="openCity(event, 'mahnung')">Mahnung</button>
-            <button class="tablinks" onclick="openCity(event, 'anlagenkarte')">Anlagenkarte</button>
-            <button class="tablinks" onclick="openCity(event, 'wertpapiere')">Wertpapiere</button>
+            <button class="tablinks" id="defaultOpen" data-on-click='[{"fn":"openCity","args":["__EVENT__","import"]}]'>Beleg importieren</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","rechnung"]}]'>Rechnung/Angebot/Gutschrift</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","kontoauszug"]}]'>Kontoauszug</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","quittung"]}]'>Quittung</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","kassenbon"]}]'>Kassenbon</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","email"]}]'>Mail</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","newspaper"]}]'>Zeitungsartikel</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","lohnabrechnung"]}]'>Lohn-/Gehaltsabrechnung</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","lohnjournal"]}]'>Lohn-/Gehaltsjournal</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","bescheid"]}]'>Bescheid</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","mahnung"]}]'>Mahnung</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","anlagenkarte"]}]'>Anlagenkarte</button>
+            <button class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","wertpapiere"]}]'>Wertpapiere</button>
         </nav>
 
         <section id="import" class="tabcontent">
@@ -214,7 +214,7 @@
 
                             <div class="form-field checkbox-field">
                                 <label for="lieferbedingungInput">
-                                    <input type="checkbox" id="lieferbedingungInput" onchange="applySVGholen()" />
+                                    <input type="checkbox" id="lieferbedingungInput" data-on-change='[{"fn":"applySVGholen","args":[]}]' />
                                     Lieferbedingung
                                 </label>
                             </div>
@@ -328,7 +328,7 @@
                             <div class="form-field checkbox-field">
                                 <label for="scriptJahr">
                                     <input type="checkbox" id="scriptJahr"
-                                        onchange="toggleInput('jahr', 'scriptJahr')" />
+                                        data-on-change='[{"fn":"toggleInput","args":["jahr","scriptJahr"]}]' />
                                     Skript verwenden
                                 </label>
                             </div>
@@ -378,18 +378,18 @@
                     <div class="flex-row">
                         <div class="form-field">
                             <label for="datenLieferer">Lieferer</label>
-                            <select id="datenLieferer" class="meinUnternehmen" onchange="applySVGholen()"></select>
+                            <select id="datenLieferer" class="meinUnternehmen" data-on-change='[{"fn":"applySVGholen","args":[]}]'></select>
                         </div>
 
                         <div class="form-field">
                             <label for="datenKunde">Empfänger</label>
-                            <select id="datenKunde" class="meinUnternehmen" onchange="applySVGholen()"></select>
+                            <select id="datenKunde" class="meinUnternehmen" data-on-change='[{"fn":"applySVGholen","args":[]}]'></select>
                         </div>
                     </div>
 
                     <div class="form-field">
                         <label for="logoUpload">Eigenes Logo hochladen</label>
-                        <input type="file" id="logoUpload" accept="image/*" onchange="loadLogo(event)" />
+                        <input type="file" id="logoUpload" accept="image/*" data-on-change='[{"fn":"loadLogo","args":["__EVENT__"]}]' />
                     </div>
 
 
@@ -398,7 +398,7 @@
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button type="button" class="btn-uebernehmen" onclick="applySVGholen()">
+                        <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"applySVGholen","args":[]}]'>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor"
                                 height="16" width="16" aria-hidden="true">
                                 <path
@@ -406,7 +406,7 @@
                             </svg>
                             Daten übernehmen
                         </button>
-                        <button type="button" class="btn-zufall" onclick="zufaelligeAusgangsrechnungErstellen()">
+                        <button type="button" class="btn-zufall" data-on-click='[{"fn":"zufaelligeAusgangsrechnungErstellen","args":[]}]'>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor"
                                 height="16" width="16" aria-hidden="true">
                                 <path
@@ -414,7 +414,7 @@
                             </svg>
                             Ausgangsrechnung
                         </button>
-                        <button type="button" class="btn-zufall" onclick="zufaelligeEingangsrechnungErstellen()">
+                        <button type="button" class="btn-zufall" data-on-click='[{"fn":"zufaelligeEingangsrechnungErstellen","args":[]}]'>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor"
                                 height="16" width="16" aria-hidden="true">
                                 <path
@@ -435,27 +435,27 @@
 
             <!-- Export-Buttons -->
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('rechnung','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["rechnung","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">
                     PNG
                 </button>
 
-                <button class="card-btn" type="button" onclick="exportDokument('rechnung','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["rechnung","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">
                     SVG
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="exportDokument('rechnung','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["rechnung","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage herunterladen"
                     aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('rechnung')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["rechnung"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage</button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('rechnung1Container')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["rechnung1Container"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -587,7 +587,7 @@
                             <div class="form-field checkbox-field">
                                 <label for="scriptJahrKontoauszug">
                                     <input type="checkbox" id="scriptJahrKontoauszug"
-                                        onchange="toggleInput('jahrKontoauszug', 'scriptJahrKontoauszug');" />
+                                        data-on-change='[{"fn":"toggleInput","args":["jahrKontoauszug","scriptJahrKontoauszug"]}]' />
                                     Skript verwenden
                                 </label>
                             </div>
@@ -637,7 +637,7 @@
 
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="applySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"applySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -655,26 +655,26 @@
 
             <!-- Export-Buttons -->
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('kontoauszug','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["kontoauszug","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="exportDokument('kontoauszug','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["kontoauszug","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="exportDokument('kontoauszug','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["kontoauszug","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage herunterladen"
                     aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('kontoauszug')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["kontoauszug"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage</button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('kontoauszugContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["kontoauszugContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -790,7 +790,7 @@
                             <div class="form-field checkbox-field">
                                 <label for="scriptJahrQuittung">
                                     <input type="checkbox" id="scriptJahrQuittung"
-                                        onchange="toggleInput('jahrQuittung', 'scriptJahrQuittung');" />
+                                        data-on-change='[{"fn":"toggleInput","args":["jahrQuittung","scriptJahrQuittung"]}]' />
                                     Skript verwenden
                                 </label>
                             </div>
@@ -819,7 +819,7 @@
 
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="quittungApplySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"quittungApplySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -837,26 +837,26 @@
 
             <!-- Export-Buttons -->
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('quittung','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["quittung","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="exportDokument('quittung','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["quittung","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="exportDokument('quittung','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["quittung","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage herunterladen"
                     aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('quittung')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["quittung"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage</button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('quittungContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["quittungContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -983,7 +983,7 @@
                             <div class="form-field checkbox-field">
                                 <label for="scriptJahrKassenbon">
                                     <input type="checkbox" id="scriptJahrKassenbon"
-                                        onchange="toggleInput('jahrKassenbon', 'scriptJahrKassenbon');" />
+                                        data-on-change='[{"fn":"toggleInput","args":["jahrKassenbon","scriptJahrKassenbon"]}]' />
                                     Skript verwenden
                                 </label>
                             </div>
@@ -1012,7 +1012,7 @@
 
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="kassenbonApplySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"kassenbonApplySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -1030,24 +1030,24 @@
 
             <!-- Export-Buttons -->
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('kassenbon','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["kassenbon","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('kassenbon','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["kassenbon","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('kassenbon','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["kassenbon","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage herunterladen"
                     aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('kassenbon')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["kassenbon"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage</button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('kassenbonContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["kassenbonContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -1075,7 +1075,7 @@
                  der Platzhaltertext kommt aus der gewählten Vorlage. -->
                     <div class="form-field" style="width: 200px">
                         <label for="svgDropdownEmail">Vorlage</label>
-                        <select id="svgDropdownEmail" onchange="emailVorlageAnwenden();">
+                        <select id="svgDropdownEmail" data-on-change='[{"fn":"emailVorlageAnwenden","args":[]}]'>
                             <option value="mail3.html" selected>Klassisch</option>
                             <option value="mail2.html">Modern</option>
                             <option value="mail1.html">Retro</option>
@@ -1105,7 +1105,7 @@
                 <!-- Vorlagenwechsel wendet die Vorlage automatisch an;
              „Zurücksetzen" stellt die Platzhalter wieder her -->
                 <section class="form-section flex-row">
-                    <button type="button" onclick="emailZuruecksetzen()">Zurücksetzen</button>
+                    <button type="button" data-on-click='[{"fn":"emailZuruecksetzen","args":[]}]'>Zurücksetzen</button>
                 </section>
             </form>
 
@@ -1117,24 +1117,24 @@
             <!-- Export-Buttons -->
             <nav class="exportButtons" aria-label="Export-Optionen">
 
-                <button class="card-btn" type="button" onclick="exportDokument('email','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["email","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
 
                 </button>
-                <button class="card-btn" type="button" onclick="emailHerunterladen()"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"emailHerunterladen","args":[]}]'
                     data-tooltip="Als HTML herunterladen" aria-label="Als HTML herunterladen">HTML-Datei
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('email','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["email","clipboard"]}]'
                     data-tooltip="Als HTML-Code in Zwischenablage herunterladen"
                     aria-label="Als HTML-Code in Zwischenablage kopieren">HTML-Code
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('email')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["email"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage </button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('emailContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["emailContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -1209,17 +1209,17 @@
             </div><br>
 
             <div class="exportButtons">
-                <button class="card-btn" type="button" onclick="exportDokument('newspaper','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["newspaper","png"]}]'
                     data-tooltip="Als PNG herunterladen">PNG</button>
                 <button class="card-btn" type="button" id="officeButtonNewspaper"
                     data-clipboard-target="#newspaperContainer">Zwischenablage (Text)</button>
-                <button class="card-btn" type="button" onclick="newspaperHerunterladen()">HTML-Datei</button>
-                <button class="card-btn" type="button" onclick="exportDokument('newspaper','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"newspaperHerunterladen","args":[]}]'>HTML-Datei</button>
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["newspaper","clipboard"]}]'
                     data-tooltip="Als HTML-Code in Zwischenablage herunterladen">HTML-Code</button>
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('newspaper')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["newspaper"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage (Grafik)</button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('newspaperContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["newspaperContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </div>
@@ -1398,7 +1398,7 @@
 
                     <div class="form-field">
                         <small>
-                            <a href="#" class="tablinks" onclick="openCity(event, 'modellunternehmen')">
+                            <a href="#" class="tablinks" data-on-click='[{"fn":"openCity","args":["__EVENT__","modellunternehmen"]}]'>
                                 Eigenes Modellunternehmen verwenden?
                             </a>
                         </small>
@@ -1407,7 +1407,7 @@
 
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="lohnabrechnungApplySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"lohnabrechnungApplySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -1428,23 +1428,23 @@
 
             <!-- Export-Buttons -->
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('lohnabrechnung','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["lohnabrechnung","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('lohnabrechnung','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["lohnabrechnung","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('lohnabrechnung','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["lohnabrechnung","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage kopieren"
                     aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('lohnabrechnung')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["lohnabrechnung"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage </button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('lohnabrechnungContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["lohnabrechnungContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -1488,7 +1488,7 @@
 
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="journalApplySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"journalApplySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -1507,21 +1507,21 @@
             </section>
 
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('lohnjournal','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["lohnjournal","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('lohnjournal','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["lohnjournal","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('lohnjournal','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["lohnjournal","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage kopieren"
                     aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('lohnjournal')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["lohnjournal"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage </button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('lohnjournalContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["lohnjournalContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -1532,22 +1532,22 @@
             </section>
 
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('lohnjournalBS','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["lohnjournalBS","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
                 </button>
                 <button class="card-btn" type="button" id="officeButtonLohnjournalBuchungssatz"
                     data-clipboard-target="#lohnjournalBuchungssatzContainer" data-tooltip="In Zwischenablage kopieren"
                     aria-label="In Zwischenablage kopieren">Zwischenablage (Text)
                 </button>
-                <button class="card-btn" type="button" onclick="lohnjournalBuchungssatzHerunterladen()"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"lohnjournalBuchungssatzHerunterladen","args":[]}]'
                     data-tooltip="Als HTML herunterladen" aria-label="Als HTML herunterladen">HTML-Datei
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('lohnjournalBS','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["lohnjournalBS","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage kopieren"
                     aria-label="Als HTML-Code in Zwischenablage kopieren">HTML-Code
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('lohnjournalBS')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["lohnjournalBS"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage (Grafik)</button>
                 </button>
@@ -1645,7 +1645,7 @@
                             <div class="form-field checkbox-field">
                                 <label for="scriptJahrBescheid">
                                     <input type="checkbox" id="scriptJahrBescheid"
-                                        onchange="toggleInput('jahrBescheid', 'scriptJahrBescheid');" />
+                                        data-on-change='[{"fn":"toggleInput","args":["jahrBescheid","scriptJahrBescheid"]}]' />
                                     Skript verwenden
                                 </label>
                             </div>
@@ -1689,13 +1689,13 @@
 
                     <div class="form-field">
                         <label for="datenBescheid">Unternehmen</label>
-                        <select id="datenBescheid" class="meinUnternehmen" onchange="bescheidApplySVGholen()"></select>
+                        <select id="datenBescheid" class="meinUnternehmen" data-on-change='[{"fn":"bescheidApplySVGholen","args":[]}]'></select>
                     </div>
                 </section>
 
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="bescheidApplySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"bescheidApplySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -1712,21 +1712,21 @@
             </section>
 
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('bescheid','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["bescheid","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('bescheid','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["bescheid","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('bescheid','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["bescheid","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage kopieren"
                     aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('bescheid')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["bescheid"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage </button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('bescheidContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["bescheidContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -1793,7 +1793,7 @@
 
                             <div class="form-field">
                                 <label for="mahnungStufeInput">Mahnstufe</label>
-                                <select id="mahnungStufeInput" onchange="mahnungApplySVGholen()">
+                                <select id="mahnungStufeInput" data-on-change='[{"fn":"mahnungApplySVGholen","args":[]}]'>
                                     <option value="1">1. Mahnung (Zahlungserinnerung)</option>
                                     <option value="2" selected>2. Mahnung</option>
                                     <option value="3">3. Mahnung – letzte Mahnung</option>
@@ -1868,7 +1868,7 @@
                             <div class="form-field checkbox-field">
                                 <label for="scriptJahrMahnung">
                                     <input type="checkbox" id="scriptJahrMahnung"
-                                        onchange="toggleInput('jahrMahnung', 'scriptJahrMahnung');" />
+                                        data-on-change='[{"fn":"toggleInput","args":["jahrMahnung","scriptJahrMahnung"]}]' />
                                     Skript verwenden
                                 </label>
                             </div>
@@ -1934,19 +1934,19 @@
                         <div class="form-field">
                             <label for="datenMahnung">Absender (Gläubiger)</label>
                             <select id="datenMahnung" class="meinUnternehmen"
-                                onchange="mahnungApplySVGholen()"></select>
+                                data-on-change='[{"fn":"mahnungApplySVGholen","args":[]}]'></select>
                         </div>
 
                         <div class="form-field">
                             <label for="datenMahnungEmpfaenger">Empfänger (Schuldner)</label>
-                            <select id="datenMahnungEmpfaenger" onchange="loadMahnungEmpfaengerData()"></select>
+                            <select id="datenMahnungEmpfaenger" data-on-change='[{"fn":"loadMahnungEmpfaengerData","args":[]}]'></select>
                         </div>
                     </div>
                 </section>
 
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="mahnungApplySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"mahnungApplySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -1963,21 +1963,21 @@
             </section>
 
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('mahnung','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["mahnung","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('mahnung','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["mahnung","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('mahnung','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["mahnung","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage kopieren"
                     aria-label="Als SVG-Code in Zwischenablage kopieren">SVG-Code
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('mahnung')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["mahnung"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage </button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('mahnungContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["mahnungContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -2184,7 +2184,7 @@
                             <div class="form-field checkbox-field">
                                 <label for="scriptJahrAnlagenkarte">
                                     <input type="checkbox" id="scriptJahrAnlagenkarte"
-                                        onchange="toggleInput('jahrAnlagenkarte', 'scriptJahrAnlagenkarte');" />
+                                        data-on-change='[{"fn":"toggleInput","args":["jahrAnlagenkarte","scriptJahrAnlagenkarte"]}]' />
                                     Skript verwenden
                                 </label>
                             </div>
@@ -2229,7 +2229,7 @@
 
 
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="anlagenkarteApplySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"anlagenkarteApplySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -2247,23 +2247,23 @@
 
             <!-- Export-Buttons -->
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('anlagenkarte','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["anlagenkarte","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('anlagenkarte','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["anlagenkarte","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('anlagenkarte','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["anlagenkarte","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage herunterladen">SVG-Code
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('anlagenkarte')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["anlagenkarte"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage </button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('anlagenkarteContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["anlagenkarteContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
@@ -2378,7 +2378,7 @@
                             <div class="form-field checkbox-field">
                                 <label for="scriptJahrWertpapiere">
                                     <input type="checkbox" id="scriptJahrWertpapiere"
-                                        onchange="toggleInput('jahrWertpapiere', 'scriptJahrWertpapiere');" />
+                                        data-on-change='[{"fn":"toggleInput","args":["jahrWertpapiere","scriptJahrWertpapiere"]}]' />
                                     Skript verwenden
                                 </label>
                             </div>
@@ -2414,7 +2414,7 @@
 
                 <!-- Aktionen -->
                 <section class="form-section form-actions">
-                    <button type="button" class="btn-uebernehmen" onclick="wertpapiereApplySVGholen()">
+                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"wertpapiereApplySVGholen","args":[]}]'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16"
                             width="16" aria-hidden="true">
                             <path
@@ -2432,23 +2432,23 @@
 
             <!-- Export-Buttons -->
             <nav class="exportButtons" aria-label="Export-Optionen">
-                <button class="card-btn" type="button" onclick="exportDokument('wertpapiere','png')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["wertpapiere","png"]}]'
                     data-tooltip="Als PNG herunterladen" aria-label="Als PNG herunterladen">PNG
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('wertpapiere','svg')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["wertpapiere","svg"]}]'
                     data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen">SVG
 
                 </button>
-                <button class="card-btn" type="button" onclick="exportDokument('wertpapiere','clipboard')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"exportDokument","args":["wertpapiere","clipboard"]}]'
                     data-tooltip="Als SVG-Code in Zwischenablage herunterladen">SVG-Code
 
                 </button>
 
-                <button class="card-btn" type="button" onclick="kopiereGrafikInZwischenablage('wertpapiere')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["wertpapiere"]}]'
                     data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
                     aria-label="Beleg-Grafik in die Zwischenablage kopieren">Zwischenablage </button>
-                <button class="card-btn" type="button" onclick="belegZurSammlung('wertpapiereContainer')"
+                <button class="card-btn" type="button" data-on-click='[{"fn":"belegZurSammlung","args":["wertpapiereContainer"]}]'
                     data-tooltip="Zur Sammlung hinzufügen" aria-label="Zur Sammlung hinzufügen">+ Sammlung
                 </button>
             </nav>
