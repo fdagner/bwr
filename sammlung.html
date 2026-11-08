@@ -150,30 +150,31 @@
         card.draggable = true;
         card.dataset.id = it.id;
         const btnOpen = (it.type === 'beleg' || it.type === 'beleg-png' || it.type === 'beleg-svg')
-          ? '<button type="button" class="card-btn" data-on-click='[{"fn":"oeffneBeleg","args":["\\&#39;&#39; + it.id + &#39;\\&#39;"]}]' title="Öffnen">Öffnen</button>' : '';
-        const btnPng = it.pngContent ? '<button type="button" class="card-btn" data-on-click='[{"fn":"downloadBeleg","args":["\\&#39;&#39; + it.id + &#39;\\&#39;,\\&#39;png\\&#39;"]}]' title="PNG herunterladen">PNG</button>' : '';
+          ? '<button type="button" class="card-btn" ' + dataOn('click', 'oeffneBeleg', it.id) + ' title="Öffnen">Öffnen</button>' : '';
+        const btnPng = it.pngContent ? '<button type="button" class="card-btn" ' + dataOn('click', 'downloadBeleg', it.id, 'png') + ' title="PNG herunterladen">PNG</button>' : '';
         const hasSvg = !!(it.svgContent || (it.content && String(it.content).trim().startsWith('<svg')));
         const hasHtml = !!(it.htmlContent || (!hasSvg && it.content && String(it.content).trim().startsWith('<')));
-        const btnSvg = hasSvg ? '<button type="button" class="card-btn" data-on-click='[{"fn":"downloadBeleg","args":["\\&#39;&#39; + it.id + &#39;\\&#39;,\\&#39;svg\\&#39;"]}]' title="SVG herunterladen">SVG</button>' : '';
-        const btnHtml = hasHtml ? '<button type="button" class="card-btn" data-on-click='[{"fn":"downloadBeleg","args":["\\&#39;&#39; + it.id + &#39;\\&#39;,\\&#39;html\\&#39;"]}]' title="HTML herunterladen">HTML</button>' : '';
+        const btnSvg = hasSvg ? '<button type="button" class="card-btn" ' + dataOn('click', 'downloadBeleg', it.id, 'svg') + ' title="SVG herunterladen">SVG</button>' : '';
+        const btnHtml = hasHtml ? '<button type="button" class="card-btn" ' + dataOn('click', 'downloadBeleg', it.id, 'html') + ' title="HTML herunterladen">HTML</button>' : '';
         const hasGrafik = !!(it.pngContent || it.thumbnail || hasSvg || hasHtml);
-        const btnClipboard = hasGrafik ? '<button type="button" class="card-btn" data-on-click='[{"fn":"kopiereBelegGrafik","args":["\\&#39;&#39; + it.id + &#39;\\&#39;"]}]' title="Grafik in die Zwischenablage kopieren">Zwischenablage</button>' : '';
-        const btnLink = it.shareUrl ? '<button type="button" class="card-btn" data-on-click='[{"fn":"kopiereLink","args":["\\&#39;&#39; + it.id + &#39;\\&#39;"]}]' title="Link kopieren">Link</button>' : '';
+        const btnClipboard = hasGrafik ? '<button type="button" class="card-btn" ' + dataOn('click', 'kopiereBelegGrafik', it.id) + ' title="Grafik in die Zwischenablage kopieren">Zwischenablage</button>' : '';
+        const btnLink = it.shareUrl ? '<button type="button" class="card-btn" ' + dataOn('click', 'kopiereLink', it.id) + ' title="Link kopieren">Link</button>' : '';
         card.innerHTML =
-          '<textarea class="title-edit" rows="2" title="' + escapeHtml(it.title) + '" data-on-change='[{"fn":"renameItem","args":["\\&#39;&#39; + it.id + &#39;\\&#39;, this.value"]}]'>' + escapeHtml(String(it.title || '').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '').trim()) + '</textarea>' +
-          '<div class="preview" style="cursor:zoom-in;" title="Vergrößern" data-on-click='[{"fn":"oeffneVorschau","args":["\\&#39;&#39; + it.id + &#39;\\&#39;"]}]'>' + (it.thumbnail || it.content || '') + '</div>' +
+          '<textarea class="title-edit" rows="2" title="' + escapeHtml(it.title) + '" ' + dataOn('change', 'renameItem', it.id, '__VALUE__') + '>' + escapeHtml(String(it.title || '').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '').trim()) + '</textarea>' +
+          '<div class="preview" style="cursor:zoom-in;" title="Vergrößern" ' + dataOn('click', 'oeffneVorschau', it.id) + '>' + (it.thumbnail || it.content || '') + '</div>' +
           '<div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 2px;">' +
           '<span class="badge ' + it.type + '">' + it.type + '</span>' +
           '</div>' +
           '<div class="card-actions">' +
           btnOpen + btnPng + btnSvg + btnHtml + btnLink + btnClipboard +
-          '<button type="button" class="card-btn card-btn-danger" data-on-click='[{"fn":"deleteItem","args":["\\&#39;&#39; + it.id + &#39;\\&#39;"]}]' title="Löschen">Löschen</button>' +
+          '<button type="button" class="card-btn card-btn-danger" ' + dataOn('click', 'deleteItem', it.id) + ' title="Löschen">Löschen</button>' +
           '</div>';
         grid.appendChild(card);
       });
     }
 
     function escapeHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function dataOn(evt, fn, ...args) { return 'data-on-' + evt + "='" + JSON.stringify([{ fn: fn, args: args }]).replace(/'/g, '&#39;') + "'"; }
 
     async function neueSammlung() {
       if (collections.length >= Collection.MAX_COLLECTIONS) {
