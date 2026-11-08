@@ -182,16 +182,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Dropdown füllen, sobald Unternehmensdaten da sind
-  document.addEventListener(
-    "yamlDataLoaded",
-    () => {
-      fillCompanyDropdown();
-      autoSelectMyCompany();
-      befuelleZufallswerte(); // Felder beim ersten Laden befüllen
-      zeigeZufaelligenSatz(); // Aufgabe sofort rendern
-    },
-    { once: true },
-  );
+  // (Muster wie lb8-2-angebotsvergleich: Daten schon geladen → sofort
+  // initialisieren; sonst auf 'yamlDataLoaded' warten – das Event kann
+  // auch VOR DOMContentLoaded feuern, daher hier der if-Zweig nötig.)
+  if (window.yamlData && window.yamlData.length > 0) {
+    fillCompanyDropdown();
+    autoSelectMyCompany();
+    befuelleZufallswerte(); // Felder beim ersten Laden befüllen
+    zeigeZufaelligenSatz(); // Aufgabe sofort rendern
+  } else {
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
+        fillCompanyDropdown();
+        autoSelectMyCompany();
+        befuelleZufallswerte();
+        zeigeZufaelligenSatz();
+      },
+      { once: true },
+    );
+  }
 });
 
 // ============================================================================
