@@ -1,42 +1,44 @@
-  // ── Unternehmen / Werkstoffbezeichnungen aus YAML ─────────────────────────
-
-
-
-
+// ── Unternehmen / Werkstoffbezeichnungen aus YAML ─────────────────────────
 
 function fillUnternehmenSelect() {
-  const select = document.getElementById('unternehmenSelect');
+  const select = document.getElementById("unternehmenSelect");
   if (!select || !yamlData.length) return;
 
-  select.innerHTML = '';
+  select.innerHTML = "";
 
   // Platzhalter (wie auf den anderen Generator-Seiten):
   // gesperrt, solange nichts gewählt ist → Standard-Werkstoffbezeichnungen
-  const opt = document.createElement('option');
-  opt.value = '';
-  opt.text = '— bitte Unternehmen auswählen —';
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "— bitte Unternehmen auswählen —";
   opt.disabled = true;
   opt.selected = true;
   select.appendChild(opt);
 
   [...yamlData]
     .sort((a, b) => {
-      const ba = a.unternehmen?.branche || '', bb = b.unternehmen?.branche || '';
+      const ba = a.unternehmen?.branche || "",
+        bb = b.unternehmen?.branche || "";
       if (ba !== bb) return ba.localeCompare(bb);
-      return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+      return (a.unternehmen?.name || "").localeCompare(
+        b.unternehmen?.name || "",
+      );
     })
-    .forEach(c => {
+    .forEach((c) => {
       const u = c.unternehmen;
       if (!u?.name) return;
-      const opt = document.createElement('option');
+      const opt = document.createElement("option");
       opt.value = u.name;
-      opt.textContent = (u.branche ? `${u.branche} – ` : '') + `${u.name} ${u.rechtsform || ''}`.trim();
+      opt.textContent =
+        (u.branche ? `${u.branche} – ` : "") +
+        `${u.name} ${u.rechtsform || ""}`.trim();
       select.appendChild(opt);
     });
 
   // "Modellunternehmen" vorauswählen, falls vorhanden
-  const mein = localStorage.getItem('myCompany');
-  if (mein && [...select.options].some(o => o.value === mein)) select.value = mein;
+  const mein = localStorage.getItem("myCompany");
+  if (mein && [...select.options].some((o) => o.value === mein))
+    select.value = mein;
 }
 
 // Liefert die Werkstoffnamen eines Kontos als Strings
@@ -45,70 +47,88 @@ function getWerkstoffNamenListe(eintrag, key) {
   const liste = eintrag?.unternehmen?.werkstoffe?.[key];
   if (!Array.isArray(liste)) return [];
   return liste
-    .map(v => (v && typeof v === 'object') ? v.name : v)
-    .map(v => String(v ?? '').trim())
-    .filter(v => v.length > 0);
+    .map((v) => (v && typeof v === "object" ? v.name : v))
+    .map((v) => String(v ?? "").trim())
+    .filter((v) => v.length > 0);
 }
 
 // Zufällige Bezeichnung aus YAML, sonst allgemeine Form (z. B. "Rohstoffen")
 function getWerkstoffName(key) {
-  const name = document.getElementById('unternehmenSelect')?.value;
-  const eintrag = name ? yamlData.find(e => e.unternehmen?.name === name) : null;
+  const name = document.getElementById("unternehmenSelect")?.value;
+  const eintrag = name
+    ? yamlData.find((e) => e.unternehmen?.name === name)
+    : null;
   const kandidaten = getWerkstoffNamenListe(eintrag, key);
-  if (kandidaten.length > 0) return kandidaten[Math.floor(Math.random() * kandidaten.length)];
+  if (kandidaten.length > 0)
+    return kandidaten[Math.floor(Math.random() * kandidaten.length)];
   return KONTEN_CONFIG[key].label;
 }
-  
-  
-    function rnd(min, max, step) {
-      return Math.round((Math.random() * (max - min) + min) / step) * step;
-    }
 
-    // ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────
-    // Nr und Abkürzung (name) kommen aus KONTENPLAN – hier nicht mehr pflegen.
-    // Die Schlüssel (AWR/AWF/AWH/AWB) sind die Werkstoffe-Schema-Schlüssel
-    // der Nutzer-YAML und bleiben bewusst unverändert.
-    function kontoCfg(nr, label, rahmen) {
-      const k = getKonto(nr);
-      return { nr, name: k ? k.abk : nr, label, rahmen };
-    }
+function rnd(min, max, step) {
+  return Math.round((Math.random() * (max - min) + min) / step) * step;
+}
 
-    const KONTEN_CONFIG = {
-      AWR: kontoCfg('6000', 'Rohstoffe',      { VE: [5000,20000], BK: [1000,10000], KA: [500,3000] }),
-      AWF: kontoCfg('6010', 'Fremdbauteile',  { VE: [1000, 5000], BK: [500,  3000], KA: [100, 800]  }),
-      AWH: kontoCfg('6020', 'Hilfsstoffe',    { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  }),
-      AWB: kontoCfg('6030', 'Betriebsstoffe', { VE: [500,  3000], BK: [200,  1500], KA: [50,  500]  })
-    };
+// ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────
+// Nr und Abkürzung (name) kommen aus KONTENPLAN – hier nicht mehr pflegen.
+// Die Schlüssel (AWR/AWF/AWH/AWB) sind die Werkstoffe-Schema-Schlüssel
+// der Nutzer-YAML und bleiben bewusst unverändert.
+function kontoCfg(nr, label, rahmen) {
+  const k = getKonto(nr);
+  return { nr, name: k ? k.abk : nr, label, rahmen };
+}
 
-    const POOL = ['VE','VE','VE','BK','BK','KA'];
+const KONTEN_CONFIG = {
+  AWR: kontoCfg("6000", "Rohstoffe", {
+    VE: [5000, 20000],
+    BK: [1000, 10000],
+    KA: [500, 3000],
+  }),
+  AWF: kontoCfg("6010", "Fremdbauteile", {
+    VE: [1000, 5000],
+    BK: [500, 3000],
+    KA: [100, 800],
+  }),
+  AWH: kontoCfg("6020", "Hilfsstoffe", {
+    VE: [500, 3000],
+    BK: [200, 1500],
+    KA: [50, 500],
+  }),
+  AWB: kontoCfg("6030", "Betriebsstoffe", {
+    VE: [500, 3000],
+    BK: [200, 1500],
+    KA: [50, 500],
+  }),
+};
 
-    
-        function geschaeftsfall(key, b) {
-      const cfg = KONTEN_CONFIG[key];
-      const wst = b.werkstoff || cfg.label;
-      const unternehmenName = document.getElementById('unternehmenSelect')?.value || '';
-      const kunde = unternehmenName ? ` ${unternehmenName}` : '';  
-      const texte = {
-        VE: `${kunde} beschafft ${wst} im Wert von ${formatBetrag(b.betrag)}\u00a0€ netto auf Ziel.`,
-        BK: `${kunde} kauft ${wst} im Wert von ${formatBetrag(b.betrag)}\u00a0€ netto per Banküberweisung.`,
-        KA: `${kunde} beschafft ${wst} in Höhe von ${formatBetrag(b.betrag)}\u00a0€ netto in bar.`,
-      };
-      return texte[b.typ];
-    }
+const POOL = ["VE", "VE", "VE", "BK", "BK", "KA"];
 
-    function renderTKontoAufgabe(titel, buchungen) {
-      // Zeilenanzahl entspricht genau der Anzahl der Buchungen
-      let rows = '';
-      for (let i = 0; i < buchungen.length; i++) {
-        const b = buchungen[i];
-        rows += `<tr style="border-top:2px solid #ccc;">
-          <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}.) ${b.typ}` : '&nbsp;'}</td>
-          <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) + '\u00a0€' : '&nbsp;'}</td>
+function geschaeftsfall(key, b) {
+  const cfg = KONTEN_CONFIG[key];
+  const wst = b.werkstoff || cfg.label;
+  const unternehmenName =
+    document.getElementById("unternehmenSelect")?.value || "";
+  const kunde = unternehmenName ? ` ${unternehmenName}` : "";
+  const texte = {
+    VE: `${kunde} beschafft ${wst} im Wert von ${formatBetrag(b.betrag)}\u00a0€ netto auf Ziel.`,
+    BK: `${kunde} kauft ${wst} im Wert von ${formatBetrag(b.betrag)}\u00a0€ netto per Banküberweisung.`,
+    KA: `${kunde} beschafft ${wst} in Höhe von ${formatBetrag(b.betrag)}\u00a0€ netto in bar.`,
+  };
+  return texte[b.typ];
+}
+
+function renderTKontoAufgabe(titel, buchungen) {
+  // Zeilenanzahl entspricht genau der Anzahl der Buchungen
+  let rows = "";
+  for (let i = 0; i < buchungen.length; i++) {
+    const b = buchungen[i];
+    rows += `<tr style="border-top:2px solid #ccc;">
+          <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}.) ${b.typ}` : "&nbsp;"}</td>
+          <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) + "\u00a0€" : "&nbsp;"}</td>
           <td style="padding:3px 2px 3px 6px;min-width:100px;width:25%;">&nbsp;</td>
           <td style="text-align:right;padding:3px 2px;min-width:100px;width:25%;">&nbsp;</td>
         </tr>`;
-      }
-      return `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;table-layout:fixed;">
+  }
+  return `<table style="border-collapse:collapse;width:580px;background:#fff;font-size:1.0em;table-layout:fixed;">
         <thead><tr>
           <th style="width:25%;text-align:left;font-weight:600;padding:4px 0;">Soll</th>
           <th style="text-align:center;font-size:1.0em;padding:4px 0;" colspan="2"><span style="font-weight:700;">${titel}</span></th>
@@ -116,10 +136,9 @@ function getWerkstoffName(key) {
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
-    }
+}
 
-
- // ── Moodle-Cloze-Export ───────────────────────────────────────────────────
+// ── Moodle-Cloze-Export ───────────────────────────────────────────────────
 let letzteAufgabe = [];
 
 function shuffleArray(arr) {
@@ -133,108 +152,160 @@ function shuffleArray(arr) {
 
 // Sonderzeichen, die in Cloze-Antworten maskiert werden müssen
 function clozeEsc(s) {
-  return String(s).replace(/([\\}#~\/])/g, '\\$1');
+  return String(s).replace(/([\\}#~\/])/g, "\\$1");
 }
 
 function clozeSelect(optionen) {
-    return '{' + MOODLE_PREIS_PUNKTE_PRO_AUFGABE + ':MULTICHOICE:' +
-    optionen.map(o => (o.richtig ? '=' : '') + clozeEsc(o.text)).join('~') + '}';
+  return (
+    "{" +
+    MOODLE_PREIS_PUNKTE_PRO_AUFGABE +
+    ":MULTICHOICE:" +
+    optionen.map((o) => (o.richtig ? "=" : "") + clozeEsc(o.text)).join("~") +
+    "}"
+  );
 }
 
 // Falsche Werkstoffe: Bezeichnungen der ANDEREN Konten (YAML, sonst allgemeine Form)
 function getFalscheWerkstoffe(key, richtig, n = 3) {
-  const name = document.getElementById('unternehmenSelect')?.value;
-  const eintrag = name ? yamlData.find(e => e.unternehmen?.name === name) : null;
+  const name = document.getElementById("unternehmenSelect")?.value;
+  const eintrag = name
+    ? yamlData.find((e) => e.unternehmen?.name === name)
+    : null;
   let pool = [];
-  Object.keys(KONTEN_CONFIG).filter(k => k !== key).forEach(k => {
-    const eigene = getWerkstoffNamenListe(eintrag, k);
-    if (eigene.length) pool.push(...eigene);
-    else pool.push(KONTEN_CONFIG[k].label);
-  });
-  pool = [...new Set(pool)].filter(v => v !== richtig);
+  Object.keys(KONTEN_CONFIG)
+    .filter((k) => k !== key)
+    .forEach((k) => {
+      const eigene = getWerkstoffNamenListe(eintrag, k);
+      if (eigene.length) pool.push(...eigene);
+      else pool.push(KONTEN_CONFIG[k].label);
+    });
+  pool = [...new Set(pool)].filter((v) => v !== richtig);
   return shuffleArray(pool).slice(0, n);
 }
 
 // ============================================================================
 // MOODLE-CLOZE-EXPORT – Titel, ID und Punkte
 // ============================================================================
-const MOODLE_PREIS_PRAEFIX = '8.3-01#B';
-const MOODLE_PREIS_TITELENDE = 'meinBwR-Buchungslesen';
-const MOODLE_PREIS_PUNKTE_PRO_AUFGABE = 1;   // Gewicht pro Dropdown
+const MOODLE_PREIS_PRAEFIX = "8.3-01#B";
+const MOODLE_PREIS_TITELENDE = "meinBwR-Buchungslesen";
+const MOODLE_PREIS_PUNKTE_PRO_AUFGABE = 1; // Gewicht pro Dropdown
 
 function mxEsc(s) {
-  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 function mxCdata(s) {
-  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
 }
 
 // Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
 function mxIdBasis() {
-  const SCHLUESSEL = 'moodlePreisLetzteIdSekunde';
+  const SCHLUESSEL = "moodlePreisLetzteIdSekunde";
   let sek = Math.floor(Date.now() / 1000);
   try {
     const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
     if (sek <= letzte) sek = letzte + 1;
     localStorage.setItem(SCHLUESSEL, String(sek));
-  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  } catch (e) {
+    /* ohne localStorage: nur Zeitstempel */
+  }
   const d = new Date(sek * 1000);
-  const p = n => String(n).padStart(2, '0');
+  const p = (n) => String(n).padStart(2, "0");
   return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
 }
 function exportiereMoodle() {
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
 
   // 1) Beschreibung: alles vor der Lösung (Aufgabenstellung + T-Konten), ohne die Überschrift "Aufgabe"
-  let beschreibung = '';
+  let beschreibung = "";
   for (const el of container.children) {
-    if (el.classList.contains('loesung')) break;
-    if (el.tagName === 'H2') continue;
+    if (el.classList.contains("loesung")) break;
+    if (el.tagName === "H2") continue;
     beschreibung += el.outerHTML;
   }
 
   // 2) Geschäftsfälle aus dem (bearbeiteten) Container
-  const absaetze = [...container.querySelectorAll('p')]
-    .map(p => p.textContent.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim())
-    .filter(t => /^\d+\.\s/.test(t));
+  const absaetze = [...container.querySelectorAll("p")]
+    .map((p) =>
+      p.textContent
+        .replace(/\u00a0/g, " ")
+        .replace(/\s+/g, " ")
+        .trim(),
+    )
+    .filter((t) => /^\d+\.\s/.test(t));
 
-  if (!absaetze.length) { zeigeModal('Keine Geschäftsfälle im Container gefunden.'); return; }
+  if (!absaetze.length) {
+    zeigeModal("Keine Geschäftsfälle im Container gefunden.");
+    return;
+  }
 
-      const re = /^(\d+)\.\s*(?:(.+?)\s+)?(beschafft|kauft)\s+(.+?)\s+(im Wert von|in Höhe von)\s+([\d.,]+)\s*€\s+(netto|brutto)\s+(auf Ziel|per Banküberweisung|in bar)\.?$/;
-      const zahlungen = ['auf Ziel', 'per Banküberweisung', 'in bar'];
+  const re =
+    /^(\d+)\.\s*(?:(.+?)\s+)?(beschafft|kauft)\s+(.+?)\s+(im Wert von|in Höhe von)\s+([\d.,]+)\s*€\s+(netto|brutto)\s+(auf Ziel|per Banküberweisung|in bar)\.?$/;
+  const zahlungen = ["auf Ziel", "per Banküberweisung", "in bar"];
 
-  let zeilen = '';
+  let zeilen = "";
   const uebersprungen = [];
 
-  absaetze.forEach(text => {
+  absaetze.forEach((text) => {
     const m = text.match(re);
-    if (!m) { uebersprungen.push(text.slice(0, 40) + '…'); return; }
-    const [, nr, subjekt, verb, werkstoff, wertPhrase, betrag, nettoBrutto, zahlung] = m;
+    if (!m) {
+      uebersprungen.push(text.slice(0, 40) + "…");
+      return;
+    }
+    const [
+      ,
+      nr,
+      subjekt,
+      verb,
+      werkstoff,
+      wertPhrase,
+      betrag,
+      nettoBrutto,
+      zahlung,
+    ] = m;
 
     // Konto der Buchung (nur um Werkstoffe desselben Kontos als Falschantwort auszuschließen)
     let key = null;
-    letzteAufgabe.forEach(k => k.buchungen.forEach(b => { if (String(b.nr) === nr) key = k.key; }));
+    letzteAufgabe.forEach((k) =>
+      k.buchungen.forEach((b) => {
+        if (String(b.nr) === nr) key = k.key;
+      }),
+    );
 
-    const verbDD = clozeSelect(shuffleArray([
-  { text: verb,       richtig: true },
-  { text: 'verkauft', richtig: false }
-]));
-    const werkstoffDD = clozeSelect(shuffleArray([
-      { text: werkstoff, richtig: true },
-      ...getFalscheWerkstoffe(key, werkstoff).map(t => ({ text: t, richtig: false }))
-    ]));
+    const verbDD = clozeSelect(
+      shuffleArray([
+        { text: verb, richtig: true },
+        { text: "verkauft", richtig: false },
+      ]),
+    );
+    const werkstoffDD = clozeSelect(
+      shuffleArray([
+        { text: werkstoff, richtig: true },
+        ...getFalscheWerkstoffe(key, werkstoff).map((t) => ({
+          text: t,
+          richtig: false,
+        })),
+      ]),
+    );
 
-    const zahlungDD = clozeSelect(shuffleArray(
-      zahlungen.map(t => ({ text: t, richtig: t === zahlung }))
-    ));
+    const zahlungDD = clozeSelect(
+      shuffleArray(zahlungen.map((t) => ({ text: t, richtig: t === zahlung }))),
+    );
 
-           zeilen += `<p><strong>${nr}.</strong> ${subjekt ? mxEsc(subjekt) + ' ' : ''}${verbDD} ${werkstoffDD} ${wertPhrase} ${betrag}\u00a0€ ${nettoBrutto} ${zahlungDD}.</p>`;
-          });
+    zeilen += `<p><strong>${nr}.</strong> ${subjekt ? mxEsc(subjekt) + " " : ""}${verbDD} ${werkstoffDD} ${wertPhrase} ${betrag}\u00a0€ ${nettoBrutto} ${zahlungDD}.</p>`;
+  });
 
-  if (!zeilen) { zeigeModal('Kein Geschäftsfall hatte das erwartete Format.'); return; }
+  if (!zeilen) {
+    zeigeModal("Kein Geschäftsfall hatte das erwartete Format.");
+    return;
+  }
   if (uebersprungen.length) {
-    zeigeModal('Nicht erkannt (übersprungen):\n' + uebersprungen.join('\n'));
+    zeigeModal("Nicht erkannt (übersprungen):\n" + uebersprungen.join("\n"));
   }
 
   const titel = `${MOODLE_PREIS_PRAEFIX}${mxIdBasis()}${MOODLE_PREIS_TITELENDE}`;
@@ -251,79 +322,85 @@ function exportiereMoodle() {
   </question>
 </quiz>`;
 
-  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
-  const a = document.createElement('a');
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
+  const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = 'buchungslesen_werkstoffe_cloze.xml';
+  a.download = "buchungslesen_werkstoffe_cloze.xml";
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(a.href);
 }
 function generiereAufgabe() {
-      const container = document.getElementById('Container');
-      if (!container) return;
-      container.innerHTML = '';
+  const container = document.getElementById("Container");
+  if (!container) return;
+  container.innerHTML = "";
 
-      const ausgewaehlt = ['AWR','AWF','AWH','AWB'].filter(k =>
-        document.getElementById('cb_' + k).checked
-      );
+  const ausgewaehlt = ["AWR", "AWF", "AWH", "AWB"].filter(
+    (k) => document.getElementById("cb_" + k).checked,
+  );
 
-      if (ausgewaehlt.length === 0) {
-        container.innerHTML = '<p>Bitte mindestens ein Konto auswählen.</p>';
-        return;
-      }
+  if (ausgewaehlt.length === 0) {
+    container.innerHTML = "<p>Bitte mindestens ein Konto auswählen.</p>";
+    return;
+  }
 
-      const anzahl = parseInt(document.getElementById('anzahlSelect').value, 10);
-      const showNr = document.getElementById('showKontoNr').checked;
+  const anzahl = parseInt(document.getElementById("anzahlSelect").value, 10);
+  const showNr = document.getElementById("showKontoNr").checked;
 
-      let globalNr = 1;
-      const alleKonten = ausgewaehlt.map(key => {
-        const cfg = KONTEN_CONFIG[key];
-        const buchungen = [];
-        for (let i = 0; i < anzahl; i++) {
-          const typ = POOL[Math.floor(Math.random() * POOL.length)];
-          const [mn, mx] = cfg.rahmen[typ];
-          const step = typ === 'KA' ? 10 : 100;
-          buchungen.push({ nr: globalNr++, typ, betrag: rnd(mn, mx, step), werkstoff: getWerkstoffName(key) });
-        }
-        return { key, buchungen };
+  let globalNr = 1;
+  const alleKonten = ausgewaehlt.map((key) => {
+    const cfg = KONTEN_CONFIG[key];
+    const buchungen = [];
+    for (let i = 0; i < anzahl; i++) {
+      const typ = POOL[Math.floor(Math.random() * POOL.length)];
+      const [mn, mx] = cfg.rahmen[typ];
+      const step = typ === "KA" ? 10 : 100;
+      buchungen.push({
+        nr: globalNr++,
+        typ,
+        betrag: rnd(mn, mx, step),
+        werkstoff: getWerkstoffName(key),
       });
-      letzteAufgabe = alleKonten;
-      // ── AUFGABE ──────────────────────────────────────────────────────
-      let html = '<h2>Aufgabe zum Buchungslesen</h2>';
-      html += `<h3>Formuliere für die Eintragungen in den T-Konten jeweils einen Geschäftsfall.</h3>`;
-
-      html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin:1.5em 0 2em;">`;
-      alleKonten.forEach(({ key, buchungen }) => {
-        const cfg   = KONTEN_CONFIG[key];
-        const titel = showNr ? `${cfg.nr} ${cfg.name}` : cfg.name;
-        html += `<div>${renderTKontoAufgabe(titel, buchungen)}</div>`;
-      });
-      html += `</div>`;
-
-      // ── LÖSUNG ───────────────────────────────────────────────────────
-      html += `<h2 style="margin-top:2.5em" class="loesung">Lösung</h2>`;
-
-      // Geschäftsfälle
-      html += `<strong>Geschäftsfälle:</strong>`;
-      let nr = 1;
-      alleKonten.forEach(({ key, buchungen }) => {
-        buchungen.forEach(b => {
-          html += `<p><strong>${nr}.</strong> ${geschaeftsfall(key, b)}</p>`;
-          nr++;
-        });
-      });
-
-    
-      container.innerHTML = html;
     }
+    return { key, buchungen };
+  });
+  letzteAufgabe = alleKonten;
+  // ── AUFGABE ──────────────────────────────────────────────────────
+  let html = "<h2>Aufgabe zum Buchungslesen</h2>";
+  html += `<h3>Formuliere für die Eintragungen in den T-Konten jeweils einen Geschäftsfall.</h3>`;
 
-    document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('unternehmenSelect')?.addEventListener('change', generiereAufgabe);
+  html += `<div style="display:flex;flex-wrap:wrap;gap:18px;margin:1.5em 0 2em;">`;
+  alleKonten.forEach(({ key, buchungen }) => {
+    const cfg = KONTEN_CONFIG[key];
+    const titel = showNr ? `${cfg.nr} ${cfg.name}` : cfg.name;
+    html += `<div>${renderTKontoAufgabe(titel, buchungen)}</div>`;
+  });
+  html += `</div>`;
+
+  // ── LÖSUNG ───────────────────────────────────────────────────────
+  html += `<h2 style="margin-top:2.5em" class="loesung">Lösung</h2>`;
+
+  // Geschäftsfälle
+  html += `<strong>Geschäftsfälle:</strong>`;
+  let nr = 1;
+  alleKonten.forEach(({ key, buchungen }) => {
+    buchungen.forEach((b) => {
+      html += `<p><strong>${nr}.</strong> ${geschaeftsfall(key, b)}</p>`;
+      nr++;
+    });
+  });
+
+  container.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .getElementById("unternehmenSelect")
+    ?.addEventListener("change", generiereAufgabe);
 });
 
-document.addEventListener('yamlDataLoaded', () => {
+document.addEventListener("yamlDataLoaded", () => {
   fillUnternehmenSelect();
   generiereAufgabe();
 });

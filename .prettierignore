@@ -1,0 +1,6 @@
+# Minified library files must not be reformatted
+js/libraries/
+
+# Build/dependency directories
+node_modules/
+.git/

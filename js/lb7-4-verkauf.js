@@ -5,26 +5,27 @@
 let kundeVerkauf = "<i>[Modellunternehmen]</i>";
 let yamlDataVerkauf = [];
 function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
+  const stored = localStorage.getItem("userCompanies");
   return stored ? JSON.parse(stored) : [];
 }
 
 function mergeUserCompaniesIntoYamlDataVerkauf() {
   const userCompanies = getUserCompanies();
-  
+
   if (userCompanies.length > 0) {
     yamlDataVerkauf = [...yamlDataVerkauf, ...userCompanies];
-    
+
     yamlDataVerkauf.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
+      const brancheA = a.unternehmen?.branche || "";
+      const brancheB = b.unternehmen?.branche || "";
       return brancheA.localeCompare(brancheB);
     });
-    
-    console.log(`${userCompanies.length} Benutzerunternehmen zu yamlDataVerkauf hinzugefügt. Gesamt: ${yamlDataVerkauf.length}`);
+
+    console.log(
+      `${userCompanies.length} Benutzerunternehmen zu yamlDataVerkauf hinzugefügt. Gesamt: ${yamlDataVerkauf.length}`,
+    );
   }
 }
-
 
 // ============================================================================
 // RABATT
@@ -79,7 +80,11 @@ function pickV(arr) {
 }
 function parseNumericValueV(value) {
   if (!value) return "0";
-  return value.toString().replace(/[€\s]/g, "").replace(/\./g, "").replace(",", ".");
+  return value
+    .toString()
+    .replace(/[€\s]/g, "")
+    .replace(/\./g, "")
+    .replace(",", ".");
 }
 
 function generateNettoOhneRabattV() {
@@ -91,9 +96,27 @@ function generateNettoOhneRabattV() {
 // ============================================================================
 
 function existiertInCoreVK(unternehmen, coreData) {
-  const key = String(unternehmen?.unternehmen?.id ?? '') + '|' + String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
-  const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
-  return (coreData || []).some(c => (String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase()) === key || String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name);
+  const key =
+    String(unternehmen?.unternehmen?.id ?? "") +
+    "|" +
+    String(unternehmen?.unternehmen?.name ?? "")
+      .trim()
+      .toLowerCase();
+  const name = String(unternehmen?.unternehmen?.name ?? "")
+    .trim()
+    .toLowerCase();
+  return (coreData || []).some(
+    (c) =>
+      String(c?.unternehmen?.id ?? "") +
+        "|" +
+        String(c?.unternehmen?.name ?? "")
+          .trim()
+          .toLowerCase() ===
+        key ||
+      String(c?.unternehmen?.name ?? "")
+        .trim()
+        .toLowerCase() === name,
+  );
 }
 
 function ladeYamlVerkauf() {
@@ -101,19 +124,28 @@ function ladeYamlVerkauf() {
     .then((r) => (r.ok ? r.text() : Promise.reject()))
     .then((txt) => {
       const coreData = jsyaml.load(txt) || [];
-      try { localStorage.setItem("standardYamlData", JSON.stringify(coreData)); } catch (e) {}
+      try {
+        localStorage.setItem("standardYamlData", JSON.stringify(coreData));
+      } catch (e) {}
       const saved = localStorage.getItem("uploadedYamlCompanyData");
       let zusaetzliche = [];
       if (saved) {
         try {
           const uploaded = JSON.parse(saved);
-          zusaetzliche = uploaded.filter(u => !existiertInCoreVK(u, coreData));
+          zusaetzliche = uploaded.filter(
+            (u) => !existiertInCoreVK(u, coreData),
+          );
           if (zusaetzliche.length === 0) {
             localStorage.removeItem("uploadedYamlCompanyData");
           } else if (zusaetzliche.length !== uploaded.length) {
-            localStorage.setItem("uploadedYamlCompanyData", JSON.stringify(zusaetzliche));
+            localStorage.setItem(
+              "uploadedYamlCompanyData",
+              JSON.stringify(zusaetzliche),
+            );
           }
-        } catch (e) { localStorage.removeItem("uploadedYamlCompanyData"); }
+        } catch (e) {
+          localStorage.removeItem("uploadedYamlCompanyData");
+        }
       }
       yamlDataVerkauf = [...coreData, ...zusaetzliche];
       mergeUserCompaniesIntoYamlDataVerkauf();
@@ -123,21 +155,22 @@ function ladeYamlVerkauf() {
   return false;
 }
 
-
-
 function fillCompanyDropdownV() {
   if (!yamlDataVerkauf?.length) return;
   const select = document.getElementById("verkaufKunde");
   if (!select) return;
   const sorted = [...yamlDataVerkauf].sort((a, b) => {
-    const bA = a.unternehmen?.branche || "", bB = b.unternehmen?.branche || "";
+    const bA = a.unternehmen?.branche || "",
+      bB = b.unternehmen?.branche || "";
     if (bA !== bB) return bA.localeCompare(bB);
     return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
   select.innerHTML = "";
   const ph = document.createElement("option");
-  ph.value = ""; ph.text = "— bitte Unternehmen auswählen —";
-  ph.disabled = true; ph.selected = true;
+  ph.value = "";
+  ph.text = "— bitte Unternehmen auswählen —";
+  ph.disabled = true;
+  ph.selected = true;
   select.appendChild(ph);
   sorted.forEach((c) => {
     const u = c.unternehmen;
@@ -168,7 +201,7 @@ function getZufaelligenAbnehmer() {
   if (!yamlDataVerkauf?.length) return { name: "Musterhandel GmbH" };
   const myName = document.getElementById("verkaufKunde")?.value?.trim() || "";
   const andere = yamlDataVerkauf.filter(
-    (e) => e.unternehmen?.name && e.unternehmen.name !== myName
+    (e) => e.unternehmen?.name && e.unternehmen.name !== myName,
   );
   if (!andere.length) return { name: "Musterhandel GmbH" };
   const u = pickV(andere).unternehmen;
@@ -200,16 +233,22 @@ function tableWrapV(rowsHTML) {
 
 function bsEinfachUstV(gf) {
   const {
-    sollKto, habenKto,
-    nettoBetrag, Umsatzsteuer, bruttoBetrag,
-    rabatt, rabattProzent,
-    listennetto, listenbrutto, rabattBetrag,
+    sollKto,
+    habenKto,
+    nettoBetrag,
+    Umsatzsteuer,
+    bruttoBetrag,
+    rabatt,
+    rabattProzent,
+    listennetto,
+    listenbrutto,
+    rabattBetrag,
     angabeIstBrutto,
   } = gf;
 
   const bs = tableWrapV(
     `<tr>${tdV(sollKto)}${tdV(formatCurrencyV(bruttoBetrag), "right")}${tdCV("an")}${tdV(habenKto)}${tdV(formatCurrencyV(nettoBetrag), "right")}</tr>` +
-    `<tr>${tdV("")}${tdV("", "right")}${tdCV("")}${tdV("UST")}${tdV(formatCurrencyV(Umsatzsteuer), "right")}</tr>`,
+      `<tr>${tdV("")}${tdV("", "right")}${tdCV("")}${tdV("UST")}${tdV(formatCurrencyV(Umsatzsteuer), "right")}</tr>`,
   );
 
   function opRow(label, op, betrag) {
@@ -274,15 +313,18 @@ function getProduktbezeichnung() {
   if (val) return val;
 
   // 2. Aktuell ausgewähltes Unternehmen ermitteln
-  const selectedCompanyName = document.getElementById("verkaufKunde")?.value?.trim();
-  
+  const selectedCompanyName = document
+    .getElementById("verkaufKunde")
+    ?.value?.trim();
+
   if (selectedCompanyName && yamlDataVerkauf?.length) {
     const companyEntry = yamlDataVerkauf.find(
-      (e) => e.unternehmen?.name === selectedCompanyName
+      (e) => e.unternehmen?.name === selectedCompanyName,
     );
-    
+
     // a) Prüfen, ob das Unternehmen Fertigerzeugnisse definiert hat (z. B. Werkstoffunternehmen)
-    const hauptwerkProdukte = companyEntry?.unternehmen?.fertigerzeugnisse?.hauptwerk;
+    const hauptwerkProdukte =
+      companyEntry?.unternehmen?.fertigerzeugnisse?.hauptwerk;
     if (hauptwerkProdukte && hauptwerkProdukte.length > 0) {
       const zufallsProdukt = pickV(hauptwerkProdukte);
       return zufallsProdukt.name;
@@ -314,18 +356,27 @@ function waehleProduktV() {
 function genMengePreisV(produkt) {
   const min = Number(produkt?.preis_min);
   const max = Number(produkt?.preis_max);
-  if (!produkt || !Number.isFinite(min) || !Number.isFinite(max) || max < min) return null;
+  if (!produkt || !Number.isFinite(min) || !Number.isFinite(max) || max < min)
+    return null;
 
   // Schrittweite so, dass Rabatte (5/10/15/20 %) glatte Beträge ergeben
-  const step = max >= 1000 ? 100 : (max >= 100 ? 20 : 1);
+  const step = max >= 1000 ? 100 : max >= 100 ? 20 : 1;
   const lo = Math.ceil(min / step);
   const hi = Math.floor(max / step);
-  const stueckpreis = hi < lo
-    ? Math.round(min)
-    : (lo + Math.floor(Math.random() * (hi - lo + 1))) * step;
+  const stueckpreis =
+    hi < lo
+      ? Math.round(min)
+      : (lo + Math.floor(Math.random() * (hi - lo + 1))) * step;
 
   // Menge: mindestens 2, Obergrenze je nach Stückpreis, Gesamtwert max. 100.000 €
-  let maxMenge = stueckpreis >= 5000 ? 8 : stueckpreis >= 1000 ? 15 : stueckpreis >= 100 ? 30 : 100;
+  let maxMenge =
+    stueckpreis >= 5000
+      ? 8
+      : stueckpreis >= 1000
+        ? 15
+        : stueckpreis >= 100
+          ? 30
+          : 100;
   maxMenge = Math.max(2, Math.min(maxMenge, Math.floor(100000 / stueckpreis)));
   const menge = 2 + Math.floor(Math.random() * (maxMenge - 1));
 
@@ -337,7 +388,8 @@ let letzteGenerierteGfListeV = [];
 
 function erstelleZufallsGeschaeftsfallV() {
   const mitRabattOpt = document.getElementById("optMitRabattV").checked;
-  const ustAngegeben = document.getElementById("optUstAngegeben")?.checked ?? false;
+  const ustAngegeben =
+    document.getElementById("optUstAngegeben")?.checked ?? false;
 
   const typ = alleGfVerkauf[0];
   const produkt = waehleProduktV();
@@ -370,58 +422,69 @@ function erstelleZufallsGeschaeftsfallV() {
   }
 
   const rabattBetrag = listennetto - nettoBetrag;
-  const Umsatzsteuer = nettoBetrag * UST_REGEL / 100;
+  const Umsatzsteuer = (nettoBetrag * UST_REGEL) / 100;
   const bruttoBetrag = nettoBetrag + Umsatzsteuer;
-  const listenbrutto = listennetto + Math.round(listennetto * UST_REGEL / 100);
+  const listenbrutto =
+    listennetto + Math.round((listennetto * UST_REGEL) / 100);
 
   const angabeIstBrutto = mitRabatt ? false : Math.random() < 0.5;
 
-  const rabattFormulierungen = mitMenge ? [
-    `${formatCurrencyV(listennetto)} netto, mit einem Rabatt von ${rabattProzent}\u00a0%`,
-    `${formatCurrencyV(listennetto)} netto für die gesamte Lieferung. Es wird ein Rabatt von ${rabattProzent}\u00a0% gewährt`,
-    `${formatCurrencyV(listennetto)} netto (abzüglich ${rabattProzent}\u00a0% Rabatt)`,
-    `${formatCurrencyV(listennetto)} netto, abzüglich ${rabattProzent}\u00a0% Rabatt`,
-  ] : [
-    `${formatCurrencyV(listennetto)} netto, mit einem Rabatt von ${rabattProzent}\u00a0%`,
-    `${formatCurrencyV(listennetto)} netto. Es wird ein Rabatt von ${rabattProzent}\u00a0% gewährt`,
-    `${formatCurrencyV(listennetto)} netto (abzüglich ${rabattProzent}\u00a0% Rabatt)`,
-    `${formatCurrencyV(listennetto)} netto, abzüglich ${rabattProzent}\u00a0% Rabatt`,
-  ];
-  const nettoFormulierungen = mitMenge ? [
-    `${formatCurrencyV(nettoBetrag)} netto`,
-    `${formatCurrencyV(nettoBetrag)} netto`,
-    `${formatCurrencyV(nettoBetrag)} netto`,
-  ] : [
-    `Verkaufspreis netto: ${formatCurrencyV(nettoBetrag)}`,
-    `Nettobetrag: ${formatCurrencyV(nettoBetrag)}`,
-    `Listenpreis netto: ${formatCurrencyV(nettoBetrag)}`,
-  ];
-  const bruttoFormulierungen = mitMenge ? [
-    `${formatCurrencyV(bruttoBetrag)} brutto`,
-    `${formatCurrencyV(bruttoBetrag)} brutto`,
-    `${formatCurrencyV(bruttoBetrag)} brutto`,
-  ] : [
-    `Rechnungsbetrag: ${formatCurrencyV(bruttoBetrag)}`,
-    `brutto: ${formatCurrencyV(bruttoBetrag)}`,
-    `Rechnungsbetrag: ${formatCurrencyV(bruttoBetrag)}`,
-  ];
+  const rabattFormulierungen = mitMenge
+    ? [
+        `${formatCurrencyV(listennetto)} netto, mit einem Rabatt von ${rabattProzent}\u00a0%`,
+        `${formatCurrencyV(listennetto)} netto für die gesamte Lieferung. Es wird ein Rabatt von ${rabattProzent}\u00a0% gewährt`,
+        `${formatCurrencyV(listennetto)} netto (abzüglich ${rabattProzent}\u00a0% Rabatt)`,
+        `${formatCurrencyV(listennetto)} netto, abzüglich ${rabattProzent}\u00a0% Rabatt`,
+      ]
+    : [
+        `${formatCurrencyV(listennetto)} netto, mit einem Rabatt von ${rabattProzent}\u00a0%`,
+        `${formatCurrencyV(listennetto)} netto. Es wird ein Rabatt von ${rabattProzent}\u00a0% gewährt`,
+        `${formatCurrencyV(listennetto)} netto (abzüglich ${rabattProzent}\u00a0% Rabatt)`,
+        `${formatCurrencyV(listennetto)} netto, abzüglich ${rabattProzent}\u00a0% Rabatt`,
+      ];
+  const nettoFormulierungen = mitMenge
+    ? [
+        `${formatCurrencyV(nettoBetrag)} netto`,
+        `${formatCurrencyV(nettoBetrag)} netto`,
+        `${formatCurrencyV(nettoBetrag)} netto`,
+      ]
+    : [
+        `Verkaufspreis netto: ${formatCurrencyV(nettoBetrag)}`,
+        `Nettobetrag: ${formatCurrencyV(nettoBetrag)}`,
+        `Listenpreis netto: ${formatCurrencyV(nettoBetrag)}`,
+      ];
+  const bruttoFormulierungen = mitMenge
+    ? [
+        `${formatCurrencyV(bruttoBetrag)} brutto`,
+        `${formatCurrencyV(bruttoBetrag)} brutto`,
+        `${formatCurrencyV(bruttoBetrag)} brutto`,
+      ]
+    : [
+        `Rechnungsbetrag: ${formatCurrencyV(bruttoBetrag)}`,
+        `brutto: ${formatCurrencyV(bruttoBetrag)}`,
+        `Rechnungsbetrag: ${formatCurrencyV(bruttoBetrag)}`,
+      ];
 
   let betragText;
   if (mitRabatt) {
     betragText = pickV(rabattFormulierungen);
   } else {
-    betragText = angabeIstBrutto ? pickV(bruttoFormulierungen) : pickV(nettoFormulierungen);
+    betragText = angabeIstBrutto
+      ? pickV(bruttoFormulierungen)
+      : pickV(nettoFormulierungen);
   }
 
-  const ustFormulierungen = mitMenge ? [
-    `Die Umsatzsteuer beträgt insgesamt ${formatCurrencyV(Umsatzsteuer)}.`,
-    `Umsatzsteuer insgesamt (19\u00a0%): ${formatCurrencyV(Umsatzsteuer)}.`,
-    `Der Umsatzsteuerbetrag liegt insgesamt bei ${formatCurrencyV(Umsatzsteuer)}.`,
-  ] : [
-    `Die Umsatzsteuer beträgt ${formatCurrencyV(Umsatzsteuer)}.`,
-    `Umsatzsteuer (19\u00a0%): ${formatCurrencyV(Umsatzsteuer)}.`,
-    `Der Umsatzsteuerbetrag liegt bei ${formatCurrencyV(Umsatzsteuer)}.`,
-  ];
+  const ustFormulierungen = mitMenge
+    ? [
+        `Die Umsatzsteuer beträgt insgesamt ${formatCurrencyV(Umsatzsteuer)}.`,
+        `Umsatzsteuer insgesamt (19\u00a0%): ${formatCurrencyV(Umsatzsteuer)}.`,
+        `Der Umsatzsteuerbetrag liegt insgesamt bei ${formatCurrencyV(Umsatzsteuer)}.`,
+      ]
+    : [
+        `Die Umsatzsteuer beträgt ${formatCurrencyV(Umsatzsteuer)}.`,
+        `Umsatzsteuer (19\u00a0%): ${formatCurrencyV(Umsatzsteuer)}.`,
+        `Der Umsatzsteuerbetrag liegt bei ${formatCurrencyV(Umsatzsteuer)}.`,
+      ];
 
   const ustHinweis = ustAngegeben ? ` ${pickV(ustFormulierungen)}` : "";
 
@@ -442,7 +505,7 @@ function erstelleZufallsGeschaeftsfallV() {
   const nurBrutto = angabeIstBrutto && !mitRabatt;
   const einleitungPool = nurBrutto
     ? betragsEinleitungen
-    : betragsEinleitungen.filter(e => !e.includes("Rechnungsbetrag"));
+    : betragsEinleitungen.filter((e) => !e.includes("Rechnungsbetrag"));
   const einleitung = pickV(einleitungPool);
 
   const geschaeftsfallText = `${textVorlage} ${einleitung} ${betragText}.${ustHinweis}`;
@@ -484,11 +547,13 @@ function erstelleBuchungssatzV(gf) {
 
 function erstelleLoesungsTextV(gf) {
   const fmtV = (v) =>
-    v.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+    v.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + " €";
 
   // Buchungssatz: FO Brutto an UEFE Netto / UST UST-Betrag
-  const bs =
-    `${gf.sollKto} ${fmtV(gf.bruttoBetrag)} an ${gf.habenKto} ${fmtV(gf.nettoBetrag)} / UST ${fmtV(gf.Umsatzsteuer)}`;
+  const bs = `${gf.sollKto} ${fmtV(gf.bruttoBetrag)} an ${gf.habenKto} ${fmtV(gf.nettoBetrag)} / UST ${fmtV(gf.Umsatzsteuer)}`;
 
   const fmtLine = (label, betrag, prefix = "") =>
     `  ${label}: ${prefix}${fmtV(betrag)}`;
@@ -526,7 +591,8 @@ function erstelleLoesungsTextV(gf) {
 function erstelleKiPromptText() {
   let aufgabenUndLoesungen = "";
   if (letzteGenerierteGfListeV.length === 0) {
-    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+    aufgabenUndLoesungen =
+      "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
   } else {
     aufgabenUndLoesungen = letzteGenerierteGfListeV
       .map((gf, idx) => {
@@ -535,7 +601,10 @@ function erstelleKiPromptText() {
       })
       .join("\n\n---\n\n");
   }
-  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+  return KI_ASSISTENT_PROMPT.replace(
+    "###AUFGABEN und LÖSUNGEN###",
+    aufgabenUndLoesungen,
+  );
 }
 
 // ============================================================================
@@ -679,7 +748,11 @@ function kopiereKiPrompt() {
         btn.classList.remove("ki-prompt-btn--success");
       }, 2500);
     })
-    .catch(() => zeigeModal("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."));
+    .catch(() =>
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      ),
+    );
 }
 
 function toggleKiPromptVorschau() {
@@ -703,9 +776,9 @@ function toggleKiPromptVorschau() {
 function erstelleBelegURL(gf) {
   const params = new URLSearchParams();
   const now = new Date();
-  const tag   = String(now.getDate()).padStart(2, "0");
+  const tag = String(now.getDate()).padStart(2, "0");
   const monat = String(now.getMonth() + 1).padStart(2, "0");
-  const jahr  = String(now.getFullYear());
+  const jahr = String(now.getFullYear());
   const kv = document.getElementById("verkaufKunde")?.value?.trim() || "";
 
   params.set("beleg", "rechnung");
@@ -713,26 +786,32 @@ function erstelleBelegURL(gf) {
   params.set("kunde", gf.abnehmerObj.name);
 
   params.set("artikel1", gf.artikelBelegName);
-  params.set("menge1",   String(gf.menge || 1));
+  params.set("menge1", String(gf.menge || 1));
   params.set("einheit1", gf.einheit || "Stk");
 
   if (gf.menge && gf.stueckpreis) {
     params.set("einzelpreis1", String(gf.stueckpreis));
     if (gf.rabatt) params.set("rabatt", gf.rabattProzent);
   } else if (gf.rabatt) {
-    params.set("einzelpreis1", parseNumericValueV(formatCurrencyV(gf.listennetto)));
+    params.set(
+      "einzelpreis1",
+      parseNumericValueV(formatCurrencyV(gf.listennetto)),
+    );
     params.set("rabatt", gf.rabattProzent);
   } else {
-    params.set("einzelpreis1", parseNumericValueV(formatCurrencyV(gf.nettoBetrag)));
+    params.set(
+      "einzelpreis1",
+      parseNumericValueV(formatCurrencyV(gf.nettoBetrag)),
+    );
   }
 
   params.set("umsatzsteuer", "19");
-  params.set("tag",          tag);
-  params.set("monat",        monat);
-  params.set("jahr",         jahr);
+  params.set("tag", tag);
+  params.set("monat", monat);
+  params.set("jahr", jahr);
   params.set("zahlungsziel", "30");
-  params.set("skonto",       "2");
-  params.set("skontofrist",  "20");
+  params.set("skonto", "2");
+  params.set("skontofrist", "20");
 
   return `belege.html?${params.toString()}`;
 }
@@ -740,7 +819,7 @@ function erstelleBelegURL(gf) {
 function erstelleBelegButtonV(nummer, gf) {
   const url = erstelleBelegURL(gf);
   return `<button class="geschaeftsfall-beleg-button"
-    data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+    data-url="${url.replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
     title="Ausgangsrechnung für Aufgabe ${nummer} erstellen"
     style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
     📄 ${nummer}. Ausgangsrechnung erstellen</button>`;
@@ -752,13 +831,13 @@ function erstelleBelegButtonV(nummer, gf) {
 
 function zeigeZufaelligeGeschaeftsfaelleV() {
   const anzahl = parseInt(document.getElementById("anzahlDropdownV").value);
-  const container    = document.getElementById("Container");
+  const container = document.getElementById("Container");
   const buttonColumn = document.getElementById("button-columnV");
   if (!container || !buttonColumn) return;
-  container.innerHTML    = "";
+  container.innerHTML = "";
   buttonColumn.innerHTML = "";
 
-  let aufgabenHTML  = "<h2>Aufgaben</h2><ol>";
+  let aufgabenHTML = "<h2>Aufgaben</h2><ol>";
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
   const liste = [];
   for (let i = 0; i < anzahl; i++) liste.push(erstelleZufallsGeschaeftsfallV());
@@ -768,7 +847,7 @@ function zeigeZufaelligeGeschaeftsfaelleV() {
 
   liste.forEach((gf, idx) => {
     const i = idx + 1;
-    aufgabenHTML  += `<li>${gf.text}</li>`;
+    aufgabenHTML += `<li>${gf.text}</li>`;
     loesungenHTML += `<div style="margin-top:1.5em"><strong>${i}.</strong><br>${erstelleBuchungssatzV(gf)}</div>`;
     const div = document.createElement("div");
     div.style.margin = "12px 0";
@@ -779,9 +858,9 @@ function zeigeZufaelligeGeschaeftsfaelleV() {
   aufgabenHTML += "</ol>";
   container.innerHTML = aufgabenHTML + loesungenHTML;
   const vorschau = document.getElementById("kiPromptVorschau");
-if (vorschau && vorschau.style.display !== "none") {
-  vorschau.textContent = erstelleKiPromptText();
-}
+  if (vorschau && vorschau.style.display !== "none") {
+    vorschau.textContent = erstelleKiPromptText();
+  }
 }
 
 // ============================================================================

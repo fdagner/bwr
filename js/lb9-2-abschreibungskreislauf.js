@@ -3,129 +3,163 @@
 // ============================================================================
 
 const aussagenDatenbank = [
-
   // ── GRUNDLAGEN SACHANLAGEN & WERTMINDERUNG ──
   {
-    aussage: "Sachanlagen wie Maschinen, Fahrzeuge oder Gebäude unterliegen im Laufe der Zeit einer Wertminderung.",
+    aussage:
+      "Sachanlagen wie Maschinen, Fahrzeuge oder Gebäude unterliegen im Laufe der Zeit einer Wertminderung.",
     korrekt: true,
     bereich: "Sachanlagen & Wertminderung",
-    begruendung: "Sachanlagen verlieren durch Nutzung, Verschleiß und Zeitablauf an Wert. Dieser Werteverzehr ist ein zentraler Grund, warum Abschreibungen in der Buchführung notwendig sind."
+    begruendung:
+      "Sachanlagen verlieren durch Nutzung, Verschleiß und Zeitablauf an Wert. Dieser Werteverzehr ist ein zentraler Grund, warum Abschreibungen in der Buchführung notwendig sind.",
   },
   {
-    aussage: "Sachanlagen behalten ihren Wert dauerhaft, weil sie aus beständigem Material bestehen.",
+    aussage:
+      "Sachanlagen behalten ihren Wert dauerhaft, weil sie aus beständigem Material bestehen.",
     korrekt: false,
     bereich: "Sachanlagen & Wertminderung",
-    begruendung: "Sachanlagen verlieren durch Nutzung und Zeitablauf an Wert – unabhängig vom Material. Dieser Werteverzehr wird als Abschreibung erfasst und ist ein typisches Merkmal aller abnutzbaren Wirtschaftsgüter."
+    begruendung:
+      "Sachanlagen verlieren durch Nutzung und Zeitablauf an Wert – unabhängig vom Material. Dieser Werteverzehr wird als Abschreibung erfasst und ist ein typisches Merkmal aller abnutzbaren Wirtschaftsgüter.",
   },
   {
-    aussage: "Grundstücke zählen zu den nicht abnutzbaren Sachanlagen und werden deshalb in der Regel nicht abgeschrieben.",
+    aussage:
+      "Grundstücke zählen zu den nicht abnutzbaren Sachanlagen und werden deshalb in der Regel nicht abgeschrieben.",
     korrekt: true,
     bereich: "Sachanlagen & Wertminderung",
-    begruendung: "Grundstücke gelten als nicht abnutzbar, da sie keinem typischen Wertverzehr durch Nutzung unterliegen. Im Gegensatz dazu werden Gebäude, Maschinen und Fahrzeuge planmäßig abgeschrieben."
+    begruendung:
+      "Grundstücke gelten als nicht abnutzbar, da sie keinem typischen Wertverzehr durch Nutzung unterliegen. Im Gegensatz dazu werden Gebäude, Maschinen und Fahrzeuge planmäßig abgeschrieben.",
   },
   {
-    aussage: "Wertminderung bei Sachanlagen entsteht ausschließlich durch mechanischen Verschleiß.",
+    aussage:
+      "Wertminderung bei Sachanlagen entsteht ausschließlich durch mechanischen Verschleiß.",
     korrekt: false,
     bereich: "Sachanlagen & Wertminderung",
-    begruendung: "Wertminderung entsteht nicht nur durch mechanischen Verschleiß, sondern auch durch wirtschaftliche Überalterung (technischer Fortschritt macht Anlagen veraltet) sowie durch Zeitablauf und Witterungseinflüsse."
+    begruendung:
+      "Wertminderung entsteht nicht nur durch mechanischen Verschleiß, sondern auch durch wirtschaftliche Überalterung (technischer Fortschritt macht Anlagen veraltet) sowie durch Zeitablauf und Witterungseinflüsse.",
   },
 
   // ── REFINANZIERUNG & KREISLAUF ──
   {
-    aussage: "Die Abschreibung wird in den Verkaufspreis der Produkte eingerechnet, sodass das Unternehmen den Werteverzehr über den Umsatz zurückerhält.",
+    aussage:
+      "Die Abschreibung wird in den Verkaufspreis der Produkte eingerechnet, sodass das Unternehmen den Werteverzehr über den Umsatz zurückerhält.",
     korrekt: true,
     bereich: "Abschreibungskreislauf",
-    begruendung: "Das ist das Kernprinzip des Abschreibungskreislaufs: Der Abschreibungsbetrag fließt als Kostenbestandteil in den Verkaufspreis ein. Beim Verkauf der Produkte erhält das Unternehmen diesen Betrag vom Kunden zurück – er steht dann als Kapital zur Verfügung."
+    begruendung:
+      "Das ist das Kernprinzip des Abschreibungskreislaufs: Der Abschreibungsbetrag fließt als Kostenbestandteil in den Verkaufspreis ein. Beim Verkauf der Produkte erhält das Unternehmen diesen Betrag vom Kunden zurück – er steht dann als Kapital zur Verfügung.",
   },
   {
-    aussage: "Das durch Abschreibungen freigesetzte Kapital steht dem Unternehmen für die Ersatzbeschaffung neuer Anlagen zur Verfügung.",
+    aussage:
+      "Das durch Abschreibungen freigesetzte Kapital steht dem Unternehmen für die Ersatzbeschaffung neuer Anlagen zur Verfügung.",
     korrekt: true,
     bereich: "Abschreibungskreislauf",
-    begruendung: "Das zurückgeflossene Kapital (Abschreibungsgegenwert) kann für die Reinvestition verwendet werden – z. B. für den Kauf einer neuen Maschine, wenn die alte das Ende ihrer Nutzungsdauer erreicht. So schließt sich der Kreislauf."
+    begruendung:
+      "Das zurückgeflossene Kapital (Abschreibungsgegenwert) kann für die Reinvestition verwendet werden – z. B. für den Kauf einer neuen Maschine, wenn die alte das Ende ihrer Nutzungsdauer erreicht. So schließt sich der Kreislauf.",
   },
   {
-    aussage: "Der Abschreibungskreislauf beginnt damit, dass das Unternehmen eine Sachanlage kauft und deren Wert über die Nutzungsdauer verteilt.",
+    aussage:
+      "Der Abschreibungskreislauf beginnt damit, dass das Unternehmen eine Sachanlage kauft und deren Wert über die Nutzungsdauer verteilt.",
     korrekt: true,
     bereich: "Abschreibungskreislauf",
-    begruendung: "Am Anfang des Kreislaufs steht die Investition in eine Sachanlage. Dann wird der Wert planmäßig abgeschrieben, in den Verkaufspreisen weitergegeben, über den Umsatz zurückverdient und schließlich für Ersatzinvestitionen eingesetzt."
+    begruendung:
+      "Am Anfang des Kreislaufs steht die Investition in eine Sachanlage. Dann wird der Wert planmäßig abgeschrieben, in den Verkaufspreisen weitergegeben, über den Umsatz zurückverdient und schließlich für Ersatzinvestitionen eingesetzt.",
   },
   {
-    aussage: "Abschreibungen führen unmittelbar zu einem Geldabfluss aus dem Unternehmen.",
+    aussage:
+      "Abschreibungen führen unmittelbar zu einem Geldabfluss aus dem Unternehmen.",
     korrekt: false,
     bereich: "Abschreibungskreislauf",
-    begruendung: "Abschreibungen sind ein nicht zahlungswirksamer Aufwand: Es fließt beim Buchen kein Geld ab. Der Geldabfluss fand bereits beim Kauf der Anlage statt. Die Abschreibung erfasst lediglich den Werteverzehr buchhalterisch."
+    begruendung:
+      "Abschreibungen sind ein nicht zahlungswirksamer Aufwand: Es fließt beim Buchen kein Geld ab. Der Geldabfluss fand bereits beim Kauf der Anlage statt. Die Abschreibung erfasst lediglich den Werteverzehr buchhalterisch.",
   },
   {
-    aussage: "Wenn ein Unternehmen die Abschreibungsbeträge nicht in den Verkaufspreisen einkalkuliert, fehlt das Kapital für spätere Ersatzinvestitionen.",
+    aussage:
+      "Wenn ein Unternehmen die Abschreibungsbeträge nicht in den Verkaufspreisen einkalkuliert, fehlt das Kapital für spätere Ersatzinvestitionen.",
     korrekt: true,
     bereich: "Abschreibungskreislauf",
-    begruendung: "Genau das macht der Abschreibungskreislauf deutlich: Werden Abschreibungen nicht im Preis berücksichtigt, fließt kein Kapital zurück. Das Unternehmen kann dann die Anlage am Ende der Nutzungsdauer nicht aus eigenen Mitteln ersetzen."
+    begruendung:
+      "Genau das macht der Abschreibungskreislauf deutlich: Werden Abschreibungen nicht im Preis berücksichtigt, fließt kein Kapital zurück. Das Unternehmen kann dann die Anlage am Ende der Nutzungsdauer nicht aus eigenen Mitteln ersetzen.",
   },
   {
-    aussage: "Abschreibungen sind nur für Aktiengesellschaften relevant, Einzelunternehmen müssen keine Abschreibungen vornehmen.",
+    aussage:
+      "Abschreibungen sind nur für Aktiengesellschaften relevant, Einzelunternehmen müssen keine Abschreibungen vornehmen.",
     korrekt: false,
     bereich: "Abschreibung",
-    begruendung: "Abschreibungen sind für alle buchführungspflichtigen Unternehmen – unabhängig von der Rechtsform – verpflichtend. Auch Einzelunternehmen und kleine GmbHs müssen Sachanlagen planmäßig abschreiben."
+    begruendung:
+      "Abschreibungen sind für alle buchführungspflichtigen Unternehmen – unabhängig von der Rechtsform – verpflichtend. Auch Einzelunternehmen und kleine GmbHs müssen Sachanlagen planmäßig abschreiben.",
   },
 
   // ── ANWENDUNG & VERKNÜPFUNG ──
   {
-    aussage: "Durch den Abschreibungskreislauf kann ein Unternehmen langfristig seine Produktionskapazität erhalten, ohne neues Fremdkapital aufnehmen zu müssen.",
+    aussage:
+      "Durch den Abschreibungskreislauf kann ein Unternehmen langfristig seine Produktionskapazität erhalten, ohne neues Fremdkapital aufnehmen zu müssen.",
     korrekt: true,
     bereich: "Abschreibungskreislauf",
-    begruendung: "Der Kreislauf sorgt dafür, dass das Unternehmen über den Umsatz kontinuierlich Kapital für Ersatzinvestitionen ansammelt. Wenn der Betrag ausreicht, kann die Anlage aus eigenen Mitteln ersetzt werden – Fremdfinanzierung ist dann nicht zwingend notwendig."
+    begruendung:
+      "Der Kreislauf sorgt dafür, dass das Unternehmen über den Umsatz kontinuierlich Kapital für Ersatzinvestitionen ansammelt. Wenn der Betrag ausreicht, kann die Anlage aus eigenen Mitteln ersetzt werden – Fremdfinanzierung ist dann nicht zwingend notwendig.",
   },
   {
-    aussage: "Wenn eine Maschine nach Ende der Nutzungsdauer vollständig abgeschrieben ist, muss das Unternehmen für die Ersatzbeschaffung immer einen Bankkredit aufnehmen.",
+    aussage:
+      "Wenn eine Maschine nach Ende der Nutzungsdauer vollständig abgeschrieben ist, muss das Unternehmen für die Ersatzbeschaffung immer einen Bankkredit aufnehmen.",
     korrekt: false,
     bereich: "Abschreibungskreislauf",
-    begruendung: "Genau das Gegenteil ist das Ziel des Abschreibungskreislaufs: Die über den Preis zurückgeflossenen Abschreibungsbeträge stehen als Eigenkapital für die Ersatzbeschaffung bereit. Ein Kredit ist daher nicht zwingend notwendig."
+    begruendung:
+      "Genau das Gegenteil ist das Ziel des Abschreibungskreislaufs: Die über den Preis zurückgeflossenen Abschreibungsbeträge stehen als Eigenkapital für die Ersatzbeschaffung bereit. Ein Kredit ist daher nicht zwingend notwendig.",
   },
 
-// ── SELBSTFINANZIERUNG & SUBSTANZERHALTUNG ──
-{
-  aussage: "Abschreibungen ermöglichen eine verdeckte Selbstfinanzierung, weil sie zwar den Gewinn mindern, aber keinen Geldabfluss verursachen.",
-  korrekt: true,
-  bereich: "Selbstfinanzierung & Substanzerhaltung",
-  begruendung: "Abschreibungen sind ein nicht zahlungswirksamer Aufwand. Der Gewinn sinkt, aber das Geld bleibt im Unternehmen (Kapitalfreisetzung). Dies wird als verdeckte Selbstfinanzierung bezeichnet."
-},
-{
-  aussage: "Durch den Abschreibungskreislauf wird die Substanz des Unternehmens (Produktionskapazität) langfristig erhalten, ohne dass zusätzliches Eigen- oder Fremdkapital benötigt wird.",
-  korrekt: true,
-  bereich: "Selbstfinanzierung & Substanzerhaltung",
-  begruendung: "Die über die Verkaufspreise zurückfließenden Abschreibungsbeträge stehen für die Ersatzbeschaffung zur Verfügung. So bleibt die betriebliche Substanz erhalten – dies ist ein zentrales Ziel des Abschreibungskreislaufs."
-},
-{
-  aussage: "Bei steigenden Wiederbeschaffungspreisen (Inflation) reicht die normale Abschreibung auf Basis der Anschaffungskosten aus, um die volle Substanz des Unternehmens zu erhalten.",
-  korrekt: false,
-  bereich: "Selbstfinanzierung & Substanzerhaltung",
-  begruendung: "Bei Inflation liegen die Wiederbeschaffungskosten höher als die historischen Anschaffungskosten. Die auf Basis der alten Kosten berechneten Abschreibungen reichen dann nicht aus – es entstehen Scheingewinne und eine Substanzgefährdung."
-},
-// ── Steuer & LIQUIDITÄT ──
-{
-  aussage: "Abschreibungen führen zu einer Steuerersparnis, weil sie den steuerpflichtigen Gewinn mindern.",
-  korrekt: true,
-  bereich: "Steuerersparnis & Liquidität",
-  begruendung: "Als Betriebsausgaben reduzieren Abschreibungen den zu versteuernden Gewinn. Dadurch sinkt die Steuerlast (z. B. Körperschaftsteuer oder Einkommensteuer) – dies ist ein wichtiger Liquiditätsvorteil."
-},
-{
-  aussage: "Abschreibungen verbessern die Liquidität unmittelbar, weil das Finanzamt dem Unternehmen Geld zurückzahlt.",
-  korrekt: false,
-  bereich: "Steuerersparnis & Liquidität",
-  begruendung: "Abschreibungen verursachen keinen direkten Geldzufluss vom Finanzamt. Der Liquiditätsvorteil entsteht indirekt: Der Gewinn und damit die Steuerzahlung sinken, sodass weniger Geld abfließt."
-},
-{
-  aussage: "Abschreibungen haben keinen Einfluss auf die Liquidität des Unternehmens, da sie nur buchhalterische Größen sind.",
-  korrekt: false,
-  bereich: "Steuerersparnis & Liquidität",
-  begruendung: "Obwohl Abschreibungen keinen unmittelbaren Zahlungsmittelabfluss darstellen, verbessern sie die Liquidität indirekt über die Gewinnminderung und die damit verbundene Steuerersparnis sowie durch die Kapitalfreisetzung."
-}
+  // ── SELBSTFINANZIERUNG & SUBSTANZERHALTUNG ──
+  {
+    aussage:
+      "Abschreibungen ermöglichen eine verdeckte Selbstfinanzierung, weil sie zwar den Gewinn mindern, aber keinen Geldabfluss verursachen.",
+    korrekt: true,
+    bereich: "Selbstfinanzierung & Substanzerhaltung",
+    begruendung:
+      "Abschreibungen sind ein nicht zahlungswirksamer Aufwand. Der Gewinn sinkt, aber das Geld bleibt im Unternehmen (Kapitalfreisetzung). Dies wird als verdeckte Selbstfinanzierung bezeichnet.",
+  },
+  {
+    aussage:
+      "Durch den Abschreibungskreislauf wird die Substanz des Unternehmens (Produktionskapazität) langfristig erhalten, ohne dass zusätzliches Eigen- oder Fremdkapital benötigt wird.",
+    korrekt: true,
+    bereich: "Selbstfinanzierung & Substanzerhaltung",
+    begruendung:
+      "Die über die Verkaufspreise zurückfließenden Abschreibungsbeträge stehen für die Ersatzbeschaffung zur Verfügung. So bleibt die betriebliche Substanz erhalten – dies ist ein zentrales Ziel des Abschreibungskreislaufs.",
+  },
+  {
+    aussage:
+      "Bei steigenden Wiederbeschaffungspreisen (Inflation) reicht die normale Abschreibung auf Basis der Anschaffungskosten aus, um die volle Substanz des Unternehmens zu erhalten.",
+    korrekt: false,
+    bereich: "Selbstfinanzierung & Substanzerhaltung",
+    begruendung:
+      "Bei Inflation liegen die Wiederbeschaffungskosten höher als die historischen Anschaffungskosten. Die auf Basis der alten Kosten berechneten Abschreibungen reichen dann nicht aus – es entstehen Scheingewinne und eine Substanzgefährdung.",
+  },
+  // ── Steuer & LIQUIDITÄT ──
+  {
+    aussage:
+      "Abschreibungen führen zu einer Steuerersparnis, weil sie den steuerpflichtigen Gewinn mindern.",
+    korrekt: true,
+    bereich: "Steuerersparnis & Liquidität",
+    begruendung:
+      "Als Betriebsausgaben reduzieren Abschreibungen den zu versteuernden Gewinn. Dadurch sinkt die Steuerlast (z. B. Körperschaftsteuer oder Einkommensteuer) – dies ist ein wichtiger Liquiditätsvorteil.",
+  },
+  {
+    aussage:
+      "Abschreibungen verbessern die Liquidität unmittelbar, weil das Finanzamt dem Unternehmen Geld zurückzahlt.",
+    korrekt: false,
+    bereich: "Steuerersparnis & Liquidität",
+    begruendung:
+      "Abschreibungen verursachen keinen direkten Geldzufluss vom Finanzamt. Der Liquiditätsvorteil entsteht indirekt: Der Gewinn und damit die Steuerzahlung sinken, sodass weniger Geld abfließt.",
+  },
+  {
+    aussage:
+      "Abschreibungen haben keinen Einfluss auf die Liquidität des Unternehmens, da sie nur buchhalterische Größen sind.",
+    korrekt: false,
+    bereich: "Steuerersparnis & Liquidität",
+    begruendung:
+      "Obwohl Abschreibungen keinen unmittelbaren Zahlungsmittelabfluss darstellen, verbessern sie die Liquidität indirekt über die Gewinnminderung und die damit verbundene Steuerersparnis sowie durch die Kapitalfreisetzung.",
+  },
 ];
 
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-
 
 // ============================================================================
 // SVG ABSCHREIBUNGSKREISLAUF – AUSGEFÜLLT
@@ -249,40 +283,41 @@ const svgLeer = `
 // ============================================================================
 
 function zeigeZufaelligeWahrFalsch() {
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
 
-  const anzahl = parseInt(document.getElementById('anzahlAussagen').value) || 6;
+  const anzahl = parseInt(document.getElementById("anzahlAussagen").value) || 6;
 
   // Aufgaben mischen und auswählen
   const ausgewaehlte = shuffle(aussagenDatenbank).slice(0, anzahl);
-  letzteGenerierteAussagen = ausgewaehlte;   // ← wichtig für den KI-Prompt
+  letzteGenerierteAussagen = ausgewaehlte; // ← wichtig für den KI-Prompt
 
   // SVG einfügen (ausgefüllt + leer)
-  const svgContainer = document.getElementById('svgContainer');
+  const svgContainer = document.getElementById("svgContainer");
   if (svgContainer) svgContainer.innerHTML = svgAusgefuellt;
 
-  const svgContainerLeer = document.getElementById('svgContainerLeer');
+  const svgContainerLeer = document.getElementById("svgContainerLeer");
   if (svgContainerLeer) svgContainerLeer.innerHTML = svgLeer;
 
   // ── Aufgaben ──────────────────────────────────────────────────────────────
-  let aufgabenHTML = '<h2>Aufgaben</h2>';
-  aufgabenHTML += '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die folgenden Aussagen. Entscheide jeweils, ob die Aussage <strong>wahr</strong> oder <strong>falsch</strong> ist. Begründe deine Entscheidung.</p>';
-  aufgabenHTML += '<ol>';
+  let aufgabenHTML = "<h2>Aufgaben</h2>";
+  aufgabenHTML +=
+    '<p style="font-style: italic; color: #555; font-size: 0.95rem;">Lies die folgenden Aussagen. Entscheide jeweils, ob die Aussage <strong>wahr</strong> oder <strong>falsch</strong> ist. Begründe deine Entscheidung.</p>';
+  aufgabenHTML += "<ol>";
 
   ausgewaehlte.forEach((item, idx) => {
     aufgabenHTML += `<li style="margin-bottom: 1.4em; font-size: 16px; line-height: 1.5;">${item.aussage}</li>`;
   });
 
-  aufgabenHTML += '</ol>';
+  aufgabenHTML += "</ol>";
 
   // ── Lösungen ──────────────────────────────────────────────────────────────
   let loesungenHTML = '<h2 class="loesung">Lösungen</h2>';
 
   ausgewaehlte.forEach((item, idx) => {
-    const badgeLabel = item.korrekt ? 'WAHR' : 'FALSCH';
-    const badgeBg    = item.korrekt ? '#2a7a2a' : '#a00';
-    const icon       = item.korrekt ? '✅' : '❌';
+    const badgeLabel = item.korrekt ? "WAHR" : "FALSCH";
+    const badgeBg = item.korrekt ? "#2a7a2a" : "#a00";
+    const icon = item.korrekt ? "✅" : "❌";
 
     loesungenHTML += `
     <div style="margin-top: 1.4em; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
@@ -299,19 +334,19 @@ function zeigeZufaelligeWahrFalsch() {
   container.innerHTML = aufgabenHTML + loesungenHTML;
 
   // KI-Prompt-Vorschau aktualisieren (falls vorhanden)
-  const vorschau = document.getElementById('kiPromptVorschau');
+  const vorschau = document.getElementById("kiPromptVorschau");
   if (vorschau) {
     vorschau.textContent = erstelleKiPromptTextAbschreibung();
   }
 }
 function toggleKiPromptVorschau() {
-  const v = document.getElementById('kiPromptVorschau');
-  const b = document.getElementById('kiPromptToggleBtn');
+  const v = document.getElementById("kiPromptVorschau");
+  const b = document.getElementById("kiPromptToggleBtn");
   if (!v || !b) return;
 
-  const hidden = getComputedStyle(v).display === 'none';
-  v.style.display = hidden ? 'block' : 'none';
-  b.textContent = hidden ? 'Vorschau ausblenden ▲' : 'Prompt anzeigen ▼';
+  const hidden = getComputedStyle(v).display === "none";
+  v.style.display = hidden ? "block" : "none";
+  b.textContent = hidden ? "Vorschau ausblenden ▲" : "Prompt anzeigen ▼";
 }
 
 // ============================================================================
@@ -375,41 +410,59 @@ Du wartest stets auf die Eingabe des Schülers und gibst nichts vor.`;
 
 function erstelleKiPromptTextAbschreibung() {
   if (letzteGenerierteAussagen.length === 0) {
-    return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LOESUNGEN###", "(Noch keine Aufgaben generiert.)");
+    return KI_ASSISTENT_PROMPT.replace(
+      "###AUFGABEN und LOESUNGEN###",
+      "(Noch keine Aufgaben generiert.)",
+    );
   }
 
-  const aufgabenText = letzteGenerierteAussagen.map((item, idx) => {
-    const antwort = item.korrekt ? "WAHR" : "FALSCH";
-    return `Aufgabe ${idx+1}:\n${item.aussage}\n\nMusterlösung ${idx+1}:\nAntwort: ${antwort}\nBegründung: ${item.begruendung}`;
-  }).join("\n\n---\n\n");
+  const aufgabenText = letzteGenerierteAussagen
+    .map((item, idx) => {
+      const antwort = item.korrekt ? "WAHR" : "FALSCH";
+      return `Aufgabe ${idx + 1}:\n${item.aussage}\n\nMusterlösung ${idx + 1}:\nAntwort: ${antwort}\nBegründung: ${item.begruendung}`;
+    })
+    .join("\n\n---\n\n");
 
-  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LOESUNGEN###", aufgabenText);
+  return KI_ASSISTENT_PROMPT.replace(
+    "###AUFGABEN und LOESUNGEN###",
+    aufgabenText,
+  );
 }
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => { btn.innerHTML = originalHTML; btn.classList.remove('ki-prompt-btn--success'); }, 2500);
-  }).catch(() => zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
+  navigator.clipboard
+    .writeText(KI_ASSISTENT_PROMPT)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() =>
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      ),
+    );
 }
 
 function toggleKiPromptVorschau() {
-  const v = document.getElementById('kiPromptVorschau');
-  const b = document.getElementById('kiPromptToggleBtn');
-  const hidden = getComputedStyle(v).display === 'none';
-  v.style.display = hidden ? 'block' : 'none';
-  b.textContent = hidden ? 'Vorschau ausblenden ▲' : 'Prompt anzeigen ▼';
+  const v = document.getElementById("kiPromptVorschau");
+  const b = document.getElementById("kiPromptToggleBtn");
+  const hidden = getComputedStyle(v).display === "none";
+  v.style.display = hidden ? "block" : "none";
+  b.textContent = hidden ? "Vorschau ausblenden ▲" : "Prompt anzeigen ▼";
 }
 
 // ============================================================================
 // INIT
 // ============================================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Prompt-Vorschau initial füllen
-  const vorschau = document.getElementById('kiPromptVorschau');
+  const vorschau = document.getElementById("kiPromptVorschau");
   if (vorschau) vorschau.textContent = erstelleKiPromptTextAbschreibung();
 
   // Erste Aufgaben generieren

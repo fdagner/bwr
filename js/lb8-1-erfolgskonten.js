@@ -1,4 +1,3 @@
-
 function generateRandomSaldo(min, max, round = 100) {
   return Math.round((Math.random() * (max - min) + min) / round) * round;
 }
@@ -10,33 +9,65 @@ function generateRandomSaldo(min, max, round = 100) {
 // Bei Nr-/Abkürzungs-Änderungen nur KONTENPLAN in utils.js anpassen.
 
 const BUCHUNGSTYP_LABEL = {
-  'VE': kontoLabel('4400'),
-  'BK': kontoLabel('2800'),
-  'KA': kontoLabel('2880'),
+  VE: kontoLabel("4400"),
+  BK: kontoLabel("2800"),
+  KA: kontoLabel("2880"),
 };
 
 // ── Nachlässe-Unterkonten (Haben-Buchungen → mindern Aufwand) ──────────────
 
 const NACHLASS_MAP = {
-  [kontoLabel('6000')]: { nr: kontoLabel('6002'), label: kontoName('6002'), hauptkonto: kontoLabel('6000') },
-  [kontoLabel('6010')]: { nr: kontoLabel('6012'), label: kontoName('6012'), hauptkonto: kontoLabel('6010') },
-  [kontoLabel('6020')]: { nr: kontoLabel('6022'), label: kontoName('6022'), hauptkonto: kontoLabel('6020') },
-  [kontoLabel('6030')]: { nr: kontoLabel('6032'), label: kontoName('6032'), hauptkonto: kontoLabel('6030') },
+  [kontoLabel("6000")]: {
+    nr: kontoLabel("6002"),
+    label: kontoName("6002"),
+    hauptkonto: kontoLabel("6000"),
+  },
+  [kontoLabel("6010")]: {
+    nr: kontoLabel("6012"),
+    label: kontoName("6012"),
+    hauptkonto: kontoLabel("6010"),
+  },
+  [kontoLabel("6020")]: {
+    nr: kontoLabel("6022"),
+    label: kontoName("6022"),
+    hauptkonto: kontoLabel("6020"),
+  },
+  [kontoLabel("6030")]: {
+    nr: kontoLabel("6032"),
+    label: kontoName("6032"),
+    hauptkonto: kontoLabel("6030"),
+  },
 };
 
 // ── Bezugskosten-Unterkonten (Soll-Buchungen → erhöhen Aufwand) ────────────
 
 const BZK_UNTERKONTO_MAP = {
-  [kontoLabel('6000')]: { nr: kontoLabel('6001'), label: kontoName('6001'), hauptkonto: kontoLabel('6000') },
-  [kontoLabel('6010')]: { nr: kontoLabel('6011'), label: kontoName('6011'), hauptkonto: kontoLabel('6010') },
-  [kontoLabel('6020')]: { nr: kontoLabel('6021'), label: kontoName('6021'), hauptkonto: kontoLabel('6020') },
-  [kontoLabel('6030')]: { nr: kontoLabel('6031'), label: kontoName('6031'), hauptkonto: kontoLabel('6030') },
+  [kontoLabel("6000")]: {
+    nr: kontoLabel("6001"),
+    label: kontoName("6001"),
+    hauptkonto: kontoLabel("6000"),
+  },
+  [kontoLabel("6010")]: {
+    nr: kontoLabel("6011"),
+    label: kontoName("6011"),
+    hauptkonto: kontoLabel("6010"),
+  },
+  [kontoLabel("6020")]: {
+    nr: kontoLabel("6021"),
+    label: kontoName("6021"),
+    hauptkonto: kontoLabel("6020"),
+  },
+  [kontoLabel("6030")]: {
+    nr: kontoLabel("6031"),
+    label: kontoName("6031"),
+    hauptkonto: kontoLabel("6030"),
+  },
 };
 
 // Einzelkonten, die hier häufig per Label auftauchen (zentral verwaltet)
-const KUEFE = kontoLabel('5000');   // Umsatzerlöse für eigene Erzeugnisse
-const KGUV  = kontoLabel('8020');   // Gewinn- und Verlustkonto
-const KEK   = kontoLabel('3000');   // Eigenkapital
+const KUEFE = kontoLabel("5000"); // Umsatzerlöse für eigene Erzeugnisse
+const KGUV = kontoLabel("8020"); // Gewinn- und Verlustkonto
+const KEK = kontoLabel("3000"); // Eigenkapital
 
 // ── Werkstoff-Hauptkonten ───────────────────────────────────────────────────
 // Intern wird ALLEIN über die Kontonummer gearbeitet. Die bisherigen Tags
@@ -44,28 +75,28 @@ const KEK   = kontoLabel('3000');   // Eigenkapital
 // sind NUR wieder interne Nutzungs-Variablen (Objekt-Schlüssel, Checkbox-IDs):
 // Ändert sich eine Abkürzung im Kontenplan, aktualisiert sich hier automatisch.
 
-const WERKSTOFF_NUMMERN = ['6000', '6010', '6020', '6030'];
+const WERKSTOFF_NUMMERN = ["6000", "6010", "6020", "6030"];
 
-const AWR = getKonto('6000').abk;   // z. B. 'AWR' – Rohstoffe
-const AWF = getKonto('6010').abk;   // 'AWF' – Fremdbauteile
-const AWH = getKonto('6020').abk;   // 'AWH' – Hilfsstoffe
-const AWB = getKonto('6030').abk;   // 'AWB' – Betriebsstoffe
+const AWR = getKonto("6000").abk; // z. B. 'AWR' – Rohstoffe
+const AWF = getKonto("6010").abk; // 'AWF' – Fremdbauteile
+const AWH = getKonto("6020").abk; // 'AWH' – Hilfsstoffe
+const AWB = getKonto("6030").abk; // 'AWB' – Betriebsstoffe
 
 // ── Buchungen für Nachlässe (Haben-Buchungen im Unterkonto) ─────────────────
 
 function erzeugeNachlassBuchungen(hauptTyp) {
   const rahmen = {
     [AWR]: [1000, 8000],
-    [AWF]: [100,   800],
-    [AWH]: [20,    200],
-    [AWB]: [30,    300],
+    [AWF]: [100, 800],
+    [AWH]: [20, 200],
+    [AWB]: [30, 300],
   };
   const [min, max] = rahmen[hauptTyp];
   const anzahl = 1 + Math.floor(Math.random() * 2);
   const buchungen = [];
   for (let i = 0; i < anzahl; i++) {
     const betrag = generateRandomSaldo(min, max, hauptTyp === AWR ? 100 : 10);
-    buchungen.push({ typ: 'VE', nr: i + 1, betrag });
+    buchungen.push({ typ: "VE", nr: i + 1, betrag });
   }
   const saldo = buchungen.reduce((s, b) => s + b.betrag, 0);
   return { buchungen, saldo };
@@ -76,16 +107,16 @@ function erzeugeNachlassBuchungen(hauptTyp) {
 function erzeugeBzkUnterkontoBuchungen(hauptTyp) {
   const rahmen = {
     [AWR]: [500, 5000],
-    [AWF]: [50,   500],
-    [AWH]: [10,   150],
-    [AWB]: [20,   200],
+    [AWF]: [50, 500],
+    [AWH]: [10, 150],
+    [AWB]: [20, 200],
   };
   const [min, max] = rahmen[hauptTyp];
   const anzahl = 1 + Math.floor(Math.random() * 2);
   const buchungen = [];
   for (let i = 0; i < anzahl; i++) {
     const betrag = generateRandomSaldo(min, max, hauptTyp === AWR ? 100 : 10);
-    buchungen.push({ typ: 'VE', nr: i + 1, betrag });
+    buchungen.push({ typ: "VE", nr: i + 1, betrag });
   }
   const saldo = buchungen.reduce((s, b) => s + b.betrag, 0);
   return { buchungen, saldo };
@@ -94,19 +125,20 @@ function erzeugeBzkUnterkontoBuchungen(hauptTyp) {
 // ── Buchungen generieren ─────────────────────────────────────────────────────
 
 function erzeugeKontoBuchungen(typ) {
-  const buchungsTypen = ['VE', 'VE', 'VE', 'VE', 'VE', 'BK', 'BK', 'KA'];
+  const buchungsTypen = ["VE", "VE", "VE", "VE", "VE", "BK", "BK", "KA"];
   const rahmen = {
-    [AWR]: { VE: [80000, 280000], BK: [20000, 80000], KA: [5000,  15000] },
-    [AWF]: { VE: [8000,   28000], BK: [2000,   8000], KA: [500,    1500] },
-    [AWH]: { VE: [1500,    6000], BK: [400,    1500], KA: [100,     400] },
-    [AWB]: { VE: [2000,    8000], BK: [500,    2000], KA: [100,     500] },
+    [AWR]: { VE: [80000, 280000], BK: [20000, 80000], KA: [5000, 15000] },
+    [AWF]: { VE: [8000, 28000], BK: [2000, 8000], KA: [500, 1500] },
+    [AWH]: { VE: [1500, 6000], BK: [400, 1500], KA: [100, 400] },
+    [AWB]: { VE: [2000, 8000], BK: [500, 2000], KA: [100, 500] },
   };
   const anzahl = 2 + Math.floor(Math.random() * 3);
   const buchungen = [];
   for (let i = 0; i < anzahl; i++) {
-    const bTyp = buchungsTypen[Math.floor(Math.random() * buchungsTypen.length)];
+    const bTyp =
+      buchungsTypen[Math.floor(Math.random() * buchungsTypen.length)];
     const [min, max] = rahmen[typ][bTyp];
-    const betrag = generateRandomSaldo(min, max, bTyp === 'KA' ? 10 : 100);
+    const betrag = generateRandomSaldo(min, max, bTyp === "KA" ? 10 : 100);
     buchungen.push({ typ: bTyp, nr: i + 1, betrag });
   }
   const saldo = buchungen.reduce((s, b) => s + b.betrag, 0);
@@ -114,59 +146,73 @@ function erzeugeKontoBuchungen(typ) {
 }
 
 function erzeugeUefeBuchungen(zielSaldo) {
-  const buchungsTypen = ['VE', 'VE', 'VE', 'VE', 'VE', 'BK', 'BK', 'KA'];
+  const buchungsTypen = ["VE", "VE", "VE", "VE", "VE", "BK", "BK", "KA"];
   const ziel = Math.max(Math.round(zielSaldo / 100) * 100, 100);
 
   for (let versuch = 0; versuch < 50; versuch++) {
     const anzahl = 2 + Math.floor(Math.random() * 3);
-    const typen = Array.from({ length: anzahl }, () =>
-      buchungsTypen[Math.floor(Math.random() * buchungsTypen.length)]);
-    const gewichte = typen.map(t =>
-      t === 'VE' ? 5 + Math.random() * 3 :
-      t === 'BK' ? 1 + Math.random() * 1.5 :
-                   0.3 + Math.random() * 0.5);
+    const typen = Array.from(
+      { length: anzahl },
+      () => buchungsTypen[Math.floor(Math.random() * buchungsTypen.length)],
+    );
+    const gewichte = typen.map((t) =>
+      t === "VE"
+        ? 5 + Math.random() * 3
+        : t === "BK"
+          ? 1 + Math.random() * 1.5
+          : 0.3 + Math.random() * 0.5,
+    );
     const summeG = gewichte.reduce((s, g) => s + g, 0);
 
     const buchungen = [];
     let rest = ziel;
     typen.forEach((typ, i) => {
-      const betrag = (i === typen.length - 1)
-        ? rest
-        : Math.round(ziel * gewichte[i] / summeG / 100) * 100;
+      const betrag =
+        i === typen.length - 1
+          ? rest
+          : Math.round((ziel * gewichte[i]) / summeG / 100) * 100;
       rest -= betrag;
       buchungen.push({ typ, nr: i + 1, betrag });
     });
 
-    if (buchungen.every(b => b.betrag >= 100)) {
+    if (buchungen.every((b) => b.betrag >= 100)) {
       return { buchungen, saldo: ziel };
     }
   }
   // Fallback: eine einzige Buchung
-  return { buchungen: [{ typ: 'VE', nr: 1, betrag: ziel }], saldo: ziel };
+  return { buchungen: [{ typ: "VE", nr: 1, betrag: ziel }], saldo: ziel };
 }
 
 // ── Gesamtdaten zusammenstellen ──────────────────────────────────────────────
 
 // Auswahl-Konto → Werkstoff-Tag (Label-Schlüssel, z. B. '6000 AWR' → 'AWR')
 const ALLE_KONTENTYPEN = Object.fromEntries(
-  WERKSTOFF_NUMMERN.map(nr => [kontoLabel(nr), getKonto(nr).abk])
+  WERKSTOFF_NUMMERN.map((nr) => [kontoLabel(nr), getKonto(nr).abk]),
 );
 
 // Checkbox-IDs sind die Kontonummern (chk6000 …) – HTML trägt daher nur Nummern.
 function getAusgewaehlteKonten() {
   const auswahl = {};
   for (const nr of WERKSTOFF_NUMMERN) {
-    if (document.getElementById('chk' + nr)?.checked) auswahl[kontoLabel(nr)] = getKonto(nr).abk;
+    if (document.getElementById("chk" + nr)?.checked)
+      auswahl[kontoLabel(nr)] = getKonto(nr).abk;
   }
   return auswahl;
 }
 
 function getErfolgswunsch() {
-  return document.querySelector('input[name="erfolgsart"]:checked')?.value || 'zufall';
+  return (
+    document.querySelector('input[name="erfolgsart"]:checked')?.value ||
+    "zufall"
+  );
 }
 
-function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten, kontenTypen, erfolgswunsch) {
-
+function erstelleZufaelligenBestandsabschluss(
+  mitNachlaesse,
+  mitBzkUnterkonten,
+  kontenTypen,
+  erfolgswunsch,
+) {
   const konten = {};
   const nachlaesse = {};
   const bzkUnterkonten = {};
@@ -189,37 +235,53 @@ function erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten, 
     }
 
     konten[nr] = {
-      buchungen:   kDaten.buchungen,
-      eigenSaldo:  kDaten.saldo,
+      buchungen: kDaten.buchungen,
+      eigenSaldo: kDaten.saldo,
       nachlassSaldo,
       bzkSaldo,
-      guvSaldo:    kDaten.saldo - nachlassSaldo + bzkSaldo,
+      guvSaldo: kDaten.saldo - nachlassSaldo + bzkSaldo,
     };
-    
   }
 
-  const gesamtAufwand = Object.values(konten).reduce((s, k) => s + k.guvSaldo, 0);
+  const gesamtAufwand = Object.values(konten).reduce(
+    (s, k) => s + k.guvSaldo,
+    0,
+  );
 
-  const art = erfolgswunsch === 'zufall'
-    ? (Math.random() < 0.5 ? 'gewinn' : 'verlust')
-    : erfolgswunsch;
-  const faktor = art === 'gewinn'
-    ? 1.1 + Math.random() * 0.4    // Erlöse 10–50 % über den Aufwänden
-    : 0.6 + Math.random() * 0.3;   // Erlöse 10–40 % unter den Aufwänden
+  const art =
+    erfolgswunsch === "zufall"
+      ? Math.random() < 0.5
+        ? "gewinn"
+        : "verlust"
+      : erfolgswunsch;
+  const faktor =
+    art === "gewinn"
+      ? 1.1 + Math.random() * 0.4 // Erlöse 10–50 % über den Aufwänden
+      : 0.6 + Math.random() * 0.3; // Erlöse 10–40 % unter den Aufwänden
 
   const uefeDaten = erzeugeUefeBuchungen(gesamtAufwand * faktor);
-  const uefe      = uefeDaten.saldo;
-  const erfolg    = uefe - gesamtAufwand;
-  const erfolgArt     = erfolg >= 0 ? 'Gewinn' : 'Verlust';
-  const erfolgHoehe   = Math.abs(erfolg);
+  const uefe = uefeDaten.saldo;
+  const erfolg = uefe - gesamtAufwand;
+  const erfolgArt = erfolg >= 0 ? "Gewinn" : "Verlust";
+  const erfolgHoehe = Math.abs(erfolg);
 
-  return { konten, nachlaesse, bzkUnterkonten, uefeDaten, uefe, gesamtAufwand, erfolg, erfolgArt, erfolgHoehe };
+  return {
+    konten,
+    nachlaesse,
+    bzkUnterkonten,
+    uefeDaten,
+    uefe,
+    gesamtAufwand,
+    erfolg,
+    erfolgArt,
+    erfolgHoehe,
+  };
 }
 
 // ── Hilfsfunktion: maximale Buchungsanzahl einer Gruppe ermitteln ─────────────
 
 function maxBuchungsanzahl(buchungsArrays) {
-  return Math.max(...buchungsArrays.map(b => b.length));
+  return Math.max(...buchungsArrays.map((b) => b.length));
 }
 
 // ── T-Konto Renderer ─────────────────────────────────────────────────────────
@@ -236,8 +298,8 @@ function renderTKontoAufgabe(kontoNr, buchungen, minZeilen) {
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : "&nbsp;"}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
     </tr>`;
@@ -260,8 +322,8 @@ function renderTKontoNachlassAufgabe(bzkNr, buchungen, minZeilen) {
     html += `<tr style="border-top:2px solid #ccc;">
       <td style="padding:3px 2px;white-space:nowrap;">&nbsp;</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">&nbsp;</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : "&nbsp;"}</td>
     </tr>`;
   }
   html += `</tbody></table>`;
@@ -280,8 +342,8 @@ function renderTKontoBzkUnterkontoAufgabe(bzkNr, buchungen, minZeilen) {
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : "&nbsp;"}</td>
       <td style="padding:3px 2px 3px 6px;min-width:100px;">&nbsp;</td>
       <td style="text-align:right;padding:3px 2px;min-width:100px;">&nbsp;</td>
     </tr>`;
@@ -304,8 +366,8 @@ function renderTKontoUEFEAufgabe(buchungen, minZeilen) {
     html += `<tr style="border-top:2px solid #ccc;">
       <td style="padding:3px 2px;white-space:nowrap;">&nbsp;</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">&nbsp;</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : "&nbsp;"}</td>
     </tr>`;
   }
   html += `</tbody></table>`;
@@ -339,7 +401,13 @@ function renderTKontoGUVAufgabe(minZeilen) {
 // ── Lösungs-T-Konten ──────────────────────────────────────────────────────────
 
 // Nachlasskonto LÖSUNG
-function renderTKontoNachlassLoesung(bzkNr, hauptkontoNr, buchungen, saldo, minZeilen) {
+function renderTKontoNachlassLoesung(
+  bzkNr,
+  hauptkontoNr,
+  buchungen,
+  saldo,
+  minZeilen,
+) {
   const alleZeilen = Math.max(buchungen.length, minZeilen || 3);
   let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
@@ -350,10 +418,10 @@ function renderTKontoNachlassLoesung(bzkNr, hauptkontoNr, buchungen, saldo, minZ
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ` ${hauptkontoNr}` : ''}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ''}</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ` ${hauptkontoNr}` : ""}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ""}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : "&nbsp;"}</td>
     </tr>`;
   }
   html += `<tr style="border-top:2px solid #888;border-bottom:4px double #888;">
@@ -367,7 +435,13 @@ function renderTKontoNachlassLoesung(bzkNr, hauptkontoNr, buchungen, saldo, minZ
 }
 
 // BZK-Unterkonto LÖSUNG
-function renderTKontoBzkUnterkontoLoesung(bzkNr, hauptkontoNr, buchungen, saldo, minZeilen) {
+function renderTKontoBzkUnterkontoLoesung(
+  bzkNr,
+  hauptkontoNr,
+  buchungen,
+  saldo,
+  minZeilen,
+) {
   const alleZeilen = Math.max(buchungen.length, minZeilen || 3);
   let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
@@ -378,10 +452,10 @@ function renderTKontoBzkUnterkontoLoesung(bzkNr, hauptkontoNr, buchungen, saldo,
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${i === 0 ? ` ${hauptkontoNr}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 2px;min-width:100px;">${i === 0 ? formatBetrag(saldo) : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${b ? formatBetrag(b.betrag) : "&nbsp;"}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${i === 0 ? ` ${hauptkontoNr}` : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">${i === 0 ? formatBetrag(saldo) : "&nbsp;"}</td>
     </tr>`;
   }
   html += `<tr style="border-top:2px solid #888;border-bottom:4px double #888;">
@@ -395,24 +469,40 @@ function renderTKontoBzkUnterkontoLoesung(bzkNr, hauptkontoNr, buchungen, saldo,
 }
 
 // Aufwandskonto LÖSUNG
-function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkSaldo, minZeilen) {
+function renderTKontoLoesung(
+  kontoNr,
+  buchungen,
+  eigenSaldo,
+  nachlassSaldo,
+  bzkSaldo,
+  minZeilen,
+) {
   const guvSaldo = eigenSaldo - (nachlassSaldo || 0) + (bzkSaldo || 0);
   const gesamtSollSumme = eigenSaldo + (bzkSaldo || 0);
 
-  const sollZeilen = [...buchungen.map(b => ({ label: `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}`, betrag: b.betrag }))];
+  const sollZeilen = [
+    ...buchungen.map((b) => ({
+      label: `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}`,
+      betrag: b.betrag,
+    })),
+  ];
   if (bzkSaldo) {
-    const bzkNr = BZK_UNTERKONTO_MAP[kontoNr]?.nr || '';
+    const bzkNr = BZK_UNTERKONTO_MAP[kontoNr]?.nr || "";
     sollZeilen.push({ label: ` ${bzkNr}`, betrag: bzkSaldo });
   }
 
   const habenZeilen = [];
   if (nachlassSaldo) {
-    const nachlassNr = NACHLASS_MAP[kontoNr]?.nr || '';
+    const nachlassNr = NACHLASS_MAP[kontoNr]?.nr || "";
     habenZeilen.push({ label: nachlassNr, betrag: nachlassSaldo });
   }
   habenZeilen.push({ label: ` ${KGUV}`, betrag: guvSaldo });
 
-  const alleZeilen = Math.max(sollZeilen.length, habenZeilen.length, minZeilen || 3);
+  const alleZeilen = Math.max(
+    sollZeilen.length,
+    habenZeilen.length,
+    minZeilen || 3,
+  );
 
   let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
     <thead><tr>
@@ -425,10 +515,10 @@ function renderTKontoLoesung(kontoNr, buchungen, eigenSaldo, nachlassSaldo, bzkS
     const s = sollZeilen[i];
     const h = habenZeilen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${s ? s.label : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${s ? formatBetrag(s.betrag) : '&nbsp;'}</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${h ? h.label : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 2px;min-width:100px;">${h ? formatBetrag(h.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${s ? s.label : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${s ? formatBetrag(s.betrag) : "&nbsp;"}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${h ? h.label : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">${h ? formatBetrag(h.betrag) : "&nbsp;"}</td>
     </tr>`;
   }
 
@@ -454,10 +544,10 @@ function renderTKontoUEFELoesung(buchungen, saldo, minZeilen) {
   for (let i = 0; i < alleZeilen; i++) {
     const b = buchungen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ` ${KGUV}` : ''}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ''}</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : '&nbsp;'}</td>
-      <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : '&nbsp;'}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${i === 0 ? ` ${KGUV}` : ""}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${i === 0 ? formatBetrag(saldo) : ""}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${b ? `${b.nr}. ${BUCHUNGSTYP_LABEL[b.typ] || b.typ}` : "&nbsp;"}</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">${b ? formatBetrag(b.betrag) : "&nbsp;"}</td>
     </tr>`;
   }
   html += `<tr style="border-top:2px solid #888;border-bottom:4px double #888;">
@@ -473,16 +563,21 @@ function renderTKontoUEFELoesung(buchungen, saldo, minZeilen) {
 // GuV-T-Konto LÖSUNG
 function renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt) {
   const gesamtAufwand = Object.values(guvSaldos).reduce((s, v) => s + v, 0);
-  const isGewinn = erfolgArt === 'Gewinn';
+  const isGewinn = erfolgArt === "Gewinn";
 
-  const sollZeilen = Object.entries(guvSaldos).map(([nr, betrag]) => ({ label: nr, betrag }));
-  if (isGewinn) sollZeilen.push({ label: KEK, betrag: erfolgHoehe, fett: true });
+  const sollZeilen = Object.entries(guvSaldos).map(([nr, betrag]) => ({
+    label: nr,
+    betrag,
+  }));
+  if (isGewinn)
+    sollZeilen.push({ label: KEK, betrag: erfolgHoehe, fett: true });
 
   const habenZeilen = [{ label: KUEFE, betrag: uefe }];
-  if (!isGewinn) habenZeilen.push({ label: KEK, betrag: erfolgHoehe, fett: true });
+  if (!isGewinn)
+    habenZeilen.push({ label: KEK, betrag: erfolgHoehe, fett: true });
 
-  const maxZeilen  = Math.max(sollZeilen.length, habenZeilen.length);
-  const sollSumme  = isGewinn ? gesamtAufwand + erfolgHoehe : gesamtAufwand;
+  const maxZeilen = Math.max(sollZeilen.length, habenZeilen.length);
+  const sollSumme = isGewinn ? gesamtAufwand + erfolgHoehe : gesamtAufwand;
   const habenSumme = isGewinn ? uefe : uefe + erfolgHoehe;
 
   let html = `<table class="tkonto" style="border-collapse:collapse;width:100%;background:#fff;font-size:1.0em;">
@@ -496,10 +591,10 @@ function renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt) {
     const s = sollZeilen[i];
     const h = habenZeilen[i];
     html += `<tr style="border-top:2px solid #ccc;">
-      <td style="padding:3px 2px;white-space:nowrap;">${s ? s.label : ''}</td>
-      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${s ? formatBetrag(s.betrag) : ''}</td>
-      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${h ? h.label : ''}</td>
-      <td style="text-align:right;padding:3px 2px;min-width:100px;">${h ? formatBetrag(h.betrag) : ''}</td>
+      <td style="padding:3px 2px;white-space:nowrap;">${s ? s.label : ""}</td>
+      <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${s ? formatBetrag(s.betrag) : ""}</td>
+      <td style="padding:3px 2px 3px 6px;min-width:100px;white-space:nowrap;">${h ? h.label : ""}</td>
+      <td style="text-align:right;padding:3px 2px;min-width:100px;">${h ? formatBetrag(h.betrag) : ""}</td>
     </tr>`;
   }
   html += `<tr style="border-top:2px solid #888;border-bottom:4px double #888;">
@@ -515,56 +610,87 @@ function renderTKontoGUV(guvSaldos, uefe, erfolgHoehe, erfolgArt) {
 // ── HAUPTFUNKTION ────────────────────────────────────────────────────────────
 
 function zeigeZufaelligenBestandsabschluss() {
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
-  container.innerHTML = '';
+  container.innerHTML = "";
 
-
-    const mitNachlaesse    = document.getElementById('toggleNachlaesse')?.checked || false;
-  const mitBzkUnterkonten = document.getElementById('toggleBzkUnterkonten')?.checked || false;
+  const mitNachlaesse =
+    document.getElementById("toggleNachlaesse")?.checked || false;
+  const mitBzkUnterkonten =
+    document.getElementById("toggleBzkUnterkonten")?.checked || false;
 
   const kontenTypen = getAusgewaehlteKonten();
   if (Object.keys(kontenTypen).length === 0) {
-    container.innerHTML = '<p style="color:#b00;font-weight:600;">Bitte mindestens ein Werkstoffkonto auswählen.</p>';
+    container.innerHTML =
+      '<p style="color:#b00;font-weight:600;">Bitte mindestens ein Werkstoffkonto auswählen.</p>';
     return;
   }
   const erfolgswunsch = getErfolgswunsch();
- const { konten, nachlaesse, bzkUnterkonten, uefeDaten, uefe, erfolg, erfolgArt, erfolgHoehe } =
-    erstelleZufaelligenBestandsabschluss(mitNachlaesse, mitBzkUnterkonten, kontenTypen, erfolgswunsch);
+  const {
+    konten,
+    nachlaesse,
+    bzkUnterkonten,
+    uefeDaten,
+    uefe,
+    erfolg,
+    erfolgArt,
+    erfolgHoehe,
+  } = erstelleZufaelligenBestandsabschluss(
+    mitNachlaesse,
+    mitBzkUnterkonten,
+    kontenTypen,
+    erfolgswunsch,
+  );
 
   const hatUnterkonten = mitNachlaesse || mitBzkUnterkonten;
 
   // ── Gleichmäßige Zeilenzahlen pro Gruppe ermitteln ────────────────────────
 
   // BZK-Unterkonten Aufgabe: alle auf gleiche Länge
-  const bzkBuchungsArrays = Object.keys(konten).map(nr => bzkUnterkonten[nr]?.buchungen || []);
-  const maxBzkAufgabe = mitBzkUnterkonten ? maxBuchungsanzahl(bzkBuchungsArrays) : 0;
+  const bzkBuchungsArrays = Object.keys(konten).map(
+    (nr) => bzkUnterkonten[nr]?.buchungen || [],
+  );
+  const maxBzkAufgabe = mitBzkUnterkonten
+    ? maxBuchungsanzahl(bzkBuchungsArrays)
+    : 0;
 
   // BZK-Unterkonten Lösung: Soll = eigene Buchungen, Haben = 1 Gegenbuchung → max(buchungen, 1)
   const maxBzkLoesung = mitBzkUnterkonten
-    ? Math.max(...Object.keys(konten).map(nr => Math.max((bzkUnterkonten[nr]?.buchungen || []).length, 1)))
+    ? Math.max(
+        ...Object.keys(konten).map((nr) =>
+          Math.max((bzkUnterkonten[nr]?.buchungen || []).length, 1),
+        ),
+      )
     : 0;
 
   // Nachlasskonten Aufgabe: alle auf gleiche Länge
-  const nlBuchungsArrays = Object.keys(konten).map(nr => nachlaesse[nr]?.buchungen || []);
+  const nlBuchungsArrays = Object.keys(konten).map(
+    (nr) => nachlaesse[nr]?.buchungen || [],
+  );
   const maxNlAufgabe = mitNachlaesse ? maxBuchungsanzahl(nlBuchungsArrays) : 0;
 
   // Nachlasskonten Lösung: Haben = eigene Buchungen, Soll = 1 Gegenbuchung → max(buchungen, 1)
   const maxNlLoesung = mitNachlaesse
-    ? Math.max(...Object.keys(konten).map(nr => Math.max((nachlaesse[nr]?.buchungen || []).length, 1)))
+    ? Math.max(
+        ...Object.keys(konten).map((nr) =>
+          Math.max((nachlaesse[nr]?.buchungen || []).length, 1),
+        ),
+      )
     : 0;
 
   // Hauptkonten (Aufgabe): alle auf gleiche Länge
-  const hauptBuchungsArrays = Object.values(konten).map(k => k.buchungen);
+  const hauptBuchungsArrays = Object.values(konten).map((k) => k.buchungen);
   const maxHaupt = maxBuchungsanzahl(hauptBuchungsArrays);
 
   // Hauptkonten (Lösung): Soll = buchungen + ggf. BZK-Übertrag, Haben = ggf. Nachlass-Übertrag + GUV
   // Beide Seiten müssen gleich lang sein → nimm das Max beider Seiten über alle Konten
-  const maxHauptLoesung = Math.max(...Object.values(konten).map(k => {
-    const sollZeilen = k.buchungen.length + (k.bzkSaldo ? 1 : 0);
-    const habenZeilen = (k.nachlassSaldo ? 1 : 0) + 1; // +1 für GUV-Abschlussbuchung
-    return Math.max(sollZeilen, habenZeilen);
-  }));
+  const maxHauptLoesung = Math.max(
+    ...Object.values(konten).map((k) => {
+      const sollZeilen = k.buchungen.length + (k.bzkSaldo ? 1 : 0);
+      const habenZeilen = (k.nachlassSaldo ? 1 : 0) + 1; // +1 für GUV-Abschlussbuchung
+      return Math.max(sollZeilen, habenZeilen);
+    }),
+  );
 
   // UEFE Aufgabe/Lösung: eigene Buchungsanzahl (nur 1 Konto, kein Gruppenabgleich nötig)
   const uefeBuchungenAnzahl = uefeDaten.buchungen.length;
@@ -573,9 +699,10 @@ function zeigeZufaelligenBestandsabschluss() {
   const guvAufgabeZeilen = 6;
 
   // ── AUFGABE ────────────────────────────────────────────────────────────────
-  let html = '<h2>Aufgabe</h2>';
+  let html = "<h2>Aufgabe</h2>";
 
-  let aufgabentext = 'Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>Schließe alle Konten ordnungsgemäß ab und bilde die Buchungssätze.';
+  let aufgabentext =
+    "Die folgenden Konten weisen zum Jahresende die aufgeführten Buchungen auf.<br>Schließe alle Konten ordnungsgemäß ab und bilde die Buchungssätze.";
   html += `<p>${aufgabentext}</p>`;
 
   // Aufgabe: 2-Spalten-Grid für den Druck
@@ -626,10 +753,10 @@ function zeigeZufaelligenBestandsabschluss() {
       const bzkDaten = bzkUnterkonten[nr];
       if (bzkU && bzkDaten) {
         html += `<tr>
-          <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${nr}</td>
-          <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-          <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${bzkU.nr}</td>
-          <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(bzkDaten.saldo)} €</td>
+          <td style="border-width:0px;padding:2px 10px 2px 0;white-space:nowrap;">${nr}</td>
+          <td style="border-width:0px;padding:2px 10px;text-align:center;">an</td>
+          <td style="border-width:0px;padding:2px 10px;white-space:nowrap;">${bzkU.nr}</td>
+          <td style="border-width:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(bzkDaten.saldo)} €</td>
         </tr>`;
       }
     });
@@ -637,58 +764,58 @@ function zeigeZufaelligenBestandsabschluss() {
   }
 
   if (mitNachlaesse) {
-    const schrittLabel = mitBzkUnterkonten ? 'Schritt 1b' : 'Schritt 1';
+    const schrittLabel = mitBzkUnterkonten ? "Schritt 1b" : "Schritt 1";
     html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">${schrittLabel}: Vorabschluss – Nachlasskonten über Hauptkonten abschließen</td></tr>`;
     Object.entries(konten).forEach(([nr]) => {
       const nl = NACHLASS_MAP[nr];
       const nlDaten = nachlaesse[nr];
       if (nl && nlDaten) {
         html += `<tr>
-          <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${nl.nr}</td>
-          <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-          <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${nr}</td>
-          <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(nlDaten.saldo)} €</td>
+          <td style="border-width:0px;padding:2px 10px 2px 0;white-space:nowrap;">${nl.nr}</td>
+          <td style="border-width:0px;padding:2px 10px;text-align:center;">an</td>
+          <td style="border-width:0px;padding:2px 10px;white-space:nowrap;">${nr}</td>
+          <td style="border-width:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(nlDaten.saldo)} €</td>
         </tr>`;
       }
     });
     html += `<tr><td colspan="4" style="padding:6px 0;"></td></tr>`;
   }
 
-  const schrittGUV = hatUnterkonten ? 'Schritt 2' : 'Schritt 1';
+  const schrittGUV = hatUnterkonten ? "Schritt 2" : "Schritt 1";
   html += `<tr><td colspan="4" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">${schrittGUV}: Aufwandskonten über GuV abschließen</td></tr>`;
 
   Object.entries(konten).forEach(([nr, data]) => {
     html += `<tr>
-      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KGUV}</td>
-      <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${nr}</td>
-      <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(data.guvSaldo)} €</td>
+      <td style="border-width:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KGUV}</td>
+      <td style="border-width:0px;padding:2px 10px;text-align:center;">an</td>
+      <td style="border-width:0px;padding:2px 10px;white-space:nowrap;">${nr}</td>
+      <td style="border-width:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(data.guvSaldo)} €</td>
     </tr>`;
   });
 
   html += `<tr><td colspan="4" style="padding:4px 0;"></td></tr>`;
   html += `<tr>
-    <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KUEFE}</td>
-    <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-    <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${KGUV}</td>
-    <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(uefe)} €</td>
+    <td style="border-width:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KUEFE}</td>
+    <td style="border-width:0px;padding:2px 10px;text-align:center;">an</td>
+    <td style="border-width:0px;padding:2px 10px;white-space:nowrap;">${KGUV}</td>
+    <td style="border-width:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(uefe)} €</td>
   </tr>`;
 
   html += `<tr><td colspan="4" style="padding:4px 0;"></td></tr>`;
 
   if (erfolg >= 0) {
     html += `<tr style="font-weight:700;">
-      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KGUV}</td>
-      <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${KEK}</td>
-      <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
+      <td style="border-width:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KGUV}</td>
+      <td style="border-width:0px;padding:2px 10px;text-align:center;">an</td>
+      <td style="border-width:0px;padding:2px 10px;white-space:nowrap;">${KEK}</td>
+      <td style="border-width:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
     </tr>`;
   } else {
     html += `<tr style="font-weight:700;">
-      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KEK}</td>
-      <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${KGUV}</td>
-      <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
+      <td style="border-width:0px;padding:2px 10px 2px 0;white-space:nowrap;">${KEK}</td>
+      <td style="border-width:0px;padding:2px 10px;text-align:center;">an</td>
+      <td style="border-width:0px;padding:2px 10px;white-space:nowrap;">${KGUV}</td>
+      <td style="border-width:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(erfolgHoehe)} €</td>
     </tr>`;
   }
   html += `</tbody></table>`;
@@ -866,38 +993,42 @@ Was du NICHT tust:
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(() => {
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(KI_ASSISTENT_PROMPT)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() => {
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
-    btn.textContent = 'Vorschau ausblenden ▲';
+    vorschau.style.display = "block";
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
 // ── DRUCK-FUNKTION ───────────────────────────────────────────────────────────
 
-
 function addPrintCSS() {
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.innerHTML = `
     /* ── Bildschirm: flexibles Grid ──────────────────────────────────────── */
     .tkonto-grid {
@@ -990,18 +1121,18 @@ function addPrintCSS() {
 }
 
 // Sofort beim Laden ausführen
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Checkbox-Bezeichner aus dem zentralen Kontenplan befüllen (HTML trägt nur Nummern)
-  document.querySelectorAll('.kontoCheckboxBez[data-konto]').forEach(el => {
+  document.querySelectorAll(".kontoCheckboxBez[data-konto]").forEach((el) => {
     el.textContent = kontoLabel(el.dataset.konto);
   });
 
   zeigeZufaelligenBestandsabschluss();
   addPrintCSS();
 
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) {
     vorschauEl.value = KI_ASSISTENT_PROMPT;
-    vorschauEl.style.display = 'none';
+    vorschauEl.style.display = "none";
   }
 });

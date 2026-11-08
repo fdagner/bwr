@@ -2,40 +2,37 @@
 // GESCHÄFTSFÄLLE MIT KONTO-AUSWAHL - KREDITBEREICH
 // ============================================================================
 // Globale Variablen
-let kunde = '<i>[Modellunternehmen]</i>';
+let kunde = "<i>[Modellunternehmen]</i>";
 let letzteGenerierteGeschaeftsfaelle = [];
 
 // ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
 // Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
 // Bei Änderungen nur KONTENPLAN in utils.js anpassen.
-const KBKV  = kontoLabel('4200');   // Kurzfristige Bankverbindlichkeiten
-const LBKV  = kontoLabel('4250');   // Langfristige Bankverbindlichkeiten
-const ZAW   = kontoLabel('7510');   // Zinsaufwendungen
-const KGV   = kontoLabel('6750');   // Kosten des Geldverkehrs
-const BK    = kontoLabel('2800');   // Bank
+const KBKV = kontoLabel("4200"); // Kurzfristige Bankverbindlichkeiten
+const LBKV = kontoLabel("4250"); // Langfristige Bankverbindlichkeiten
+const ZAW = kontoLabel("7510"); // Zinsaufwendungen
+const KGV = kontoLabel("6750"); // Kosten des Geldverkehrs
+const BK = kontoLabel("2800"); // Bank
 
 // Konten-Definitionen
 const kontenDefinitionen = {
-    [KBKV]: {
-        beschreibung: 'Kurzfristige Bankverbindlichkeiten',
-    },
-    [LBKV]: {
-        beschreibung: 'Langfristige Bankverbindlichkeiten',
-    },
-    [ZAW]: {
-        beschreibung: 'Zinsaufwendungen (inkl. Disagio)',
-    },
-    [KGV]: {
-        beschreibung: 'Kosten des Geldverkehrs',
-    },
+  [KBKV]: {
+    beschreibung: "Kurzfristige Bankverbindlichkeiten",
+  },
+  [LBKV]: {
+    beschreibung: "Langfristige Bankverbindlichkeiten",
+  },
+  [ZAW]: {
+    beschreibung: "Zinsaufwendungen (inkl. Disagio)",
+  },
+  [KGV]: {
+    beschreibung: "Kosten des Geldverkehrs",
+  },
 };
 
 // ============================================================================
 // YAML-DATEN LADEN
 // ============================================================================
-
-
-
 
 // ============================================================================
 // GESCHÄFTSFALL-TYPEN AUSWAHL FUNKTIONEN (ERSATZ FÜR KONTEN)
@@ -43,472 +40,605 @@ const kontenDefinitionen = {
 
 // Wird beim Start aufgerufen, prüft und aktualisiert die Anzeige
 function initializeKontoAuswahl() {
-    // Sicherstellen, dass jede Änderung den Hinweis aktualisiert
-    document.querySelectorAll('.typCheckbox').forEach(cb => {
-        cb.addEventListener('change', aktualisiereAuswahlInfo);
-    });
-    aktualisiereAuswahlInfo();
+  // Sicherstellen, dass jede Änderung den Hinweis aktualisiert
+  document.querySelectorAll(".typCheckbox").forEach((cb) => {
+    cb.addEventListener("change", aktualisiereAuswahlInfo);
+  });
+  aktualisiereAuswahlInfo();
 }
 
 function aktualisiereAuswahlInfo() {
-    const auswahlInfo = document.getElementById('auswahlInfo');
-    const checkboxes = document.querySelectorAll('.typCheckbox');
-    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const auswahlInfo = document.getElementById("auswahlInfo");
+  const checkboxes = document.querySelectorAll(".typCheckbox");
+  const checkedCount = Array.from(checkboxes).filter((cb) => cb.checked).length;
 
-    if (!auswahlInfo) return;
+  if (!auswahlInfo) return;
 
-    auswahlInfo.style.display = 'block';
+  auswahlInfo.style.display = "block";
 
-    if (checkedCount === 0) {
-        auswahlInfo.textContent = '⚠️ Keine Themen ausgewählt - es werden alle verwendet';
-        auswahlInfo.style.background = '#fff3cd';
-        auswahlInfo.style.color = '#856404';
-    } else if (checkedCount === checkboxes.length) {
-        auswahlInfo.textContent = '✓ Alle Themen ausgewählt';
-        auswahlInfo.style.background = '#d4edda';
-        auswahlInfo.style.color = '#155724';
-    } else {
-        auswahlInfo.textContent = `✓ ${checkedCount} von ${checkboxes.length} Themen ausgewählt`;
-        auswahlInfo.style.background = '#d1ecf1';
-        auswahlInfo.style.color = '#0c5460';
-    }
+  if (checkedCount === 0) {
+    auswahlInfo.textContent =
+      "⚠️ Keine Themen ausgewählt - es werden alle verwendet";
+    auswahlInfo.style.background = "#fff3cd";
+    auswahlInfo.style.color = "#856404";
+  } else if (checkedCount === checkboxes.length) {
+    auswahlInfo.textContent = "✓ Alle Themen ausgewählt";
+    auswahlInfo.style.background = "#d4edda";
+    auswahlInfo.style.color = "#155724";
+  } else {
+    auswahlInfo.textContent = `✓ ${checkedCount} von ${checkboxes.length} Themen ausgewählt`;
+    auswahlInfo.style.background = "#d1ecf1";
+    auswahlInfo.style.color = "#0c5460";
+  }
 }
 
 function alleTypenAuswaehlen() {
-    document.querySelectorAll('.typCheckbox').forEach(cb => cb.checked = true);
-    aktualisiereAuswahlInfo();
+  document
+    .querySelectorAll(".typCheckbox")
+    .forEach((cb) => (cb.checked = true));
+  aktualisiereAuswahlInfo();
 }
 
 function alleTypenAbwaehlen() {
-    document.querySelectorAll('.typCheckbox').forEach(cb => cb.checked = false);
-    aktualisiereAuswahlInfo();
+  document
+    .querySelectorAll(".typCheckbox")
+    .forEach((cb) => (cb.checked = false));
+  aktualisiereAuswahlInfo();
 }
 
 // Ersetzt das alte getAusgewaehlteKonten
 function getAusgewaehlteTypen() {
-    const checkboxes = document.querySelectorAll('.typCheckbox:checked');
-    return Array.from(checkboxes).map(cb => cb.value);
+  const checkboxes = document.querySelectorAll(".typCheckbox:checked");
+  return Array.from(checkboxes).map((cb) => cb.value);
 }
 
 function generateGlattenBetrag(min = 10000, max = 100000, schritt = 5000) {
-    const anzahlSchritte = Math.floor((max - min) / schritt);
-    return min + (Math.floor(Math.random() * (anzahlSchritte + 1)) * schritt);
+  const anzahlSchritte = Math.floor((max - min) / schritt);
+  return min + Math.floor(Math.random() * (anzahlSchritte + 1)) * schritt;
 }
-
-
 
 // ============================================================================
 // GESCHÄFTSFALL-DEFINITIONEN
 // ============================================================================
 const geschaeftsfallTypen = {
+  // --------------------------------------------------------------------------
+  // 4200 KBKV – Kurzfristige Bankverbindlichkeiten (Kreditaufnahme)
+  // --------------------------------------------------------------------------
+  kbkv: {
+    name: "Kreditaufnahme (kurzfristig)",
+    sollKonto: BK,
+    habenKonto: KBKV,
+    belegtyp: "kontoauszug",
+    kontoauszugArt: "kontoauszug3.svg",
+    zahlungsarten: [
+      { text: "wird gutgeschrieben", konto: BK },
+      { text: "wird auf dem Konto gutgeschrieben", konto: BK },
+    ],
+    mitVorsteuer: false,
+    mitUSt: false,
+    geschaeftsfaelle: [
+      {
+        typText:
+          "Die Hausbank gewährt einen kurzfristigen Bankkredit über {summe} und schreibt den Betrag auf dem Bankkonto von {kunde} gut.",
+        vorgang: "Kreditaufnahme kurzfristig",
+      },
+      {
+        typText:
+          "Zur Überbrückung von Engpässen wird ein kurzfristiger Kredit über {summe} auf dem Geschäftskonto der Firma {kunde} gutgeschrieben.",
+        vorgang: "Gutschrift Kurzfristkredit",
+      },
+      {
+        typText:
+          "Ein kurzfristiger Betriebsmittelkredit über {summe} wird auf dem Bankkonto von {kunde} gutgeschrieben.",
+        vorgang: "Kreditaufnahme KBKV",
+      },
+      {
+        typText:
+          "Die Bank bewilligt {kunde} einen Bankkredit mit einer Laufzeit von 6 Monaten über {summe}. Der Betrag wird auf dem Bankkonto gutgeschrieben.",
+        vorgang: "Kurzfristiges Darlehen",
+      },
+    ],
+    customBetrag: () => generateGlattenBetrag(10000, 50000, 5000),
+    betragsbereich: { min: 10000, max: 50000 },
+  },
 
-    // --------------------------------------------------------------------------
-    // 4200 KBKV – Kurzfristige Bankverbindlichkeiten (Kreditaufnahme)
-    // --------------------------------------------------------------------------
-    kbkv: {
-        name: 'Kreditaufnahme (kurzfristig)',
-        sollKonto: BK,
-        habenKonto: KBKV,
-        belegtyp: 'kontoauszug',
-        kontoauszugArt: 'kontoauszug3.svg',
-        zahlungsarten: [
-            { text: 'wird gutgeschrieben', konto: BK },
-            { text: 'wird auf dem Konto gutgeschrieben', konto: BK },
-        ],
-        mitVorsteuer: false,
-        mitUSt: false,
-        geschaeftsfaelle: [
-            { typText: 'Die Hausbank gewährt einen kurzfristigen Bankkredit über {summe} und schreibt den Betrag auf dem Bankkonto von {kunde} gut.', vorgang: 'Kreditaufnahme kurzfristig' },
-            { typText: 'Zur Überbrückung von Engpässen wird ein kurzfristiger Kredit über {summe} auf dem Geschäftskonto der Firma {kunde} gutgeschrieben.', vorgang: 'Gutschrift Kurzfristkredit' },
-            { typText: 'Ein kurzfristiger Betriebsmittelkredit über {summe} wird auf dem Bankkonto von {kunde} gutgeschrieben.', vorgang: 'Kreditaufnahme KBKV' },
-            { typText: 'Die Bank bewilligt {kunde} einen Bankkredit mit einer Laufzeit von 6 Monaten über {summe}. Der Betrag wird auf dem Bankkonto gutgeschrieben.', vorgang: 'Kurzfristiges Darlehen' },
-        ],
-        customBetrag: () => generateGlattenBetrag(10000, 50000, 5000),
-        betragsbereich: { min: 10000, max: 50000 }
-    },
+  // --------------------------------------------------------------------------
+  // 4250 LBKV – Langfristige Bankverbindlichkeiten (Kreditaufnahme)
+  // --------------------------------------------------------------------------
+  lbkv: {
+    name: "Kreditaufnahme (langfristig)",
+    sollKonto: BK,
+    habenKonto: LBKV,
+    belegtyp: "kontoauszug",
+    kontoauszugArt: "kontoauszug3.svg",
+    zahlungsarten: [
+      { text: "wird gutgeschrieben", konto: BK },
+      { text: "wird auf dem Konto gutgeschrieben", konto: BK },
+    ],
+    mitVorsteuer: false,
+    mitUSt: false,
+    geschaeftsfaelle: [
+      {
+        typText:
+          "Die Hausbank gewährt ein langfristiges Darlehen über {summe} und schreibt den Betrag auf dem Bankkonto von {kunde} gut.",
+        vorgang: "Kreditaufnahme langfristig",
+      },
+      {
+        typText:
+          "Ein langfristiger Investitionskredit über {summe} wird auf dem Geschäftskonto der Firma {kunde} gutgeschrieben.",
+        vorgang: "Investitionskredit",
+      },
+      {
+        typText:
+          "Die Bank bewilligt {kunde} ein Darlehen mit einer Laufzeit von 10 Jahren über {summe}. Der Betrag wird auf dem Bankkonto gutgeschrieben.",
+        vorgang: "Baudarlehen",
+      },
+    ],
+    customBetrag: () => generateGlattenBetrag(50000, 200000, 10000),
+    betragsbereich: { min: 50000, max: 200000 },
+  },
 
-    // --------------------------------------------------------------------------
-    // 4250 LBKV – Langfristige Bankverbindlichkeiten (Kreditaufnahme)
-    // --------------------------------------------------------------------------
-    lbkv: {
-        name: 'Kreditaufnahme (langfristig)',
-        sollKonto: BK,
-        habenKonto: LBKV,
-        belegtyp: 'kontoauszug',
-        kontoauszugArt: 'kontoauszug3.svg',
-        zahlungsarten: [
-            { text: 'wird gutgeschrieben', konto: BK },
-            { text: 'wird auf dem Konto gutgeschrieben', konto: BK },
-        ],
-        mitVorsteuer: false,
-        mitUSt: false,
-        geschaeftsfaelle: [
-            { typText: 'Die Hausbank gewährt ein langfristiges Darlehen über {summe} und schreibt den Betrag auf dem Bankkonto von {kunde} gut.', vorgang: 'Kreditaufnahme langfristig' },
-            { typText: 'Ein langfristiger Investitionskredit über {summe} wird auf dem Geschäftskonto der Firma {kunde} gutgeschrieben.', vorgang: 'Investitionskredit' },
-            { typText: 'Die Bank bewilligt {kunde} ein Darlehen mit einer Laufzeit von 10 Jahren über {summe}. Der Betrag wird auf dem Bankkonto gutgeschrieben.', vorgang: 'Baudarlehen' },
-        ],
-        customBetrag: () => generateGlattenBetrag(50000, 200000, 10000),
-        betragsbereich: { min: 50000, max: 200000 }
-    },
+  // --------------------------------------------------------------------------
+  // 7510 ZAW – Zinsaufwendungen (Sollzinsen / Überziehungszinsen)
+  // --------------------------------------------------------------------------
+  zaw: {
+    name: "Zinsaufwendungen",
+    sollKonto: ZAW,
+    habenKonto: BK,
+    belegtyp: "kontoauszug",
+    kontoauszugArt: "kontoauszug1.svg",
+    zahlungsarten: [
+      { text: "werden vom Geschäftskonto abgebucht", konto: BK },
+      { text: "werden vom Bankkonto abgebucht", konto: BK },
+    ],
+    mitVorsteuer: false,
+    mitUSt: false,
+    geschaeftsfaelle: [
+      { beschreibung: "Sollzinsen ", vorgang: "Sollzinsen" },
+      { beschreibung: "Überziehungszinsen ", vorgang: "Überziehungszinsen" },
+      {
+        beschreibung: "Darlehenszinsen für den Bankkredit ",
+        vorgang: "Zinsaufwand",
+      },
+      {
+        beschreibung: "Zinsen für die Inanspruchnahme des Kontokorrentkredits ",
+        vorgang: "Sollzinsen Bank",
+      },
+      { beschreibung: "Zinsaufwendungen ", vorgang: "Zinsbelastung" },
+    ],
+    betragsbereich: { min: 150, max: 2800 },
+  },
 
-    // --------------------------------------------------------------------------
-    // 7510 ZAW – Zinsaufwendungen (Sollzinsen / Überziehungszinsen)
-    // --------------------------------------------------------------------------
-    zaw: {
-        name: 'Zinsaufwendungen',
-        sollKonto: ZAW,
-        habenKonto: BK,
-        belegtyp: 'kontoauszug',
-        kontoauszugArt: 'kontoauszug1.svg',
-        zahlungsarten: [
-            { text: 'werden vom Geschäftskonto abgebucht', konto: BK },
-            { text: 'werden vom Bankkonto abgebucht', konto: BK },
-        ],
-        mitVorsteuer: false,
-        mitUSt: false,
-        geschaeftsfaelle: [
-            { beschreibung: 'Sollzinsen ', vorgang: 'Sollzinsen' },
-            { beschreibung: 'Überziehungszinsen ', vorgang: 'Überziehungszinsen' },
-            { beschreibung: 'Darlehenszinsen für den Bankkredit ', vorgang: 'Zinsaufwand' },
-            { beschreibung: 'Zinsen für die Inanspruchnahme des Kontokorrentkredits ', vorgang: 'Sollzinsen Bank' },
-            { beschreibung: 'Zinsaufwendungen ', vorgang: 'Zinsbelastung' },
-        ],
-        betragsbereich: { min: 150, max: 2800 }
-    },
+  // --------------------------------------------------------------------------
+  // 6750 KGV – Kontoführungsgebühren / Bankspesen
+  // --------------------------------------------------------------------------
+  kgv: {
+    name: "Kontoführungsgebühren",
+    sollKonto: KGV,
+    habenKonto: BK,
+    belegtyp: "kontoauszug",
+    kontoauszugArt: "kontoauszug1.svg",
+    zahlungsarten: [
+      { text: "werden vom Geschäftskonto abgebucht", konto: BK },
+      { text: "werden vom Konto belastet", konto: BK },
+    ],
+    mitVorsteuer: false,
+    mitUSt: false,
+    geschaeftsfaelle: [
+      {
+        beschreibung: "Die vierteljährlichen Kontoführungsgebühren ",
+        vorgang: "Kontoführungsgebühren",
+      },
+      {
+        beschreibung: "Bankspesen für die Kontoführung ",
+        vorgang: "Bankspesen",
+      },
+      {
+        beschreibung: "Gebühren für den Zahlungsverkehr ",
+        vorgang: "Kontoführung",
+      },
+      {
+        beschreibung:
+          "Bearbeitungsgebühren für die Bereitstellung des Geschäftskontos ",
+        vorgang: "Bankgebühren",
+      },
+    ],
+    betragsbereich: { min: 25, max: 350 },
+  },
 
-    // --------------------------------------------------------------------------
-    // 6750 KGV – Kontoführungsgebühren / Bankspesen
-    // --------------------------------------------------------------------------
-    kgv: {
-        name: 'Kontoführungsgebühren',
-        sollKonto: KGV,
-        habenKonto: BK,
-        belegtyp: 'kontoauszug',
-        kontoauszugArt: 'kontoauszug1.svg',
-        zahlungsarten: [
-            { text: 'werden vom Geschäftskonto abgebucht', konto: BK },
-            { text: 'werden vom Konto belastet', konto: BK },
-        ],
-        mitVorsteuer: false,
-        mitUSt: false,
-        geschaeftsfaelle: [
-            { beschreibung: 'Die vierteljährlichen Kontoführungsgebühren ', vorgang: 'Kontoführungsgebühren' },
-            { beschreibung: 'Bankspesen für die Kontoführung ', vorgang: 'Bankspesen' },
-            { beschreibung: 'Gebühren für den Zahlungsverkehr ', vorgang: 'Kontoführung' },
-            { beschreibung: 'Bearbeitungsgebühren für die Bereitstellung des Geschäftskontos ', vorgang: 'Bankgebühren' },
-        ],
-        betragsbereich: { min: 25, max: 350 }
-    },
+  // --------------------------------------------------------------------------
+  // Umwandlung kurzfristiger in langfristige Bankverbindlichkeiten
+  // --------------------------------------------------------------------------
+  umwandlung_kredit: {
+    name: "Kreditumwandlung",
+    sollKonto: KBKV,
+    habenKonto: LBKV,
+    belegtyp: "sonstiger",
+    zahlungsarten: [],
+    mitDisagio: false,
+    geschaeftsfaelle: [
+      {
+        beschreibung:
+          "Ein kurzfristiger Bankkredit bei der Hausbank wird in ein langfristiges Darlehen umgewandelt ",
+        vorgang: "Kreditumwandlung",
+      },
+      {
+        beschreibung:
+          "Bestehende kurzfristige Bankverbindlichkeiten werden in langfristige Verbindlichkeiten umgeschuldet ",
+        vorgang: "Umschuldung Kredit",
+      },
+      {
+        beschreibung:
+          "Ein kurzfristiges Darlehen wird in ein langfristiges Immobiliendarlehen umgewandelt ",
+        vorgang: "Kreditumwandlung",
+      },
+    ],
+    customBetrag: () => generateGlattenBetrag(20000, 100000, 5000),
+    betragsbereich: { min: 20000, max: 100000 },
+  },
 
-    // --------------------------------------------------------------------------
-    // Umwandlung kurzfristiger in langfristige Bankverbindlichkeiten
-    // --------------------------------------------------------------------------
-    umwandlung_kredit: {
-        name: 'Kreditumwandlung',
-        sollKonto: KBKV,
-        habenKonto: LBKV,
-        belegtyp: 'sonstiger',
-        zahlungsarten: [],
-        mitDisagio: false,
-        geschaeftsfaelle: [
-            { beschreibung: 'Ein kurzfristiger Bankkredit bei der Hausbank wird in ein langfristiges Darlehen umgewandelt ', vorgang: 'Kreditumwandlung' },
-            { beschreibung: 'Bestehende kurzfristige Bankverbindlichkeiten werden in langfristige Verbindlichkeiten umgeschuldet ', vorgang: 'Umschuldung Kredit' },
-            { beschreibung: 'Ein kurzfristiges Darlehen wird in ein langfristiges Immobiliendarlehen umgewandelt ', vorgang: 'Kreditumwandlung' },
-        ],
-        customBetrag: () => generateGlattenBetrag(20000, 100000, 5000),
-        betragsbereich: { min: 20000, max: 100000 }
-    },
+  // --------------------------------------------------------------------------
+  // Kreditaufnahme mit Disagio (Buchung auf ZAW)
+  // --------------------------------------------------------------------------
+  kredit_disagio: {
+    name: "Kreditaufnahme mit Disagio",
+    sollKonto: BK,
+    habenKonto: LBKV,
+    belegtyp: "kontoauszug",
+    kontoauszugArt: "kontoauszug1.svg",
+    zahlungsarten: [{ text: "abzüglich Disagio ausgezahlt", konto: BK }],
+    mitDisagio: true,
+    disagioSatz: 1.5,
+    geschaeftsfaelle: [
+      {
+        typText:
+          "Die Bank zahlt ein langfristiges Darlehen in Höhe von {summe} abzüglich von {satz} % Disagio auf dem Bankkonto von {kunde} aus.",
+        vorgang: "Kreditaufnahme mit Disagio",
+      },
+      {
+        typText:
+          "Ein langfristiger Investitionskredit über {summe} wird unter Einbehalt von {satz} % Disagio auf dem Bankkonto von {kunde} gutgeschrieben.",
+        vorgang: "Darlehensauszahlung Disagio",
+      },
+      {
+        typText:
+          "Die Hausbank bewilligt ein Baudarlehen in Höhe von {summe} abzüglich {satz} % Disagio zur Gutschrift auf dem Bankkonto von {kunde}.",
+        vorgang: "Baudarlehen mit Disagio",
+      },
+    ],
+    customBetrag: () => generateGlattenBetrag(100000, 250000, 10000),
+    betragsbereich: { min: 100000, max: 250000 },
+  },
 
-    // --------------------------------------------------------------------------
-    // Kreditaufnahme mit Disagio (Buchung auf ZAW)
-    // --------------------------------------------------------------------------
-    kredit_disagio: {
-        name: 'Kreditaufnahme mit Disagio',
-        sollKonto: BK,
-        habenKonto: LBKV,
-        belegtyp: 'kontoauszug',
-        kontoauszugArt: 'kontoauszug1.svg',
-        zahlungsarten: [
-            { text: 'abzüglich Disagio ausgezahlt', konto: BK }
-        ],
-        mitDisagio: true,
-        disagioSatz: 1.5,
-        geschaeftsfaelle: [
-            { typText: 'Die Bank zahlt ein langfristiges Darlehen in Höhe von {summe} abzüglich von {satz} % Disagio auf dem Bankkonto von {kunde} aus.', vorgang: 'Kreditaufnahme mit Disagio' },
-            { typText: 'Ein langfristiger Investitionskredit über {summe} wird unter Einbehalt von {satz} % Disagio auf dem Bankkonto von {kunde} gutgeschrieben.', vorgang: 'Darlehensauszahlung Disagio' },
-            { typText: 'Die Hausbank bewilligt ein Baudarlehen in Höhe von {summe} abzüglich {satz} % Disagio zur Gutschrift auf dem Bankkonto von {kunde}.', vorgang: 'Baudarlehen mit Disagio' }
-        ],
-        customBetrag: () => generateGlattenBetrag(100000, 250000, 10000),
-        betragsbereich: { min: 100000, max: 250000 }
-    },
+  // --------------------------------------------------------------------------
+  // Zusammengesetzte Bankabrechnung: KGV und ZAW gemeinsam gebucht
+  // --------------------------------------------------------------------------
+  kontoabrechnung: {
+    name: "Kontoabrechnung (Gebühren + Sollzinsen)",
+    sollKonto: KGV,
+    habenKonto: BK,
+    belegtyp: "kontoauszug",
+    kontoauszugArt: "kontoauszug2.svg",
+    zahlungsarten: [
+      { text: "vom Geschäftskonto abgebucht", konto: BK },
+      { text: "vom Bankkonto abgebucht", konto: BK },
+    ],
+    mitVorsteuer: false,
+    mitUSt: false,
+    zusammengesetzt: true,
+    bestandteile: [
+      {
+        konto: KGV,
+        name: "Kontoführungsgebühr",
+        vorgangText: "Kontoführungsgebühren",
+        min: 25,
+        max: 120,
+      },
+      {
+        konto: ZAW,
+        name: "Sollzinsen",
+        vorgangText: "Sollzinsen",
+        min: 60,
+        max: 450,
+      },
+    ],
+    geschaeftsfaelle: [
+      {
+        beschreibung: "Die monatliche Abrechnung ",
+        vorgang: "Kontoabrechnung Gebühren & Sollzinsen",
+      },
+    ],
+    betragsbereich: { min: 100, max: 600 },
+  },
 
-    // --------------------------------------------------------------------------
-    // Zusammengesetzte Bankabrechnung: KGV und ZAW gemeinsam gebucht
-    // --------------------------------------------------------------------------
-    kontoabrechnung: {
-        name: 'Kontoabrechnung (Gebühren + Sollzinsen)',
-        sollKonto: KGV,
-        habenKonto: BK,
-        belegtyp: 'kontoauszug',
-        kontoauszugArt: 'kontoauszug2.svg',
-        zahlungsarten: [
-            { text: 'vom Geschäftskonto abgebucht', konto: BK },
-            { text: 'vom Bankkonto abgebucht', konto: BK },
-        ],
-        mitVorsteuer: false,
-        mitUSt: false,
-        zusammengesetzt: true,
-        bestandteile: [
-            { konto: KGV, name: 'Kontoführungsgebühr', vorgangText: 'Kontoführungsgebühren', min: 25, max: 120 },
-            { konto: ZAW, name: 'Sollzinsen', vorgangText: 'Sollzinsen', min: 60, max: 450 },
-        ],
-        geschaeftsfaelle: [
-            { beschreibung: 'Die monatliche Abrechnung ', vorgang: 'Kontoabrechnung Gebühren & Sollzinsen' },
-        ],
-        betragsbereich: { min: 100, max: 600 }
-    },
-
-    // --------------------------------------------------------------------------
-    // Kreditrückzahlung (Tilgung langfristiger Bankverbindlichkeiten)
-    // --------------------------------------------------------------------------
-    tilgung: {
-        name: 'Kreditrückzahlung',
-        sollKonto: LBKV,
-        habenKonto: BK,
-        belegtyp: 'kontoauszug',
-        kontoauszugArt: 'kontoauszug1.svg',
-        zahlungsarten: [
-            { text: '', konto: BK },
-            { text: 'per Banküberweisung', konto: BK }
-        ],
-        mitVorsteuer: false,
-        mitUSt: false,
-        geschaeftsfaelle: [
-            { beschreibung: 'Die Tilgung des langfristigen Darlehens ', vorgang: 'Darlehenstilgung' },
-            { beschreibung: 'Die planmäßige Rückzahlung des Investitionskredits ', vorgang: 'Kreditrückzahlung' },
-            { beschreibung: 'Tilgung des Baudarlehens ', vorgang: 'Tilgung Baudarlehen' }
-        ],
-        customBetrag: () => generateGlattenBetrag(10000, 50000, 5000),
-        betragsbereich: { min: 10000, max: 50000 }
-    },
-
+  // --------------------------------------------------------------------------
+  // Kreditrückzahlung (Tilgung langfristiger Bankverbindlichkeiten)
+  // --------------------------------------------------------------------------
+  tilgung: {
+    name: "Kreditrückzahlung",
+    sollKonto: LBKV,
+    habenKonto: BK,
+    belegtyp: "kontoauszug",
+    kontoauszugArt: "kontoauszug1.svg",
+    zahlungsarten: [
+      { text: "", konto: BK },
+      { text: "per Banküberweisung", konto: BK },
+    ],
+    mitVorsteuer: false,
+    mitUSt: false,
+    geschaeftsfaelle: [
+      {
+        beschreibung: "Die Tilgung des langfristigen Darlehens ",
+        vorgang: "Darlehenstilgung",
+      },
+      {
+        beschreibung: "Die planmäßige Rückzahlung des Investitionskredits ",
+        vorgang: "Kreditrückzahlung",
+      },
+      {
+        beschreibung: "Tilgung des Baudarlehens ",
+        vorgang: "Tilgung Baudarlehen",
+      },
+    ],
+    customBetrag: () => generateGlattenBetrag(10000, 50000, 5000),
+    betragsbereich: { min: 10000, max: 50000 },
+  },
 };
 
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
 
-
 function generateRandomBetrag(min = 100, max = 1000) {
-    const steps = Math.floor((max - min) / 5);
-    return min + (Math.floor(Math.random() * steps) * 5);
+  const steps = Math.floor((max - min) / 5);
+  return min + Math.floor(Math.random() * steps) * 5;
 }
 
-
-const wertFormulierungen = [
-    ' in Höhe von ',
-    ' mit einem Betrag von '
-];
+const wertFormulierungen = [" in Höhe von ", " mit einem Betrag von "];
 
 // ============================================================================
 // HIER GEHÖREN DIE NEUEN TEXT-VARIANTEN HIN:
 // ============================================================================
 const variantenSoll = [
-    `auf dem Bankkonto von ${kunde} `,
-    `auf dem Geschäftskonto der Firma ${kunde} `,
-    `auf dem Bankkonto des Unternehmens ${kunde} `,
-    `auf dem Girokonto von Fa. ${kunde} `,
+  `auf dem Bankkonto von ${kunde} `,
+  `auf dem Geschäftskonto der Firma ${kunde} `,
+  `auf dem Bankkonto des Unternehmens ${kunde} `,
+  `auf dem Girokonto von Fa. ${kunde} `,
 ];
 
 const variantenHaben = [
-    `vom Bankkonto von ${kunde} `,
-    `vom Geschäftskonto der Firma ${kunde} `,
-    `vom Bankkonto des Unternehmens ${kunde} `,
-    `vom Girokonto von Fa. ${kunde} `,
+  `vom Bankkonto von ${kunde} `,
+  `vom Geschäftskonto der Firma ${kunde} `,
+  `vom Bankkonto des Unternehmens ${kunde} `,
+  `vom Girokonto von Fa. ${kunde} `,
 ];
-
 
 // ============================================================================
 // GESCHÄFTSFALL GENERIEREN
 // ============================================================================
 
 function erstelleZufallsGeschaeftsfall() {
-    // HIER DIE KORREKTUR: Wir holen die ausgewählten Typen statt Konten
-    const ausgewaehlteTypen = getAusgewaehlteTypen();
+  // HIER DIE KORREKTUR: Wir holen die ausgewählten Typen statt Konten
+  const ausgewaehlteTypen = getAusgewaehlteTypen();
 
-    let verfuegbareTypen = Object.keys(geschaeftsfallTypen);
+  let verfuegbareTypen = Object.keys(geschaeftsfallTypen);
 
-    if (ausgewaehlteTypen.length > 0) {
-        verfuegbareTypen = verfuegbareTypen.filter(typKey => {
-            return ausgewaehlteTypen.includes(typKey);
-        });
+  if (ausgewaehlteTypen.length > 0) {
+    verfuegbareTypen = verfuegbareTypen.filter((typKey) => {
+      return ausgewaehlteTypen.includes(typKey);
+    });
+  }
+
+  // Wenn gar nichts ausgewählt ist, nimm sicherheitshalber alle
+  if (verfuegbareTypen.length === 0) {
+    verfuegbareTypen = Object.keys(geschaeftsfallTypen);
+  }
+
+  const zufallsTyp =
+    verfuegbareTypen[Math.floor(Math.random() * verfuegbareTypen.length)];
+  const typ = geschaeftsfallTypen[zufallsTyp];
+
+  const geschaeftsfall =
+    typ.geschaeftsfaelle[
+      Math.floor(Math.random() * typ.geschaeftsfaelle.length)
+    ];
+  const { min, max } = typ.betragsbereich;
+
+  // Wenn der Typ eine eigene glatte Betragsfunktion hat, nutze diese, sonst den Standard
+  const bruttoBetrag = typ.customBetrag
+    ? typ.customBetrag()
+    : generateRandomBetrag(min, max);
+
+  let ausgabeData = {
+    text: "",
+    typ: zufallsTyp,
+    typDaten: typ,
+    betrag: bruttoBetrag,
+    betragFormatted: formatCurrency(bruttoBetrag),
+    vorgang: geschaeftsfall.vorgang || null,
+    extraDaten: {},
+  };
+
+  // Textgenerierung je nach Geschäftsfall-Typ
+  switch (zufallsTyp) {
+    case "kredit_disagio": {
+      const zinssatz = typ.disagioSatz || 1.5;
+      const disagioBetrag = roundToTwoDecimals(bruttoBetrag * (zinssatz / 100));
+      const auszahlungsBetrag = roundToTwoDecimals(
+        bruttoBetrag - disagioBetrag,
+      );
+
+      ausgabeData.kreditsumme = bruttoBetrag;
+      ausgabeData.disagioBetrag = disagioBetrag;
+      ausgabeData.auszahlungsBetrag = auszahlungsBetrag;
+
+      ausgabeData.kreditsummeFormatted = formatCurrency(bruttoBetrag);
+      ausgabeData.disagioFormatted = formatCurrency(disagioBetrag);
+      ausgabeData.auszahlungFormatted = formatCurrency(auszahlungsBetrag);
+      ausgabeData.betragFormatted = formatCurrency(auszahlungsBetrag);
+      ausgabeData.disagioSatz = zinssatz;
+
+      const satzFormatted = zinssatz.toFixed(1).replace(".", ",");
+      const zufallsGf = geschaeftsfall.typText;
+
+      ausgabeData.text = zufallsGf
+        .replace("{summe}", ausgabeData.kreditsummeFormatted)
+        .replace("{satz}", satzFormatted)
+        .replace("{kunde}", kunde);
+
+      ausgabeData.betrag = auszahlungsBetrag;
+      break;
     }
 
-    // Wenn gar nichts ausgewählt ist, nimm sicherheitshalber alle
-    if (verfuegbareTypen.length === 0) {
-        verfuegbareTypen = Object.keys(geschaeftsfallTypen);
+    case "umwandlung_kredit": {
+      ausgabeData.text = `${geschaeftsfall.beschreibung} in Höhe von ${ausgabeData.betragFormatted} bei ${kunde}.`;
+      break;
     }
 
-    const zufallsTyp = verfuegbareTypen[Math.floor(Math.random() * verfuegbareTypen.length)];
-    const typ = geschaeftsfallTypen[zufallsTyp];
+    case "kbkv":
+    case "lbkv": {
+      ausgabeData.text = geschaeftsfall.typText
+        .replace("{summe}", ausgabeData.betragFormatted)
+        .replace("{kunde}", kunde);
+      break;
+    }
+    case "kontoabrechnung": {
+      // Zusammengesetzter Buchungssatz: mehrere Beträge im Soll (z. B. KGV + ZAW),
+      // Haben mit der Summe
+      const zahlungsart =
+        typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
+      const teile = typ.bestandteile.map((t) => {
+        // Beträge auf 5-Cent-Schritte (typisch für Bankabrechnungen)
+        const betrag =
+          Math.round((t.min + Math.random() * (t.max - t.min)) * 20) / 20;
+        return {
+          konto: t.konto,
+          name: t.name,
+          vorgangText: t.vorgangText,
+          betrag: roundToTwoDecimals(betrag),
+          formatted: formatCurrency(roundToTwoDecimals(betrag)),
+        };
+      });
+      const total = roundToTwoDecimals(
+        teile.reduce((summe, t) => summe + t.betrag, 0),
+      );
 
-    const geschaeftsfall = typ.geschaeftsfaelle[Math.floor(Math.random() * typ.geschaeftsfaelle.length)];
-    const { min, max } = typ.betragsbereich;
+      ausgabeData.zusammengesetzt = true;
+      ausgabeData.bestandteile = teile;
+      ausgabeData.gesamtFormatted = formatCurrency(total);
+      ausgabeData.betrag = total;
+      ausgabeData.betragFormatted = formatCurrency(total);
+      ausgabeData.zahlungsart = zahlungsart;
 
-    // Wenn der Typ eine eigene glatte Betragsfunktion hat, nutze diese, sonst den Standard
-    const bruttoBetrag = typ.customBetrag ? typ.customBetrag() : generateRandomBetrag(min, max);
-
-    let ausgabeData = {
-        text: '',
-        typ: zufallsTyp,
-        typDaten: typ,
-        betrag: bruttoBetrag,
-        betragFormatted: formatCurrency(bruttoBetrag),
-        vorgang: geschaeftsfall.vorgang || null,
-        extraDaten: {}
-    };
-
-    // Textgenerierung je nach Geschäftsfall-Typ
-    switch (zufallsTyp) {
-        case 'kredit_disagio': {
-            const zinssatz = typ.disagioSatz || 1.5;
-            const disagioBetrag = roundToTwoDecimals(bruttoBetrag * (zinssatz / 100));
-            const auszahlungsBetrag = roundToTwoDecimals(bruttoBetrag - disagioBetrag);
-
-            ausgabeData.kreditsumme = bruttoBetrag;
-            ausgabeData.disagioBetrag = disagioBetrag;
-            ausgabeData.auszahlungsBetrag = auszahlungsBetrag;
-
-            ausgabeData.kreditsummeFormatted = formatCurrency(bruttoBetrag);
-            ausgabeData.disagioFormatted = formatCurrency(disagioBetrag);
-            ausgabeData.auszahlungFormatted = formatCurrency(auszahlungsBetrag);
-            ausgabeData.betragFormatted = formatCurrency(auszahlungsBetrag);
-            ausgabeData.disagioSatz = zinssatz;
-
-            const satzFormatted = zinssatz.toFixed(1).replace('.', ',');
-            const zufallsGf = geschaeftsfall.typText;
-
-            ausgabeData.text = zufallsGf
-                .replace('{summe}', ausgabeData.kreditsummeFormatted)
-                .replace('{satz}', satzFormatted)
-                .replace('{kunde}', kunde);
-
-            ausgabeData.betrag = auszahlungsBetrag;
-            break;
-        }
-
-        case 'umwandlung_kredit': {
-            ausgabeData.text = `${geschaeftsfall.beschreibung} in Höhe von ${ausgabeData.betragFormatted} bei ${kunde}.`;
-            break;
-        }
-
-        case 'kbkv':
-        case 'lbkv': {
-            ausgabeData.text = geschaeftsfall.typText
-                .replace('{summe}', ausgabeData.betragFormatted)
-                .replace('{kunde}', kunde);
-            break;
-        }
-        case 'kontoabrechnung': {
-            // Zusammengesetzter Buchungssatz: mehrere Beträge im Soll (z. B. KGV + ZAW),
-            // Haben mit der Summe
-            const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
-            const teile = typ.bestandteile.map(t => {
-                // Beträge auf 5-Cent-Schritte (typisch für Bankabrechnungen)
-                const betrag = Math.round((t.min + Math.random() * (t.max - t.min)) * 20) / 20;
-                return { konto: t.konto, name: t.name, vorgangText: t.vorgangText, betrag: roundToTwoDecimals(betrag), formatted: formatCurrency(roundToTwoDecimals(betrag)) };
-            });
-            const total = roundToTwoDecimals(teile.reduce((summe, t) => summe + t.betrag, 0));
-
-            ausgabeData.zusammengesetzt = true;
-            ausgabeData.bestandteile = teile;
-            ausgabeData.gesamtFormatted = formatCurrency(total);
-            ausgabeData.betrag = total;
-            ausgabeData.betragFormatted = formatCurrency(total);
-            ausgabeData.zahlungsart = zahlungsart;
-
-            ausgabeData.text = `Die Bank bucht die ${teile[0].name} in Höhe von ${teile[0].formatted} und die ${teile[1].name} in Höhe von ${teile[1].formatted} ${zahlungsart.text}.`;
-            break;
-        }
-
-        case 'tilgung': {
-            const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
-            const variantenHaben = [
-                `vom Bankkonto von ${kunde} `,
-                `vom Geschäftskonto der Firma ${kunde} `,
-            ];
-            const habenero = variantenHaben[Math.floor(Math.random() * variantenHaben.length)];
-            const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
-
-            const rateVariante = Math.random();
-            if (rateVariante < 0.3) {
-                // Ratentilgung MIT Zinszahlung (zusammengesetzter Buchungssatz):
-                // Tilgung im Soll an 2800 BK, zusätzlich Sollzinsen im Soll
-                const rate = 500 + Math.floor(Math.random() * 71) * 50; // 500 – 4 000 €
-                const zinsen = Math.round((40 + Math.random() * 210) / 5) * 5; // 40 – 245 €
-                const teile = [
-                    { konto: LBKV, name: 'Tilgung', vorgangText: 'Tilgung Darlehen', betrag: rate, formatted: formatCurrency(rate) },
-                    { konto: ZAW, name: 'Sollzinsen', vorgangText: 'Sollzinsen', betrag: zinsen, formatted: formatCurrency(zinsen) },
-                ];
-                const total = roundToTwoDecimals(rate + zinsen);
-
-                ausgabeData.zusammengesetzt = true;
-                ausgabeData.bestandteile = teile;
-                ausgabeData.gesamtFormatted = formatCurrency(total);
-                ausgabeData.betrag = total;
-                ausgabeData.betragFormatted = formatCurrency(total);
-
-                ausgabeData.text = `Die Bank bucht die Rate für das Darlehen in Höhe von ${ausgabeData.gesamtFormatted} – bestehend aus Tilgung in Höhe von ${teile[0].formatted} und Sollzinsen in Höhe von ${teile[1].formatted} – vom Bankkonto von ${kunde} ab.`;
-            } else if (rateVariante < 0.6) {
-                // Ratentilgung ohne Zinszahlung: kleinere Beträge, Hinweis Tilgungsrate
-                const rate = 500 + Math.floor(Math.random() * 71) * 50; // 500 – 4 000 €
-                ausgabeData.betrag = rate;
-                ausgabeData.betragFormatted = formatCurrency(rate);
-                ausgabeData.istRatentilgung = true;
-
-                ausgabeData.text = `Die monatliche Tilgungsrate für das Darlehen in Höhe von ${ausgabeData.betragFormatted} ${habenero}wird abgebucht.`;
-            } else {
-                ausgabeData.text = `${geschaeftsfall.beschreibung}${habenero}${wertPhrase}${ausgabeData.betragFormatted} ${zahlungsart.text}.`;
-            }
-            ausgabeData.zahlungsart = zahlungsart;
-            break;
-        }
-
-        default: {
-            // Standard für ZAW, KGV, LBKV usw.
-            const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
-            const variantenSoll = [
-                `auf dem Bankkonto von ${kunde} `,
-                `auf dem Geschäftskonto der Firma ${kunde} `,
-            ];
-            const variantenHaben = [
-                `des Girokontos von ${kunde} `,
-                `der Firma ${kunde} `,
-            ];
-            const ausgabe = typ.sollKonto === BK ? variantenSoll[Math.floor(Math.random() * variantenSoll.length)] : variantenHaben[Math.floor(Math.random() * variantenHaben.length)];
-            const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
-
-            ausgabeData.text = `${geschaeftsfall.beschreibung}${ausgabe}${zahlungsart.text}${wertPhrase}${ausgabeData.betragFormatted}.`;
-            ausgabeData.zahlungsart = zahlungsart;
-            break;
-        }
+      ausgabeData.text = `Die Bank bucht die ${teile[0].name} in Höhe von ${teile[0].formatted} und die ${teile[1].name} in Höhe von ${teile[1].formatted} ${zahlungsart.text}.`;
+      break;
     }
 
-    return ausgabeData;
+    case "tilgung": {
+      const zahlungsart =
+        typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
+      const variantenHaben = [
+        `vom Bankkonto von ${kunde} `,
+        `vom Geschäftskonto der Firma ${kunde} `,
+      ];
+      const habenero =
+        variantenHaben[Math.floor(Math.random() * variantenHaben.length)];
+      const wertPhrase =
+        wertFormulierungen[
+          Math.floor(Math.random() * wertFormulierungen.length)
+        ];
+
+      const rateVariante = Math.random();
+      if (rateVariante < 0.3) {
+        // Ratentilgung MIT Zinszahlung (zusammengesetzter Buchungssatz):
+        // Tilgung im Soll an 2800 BK, zusätzlich Sollzinsen im Soll
+        const rate = 500 + Math.floor(Math.random() * 71) * 50; // 500 – 4 000 €
+        const zinsen = Math.round((40 + Math.random() * 210) / 5) * 5; // 40 – 245 €
+        const teile = [
+          {
+            konto: LBKV,
+            name: "Tilgung",
+            vorgangText: "Tilgung Darlehen",
+            betrag: rate,
+            formatted: formatCurrency(rate),
+          },
+          {
+            konto: ZAW,
+            name: "Sollzinsen",
+            vorgangText: "Sollzinsen",
+            betrag: zinsen,
+            formatted: formatCurrency(zinsen),
+          },
+        ];
+        const total = roundToTwoDecimals(rate + zinsen);
+
+        ausgabeData.zusammengesetzt = true;
+        ausgabeData.bestandteile = teile;
+        ausgabeData.gesamtFormatted = formatCurrency(total);
+        ausgabeData.betrag = total;
+        ausgabeData.betragFormatted = formatCurrency(total);
+
+        ausgabeData.text = `Die Bank bucht die Rate für das Darlehen in Höhe von ${ausgabeData.gesamtFormatted} – bestehend aus Tilgung in Höhe von ${teile[0].formatted} und Sollzinsen in Höhe von ${teile[1].formatted} – vom Bankkonto von ${kunde} ab.`;
+      } else if (rateVariante < 0.6) {
+        // Ratentilgung ohne Zinszahlung: kleinere Beträge, Hinweis Tilgungsrate
+        const rate = 500 + Math.floor(Math.random() * 71) * 50; // 500 – 4 000 €
+        ausgabeData.betrag = rate;
+        ausgabeData.betragFormatted = formatCurrency(rate);
+        ausgabeData.istRatentilgung = true;
+
+        ausgabeData.text = `Die monatliche Tilgungsrate für das Darlehen in Höhe von ${ausgabeData.betragFormatted} ${habenero}wird abgebucht.`;
+      } else {
+        ausgabeData.text = `${geschaeftsfall.beschreibung}${habenero}${wertPhrase}${ausgabeData.betragFormatted} ${zahlungsart.text}.`;
+      }
+      ausgabeData.zahlungsart = zahlungsart;
+      break;
+    }
+
+    default: {
+      // Standard für ZAW, KGV, LBKV usw.
+      const zahlungsart =
+        typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
+      const variantenSoll = [
+        `auf dem Bankkonto von ${kunde} `,
+        `auf dem Geschäftskonto der Firma ${kunde} `,
+      ];
+      const variantenHaben = [
+        `des Girokontos von ${kunde} `,
+        `der Firma ${kunde} `,
+      ];
+      const ausgabe =
+        typ.sollKonto === BK
+          ? variantenSoll[Math.floor(Math.random() * variantenSoll.length)]
+          : variantenHaben[Math.floor(Math.random() * variantenHaben.length)];
+      const wertPhrase =
+        wertFormulierungen[
+          Math.floor(Math.random() * wertFormulierungen.length)
+        ];
+
+      ausgabeData.text = `${geschaeftsfall.beschreibung}${ausgabe}${zahlungsart.text}${wertPhrase}${ausgabeData.betragFormatted}.`;
+      ausgabeData.zahlungsart = zahlungsart;
+      break;
+    }
+  }
+
+  return ausgabeData;
 }
 // ============================================================================
 // BUCHUNGSSATZ ERSTELLEN (Mit Nebenrechnung bei Disagio)
 // ============================================================================
 function erstelleBuchungssatz(geschaeftsfall) {
-    const typ = geschaeftsfall.typDaten;
+  const typ = geschaeftsfall.typDaten;
 
-    if (typ.mitDisagio) {
-        // Prozentuale Anteile berechnen für die Tabelle
-        const satzDisagio = geschaeftsfall.disagioSatz.toFixed(2).replace('.', ',') + '&nbsp;%';
-        const prozentRest = (100 - geschaeftsfall.disagioSatz).toFixed(2).replace('.', ',') + '&nbsp;%';
+  if (typ.mitDisagio) {
+    // Prozentuale Anteile berechnen für die Tabelle
+    const satzDisagio =
+      geschaeftsfall.disagioSatz.toFixed(2).replace(".", ",") + "&nbsp;%";
+    const prozentRest =
+      (100 - geschaeftsfall.disagioSatz).toFixed(2).replace(".", ",") +
+      "&nbsp;%";
 
-        // Nebenrechnung als HTML-Tabelle + direkt darunter der Buchungssatz
-        return `
+    // Nebenrechnung als HTML-Tabelle + direkt darunter der Buchungssatz
+    return `
     <table style="border-collapse: collapse; white-space: nowrap; width: 400px; margin: 0 0 6px; font-family: sans-serif; font-size: 14px;">
       <tbody>
         <tr>
@@ -543,29 +673,40 @@ function erstelleBuchungssatz(geschaeftsfall) {
         </tr>
       </tbody>
     </table><br>`;
-    }
+  }
 
-    // Zusammengesetzte Buchungssätze: mehrere Beträge im Soll,
-    // Haben mit der Gesamtsumme (z. B. KGV + ZAW an BK; Ratentilgung + Zinsen)
-    if (geschaeftsfall.zusammengesetzt && Array.isArray(geschaeftsfall.bestandteile)) {
-        const teile = geschaeftsfall.bestandteile;
-        const spalten = `border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;`;
-        const zeilen = teile.map((te, dgl) => `
+  // Zusammengesetzte Buchungssätze: mehrere Beträge im Soll,
+  // Haben mit der Gesamtsumme (z. B. KGV + ZAW an BK; Ratentilgung + Zinsen)
+  if (
+    geschaeftsfall.zusammengesetzt &&
+    Array.isArray(geschaeftsfall.bestandteile)
+  ) {
+    const teile = geschaeftsfall.bestandteile;
+    const spalten = `border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;`;
+    const zeilen = teile
+      .map(
+        (te, dgl) => `
         <tr>
           <td style="border-width: 0; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${te.konto}</td>
           <td style="${spalten}" tabindex="1">${te.formatted}</td>
-          ${dgl === 0 ? `<td rowspan="${teile.length}" style="border-width: 0; text-align: center; width: 40px; vertical-align: top;" tabindex="1">an</td>
+          ${
+            dgl === 0
+              ? `<td rowspan="${teile.length}" style="border-width: 0; text-align: center; width: 40px; vertical-align: top;" tabindex="1">an</td>
           <td rowspan="${teile.length}" style="border-width: 0; text-align: left; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${typ.habenKonto}</td>
-          <td rowspan="${teile.length}" style="border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${geschaeftsfall.gesamtFormatted}</td>` : ''}
-        </tr>`).join('');
-        return `
+          <td rowspan="${teile.length}" style="border-width: 0; text-align: right; white-space: nowrap; max-width: 140px; min-width: 140px; vertical-align: top;" tabindex="1">${geschaeftsfall.gesamtFormatted}</td>`
+              : ""
+          }
+        </tr>`,
+      )
+      .join("");
+    return `
     <table style="border: 1px solid #ccc; white-space: nowrap; background-color: #fff; font-family: courier; width: 600px; margin: 0 0 6px;">
       <tbody>${zeilen}</tbody>
     </table><br>`;
-    }
+  }
 
-    // Standard-Buchungssatz für alle anderen Fälle
-    return `
+  // Standard-Buchungssatz für alle anderen Fälle
+  return `
     <table style="border: 1px solid #ccc; white-space: nowrap; background-color: #fff; font-family: courier; width: 600px; margin: 0 0 6px;">
       <tbody>
         <tr>
@@ -579,75 +720,86 @@ function erstelleBuchungssatz(geschaeftsfall) {
     </table><br>`;
 }
 function erstellePlainBuchungssatz(geschaeftsfall) {
-    const typ = geschaeftsfall.typDaten;
-    if (geschaeftsfall.zusammengesetzt && Array.isArray(geschaeftsfall.bestandteile)) {
-        return geschaeftsfall.bestandteile.map(te => `${te.konto} ${te.formatted}`).join(' / ')
-            + ` an ${typ.habenKonto} ${geschaeftsfall.gesamtFormatted}`;
-    }
-    if (typ.mitDisagio) {
-        return `${BK} ${geschaeftsfall.auszahlungFormatted} / ${ZAW} ${geschaeftsfall.disagioFormatted} an ${typ.habenKonto} ${geschaeftsfall.kreditsummeFormatted}`;
-    }
-    return `${typ.sollKonto} ${geschaeftsfall.betragFormatted} an ${typ.habenKonto} ${geschaeftsfall.betragFormatted}`;
+  const typ = geschaeftsfall.typDaten;
+  if (
+    geschaeftsfall.zusammengesetzt &&
+    Array.isArray(geschaeftsfall.bestandteile)
+  ) {
+    return (
+      geschaeftsfall.bestandteile
+        .map((te) => `${te.konto} ${te.formatted}`)
+        .join(" / ") + ` an ${typ.habenKonto} ${geschaeftsfall.gesamtFormatted}`
+    );
+  }
+  if (typ.mitDisagio) {
+    return `${BK} ${geschaeftsfall.auszahlungFormatted} / ${ZAW} ${geschaeftsfall.disagioFormatted} an ${typ.habenKonto} ${geschaeftsfall.kreditsummeFormatted}`;
+  }
+  return `${typ.sollKonto} ${geschaeftsfall.betragFormatted} an ${typ.habenKonto} ${geschaeftsfall.betragFormatted}`;
 }
-
 
 // ============================================================================
 // BELEG-URL ERSTELLEN
 // ============================================================================
 function erstelleBelegURL(geschaeftsfall) {
-    const typ = geschaeftsfall.typDaten;
+  const typ = geschaeftsfall.typDaten;
 
-    if (!typ.kontoauszugArt || typ.sollKonto === KBKV) return null;
+  if (!typ.kontoauszugArt || typ.sollKonto === KBKV) return null;
 
-    const params = new URLSearchParams();
-    params.set('beleg', 'kontoauszug');
-    params.set('vorlage', typ.kontoauszugArt);
+  const params = new URLSearchParams();
+  params.set("beleg", "kontoauszug");
+  params.set("vorlage", typ.kontoauszugArt);
 
-    const now = new Date();
-    params.set('tag', now.getDate().toString().padStart(2, '0'));
-    params.set('monat', (now.getMonth() + 1).toString().padStart(2, '0'));
-    params.set('jahr', now.getFullYear().toString());
+  const now = new Date();
+  params.set("tag", now.getDate().toString().padStart(2, "0"));
+  params.set("monat", (now.getMonth() + 1).toString().padStart(2, "0"));
+  params.set("jahr", now.getFullYear().toString());
 
-    // Zusammengesetzt: Kontoauszug2 mit ZWEI Vorgängen (z. B. Gebühren + Sollzinsen
-    // oder Tilgung + Sollzinsen als Rate)
-    if (geschaeftsfall.zusammengesetzt && Array.isArray(geschaeftsfall.bestandteile)) {
-        params.set('vorlage', 'kontoauszug2.svg');
-        geschaeftsfall.bestandteile.forEach((te, lauf) => {
-            params.set('vorgang' + (lauf + 1), te.vorgangText || te.name);
-            params.set('wertstellung' + (lauf + 1), '-' + Math.abs(te.betrag));
-        });
-        return `belege.html?${params.toString()}`;
-    }
-
-    // HIER DIE ANPASSUNG FÜR DEN VORGANG:
-    let vorgangText = geschaeftsfall.vorgang || typ.name;
-    if (typ.mitDisagio && geschaeftsfall.disagioSatz) {
-        const satzDisagio = geschaeftsfall.disagioSatz.toFixed(2).replace('.', ',') + ' %';
-        vorgangText = `Darlehen abzgl. ${satzDisagio} Disagio`;
-    }
-
-    params.set('vorgang1', vorgangText);
-
-    // Der Betrag auf dem Kontoauszug ist bei Disagio der Auszahlungsbetrag
-    let wertFuerBeleg = typ.mitDisagio ? geschaeftsfall.auszahlungsBetrag : geschaeftsfall.betrag;
-
-    if (typ.sollKonto !== BK && !typ.mitDisagio) {
-        wertFuerBeleg = -Math.abs(wertFuerBeleg);
-    }
-
-    params.set('wertstellung1', wertFuerBeleg.toString());
-
+  // Zusammengesetzt: Kontoauszug2 mit ZWEI Vorgängen (z. B. Gebühren + Sollzinsen
+  // oder Tilgung + Sollzinsen als Rate)
+  if (
+    geschaeftsfall.zusammengesetzt &&
+    Array.isArray(geschaeftsfall.bestandteile)
+  ) {
+    params.set("vorlage", "kontoauszug2.svg");
+    geschaeftsfall.bestandteile.forEach((te, lauf) => {
+      params.set("vorgang" + (lauf + 1), te.vorgangText || te.name);
+      params.set("wertstellung" + (lauf + 1), "-" + Math.abs(te.betrag));
+    });
     return `belege.html?${params.toString()}`;
+  }
+
+  // HIER DIE ANPASSUNG FÜR DEN VORGANG:
+  let vorgangText = geschaeftsfall.vorgang || typ.name;
+  if (typ.mitDisagio && geschaeftsfall.disagioSatz) {
+    const satzDisagio =
+      geschaeftsfall.disagioSatz.toFixed(2).replace(".", ",") + " %";
+    vorgangText = `Darlehen abzgl. ${satzDisagio} Disagio`;
+  }
+
+  params.set("vorgang1", vorgangText);
+
+  // Der Betrag auf dem Kontoauszug ist bei Disagio der Auszahlungsbetrag
+  let wertFuerBeleg = typ.mitDisagio
+    ? geschaeftsfall.auszahlungsBetrag
+    : geschaeftsfall.betrag;
+
+  if (typ.sollKonto !== BK && !typ.mitDisagio) {
+    wertFuerBeleg = -Math.abs(wertFuerBeleg);
+  }
+
+  params.set("wertstellung1", wertFuerBeleg.toString());
+
+  return `belege.html?${params.toString()}`;
 }
 
 // ============================================================================
 // BELEG-BUTTON ERSTELLEN
 // ============================================================================
 function erstelleBelegButton(nummer, geschaeftsfall) {
-    const url = erstelleBelegURL(geschaeftsfall);
+  const url = erstelleBelegURL(geschaeftsfall);
 
-    if (!url) {
-        return `
+  if (!url) {
+    return `
       <div
         style="width:100%; padding:10px 12px; font-size:13px; margin-bottom:8px;
                color:#999; border:1px dashed #ccc; border-radius:4px; text-align:center;"
@@ -655,15 +807,15 @@ function erstelleBelegButton(nummer, geschaeftsfall) {
       >
         ${nummer}. Noch kein Beleg verfügbar
       </div>`;
-    }
+  }
 
-    const belegTypName = 'Kontoauszug';
+  const belegTypName = "Kontoauszug";
 
-    return `
+  return `
     <button
       class="geschaeftsfall-beleg-button"
-      data-url="${url.replace(/"/g, '&quot;')}"
-      data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+      data-url="${url.replace(/"/g, "&quot;")}"
+      data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
       title="${belegTypName} für Aufgabe ${nummer} erstellen"
       style="width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;"
     >
@@ -675,106 +827,106 @@ function erstelleBelegButton(nummer, geschaeftsfall) {
 // HAUPTFUNKTION – GESCHÄFTSFÄLLE ANZEIGEN
 // ============================================================================
 function zeigeZufaelligeGeschaeftsfaelle() {
-    const anzahl = parseInt(document.getElementById('anzahlDropdown').value);
-    const container = document.getElementById('Container');
-    const buttonColumn = document.getElementById('button-column');
+  const anzahl = parseInt(document.getElementById("anzahlDropdown").value);
+  const container = document.getElementById("Container");
+  const buttonColumn = document.getElementById("button-column");
 
-    if (!container || !buttonColumn) {
-        console.error("Container oder Button-Column nicht gefunden");
-        return;
-    }
+  if (!container || !buttonColumn) {
+    console.error("Container oder Button-Column nicht gefunden");
+    return;
+  }
 
-    container.innerHTML = '';
-    buttonColumn.innerHTML = '';
+  container.innerHTML = "";
+  buttonColumn.innerHTML = "";
 
-    const testGf = erstelleZufallsGeschaeftsfall();
-    if (!testGf) {
-        container.innerHTML = `
+  const testGf = erstelleZufallsGeschaeftsfall();
+  if (!testGf) {
+    container.innerHTML = `
       <div style="padding: 14px 16px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px; color: #856404; margin-top: 16px;">
         ⚠️ <strong>Keine passenden Geschäftsfälle verfügbar.</strong><br>
         Die gewählte Kombination aus Optionen und Konten ergibt keine gültigen Aufgaben.
         Bitte wählen Sie weitere Konten aus.
       </div>`;
-        return;
-    }
+    return;
+  }
 
-    let aufgabenHTML = `<h2>Buchungen im Kreditbereich</h2><h3>Bilde die Buchungssätze im Unternehmen ${kunde}.</h3><ol>`;
-    let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
+  let aufgabenHTML = `<h2>Buchungen im Kreditbereich</h2><h3>Bilde die Buchungssätze im Unternehmen ${kunde}.</h3><ol>`;
+  let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
-    letzteGenerierteGeschaeftsfaelle = [testGf];
-    for (let i = 1; i < anzahl; i++) {
-        const gf = erstelleZufallsGeschaeftsfall();
-        if (gf) letzteGenerierteGeschaeftsfaelle.push(gf);
-    }
-    const geschaeftsfaelle = letzteGenerierteGeschaeftsfaelle;
+  letzteGenerierteGeschaeftsfaelle = [testGf];
+  for (let i = 1; i < anzahl; i++) {
+    const gf = erstelleZufallsGeschaeftsfall();
+    if (gf) letzteGenerierteGeschaeftsfaelle.push(gf);
+  }
+  const geschaeftsfaelle = letzteGenerierteGeschaeftsfaelle;
 
-    geschaeftsfaelle.forEach((gf, idx) => {
-        const i = idx + 1;
-        aufgabenHTML += `<li>${gf.text}</li>`;
-        loesungenHTML += `<div style="margin-top: 1.5em;"><strong>${i}.</strong><br>${erstelleBuchungssatz(gf)}</div>`;
+  geschaeftsfaelle.forEach((gf, idx) => {
+    const i = idx + 1;
+    aufgabenHTML += `<li>${gf.text}</li>`;
+    loesungenHTML += `<div style="margin-top: 1.5em;"><strong>${i}.</strong><br>${erstelleBuchungssatz(gf)}</div>`;
 
-        const buttonHTML = erstelleBelegButton(i, gf);
-        const div = document.createElement('div');
-        div.style.margin = '12px 0';
-        div.innerHTML = buttonHTML;
-        buttonColumn.appendChild(div);
-    });
+    const buttonHTML = erstelleBelegButton(i, gf);
+    const div = document.createElement("div");
+    div.style.margin = "12px 0";
+    div.innerHTML = buttonHTML;
+    buttonColumn.appendChild(div);
+  });
 
-    aufgabenHTML += '</ol>';
-    container.innerHTML = aufgabenHTML + loesungenHTML;
+  aufgabenHTML += "</ol>";
+  container.innerHTML = aufgabenHTML + loesungenHTML;
 
-    const vorschau = document.getElementById("kiPromptVorschau");
-    if (vorschau && vorschau.style.display !== "none") {
-        vorschau.textContent = erstelleKiPromptText();
-    }
+  const vorschau = document.getElementById("kiPromptVorschau");
+  if (vorschau && vorschau.style.display !== "none") {
+    vorschau.textContent = erstelleKiPromptText();
+  }
 }
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
 // ============================================================================
 function fillCompanyDropdowns() {
-    if (!yamlData || yamlData.length === 0) {
-        console.warn("yamlData ist leer → keine Unternehmen zum Befüllen");
-        return;
-    }
+  if (!yamlData || yamlData.length === 0) {
+    console.warn("yamlData ist leer → keine Unternehmen zum Befüllen");
+    return;
+  }
 
-    const sortedCompanies = [...yamlData].sort((a, b) => {
-        const brancheA = a.unternehmen?.branche || '';
-        const brancheB = b.unternehmen?.branche || '';
-        if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
-        return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
-    });
+  const sortedCompanies = [...yamlData].sort((a, b) => {
+    const brancheA = a.unternehmen?.branche || "";
+    const brancheB = b.unternehmen?.branche || "";
+    if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
+    return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
+  });
 
-    const kundeSelect = document.getElementById('kunde');
-    if (!kundeSelect) return;
+  const kundeSelect = document.getElementById("kunde");
+  if (!kundeSelect) return;
 
-    kundeSelect.innerHTML = '';
-    const opt = document.createElement('option');
-    opt.value = '';
-    opt.text = '— bitte Unternehmen auswählen —';
-    opt.disabled = true;
-    opt.selected = true;
-    kundeSelect.appendChild(opt);
+  kundeSelect.innerHTML = "";
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "— bitte Unternehmen auswählen —";
+  opt.disabled = true;
+  opt.selected = true;
+  kundeSelect.appendChild(opt);
 
-    sortedCompanies.forEach(company => {
-        const u = company.unternehmen;
-        if (!u?.name) return;
+  sortedCompanies.forEach((company) => {
+    const u = company.unternehmen;
+    if (!u?.name) return;
 
-        const displayText = u.branche
-            ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
-            : `${u.name} ${u.rechtsform || ''}`.trim();
+    const displayText = u.branche
+      ? `${u.branche} – ${u.name} ${u.rechtsform || ""}`.trim()
+      : `${u.name} ${u.rechtsform || ""}`.trim();
 
-        const option = document.createElement('option');
-        option.value = u.name;
-        option.textContent = displayText;
-        option.dataset.id = u.id || '';
-        option.dataset.rechtsform = u.rechtsform || '';
-        option.dataset.branche = u.branche || '';
+    const option = document.createElement("option");
+    option.value = u.name;
+    option.textContent = displayText;
+    option.dataset.id = u.id || "";
+    option.dataset.rechtsform = u.rechtsform || "";
+    option.dataset.branche = u.branche || "";
 
-        kundeSelect.appendChild(option);
-    });
+    kundeSelect.appendChild(option);
+  });
 
-    console.log(`Dropdown befüllt mit ${sortedCompanies.length} Unternehmen`);
+  console.log(`Dropdown befüllt mit ${sortedCompanies.length} Unternehmen`);
 }
 
 // ============================================================================
@@ -865,102 +1017,117 @@ Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel i
 `;
 
 function erstelleKiPromptText() {
-    let inhalt = '';
-    if (letzteGenerierteGeschaeftsfaelle.length === 0) {
-        inhalt = '(Noch keine Aufgaben generiert. Bitte zuerst Geschäftsfälle erstellen.)';
-    } else {
-        inhalt = letzteGenerierteGeschaeftsfaelle.map((gf, idx) => {
-            const nr = idx + 1;
-            const bsPlain = erstellePlainBuchungssatz(gf);
-            return `--- Aufgabe ${nr} ---\n${gf.text}\nMusterlösung Aufgabe ${nr}: ${bsPlain}`;
-        }).join('\n\n');
-    }
-    return KI_ASSISTENT_PROMPT.replace('###AUFGABEN und LÖSUNGEN###', inhalt);
+  let inhalt = "";
+  if (letzteGenerierteGeschaeftsfaelle.length === 0) {
+    inhalt =
+      "(Noch keine Aufgaben generiert. Bitte zuerst Geschäftsfälle erstellen.)";
+  } else {
+    inhalt = letzteGenerierteGeschaeftsfaelle
+      .map((gf, idx) => {
+        const nr = idx + 1;
+        const bsPlain = erstellePlainBuchungssatz(gf);
+        return `--- Aufgabe ${nr} ---\n${gf.text}\nMusterlösung Aufgabe ${nr}: ${bsPlain}`;
+      })
+      .join("\n\n");
+  }
+  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", inhalt);
 }
 
 function kopiereKiPrompt() {
-    const promptText = erstelleKiPromptText();
-    navigator.clipboard.writeText(promptText).then(() => {
-        const btn = document.getElementById('kiPromptKopierenBtn');
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-        btn.classList.add('ki-prompt-btn--success');
-        setTimeout(() => { btn.innerHTML = originalHTML; btn.classList.remove('ki-prompt-btn--success'); }, 2500);
-    }).catch(err => {
-        console.error('Fehler beim Kopieren:', err);
-        zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+  const promptText = erstelleKiPromptText();
+  navigator.clipboard
+    .writeText(promptText)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch((err) => {
+      console.error("Fehler beim Kopieren:", err);
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
     });
 }
 
 function toggleKiPromptVorschau() {
-    const vorschau = document.getElementById('kiPromptVorschau');
-    const btn = document.getElementById('kiPromptToggleBtn');
-    const isHidden = getComputedStyle(vorschau).display === 'none';
-    if (isHidden) {
-        vorschau.style.display = 'block';
-        vorschau.textContent = erstelleKiPromptText();
-        btn.textContent = 'Vorschau ausblenden ▲';
-    } else {
-        vorschau.style.display = 'none';
-        btn.textContent = 'Prompt anzeigen ▼';
-    }
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
+  if (isHidden) {
+    vorschau.style.display = "block";
+    vorschau.textContent = erstelleKiPromptText();
+    btn.textContent = "Vorschau ausblenden ▲";
+  } else {
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
+  }
 }
 
 // ============================================================================
 // INITIALISIERUNG
 // ============================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    initializeKontoAuswahl();
+document.addEventListener("DOMContentLoaded", () => {
+  initializeKontoAuswahl();
 
-    const kundeSelect = document.getElementById('kunde');
+  const kundeSelect = document.getElementById("kunde");
 
-    if (kundeSelect && kundeSelect.value) {
-        kunde = kundeSelect.value.trim();
-    }
+  if (kundeSelect && kundeSelect.value) {
+    kunde = kundeSelect.value.trim();
+  }
 
-    if (kundeSelect) {
-        kundeSelect.addEventListener('change', () => {
-            kunde = kundeSelect.value.trim() || '';
-            console.log('Kunde geändert:', kunde);
-        });
-    }
+  if (kundeSelect) {
+    kundeSelect.addEventListener("change", () => {
+      kunde = kundeSelect.value.trim() || "";
+      console.log("Kunde geändert:", kunde);
+    });
+  }
 
-    if (yamlData && yamlData.length > 0) {
+  if (yamlData && yamlData.length > 0) {
+    fillCompanyDropdowns();
+    autoSelectMyCompany();
+    zeigeZufaelligeGeschaeftsfaelle();
+  } else {
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
         fillCompanyDropdowns();
         autoSelectMyCompany();
         zeigeZufaelligeGeschaeftsfaelle();
-    } else {
-        document.addEventListener('yamlDataLoaded', () => {
-            fillCompanyDropdowns();
-            autoSelectMyCompany();
-            zeigeZufaelligeGeschaeftsfaelle();
-        }, { once: true });
-    }
+      },
+      { once: true },
+    );
+  }
 
-    const vorschauEl = document.getElementById('kiPromptVorschau');
-    if (vorschauEl) {
-        vorschauEl.textContent = KI_ASSISTENT_PROMPT;
-    }
+  const vorschauEl = document.getElementById("kiPromptVorschau");
+  if (vorschauEl) {
+    vorschauEl.textContent = KI_ASSISTENT_PROMPT;
+  }
 });
 
 // Auto-Select: Modellunternehmen aus localStorage
 function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
-  
+  const myCompanyName = localStorage.getItem("myCompany");
+
   if (!myCompanyName) return;
-  
-  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-  
-  dropdowns.forEach(dropdown => {
+
+  const dropdowns = document.querySelectorAll("select.meinUnternehmen");
+
+  dropdowns.forEach((dropdown) => {
     const options = Array.from(dropdown.options);
-    const matchingOption = options.find(opt => opt.value === myCompanyName);
-    
+    const matchingOption = options.find((opt) => opt.value === myCompanyName);
+
     if (matchingOption) {
       dropdown.value = myCompanyName;
-      
-      const event = new Event('change', { bubbles: true });
+
+      const event = new Event("change", { bubbles: true });
       dropdown.dispatchEvent(event);
-      
+
       console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
     }
   });

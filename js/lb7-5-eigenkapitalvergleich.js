@@ -2,17 +2,13 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 
-let kunde = '<i>[Modellunternehmen]</i>';
+let kunde = "<i>[Modellunternehmen]</i>";
 let letzteEkAufgaben = [];
-let letzteAktiveSpalten = ['aufw', 'ertr', 'gewinn', 'ekAnf', 'ekEnd']; // Standard
+let letzteAktiveSpalten = ["aufw", "ertr", "gewinn", "ekAnf", "ekEnd"]; // Standard
 
 // ============================================================================
 // YAML-DATEN LADEN (identisch zu den anderen Generatoren)
 // ============================================================================
-
-
-
-
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -22,37 +18,37 @@ function fillCompanyDropdowns() {
   if (!yamlData || yamlData.length === 0) return;
 
   const sortedCompanies = [...yamlData].sort((a, b) => {
-    const brancheA = a.unternehmen?.branche || '';
-    const brancheB = b.unternehmen?.branche || '';
+    const brancheA = a.unternehmen?.branche || "";
+    const brancheB = b.unternehmen?.branche || "";
     if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
-    return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+    return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
 
-  const kundeSelect = document.getElementById('ekKunde');
+  const kundeSelect = document.getElementById("ekKunde");
   if (!kundeSelect) return;
 
-  kundeSelect.innerHTML = '';
-  const opt = document.createElement('option');
-  opt.value = '';
-  opt.text = '— bitte Unternehmen auswählen —';
+  kundeSelect.innerHTML = "";
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "— bitte Unternehmen auswählen —";
   opt.disabled = true;
   opt.selected = true;
   kundeSelect.appendChild(opt);
 
-  sortedCompanies.forEach(company => {
+  sortedCompanies.forEach((company) => {
     const u = company.unternehmen;
     if (!u?.name) return;
 
     const displayText = u.branche
-      ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
-      : `${u.name} ${u.rechtsform || ''}`.trim();
+      ? `${u.branche} – ${u.name} ${u.rechtsform || ""}`.trim()
+      : `${u.name} ${u.rechtsform || ""}`.trim();
 
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = u.name;
     option.textContent = displayText;
-    option.dataset.id = u.id || '';
-    option.dataset.rechtsform = u.rechtsform || '';
-    option.dataset.branche = u.branche || '';
+    option.dataset.id = u.id || "";
+    option.dataset.rechtsform = u.rechtsform || "";
+    option.dataset.branche = u.branche || "";
 
     kundeSelect.appendChild(option);
   });
@@ -62,22 +58,27 @@ function fillCompanyDropdowns() {
 // HILFSFUNKTIONEN
 // ============================================================================
 
-
 // Zufallszahl von min bis max in festen Schritten
 function rnd(min, max, step) {
   const n = Math.floor((max - min) / step);
-  return Math.round((min + Math.floor(Math.random() * (n + 1)) * step) * 100) / 100;
+  return (
+    Math.round((min + Math.floor(Math.random() * (n + 1)) * step) * 100) / 100
+  );
 }
 
 // Zahl mit zwei Dezimalstellen (deutsches Format, Minus als echtes Minuszeichen)
 function fmt(n) {
-  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-    .replace('-', '−');
+  return n
+    .toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+    .replace("-", "−");
 }
 
 // Eurobetrag mit geschütztem Leerzeichen
 function eur(n) {
-  return fmt(n) + '\u00a0€';
+  return fmt(n) + "\u00a0€";
 }
 
 const unternehmensVarianten = [
@@ -88,9 +89,12 @@ const unternehmensVarianten = [
 
 // Einleitungstexte (ohne Zahlen, passen für Aufgabe und Moodle)
 const einleitungen = [
-  (u) => `<h3>Im Buchführungsprogramm von ${u} fehlen in der folgenden Übersicht einige Werte. Berechne die fehlenden Werte.</h3>`,
-  (u) => `<h3>Bei der Erstellung der Jahreszahlen von ${u} sind einige Werte verloren gegangen. Berechne die fehlenden Werte.</h3>`,
-  (u) => `<h3>Bei ${u} zeigt das Programm einige Werte nicht an. Berechne die fehlenden Werte.</h3>`,
+  (u) =>
+    `<h3>Im Buchführungsprogramm von ${u} fehlen in der folgenden Übersicht einige Werte. Berechne die fehlenden Werte.</h3>`,
+  (u) =>
+    `<h3>Bei der Erstellung der Jahreszahlen von ${u} sind einige Werte verloren gegangen. Berechne die fehlenden Werte.</h3>`,
+  (u) =>
+    `<h3>Bei ${u} zeigt das Programm einige Werte nicht an. Berechne die fehlenden Werte.</h3>`,
 ];
 
 // ============================================================================
@@ -99,14 +103,14 @@ const einleitungen = [
 // Zusammenhang: gewinn = ertr − aufw = ekEnd − ekAnf
 // ============================================================================
 
-const SPALTEN = ['aufw', 'ertr', 'gewinn', 'ekAnf', 'ekEnd'];
+const SPALTEN = ["aufw", "ertr", "gewinn", "ekAnf", "ekEnd"];
 
 const FELD_LABEL = {
-  aufw: 'Summe der Aufwendungen',
-  ertr: 'Summe der Erträge',
-  gewinn: 'Gewinn / Verlust',
-  ekAnf: 'EK zum 01.01.',
-  ekEnd: 'EK zum 31.12.'
+  aufw: "Summe der Aufwendungen",
+  ertr: "Summe der Erträge",
+  gewinn: "Gewinn / Verlust",
+  ekAnf: "EK zum 01.01.",
+  ekEnd: "EK zum 31.12.",
 };
 
 function erzeugeJahre(anzahlJahre, mitVerlust, anknuepfen, aktiveSpalten) {
@@ -127,8 +131,12 @@ function erzeugeJahre(anzahlJahre, mitVerlust, anknuepfen, aktiveSpalten) {
 
     jahre.push({
       jahr: endJahr - anzahlJahre + 1 + i,
-      aufw, ertr, ekAnf, ekEnd, gewinn,
-      fehlt: pick(aktiveSpalten) // Es wird nur aus den sichtbaren Spalten eine verdeckte ausgewählt
+      aufw,
+      ertr,
+      ekAnf,
+      ekEnd,
+      gewinn,
+      fehlt: pick(aktiveSpalten), // Es wird nur aus den sichtbaren Spalten eine verdeckte ausgewählt
     });
 
     ekAnf = ekEnd;
@@ -140,41 +148,58 @@ function erzeugeJahre(anzahlJahre, mitVerlust, anknuepfen, aktiveSpalten) {
 // TABELLE UND RECHENWEG
 // ============================================================================
 
-const TH_STYLE = 'border:1px solid #000; padding:3px 8px; text-align:center; font-weight:normal; background:#fff;';
-const TD_STYLE = 'border:1px solid #000; padding:3px 8px; min-width:95px; text-align:right; white-space:nowrap; background:#fff;';
+const TH_STYLE =
+  "border:1px solid #000; padding:3px 8px; text-align:center; font-weight:normal; background:#fff;";
+const TD_STYLE =
+  "border:1px solid #000; padding:3px 8px; min-width:95px; text-align:right; white-space:nowrap; background:#fff;";
 
 // zelleFn(jahrObjekt, spaltenKey) liefert den HTML-Inhalt der Zelle
 function baueTabelle(jahre, zelleFn, aktiveSpalten) {
-  let h = '<table style="border-collapse:collapse; margin:8px 0; font-family:Arial,Helvetica,sans-serif; font-size:14px;">';
-  h += '<tr>';
+  let h =
+    '<table style="border-collapse:collapse; margin:8px 0; font-family:Arial,Helvetica,sans-serif; font-size:14px;">';
+  h += "<tr>";
   h += `<th style="${TH_STYLE}">Geschäfts&shy;jahr</th>`;
-  aktiveSpalten.forEach(k => { h += `<th style="${TH_STYLE}">${FELD_LABEL[k]}</th>`; });
-  h += '</tr>';
-  jahre.forEach(j => {
-    h += `<tr><td style="${TD_STYLE} text-align:center;">${j.jahr}</td>`;
-    aktiveSpalten.forEach(k => { h += `<td style="${TD_STYLE}">${zelleFn(j, k)}</td>`; });
-    h += '</tr>';
+  aktiveSpalten.forEach((k) => {
+    h += `<th style="${TH_STYLE}">${FELD_LABEL[k]}</th>`;
   });
-  h += '</table>';
+  h += "</tr>";
+  jahre.forEach((j) => {
+    h += `<tr><td style="${TD_STYLE} text-align:center;">${j.jahr}</td>`;
+    aktiveSpalten.forEach((k) => {
+      h += `<td style="${TD_STYLE}">${zelleFn(j, k)}</td>`;
+    });
+    h += "</tr>";
+  });
+  h += "</table>";
   return h;
 }
 
 // Rechenweg als Liste von Textzeilen (reiner Text, ohne HTML)
 function rechenwegZeilen(j) {
-  const par = n => (n < 0 ? `(${eur(n)})` : eur(n));
-  const art = j.gewinn >= 0 ? 'Gewinn' : 'Verlust';
+  const par = (n) => (n < 0 ? `(${eur(n)})` : eur(n));
+  const art = j.gewinn >= 0 ? "Gewinn" : "Verlust";
 
   switch (j.fehlt) {
-    case 'gewinn':
-      return [`Gewinn/Verlust = Erträge − Aufwendungen = ${eur(j.ertr)} − ${eur(j.aufw)} = ${eur(j.gewinn)} (${art})`];
-    case 'ertr':
-      return [`Erträge = Aufwendungen + Gewinn/Verlust = ${eur(j.aufw)} + ${par(j.gewinn)} = ${eur(j.ertr)}`];
-    case 'aufw':
-      return [`Aufwendungen = Erträge − Gewinn/Verlust = ${eur(j.ertr)} − ${par(j.gewinn)} = ${eur(j.aufw)}`];
-    case 'ekAnf':
-      return [`EK 01.01. = EK 31.12. − Gewinn/Verlust = ${eur(j.ekEnd)} − ${par(j.gewinn)} = ${eur(j.ekAnf)}`];
-    case 'ekEnd':
-      return [`EK 31.12. = EK 01.01. + Gewinn/Verlust = ${eur(j.ekAnf)} + ${par(j.gewinn)} = ${eur(j.ekEnd)}`];
+    case "gewinn":
+      return [
+        `Gewinn/Verlust = Erträge − Aufwendungen = ${eur(j.ertr)} − ${eur(j.aufw)} = ${eur(j.gewinn)} (${art})`,
+      ];
+    case "ertr":
+      return [
+        `Erträge = Aufwendungen + Gewinn/Verlust = ${eur(j.aufw)} + ${par(j.gewinn)} = ${eur(j.ertr)}`,
+      ];
+    case "aufw":
+      return [
+        `Aufwendungen = Erträge − Gewinn/Verlust = ${eur(j.ertr)} − ${par(j.gewinn)} = ${eur(j.aufw)}`,
+      ];
+    case "ekAnf":
+      return [
+        `EK 01.01. = EK 31.12. − Gewinn/Verlust = ${eur(j.ekEnd)} − ${par(j.gewinn)} = ${eur(j.ekAnf)}`,
+      ];
+    case "ekEnd":
+      return [
+        `EK 31.12. = EK 01.01. + Gewinn/Verlust = ${eur(j.ekAnf)} + ${par(j.gewinn)} = ${eur(j.ekEnd)}`,
+      ];
   }
   return [];
 }
@@ -184,39 +209,45 @@ function rechenwegZeilen(j) {
 // ============================================================================
 
 function zeigeZufaelligeEkAufgaben() {
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
 
   if (!container) {
     console.error("Container nicht gefunden");
     return;
   }
 
-  const kundeSelect = document.getElementById('ekKunde');
-  const kundeValue = kundeSelect?.value?.trim() || '';
-  const anzeigeName = kundeValue || '[Modellunternehmen]';
+  const kundeSelect = document.getElementById("ekKunde");
+  const kundeValue = kundeSelect?.value?.trim() || "";
+  const anzeigeName = kundeValue || "[Modellunternehmen]";
 
-  const anzahl = parseInt(document.getElementById('anzahlAufgaben')?.value) || 3;
-  const anzahlJahre = parseInt(document.getElementById('anzahlJahre')?.value) || 2;
-  const mitVerlust = document.getElementById('mitVerlust')?.checked;
-  const anknuepfen = document.getElementById('anknuepfen')?.checked;
-  const zeigeRechenweg = document.getElementById('zeigeRechenweg')?.checked;
+  const anzahl =
+    parseInt(document.getElementById("anzahlAufgaben")?.value) || 3;
+  const anzahlJahre =
+    parseInt(document.getElementById("anzahlJahre")?.value) || 2;
+  const mitVerlust = document.getElementById("mitVerlust")?.checked;
+  const anknuepfen = document.getElementById("anknuepfen")?.checked;
+  const zeigeRechenweg = document.getElementById("zeigeRechenweg")?.checked;
 
   // Spalten-Checkboxen auslesen
-  const spalteAufwErtr = document.getElementById('spalteAufwErtr')?.checked ?? true;
-  const spalteGewinn = document.getElementById('spalteGewinn')?.checked ?? true;
-  const spalteEk = document.getElementById('spalteEk')?.checked ?? true;
+  const spalteAufwErtr =
+    document.getElementById("spalteAufwErtr")?.checked ?? true;
+  const spalteGewinn = document.getElementById("spalteGewinn")?.checked ?? true;
+  const spalteEk = document.getElementById("spalteEk")?.checked ?? true;
 
-  const anzahlGewaehlt = (spalteAufwErtr ? 1 : 0) + (spalteGewinn ? 1 : 0) + (spalteEk ? 1 : 0);
+  const anzahlGewaehlt =
+    (spalteAufwErtr ? 1 : 0) + (spalteGewinn ? 1 : 0) + (spalteEk ? 1 : 0);
 
   if (anzahlGewaehlt < 2) {
-    zeigeModal('Bitte wähle mindestens 2 Spaltengruppen aus, damit sinnvolle Berechnungen möglich sind.');
+    zeigeModal(
+      "Bitte wähle mindestens 2 Spaltengruppen aus, damit sinnvolle Berechnungen möglich sind.",
+    );
     return;
   }
 
   let aktiveSpalten = [];
-  if (spalteAufwErtr) aktiveSpalten.push('aufw', 'ertr');
-  if (spalteEk) aktiveSpalten.push('ekAnf', 'ekEnd');
-  if (spalteGewinn) aktiveSpalten.push('gewinn'); // Gewinn-Spalte landet nun garantiert ganz rechts
+  if (spalteAufwErtr) aktiveSpalten.push("aufw", "ertr");
+  if (spalteEk) aktiveSpalten.push("ekAnf", "ekEnd");
+  if (spalteGewinn) aktiveSpalten.push("gewinn"); // Gewinn-Spalte landet nun garantiert ganz rechts
 
   letzteAktiveSpalten = aktiveSpalten;
 
@@ -225,48 +256,58 @@ function zeigeZufaelligeEkAufgaben() {
     const u = pick(unternehmensVarianten)(anzeigeName);
     aufgaben.push({
       intro: pick(einleitungen)(u),
-      jahre: erzeugeJahre(anzahlJahre, mitVerlust, anknuepfen, aktiveSpalten)
+      jahre: erzeugeJahre(anzahlJahre, mitVerlust, anknuepfen, aktiveSpalten),
     });
   }
   letzteEkAufgaben = aufgaben;
-  
-  let aufgabenHTML = '';
+
+  let aufgabenHTML = "";
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   aufgaben.forEach((a, idx) => {
     // Aufgabe: verdeckte Zelle bleibt leer
-    const tabelle = baueTabelle(a.jahre, (j, k) => (j.fehlt === k ? '' : eur(j[k])), aktiveSpalten);
-    const liStyle = anzahl === 1 ? 'style="margin-bottom: 1.5em; list-style: none;"' : 'style="margin-bottom: 1.5em;"';
+    const tabelle = baueTabelle(
+      a.jahre,
+      (j, k) => (j.fehlt === k ? "" : eur(j[k])),
+      aktiveSpalten,
+    );
+    const liStyle =
+      anzahl === 1
+        ? 'style="margin-bottom: 1.5em; list-style: none;"'
+        : 'style="margin-bottom: 1.5em;"';
     aufgabenHTML += `<li ${liStyle}>${a.intro}${tabelle}</li>`;
 
     // Lösung: dieselbe Tabelle, fehlender Wert blau und fett
-    const loesungsTabelle = baueTabelle(a.jahre, (j, k) =>
-      j.fehlt === k
-        ? `<span style="color:#0070c0;"><strong>${eur(j[k])}</strong></span>`
-        : eur(j[k]),
-      aktiveSpalten
+    const loesungsTabelle = baueTabelle(
+      a.jahre,
+      (j, k) =>
+        j.fehlt === k
+          ? `<span style="color:#0070c0;"><strong>${eur(j[k])}</strong></span>`
+          : eur(j[k]),
+      aktiveSpalten,
     );
 
     // Nummerierung bei der Lösung nur anzeigen, wenn es mehr als 1 Aufgabe gibt
-    const loesungsPraefix = anzahl > 1 ? `<strong>${idx + 1}.</strong>` : '';
+    const loesungsPraefix = anzahl > 1 ? `<strong>${idx + 1}.</strong>` : "";
     loesungenHTML += `<div style="margin-top: 1.5em;">${loesungsPraefix}${loesungsTabelle}`;
 
     if (zeigeRechenweg) {
-      a.jahre.forEach(j => {
+      a.jahre.forEach((j) => {
         loesungenHTML += `<div style="border: 1px solid #ccc; background-color:#fff; font-family:courier; padding: 4px 8px; margin: 0 0 6px;">`;
-        loesungenHTML += `<strong>${j.jahr}:</strong><br>${rechenwegZeilen(j).join('<br>')}`;
+        loesungenHTML += `<strong>${j.jahr}:</strong><br>${rechenwegZeilen(j).join("<br>")}`;
         loesungenHTML += `</div>`;
       });
     }
     loesungenHTML += `</div>`;
   });
 
-  const aufgabenContainer = document.getElementById('aufgabenContainer');
-  const loesungenContainer = document.getElementById('loesungenContainer');
+  const aufgabenContainer = document.getElementById("aufgabenContainer");
+  const loesungenContainer = document.getElementById("loesungenContainer");
 
   // Bei 1 Aufgabe ein einfaches <ul> ohne Nummerierung verwenden, sonst <ol>
-  const listenTag = anzahl === 1 ? 'ul' : 'ol';
-  const listenStyle = anzahl === 1 ? ' style="list-style: none; padding-left: 0;"' : '';
+  const listenTag = anzahl === 1 ? "ul" : "ol";
+  const listenStyle =
+    anzahl === 1 ? ' style="list-style: none; padding-left: 0;"' : "";
 
   if (aufgabenContainer && loesungenContainer) {
     aufgabenContainer.innerHTML = `<${listenTag}${listenStyle}>${aufgabenHTML}</${listenTag}>`;
@@ -326,31 +367,36 @@ Was du NICHT tust:
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(err => {
-    console.error('Fehler beim Kopieren:', err);
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(KI_ASSISTENT_PROMPT)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch((err) => {
+      console.error("Fehler beim Kopieren:", err);
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
-    btn.textContent = 'Vorschau ausblenden ▲';
+    vorschau.style.display = "block";
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
@@ -359,56 +405,67 @@ function toggleKiPromptVorschau() {
 // Pro Aufgabe (Tabelle) eine Cloze-Frage, jede verdeckte Zelle ist eine Lücke.
 // ============================================================================
 
-const MOODLE_EK_PRAEFIX = '7.5-07#T';
-const MOODLE_EK_TITELENDE = 'meinBwR-Berechnen';
-const MOODLE_EK_HINWEIS = '';
+const MOODLE_EK_PRAEFIX = "7.5-07#T";
+const MOODLE_EK_TITELENDE = "meinBwR-Berechnen";
+const MOODLE_EK_HINWEIS = "";
 const MOODLE_EK_PUNKTE_PRO_LUECKE = 1;
 
 function mxEsc(s) {
-  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 function mxCdata(s) {
-  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
 }
 
 // Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
 function mxIdBasis() {
-  const SCHLUESSEL = 'moodleEkLetzteIdSekunde';
+  const SCHLUESSEL = "moodleEkLetzteIdSekunde";
   let sek = Math.floor(Date.now() / 1000);
   try {
     const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
     if (sek <= letzte) sek = letzte + 1;
     localStorage.setItem(SCHLUESSEL, String(sek));
-  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  } catch (e) {
+    /* ohne localStorage: nur Zeitstempel */
+  }
   const d = new Date(sek * 1000);
-  const p = n => String(n).padStart(2, '0');
+  const p = (n) => String(n).padStart(2, "0");
   return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
 }
 
 function mxBaueClozeXml(aufgaben) {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
 
-  aufgaben.forEach(a => {
+  aufgaben.forEach((a) => {
     const titel = `${MOODLE_EK_PRAEFIX}${mxIdBasis()}${MOODLE_EK_TITELENDE}`;
     const punkte = a.jahre.length * MOODLE_EK_PUNKTE_PRO_LUECKE;
 
     // Frage: Tabelle, verdeckte Zellen werden zu SHORTANSWER-Lücken
-    const tabelle = baueTabelle(a.jahre, (j, k) => {
-      if (j.fehlt === k) {
-        const korrekterWert = mxMoodleBetrag(j[k]);
-        // Moodle Cloze Shortanswer Syntax: {1:SHORTANSWER:=5.000,00 €} oder mit Toleranz für Schreibweisen
-        return `{${MOODLE_EK_PUNKTE_PRO_LUECKE}:SHORTANSWER:=${korrekterWert}}`;
-      } else {
-        return eur(j[k]);
-      }
-    }, letzteAktiveSpalten);
+    const tabelle = baueTabelle(
+      a.jahre,
+      (j, k) => {
+        if (j.fehlt === k) {
+          const korrekterWert = mxMoodleBetrag(j[k]);
+          // Moodle Cloze Shortanswer Syntax: {1:SHORTANSWER:=5.000,00 €} oder mit Toleranz für Schreibweisen
+          return `{${MOODLE_EK_PUNKTE_PRO_LUECKE}:SHORTANSWER:=${korrekterWert}}`;
+        } else {
+          return eur(j[k]);
+        }
+      },
+      letzteAktiveSpalten,
+    );
 
     const frage = `<p>${a.intro}</p>${tabelle}<p><em>${MOODLE_EK_HINWEIS}</em></p>`;
 
     // Rückmeldung: Rechenweg je Geschäftsjahr
-    let feedback = '<p><strong>Lösungsweg</strong></p>';
-    a.jahre.forEach(j => {
-      feedback += `<p><strong>${j.jahr}:</strong><br>${rechenwegZeilen(j).join('<br>')}</p>`;
+    let feedback = "<p><strong>Lösungsweg</strong></p>";
+    a.jahre.forEach((j) => {
+      feedback += `<p><strong>${j.jahr}:</strong><br>${rechenwegZeilen(j).join("<br>")}</p>`;
     });
 
     xml += `  <question type="cloze">\n`;
@@ -428,23 +485,23 @@ function mxBaueClozeXml(aufgaben) {
 
 // Formatiert den Wert exakt so, wie der Schüler ihn eingeben soll (z.B. 5.000,00 €)
 function mxMoodleBetrag(n) {
-  return fmt(n) + '\u00a0€'; // Nutzt deine vorhandene fmt()-Funktion + geschütztes Leerzeichen und €
+  return fmt(n) + "\u00a0€"; // Nutzt deine vorhandene fmt()-Funktion + geschütztes Leerzeichen und €
 }
 
 function exportiereMoodle() {
   if (!letzteEkAufgaben.length) {
-    zeigeModal('Bitte zuerst Aufgaben erstellen.');
+    zeigeModal("Bitte zuerst Aufgaben erstellen.");
     return;
   }
   const xml = mxBaueClozeXml(letzteEkAufgaben);
 
   const d = new Date();
-  const p = n => String(n).padStart(2, '0');
+  const p = (n) => String(n).padStart(2, "0");
   const dateiname = `quiz-eigenkapitalvergleich-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
 
-  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = dateiname;
   document.body.appendChild(a);
@@ -458,35 +515,35 @@ function exportiereMoodle() {
 // ============================================================================
 
 function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
+  const myCompanyName = localStorage.getItem("myCompany");
   if (!myCompanyName) return;
 
-  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-  dropdowns.forEach(dropdown => {
+  const dropdowns = document.querySelectorAll("select.meinUnternehmen");
+  dropdowns.forEach((dropdown) => {
     const options = Array.from(dropdown.options);
-    const matchingOption = options.find(opt => opt.value === myCompanyName);
+    const matchingOption = options.find((opt) => opt.value === myCompanyName);
     if (matchingOption) {
       dropdown.value = myCompanyName;
-      const event = new Event('change', { bubbles: true });
+      const event = new Event("change", { bubbles: true });
       dropdown.dispatchEvent(event);
     }
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const kundeSelect = document.getElementById('ekKunde');
+document.addEventListener("DOMContentLoaded", () => {
+  const kundeSelect = document.getElementById("ekKunde");
 
   if (kundeSelect && kundeSelect.value) {
     kunde = kundeSelect.value.trim();
   }
 
   if (kundeSelect) {
-    kundeSelect.addEventListener('change', () => {
-      kunde = kundeSelect.value.trim() || '';
+    kundeSelect.addEventListener("change", () => {
+      kunde = kundeSelect.value.trim() || "";
     });
   }
 
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) {
     vorschauEl.textContent = KI_ASSISTENT_PROMPT;
   }
@@ -498,10 +555,14 @@ document.addEventListener('DOMContentLoaded', () => {
     autoSelectMyCompany();
     zeigeZufaelligeEkAufgaben();
   } else {
-    document.addEventListener('yamlDataLoaded', () => {
-      fillCompanyDropdowns();
-      autoSelectMyCompany();
-      zeigeZufaelligeEkAufgaben();
-    }, { once: true });
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
+        fillCompanyDropdowns();
+        autoSelectMyCompany();
+        zeigeZufaelligeEkAufgaben();
+      },
+      { once: true },
+    );
   }
 });

@@ -3,67 +3,63 @@
 // ============================================================================
 
 // Globale Variablen
-let kunde = '<i>[Modellunternehmen]</i>';
+let kunde = "<i>[Modellunternehmen]</i>";
 
 // ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
 // Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
 // Bei Änderungen nur KONTENPLAN in utils.js anpassen.
-const AWVM  = kontoLabel('6040');   // Aufwendungen für Verpackungsmaterial
-const AFR   = kontoLabel('6140');   // Ausgangsfrachten
-const VORST = kontoLabel('2600');   // Vorsteuer
-const KA    = kontoLabel('2880');   // Kasse
-const BK    = kontoLabel('2800');   // Bank
-const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
+const AWVM = kontoLabel("6040"); // Aufwendungen für Verpackungsmaterial
+const AFR = kontoLabel("6140"); // Ausgangsfrachten
+const VORST = kontoLabel("2600"); // Vorsteuer
+const KA = kontoLabel("2880"); // Kasse
+const BK = kontoLabel("2800"); // Bank
+const VE = kontoLabel("4400"); // Verbindlichkeiten aus LL
 
 // Konten-Definitionen
 const kontenDefinitionen = {
   [AWVM]: {
-    beschreibung: '',
+    beschreibung: "",
   },
   [AFR]: {
-    beschreibung: '',
-  }
+    beschreibung: "",
+  },
 };
 
 // ============================================================================
 // YAML-DATEN LADEN
 // ============================================================================
 
-
-
-
-
 // ============================================================================
 // KONTO-AUSWAHL FUNKTIONEN
 // ============================================================================
 
 function initializeKontoAuswahl() {
-  const kontoGrid = document.getElementById('kontoGrid');
+  const kontoGrid = document.getElementById("kontoGrid");
   if (!kontoGrid) return;
 
-  kontoGrid.innerHTML = '';
+  kontoGrid.innerHTML = "";
 
   Object.entries(kontenDefinitionen).forEach(([kontoNr, info]) => {
-    const item = document.createElement('div');
-    item.className = 'konto-checkbox-item';
+    const item = document.createElement("div");
+    item.className = "konto-checkbox-item";
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = `konto-${kontoNr.replace(/\s/g, '-')}`;
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = `konto-${kontoNr.replace(/\s/g, "-")}`;
     checkbox.value = kontoNr;
     checkbox.checked = true;
     checkbox.onchange = updateAuswahlInfo;
 
-    const label = document.createElement('label');
-    label.className = 'konto-label';
+    const label = document.createElement("label");
+    label.className = "konto-label";
     label.htmlFor = checkbox.id;
 
-    const nummer = document.createElement('div');
-    nummer.className = 'konto-nummer';
+    const nummer = document.createElement("div");
+    nummer.className = "konto-nummer";
     nummer.textContent = kontoNr;
 
-    const beschreibung = document.createElement('div');
-    beschreibung.className = 'konto-beschreibung';
+    const beschreibung = document.createElement("div");
+    beschreibung.className = "konto-beschreibung";
     beschreibung.textContent = info.beschreibung;
 
     label.appendChild(nummer);
@@ -77,41 +73,50 @@ function initializeKontoAuswahl() {
 }
 
 function updateAuswahlInfo() {
-  const auswahlInfo = document.getElementById('auswahlInfo');
-  const checkboxes = document.querySelectorAll('#kontoGrid input[type="checkbox"]');
-  const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const auswahlInfo = document.getElementById("auswahlInfo");
+  const checkboxes = document.querySelectorAll(
+    '#kontoGrid input[type="checkbox"]',
+  );
+  const checkedCount = Array.from(checkboxes).filter((cb) => cb.checked).length;
 
   if (!auswahlInfo) return;
-  auswahlInfo.style.display = 'block';
+  auswahlInfo.style.display = "block";
 
   if (checkedCount === 0) {
-    auswahlInfo.textContent = '⚠️ Keine Konten ausgewählt - es werden alle verwendet';
-    auswahlInfo.style.background = '#fff3cd';
-    auswahlInfo.style.color = '#856404';
+    auswahlInfo.textContent =
+      "⚠️ Keine Konten ausgewählt - es werden alle verwendet";
+    auswahlInfo.style.background = "#fff3cd";
+    auswahlInfo.style.color = "#856404";
   } else if (checkedCount === checkboxes.length) {
-    auswahlInfo.textContent = '✓ Alle Konten ausgewählt';
-    auswahlInfo.style.background = '#d4edda';
-    auswahlInfo.style.color = '#155724';
+    auswahlInfo.textContent = "✓ Alle Konten ausgewählt";
+    auswahlInfo.style.background = "#d4edda";
+    auswahlInfo.style.color = "#155724";
   } else {
     auswahlInfo.textContent = `✓ ${checkedCount} von ${checkboxes.length} Konten ausgewählt`;
-    auswahlInfo.style.background = '#d1ecf1';
-    auswahlInfo.style.color = '#0c5460';
+    auswahlInfo.style.background = "#d1ecf1";
+    auswahlInfo.style.color = "#0c5460";
   }
 }
 
 function alleKontenAuswaehlen() {
-  document.querySelectorAll('#kontoGrid input[type="checkbox"]').forEach(cb => cb.checked = true);
+  document
+    .querySelectorAll('#kontoGrid input[type="checkbox"]')
+    .forEach((cb) => (cb.checked = true));
   updateAuswahlInfo();
 }
 
 function alleKontenAbwaehlen() {
-  document.querySelectorAll('#kontoGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document
+    .querySelectorAll('#kontoGrid input[type="checkbox"]')
+    .forEach((cb) => (cb.checked = false));
   updateAuswahlInfo();
 }
 
 function getAusgewaehlteKonten() {
-  const checkboxes = document.querySelectorAll('#kontoGrid input[type="checkbox"]:checked');
-  return Array.from(checkboxes).map(cb => cb.value);
+  const checkboxes = document.querySelectorAll(
+    '#kontoGrid input[type="checkbox"]:checked',
+  );
+  return Array.from(checkboxes).map((cb) => cb.value);
 }
 
 // ============================================================================
@@ -120,65 +125,121 @@ function getAusgewaehlteKonten() {
 
 const geschaeftsfallTypen = {
   verpackungsmaterial: {
-    name: 'Verpackungsmaterial',
+    name: "Verpackungsmaterial",
     konto: AWVM,
-    lieferanten: ['PackDesign Pro', 'GreenWrap Solutions'],
-    belegtyp: 'rechnung',
+    lieferanten: ["PackDesign Pro", "GreenWrap Solutions"],
+    belegtyp: "rechnung",
     zahlungsarten: [
-      { text: '. Hierfür liegt eine Rechnung vor', konto: VE },
-      { text: ' auf Ziel', konto: VE },
-      { text: '. Die Rechnung geht ein', konto: VE }
+      { text: ". Hierfür liegt eine Rechnung vor", konto: VE },
+      { text: " auf Ziel", konto: VE },
+      { text: ". Die Rechnung geht ein", konto: VE },
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
-      { beschreibung: ' kauft Kartonagen für den Versand der Fertigerzeugnisse', artikel: 'Versandkartons (100 Stück)', einheit: 'Pak.' },
-      { beschreibung: ' beschafft Verpackungsmaterial für Fertigerzeugnisse', artikel: 'Verpackungsfolie', einheit: 'Rol.' },
-      { beschreibung: ' kauft Füllmaterial für die Verpackung von Fertigerzeugnissen', artikel: 'Füllmaterial (Polster)', einheit: 'Pak.' },
-      { beschreibung: ' erwirbt Versandkartons für die Auslieferung von Fertigerzeugnissen', artikel: 'Wellpappkartons (50 Stück)', einheit: 'Pak.' },
-      { beschreibung: ' kauft Klebeband und Verpackungsmaterial für den Versand von Fertigerzeugnissen', artikel: 'Klebeband + Polster', einheit: 'Set' },
-      { beschreibung: ' bestellt für die Verpackung von Fertigerzeugnissen Schutzfolien', artikel: 'Luftpolsterfolie', einheit: 'Rol.' },
-      { beschreibung: ' kauft Verpackungskartons für den Transport der Fertigerzeugnissen zum Kunden', artikel: 'Faltkartons (200 Stück)', einheit: 'Pak.' }
-    ]
+      {
+        beschreibung: " kauft Kartonagen für den Versand der Fertigerzeugnisse",
+        artikel: "Versandkartons (100 Stück)",
+        einheit: "Pak.",
+      },
+      {
+        beschreibung: " beschafft Verpackungsmaterial für Fertigerzeugnisse",
+        artikel: "Verpackungsfolie",
+        einheit: "Rol.",
+      },
+      {
+        beschreibung:
+          " kauft Füllmaterial für die Verpackung von Fertigerzeugnissen",
+        artikel: "Füllmaterial (Polster)",
+        einheit: "Pak.",
+      },
+      {
+        beschreibung:
+          " erwirbt Versandkartons für die Auslieferung von Fertigerzeugnissen",
+        artikel: "Wellpappkartons (50 Stück)",
+        einheit: "Pak.",
+      },
+      {
+        beschreibung:
+          " kauft Klebeband und Verpackungsmaterial für den Versand von Fertigerzeugnissen",
+        artikel: "Klebeband + Polster",
+        einheit: "Set",
+      },
+      {
+        beschreibung:
+          " bestellt für die Verpackung von Fertigerzeugnissen Schutzfolien",
+        artikel: "Luftpolsterfolie",
+        einheit: "Rol.",
+      },
+      {
+        beschreibung:
+          " kauft Verpackungskartons für den Transport der Fertigerzeugnissen zum Kunden",
+        artikel: "Faltkartons (200 Stück)",
+        einheit: "Pak.",
+      },
+    ],
   },
 
   ausgangsfrachten: {
-    name: 'Ausgangsfrachten',
+    name: "Ausgangsfrachten",
     konto: AFR,
-    lieferanten: ['TransMove', 'SpeedyDelivery'],
-    belegtyp: 'rechnung',
+    lieferanten: ["TransMove", "SpeedyDelivery"],
+    belegtyp: "rechnung",
     zahlungsarten: [
-      { text: '. Hierfür liegt eine Rechnung vor', konto: VE },
-      { text: ' auf Ziel', konto: VE },
-      { text: '. Es geht eine Rechnung ein', konto: VE }
+      { text: ". Hierfür liegt eine Rechnung vor", konto: VE },
+      { text: " auf Ziel", konto: VE },
+      { text: ". Es geht eine Rechnung ein", konto: VE },
     ],
     mitVorsteuer: true,
     geschaeftsfaelle: [
-      { beschreibung: ' lässt Fertigerzeugnisse zu einem Kunden durch eine Spedition transportieren', artikel: 'Transport Fertigerzeugnisse', einheit: 'Frt.' },
-      { beschreibung: ' beauftragt eine Spedition für den Transport von Fertigerzeugnissen zu einem Kunden', artikel: 'Speditionsauftrag Auslieferung', einheit: 'Frt.' },
-      { beschreibung: ' gibt Fertigerzeugnisse per Spedition an einen Kunden', artikel: 'Frachtleistung Warenausgang', einheit: 'Frt.' },
-      { beschreibung: ' beauftragt die Spedition mit dem Versand an einen Großkunden', artikel: 'Spedition Großkundenlieferung', einheit: 'Frt.' },
-      { beschreibung: ' lässt Waren per Spedition an den Handelspartner liefern', artikel: 'Transport Fertigerzeugnisse', einheit: 'Frt.' },
-      { beschreibung: ' erhält die Kostenaufstellung für eine Auslieferung von Fertigerzeugnissen an einen Kunden', artikel: 'Frachtkosten Kundenlieferung', einheit: 'Frt.' }
-    ]
-  }
+      {
+        beschreibung:
+          " lässt Fertigerzeugnisse zu einem Kunden durch eine Spedition transportieren",
+        artikel: "Transport Fertigerzeugnisse",
+        einheit: "Frt.",
+      },
+      {
+        beschreibung:
+          " beauftragt eine Spedition für den Transport von Fertigerzeugnissen zu einem Kunden",
+        artikel: "Speditionsauftrag Auslieferung",
+        einheit: "Frt.",
+      },
+      {
+        beschreibung: " gibt Fertigerzeugnisse per Spedition an einen Kunden",
+        artikel: "Frachtleistung Warenausgang",
+        einheit: "Frt.",
+      },
+      {
+        beschreibung:
+          " beauftragt die Spedition mit dem Versand an einen Großkunden",
+        artikel: "Spedition Großkundenlieferung",
+        einheit: "Frt.",
+      },
+      {
+        beschreibung:
+          " lässt Waren per Spedition an den Handelspartner liefern",
+        artikel: "Transport Fertigerzeugnisse",
+        einheit: "Frt.",
+      },
+      {
+        beschreibung:
+          " erhält die Kostenaufstellung für eine Auslieferung von Fertigerzeugnissen an einen Kunden",
+        artikel: "Frachtkosten Kundenlieferung",
+        einheit: "Frt.",
+      },
+    ],
+  },
 };
 
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
 
-
-
 function generateRandomBetrag(min = 20, max = 500) {
   const steps = Math.floor((max - min) / 5);
-  return min + (Math.floor(Math.random() * steps) * 5);
+  return min + Math.floor(Math.random() * steps) * 5;
 }
 
-
-const wertFormulierungen = [
-  " in Höhe von ",
-  " mit einem Betrag von "
-];
+const wertFormulierungen = [" in Höhe von ", " mit einem Betrag von "];
 
 // ============================================================================
 // GESCHÄFTSFALL GENERIEREN
@@ -190,7 +251,7 @@ function erstelleZufallsGeschaeftsfall() {
   let verfuegbareTypen = Object.keys(geschaeftsfallTypen);
 
   if (ausgewaehlteKonten.length > 0) {
-    verfuegbareTypen = verfuegbareTypen.filter(typKey => {
+    verfuegbareTypen = verfuegbareTypen.filter((typKey) => {
       const typ = geschaeftsfallTypen[typKey];
       return ausgewaehlteKonten.includes(typ.konto);
     });
@@ -200,21 +261,27 @@ function erstelleZufallsGeschaeftsfall() {
     verfuegbareTypen = Object.keys(geschaeftsfallTypen);
   }
 
-  const zufallsTyp = verfuegbareTypen[Math.floor(Math.random() * verfuegbareTypen.length)];
+  const zufallsTyp =
+    verfuegbareTypen[Math.floor(Math.random() * verfuegbareTypen.length)];
   const typ = geschaeftsfallTypen[zufallsTyp];
 
-  const lieferant = typ.lieferanten[Math.floor(Math.random() * typ.lieferanten.length)];
-  const zahlungsart = typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
-  const geschaeftsfall = typ.geschaeftsfaelle[Math.floor(Math.random() * typ.geschaeftsfaelle.length)];
+  const lieferant =
+    typ.lieferanten[Math.floor(Math.random() * typ.lieferanten.length)];
+  const zahlungsart =
+    typ.zahlungsarten[Math.floor(Math.random() * typ.zahlungsarten.length)];
+  const geschaeftsfall =
+    typ.geschaeftsfaelle[
+      Math.floor(Math.random() * typ.geschaeftsfaelle.length)
+    ];
 
   const beschreibung = geschaeftsfall.beschreibung;
   const artikel = geschaeftsfall.artikel;
-  const einheit = geschaeftsfall.einheit || 'Stück';
+  const einheit = geschaeftsfall.einheit || "Stück";
 
   let nettoBetrag;
-  if (zufallsTyp === 'verpackungsmaterial') {
+  if (zufallsTyp === "verpackungsmaterial") {
     nettoBetrag = generateRandomBetrag(30, 300);
-  } else if (zufallsTyp === 'ausgangsfrachten') {
+  } else if (zufallsTyp === "ausgangsfrachten") {
     nettoBetrag = generateRandomBetrag(25, 400);
   } else {
     nettoBetrag = generateRandomBetrag(30, 300);
@@ -236,7 +303,7 @@ function erstelleZufallsGeschaeftsfall() {
   }
 
   let betragText;
-  let betragHinweis = '';
+  let betragHinweis = "";
 
   if (!typ.mitVorsteuer) {
     betragText = nettoFormatted;
@@ -244,42 +311,41 @@ function erstelleZufallsGeschaeftsfall() {
     const showNetto = Math.random() < 0.5;
     if (showNetto) {
       betragText = nettoFormatted;
-      betragHinweis = ' netto';
+      betragHinweis = " netto";
     } else {
       betragText = bruttoFormatted;
-      betragHinweis = ' brutto';
+      betragHinweis = " brutto";
     }
   }
 
   const zText = zahlungsart.text.trim();
-  let verbindung = '';
+  let verbindung = "";
   if (zText) {
-    if (zText.startsWith(',') || zText.startsWith('.')) {
-      verbindung = '';
+    if (zText.startsWith(",") || zText.startsWith(".")) {
+      verbindung = "";
     } else {
-      verbindung = ' ';
+      verbindung = " ";
     }
   }
 
-  const varianten = [
-    `${kunde}`,
-    `Firma ${kunde}`,
-    `Unternehmen ${kunde}`,
-  ];
+  const varianten = [`${kunde}`, `Firma ${kunde}`, `Unternehmen ${kunde}`];
 
   const ausgabe = varianten[Math.floor(Math.random() * varianten.length)];
-  const wertPhrase = wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
+  const wertPhrase =
+    wertFormulierungen[Math.floor(Math.random() * wertFormulierungen.length)];
 
   // Lieferanten-Name in den Geschäftsfall einfügen (Spedition/Lieferant nennen)
-  const lieferantPrefix = (zufallsTyp === 'ausgangsfrachten')
-    ? `Die Spedition ${lieferant} stellt `
-    : ``;
+  const lieferantPrefix =
+    zufallsTyp === "ausgangsfrachten"
+      ? `Die Spedition ${lieferant} stellt `
+      : ``;
 
   let geschaeftsfallText;
-  if (zufallsTyp === 'ausgangsfrachten') {
+  if (zufallsTyp === "ausgangsfrachten") {
     // Für Ausgangsfrachten: Spedition wird Subjekt (wie im Screenshot)
     const zahlText = zahlungsart.text.trim();
-    const verbindungZ = (zahlText.startsWith(',') || zahlText.startsWith('.')) ? '' : ' ';
+    const verbindungZ =
+      zahlText.startsWith(",") || zahlText.startsWith(".") ? "" : " ";
     geschaeftsfallText = `Die Spedition ${lieferant} stellt ${ausgabe} den Transport von Fertigerzeugnissen zu einem Kunden in Rechnung${verbindungZ}${zahlText}${wertPhrase}${betragText}${betragHinweis}.`;
   } else {
     geschaeftsfallText = `${ausgabe}${beschreibung}${verbindung}${zText}${wertPhrase}${betragText}${betragHinweis}.`;
@@ -299,7 +365,9 @@ function erstelleZufallsGeschaeftsfall() {
     vorsteuerFormatted: vorsteuerFormatted,
     bruttoBetrag: bruttoBetrag,
     bruttoFormatted: bruttoFormatted,
-    ustProzent: typ.umsatzsteuerSatz ? roundToTwoDecimals(typ.umsatzsteuerSatz * 100) : 19
+    ustProzent: typ.umsatzsteuerSatz
+      ? roundToTwoDecimals(typ.umsatzsteuerSatz * 100)
+      : 19,
   };
 }
 
@@ -317,27 +385,27 @@ function erstelleBuchungssatz(geschaeftsfall) {
   if (typ.mitVorsteuer) {
     buchungssatzHTML += `
         <tr>
-          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
-          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.nettoFormatted}</td>
-          <td style="border-with:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1"></td>
-          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px; text-align:right" tabindex="1"></td>
-          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px; text-align:right" tabindex="1"></td>
+          <td style="border-width:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
+          <td style="border-width:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.nettoFormatted}</td>
+          <td style="border-width:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1"></td>
+          <td style="border-width:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px; text-align:right" tabindex="1"></td>
+          <td style="border-width:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px; text-align:right" tabindex="1"></td>
         </tr>
         <tr>
-          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${VORST}</td>
-          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.vorsteuerFormatted}</td>
-          <td style="border-with:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
-          <td style="border-with:0;text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
-          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.bruttoFormatted}</td>
+          <td style="border-width:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${VORST}</td>
+          <td style="border-width:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.vorsteuerFormatted}</td>
+          <td style="border-width:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
+          <td style="border-width:0;text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
+          <td style="border-width:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.bruttoFormatted}</td>
         </tr>`;
   } else {
     buchungssatzHTML += `
         <tr>
-          <td style="border-with:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
-          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.nettoFormatted}</td>
-          <td style="border-with:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
-          <td style="border-with:0;text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
-          <td style="border-with:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.nettoFormatted}</td>
+          <td style="border-width:0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${typ.konto}</td>
+          <td style="border-width:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.nettoFormatted}</td>
+          <td style="border-width:0;text-align:center; width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:40px" tabindex="1">an</td>
+          <td style="border-width:0;text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.zahlungsart.konto}</td>
+          <td style="border-width:0;text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; min-width:140px" tabindex="1">${geschaeftsfall.nettoFormatted}</td>
         </tr>`;
   }
 
@@ -357,41 +425,45 @@ function erstelleBelegURL(geschaeftsfall) {
   const typ = geschaeftsfall.typDaten;
   const belegtyp = typ.belegtyp;
 
-  params.set('beleg', belegtyp);
+  params.set("beleg", belegtyp);
 
-  const kundeSelect = document.getElementById('ausgangsfrachtenKunde');
-  const kundeValue = kundeSelect?.value?.trim() || '';
+  const kundeSelect = document.getElementById("ausgangsfrachtenKunde");
+  const kundeValue = kundeSelect?.value?.trim() || "";
 
   const now = new Date();
-  const tag = now.getDate().toString().padStart(2, '0');
-  const monat = (now.getMonth() + 1).toString().padStart(2, '0');
+  const tag = now.getDate().toString().padStart(2, "0");
+  const monat = (now.getMonth() + 1).toString().padStart(2, "0");
   const jahr = now.getFullYear().toString();
 
-  if (belegtyp === 'rechnung') {
-    if (kundeValue) params.set('kunde', kundeValue);
-    params.set('lieferer', geschaeftsfall.lieferant);
+  if (belegtyp === "rechnung") {
+    if (kundeValue) params.set("kunde", kundeValue);
+    params.set("lieferer", geschaeftsfall.lieferant);
 
-    params.set('artikel1', geschaeftsfall.artikel);
-    params.set('menge1', '1');
-    params.set('einheit1', geschaeftsfall.einheit);
+    params.set("artikel1", geschaeftsfall.artikel);
+    params.set("menge1", "1");
+    params.set("einheit1", geschaeftsfall.einheit);
 
-    const einzelpreis = parseNumericValue(formatCurrency(geschaeftsfall.nettoBetrag));
-    params.set('einzelpreis1', einzelpreis);
+    const einzelpreis = parseNumericValue(
+      formatCurrency(geschaeftsfall.nettoBetrag),
+    );
+    params.set("einzelpreis1", einzelpreis);
 
-    const ustWert = typ.mitVorsteuer ? geschaeftsfall.ustProzent.toString() : '0';
-    params.set('umsatzsteuer', ustWert);
+    const ustWert = typ.mitVorsteuer
+      ? geschaeftsfall.ustProzent.toString()
+      : "0";
+    params.set("umsatzsteuer", ustWert);
 
-    if (geschaeftsfall.typ === 'ausgangsfrachten') {
-  params.set('vorlage', 'template6.svg');
-} else {
-  params.set('vorlage', 'template2.svg');
-}
-    params.set('tag', tag);
-    params.set('monat', monat);
-    params.set('jahr', jahr);
-    params.set('zahlungsziel', '30');
-    params.set('skonto', '0');
-    params.set('skontofrist', '0');
+    if (geschaeftsfall.typ === "ausgangsfrachten") {
+      params.set("vorlage", "template6.svg");
+    } else {
+      params.set("vorlage", "template2.svg");
+    }
+    params.set("tag", tag);
+    params.set("monat", monat);
+    params.set("jahr", jahr);
+    params.set("zahlungsziel", "30");
+    params.set("skonto", "0");
+    params.set("skontofrist", "0");
   }
 
   return `belege.html?${params.toString()}`;
@@ -403,12 +475,12 @@ function erstelleBelegURL(geschaeftsfall) {
 
 function erstelleBelegButton(nummer, geschaeftsfall) {
   const url = erstelleBelegURL(geschaeftsfall);
-  let belegTypName = 'Rechnung';
+  let belegTypName = "Rechnung";
 
   return `
     <button
       class="geschaeftsfall-beleg-button"
-      data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+      data-url="${url.replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
       title="Rechnung für Aufgabe ${nummer} erstellen"
       style="width: 100%; padding: 10px 12px; font-size: 14px; margin-bottom: 8px;"
     >
@@ -422,38 +494,49 @@ function erstelleBelegButton(nummer, geschaeftsfall) {
 // ============================================================================
 
 function zeigeZufaelligeGeschaeftsfaelle() {
-  const anzahl = parseInt(document.getElementById('anzahlDropdown').value);
-  const container = document.getElementById('Container');
-  const buttonColumn = document.getElementById('button-column');
+  const anzahl = parseInt(document.getElementById("anzahlDropdown").value);
+  const container = document.getElementById("Container");
+  const buttonColumn = document.getElementById("button-column");
 
   if (!container || !buttonColumn) {
     console.error("Container oder Button-Column nicht gefunden");
     return;
   }
 
-  container.innerHTML = '';
-  buttonColumn.innerHTML = '';
+  container.innerHTML = "";
+  buttonColumn.innerHTML = "";
   letzteGenerierteGfListeFrachten = [];
-  if (typeof moodleReset === 'function') moodleReset();
+  if (typeof moodleReset === "function") moodleReset();
 
-  let aufgabenHTML = '<h2>Buchungen zu Ausgangsfrachten und Verpackungsmaterial</h2><h3>Bilde die Buchungssätze zu den folgenden Geschäftsfällen.</h3><ol>';
+  let aufgabenHTML =
+    "<h2>Buchungen zu Ausgangsfrachten und Verpackungsmaterial</h2><h3>Bilde die Buchungssätze zu den folgenden Geschäftsfällen.</h3><ol>";
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   for (let i = 1; i <= anzahl; i++) {
     const geschaeftsfall = erstelleZufallsGeschaeftsfall();
 
     // Aufgabe und Lösung für KI-Prompt merken
-    const klartext = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '').trim();
+    const klartext = (s) =>
+      s
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .replace(/\s(?=[.,;:!])/g, "")
+        .trim();
     letzteGenerierteGfListeFrachten.push({
       aufgabe: klartext(geschaeftsfall.text),
-      loesung: `Buchungssatz: ${geschaeftsfall.typDaten.konto} ${geschaeftsfall.nettoFormatted} / ${VORST} ${geschaeftsfall.vorsteuerFormatted} an ${geschaeftsfall.zahlungsart.konto} ${geschaeftsfall.bruttoFormatted}`
+      loesung: `Buchungssatz: ${geschaeftsfall.typDaten.konto} ${geschaeftsfall.nettoFormatted} / ${VORST} ${geschaeftsfall.vorsteuerFormatted} an ${geschaeftsfall.zahlungsart.konto} ${geschaeftsfall.bruttoFormatted}`,
     });
-        if (typeof moodleErfasseAusgangsfrachten === 'function') {
+    if (typeof moodleErfasseAusgangsfrachten === "function") {
       moodleErfasseAusgangsfrachten({
-        nr: i, typName: geschaeftsfall.typDaten.name, satz: geschaeftsfall.text,
-        aufwandskonto: geschaeftsfall.typDaten.konto, zahlungskonto: geschaeftsfall.zahlungsart.konto,
-        netto: geschaeftsfall.nettoFormatted, vorsteuer: geschaeftsfall.vorsteuerFormatted,
-        brutto: geschaeftsfall.bruttoFormatted, ustProzent: geschaeftsfall.ustProzent
+        nr: i,
+        typName: geschaeftsfall.typDaten.name,
+        satz: geschaeftsfall.text,
+        aufwandskonto: geschaeftsfall.typDaten.konto,
+        zahlungskonto: geschaeftsfall.zahlungsart.konto,
+        netto: geschaeftsfall.nettoFormatted,
+        vorsteuer: geschaeftsfall.vorsteuerFormatted,
+        brutto: geschaeftsfall.bruttoFormatted,
+        ustProzent: geschaeftsfall.ustProzent,
       });
     }
 
@@ -463,16 +546,16 @@ function zeigeZufaelligeGeschaeftsfaelle() {
     loesungenHTML += erstelleBuchungssatz(geschaeftsfall);
     loesungenHTML += `</div>`;
 
-    const buttonDiv = document.createElement('div');
-    buttonDiv.style.margin = '12px 0';
+    const buttonDiv = document.createElement("div");
+    buttonDiv.style.margin = "12px 0";
     buttonDiv.innerHTML = erstelleBelegButton(i, geschaeftsfall);
     buttonColumn.appendChild(buttonDiv);
   }
 
-  aufgabenHTML += '</ol>';
+  aufgabenHTML += "</ol>";
   container.innerHTML = aufgabenHTML + loesungenHTML;
-  const vorschau = document.getElementById('kiPromptVorschau');
-  if (vorschau && vorschau.style.display !== 'none') {
+  const vorschau = document.getElementById("kiPromptVorschau");
+  if (vorschau && vorschau.style.display !== "none") {
     vorschau.textContent = erstelleKiPromptText();
   }
 }
@@ -488,37 +571,37 @@ function fillCompanyDropdowns() {
   }
 
   const sortedCompanies = [...yamlData].sort((a, b) => {
-    const brancheA = a.unternehmen?.branche || '';
-    const brancheB = b.unternehmen?.branche || '';
+    const brancheA = a.unternehmen?.branche || "";
+    const brancheB = b.unternehmen?.branche || "";
     if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
-    return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+    return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
 
-  const kundeSelect = document.getElementById('ausgangsfrachtenKunde');
+  const kundeSelect = document.getElementById("ausgangsfrachtenKunde");
   if (!kundeSelect) return;
 
-  kundeSelect.innerHTML = '';
-  const opt = document.createElement('option');
-  opt.value = '';
-  opt.text = '— bitte Unternehmen auswählen —';
+  kundeSelect.innerHTML = "";
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "— bitte Unternehmen auswählen —";
   opt.disabled = true;
   opt.selected = true;
   kundeSelect.appendChild(opt);
 
-  sortedCompanies.forEach(company => {
+  sortedCompanies.forEach((company) => {
     const u = company.unternehmen;
     if (!u?.name) return;
 
     const displayText = u.branche
-      ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
-      : `${u.name} ${u.rechtsform || ''}`.trim();
+      ? `${u.branche} – ${u.name} ${u.rechtsform || ""}`.trim()
+      : `${u.name} ${u.rechtsform || ""}`.trim();
 
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = u.name;
     option.textContent = displayText;
-    option.dataset.id = u.id || '';
-    option.dataset.rechtsform = u.rechtsform || '';
-    option.dataset.branche = u.branche || '';
+    option.dataset.id = u.id || "";
+    option.dataset.rechtsform = u.rechtsform || "";
+    option.dataset.branche = u.branche || "";
 
     kundeSelect.appendChild(option);
   });
@@ -532,13 +615,20 @@ let letzteGenerierteGfListeFrachten = [];
 function erstelleKiPromptText() {
   let aufgabenUndLoesungen;
   if (letzteGenerierteGfListeFrachten.length === 0) {
-    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+    aufgabenUndLoesungen =
+      "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
   } else {
     aufgabenUndLoesungen = letzteGenerierteGfListeFrachten
-      .map((e, idx) => `Aufgabe ${idx + 1}:\n${e.aufgabe}\n\nMusterlösung ${idx + 1}:\n${e.loesung}`)
+      .map(
+        (e, idx) =>
+          `Aufgabe ${idx + 1}:\n${e.aufgabe}\n\nMusterlösung ${idx + 1}:\n${e.loesung}`,
+      )
       .join("\n\n---\n\n");
   }
-  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+  return KI_ASSISTENT_PROMPT.replace(
+    "###AUFGABEN und LÖSUNGEN###",
+    aufgabenUndLoesungen,
+  );
 }
 
 // ============================================================================
@@ -651,56 +741,58 @@ Gib ganz am Ende den Buchungssatz als HTML-Tabelle aus, z. B.:
 </table>
 `;
 
-
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(erstelleKiPromptText()).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(err => {
-    console.error('Fehler beim Kopieren:', err);
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(erstelleKiPromptText())
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch((err) => {
+      console.error("Fehler beim Kopieren:", err);
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
+    vorschau.style.display = "block";
     vorschau.textContent = erstelleKiPromptText();
-    btn.textContent = 'Vorschau ausblenden ▲';
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
-
-
 
 // ============================================================================
 // INITIALISIERUNG
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   initializeKontoAuswahl();
 
-  const kundeSelect = document.getElementById('ausgangsfrachtenKunde');
+  const kundeSelect = document.getElementById("ausgangsfrachtenKunde");
 
   if (kundeSelect) {
     if (kundeSelect.value) {
       kunde = kundeSelect.value.trim();
     }
 
-    kundeSelect.addEventListener('change', () => {
-      kunde = kundeSelect.value.trim() || '';
-      console.log('Kunde geändert:', kunde);
+    kundeSelect.addEventListener("change", () => {
+      kunde = kundeSelect.value.trim() || "";
+      console.log("Kunde geändert:", kunde);
     });
   }
 
@@ -711,38 +803,41 @@ document.addEventListener('DOMContentLoaded', () => {
     autoSelectMyCompany();
     zeigeZufaelligeGeschaeftsfaelle();
   } else {
-    document.addEventListener('yamlDataLoaded', () => {
-      fillCompanyDropdowns();
-      autoSelectMyCompany();
-      zeigeZufaelligeGeschaeftsfaelle();
-    }, { once: true });
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
+        fillCompanyDropdowns();
+        autoSelectMyCompany();
+        zeigeZufaelligeGeschaeftsfaelle();
+      },
+      { once: true },
+    );
   }
 
-   
   // Prompt-Text in Vorschau einfügen
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) {
     vorschauEl.textContent = erstelleKiPromptText();
   }
 });
 
 function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
-  
+  const myCompanyName = localStorage.getItem("myCompany");
+
   if (!myCompanyName) return;
-  
-  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-  
-  dropdowns.forEach(dropdown => {
+
+  const dropdowns = document.querySelectorAll("select.meinUnternehmen");
+
+  dropdowns.forEach((dropdown) => {
     const options = Array.from(dropdown.options);
-    const matchingOption = options.find(opt => opt.value === myCompanyName);
-    
+    const matchingOption = options.find((opt) => opt.value === myCompanyName);
+
     if (matchingOption) {
       dropdown.value = myCompanyName;
-      
-      const event = new Event('change', { bubbles: true });
+
+      const event = new Event("change", { bubbles: true });
       dropdown.dispatchEvent(event);
-      
+
       console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
     }
   });

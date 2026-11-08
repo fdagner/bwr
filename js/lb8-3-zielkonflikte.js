@@ -2,15 +2,11 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 
-let kunde = '<i>[Modellunternehmen]</i>';
+let kunde = "<i>[Modellunternehmen]</i>";
 
 // ============================================================================
 // YAML-DATEN LADEN (identisch zum Marketing-Generator)
 // ============================================================================
-
-
-
-
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -20,37 +16,37 @@ function fillCompanyDropdowns() {
   if (!yamlData || yamlData.length === 0) return;
 
   const sortedCompanies = [...yamlData].sort((a, b) => {
-    const brancheA = a.unternehmen?.branche || '';
-    const brancheB = b.unternehmen?.branche || '';
+    const brancheA = a.unternehmen?.branche || "";
+    const brancheB = b.unternehmen?.branche || "";
     if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
-    return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+    return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
 
-  const kundeSelect = document.getElementById('zielKunde');
+  const kundeSelect = document.getElementById("zielKunde");
   if (!kundeSelect) return;
 
-  kundeSelect.innerHTML = '';
-  const opt = document.createElement('option');
-  opt.value = '';
-  opt.text = '— bitte Unternehmen auswählen —';
+  kundeSelect.innerHTML = "";
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "— bitte Unternehmen auswählen —";
   opt.disabled = true;
   opt.selected = true;
   kundeSelect.appendChild(opt);
 
-  sortedCompanies.forEach(company => {
+  sortedCompanies.forEach((company) => {
     const u = company.unternehmen;
     if (!u?.name) return;
 
     const displayText = u.branche
-      ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
-      : `${u.name} ${u.rechtsform || ''}`.trim();
+      ? `${u.branche} – ${u.name} ${u.rechtsform || ""}`.trim()
+      : `${u.name} ${u.rechtsform || ""}`.trim();
 
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = u.name;
     option.textContent = displayText;
-    option.dataset.id = u.id || '';
-    option.dataset.rechtsform = u.rechtsform || '';
-    option.dataset.branche = u.branche || '';
+    option.dataset.id = u.id || "";
+    option.dataset.rechtsform = u.rechtsform || "";
+    option.dataset.branche = u.branche || "";
 
     kundeSelect.appendChild(option);
   });
@@ -62,88 +58,100 @@ function fillCompanyDropdowns() {
 
 const marketingZiele = [
   {
-    id: 'gewinn',
-    label: 'Gewinnmaximierung',
-    beschreibung: 'möglichst hohen Gewinn erzielen',
-    kategorie: 'wirtschaftlich',
-    erklaerung: 'Das Unternehmen will so viel Gewinn wie möglich erzielen – also möglichst viel mehr einnehmen, als es ausgibt. Der Gewinn ergibt sich aus: Umsatz minus alle Kosten.'
+    id: "gewinn",
+    label: "Gewinnmaximierung",
+    beschreibung: "möglichst hohen Gewinn erzielen",
+    kategorie: "wirtschaftlich",
+    erklaerung:
+      "Das Unternehmen will so viel Gewinn wie möglich erzielen – also möglichst viel mehr einnehmen, als es ausgibt. Der Gewinn ergibt sich aus: Umsatz minus alle Kosten.",
   },
   {
-    id: 'marktanteil',
-    label: 'Marktanteilssteigerung',
-    beschreibung: 'den eigenen Marktanteil vergrößern',
-    kategorie: 'wirtschaftlich',
-    erklaerung: 'Das Unternehmen will einen größeren Anteil aller Verkäufe in seiner Branche auf sich vereinen. Werden z. B. in einer Branche 100 Produkte verkauft und das Unternehmen verkauft davon 20, hat es einen Marktanteil von 20 % – diesen Anteil will es vergrößern.'
+    id: "marktanteil",
+    label: "Marktanteilssteigerung",
+    beschreibung: "den eigenen Marktanteil vergrößern",
+    kategorie: "wirtschaftlich",
+    erklaerung:
+      "Das Unternehmen will einen größeren Anteil aller Verkäufe in seiner Branche auf sich vereinen. Werden z. B. in einer Branche 100 Produkte verkauft und das Unternehmen verkauft davon 20, hat es einen Marktanteil von 20 % – diesen Anteil will es vergrößern.",
   },
   {
-    id: 'umsatz',
-    label: 'Umsatzsteigerung',
-    beschreibung: 'den Gesamtumsatz erhöhen',
-    kategorie: 'wirtschaftlich',
-    erklaerung: 'Das Unternehmen will mehr Einnahmen durch Verkäufe erzielen. Der Umsatz berechnet sich aus: verkaufte Menge × Preis. Er lässt sich steigern, indem mehr verkauft wird, der Preis erhöht wird – oder beides.'
+    id: "umsatz",
+    label: "Umsatzsteigerung",
+    beschreibung: "den Gesamtumsatz erhöhen",
+    kategorie: "wirtschaftlich",
+    erklaerung:
+      "Das Unternehmen will mehr Einnahmen durch Verkäufe erzielen. Der Umsatz berechnet sich aus: verkaufte Menge × Preis. Er lässt sich steigern, indem mehr verkauft wird, der Preis erhöht wird – oder beides.",
   },
   {
-    id: 'image',
-    label: 'Imageverbesserung',
-    beschreibung: 'das Ansehen des Unternehmens steigern',
-    kategorie: 'qualitativ',
-    erklaerung: 'Das Unternehmen will das Bild verbessern, das Kunden und die Öffentlichkeit von ihm haben. Ein gutes Image entsteht z. B. durch soziales Engagement, fairen Umgang mit Mitarbeitern oder umweltbewusstes Handeln – das kostet aber meist Geld.'
+    id: "image",
+    label: "Imageverbesserung",
+    beschreibung: "das Ansehen des Unternehmens steigern",
+    kategorie: "qualitativ",
+    erklaerung:
+      "Das Unternehmen will das Bild verbessern, das Kunden und die Öffentlichkeit von ihm haben. Ein gutes Image entsteht z. B. durch soziales Engagement, fairen Umgang mit Mitarbeitern oder umweltbewusstes Handeln – das kostet aber meist Geld.",
   },
   {
-    id: 'kundenzufriedenheit',
-    label: 'Kundenzufriedenheit',
-    beschreibung: 'die Zufriedenheit der Kunden erhöhen',
-    kategorie: 'qualitativ',
-    erklaerung: 'Das Unternehmen will, dass seine Kunden so zufrieden sind, dass sie wiederkommen und es weiterempfehlen. Zufriedenheit entsteht, wenn das Produkt oder der Service die Erwartungen der Kunden erfüllt oder übertrifft – guter Service und Qualität kosten aber Geld.'
+    id: "kundenzufriedenheit",
+    label: "Kundenzufriedenheit",
+    beschreibung: "die Zufriedenheit der Kunden erhöhen",
+    kategorie: "qualitativ",
+    erklaerung:
+      "Das Unternehmen will, dass seine Kunden so zufrieden sind, dass sie wiederkommen und es weiterempfehlen. Zufriedenheit entsteht, wenn das Produkt oder der Service die Erwartungen der Kunden erfüllt oder übertrifft – guter Service und Qualität kosten aber Geld.",
   },
   {
-    id: 'neukundengewinnung',
-    label: 'Neukundengewinnung',
-    beschreibung: 'neue Kundengruppen erschließen',
-    kategorie: 'wirtschaftlich',
-    erklaerung: 'Das Unternehmen will Menschen ansprechen, die bisher noch nicht bei ihm gekauft haben – zum Beispiel durch Werbung, niedrigere Einstiegspreise oder neue Vertriebswege. Das erfordert Investitionen, also Geld.'
+    id: "neukundengewinnung",
+    label: "Neukundengewinnung",
+    beschreibung: "neue Kundengruppen erschließen",
+    kategorie: "wirtschaftlich",
+    erklaerung:
+      "Das Unternehmen will Menschen ansprechen, die bisher noch nicht bei ihm gekauft haben – zum Beispiel durch Werbung, niedrigere Einstiegspreise oder neue Vertriebswege. Das erfordert Investitionen, also Geld.",
   },
   {
-    id: 'kundenbindung',
-    label: 'Kundenbindung',
-    beschreibung: 'bestehende Kunden langfristig halten',
-    kategorie: 'qualitativ',
-    erklaerung: 'Das Unternehmen will, dass Kunden immer wieder bei ihm kaufen und nicht zur Konkurrenz wechseln. Mittel dazu sind z. B. Treueprogramme, Rabatte für Stammkunden oder besonders guter Service – das kostet aber ebenfalls Geld und Aufwand.'
+    id: "kundenbindung",
+    label: "Kundenbindung",
+    beschreibung: "bestehende Kunden langfristig halten",
+    kategorie: "qualitativ",
+    erklaerung:
+      "Das Unternehmen will, dass Kunden immer wieder bei ihm kaufen und nicht zur Konkurrenz wechseln. Mittel dazu sind z. B. Treueprogramme, Rabatte für Stammkunden oder besonders guter Service – das kostet aber ebenfalls Geld und Aufwand.",
   },
   {
-    id: 'bekanntheit',
-    label: 'Steigerung des Bekanntheitsgrades',
-    beschreibung: 'das Unternehmen oder Produkt bekannter machen',
-    kategorie: 'qualitativ',
-    erklaerung: 'Das Unternehmen will, dass möglichst viele Menschen seinen Namen oder sein Produkt kennen. Je bekannter ein Unternehmen ist, desto mehr potenzielle Käufer gibt es – dafür sind meist teure Werbemaßnahmen nötig.'
+    id: "bekanntheit",
+    label: "Steigerung des Bekanntheitsgrades",
+    beschreibung: "das Unternehmen oder Produkt bekannter machen",
+    kategorie: "qualitativ",
+    erklaerung:
+      "Das Unternehmen will, dass möglichst viele Menschen seinen Namen oder sein Produkt kennen. Je bekannter ein Unternehmen ist, desto mehr potenzielle Käufer gibt es – dafür sind meist teure Werbemaßnahmen nötig.",
   },
   {
-    id: 'nachhaltigkeit',
-    label: 'Nachhaltigkeit / Umweltschutz',
-    beschreibung: 'umweltfreundlich und nachhaltig handeln',
-    kategorie: 'gesellschaftlich',
-    erklaerung: 'Das Unternehmen will seine Umweltbelastung reduzieren – z. B. durch weniger Verpackungsmüll, den Einsatz erneuerbarer Energien oder umweltfreundliche Produktionsmethoden. Das ist meist aufwendiger und teurer als herkömmliche Verfahren.'
+    id: "nachhaltigkeit",
+    label: "Nachhaltigkeit / Umweltschutz",
+    beschreibung: "umweltfreundlich und nachhaltig handeln",
+    kategorie: "gesellschaftlich",
+    erklaerung:
+      "Das Unternehmen will seine Umweltbelastung reduzieren – z. B. durch weniger Verpackungsmüll, den Einsatz erneuerbarer Energien oder umweltfreundliche Produktionsmethoden. Das ist meist aufwendiger und teurer als herkömmliche Verfahren.",
   },
   {
-    id: 'liquiditaet',
-    label: 'Liquiditätssicherung',
-    beschreibung: 'jederzeit zahlungsfähig bleiben',
-    kategorie: 'wirtschaftlich',
-    erklaerung: 'Das Unternehmen will sicherstellen, dass es seine Rechnungen, Löhne und laufenden Kosten jederzeit pünktlich bezahlen kann. Fehlt die Liquidität, droht die Zahlungsunfähigkeit – selbst dann, wenn das Unternehmen eigentlich Gewinne macht.'
+    id: "liquiditaet",
+    label: "Liquiditätssicherung",
+    beschreibung: "jederzeit zahlungsfähig bleiben",
+    kategorie: "wirtschaftlich",
+    erklaerung:
+      "Das Unternehmen will sicherstellen, dass es seine Rechnungen, Löhne und laufenden Kosten jederzeit pünktlich bezahlen kann. Fehlt die Liquidität, droht die Zahlungsunfähigkeit – selbst dann, wenn das Unternehmen eigentlich Gewinne macht.",
   },
   {
-    id: 'qualitaet',
-    label: 'Qualitätsführerschaft',
-    beschreibung: 'als qualitativ bestes Produkt am Markt gelten',
-    kategorie: 'qualitativ',
-    erklaerung: 'Das Unternehmen will das hochwertigste Produkt seiner Branche anbieten – nicht unbedingt das günstigste, sondern das beste. Dafür werden bessere Materialien, aufwendigere Verarbeitung und strenge Qualitätskontrollen eingesetzt, was höhere Kosten verursacht.'
+    id: "qualitaet",
+    label: "Qualitätsführerschaft",
+    beschreibung: "als qualitativ bestes Produkt am Markt gelten",
+    kategorie: "qualitativ",
+    erklaerung:
+      "Das Unternehmen will das hochwertigste Produkt seiner Branche anbieten – nicht unbedingt das günstigste, sondern das beste. Dafür werden bessere Materialien, aufwendigere Verarbeitung und strenge Qualitätskontrollen eingesetzt, was höhere Kosten verursacht.",
   },
   {
-    id: 'kosteneffizienz',
-    label: 'Kosteneffizienz',
-    beschreibung: 'Kosten senken und effizienter produzieren',
-    kategorie: 'wirtschaftlich',
-    erklaerung: 'Das Unternehmen will dasselbe Ergebnis mit möglichst wenig Aufwand erreichen – also Geld, Zeit und Material einsparen. Das gelingt z. B. durch optimierte Abläufe, den Einsatz von Maschinen oder günstigere Einkaufskonditionen.'
+    id: "kosteneffizienz",
+    label: "Kosteneffizienz",
+    beschreibung: "Kosten senken und effizienter produzieren",
+    kategorie: "wirtschaftlich",
+    erklaerung:
+      "Das Unternehmen will dasselbe Ergebnis mit möglichst wenig Aufwand erreichen – also Geld, Zeit und Material einsparen. Das gelingt z. B. durch optimierte Abläufe, den Einsatz von Maschinen oder günstigere Einkaufskonditionen.",
   },
 ];
 
@@ -153,359 +161,433 @@ const marketingZiele = [
 // ============================================================================
 
 function paarKey(id1, id2) {
-  return [id1, id2].sort().join('__');
+  return [id1, id2].sort().join("__");
 }
 
 const zielbeziehungen = {
   // Gewinnmaximierung
-  [paarKey('gewinn', 'marktanteil')]: {
-    typ: 'konflikt',
-    erklaerung: 'Marktanteilssteigerung erfordert oft niedrigere Preise oder hohe Werbeausgaben, was den Gewinn schmälert.'
+  [paarKey("gewinn", "marktanteil")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Marktanteilssteigerung erfordert oft niedrigere Preise oder hohe Werbeausgaben, was den Gewinn schmälert.",
   },
-  [paarKey('gewinn', 'umsatz')]: {
-    typ: 'harmonie',
-    erklaerung: 'Mehr Umsatz führt bei gleichbleibenden Kosten zu höherem Gewinn – die Ziele ergänzen sich.'
+  [paarKey("gewinn", "umsatz")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Mehr Umsatz führt bei gleichbleibenden Kosten zu höherem Gewinn – die Ziele ergänzen sich.",
   },
-  [paarKey('gewinn', 'image')]: {
-    typ: 'konflikt',
-    erklaerung: 'Imageverbessernde Maßnahmen (z. B. Sponsoring, hochwertige Verpackung) kosten Geld und senken kurzfristig den Gewinn.'
+  [paarKey("gewinn", "image")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Imageverbessernde Maßnahmen (z. B. Sponsoring, hochwertige Verpackung) kosten Geld und senken kurzfristig den Gewinn.",
   },
-  [paarKey('gewinn', 'kundenzufriedenheit')]: {
-    typ: 'konflikt',
-    erklaerung: 'Höhere Kundenzufriedenheit erfordert oft Investitionen (Service, Qualität), die die Gewinnmarge senken.'
+  [paarKey("gewinn", "kundenzufriedenheit")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Höhere Kundenzufriedenheit erfordert oft Investitionen (Service, Qualität), die die Gewinnmarge senken.",
   },
-  [paarKey('gewinn', 'neukundengewinnung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Neue Kunden steigern den Umsatz, was langfristig den Gewinn erhöht.'
+  [paarKey("gewinn", "neukundengewinnung")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Neue Kunden steigern den Umsatz, was langfristig den Gewinn erhöht.",
   },
-  [paarKey('gewinn', 'kundenbindung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Treue Kunden kaufen regelmäßig, was stabile Umsätze und damit Gewinne sichert.'
+  [paarKey("gewinn", "kundenbindung")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Treue Kunden kaufen regelmäßig, was stabile Umsätze und damit Gewinne sichert.",
   },
-  [paarKey('gewinn', 'bekanntheit')]: {
-    typ: 'konflikt',
-    erklaerung: 'Werbung und PR-Maßnahmen zur Steigerung des Bekanntheitsgrades verursachen Kosten, die den Gewinn senken.'
+  [paarKey("gewinn", "bekanntheit")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Werbung und PR-Maßnahmen zur Steigerung des Bekanntheitsgrades verursachen Kosten, die den Gewinn senken.",
   },
-  [paarKey('gewinn', 'nachhaltigkeit')]: {
-    typ: 'konflikt',
-    erklaerung: 'Umweltfreundliche Produktionsweisen sind häufig teurer und reduzieren so die Gewinnmarge.'
+  [paarKey("gewinn", "nachhaltigkeit")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Umweltfreundliche Produktionsweisen sind häufig teurer und reduzieren so die Gewinnmarge.",
   },
-  [paarKey('gewinn', 'liquiditaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Gewinne verbessern die Zahlungsfähigkeit eines Unternehmens – beide Ziele ergänzen sich.'
+  [paarKey("gewinn", "liquiditaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Gewinne verbessern die Zahlungsfähigkeit eines Unternehmens – beide Ziele ergänzen sich.",
   },
-  [paarKey('gewinn', 'qualitaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Höhere Qualität bedeutet oft höhere Produktionskosten, was den Gewinn je Stück senkt.'
+  [paarKey("gewinn", "qualitaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Höhere Qualität bedeutet oft höhere Produktionskosten, was den Gewinn je Stück senkt.",
   },
-  [paarKey('gewinn', 'kosteneffizienz')]: {
-    typ: 'harmonie',
-    erklaerung: 'Wer Kosten senkt, erzielt bei gleichem Umsatz einen höheren Gewinn.'
+  [paarKey("gewinn", "kosteneffizienz")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Wer Kosten senkt, erzielt bei gleichem Umsatz einen höheren Gewinn.",
   },
 
   // Marktanteil
-  [paarKey('marktanteil', 'umsatz')]: {
-    typ: 'harmonie',
-    erklaerung: 'Ein größerer Marktanteil bedeutet in der Regel auch höheren Umsatz.'
+  [paarKey("marktanteil", "umsatz")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Ein größerer Marktanteil bedeutet in der Regel auch höheren Umsatz.",
   },
-  [paarKey('marktanteil', 'image')]: {
-    typ: 'harmonie',
-    erklaerung: 'Ein positives Image zieht mehr Kunden an und hilft, den Marktanteil zu steigern.'
+  [paarKey("marktanteil", "image")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Ein positives Image zieht mehr Kunden an und hilft, den Marktanteil zu steigern.",
   },
-  [paarKey('marktanteil', 'kundenzufriedenheit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Zufriedene Kunden empfehlen das Unternehmen weiter, was den Marktanteil erhöht.'
+  [paarKey("marktanteil", "kundenzufriedenheit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Zufriedene Kunden empfehlen das Unternehmen weiter, was den Marktanteil erhöht.",
   },
-  [paarKey('marktanteil', 'neukundengewinnung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Mehr Neukunden steigern direkt den Marktanteil.'
+  [paarKey("marktanteil", "neukundengewinnung")]: {
+    typ: "harmonie",
+    erklaerung: "Mehr Neukunden steigern direkt den Marktanteil.",
   },
-  [paarKey('marktanteil', 'kundenbindung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Gebundene Kunden stärken den bestehenden Marktanteil und reduzieren Kundenverluste.'
+  [paarKey("marktanteil", "kundenbindung")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Gebundene Kunden stärken den bestehenden Marktanteil und reduzieren Kundenverluste.",
   },
-  [paarKey('marktanteil', 'bekanntheit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Wer bekannter ist, wird von mehr Kunden gewählt – der Marktanteil wächst.'
+  [paarKey("marktanteil", "bekanntheit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Wer bekannter ist, wird von mehr Kunden gewählt – der Marktanteil wächst.",
   },
-  [paarKey('marktanteil', 'nachhaltigkeit')]: {
-    typ: 'konflikt',
-    erklaerung: 'Um schnell Marktanteile zu gewinnen, werden oft günstige Massenprodukte angeboten – das steht nachhaltiger, aufwendigerer Produktion entgegen.'
+  [paarKey("marktanteil", "nachhaltigkeit")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Um schnell Marktanteile zu gewinnen, werden oft günstige Massenprodukte angeboten – das steht nachhaltiger, aufwendigerer Produktion entgegen.",
   },
-  [paarKey('marktanteil', 'liquiditaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Aggressives Wachstum kostet Kapital – ein hoher Marktanteil kann die Liquidität kurzfristig belasten.'
+  [paarKey("marktanteil", "liquiditaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Aggressives Wachstum kostet Kapital – ein hoher Marktanteil kann die Liquidität kurzfristig belasten.",
   },
-  [paarKey('marktanteil', 'qualitaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Hochwertige Produkte gewinnen Marktanteile, weil Kunden Qualität bevorzugen.'
+  [paarKey("marktanteil", "qualitaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Hochwertige Produkte gewinnen Marktanteile, weil Kunden Qualität bevorzugen.",
   },
-  [paarKey('marktanteil', 'kosteneffizienz')]: {
-    typ: 'harmonie',
-    erklaerung: 'Günstigere Preise durch Kosteneffizienz können den Marktanteil steigern.'
+  [paarKey("marktanteil", "kosteneffizienz")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Günstigere Preise durch Kosteneffizienz können den Marktanteil steigern.",
   },
 
   // Umsatz
-  [paarKey('umsatz', 'image')]: {
-    typ: 'harmonie',
-    erklaerung: 'Ein gutes Image zieht mehr Käufer an und steigert den Umsatz.'
+  [paarKey("umsatz", "image")]: {
+    typ: "harmonie",
+    erklaerung: "Ein gutes Image zieht mehr Käufer an und steigert den Umsatz.",
   },
-  [paarKey('umsatz', 'kundenzufriedenheit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Zufriedene Kunden kaufen mehr und öfter, was den Umsatz erhöht.'
+  [paarKey("umsatz", "kundenzufriedenheit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Zufriedene Kunden kaufen mehr und öfter, was den Umsatz erhöht.",
   },
-  [paarKey('umsatz', 'neukundengewinnung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Mehr Kunden bedeuten mehr Verkäufe und damit höheren Umsatz.'
+  [paarKey("umsatz", "neukundengewinnung")]: {
+    typ: "harmonie",
+    erklaerung: "Mehr Kunden bedeuten mehr Verkäufe und damit höheren Umsatz.",
   },
-  [paarKey('umsatz', 'kundenbindung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Treue Kunden sorgen für regelmäßige Umsätze.'
+  [paarKey("umsatz", "kundenbindung")]: {
+    typ: "harmonie",
+    erklaerung: "Treue Kunden sorgen für regelmäßige Umsätze.",
   },
-  [paarKey('umsatz', 'bekanntheit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Höhere Bekanntheit führt zu mehr Nachfrage und damit zu höherem Umsatz.'
+  [paarKey("umsatz", "bekanntheit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Höhere Bekanntheit führt zu mehr Nachfrage und damit zu höherem Umsatz.",
   },
-  [paarKey('umsatz', 'nachhaltigkeit')]: {
-    typ: 'konflikt',
-    erklaerung: 'Nachhaltige Produkte sind oft teurer, was die Nachfrage und damit den Umsatz bremsen kann.'
+  [paarKey("umsatz", "nachhaltigkeit")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Nachhaltige Produkte sind oft teurer, was die Nachfrage und damit den Umsatz bremsen kann.",
   },
-  [paarKey('umsatz', 'liquiditaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Höherer Umsatz verbessert den Geldfluss und sichert die Liquidität.'
+  [paarKey("umsatz", "liquiditaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Höherer Umsatz verbessert den Geldfluss und sichert die Liquidität.",
   },
-  [paarKey('umsatz', 'qualitaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Qualitätsprodukte rechtfertigen höhere Preise und steigern so den Umsatz.'
+  [paarKey("umsatz", "qualitaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Qualitätsprodukte rechtfertigen höhere Preise und steigern so den Umsatz.",
   },
-  [paarKey('umsatz', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Um mehr Umsatz zu erzielen, sind oft Investitionen in Werbung, Personal oder neue Produkte nötig – das widerspricht dem Ziel, Kosten zu senken.'
+  [paarKey("umsatz", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Um mehr Umsatz zu erzielen, sind oft Investitionen in Werbung, Personal oder neue Produkte nötig – das widerspricht dem Ziel, Kosten zu senken.",
   },
 
   // Image
-  [paarKey('image', 'kundenzufriedenheit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Zufriedene Kunden berichten positiv – das verbessert das Image des Unternehmens.'
+  [paarKey("image", "kundenzufriedenheit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Zufriedene Kunden berichten positiv – das verbessert das Image des Unternehmens.",
   },
-  [paarKey('image', 'neukundengewinnung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Ein gutes Image macht das Unternehmen attraktiv für potenzielle Neukunden.'
+  [paarKey("image", "neukundengewinnung")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Ein gutes Image macht das Unternehmen attraktiv für potenzielle Neukunden.",
   },
-  [paarKey('image', 'kundenbindung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Kunden identifizieren sich mit einem positiven Markenimage und bleiben dem Unternehmen treu.'
+  [paarKey("image", "kundenbindung")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Kunden identifizieren sich mit einem positiven Markenimage und bleiben dem Unternehmen treu.",
   },
-  [paarKey('image', 'bekanntheit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Bekanntheit und Image bedingen sich oft gegenseitig – wer bekannt ist, wird auch wahrgenommen.'
+  [paarKey("image", "bekanntheit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Bekanntheit und Image bedingen sich oft gegenseitig – wer bekannt ist, wird auch wahrgenommen.",
   },
-  [paarKey('image', 'nachhaltigkeit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Nachhaltiges Handeln verbessert das öffentliche Bild des Unternehmens deutlich.'
+  [paarKey("image", "nachhaltigkeit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Nachhaltiges Handeln verbessert das öffentliche Bild des Unternehmens deutlich.",
   },
-  [paarKey('image', 'liquiditaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Imagemaßnahmen wie Sponsoring, PR-Kampagnen oder hochwertige Verpackungen kosten viel Geld und können die Liquidität des Unternehmens belasten.'
+  [paarKey("image", "liquiditaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Imagemaßnahmen wie Sponsoring, PR-Kampagnen oder hochwertige Verpackungen kosten viel Geld und können die Liquidität des Unternehmens belasten.",
   },
-  [paarKey('image', 'qualitaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Hochwertige Produkte stärken das Ansehen des Unternehmens als Qualitätsanbieter.'
+  [paarKey("image", "qualitaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Hochwertige Produkte stärken das Ansehen des Unternehmens als Qualitätsanbieter.",
   },
-  [paarKey('image', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Kostensparmassnahmen (z. B. günstigere Materialien) können das Qualitätsimage beschädigen.'
+  [paarKey("image", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Kostensparmassnahmen (z. B. günstigere Materialien) können das Qualitätsimage beschädigen.",
   },
 
   // Kundenzufriedenheit
-  [paarKey('kundenzufriedenheit', 'neukundengewinnung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Zufriedene Kunden empfehlen das Unternehmen weiter – das bringt Neukunden.'
+  [paarKey("kundenzufriedenheit", "neukundengewinnung")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Zufriedene Kunden empfehlen das Unternehmen weiter – das bringt Neukunden.",
   },
-  [paarKey('kundenzufriedenheit', 'kundenbindung')]: {
-    typ: 'harmonie',
-    erklaerung: 'Nur zufriedene Kunden bleiben langfristig treu – Zufriedenheit ist die Basis der Kundenbindung.'
+  [paarKey("kundenzufriedenheit", "kundenbindung")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Nur zufriedene Kunden bleiben langfristig treu – Zufriedenheit ist die Basis der Kundenbindung.",
   },
-  [paarKey('kundenzufriedenheit', 'bekanntheit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Positive Erfahrungen werden geteilt (Mundpropaganda, Bewertungen) und steigern die Bekanntheit.'
+  [paarKey("kundenzufriedenheit", "bekanntheit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Positive Erfahrungen werden geteilt (Mundpropaganda, Bewertungen) und steigern die Bekanntheit.",
   },
-  [paarKey('kundenzufriedenheit', 'nachhaltigkeit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Viele Kunden schätzen nachhaltiges Handeln – das steigert ihre Zufriedenheit.'
+  [paarKey("kundenzufriedenheit", "nachhaltigkeit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Viele Kunden schätzen nachhaltiges Handeln – das steigert ihre Zufriedenheit.",
   },
-  [paarKey('kundenzufriedenheit', 'liquiditaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Maßnahmen zur Steigerung der Kundenzufriedenheit – z. B. besserer Service, Kulanzregelungen oder Qualitätsverbesserungen – kosten Geld und können die Liquidität belasten.'
+  [paarKey("kundenzufriedenheit", "liquiditaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Maßnahmen zur Steigerung der Kundenzufriedenheit – z. B. besserer Service, Kulanzregelungen oder Qualitätsverbesserungen – kosten Geld und können die Liquidität belasten.",
   },
-  [paarKey('kundenzufriedenheit', 'qualitaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Hohe Qualität erfüllt oder übertrifft Kundenerwartungen und erzeugt Zufriedenheit.'
+  [paarKey("kundenzufriedenheit", "qualitaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Hohe Qualität erfüllt oder übertrifft Kundenerwartungen und erzeugt Zufriedenheit.",
   },
-  [paarKey('kundenzufriedenheit', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Kostensenkungen können sich negativ auf Qualität oder Service auswirken und die Zufriedenheit senken.'
+  [paarKey("kundenzufriedenheit", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Kostensenkungen können sich negativ auf Qualität oder Service auswirken und die Zufriedenheit senken.",
   },
 
   // Neukundengewinnung
-  [paarKey('neukundengewinnung', 'kundenbindung')]: {
-    typ: 'konflikt',
-    erklaerung: 'Ressourcen für Neukundenakquise fehlen oft bei der Betreuung von Bestandskunden – die Ziele konkurrieren um Budget.'
+  [paarKey("neukundengewinnung", "kundenbindung")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Ressourcen für Neukundenakquise fehlen oft bei der Betreuung von Bestandskunden – die Ziele konkurrieren um Budget.",
   },
-  [paarKey('neukundengewinnung', 'bekanntheit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Werbung steigert die Bekanntheit und macht es leichter, neue Kunden zu gewinnen.'
+  [paarKey("neukundengewinnung", "bekanntheit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Werbung steigert die Bekanntheit und macht es leichter, neue Kunden zu gewinnen.",
   },
-  [paarKey('neukundengewinnung', 'nachhaltigkeit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Nachhaltigkeit zieht umweltbewusste Neukunden an.'
+  [paarKey("neukundengewinnung", "nachhaltigkeit")]: {
+    typ: "harmonie",
+    erklaerung: "Nachhaltigkeit zieht umweltbewusste Neukunden an.",
   },
-  [paarKey('neukundengewinnung', 'liquiditaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Neukundengewinnung erfordert Werbeinvestitionen, die die Liquidität kurzfristig belasten.'
+  [paarKey("neukundengewinnung", "liquiditaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Neukundengewinnung erfordert Werbeinvestitionen, die die Liquidität kurzfristig belasten.",
   },
-  [paarKey('neukundengewinnung', 'qualitaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Qualitätsprodukte sprechen sich herum und erleichtern die Gewinnung neuer Kunden.'
+  [paarKey("neukundengewinnung", "qualitaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Qualitätsprodukte sprechen sich herum und erleichtern die Gewinnung neuer Kunden.",
   },
-  [paarKey('neukundengewinnung', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Werbung und Akquisitionsmaßnahmen kosten Geld – das widerspricht dem Ziel der Kosteneffizienz.'
+  [paarKey("neukundengewinnung", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Werbung und Akquisitionsmaßnahmen kosten Geld – das widerspricht dem Ziel der Kosteneffizienz.",
   },
 
   // Kundenbindung
-  [paarKey('kundenbindung', 'bekanntheit')]: {
-    typ: 'konflikt',
-    erklaerung: 'Das Budget ist begrenzt: Wer viel Geld in Werbung für Neukunden steckt, hat weniger für die Pflege und Bindung bestehender Kunden – und umgekehrt.'
+  [paarKey("kundenbindung", "bekanntheit")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Das Budget ist begrenzt: Wer viel Geld in Werbung für Neukunden steckt, hat weniger für die Pflege und Bindung bestehender Kunden – und umgekehrt.",
   },
-  [paarKey('kundenbindung', 'nachhaltigkeit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Kunden, die die Werte des Unternehmens teilen, bleiben ihm langfristig treu.'
+  [paarKey("kundenbindung", "nachhaltigkeit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Kunden, die die Werte des Unternehmens teilen, bleiben ihm langfristig treu.",
   },
-  [paarKey('kundenbindung', 'liquiditaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Treue Kunden sorgen für planbare Einnahmen, die die Liquidität sichern.'
+  [paarKey("kundenbindung", "liquiditaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Treue Kunden sorgen für planbare Einnahmen, die die Liquidität sichern.",
   },
-  [paarKey('kundenbindung', 'qualitaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Kunden, die dauerhaft hohe Qualität erleben, bleiben dem Unternehmen treu.'
+  [paarKey("kundenbindung", "qualitaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Kunden, die dauerhaft hohe Qualität erleben, bleiben dem Unternehmen treu.",
   },
-  [paarKey('kundenbindung', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Kundenbindungsprogramme (Rabatte, Treuekarten, Service) kosten Geld und stehen der Kosteneffizienz entgegen.'
+  [paarKey("kundenbindung", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Kundenbindungsprogramme (Rabatte, Treuekarten, Service) kosten Geld und stehen der Kosteneffizienz entgegen.",
   },
 
   // Bekanntheit
-  [paarKey('bekanntheit', 'nachhaltigkeit')]: {
-    typ: 'harmonie',
-    erklaerung: 'Nachhaltiges Engagement erzeugt Medienaufmerksamkeit und steigert die Bekanntheit.'
+  [paarKey("bekanntheit", "nachhaltigkeit")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Nachhaltiges Engagement erzeugt Medienaufmerksamkeit und steigert die Bekanntheit.",
   },
-  [paarKey('bekanntheit', 'liquiditaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Werbemaßnahmen zur Steigerung der Bekanntheit erfordern hohe Investitionen und beanspruchen die Liquidität.'
+  [paarKey("bekanntheit", "liquiditaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Werbemaßnahmen zur Steigerung der Bekanntheit erfordern hohe Investitionen und beanspruchen die Liquidität.",
   },
-  [paarKey('bekanntheit', 'qualitaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Qualitätsprodukte werden empfohlen und erhöhen so die Bekanntheit auf natürlichem Weg.'
+  [paarKey("bekanntheit", "qualitaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Qualitätsprodukte werden empfohlen und erhöhen so die Bekanntheit auf natürlichem Weg.",
   },
-  [paarKey('bekanntheit', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Werbung ist teuer – Bekanntheitssteigerung und Kosteneffizienz stehen häufig im Widerspruch.'
+  [paarKey("bekanntheit", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Werbung ist teuer – Bekanntheitssteigerung und Kosteneffizienz stehen häufig im Widerspruch.",
   },
 
   // Nachhaltigkeit
-  [paarKey('nachhaltigkeit', 'liquiditaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Nachhaltige Investitionen (z. B. Solaranlagen, Recyclingprozesse) belasten die Liquidität kurzfristig.'
+  [paarKey("nachhaltigkeit", "liquiditaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Nachhaltige Investitionen (z. B. Solaranlagen, Recyclingprozesse) belasten die Liquidität kurzfristig.",
   },
-  [paarKey('nachhaltigkeit', 'qualitaet')]: {
-    typ: 'harmonie',
-    erklaerung: 'Nachhaltige, hochwertige Materialien steigern oft die Produktqualität.'
+  [paarKey("nachhaltigkeit", "qualitaet")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Nachhaltige, hochwertige Materialien steigern oft die Produktqualität.",
   },
-  [paarKey('nachhaltigkeit', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Umweltfreundliche Prozesse sind oft aufwendiger und teurer als konventionelle Methoden.'
+  [paarKey("nachhaltigkeit", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Umweltfreundliche Prozesse sind oft aufwendiger und teurer als konventionelle Methoden.",
   },
 
   // Liquidität
-  [paarKey('liquiditaet', 'qualitaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Investitionen in Qualität binden Kapital und können die Liquidität kurzfristig einschränken.'
+  [paarKey("liquiditaet", "qualitaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Investitionen in Qualität binden Kapital und können die Liquidität kurzfristig einschränken.",
   },
-  [paarKey('liquiditaet', 'kosteneffizienz')]: {
-    typ: 'harmonie',
-    erklaerung: 'Wer Kosten spart, schont das Kapital und verbessert die Liquidität.'
+  [paarKey("liquiditaet", "kosteneffizienz")]: {
+    typ: "harmonie",
+    erklaerung:
+      "Wer Kosten spart, schont das Kapital und verbessert die Liquidität.",
   },
 
   // Qualität
-  [paarKey('qualitaet', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Hohe Qualität erfordert bessere Materialien und Verarbeitung – das widerspricht dem Ziel, Kosten zu minimieren.'
+  [paarKey("qualitaet", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Hohe Qualität erfordert bessere Materialien und Verarbeitung – das widerspricht dem Ziel, Kosten zu minimieren.",
   },
 
   // Weitere Konfliktpaare
-  [paarKey('gewinn', 'kundenbindung')]: {
-    typ: 'konflikt',
-    erklaerung: 'Kundenbindungsmaßnahmen wie Treueprogramme, Rabatte oder Sonderservice kosten Geld und senken damit den Gewinn.'
+  [paarKey("gewinn", "kundenbindung")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Kundenbindungsmaßnahmen wie Treueprogramme, Rabatte oder Sonderservice kosten Geld und senken damit den Gewinn.",
   },
-  [paarKey('marktanteil', 'gewinn')]: {
-    typ: 'konflikt',
-    erklaerung: 'Marktanteilssteigerung erfordert oft niedrigere Preise oder hohe Werbeausgaben, was den Gewinn schmälert.'
+  [paarKey("marktanteil", "gewinn")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Marktanteilssteigerung erfordert oft niedrigere Preise oder hohe Werbeausgaben, was den Gewinn schmälert.",
   },
-  [paarKey('umsatz', 'nachhaltigkeit')]: {
-    typ: 'konflikt',
-    erklaerung: 'Nachhaltige Produkte sind oft teurer, was die Nachfrage und damit den Umsatz bremsen kann.'
+  [paarKey("umsatz", "nachhaltigkeit")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Nachhaltige Produkte sind oft teurer, was die Nachfrage und damit den Umsatz bremsen kann.",
   },
-  [paarKey('neukundengewinnung', 'qualitaet')]: {
-    typ: 'konflikt',
-    erklaerung: 'Um viele Neukunden anzusprechen, werden oft günstige Einstiegspreise oder Sonderangebote eingesetzt – das verträgt sich schlecht mit einer konsequenten Qualitätsführerschaft.'
+  [paarKey("neukundengewinnung", "qualitaet")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Um viele Neukunden anzusprechen, werden oft günstige Einstiegspreise oder Sonderangebote eingesetzt – das verträgt sich schlecht mit einer konsequenten Qualitätsführerschaft.",
   },
-  [paarKey('kundenzufriedenheit', 'marktanteil')]: {
-    typ: 'konflikt',
-    erklaerung: 'Wer aggressiv auf Masse und Marktanteil setzt – z. B. durch Niedrigpreise – muss oft bei Qualität und Service sparen, was die Kundenzufriedenheit senken kann.'
+  [paarKey("kundenzufriedenheit", "marktanteil")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Wer aggressiv auf Masse und Marktanteil setzt – z. B. durch Niedrigpreise – muss oft bei Qualität und Service sparen, was die Kundenzufriedenheit senken kann.",
   },
-  [paarKey('nachhaltigkeit', 'umsatz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Nachhaltige Produkte sind meist teurer und sprechen eine kleinere Zielgruppe an – das kann den Umsatz bremsen.'
+  [paarKey("nachhaltigkeit", "umsatz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Nachhaltige Produkte sind meist teurer und sprechen eine kleinere Zielgruppe an – das kann den Umsatz bremsen.",
   },
-  [paarKey('qualitaet', 'neukundengewinnung')]: {
-    typ: 'konflikt',
-    erklaerung: 'Hohe Qualität bedeutet oft höhere Preise – das schreckt preisbewusste Neukunden ab und erschwert die Erschließung neuer Zielgruppen.'
+  [paarKey("qualitaet", "neukundengewinnung")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Hohe Qualität bedeutet oft höhere Preise – das schreckt preisbewusste Neukunden ab und erschwert die Erschließung neuer Zielgruppen.",
   },
-  [paarKey('kosteneffizienz', 'kundenzufriedenheit')]: {
-    typ: 'konflikt',
-    erklaerung: 'Wer Kosten spart – z. B. durch reduzierten Kundenservice oder günstigere Materialien – riskiert, dass die Qualität und damit die Kundenzufriedenheit sinkt.'
+  [paarKey("kosteneffizienz", "kundenzufriedenheit")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Wer Kosten spart – z. B. durch reduzierten Kundenservice oder günstigere Materialien – riskiert, dass die Qualität und damit die Kundenzufriedenheit sinkt.",
   },
-  [paarKey('kosteneffizienz', 'image')]: {
-    typ: 'konflikt',
-    erklaerung: 'Sparmaßnahmen (z. B. günstigere Verpackung, weniger Werbung, einfachere Ausstattung) können das Erscheinungsbild des Unternehmens verschlechtern und das Image schädigen.'
+  [paarKey("kosteneffizienz", "image")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Sparmaßnahmen (z. B. günstigere Verpackung, weniger Werbung, einfachere Ausstattung) können das Erscheinungsbild des Unternehmens verschlechtern und das Image schädigen.",
   },
-  [paarKey('liquiditaet', 'neukundengewinnung')]: {
-    typ: 'konflikt',
-    erklaerung: 'Neukundengewinnung erfordert Investitionen in Werbung und Vertrieb – das belastet die Liquidität, da das Geld erst später durch Einnahmen zurückfließt.'
+  [paarKey("liquiditaet", "neukundengewinnung")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Neukundengewinnung erfordert Investitionen in Werbung und Vertrieb – das belastet die Liquidität, da das Geld erst später durch Einnahmen zurückfließt.",
   },
-  [paarKey('bekanntheit', 'gewinn')]: {
-    typ: 'konflikt',
-    erklaerung: 'Werbung und PR-Maßnahmen zur Steigerung des Bekanntheitsgrades kosten viel Geld – das mindert kurzfristig den Gewinn.'
+  [paarKey("bekanntheit", "gewinn")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Werbung und PR-Maßnahmen zur Steigerung des Bekanntheitsgrades kosten viel Geld – das mindert kurzfristig den Gewinn.",
   },
-  [paarKey('kundenbindung', 'kosteneffizienz')]: {
-    typ: 'konflikt',
-    erklaerung: 'Kundenbindungsprogramme wie Treuekarten, Rabattaktionen oder persönlicher Service verursachen laufende Kosten – das steht dem Ziel der Kosteneffizienz entgegen.'
+  [paarKey("kundenbindung", "kosteneffizienz")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Kundenbindungsprogramme wie Treuekarten, Rabattaktionen oder persönlicher Service verursachen laufende Kosten – das steht dem Ziel der Kosteneffizienz entgegen.",
   },
-  [paarKey('qualitaet', 'marktanteil')]: {
-    typ: 'konflikt',
-    erklaerung: 'Hochwertige Produkte sind teurer und daher für viele Kunden unerschwinglich – das begrenzt die erreichbare Kundenzahl und damit den Marktanteil.'
+  [paarKey("qualitaet", "marktanteil")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Hochwertige Produkte sind teurer und daher für viele Kunden unerschwinglich – das begrenzt die erreichbare Kundenzahl und damit den Marktanteil.",
   },
-  [paarKey('nachhaltigkeit', 'marktanteil')]: {
-    typ: 'konflikt',
-    erklaerung: 'Nachhaltige Produkte haben oft höhere Preise und sprechen nur bestimmte Zielgruppen an – das macht es schwerer, einen großen Marktanteil zu gewinnen.'
+  [paarKey("nachhaltigkeit", "marktanteil")]: {
+    typ: "konflikt",
+    erklaerung:
+      "Nachhaltige Produkte haben oft höhere Preise und sprechen nur bestimmte Zielgruppen an – das macht es schwerer, einen großen Marktanteil zu gewinnen.",
   },
 };
 
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-
 
 const unternehmensVarianten = [
   (name) => name,
@@ -544,11 +626,16 @@ function zielInfoBox(z) {
 // ============================================================================
 
 const szenarien = [
-  (u, z1, z2) => `${u} verfolgt gleichzeitig zwei Marketingziele:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Handelt es sich um einen <strong>Zielkonflikt</strong> oder eine <strong>Zielharmonie</strong>? Begründe deine Entscheidung.`,
-  (u, z1, z2) => `Die Geschäftsleitung von ${u} fragt sich, ob diese beiden Ziele gleichzeitig erreicht werden können:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Erkläre die Zielbeziehung zwischen den beiden Marketingzielen und begründe deine Antwort.`,
-  (u, z1, z2) => `${u} plant, gleichzeitig folgende Ziele zu verfolgen:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Bestimme die Art der Zielbeziehung (<strong>Zielkonflikt, Zielharmonie</strong> oder <strong>Zielneutralität</strong>) und erläutere mögliche Auswirkungen.`,
-  (u, z1, z2) => `Im Rahmen der Marketingplanung stellt ${u} folgende zwei Ziele auf:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Nimm Stellung: Unterstützen sich die Ziele gegenseitig, oder behindern sie sich? Begründe deine Antwort.`,
-  (u, z1, z2) => `Folgende zwei Marketingziele stehen bei ${u} auf dem Programm:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Überlege, wie sich die Ziele gegenseitig beeinflussen, und bestimme die Zielbeziehung.`,
+  (u, z1, z2) =>
+    `${u} verfolgt gleichzeitig zwei Marketingziele:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Handelt es sich um einen <strong>Zielkonflikt</strong> oder eine <strong>Zielharmonie</strong>? Begründe deine Entscheidung.`,
+  (u, z1, z2) =>
+    `Die Geschäftsleitung von ${u} fragt sich, ob diese beiden Ziele gleichzeitig erreicht werden können:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Erkläre die Zielbeziehung zwischen den beiden Marketingzielen und begründe deine Antwort.`,
+  (u, z1, z2) =>
+    `${u} plant, gleichzeitig folgende Ziele zu verfolgen:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Bestimme die Art der Zielbeziehung (<strong>Zielkonflikt, Zielharmonie</strong> oder <strong>Zielneutralität</strong>) und erläutere mögliche Auswirkungen.`,
+  (u, z1, z2) =>
+    `Im Rahmen der Marketingplanung stellt ${u} folgende zwei Ziele auf:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Nimm Stellung: Unterstützen sich die Ziele gegenseitig, oder behindern sie sich? Begründe deine Antwort.`,
+  (u, z1, z2) =>
+    `Folgende zwei Marketingziele stehen bei ${u} auf dem Programm:<br>${zielInfoBox(z1)}${zielInfoBox(z2)}Überlege, wie sich die Ziele gegenseitig beeinflussen, und bestimme die Zielbeziehung.`,
 ];
 
 // ============================================================================
@@ -556,20 +643,20 @@ const szenarien = [
 // ============================================================================
 
 function zeigeZufaelligeZielbeziehungen() {
-  const anzahlSelect = document.getElementById('zielAnzahl');
+  const anzahlSelect = document.getElementById("zielAnzahl");
   const anzahl = parseInt(anzahlSelect?.value) || 4;
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
 
   if (!container) {
     console.error("Container nicht gefunden");
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
-  const kundeSelect = document.getElementById('zielKunde');
-  const kundeValue = kundeSelect?.value?.trim() || '';
-  const anzeigeName = kundeValue || '[Modellunternehmen]';
+  const kundeSelect = document.getElementById("zielKunde");
+  const kundeValue = kundeSelect?.value?.trim() || "";
+  const anzeigeName = kundeValue || "[Modellunternehmen]";
 
   // Alle definierten Paare holen, mischen, die gewünschte Anzahl nehmen
   let paare = shuffle(allePaare());
@@ -580,7 +667,7 @@ function zeigeZufaelligeZielbeziehungen() {
   }
   const ausgewaehlte = paare.slice(0, anzahl);
 
-  let aufgabenHTML = '<h2>Aufgaben</h2><ol>';
+  let aufgabenHTML = "<h2>Aufgaben</h2><ol>";
   let loesungenHTML = '<h2 class="loesung">Lösungen</h2>';
 
   ausgewaehlte.forEach((paar, idx) => {
@@ -591,8 +678,18 @@ function zeigeZufaelligeZielbeziehungen() {
 
     aufgabenHTML += `<li style="margin-bottom: 1em;">${text}</li>`;
 
-    const typFarbe = beziehung.typ === 'harmonie' ? '#2a7a2a' : beziehung.typ === 'konflikt' ? '#a00' : '#555';
-    const typLabel = beziehung.typ === 'harmonie' ? '✅ Zielharmonie' : beziehung.typ === 'konflikt' ? '⚠️ Zielkonflikt' : '↔️ Zielneutralität';
+    const typFarbe =
+      beziehung.typ === "harmonie"
+        ? "#2a7a2a"
+        : beziehung.typ === "konflikt"
+          ? "#a00"
+          : "#555";
+    const typLabel =
+      beziehung.typ === "harmonie"
+        ? "✅ Zielharmonie"
+        : beziehung.typ === "konflikt"
+          ? "⚠️ Zielkonflikt"
+          : "↔️ Zielneutralität";
 
     loesungenHTML += `
       <div style="margin-top: 1.5em;">
@@ -604,7 +701,7 @@ function zeigeZufaelligeZielbeziehungen() {
       </div>`;
   });
 
-  aufgabenHTML += '</ol>';
+  aufgabenHTML += "</ol>";
   container.innerHTML = aufgabenHTML + loesungenHTML;
 }
 
@@ -684,31 +781,36 @@ Was du NICHT tust:
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(err => {
-    console.error('Fehler beim Kopieren:', err);
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(KI_ASSISTENT_PROMPT)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch((err) => {
+      console.error("Fehler beim Kopieren:", err);
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
-    btn.textContent = 'Vorschau ausblenden ▲';
+    vorschau.style.display = "block";
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
@@ -716,15 +818,15 @@ function toggleKiPromptVorschau() {
 // INITIALISIERUNG
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  const kundeSelect = document.getElementById('zielKunde');
+document.addEventListener("DOMContentLoaded", () => {
+  const kundeSelect = document.getElementById("zielKunde");
 
   if (kundeSelect && kundeSelect.value) {
     kunde = kundeSelect.value.trim();
   }
 
-  kundeSelect.addEventListener('change', () => {
-    kunde = kundeSelect.value.trim() || '';
+  kundeSelect.addEventListener("change", () => {
+    kunde = kundeSelect.value.trim() || "";
   });
 
   // Dropdown befüllen → "Modellunternehmen" wählen → Aufgaben starten,
@@ -734,30 +836,34 @@ document.addEventListener('DOMContentLoaded', () => {
     autoSelectMyCompany();
     zeigeZufaelligeZielbeziehungen();
   } else {
-    document.addEventListener('yamlDataLoaded', () => {
-      fillCompanyDropdowns();
-      autoSelectMyCompany();
-      zeigeZufaelligeZielbeziehungen();
-    }, { once: true });
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
+        fillCompanyDropdowns();
+        autoSelectMyCompany();
+        zeigeZufaelligeZielbeziehungen();
+      },
+      { once: true },
+    );
   }
 
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) {
     vorschauEl.textContent = KI_ASSISTENT_PROMPT;
   }
 });
 
 function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
+  const myCompanyName = localStorage.getItem("myCompany");
   if (!myCompanyName) return;
 
-  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-  dropdowns.forEach(dropdown => {
+  const dropdowns = document.querySelectorAll("select.meinUnternehmen");
+  dropdowns.forEach((dropdown) => {
     const options = Array.from(dropdown.options);
-    const matchingOption = options.find(opt => opt.value === myCompanyName);
+    const matchingOption = options.find((opt) => opt.value === myCompanyName);
     if (matchingOption) {
       dropdown.value = myCompanyName;
-      const event = new Event('change', { bubbles: true });
+      const event = new Event("change", { bubbles: true });
       dropdown.dispatchEvent(event);
     }
   });

@@ -1,78 +1,100 @@
 function generateRandomInventar() {
-    const valueRanges = {
-        "GR-value": { min: 500000, max: 1000000 },
-        "BVG-value": { min: 800000, max: 1500000 },
-        "MA-value": { min: 10000, max: 200000 },
-        "FP1-value": { min: 10000, max: 80000 },
-        "FP2-value": { min: 50000, max: 150000 },
-        "BM-value": { min: 5000, max: 20000 },
-        "BGA-value": { min: 20000, max: 200000 },
-        "VORR-value": { min: 20000, max: 100000 },
-        "FO-value": { min: 2000, max: 20000 },
-        "BK1-value": { min: 20000, max: 200000 },
-        "BK2-value": { min: 20000, max: 200000 },
-        "KA-value": { min: 1000, max: 15000 },
-        "LBKV-value": { min: 50000, max: 500000 },
-        "KBKV-value": { min: 5000, max: 50000 },
-        "VE-value": { min: 5000, max: 50000 },
-    };
+  const valueRanges = {
+    "GR-value": { min: 500000, max: 1000000 },
+    "BVG-value": { min: 800000, max: 1500000 },
+    "MA-value": { min: 10000, max: 200000 },
+    "FP1-value": { min: 10000, max: 80000 },
+    "FP2-value": { min: 50000, max: 150000 },
+    "BM-value": { min: 5000, max: 20000 },
+    "BGA-value": { min: 20000, max: 200000 },
+    "VORR-value": { min: 20000, max: 100000 },
+    "FO-value": { min: 2000, max: 20000 },
+    "BK1-value": { min: 20000, max: 200000 },
+    "BK2-value": { min: 20000, max: 200000 },
+    "KA-value": { min: 1000, max: 15000 },
+    "LBKV-value": { min: 50000, max: 500000 },
+    "KBKV-value": { min: 5000, max: 50000 },
+    "VE-value": { min: 5000, max: 50000 },
+  };
 
-
-    function getRandomValueInRange(min, max) {
-        const randomValue = Math.ceil(Math.random() * (max - min + 1)) + min;
+  function getRandomValueInRange(min, max) {
+    const randomValue = Math.ceil(Math.random() * (max - min + 1)) + min;
     return Math.ceil(randomValue / 5000) * 5000;
+  }
+
+  function updateCellValueById(id, value) {
+    const cell = document.getElementById(id);
+    if (cell) {
+      cell.textContent = formatCurrency(value);
     }
+  }
 
+  function calculateAndSetSum(cellIds, resultCellId) {
+    const resultCell = document.getElementById(resultCellId);
+    if (!resultCell) return;
 
-    function updateCellValueById(id, value) {
-        const cell = document.getElementById(id);
-        if (cell) {
-            cell.textContent = formatCurrency(value);
-        }
-    }
+    const sum = cellIds.reduce((acc, id) => {
+      const value =
+        parseFloat(
+          document.getElementById(id)?.textContent.replace(/[^0-9,-]+/g, ""),
+        ) || 0;
+      return acc + value;
+    }, 0);
 
-    function calculateAndSetSum(cellIds, resultCellId) {
-        const resultCell = document.getElementById(resultCellId);
-        if (!resultCell) return;
+    resultCell.textContent = formatCurrency(sum);
+  }
 
-        const sum = cellIds.reduce((acc, id) => {
-            const value = parseFloat(document.getElementById(id)?.textContent.replace(/[^0-9,-]+/g, '')) || 0;
-            return acc + value;
-        }, 0);
+  for (const id in valueRanges) {
+    const randomValue = getRandomValueInRange(
+      valueRanges[id].min,
+      valueRanges[id].max,
+    );
+    updateCellValueById(id, randomValue);
+  }
 
-        resultCell.textContent = formatCurrency(sum);
-    }
+  calculateAndSetSum(["FP1-value", "FP2-value"], "FP-value");
+  calculateAndSetSum(["BK1-value", "BK2-value"], "BK-value");
 
-    for (const id in valueRanges) {
-        const randomValue = getRandomValueInRange(valueRanges[id].min, valueRanges[id].max);
-        updateCellValueById(id, randomValue);
-    }
+  const avCellIds = [
+    "GR-value",
+    "BVG-value",
+    "MA-value",
+    "FP-value",
+    "BM-value",
+    "BGA-value",
+  ];
+  const uvCellIds = ["VORR-value", "FO-value", "BK-value", "KA-value"];
+  const fkCellIds = ["LBKV-value", "KBKV-value", "VE-value"];
 
-    calculateAndSetSum(["FP1-value", "FP2-value"], "FP-value");
-    calculateAndSetSum(["BK1-value", "BK2-value"], "BK-value");
+  calculateAndSetSum(avCellIds, "AV-value");
+  calculateAndSetSum(uvCellIds, "UV-value");
+  calculateAndSetSum(fkCellIds, "FK-value");
 
-    const avCellIds = ["GR-value", "BVG-value", "MA-value", "FP-value", "BM-value", "BGA-value"];
-    const uvCellIds = ["VORR-value", "FO-value", "BK-value", "KA-value"];
-    const fkCellIds = ["LBKV-value", "KBKV-value", "VE-value"]
+  const avuvCellIds = ["AV-value", "UV-value"];
+  const fkCellId = "FK-value";
+  const ekCellId = "EK-value";
 
-    calculateAndSetSum(avCellIds, "AV-value");
-    calculateAndSetSum(uvCellIds, "UV-value");
-    calculateAndSetSum(fkCellIds, "FK-value");
+  calculateAndSetSum(avuvCellIds, "AVUV-value");
+  calculateAndSetSum(["LBKV-value", "KBKV-value", "VE-value"], "FK-value");
+  calculateAndSetSum(["AVUV-value", "FK-value"], ekCellId);
 
-    const avuvCellIds = ["AV-value", "UV-value"];
-    const fkCellId = "FK-value";
-    const ekCellId = "EK-value";
+  const fkSumValue =
+    parseFloat(
+      document.getElementById("FK-value").textContent.replace(/[^0-9,-]+/g, ""),
+    ) || 0;
+  updateCellValueById("FKSum-value", fkSumValue);
 
-    calculateAndSetSum(avuvCellIds, "AVUV-value");
-    calculateAndSetSum(["LBKV-value", "KBKV-value", "VE-value"], "FK-value");
-    calculateAndSetSum(["AVUV-value", "FK-value"], ekCellId);
-
-    const fkSumValue = parseFloat(document.getElementById("FK-value").textContent.replace(/[^0-9,-]+/g, '')) || 0;
-    updateCellValueById("FKSum-value", fkSumValue);
-
-    // Berechne und setze EK-Value gleich AVUV-Value - FK-Value
-    const avuvValue = parseFloat(document.getElementById("AVUV-value").textContent.replace(/[^0-9,-]+/g, '')) || 0;
-    const fkValue = parseFloat(document.getElementById("FK-value").textContent.replace(/[^0-9,-]+/g, '')) || 0;
-    const ekValue = avuvValue - fkValue;
-    updateCellValueById("EK-Value", ekValue);
+  // Berechne und setze EK-Value gleich AVUV-Value - FK-Value
+  const avuvValue =
+    parseFloat(
+      document
+        .getElementById("AVUV-value")
+        .textContent.replace(/[^0-9,-]+/g, ""),
+    ) || 0;
+  const fkValue =
+    parseFloat(
+      document.getElementById("FK-value").textContent.replace(/[^0-9,-]+/g, ""),
+    ) || 0;
+  const ekValue = avuvValue - fkValue;
+  updateCellValueById("EK-Value", ekValue);
 }

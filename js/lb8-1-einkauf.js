@@ -1,16 +1,23 @@
 // Globale Variable – wird von einkauf.js benötigt
-let kunde = '<i>[Modellunternehmen]</i>';
+let kunde = "<i>[Modellunternehmen]</i>";
 
 // Zuletzt gewählte Werkstoff-Art im Dativ Plural (z. B. "Rohstoffen") –
 // für den Mail-Text bei der Rücksendung der Leihverpackung
-let letzteWerkstoffArtEinkauf = '';
+let letzteWerkstoffArtEinkauf = "";
 let letzteWerkstoffKuerzelEinkauf = null;
 
 // ── Vermischte Aufgaben ──────────────────────────────────────────────────
 let modusUeberschreibung = null;
-const EINKAUF_MODI = ['buchungssatz', 'einkaufskalkulation', 'skontobuchungssatz'];
+const EINKAUF_MODI = [
+  "buchungssatz",
+  "einkaufskalkulation",
+  "skontobuchungssatz",
+];
 function getModus() {
-  return modusUeberschreibung || document.getElementById('buchungsoptionDropdown').value;
+  return (
+    modusUeberschreibung ||
+    document.getElementById("buchungsoptionDropdown").value
+  );
 }
 
 // ============================================================================
@@ -23,11 +30,9 @@ function getModus() {
 
 // Versuch 1: Aus localStorage laden (wenn User eigene Datei hochgeladen hat)
 
-
 // Start: zuerst localStorage, sonst Standard
-document.addEventListener('DOMContentLoaded', () => {
-
-  const kaeuferSelect = document.getElementById('einkaufKaeufer');
+document.addEventListener("DOMContentLoaded", () => {
+  const kaeuferSelect = document.getElementById("einkaufKaeufer");
 
   // Initialwert setzen
   if (kaeuferSelect && kaeuferSelect.value) {
@@ -35,14 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Bei jeder Änderung aktualisieren
-  kaeuferSelect.addEventListener('change', () => {
-    kunde = kaeuferSelect.value.trim() || '';
+  kaeuferSelect.addEventListener("change", () => {
+    kunde = kaeuferSelect.value.trim() || "";
     leereBezeichnungsfelder();
-    if (kaeuferSelect.value.trim()) fillBezeichnungsfelderEinkauf(kaeuferSelect.value.trim());
+    if (kaeuferSelect.value.trim())
+      fillBezeichnungsfelderEinkauf(kaeuferSelect.value.trim());
   });
-
 });
-
 
 // ============================================================================
 // WERKSTOFF-BEZEICHNUNGEN AUS YAML LADEN UND FELDER BEFÜLLEN
@@ -50,27 +54,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function fillBezeichnungsfelderEinkauf(unternehmensName) {
   if (!unternehmensName || !yamlData?.length) return;
-  const eintrag = yamlData.find(e => e.unternehmen?.name === unternehmensName);
+  const eintrag = yamlData.find(
+    (e) => e.unternehmen?.name === unternehmensName,
+  );
   const werkstoffe = eintrag?.unternehmen?.werkstoffe;
   if (!werkstoffe) return;
 
- ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
+  ["AWR", "AWF", "AWH", "AWB"].forEach((konto) => {
     const liste = werkstoffe[konto];
     if (!Array.isArray(liste)) return;
-    [0, 1, 2].forEach(i => {
+    [0, 1, 2].forEach((i) => {
       const el = document.getElementById(`bezeichnung${konto}_${i}`);
       if (el) {
         // Hier greifen wir nun auf .name zu, falls es ein Objekt ist, ansonsten direkt auf den Wert (Fallback)
         const wert = liste[i];
-        el.value = (typeof wert === 'object' && wert !== null) ? (wert.name ?? "") : (wert ?? "");
+        el.value =
+          typeof wert === "object" && wert !== null
+            ? (wert.name ?? "")
+            : (wert ?? "");
       }
     });
   });
 }
 
 function leereBezeichnungsfelder() {
-  ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
-    [0, 1, 2].forEach(i => {
+  ["AWR", "AWF", "AWH", "AWB"].forEach((konto) => {
+    [0, 1, 2].forEach((i) => {
       const el = document.getElementById(`bezeichnung${konto}_${i}`);
       if (el) el.value = "";
     });
@@ -80,19 +89,25 @@ function leereBezeichnungsfelder() {
 function getBezeichnungFuerKonto(kontoKuerzel) {
   // z. B. kontoKuerzel = "AWR" → liefert zufälligen nicht-leeren Wert oder null
   const kandidaten = [0, 1, 2]
-    .map(i => document.getElementById(`bezeichnung${kontoKuerzel}_${i}`)?.value?.trim() || "")
-    .filter(v => v.length > 0);
-  if (kandidaten.length > 0) return kandidaten[Math.floor(Math.random() * kandidaten.length)];
+    .map(
+      (i) =>
+        document
+          .getElementById(`bezeichnung${kontoKuerzel}_${i}`)
+          ?.value?.trim() || "",
+    )
+    .filter((v) => v.length > 0);
+  if (kandidaten.length > 0)
+    return kandidaten[Math.floor(Math.random() * kandidaten.length)];
   return null;
 }
 
 function getWerkstoffAnzeigeName(werkstoffTyp) {
   // werkstoffTyp = "Rohstoffe" | "Fremdbauteile" | "Hilfsstoffe" | "Betriebsstoffe"
   const kuerzelMap = {
-    "Rohstoffe": "AWR",
-    "Fremdbauteile": "AWF",
-    "Hilfsstoffe": "AWH",
-    "Betriebsstoffe": "AWB",
+    Rohstoffe: "AWR",
+    Fremdbauteile: "AWF",
+    Hilfsstoffe: "AWH",
+    Betriebsstoffe: "AWB",
     // auch _2-Varianten abfangen
     "von Rohstoffen": "AWR",
     "von Fremdbauteilen": "AWF",
@@ -108,61 +123,73 @@ function getWerkstoffAnzeigeName(werkstoffTyp) {
 // Liefert das Konto-Kürzel (AWR/AWF/AWH/AWB) zu einem Werkstoff-Typ
 function getWerkstoffKuerzel(werkstoffTyp) {
   const kuerzelMap = {
-    "Rohstoffe": "AWR", "Fremdbauteile": "AWF", "Hilfsstoffe": "AWH", "Betriebsstoffe": "AWB",
-    "von Rohstoffen": "AWR", "von Fremdbauteilen": "AWF", "von Hilfsstoffen": "AWH", "von Betriebsstoffen": "AWB",
+    Rohstoffe: "AWR",
+    Fremdbauteile: "AWF",
+    Hilfsstoffe: "AWH",
+    Betriebsstoffe: "AWB",
+    "von Rohstoffen": "AWR",
+    "von Fremdbauteilen": "AWF",
+    "von Hilfsstoffen": "AWH",
+    "von Betriebsstoffen": "AWB",
   };
-  return kuerzelMap[werkstoffTyp] || kuerzelMap[(werkstoffTyp || '').replace(/^von\s+/i, '')] || null;
+  return (
+    kuerzelMap[werkstoffTyp] ||
+    kuerzelMap[(werkstoffTyp || "").replace(/^von\s+/i, "")] ||
+    null
+  );
 }
 
+const anzahlDropdown = document.getElementById("anzahlDropdown");
+const mitRabatt = document.getElementById("mitRabatt");
+const mitBezugskosten = document.getElementById("mitBezugskosten");
+const mitRuecksendung = document.getElementById("mitRuecksendung");
+const mitEinkaufskalkulation = document.getElementById(
+  "mitEinkaufskalkulation",
+);
+const Skontobuchungssatz = document.getElementById("mitSkontobuchungssatz");
 
-const anzahlDropdown = document.getElementById('anzahlDropdown');
-const mitRabatt = document.getElementById('mitRabatt');
-const mitBezugskosten = document.getElementById('mitBezugskosten');
-const mitRuecksendung = document.getElementById('mitRuecksendung');
-const mitEinkaufskalkulation = document.getElementById('mitEinkaufskalkulation');
-const Skontobuchungssatz = document.getElementById('mitSkontobuchungssatz');
-
-document.addEventListener('DOMContentLoaded', function () {
-  const mitBezugskosten = document.getElementById('mitBezugskosten');
-  const mitRuecksendung = document.getElementById('mitRuecksendung');
-  const buchungsoptionDropdown = document.getElementById('buchungsoptionDropdown');
+document.addEventListener("DOMContentLoaded", function () {
+  const mitBezugskosten = document.getElementById("mitBezugskosten");
+  const mitRuecksendung = document.getElementById("mitRuecksendung");
+  const buchungsoptionDropdown = document.getElementById(
+    "buchungsoptionDropdown",
+  );
 
   function updateMitBezugskostenState() {
-
-    if (getModus() === 'einkaufskalkulation') {
+    if (getModus() === "einkaufskalkulation") {
       mitRuecksendung.disabled = true;
       mitRuecksendung.checked = false;
       mitBezugskosten.disabled = false;
-    };
+    }
 
-    if (getModus() === 'skontobuchungssatz') {
+    if (getModus() === "skontobuchungssatz") {
       mitBezugskosten.disabled = true;
       mitBezugskosten.checked = false;
       mitRuecksendung.disabled = true;
       mitRuecksendung.checked = false;
-    };
+    }
 
-    if (getModus() === 'buchungssatz') {
+    if (getModus() === "buchungssatz") {
       mitBezugskosten.disabled = false;
       mitRuecksendung.disabled = false;
-    };
+    }
 
-    if (getModus() === 'leihverpackung') {
+    if (getModus() === "leihverpackung") {
       // Geschäftsfall erzwingt Bezugskosten (Leihverpackung) und Rücksendung:
       // Häkchen automatisch gesetzt und ausgegraut
       mitBezugskosten.disabled = true;
       mitBezugskosten.checked = true;
       mitRuecksendung.disabled = true;
       mitRuecksendung.checked = true;
-    };
+    }
 
-      if (getModus() === 'gemischt') {
+    if (getModus() === "gemischt") {
       mitBezugskosten.disabled = false;
       mitRuecksendung.disabled = false;
     }
   }
 
-  buchungsoptionDropdown.addEventListener('change', updateMitBezugskostenState);
+  buchungsoptionDropdown.addEventListener("change", updateMitBezugskostenState);
 
   // Initialisiere den Zustand der "mitBezugskosten"-Checkbox beim Laden der Seite
   updateMitBezugskostenState();
@@ -171,23 +198,25 @@ document.addEventListener('DOMContentLoaded', function () {
   if (yamlData && yamlData.length > 0) {
     fillCompanyDropdowns();
     autoSelectMyCompany();
-    const sel = document.getElementById('einkaufKaeufer');
+    const sel = document.getElementById("einkaufKaeufer");
     if (sel?.value) fillBezeichnungsfelderEinkauf(sel.value.trim());
     zeigeZufaelligenSatz();
   } else {
     // Falls yamlData noch nicht geladen → auf Event warten oder fetch auslösen
-    document.addEventListener('yamlDataLoaded', () => {
-      fillCompanyDropdowns();
-      autoSelectMyCompany();
-      // ← NEU: Felder für vorausgewähltes Unternehmen befüllen
-      const sel = document.getElementById('einkaufKaeufer');
-      if (sel?.value) fillBezeichnungsfelderEinkauf(sel.value.trim());
-      zeigeZufaelligenSatz();
-    }, { once: true });
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
+        fillCompanyDropdowns();
+        autoSelectMyCompany();
+        // ← NEU: Felder für vorausgewähltes Unternehmen befüllen
+        const sel = document.getElementById("einkaufKaeufer");
+        if (sel?.value) fillBezeichnungsfelderEinkauf(sel.value.trim());
+        zeigeZufaelligenSatz();
+      },
+      { once: true },
+    );
   }
 });
-
-
 
 // Auf 2 Dezimalstellen runden
 
@@ -212,7 +241,6 @@ function getRandomRuecksendung() {
 // Funktion zur Generierung einer Zufallsganzzahl für den Nettowert
 function generateRandomNettoWert() {
   return Math.round(Math.random() * 49 + 2) * 100;
-
 }
 
 // Währung nach DIN 5008
@@ -223,65 +251,69 @@ function generateRandomNettoWert() {
 // ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
 // Im Generator wird nur die Kontonummer angegeben – Abkürzung und Label
 // liefert kontoLabel(). Bei Änderungen nur KONTENPLAN in utils.js anpassen.
-const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
-const KA    = kontoLabel('2880');   // Kasse
-const BK    = kontoLabel('2800');   // Bank
-const VORST = kontoLabel('2600');   // Vorsteuer
+const VE = kontoLabel("4400"); // Verbindlichkeiten aus LL
+const KA = kontoLabel("2880"); // Kasse
+const BK = kontoLabel("2800"); // Bank
+const VORST = kontoLabel("2600"); // Vorsteuer
 
 const kontenWerkstoffe = {
-  "Rohstoffe": {
-    "Hauptkonto": kontoLabel('6000'),
-    "Unterkonto": kontoLabel('6001'),
-    "Nachlasskonto": kontoLabel('6002')
+  Rohstoffe: {
+    Hauptkonto: kontoLabel("6000"),
+    Unterkonto: kontoLabel("6001"),
+    Nachlasskonto: kontoLabel("6002"),
   },
-  "Fremdbauteile": {
-    "Hauptkonto": kontoLabel('6010'),
-    "Unterkonto": kontoLabel('6011'),
-    "Nachlasskonto": kontoLabel('6012')
+  Fremdbauteile: {
+    Hauptkonto: kontoLabel("6010"),
+    Unterkonto: kontoLabel("6011"),
+    Nachlasskonto: kontoLabel("6012"),
   },
-  "Hilfsstoffe": {
-    "Hauptkonto": kontoLabel('6020'),
-    "Unterkonto": kontoLabel('6021'),
-    "Nachlasskonto": kontoLabel('6022')
+  Hilfsstoffe: {
+    Hauptkonto: kontoLabel("6020"),
+    Unterkonto: kontoLabel("6021"),
+    Nachlasskonto: kontoLabel("6022"),
   },
-  "Betriebsstoffe": {
-    "Hauptkonto": kontoLabel('6030'),
-    "Unterkonto": kontoLabel('6031'),
-    "Nachlasskonto": kontoLabel('6032')
+  Betriebsstoffe: {
+    Hauptkonto: kontoLabel("6030"),
+    Unterkonto: kontoLabel("6031"),
+    Nachlasskonto: kontoLabel("6032"),
   },
 };
 
 const kontenWerkstoffe_2 = {
   "von Rohstoffen": {
-    "Hauptkonto": kontoLabel('6000'),
-    "Unterkonto": kontoLabel('6001'),
-    "Nachlasskonto": kontoLabel('6002')
+    Hauptkonto: kontoLabel("6000"),
+    Unterkonto: kontoLabel("6001"),
+    Nachlasskonto: kontoLabel("6002"),
   },
   "von Fremdbauteilen": {
-    "Hauptkonto": kontoLabel('6010'),
-    "Unterkonto": kontoLabel('6011'),
-    "Nachlasskonto": kontoLabel('6012')
+    Hauptkonto: kontoLabel("6010"),
+    Unterkonto: kontoLabel("6011"),
+    Nachlasskonto: kontoLabel("6012"),
   },
   "von Hilfsstoffen": {
-    "Hauptkonto": kontoLabel('6020'),
-    "Unterkonto": kontoLabel('6021'),
-    "Nachlasskonto": kontoLabel('6022')
+    Hauptkonto: kontoLabel("6020"),
+    Unterkonto: kontoLabel("6021"),
+    Nachlasskonto: kontoLabel("6022"),
   },
   "von Betriebsstoffen": {
-    "Hauptkonto": kontoLabel('6030'),
-    "Unterkonto": kontoLabel('6031'),
-    "Nachlasskonto": kontoLabel('6032')
+    Hauptkonto: kontoLabel("6030"),
+    Unterkonto: kontoLabel("6031"),
+    Nachlasskonto: kontoLabel("6032"),
   },
 };
 
 let kontenZahlung;
 function inputChangeCategory() {
-  if (getModus() === 'einkaufskalkulation' || getModus() === 'skontobuchungssatz') {
+  if (
+    getModus() === "einkaufskalkulation" ||
+    getModus() === "skontobuchungssatz"
+  ) {
     kontenZahlung = {
       ", wobei eine Eingangsrechnung eingeht": VE,
-      ". Die Werkstoffe werden geliefert und der Lieferer sendet eine Eingangsrechnung": VE,
+      ". Die Werkstoffe werden geliefert und der Lieferer sendet eine Eingangsrechnung":
+        VE,
       ", wobei die Rechnung des Lieferers eingeht": VE,
-    }
+    };
   } else {
     kontenZahlung = {
       "per Barzahlung": KA,
@@ -291,30 +323,59 @@ function inputChangeCategory() {
       "auf Ziel": VE,
       "per Eingangsrechnung": VE,
       "per Rechnung": VE,
-    }
+    };
   }
 }
-
 
 function erstelleZufallssatz() {
   inputChangeCategory();
   let random_Rabatt = getrandom_Rabatt();
   let random_Bezugskosten = getRandomBezugskosten();
   let randomSk = Math.random();
-  let random_Skonto = (randomSk < 0.5) ? 2 : 3;
+  let random_Skonto = randomSk < 0.5 ? 2 : 3;
   random_Bezugskosten = formatCurrency(random_Bezugskosten);
   // Arrays mit verschiedenen Teilen des Satzes
-  const array_Subjekt = [`${kunde} kauft`, `${kunde} bezieht `, `${kunde} kauft `, `${kunde} erwirbt `, `Ein Lieferant sendet an ${kunde} `];
-  const array_Subjekt_2 = [`${kunde} kauft`, `${kunde} bezieht `, `${kunde} kauft `, `${kunde} erwirbt `, `Ein Lieferant sendet an ${kunde} `];
-  const array_Subjekt_3 = [`Berechne den Einstandspreis: ${kunde} erhält ein Angebot für `, `Berechne den Einstandspreis, wenn ${kunde} ein Angebot erhält für `];
-  const array_Subjekt_4 = ['Berechne den Einstandspreis: Unser Lieferant sendet ein Angebot für den Bezug von', 'Berechne den Einstandspreis eines Angebots für den Kauf von'];
-  const array_Subjekt_5 = [`${kunde} bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${random_Skonto} % Skonto`, `Die Rechnung wird mit ${random_Skonto} % Skonto per Banküberweisung ausgeglichen`, `Der Rechnungsausgleich erfolgt mit ${random_Skonto} % Skonto per Bank`,];
+  const array_Subjekt = [
+    `${kunde} kauft`,
+    `${kunde} bezieht `,
+    `${kunde} kauft `,
+    `${kunde} erwirbt `,
+    `Ein Lieferant sendet an ${kunde} `,
+  ];
+  const array_Subjekt_2 = [
+    `${kunde} kauft`,
+    `${kunde} bezieht `,
+    `${kunde} kauft `,
+    `${kunde} erwirbt `,
+    `Ein Lieferant sendet an ${kunde} `,
+  ];
+  const array_Subjekt_3 = [
+    `Berechne den Einstandspreis: ${kunde} erhält ein Angebot für `,
+    `Berechne den Einstandspreis, wenn ${kunde} ein Angebot erhält für `,
+  ];
+  const array_Subjekt_4 = [
+    "Berechne den Einstandspreis: Unser Lieferant sendet ein Angebot für den Bezug von",
+    "Berechne den Einstandspreis eines Angebots für den Kauf von",
+  ];
+  const array_Subjekt_5 = [
+    `${kunde} bezahlt die Rechnung per Banküberweisung innerhalb der Skontofrist mit ${random_Skonto} % Skonto`,
+    `Die Rechnung wird mit ${random_Skonto} % Skonto per Banküberweisung ausgeglichen`,
+    `Der Rechnungsausgleich erfolgt mit ${random_Skonto} % Skonto per Bank`,
+  ];
   const array_Werkstoffe = Object.keys(kontenWerkstoffe);
   const array_Werkstoffe_2 = Object.keys(kontenWerkstoffe_2);
-  const array_Supply_Wert = ['im Wert von', 'mit', 'in Höhe von', 'mit einem Warenwert von ', ' '];
+  const array_Supply_Wert = [
+    "im Wert von",
+    "mit",
+    "in Höhe von",
+    "mit einem Warenwert von ",
+    " ",
+  ];
   const array_Zahlung = Object.keys(kontenZahlung);
   // Leihverpackung: Einkauf immer auf Ziel (Eingangsrechnung), damit Rechnung + Rücksende-Mail zusammenpassen
-  const array_ZahlungLeihverpackung = array_Zahlung.filter(k => kontenZahlung[k] === VE);
+  const array_ZahlungLeihverpackung = array_Zahlung.filter(
+    (k) => kontenZahlung[k] === VE,
+  );
   const array_Supply_Rabatt = [`, abzüglich ${random_Rabatt} % Rabatt`];
   const array_Supply_Rabatt_2 = [
     `. Ausgehandelt wurden zusätzlich ${random_Rabatt} % Treuerabatt`,
@@ -339,46 +400,79 @@ function erstelleZufallssatz() {
     `. Es werden noch netto ${random_Bezugskosten} an Versandkosten berechnet`,
   ];
 
-
   // Zufällige Auswahl der Elemente und der alternativen Arrays
-  const selectedarray_Subjekt = Math.random() < 0.5 ? array_Subjekt : array_Subjekt_2;
-  const selectedarray_WerkstoffeBasis = selectedarray_Subjekt === array_Subjekt_2 ? array_Werkstoffe_2 : array_Werkstoffe;
+  const selectedarray_Subjekt =
+    Math.random() < 0.5 ? array_Subjekt : array_Subjekt_2;
+  const selectedarray_WerkstoffeBasis =
+    selectedarray_Subjekt === array_Subjekt_2
+      ? array_Werkstoffe_2
+      : array_Werkstoffe;
   let selectedarray_Werkstoffe = selectedarray_WerkstoffeBasis;
   // Leihverpackung: nur Rohstoffe, Fremdbauteile und Hilfsstoffe (AWR/AWF/AWH) verwenden
-  if (getModus() === 'leihverpackung') {
-    selectedarray_Werkstoffe = selectedarray_Werkstoffe.filter(w => !w.includes('Betriebsstoffe'));
+  if (getModus() === "leihverpackung") {
+    selectedarray_Werkstoffe = selectedarray_Werkstoffe.filter(
+      (w) => !w.includes("Betriebsstoffe"),
+    );
   }
-  const selectedarray_Angebot = selectedarray_Werkstoffe === array_Werkstoffe ? array_Subjekt_3 : array_Subjekt_4;
+  const selectedarray_Angebot =
+    selectedarray_Werkstoffe === array_Werkstoffe
+      ? array_Subjekt_3
+      : array_Subjekt_4;
   // Zufällige Auswahl der Elemente aus den ausgewählten Arrays
-  const randomSubjekt = selectedarray_Subjekt[Math.floor(Math.random() * selectedarray_Subjekt.length)];
-  const randomAngebot = selectedarray_Angebot[Math.floor(Math.random() * selectedarray_Angebot.length)];
-  const randomWerkstoff = selectedarray_Werkstoffe[Math.floor(Math.random() * selectedarray_Werkstoffe.length)];
+  const randomSubjekt =
+    selectedarray_Subjekt[
+      Math.floor(Math.random() * selectedarray_Subjekt.length)
+    ];
+  const randomAngebot =
+    selectedarray_Angebot[
+      Math.floor(Math.random() * selectedarray_Angebot.length)
+    ];
+  const randomWerkstoff =
+    selectedarray_Werkstoffe[
+      Math.floor(Math.random() * selectedarray_Werkstoffe.length)
+    ];
   // Werkstoff-Art merken ("von Rohstoffen" → "Rohstoffe") – für den Rücksende-Mail-Text;
   // nach "von" steht Dativ Plural ("Rohstoffen", "Fremdbauteilen", "Hilfsstoffen")
-  letzteWerkstoffArtEinkauf = (randomWerkstoff || '').replace(/^von\s+/i, '');
-  if (!letzteWerkstoffArtEinkauf.endsWith('n')) letzteWerkstoffArtEinkauf += 'n';
+  letzteWerkstoffArtEinkauf = (randomWerkstoff || "").replace(/^von\s+/i, "");
+  if (!letzteWerkstoffArtEinkauf.endsWith("n"))
+    letzteWerkstoffArtEinkauf += "n";
   const werkstoffAnzeigeName = getWerkstoffAnzeigeName(randomWerkstoff);
   letzteWerkstoffKuerzelEinkauf = getWerkstoffKuerzel(randomWerkstoff);
-  const randomSupply_Wert = array_Supply_Wert[Math.floor(Math.random() * array_Supply_Wert.length)];
-  const antwortWerkstoff = kontenWerkstoffe[randomWerkstoff]?.Hauptkonto || kontenWerkstoffe_2[randomWerkstoff]?.Hauptkonto;
-  const antwortBezugskosten = kontenWerkstoffe[randomWerkstoff]?.Unterkonto || kontenWerkstoffe_2[randomWerkstoff]?.Unterkonto;
-  const antwortSkontobuchungssatz = kontenWerkstoffe[randomWerkstoff]?.Nachlasskonto || kontenWerkstoffe_2[randomWerkstoff]?.Nachlasskonto;
-  const randomSkontobuchungssatz = array_Subjekt_5[Math.floor(Math.random() * array_Subjekt_5.length)];
-  const nettoOderBrutto = mitRabatt.checked ? 'Netto' : (Math.random() < 0.5 ? 'Netto' : 'Brutto');
+  const randomSupply_Wert =
+    array_Supply_Wert[Math.floor(Math.random() * array_Supply_Wert.length)];
+  const antwortWerkstoff =
+    kontenWerkstoffe[randomWerkstoff]?.Hauptkonto ||
+    kontenWerkstoffe_2[randomWerkstoff]?.Hauptkonto;
+  const antwortBezugskosten =
+    kontenWerkstoffe[randomWerkstoff]?.Unterkonto ||
+    kontenWerkstoffe_2[randomWerkstoff]?.Unterkonto;
+  const antwortSkontobuchungssatz =
+    kontenWerkstoffe[randomWerkstoff]?.Nachlasskonto ||
+    kontenWerkstoffe_2[randomWerkstoff]?.Nachlasskonto;
+  const randomSkontobuchungssatz =
+    array_Subjekt_5[Math.floor(Math.random() * array_Subjekt_5.length)];
+  const nettoOderBrutto = mitRabatt.checked
+    ? "Netto"
+    : Math.random() < 0.5
+      ? "Netto"
+      : "Brutto";
   const Wert = generateRandomNettoWert();
   const nettoWert = formatCurrency(Wert);
-  let bruttoWert = formatCurrency(Math.round(Wert * UST_REGEL / 100 + Wert));
+  let bruttoWert = formatCurrency(Math.round((Wert * UST_REGEL) / 100 + Wert));
   let randomNettowert;
 
   // Anzeige wenn Brutto oder Netto
-  randomNettowert = nettoOderBrutto === 'Netto' ? `${nettoWert} netto` : `brutto ${bruttoWert}`;
+  randomNettowert =
+    nettoOderBrutto === "Netto" ? `${nettoWert} netto` : `brutto ${bruttoWert}`;
   randomNettowertbeiAngebot = `Listenpreis ${nettoWert} netto`;
 
-
-  const array_ZahlungBasis = getModus() === 'leihverpackung' ? array_ZahlungLeihverpackung : array_Zahlung;
-  const randomZahlung = array_ZahlungBasis[Math.floor(Math.random() * array_ZahlungBasis.length)];
-  const antwortZahlung = kontenZahlung[randomZahlung]
-
+  const array_ZahlungBasis =
+    getModus() === "leihverpackung"
+      ? array_ZahlungLeihverpackung
+      : array_Zahlung;
+  const randomZahlung =
+    array_ZahlungBasis[Math.floor(Math.random() * array_ZahlungBasis.length)];
+  const antwortZahlung = kontenZahlung[randomZahlung];
 
   let randomSupply_Rabatt;
   let randomSupply_Rabatt_2;
@@ -386,9 +480,15 @@ function erstelleZufallssatz() {
 
   // Berechnung mit Rabatt
   if (mitRabatt.checked) {
-    randomSupply_Rabatt = array_Supply_Rabatt[Math.floor(Math.random() * array_Supply_Rabatt.length)];
-    randomSupply_Rabatt_2 = array_Supply_Rabatt_2[Math.floor(Math.random() * array_Supply_Rabatt_2.length)];
-    berechnung_nettoWert = Wert * (100 - parseFloat(random_Rabatt)) / 100;
+    randomSupply_Rabatt =
+      array_Supply_Rabatt[
+        Math.floor(Math.random() * array_Supply_Rabatt.length)
+      ];
+    randomSupply_Rabatt_2 =
+      array_Supply_Rabatt_2[
+        Math.floor(Math.random() * array_Supply_Rabatt_2.length)
+      ];
+    berechnung_nettoWert = (Wert * (100 - parseFloat(random_Rabatt))) / 100;
     berechnung_nettoWert = roundToTwoDecimals(berechnung_nettoWert);
   } else {
     random_Rabatt = 0;
@@ -397,36 +497,56 @@ function erstelleZufallssatz() {
     berechnung_nettoWert = Wert;
     berechnung_nettoWert = roundToTwoDecimals(berechnung_nettoWert);
   }
-  let randomSupply_Skonto = array_Supply_Skonto[Math.floor(Math.random() * array_Supply_Skonto.length)];
+  let randomSupply_Skonto =
+    array_Supply_Skonto[Math.floor(Math.random() * array_Supply_Skonto.length)];
   let antwortNettowert = formatCurrency(berechnung_nettoWert);
-  let berechnung_skontoBetrag = random_Skonto / 100 * berechnung_nettoWert;
+  let berechnung_skontoBetrag = (random_Skonto / 100) * berechnung_nettoWert;
   berechnung_skontoBetrag = roundToTwoDecimals(berechnung_skontoBetrag);
-  let berechnung_skontoBetrag_brutto = (berechnung_skontoBetrag) + (berechnung_skontoBetrag * UST_REGEL / 100);
-  berechnung_skontoBetrag_brutto = roundToTwoDecimals(berechnung_skontoBetrag_brutto);
-  let berechnung_vorsteuer_berichtigung = berechnung_skontoBetrag_brutto - berechnung_skontoBetrag;
-  let vorsteuer_berichtigung = formatCurrency(berechnung_vorsteuer_berichtigung);
+  let berechnung_skontoBetrag_brutto =
+    berechnung_skontoBetrag + (berechnung_skontoBetrag * UST_REGEL) / 100;
+  berechnung_skontoBetrag_brutto = roundToTwoDecimals(
+    berechnung_skontoBetrag_brutto,
+  );
+  let berechnung_vorsteuer_berichtigung =
+    berechnung_skontoBetrag_brutto - berechnung_skontoBetrag;
+  let vorsteuer_berichtigung = formatCurrency(
+    berechnung_vorsteuer_berichtigung,
+  );
   let skontoBetrag_brutto = formatCurrency(berechnung_skontoBetrag_brutto);
 
   let skontoBetrag = formatCurrency(berechnung_skontoBetrag);
-  let berechnung_bareinkaufspreis = berechnung_nettoWert - berechnung_skontoBetrag;
+  let berechnung_bareinkaufspreis =
+    berechnung_nettoWert - berechnung_skontoBetrag;
   let bareinkaufspreis = formatCurrency(berechnung_bareinkaufspreis);
-  let berechnung_USTWert = berechnung_nettoWert * UST_REGEL / 100;
+  let berechnung_USTWert = (berechnung_nettoWert * UST_REGEL) / 100;
   berechnung_USTWert = roundToTwoDecimals(berechnung_USTWert);
-  let berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert);
+  let berechnung_bruttoWert = berechnung_nettoWert + berechnung_USTWert;
   let randomSupply_Bezugskosten;
 
   // Berechnung mit Bezugskosten
   if (mitBezugskosten.checked) {
-    if (getModus() === 'leihverpackung') {
+    if (getModus() === "leihverpackung") {
       // Geschäftsfall "Leihverpackung": immer diese Bezugskosten-Aussage
       randomSupply_Bezugskosten = `. Die Leihverpackung in Höhe von ${random_Bezugskosten} netto wird zusätzlich berechnet`;
     } else {
-      randomSupply_Bezugskosten = array_Supply_Bezugskosten[Math.floor(Math.random() * array_Supply_Bezugskosten.length)];
+      randomSupply_Bezugskosten =
+        array_Supply_Bezugskosten[
+          Math.floor(Math.random() * array_Supply_Bezugskosten.length)
+        ];
     }
-    berechnung_USTWert = (berechnung_nettoWert + parseFloat(random_Bezugskosten)) * UST_REGEL / 100;
+    berechnung_USTWert =
+      ((berechnung_nettoWert + parseFloat(random_Bezugskosten)) * UST_REGEL) /
+      100;
     berechnung_USTWert = roundToTwoDecimals(berechnung_USTWert);
-    berechnung_bruttoWert = berechnung_nettoWert + (berechnung_USTWert) + parseFloat(random_Bezugskosten);
-    bruttoWert = roundToTwoDecimals(Math.round(Wert * UST_REGEL / 100 + Wert) + parseFloat(random_Bezugskosten) * UST_REGEL / 100 + parseFloat(random_Bezugskosten));
+    berechnung_bruttoWert =
+      berechnung_nettoWert +
+      berechnung_USTWert +
+      parseFloat(random_Bezugskosten);
+    bruttoWert = roundToTwoDecimals(
+      Math.round((Wert * UST_REGEL) / 100 + Wert) +
+        (parseFloat(random_Bezugskosten) * UST_REGEL) / 100 +
+        parseFloat(random_Bezugskosten),
+    );
     bruttoWert = formatCurrency(bruttoWert);
   } else {
     random_Bezugskosten = 0;
@@ -434,12 +554,15 @@ function erstelleZufallssatz() {
     berechnung_USTWert = berechnung_USTWert;
   }
   let bezugskostenWert = formatCurrency(random_Bezugskosten);
-  let berechnung_rabattWert = parseFloat(nettoWert.replace(/[^\d,-]/g, '')) * random_Rabatt / 100;
+  let berechnung_rabattWert =
+    (parseFloat(nettoWert.replace(/[^\d,-]/g, "")) * random_Rabatt) / 100;
   let rabattWert = formatCurrency(berechnung_rabattWert);
-  let berechnung_einstandspreis = berechnung_bareinkaufspreis + parseFloat(random_Bezugskosten);
+  let berechnung_einstandspreis =
+    berechnung_bareinkaufspreis + parseFloat(random_Bezugskosten);
   let einstandspreis = formatCurrency(berechnung_einstandspreis);
   let USTWert = formatCurrency(berechnung_USTWert);
-  let ueberweisungsbetrag_berechnung = berechnung_bruttoWert - berechnung_skontoBetrag_brutto;
+  let ueberweisungsbetrag_berechnung =
+    berechnung_bruttoWert - berechnung_skontoBetrag_brutto;
   let ueberweisungsbetrag = formatCurrency(ueberweisungsbetrag_berechnung);
   let antwortBruttowert = formatCurrency(berechnung_bruttoWert);
 
@@ -459,7 +582,6 @@ function erstelleZufallssatz() {
   }
   angebotSatz += `</ol>`;
 
-
   let zufaelligerSatz;
   const randomValue = Math.random();
   if (randomValue < 0.33) {
@@ -478,30 +600,56 @@ function erstelleZufallssatz() {
   if (randomRuecksendung < 0.33) {
     ruecksendungSatz = `Aufgrund einer Falschlieferung sendet ${kunde} alle Werkstoffe`;
     randomRuecksendungProzent = 100;
-    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung * randomRuecksendungProzent / 100);
-    USTWertRuecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung * 19 / 100);
-    berechnung_bruttoWertRuecksendung = USTWertRuecksendung + zieleinkaufspreis_Ruecksendung;
+    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(
+      (zieleinkaufspreis_Ruecksendung * randomRuecksendungProzent) / 100,
+    );
+    USTWertRuecksendung = roundToTwoDecimals(
+      (zieleinkaufspreis_Ruecksendung * 19) / 100,
+    );
+    berechnung_bruttoWertRuecksendung =
+      USTWertRuecksendung + zieleinkaufspreis_Ruecksendung;
     USTWertRuecksendung = formatCurrency(USTWertRuecksendung);
-    zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
-    berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
+    zieleinkaufspreis_Ruecksendung = formatCurrency(
+      zieleinkaufspreis_Ruecksendung,
+    );
+    berechnung_bruttoWertRuecksendung = formatCurrency(
+      berechnung_bruttoWertRuecksendung,
+    );
   } else if (randomRuecksendung < 0.66) {
     ruecksendungSatz = `Aufgrund eines Sachmangels sendet ${kunde} ${randomRuecksendungProzent} % der Werkstoffe `;
-    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung * randomRuecksendungProzent / 100);
-    USTWertRuecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung * 19 / 100);
-    berechnung_bruttoWertRuecksendung = USTWertRuecksendung + zieleinkaufspreis_Ruecksendung;
+    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(
+      (zieleinkaufspreis_Ruecksendung * randomRuecksendungProzent) / 100,
+    );
+    USTWertRuecksendung = roundToTwoDecimals(
+      (zieleinkaufspreis_Ruecksendung * 19) / 100,
+    );
+    berechnung_bruttoWertRuecksendung =
+      USTWertRuecksendung + zieleinkaufspreis_Ruecksendung;
     USTWertRuecksendung = formatCurrency(USTWertRuecksendung);
-    zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
-    berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
+    zieleinkaufspreis_Ruecksendung = formatCurrency(
+      zieleinkaufspreis_Ruecksendung,
+    );
+    berechnung_bruttoWertRuecksendung = formatCurrency(
+      berechnung_bruttoWertRuecksendung,
+    );
   } else {
     ruecksendungSatz = `${kunde} sendet ${randomRuecksendungProzent} % der Werkstoffe `;
-    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung * randomRuecksendungProzent / 100);
-    USTWertRuecksendung = roundToTwoDecimals(zieleinkaufspreis_Ruecksendung * 19 / 100);
-    berechnung_bruttoWertRuecksendung = USTWertRuecksendung + zieleinkaufspreis_Ruecksendung;
+    zieleinkaufspreis_Ruecksendung = roundToTwoDecimals(
+      (zieleinkaufspreis_Ruecksendung * randomRuecksendungProzent) / 100,
+    );
+    USTWertRuecksendung = roundToTwoDecimals(
+      (zieleinkaufspreis_Ruecksendung * 19) / 100,
+    );
+    berechnung_bruttoWertRuecksendung =
+      USTWertRuecksendung + zieleinkaufspreis_Ruecksendung;
     USTWertRuecksendung = formatCurrency(USTWertRuecksendung);
-    zieleinkaufspreis_Ruecksendung = formatCurrency(zieleinkaufspreis_Ruecksendung);
-    berechnung_bruttoWertRuecksendung = formatCurrency(berechnung_bruttoWertRuecksendung);
+    zieleinkaufspreis_Ruecksendung = formatCurrency(
+      zieleinkaufspreis_Ruecksendung,
+    );
+    berechnung_bruttoWertRuecksendung = formatCurrency(
+      berechnung_bruttoWertRuecksendung,
+    );
   }
-
 
   const randomSkontoSatz = Math.random();
   skontoSatz = `<ol style="list-style-type: lower-latin;">`;
@@ -513,7 +661,6 @@ function erstelleZufallssatz() {
     skontoSatz += `<li>Bilde den Buchungssatz zum Geschäftsfall.</li><li>Bilde den Buchungssatz: ${randomSkontobuchungssatz}.</li>`;
   }
   skontoSatz += `</ol>`;
-
 
   const listeneinkaufspreis = `${nettoWert}`;
   const antwort_rabattWert = `${rabattWert}`;
@@ -533,10 +680,35 @@ function erstelleZufallssatz() {
   const antwort_bezugskostenWert = `${bezugskostenWert}`;
   const betrag_2 = `${antwortBruttowert}`;
 
-  return [zufaelligerSatz, angebotSatz, ruecksendungSatz, skontoSatz, listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz, antwort_skontoSatz, antwort_skontoBetrag, antwort_skontoBetrag_brutto, antwort_vorsteuer_berichtigung, antwort_ueberweisungsbetrag, antwort_bareinkaufspreis, antwort_einstandspreis, konto_1, zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert, USTWert, konto_2, betrag_2, konto_Skontobuchungssatz, USTWertRuecksendung, zieleinkaufspreis_Ruecksendung, berechnung_bruttoWertRuecksendung, werkstoffAnzeigeName];
-
+  return [
+    zufaelligerSatz,
+    angebotSatz,
+    ruecksendungSatz,
+    skontoSatz,
+    listeneinkaufspreis,
+    antwort_rabattWert,
+    antwort_rabattSatz,
+    antwort_skontoSatz,
+    antwort_skontoBetrag,
+    antwort_skontoBetrag_brutto,
+    antwort_vorsteuer_berichtigung,
+    antwort_ueberweisungsbetrag,
+    antwort_bareinkaufspreis,
+    antwort_einstandspreis,
+    konto_1,
+    zieleinkaufspreis,
+    antwort_bezugskosten,
+    antwort_bezugskostenWert,
+    USTWert,
+    konto_2,
+    betrag_2,
+    konto_Skontobuchungssatz,
+    USTWertRuecksendung,
+    zieleinkaufspreis_Ruecksendung,
+    berechnung_bruttoWertRuecksendung,
+    werkstoffAnzeigeName,
+  ];
 }
-
 
 // ============================================================================
 // Dropdowns mit YAML-Unternehmen befüllen
@@ -549,22 +721,21 @@ function fillCompanyDropdowns() {
 
   // Sortierung: erst nach Branche, dann nach Name
   const sortedCompanies = [...yamlData].sort((a, b) => {
-    const brancheA = a.unternehmen?.branche || '';
-    const brancheB = b.unternehmen?.branche || '';
+    const brancheA = a.unternehmen?.branche || "";
+    const brancheB = b.unternehmen?.branche || "";
     if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
-    return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+    return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
 
-  const kaueferSelect = document.getElementById('einkaufKaeufer');
-
+  const kaueferSelect = document.getElementById("einkaufKaeufer");
 
   // Leeren + Option "Bitte auswählen" hinzufügen
   const clearAndAddPlaceholder = (select) => {
     if (!select) return;
-    select.innerHTML = '';
-    const opt = document.createElement('option');
-    opt.value = '';
-    opt.text = '— bitte Unternehmen auswählen —';
+    select.innerHTML = "";
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.text = "— bitte Unternehmen auswählen —";
     opt.disabled = true;
     opt.selected = true;
     select.appendChild(opt);
@@ -572,38 +743,34 @@ function fillCompanyDropdowns() {
 
   clearAndAddPlaceholder(kaueferSelect);
 
-
   // Alle Unternehmen einfügen
-  sortedCompanies.forEach(company => {
+  sortedCompanies.forEach((company) => {
     const u = company.unternehmen;
     if (!u?.name) return;
 
     const displayText = u.branche
-      ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
-      : `${u.name} ${u.rechtsform || ''}`.trim();
+      ? `${u.branche} – ${u.name} ${u.rechtsform || ""}`.trim()
+      : `${u.name} ${u.rechtsform || ""}`.trim();
 
-    const option = document.createElement('option');
-    option.value = u.name;           // ← wichtig: value = Firmenname
+    const option = document.createElement("option");
+    option.value = u.name; // ← wichtig: value = Firmenname
     option.textContent = displayText;
 
     // Optional: data-Attribute für spätere Verwendung
-    option.dataset.id = u.id || '';
-    option.dataset.rechtsform = u.rechtsform || '';
-    option.dataset.branche = u.branche || '';
+    option.dataset.id = u.id || "";
+    option.dataset.rechtsform = u.rechtsform || "";
+    option.dataset.branche = u.branche || "";
 
     // Kopie für beide Dropdowns
     if (kaueferSelect) kaueferSelect.appendChild(option.cloneNode(true));
-
   });
 
   console.log(`Dropdowns befüllt mit ${sortedCompanies.length} Unternehmen`);
 }
 
-
 // ============================================================================
 // NEUE HILFSFUNKTIONEN FÜR BELEG-BUTTONS
 // ============================================================================
-
 
 function getBelegtypAusKonto(konto_2) {
   if (konto_2 === KA) return "quittung";
@@ -615,65 +782,93 @@ function getBelegtypAusKonto(konto_2) {
 // versendet das Angebot an das Modellunternehmen mit Listenpreis, ggf. Rabatt
 // und Skonto (analog zur Verkaufskalkulation).
 function erzeugeEinkaufAngebotText(daten, werkstoffOverride) {
-    const werkstoff = (werkstoffOverride || daten.werkstoff || 'Werkstoffe').replace(/^von\s+/i, '');
-    const listeneinkaufspreis = daten.listeneinkaufspreis || '';
-    const rabattSatz = daten.rabattSatz || '0';
-    const skontoSatz = daten.skontoSatz || '0';
+  const werkstoff = (
+    werkstoffOverride ||
+    daten.werkstoff ||
+    "Werkstoffe"
+  ).replace(/^von\s+/i, "");
+  const listeneinkaufspreis = daten.listeneinkaufspreis || "";
+  const rabattSatz = daten.rabattSatz || "0";
+  const skontoSatz = daten.skontoSatz || "0";
 
-    let text = `vielen Dank für Ihre Anfrage. Gerne unterbreiten wir Ihnen ein Angebot über ${werkstoff}: `;
-    text += `Der Listenpreis beträgt ${listeneinkaufspreis} je PAL. `;
-    if (parseFloat(rabattSatz) > 0) {
-        text += `Bei dieser Abnahmemenge gewähren wir Ihnen einen Rabatt von ${rabattSatz} %. `;
-    }
-    if (parseFloat(skontoSatz) > 0) {
-        text += `Bei Zahlung innerhalb der Skontofrist gewähren wir Ihnen ${skontoSatz} % Skonto. `;
-    }
-    text += `Wir freuen uns auf Ihre Bestellung und stehen für Rückfragen gerne zur Verfügung.`;
-    return text;
+  let text = `vielen Dank für Ihre Anfrage. Gerne unterbreiten wir Ihnen ein Angebot über ${werkstoff}: `;
+  text += `Der Listenpreis beträgt ${listeneinkaufspreis} je PAL. `;
+  if (parseFloat(rabattSatz) > 0) {
+    text += `Bei dieser Abnahmemenge gewähren wir Ihnen einen Rabatt von ${rabattSatz} %. `;
+  }
+  if (parseFloat(skontoSatz) > 0) {
+    text += `Bei Zahlung innerhalb der Skontofrist gewähren wir Ihnen ${skontoSatz} % Skonto. `;
+  }
+  text += `Wir freuen uns auf Ihre Bestellung und stehen für Rückfragen gerne zur Verfügung.`;
+  return text;
 }
 
-function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isGutschrift = false) {
+function erzeugeURLFuerGeschaeftsfall(
+  geschaeftsfallDaten,
+  typ = "rechnung",
+  isGutschrift = false,
+) {
   const params = new URLSearchParams();
 
   // Belegtyp aus konto_2 ableiten
-  const belegtyp = isGutschrift ? 'gutschrift' : (typ !== 'rechnung' && typ !== 'angebot' ? typ : getBelegtypAusKonto(geschaeftsfallDaten.konto_2 || ''));
-  params.set('beleg', belegtyp);
+  const belegtyp = isGutschrift
+    ? "gutschrift"
+    : typ !== "rechnung" && typ !== "angebot"
+      ? typ
+      : getBelegtypAusKonto(geschaeftsfallDaten.konto_2 || "");
+  params.set("beleg", belegtyp);
 
-  if (typ === 'angebot') params.set('vorlage', 'angebot1.svg');
-  if (isGutschrift || typ === 'gutschrift') params.set('vorlage', 'gutschrift2.svg');
+  if (typ === "angebot") params.set("vorlage", "angebot1.svg");
+  if (isGutschrift || typ === "gutschrift")
+    params.set("vorlage", "gutschrift2.svg");
 
-  const kaeuferSelect = document.getElementById('einkaufKaeufer');
+  const kaeuferSelect = document.getElementById("einkaufKaeufer");
   const aktuellesUnternehmenName = kaeuferSelect?.value?.trim();
   const werkstoffName = geschaeftsfallDaten.werkstoff;
 
   const now = new Date();
-  const tag   = now.getDate().toString().padStart(2, '0');
-  const monat = (now.getMonth() + 1).toString().padStart(2, '0');
+  const tag = now.getDate().toString().padStart(2, "0");
+  const monat = (now.getMonth() + 1).toString().padStart(2, "0");
 
   // Hilfsfunktion: Findet den Unternehmensnamen in den YAML-Daten anhand der ID
   function getUnternehmensNamePerId(id) {
-    if (id === undefined || id === null || typeof yamlData === 'undefined') return null;
+    if (id === undefined || id === null || typeof yamlData === "undefined")
+      return null;
     const searchId = String(id).trim();
-    const eintrag = yamlData.find(e => String(e.unternehmen?.id).trim() === searchId);
+    const eintrag = yamlData.find(
+      (e) => String(e.unternehmen?.id).trim() === searchId,
+    );
     return eintrag?.unternehmen?.name || null;
   }
 
   // 1. ID des Stammlieferanten automatisch über den Werkstoff ermitteln
   let lieferantenId = null;
 
-  if (typeof yamlData !== 'undefined' && yamlData.length > 0 && aktuellesUnternehmenName && werkstoffName) {
-    const modellUnternehmenEintrag = yamlData.find(e => e.unternehmen?.name === aktuellesUnternehmenName);
-    
+  if (
+    typeof yamlData !== "undefined" &&
+    yamlData.length > 0 &&
+    aktuellesUnternehmenName &&
+    werkstoffName
+  ) {
+    const modellUnternehmenEintrag = yamlData.find(
+      (e) => e.unternehmen?.name === aktuellesUnternehmenName,
+    );
+
     if (modellUnternehmenEintrag?.unternehmen?.werkstoffe) {
       const werkstoffe = modellUnternehmenEintrag.unternehmen.werkstoffe;
       for (const kontoKey of ["AWR", "AWF", "AWH", "AWB"]) {
         const liste = werkstoffe[kontoKey];
         if (Array.isArray(liste)) {
-          const gefunden = liste.find(w => {
-            if (typeof w === 'object' && w !== null) return w.name === werkstoffName;
+          const gefunden = liste.find((w) => {
+            if (typeof w === "object" && w !== null)
+              return w.name === werkstoffName;
             return w === werkstoffName;
           });
-          if (gefunden && typeof gefunden === 'object' && gefunden.stammlieferant) {
+          if (
+            gefunden &&
+            typeof gefunden === "object" &&
+            gefunden.stammlieferant
+          ) {
             lieferantenId = gefunden.stammlieferant;
             break;
           }
@@ -683,15 +878,28 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
   }
 
   // Fallback über alle Unternehmen
-  if (!lieferantenId && typeof yamlData !== 'undefined' && yamlData.length > 0 && werkstoffName) {
+  if (
+    !lieferantenId &&
+    typeof yamlData !== "undefined" &&
+    yamlData.length > 0 &&
+    werkstoffName
+  ) {
     for (const eintrag of yamlData) {
       const werkstoffe = eintrag.unternehmen?.werkstoffe;
       if (!werkstoffe) continue;
       for (const kontoKey of ["AWR", "AWF", "AWH", "AWB"]) {
         const liste = werkstoffe[kontoKey];
         if (Array.isArray(liste)) {
-          const gefunden = liste.find(w => (typeof w === 'object' && w !== null ? w.name === werkstoffName : w === werkstoffName));
-          if (gefunden && typeof gefunden === 'object' && gefunden.stammlieferant) {
+          const gefunden = liste.find((w) =>
+            typeof w === "object" && w !== null
+              ? w.name === werkstoffName
+              : w === werkstoffName,
+          );
+          if (
+            gefunden &&
+            typeof gefunden === "object" &&
+            gefunden.stammlieferant
+          ) {
             lieferantenId = gefunden.stammlieferant;
             break;
           }
@@ -707,38 +915,74 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
   if (!lieferantenId) {
     let kuerzel = geschaeftsfallDaten?.werkstoffKuerzel || null;
     if (!kuerzel) {
-      const kuerzelMap = { 'Rohstoffe':'AWR','Fremdbauteile':'AWF','Hilfsstoffe':'AWH','Betriebsstoffe':'AWB','von Rohstoffen':'AWR','von Fremdbauteilen':'AWF','von Hilfsstoffen':'AWH','von Betriebsstoffen':'AWB' };
-      kuerzel = kuerzelMap[werkstoffName] || kuerzelMap[(werkstoffName || '').replace(/^von\s+/i, '')] || null;
+      const kuerzelMap = {
+        Rohstoffe: "AWR",
+        Fremdbauteile: "AWF",
+        Hilfsstoffe: "AWH",
+        Betriebsstoffe: "AWB",
+        "von Rohstoffen": "AWR",
+        "von Fremdbauteilen": "AWF",
+        "von Hilfsstoffen": "AWH",
+        "von Betriebsstoffen": "AWB",
+      };
+      kuerzel =
+        kuerzelMap[werkstoffName] ||
+        kuerzelMap[(werkstoffName || "").replace(/^von\s+/i, "")] ||
+        null;
       if (!kuerzel) {
-        for (const k of ['AWR','AWF','AWH','AWB']) {
-          if (getBezeichnungFuerKonto(k) === werkstoffName) { kuerzel = k; break; }
+        for (const k of ["AWR", "AWF", "AWH", "AWB"]) {
+          if (getBezeichnungFuerKonto(k) === werkstoffName) {
+            kuerzel = k;
+            break;
+          }
         }
       }
     }
-    const modellEintrag = (typeof yamlData !== 'undefined' && yamlData.length > 0 && aktuellesUnternehmenName)
-      ? yamlData.find(e => e.unternehmen?.name === aktuellesUnternehmenName) : null;
+    const modellEintrag =
+      typeof yamlData !== "undefined" &&
+      yamlData.length > 0 &&
+      aktuellesUnternehmenName
+        ? yamlData.find((e) => e.unternehmen?.name === aktuellesUnternehmenName)
+        : null;
     if (kuerzel && modellEintrag?.unternehmen?.werkstoffe) {
       const liste = modellEintrag.unternehmen.werkstoffe[kuerzel];
       if (Array.isArray(liste)) {
-        const gefunden = liste.find(w => typeof w === 'object' && w !== null && w.stammlieferant);
+        const gefunden = liste.find(
+          (w) => typeof w === "object" && w !== null && w.stammlieferant,
+        );
         if (gefunden) lieferantenId = gefunden.stammlieferant;
       }
     }
-    if (!lieferantenId && kuerzel && typeof yamlData !== 'undefined' && yamlData.length > 0) {
+    if (
+      !lieferantenId &&
+      kuerzel &&
+      typeof yamlData !== "undefined" &&
+      yamlData.length > 0
+    ) {
       for (const eintrag of yamlData) {
         const liste = eintrag.unternehmen?.werkstoffe?.[kuerzel];
         if (Array.isArray(liste)) {
-          const gefunden = liste.find(w => typeof w === 'object' && w !== null && w.stammlieferant);
-          if (gefunden) { lieferantenId = gefunden.stammlieferant; break; }
+          const gefunden = liste.find(
+            (w) => typeof w === "object" && w !== null && w.stammlieferant,
+          );
+          if (gefunden) {
+            lieferantenId = gefunden.stammlieferant;
+            break;
+          }
         }
       }
     }
     if (!lieferantenId && modellEintrag?.unternehmen?.werkstoffe) {
-      for (const k of ['AWR','AWF','AWH','AWB']) {
+      for (const k of ["AWR", "AWF", "AWH", "AWB"]) {
         const liste = modellEintrag.unternehmen.werkstoffe[k];
         if (Array.isArray(liste)) {
-          const gefunden = liste.find(w => typeof w === 'object' && w !== null && w.stammlieferant);
-          if (gefunden) { lieferantenId = gefunden.stammlieferant; break; }
+          const gefunden = liste.find(
+            (w) => typeof w === "object" && w !== null && w.stammlieferant,
+          );
+          if (gefunden) {
+            lieferantenId = gefunden.stammlieferant;
+            break;
+          }
         }
       }
     }
@@ -748,38 +992,50 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
   const lieferantenName = getUnternehmensNamePerId(lieferantenId);
 
   // Mail-Fall (Einkaufskalkulation): Angebot des Lieferers per E-Mail
-  if (typ === 'mail') {
-    params.set('beleg', 'email');
-    params.set('vorlage', 'mail3.html');
+  if (typ === "mail") {
+    params.set("beleg", "email");
+    params.set("vorlage", "mail3.html");
     // Lieferant: Stammunternehmen des Werkstoffs; Fallback: deterministisch das
     // erste Nicht-Käufer-Unternehmen (damit wiederholte Klicks denselben
     // Absender liefern)
     let lieferantMail = lieferantenName;
-    if (!lieferantMail && typeof yamlData !== 'undefined' && yamlData.length > 0) {
+    if (
+      !lieferantMail &&
+      typeof yamlData !== "undefined" &&
+      yamlData.length > 0
+    ) {
       const kaeuferName = kaeuferSelect?.value?.trim();
       const kandidaten = yamlData
-        .map(e => e.unternehmen?.name)
-        .filter(n => n && n !== kaeuferName);
+        .map((e) => e.unternehmen?.name)
+        .filter((n) => n && n !== kaeuferName);
       if (kandidaten.length) lieferantMail = kandidaten[0];
     }
-    if (lieferantMail) params.set('absender', lieferantMail);
-    if (kaeuferSelect?.value) params.set('empfaenger', kaeuferSelect.value.trim());
+    if (lieferantMail) params.set("absender", lieferantMail);
+    if (kaeuferSelect?.value)
+      params.set("empfaenger", kaeuferSelect.value.trim());
     // Werkstoff-Bezeichnung für Betreff/Text bereinigen ("von Hilfsstoffen" → "Hilfsstoffe")
-    const werkstoffMail = (werkstoffName || 'Werkstoffe').replace(/^von\s+/i, '');
-    params.set('betreff', `Angebot ${werkstoffMail}`);
-    params.set('text', erzeugeEinkaufAngebotText(geschaeftsfallDaten, werkstoffMail));
+    const werkstoffMail = (werkstoffName || "Werkstoffe").replace(
+      /^von\s+/i,
+      "",
+    );
+    params.set("betreff", `Angebot ${werkstoffMail}`);
+    params.set(
+      "text",
+      erzeugeEinkaufAngebotText(geschaeftsfallDaten, werkstoffMail),
+    );
     return `belege.html?${params.toString()}`;
   }
 
   // Rücksende-Mail (Leihverpackung): der Lieferer schreibt dem Modellunternehmen,
   // welchen Betrag er für die zurückgesendete Leihverpackung gutbringt
-  if (typ === 'mailrueck') {
-    params.set('beleg', 'email');
-    params.set('vorlage', 'mail3.html');
-    if (lieferantenName) params.set('absender', lieferantenName);
-    if (kaeuferSelect?.value) params.set('empfaenger', kaeuferSelect.value.trim());
-    params.set('betreff', 'Rücksendung Leihverpackung');
-    params.set('text', geschaeftsfallDaten.mailRuecksendung || '');
+  if (typ === "mailrueck") {
+    params.set("beleg", "email");
+    params.set("vorlage", "mail3.html");
+    if (lieferantenName) params.set("absender", lieferantenName);
+    if (kaeuferSelect?.value)
+      params.set("empfaenger", kaeuferSelect.value.trim());
+    params.set("betreff", "Rücksendung Leihverpackung");
+    params.set("text", geschaeftsfallDaten.mailRuecksendung || "");
     return `belege.html?${params.toString()}`;
   }
 
@@ -788,88 +1044,108 @@ function erzeugeURLFuerGeschaeftsfall(geschaeftsfallDaten, typ = 'rechnung', isG
 
   // Generellen Kunden (Modellunternehmen) setzen
   if (kaeuferSelect?.value) {
-    params.set('kunde', kaeuferSelect.value.trim());
+    params.set("kunde", kaeuferSelect.value.trim());
   }
 
-  if (belegtyp === 'kontoauszug') {
-    if (kaeuferSelect?.value) params.set('kontoinhaber', kaeuferSelect.value.trim());
-    params.set('vorgang1', werkstoffName || 'Werkstoffe');
+  if (belegtyp === "kontoauszug") {
+    if (kaeuferSelect?.value)
+      params.set("kontoinhaber", kaeuferSelect.value.trim());
+    params.set("vorgang1", werkstoffName || "Werkstoffe");
     if (geschaeftsfallDaten.bruttoBetrag) {
-      params.set('wertstellung1', `-${parseNumericValue(geschaeftsfallDaten.bruttoBetrag)}`);
+      params.set(
+        "wertstellung1",
+        `-${parseNumericValue(geschaeftsfallDaten.bruttoBetrag)}`,
+      );
     }
     // Falls der Kontoauszug ebenfalls den Empfänger nutzt:
     if (lieferantenName) {
-      params.set('empfaenger', lieferantenName);
+      params.set("empfaenger", lieferantenName);
     }
-    params.set('tag', tag);
-    params.set('monat', monat);
-
-  } else if (belegtyp === 'quittung') {
-    params.set('zweck', werkstoffName || 'Werkstoffe');
+    params.set("tag", tag);
+    params.set("monat", monat);
+  } else if (belegtyp === "quittung") {
+    params.set("zweck", werkstoffName || "Werkstoffe");
     if (geschaeftsfallDaten.listeneinkaufspreis) {
-      params.set('netto', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
+      params.set(
+        "netto",
+        parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis),
+      );
     }
-    
+
     // ---> HIER WIRD DER EMPFÄNGER FÜR DIE QUITTUNG GESETZT <---
     if (lieferantenName) {
-      params.set('empfaenger', lieferantenName);
+      params.set("empfaenger", lieferantenName);
     }
 
-    params.set('ust', '19');
-    params.set('tag', tag);
-    params.set('monat', monat);
-
+    params.set("ust", "19");
+    params.set("tag", tag);
+    params.set("monat", monat);
   } else {
     // rechnung, angebot, gutschrift (nutzen weiterhin 'lieferer')
     if (geschaeftsfallDaten.listeneinkaufspreis)
-      params.set('einzelpreis1', parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis));
-    if (geschaeftsfallDaten.rabattSatz) params.set('rabatt', geschaeftsfallDaten.rabattSatz);
+      params.set(
+        "einzelpreis1",
+        parseNumericValue(geschaeftsfallDaten.listeneinkaufspreis),
+      );
+    if (geschaeftsfallDaten.rabattSatz)
+      params.set("rabatt", geschaeftsfallDaten.rabattSatz);
     if (geschaeftsfallDaten.bezugskostenWert) {
-      params.set('bezugskosten', parseNumericValue(geschaeftsfallDaten.bezugskostenWert));
+      params.set(
+        "bezugskosten",
+        parseNumericValue(geschaeftsfallDaten.bezugskostenWert),
+      );
       // Geschäftsfall Leihverpackung: Bezeichnung auf der Rechnung statt "Versand"
-      if (getModus() === 'leihverpackung') params.set('bezugskostenart', 'Leihverpackung');
+      if (getModus() === "leihverpackung")
+        params.set("bezugskostenart", "Leihverpackung");
     }
-    if (geschaeftsfallDaten.skontoSatz) params.set('skonto', geschaeftsfallDaten.skontoSatz);
-    if (werkstoffName) params.set('artikel1', werkstoffName);
+    if (geschaeftsfallDaten.skontoSatz)
+      params.set("skonto", geschaeftsfallDaten.skontoSatz);
+    if (werkstoffName) params.set("artikel1", werkstoffName);
 
     if (lieferantenName) {
-      params.set('lieferer', lieferantenName);
+      params.set("lieferer", lieferantenName);
     }
 
-    params.set('menge1', '1');
-    params.set('einheit1', 'PAL');
-    params.set('umsatzsteuer', '19');
-    params.set('tag', tag);
-    params.set('monat', monat);
+    params.set("menge1", "1");
+    params.set("einheit1", "PAL");
+    params.set("umsatzsteuer", "19");
+    params.set("tag", tag);
+    params.set("monat", monat);
   }
 
   return `belege.html?${params.toString()}`;
 }
 function erstelleGeschaeftsfallButton(nummer, daten, isGutschrift = false) {
-  const url = erzeugeURLFuerGeschaeftsfall(daten, isGutschrift ? 'gutschrift' : 'rechnung', isGutschrift);
+  const url = erzeugeURLFuerGeschaeftsfall(
+    daten,
+    isGutschrift ? "gutschrift" : "rechnung",
+    isGutschrift,
+  );
 
-  const belegtyp = isGutschrift ? 'gutschrift' : getBelegtypAusKonto(daten.konto_2 || '');
+  const belegtyp = isGutschrift
+    ? "gutschrift"
+    : getBelegtypAusKonto(daten.konto_2 || "");
   const namen = {
-    rechnung:    '📄 Eingangsrechnung',
-    kontoauszug: '🏦 Kontoauszug',
-    quittung:    '🧾 Quittung',
-    gutschrift:  '📄 Gutschrift (Rücksendung)',
+    rechnung: "📄 Eingangsrechnung",
+    kontoauszug: "🏦 Kontoauszug",
+    quittung: "🧾 Quittung",
+    gutschrift: "📄 Gutschrift (Rücksendung)",
   };
-  const name = namen[belegtyp] || '📄 Beleg';
+  const name = namen[belegtyp] || "📄 Beleg";
 
   return `<button class="geschaeftsfall-beleg-button"
-    data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+    data-url="${url.replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
     style="width:100%;padding:10px 12px;font-size:14px;">
     ${name} ${nummer} erstellen
   </button>`;
 }
 
-function erstelleAngebotButton(nummer, daten, buchstabe = 'a') {
-  const url = erzeugeURLFuerGeschaeftsfall(daten, 'angebot');
+function erstelleAngebotButton(nummer, daten, buchstabe = "a") {
+  const url = erzeugeURLFuerGeschaeftsfall(daten, "angebot");
   return `
         <button
             class="geschaeftsfall-beleg-button angebot-button"
-            data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+            data-url="${url.replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
             title="Angebot für Aufgabe ${nummer} als SVG öffnen"
              style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
@@ -883,23 +1159,26 @@ function erstelleAngebotButton(nummer, daten, buchstabe = 'a') {
 // werden – auch wenn die Auswahl nach dem Generieren geändert wurde.
 let einkaufMailRegistrierung = [];
 function einkaufMailQuelleAnlegen(typ, daten) {
-    einkaufMailRegistrierung.push({ typ: typ, daten: daten });
-    return einkaufMailRegistrierung.length - 1;
+  einkaufMailRegistrierung.push({ typ: typ, daten: daten });
+  return einkaufMailRegistrierung.length - 1;
 }
 function einkaufMailUrlErzeugen(quelleIdx) {
-    const eintrag = einkaufMailRegistrierung[quelleIdx] || {};
-    return erzeugeURLFuerGeschaeftsfall(eintrag.daten || {}, eintrag.typ || 'mail');
+  const eintrag = einkaufMailRegistrierung[quelleIdx] || {};
+  return erzeugeURLFuerGeschaeftsfall(
+    eintrag.daten || {},
+    eintrag.typ || "mail",
+  );
 }
 window.einkaufMailUrlErzeugen = einkaufMailUrlErzeugen;
 
 // Angebots-Mail (Einkaufskalkulation): der Lieferer (Stammunternehmen) versendet
 // das Angebot an das Modellunternehmen per E-Mail
 function erstelleAngebotMailButton(nummer, daten) {
-  const quelle = einkaufMailQuelleAnlegen('mail', daten);
+  const quelle = einkaufMailQuelleAnlegen("mail", daten);
   return `
         <button
             class="geschaeftsfall-beleg-button angebot-mail-button"
-            data-url="${einkaufMailUrlErzeugen(quelle)}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+            data-url="${einkaufMailUrlErzeugen(quelle).replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
             title="Angebots-Mail des Lieferers für Aufgabe ${nummer} öffnen"
             style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
@@ -910,12 +1189,12 @@ function erstelleAngebotMailButton(nummer, daten) {
 
 // Rücksende-Mail (Leihverpackung): der Lieferer schreibt, welchen Betrag er
 // für die zurückgesendete Leihverpackung brutto gutschreibt
-function erstelleMailRuecksendungButton(nummer, daten, buchstabe = 'b') {
-  const quelle = einkaufMailQuelleAnlegen('mailrueck', daten);
+function erstelleMailRuecksendungButton(nummer, daten, buchstabe = "b") {
+  const quelle = einkaufMailQuelleAnlegen("mailrueck", daten);
   return `
         <button
             class="geschaeftsfall-beleg-button angebot-mail-button"
-            data-url="${einkaufMailUrlErzeugen(quelle)}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+            data-url="${einkaufMailUrlErzeugen(quelle).replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
             title="Mail vom Lieferer (Gutschrift für die Leihverpackung) für Aufgabe ${nummer} öffnen"
             style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
@@ -924,12 +1203,12 @@ function erstelleMailRuecksendungButton(nummer, daten, buchstabe = 'b') {
     `;
 }
 
-function erstelleRechnungButton(nummer, daten, buchstabe = 'b') {
-  const url = erzeugeURLFuerGeschaeftsfall(daten, 'rechnung');   // → KEIN vorlage-Parameter
+function erstelleRechnungButton(nummer, daten, buchstabe = "b") {
+  const url = erzeugeURLFuerGeschaeftsfall(daten, "rechnung"); // → KEIN vorlage-Parameter
   return `
         <button
             class="geschaeftsfall-beleg-button rechnung-button"
-            data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+            data-url="${url.replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
             title="Eingangsrechnung für Aufgabe ${nummer} als SVG öffnen"
             style="width: 100%; padding: 9px 11px; font-size: 13px;"
         >
@@ -940,13 +1219,13 @@ function erstelleRechnungButton(nummer, daten, buchstabe = 'b') {
 
 function zeigeZufaelligenSatz() {
   // Falls eine andere Funktion vorhanden ist → abbrechen
-  if (typeof zeigeZufaelligenSatzMitUnternehmen === 'function') {
+  if (typeof zeigeZufaelligenSatzMitUnternehmen === "function") {
     return zeigeZufaelligenSatzMitUnternehmen();
   }
 
   const anzahl = parseInt(anzahlDropdown.value);
-  const container = document.getElementById('Container');
-  const buttonColumn = document.getElementById('button-column'); // ← muss im HTML existieren!
+  const container = document.getElementById("Container");
+  const buttonColumn = document.getElementById("button-column"); // ← muss im HTML existieren!
 
   if (!container || !buttonColumn) {
     console.error("Container oder Button-Column nicht gefunden");
@@ -954,124 +1233,189 @@ function zeigeZufaelligenSatz() {
   }
 
   // Inhalte zurücksetzen
-  container.innerHTML = '';
-  buttonColumn.innerHTML = '';
+  container.innerHTML = "";
+  buttonColumn.innerHTML = "";
   letzteGenerierteGfListeEinkauf = [];
-  if (typeof moodleReset === 'function') moodleReset();
+  if (typeof moodleReset === "function") moodleReset();
 
-  let satzOutput = '<h2>Aufgaben</h2><ol>';
+  let satzOutput = "<h2>Aufgaben</h2><ol>";
   let antwortOutput = '<h2 class="loesung">Lösung</h2>';
-  const gemischt = document.getElementById('buchungsoptionDropdown').value === 'gemischt';
+  const gemischt =
+    document.getElementById("buchungsoptionDropdown").value === "gemischt";
   const origBezug = mitBezugskosten.checked;
   const origRueck = mitRuecksendung.checked;
   modusUeberschreibung = null;
 
-
   for (let i = 1; i <= anzahl; i++) {
-        if (gemischt) {
+    if (gemischt) {
       // Leihverpackung nur einbeziehen, wenn der Nutzer Bezugskosten UND Rücksendungen angehakt hat
-      const gemischtKandidaten = (origBezug && origRueck) ? [...EINKAUF_MODI, 'leihverpackung'] : EINKAUF_MODI;
-      modusUeberschreibung = gemischtKandidaten[Math.floor(Math.random() * gemischtKandidaten.length)];
-      if (modusUeberschreibung === 'leihverpackung') {
+      const gemischtKandidaten =
+        origBezug && origRueck
+          ? [...EINKAUF_MODI, "leihverpackung"]
+          : EINKAUF_MODI;
+      modusUeberschreibung =
+        gemischtKandidaten[
+          Math.floor(Math.random() * gemischtKandidaten.length)
+        ];
+      if (modusUeberschreibung === "leihverpackung") {
         // Geschäftsfall erzwingt Bezugskosten (Leihverpackung) und Rücksendung
         mitBezugskosten.checked = true;
         mitRuecksendung.checked = true;
       } else {
         // Nebenbedingungen je Typ: Skonto ohne Bezugskosten/Rücksendung, Kalkulation ohne Rücksendung
-        mitBezugskosten.checked = origBezug && modusUeberschreibung !== 'skontobuchungssatz';
-        mitRuecksendung.checked = origRueck && modusUeberschreibung === 'buchungssatz';
+        mitBezugskosten.checked =
+          origBezug && modusUeberschreibung !== "skontobuchungssatz";
+        mitRuecksendung.checked =
+          origRueck && modusUeberschreibung === "buchungssatz";
       }
     }
     const currentI = i;
     const [
-      zufaelligerSatz, angebotSatz, ruecksendungSatz, skontoSatz,
-      listeneinkaufspreis, antwort_rabattWert, antwort_rabattSatz,
-      antwort_skontoSatz, antwort_skontoBetrag, antwort_skontoBetrag_brutto,
-      antwort_vorsteuer_berichtigung, antwort_ueberweisungsbetrag,
-      antwort_bareinkaufspreis, antwort_einstandspreis, konto_1,
-      zieleinkaufspreis, antwort_bezugskosten, antwort_bezugskostenWert,
-      USTWert, konto_2, betrag_2, konto_Skontobuchungssatz,
-      USTWertRuecksendung, zieleinkaufspreis_Ruecksendung,
-      berechnung_bruttoWertRuecksendung, werkstoffAnzeigeName
+      zufaelligerSatz,
+      angebotSatz,
+      ruecksendungSatz,
+      skontoSatz,
+      listeneinkaufspreis,
+      antwort_rabattWert,
+      antwort_rabattSatz,
+      antwort_skontoSatz,
+      antwort_skontoBetrag,
+      antwort_skontoBetrag_brutto,
+      antwort_vorsteuer_berichtigung,
+      antwort_ueberweisungsbetrag,
+      antwort_bareinkaufspreis,
+      antwort_einstandspreis,
+      konto_1,
+      zieleinkaufspreis,
+      antwort_bezugskosten,
+      antwort_bezugskostenWert,
+      USTWert,
+      konto_2,
+      betrag_2,
+      konto_Skontobuchungssatz,
+      USTWertRuecksendung,
+      zieleinkaufspreis_Ruecksendung,
+      berechnung_bruttoWertRuecksendung,
+      werkstoffAnzeigeName,
     ] = erstelleZufallssatz();
 
     // ── Leihverpackung: Beträge für die Rücksendung (anteilig zu den Bezugskosten) ──
-    const bezugskostenNumLV = parseFloat(parseNumericValue(antwort_bezugskostenWert)) || 0;
-    const vorsteuerRuecksendungLV = formatCurrency(roundToTwoDecimals(bezugskostenNumLV * UST_REGEL / 100));
-    const bruttoRuecksendungLV = formatCurrency(roundToTwoDecimals(bezugskostenNumLV * (1 + UST_REGEL / 100)));
+    const bezugskostenNumLV =
+      parseFloat(parseNumericValue(antwort_bezugskostenWert)) || 0;
+    const vorsteuerRuecksendungLV = formatCurrency(
+      roundToTwoDecimals((bezugskostenNumLV * UST_REGEL) / 100),
+    );
+    const bruttoRuecksendungLV = formatCurrency(
+      roundToTwoDecimals(bezugskostenNumLV * (1 + UST_REGEL / 100)),
+    );
     const mailTextRuecksendungLV = `Für die zurückgesendete Leihverpackung für die Lieferung von ${letzteWerkstoffArtEinkauf} schreiben wir Ihnen ${bruttoRuecksendungLV} brutto gut.`;
     const ruecksendungLVText = `${kunde} sendet die Leihverpackung an den Lieferer zurück`;
 
     // Aufgabe und Lösung für KI-Prompt merken
-const aufgabeText = (() => {
-  switch (getModus()) {
-    case 'einkaufskalkulation': return angebotSatz.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    case 'skontobuchungssatz':  return (zufaelligerSatz + ' ' + skontoSatz).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    case 'leihverpackung':      return (zufaelligerSatz + ' Bilde den Buchungssatz.').replace(/\s+/g, ' ').trim();
-    default:                    return zufaelligerSatz.replace(/\s+/g, ' ').trim();
-  }
-})();
+    const aufgabeText = (() => {
+      switch (getModus()) {
+        case "einkaufskalkulation":
+          return angebotSatz
+            .replace(/<[^>]+>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+        case "skontobuchungssatz":
+          return (zufaelligerSatz + " " + skontoSatz)
+            .replace(/<[^>]+>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+        case "leihverpackung":
+          return (zufaelligerSatz + " Bilde den Buchungssatz.")
+            .replace(/\s+/g, " ")
+            .trim();
+        default:
+          return zufaelligerSatz.replace(/\s+/g, " ").trim();
+      }
+    })();
 
-const loesungText = (() => {
-  const fmt = (v) => typeof v === 'string' ? v : String(v);
-  switch (getModus()) {
-    case 'einkaufskalkulation':
-      return [
-        `Listeneinkaufspreis: ${listeneinkaufspreis} (100 %)`,
-        `- Liefererrabatt: ${antwort_rabattWert} (${antwort_rabattSatz} %)`,
-        `= Zieleinkaufspreis: ${zieleinkaufspreis} (${100 - parseFloat(antwort_rabattSatz)} %)`,
-        `- Liefererskonto: ${antwort_skontoBetrag} (${antwort_skontoSatz} %)`,
-        `= Bareinkaufspreis: ${antwort_bareinkaufspreis}`,
-        `+ Bezugskosten: ${antwort_bezugskostenWert}`,
-        `= Einstandspreis: ${antwort_einstandspreis}`,
-        `Buchungssatz: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`,
-      ].join('\n');
-    case 'skontobuchungssatz':
-      return [
-        `Buchungssatz 1: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`,
-        `Buchungssatz 2: ${VE} ${betrag_2} an ${BK} ${antwort_ueberweisungsbetrag} / ${konto_Skontobuchungssatz} ${antwort_skontoBetrag} / ${VORST} ${antwort_vorsteuer_berichtigung}`,
-        `Skonto brutto: ${antwort_skontoBetrag_brutto}, Skonto netto: ${antwort_skontoBetrag}, Vorsteuerberichtigung: ${antwort_vorsteuer_berichtigung}`,
-        `Überweisungsbetrag: ${antwort_ueberweisungsbetrag}`,
-      ].join('\n');
-    default:
-      return `Buchungssatz: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`;
-  }
-})();
+    const loesungText = (() => {
+      const fmt = (v) => (typeof v === "string" ? v : String(v));
+      switch (getModus()) {
+        case "einkaufskalkulation":
+          return [
+            `Listeneinkaufspreis: ${listeneinkaufspreis} (100 %)`,
+            `- Liefererrabatt: ${antwort_rabattWert} (${antwort_rabattSatz} %)`,
+            `= Zieleinkaufspreis: ${zieleinkaufspreis} (${100 - parseFloat(antwort_rabattSatz)} %)`,
+            `- Liefererskonto: ${antwort_skontoBetrag} (${antwort_skontoSatz} %)`,
+            `= Bareinkaufspreis: ${antwort_bareinkaufspreis}`,
+            `+ Bezugskosten: ${antwort_bezugskostenWert}`,
+            `= Einstandspreis: ${antwort_einstandspreis}`,
+            `Buchungssatz: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`,
+          ].join("\n");
+        case "skontobuchungssatz":
+          return [
+            `Buchungssatz 1: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`,
+            `Buchungssatz 2: ${VE} ${betrag_2} an ${BK} ${antwort_ueberweisungsbetrag} / ${konto_Skontobuchungssatz} ${antwort_skontoBetrag} / ${VORST} ${antwort_vorsteuer_berichtigung}`,
+            `Skonto brutto: ${antwort_skontoBetrag_brutto}, Skonto netto: ${antwort_skontoBetrag}, Vorsteuerberichtigung: ${antwort_vorsteuer_berichtigung}`,
+            `Überweisungsbetrag: ${antwort_ueberweisungsbetrag}`,
+          ].join("\n");
+        default:
+          return `Buchungssatz: ${konto_1} ${zieleinkaufspreis} / ${VORST} ${USTWert} an ${konto_2} ${betrag_2}`;
+      }
+    })();
 
-letzteGenerierteGfListeEinkauf.push({
-  aufgabe: aufgabeText, loesung: loesungText,
-  label: getModus() === 'leihverpackung' ? 'a' : null,
-});
+    letzteGenerierteGfListeEinkauf.push({
+      aufgabe: aufgabeText,
+      loesung: loesungText,
+      label: getModus() === "leihverpackung" ? "a" : null,
+    });
 
+    const formattedSatz = zufaelligerSatz
+      .replace(/\s+/g, " ")
+      .replace(/\s(?=[.,;:!])/g, "");
+    const formattedAngebot = angebotSatz
+      .replace(/\s+/g, " ")
+      .replace(/\s(?=[.,;:!])/g, "");
+    const formattedSkonto = skontoSatz
+      .replace(/\s+/g, " ")
+      .replace(/\s(?=[.,;:!])/g, "");
+    const formattedRuecksendung = ruecksendungSatz
+      .replace(/\s+/g, " ")
+      .replace(/\s(?=[.,;:!])/g, "");
 
-    const formattedSatz = zufaelligerSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
-    const formattedAngebot = angebotSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
-    const formattedSkonto = skontoSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
-    const formattedRuecksendung = ruecksendungSatz.replace(/\s+/g, ' ').replace(/\s(?=[.,;:!])/g, '');
-
-    if (typeof moodleErfasseGeschaeftsfall === 'function') {
-  moodleErfasseGeschaeftsfall({
-    nr: currentI, modus: getModus(), mitBezugskosten: mitBezugskosten.checked,
-    satz: formattedSatz, angebotSatz: formattedAngebot, skontoSatz: formattedSkonto,
-    listeneinkaufspreis, rabattWert: antwort_rabattWert, rabattSatz: antwort_rabattSatz,
-    skontoProzent: antwort_skontoSatz, skontoBetrag: antwort_skontoBetrag,
-    skontoBrutto: antwort_skontoBetrag_brutto, vorsteuerBerichtigung: antwort_vorsteuer_berichtigung,
-    ueberweisung: antwort_ueberweisungsbetrag, bareinkaufspreis: antwort_bareinkaufspreis,
-    einstandspreis: antwort_einstandspreis, konto1: konto_1, zieleinkaufspreis,
-    kontoBezug: antwort_bezugskosten, bezugskosten: antwort_bezugskostenWert,
-    ust: USTWert, konto2: konto_2, brutto: betrag_2, kontoNachlass: konto_Skontobuchungssatz
-  });
-}
+    if (typeof moodleErfasseGeschaeftsfall === "function") {
+      moodleErfasseGeschaeftsfall({
+        nr: currentI,
+        modus: getModus(),
+        mitBezugskosten: mitBezugskosten.checked,
+        satz: formattedSatz,
+        angebotSatz: formattedAngebot,
+        skontoSatz: formattedSkonto,
+        listeneinkaufspreis,
+        rabattWert: antwort_rabattWert,
+        rabattSatz: antwort_rabattSatz,
+        skontoProzent: antwort_skontoSatz,
+        skontoBetrag: antwort_skontoBetrag,
+        skontoBrutto: antwort_skontoBetrag_brutto,
+        vorsteuerBerichtigung: antwort_vorsteuer_berichtigung,
+        ueberweisung: antwort_ueberweisungsbetrag,
+        bareinkaufspreis: antwort_bareinkaufspreis,
+        einstandspreis: antwort_einstandspreis,
+        konto1: konto_1,
+        zieleinkaufspreis,
+        kontoBezug: antwort_bezugskosten,
+        bezugskosten: antwort_bezugskostenWert,
+        ust: USTWert,
+        konto2: konto_2,
+        brutto: betrag_2,
+        kontoNachlass: konto_Skontobuchungssatz,
+      });
+    }
 
     // ── Aufgaben-Text (wird exportiert) ───────────────────────────────
     let aufgabeHtml = `<li>`;
 
     switch (getModus()) {
-      case 'einkaufskalkulation':
+      case "einkaufskalkulation":
         aufgabeHtml += `<div>${formattedAngebot}</div>`;
         break;
 
-      case 'buchungssatz':
+      case "buchungssatz":
         aufgabeHtml += `<div>${formattedSatz}</div>`;
 
         // ← Hier kommen die Rücksendungen – als bedingter Block innerhalb dieses Cases
@@ -1082,18 +1426,18 @@ letzteGenerierteGfListeEinkauf.push({
         }
         break;
 
-      case 'leihverpackung':
+      case "leihverpackung":
         aufgabeHtml += `<div>${formattedSatz}</div>`;
         aufgabeHtml += `<div style="margin: 8px 0 20px;"><ol style="list-style-type: lower-latin;"><li>Bilde den Buchungssatz.</li><li>Bilde den Buchungssatz: ${ruecksendungLVText}.</li></ol></div>`;
         break;
 
-      case 'skontobuchungssatz':
+      case "skontobuchungssatz":
         aufgabeHtml += `<div>${formattedSatz}</div>`;
         aufgabeHtml += `<div style="margin: 8px 0 20px;">${formattedSkonto}</div>`;
         break;
 
       default:
-        aufgabeHtml += `<div>${formattedSatz || formattedAngebot || 'Kein Text verfügbar'}</div>`;
+        aufgabeHtml += `<div>${formattedSatz || formattedAngebot || "Kein Text verfügbar"}</div>`;
         break;
     }
 
@@ -1101,53 +1445,66 @@ letzteGenerierteGfListeEinkauf.push({
     satzOutput += aufgabeHtml;
     // ── Button separat erzeugen (wird NICHT exportiert) ────────────────
 
-
     // Rechnungs-Button immer
-const geschaeftsfallDaten = {
-  listeneinkaufspreis: listeneinkaufspreis,
-  rabattSatz: antwort_rabattSatz,
-  bezugskostenWert: antwort_bezugskostenWert,
-  skontoSatz: antwort_skontoSatz,
-  werkstoff: werkstoffAnzeigeName,
-  werkstoffKuerzel: letzteWerkstoffKuerzelEinkauf,
-  konto_2: konto_2,         
-  bruttoBetrag: betrag_2,     
-  mailRuecksendung: mailTextRuecksendungLV,  
-};
+    const geschaeftsfallDaten = {
+      listeneinkaufspreis: listeneinkaufspreis,
+      rabattSatz: antwort_rabattSatz,
+      bezugskostenWert: antwort_bezugskostenWert,
+      skontoSatz: antwort_skontoSatz,
+      werkstoff: werkstoffAnzeigeName,
+      werkstoffKuerzel: letzteWerkstoffKuerzelEinkauf,
+      konto_2: konto_2,
+      bruttoBetrag: betrag_2,
+      mailRuecksendung: mailTextRuecksendungLV,
+    };
 
-    const buttonDiv = document.createElement('div');
-    buttonDiv.style.margin = '12px 0';
+    const buttonDiv = document.createElement("div");
+    buttonDiv.style.margin = "12px 0";
 
-    if (getModus() === 'leihverpackung') {
+    if (getModus() === "leihverpackung") {
       // 1a: Eingangsrechnung (Wareneingang inkl. Leihverpackung)
       // 1b: Mail vom Lieferer (Gutschrift für die zurückgesendete Leihverpackung)
       buttonDiv.innerHTML = `
-        ${erstelleRechnungButton(currentI, geschaeftsfallDaten, 'a')}
+        ${erstelleRechnungButton(currentI, geschaeftsfallDaten, "a")}
         <div style="margin-top:8px;"></div>
-        ${erstelleMailRuecksendungButton(currentI, geschaeftsfallDaten, 'b')}
+        ${erstelleMailRuecksendungButton(currentI, geschaeftsfallDaten, "b")}
     `;
-    } else if (getModus() === 'einkaufskalkulation') {
+    } else if (getModus() === "einkaufskalkulation") {
       // Angebot per Mail (vom Lieferer) + Angebot als Beleg + Eingangsrechnung –
       // beide Angebots-Belege gehören zu 1a
       buttonDiv.innerHTML = `
         ${erstelleAngebotMailButton(currentI, geschaeftsfallDaten)}
         <div style="margin-top:8px;"></div>
-        ${erstelleAngebotButton(currentI, geschaeftsfallDaten, 'a')}
+        ${erstelleAngebotButton(currentI, geschaeftsfallDaten, "a")}
         <div style="margin-top:8px;"></div>
-        ${erstelleRechnungButton(currentI, geschaeftsfallDaten, 'b')}
+        ${erstelleRechnungButton(currentI, geschaeftsfallDaten, "b")}
     `;
     } else {
       // Alle anderen Modi → nur eine Rechnung (wie bisher)
-      const buttonHtml = erstelleGeschaeftsfallButton(currentI, geschaeftsfallDaten, false);
+      const buttonHtml = erstelleGeschaeftsfallButton(
+        currentI,
+        geschaeftsfallDaten,
+        false,
+      );
       buttonDiv.innerHTML = buttonHtml;
     }
 
     // Gutschrift-Button (Rücksendung) – bleibt wie bisher
-    if (mitRuecksendung.checked && currentI > 0 && currentI < anzahl && konto_2 === VE && getModus() === 'buchungssatz') {
+    if (
+      mitRuecksendung.checked &&
+      currentI > 0 &&
+      currentI < anzahl &&
+      konto_2 === VE &&
+      getModus() === "buchungssatz"
+    ) {
       const gutschriftNummer = currentI + 1;
-      const gutschriftButtonHtml = erstelleGeschaeftsfallButton(gutschriftNummer, geschaeftsfallDaten, true);
-      const gutschriftDiv = document.createElement('div');
-      gutschriftDiv.style.margin = '8px 0 16px 0';
+      const gutschriftButtonHtml = erstelleGeschaeftsfallButton(
+        gutschriftNummer,
+        geschaeftsfallDaten,
+        true,
+      );
+      const gutschriftDiv = document.createElement("div");
+      gutschriftDiv.style.margin = "8px 0 16px 0";
       gutschriftDiv.innerHTML = gutschriftButtonHtml;
       buttonColumn.appendChild(gutschriftDiv);
 
@@ -1161,10 +1518,11 @@ const geschaeftsfallDaten = {
 
     // ── Lösung / Antwort (wird exportiert) ─────────────────────────────
     // Lösung 1a (Leihverpackung) bzw. 1 (andere Modi)
-    const loesungsNummer = getModus() === 'leihverpackung' ? `${parseInt(i)}a.` : `${parseInt(i)}.`;
+    const loesungsNummer =
+      getModus() === "leihverpackung" ? `${parseInt(i)}a.` : `${parseInt(i)}.`;
     antwortOutput += `<div style="margin-top: 1.5em;"><strong>${loesungsNummer}</strong><br>`;
 
-    if (getModus() === 'einkaufskalkulation') {
+    if (getModus() === "einkaufskalkulation") {
       antwortOutput += `
         <table style="border-collapse: collapse; white-space:nowrap; width:350px; margin: 0 0">
           <tbody>
@@ -1212,7 +1570,7 @@ const geschaeftsfallDaten = {
         </tbody>
       </table><br>`;
 
-    if (getModus() === 'skontobuchungssatz') {
+    if (getModus() === "skontobuchungssatz") {
       antwortOutput += `
         <br><b>Nebenrechnung:</b><br>
         <table style="border-collapse: collapse; white-space:nowrap; width:350px; margin: 0 0">
@@ -1259,26 +1617,37 @@ const geschaeftsfallDaten = {
     antwortOutput += `</div>`;
 
     // ── Leihverpackung: Lösung 1b (Rücksendung nur der Verpackung) ───────
-    if (getModus() === 'leihverpackung') {
+    if (getModus() === "leihverpackung") {
       // KI-Prompt: Rücksendung als zweite Teilaufgabe erfassen
       letzteGenerierteGfListeEinkauf.push({
         aufgabe: `Bilde den Buchungssatz: ${ruecksendungLVText}.`,
         loesung: `Buchungssatz Rücksendung Leihverpackung:\n${konto_2} ${bruttoRuecksendungLV} an ${antwort_bezugskosten} ${antwort_bezugskostenWert} / ${VORST} ${vorsteuerRuecksendungLV}`,
-        label: 'b',
+        label: "b",
       });
 
-      if (typeof moodleFragen !== 'undefined') {
-        const nrLV = String(currentI).padStart(2, '0');
+      if (typeof moodleFragen !== "undefined") {
+        const nrLV = String(currentI).padStart(2, "0");
         moodleFragen.push({
           name: `Leihverpackung_${nrLV}`,
-          text: '<p>Bilde den Buchungssatz mit Kontennummern.</p>' +
-                `<p>Ausgangsfall (bereits gebucht): ${formattedSatz}</p>` +
-                `<p>Es wird nur die Leihverpackung zurückgesendet – der Lieferer schreibt die bezahlten Bezugskosten anteilig brutto gut.</p>` +
-                `<p>Bilde den Buchungssatz zur Rücksendung der Leihverpackung.</p>`,
-          feedback: '',
+          text:
+            "<p>Bilde den Buchungssatz mit Kontennummern.</p>" +
+            `<p>Ausgangsfall (bereits gebucht): ${formattedSatz}</p>` +
+            `<p>Es wird nur die Leihverpackung zurückgesendet – der Lieferer schreibt die bezahlten Bezugskosten anteilig brutto gut.</p>` +
+            `<p>Bilde den Buchungssatz zur Rücksendung der Leihverpackung.</p>`,
+          feedback: "",
           zeilen: [
-            { d: konto_2, da: moodleBetrag(bruttoRuecksendungLV), c: antwort_bezugskosten, ca: moodleBetrag(antwort_bezugskostenWert) },
-            { d: '', da: 0, c: VORST, ca: moodleBetrag(vorsteuerRuecksendungLV) },
+            {
+              d: konto_2,
+              da: moodleBetrag(bruttoRuecksendungLV),
+              c: antwort_bezugskosten,
+              ca: moodleBetrag(antwort_bezugskostenWert),
+            },
+            {
+              d: "",
+              da: 0,
+              c: VORST,
+              ca: moodleBetrag(vorsteuerRuecksendungLV),
+            },
           ],
         });
       }
@@ -1304,22 +1673,33 @@ const geschaeftsfallDaten = {
         </table><br>`;
     }
 
-if (mitRuecksendung.checked && i > 0 && i < anzahl && konto_2 === VE && getModus() === 'buchungssatz') {
-    letzteGenerierteGfListeEinkauf.push({
-    aufgabe: `${formattedRuecksendung} aus Geschäftsfall ${currentI} zurück und erhält dafür eine Gutschrift.`,
-    loesung: `Buchungssatz Rücksendung:\n${konto_2} ${berechnung_bruttoWertRuecksendung} an ${VORST} ${USTWertRuecksendung} / ${konto_1} ${zieleinkaufspreis_Ruecksendung}`,
-  });
+    if (
+      mitRuecksendung.checked &&
+      i > 0 &&
+      i < anzahl &&
+      konto_2 === VE &&
+      getModus() === "buchungssatz"
+    ) {
+      letzteGenerierteGfListeEinkauf.push({
+        aufgabe: `${formattedRuecksendung} aus Geschäftsfall ${currentI} zurück und erhält dafür eine Gutschrift.`,
+        loesung: `Buchungssatz Rücksendung:\n${konto_2} ${berechnung_bruttoWertRuecksendung} an ${VORST} ${USTWertRuecksendung} / ${konto_1} ${zieleinkaufspreis_Ruecksendung}`,
+      });
 
-if (typeof moodleErfasseRuecksendung === 'function') {
-    moodleErfasseRuecksendung({
-      nr: currentI, ausgangssatz: formattedSatz, text: formattedRuecksendung,
-      konto1: konto_1, konto2: konto_2, brutto: berechnung_bruttoWertRuecksendung,
-      ust: USTWertRuecksendung, netto: zieleinkaufspreis_Ruecksendung
-    });
-  }
+      if (typeof moodleErfasseRuecksendung === "function") {
+        moodleErfasseRuecksendung({
+          nr: currentI,
+          ausgangssatz: formattedSatz,
+          text: formattedRuecksendung,
+          konto1: konto_1,
+          konto2: konto_2,
+          brutto: berechnung_bruttoWertRuecksendung,
+          ust: USTWertRuecksendung,
+          netto: zieleinkaufspreis_Ruecksendung,
+        });
+      }
 
-  i++;
-  // ... rest des Rücksendungs-HTML-Blocks bleibt unverändert
+      i++;
+      // ... rest des Rücksendungs-HTML-Blocks bleibt unverändert
       antwortOutput += `<strong>${parseInt(i)}.</strong>`;
       antwortOutput += `<table style="border: 1px solid #ccc;white-space:nowrap;background-color:#fff;font-family:courier;min-width:500px;margin:0 0;margin-bottom:6px;">`;
       antwortOutput += `<tbody>`;
@@ -1345,36 +1725,34 @@ if (typeof moodleErfasseRuecksendung === 'function') {
   modusUeberschreibung = null;
   mitBezugskosten.checked = origBezug;
   mitRuecksendung.checked = origRueck;
-  satzOutput += '</ol>'; // Ende der nummerierten Liste für Sätze
+  satzOutput += "</ol>"; // Ende der nummerierten Liste für Sätze
 
   container.innerHTML = satzOutput + antwortOutput;
-  const vorschau = document.getElementById('kiPromptVorschau');
-if (vorschau && vorschau.style.display !== 'none') {
-  vorschau.textContent = erstelleKiPromptText();
+  const vorschau = document.getElementById("kiPromptVorschau");
+  if (vorschau && vorschau.style.display !== "none") {
+    vorschau.textContent = erstelleKiPromptText();
+  }
 }
-}
-
-
 
 function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
+  const myCompanyName = localStorage.getItem("myCompany");
 
   if (!myCompanyName) return;
 
   // Finde alle Dropdowns mit class="meinUnternehmen"
-  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
+  const dropdowns = document.querySelectorAll("select.meinUnternehmen");
 
-  dropdowns.forEach(dropdown => {
+  dropdowns.forEach((dropdown) => {
     // Suche nach der passenden Option
     const options = Array.from(dropdown.options);
-    const matchingOption = options.find(opt => opt.value === myCompanyName);
+    const matchingOption = options.find((opt) => opt.value === myCompanyName);
 
     if (matchingOption) {
       dropdown.value = myCompanyName;
       fillBezeichnungsfelderEinkauf(myCompanyName);
 
       // Trigger change event falls andere Scripts darauf reagieren
-      const event = new Event('change', { bubbles: true });
+      const event = new Event("change", { bubbles: true });
       dropdown.dispatchEvent(event);
 
       console.log(`"${myCompanyName}" automatisch in Dropdown ausgewählt`);
@@ -1388,7 +1766,8 @@ let letzteGenerierteGfListeEinkauf = [];
 function erstelleKiPromptText() {
   let aufgabenUndLoesungen = "";
   if (letzteGenerierteGfListeEinkauf.length === 0) {
-    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+    aufgabenUndLoesungen =
+      "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
   } else {
     aufgabenUndLoesungen = (() => {
       // Durchlaufende Geschäftsfall-Nummerierung: Teilaufgaben (label "a"/"b",
@@ -1398,8 +1777,8 @@ function erstelleKiPromptText() {
       const teile = [];
       for (const eintrag of letzteGenerierteGfListeEinkauf) {
         let nr;
-        if (eintrag.label === 'a' || eintrag.label === 'b') {
-          if (eintrag.label === 'a' || !imPaar) gfNummer++;
+        if (eintrag.label === "a" || eintrag.label === "b") {
+          if (eintrag.label === "a" || !imPaar) gfNummer++;
           imPaar = true;
           nr = `${gfNummer}${eintrag.label}`;
         } else {
@@ -1407,17 +1786,22 @@ function erstelleKiPromptText() {
           imPaar = false;
           nr = String(gfNummer);
         }
-        teile.push(`Aufgabe ${nr}:\n${eintrag.aufgabe}\n\nMusterlösung ${nr}:\n${eintrag.loesung}`);
+        teile.push(
+          `Aufgabe ${nr}:\n${eintrag.aufgabe}\n\nMusterlösung ${nr}:\n${eintrag.loesung}`,
+        );
       }
       return teile.length ? teile.join("\n\n---\n\n") : "";
     })();
     if (!aufgabenUndLoesungen) {
-      aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+      aufgabenUndLoesungen =
+        "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
     }
   }
-  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+  return KI_ASSISTENT_PROMPT.replace(
+    "###AUFGABEN und LÖSUNGEN###",
+    aufgabenUndLoesungen,
+  );
 }
-
 
 // ============================================================================
 // KI-ASSISTENT PROMPT – EINKAUF (Buchungssatz, Einkaufskalkulation, Skontobuchungssatz)
@@ -1724,41 +2108,44 @@ Gib ganz am Ende den Buchungssatz mit einer Tabellenstruktur in html aus, Beispi
 
 `;
 
-
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(erstelleKiPromptText()).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(err => {
-    console.error('Fehler beim Kopieren:', err);
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(erstelleKiPromptText())
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch((err) => {
+      console.error("Fehler beim Kopieren:", err);
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
+    vorschau.style.display = "block";
     vorschau.textContent = erstelleKiPromptText(); // ← NEU
-    btn.textContent = 'Vorschau ausblenden ▲';
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
-
 // Prompt-Text in Vorschau einfügen (Aufgaben werden event-basiert gestartet)
-document.addEventListener('DOMContentLoaded', function () {
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+document.addEventListener("DOMContentLoaded", function () {
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) {
     vorschauEl.textContent = erstelleKiPromptText();
   }

@@ -1,127 +1,214 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Zinsformel (Z = K × p × t) – Tool &amp; Zufallsaufgaben | meinbwr.de BwR
+    </title>
+    <meta
+      name="description"
+      content="Kostenloses BwR-Tool: Zinsformel (Z = K × p × t) mit zufälligen Aufgaben zur Zinsrechnung. Ideal für Klasse 9/10 Realschule Bayern."
+    />
+    <link rel="canonical" href="https://www.meinbwr.de/zinsformel.html" />
+    <meta name="robots" content="index, follow" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zinsformel (Z = K × p × t) – Tool &amp; Zufallsaufgaben | meinbwr.de BwR</title>
-  <meta name="description" content="Kostenloses BwR-Tool: Zinsformel (Z = K × p × t) mit zufälligen Aufgaben zur Zinsrechnung. Ideal für Klasse 9/10 Realschule Bayern.">
-  <link rel="canonical" href="https://www.meinbwr.de/zinsformel.html">
-  <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Zinsformel (Z = K × p × t) – Tool &amp; Zufallsaufgaben | meinbwr.de"
+    />
+    <meta
+      property="og:description"
+      content="Kostenloses BwR-Tool: Zinsformel (Z = K × p × t) mit zufälligen Aufgaben zur Zinsrechnung. Ideal für Klasse 9/10 Realschule Bayern."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.meinbwr.de/zinsformel.html" />
+    <meta
+      property="og:site_name"
+      content="meinbwr.de – BwR Realschule Bayern"
+    />
+    <meta property="og:locale" content="de_DE" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Zinsformel (Z = K × p × t) – Tool &amp; Zufallsaufgaben | meinbwr.de">
-  <meta property="og:description" content="Kostenloses BwR-Tool: Zinsformel (Z = K × p × t) mit zufälligen Aufgaben zur Zinsrechnung. Ideal für Klasse 9/10 Realschule Bayern.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.meinbwr.de/zinsformel.html">
-  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
-  <meta property="og:locale" content="de_DE">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Zinsformel (Z = K × p × t) – Tool &amp; Zufallsaufgaben | meinbwr.de"
+    />
+    <meta
+      name="twitter:description"
+      content="Kostenloses BwR-Tool: Zinsformel (Z = K × p × t) mit zufälligen Aufgaben zur Zinsrechnung."
+    />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Zinsformel (Z = K × p × t) – Tool &amp; Zufallsaufgaben | meinbwr.de">
-  <meta name="twitter:description" content="Kostenloses BwR-Tool: Zinsformel (Z = K × p × t) mit zufälligen Aufgaben zur Zinsrechnung.">
+    <!-- Theme -->
+    <meta name="theme-color" content="#2c5f2d" />
+    <meta name="color-scheme" content="light" />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#2c5f2d">
-  <meta name="color-scheme" content="light">
+    <!-- Strukturierte Daten -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Zinsformel – Tool &amp; Zufallsaufgaben",
+        "description": "Kostenloses BwR-Tool: Zinsformel (Z = K × p × t) mit zufälligen Aufgaben zur Zinsrechnung. Ideal für Klasse 9/10 Realschule Bayern.",
+        "url": "https://www.meinbwr.de/zinsformel.html",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "meinbwr.de – BwR Realschule Bayern",
+          "url": "https://www.meinbwr.de/"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "BwR 9",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Zinsformel",
+              "item": "https://www.meinbwr.de/zinsformel.html"
+            }
+          ]
+        }
+      }
+    </script>
 
-  <!-- Strukturierte Daten -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Zinsformel – Tool &amp; Zufallsaufgaben",
-    "description": "Kostenloses BwR-Tool: Zinsformel (Z = K × p × t) mit zufälligen Aufgaben zur Zinsrechnung. Ideal für Klasse 9/10 Realschule Bayern.",
-    "url": "https://www.meinbwr.de/zinsformel.html",
-    "inLanguage": "de-DE",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "meinbwr.de – BwR Realschule Bayern",
-      "url": "https://www.meinbwr.de/"
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 2, "name": "BwR 9", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 3, "name": "Zinsformel", "item": "https://www.meinbwr.de/zinsformel.html" }
-      ]
-    }
-  }
-  </script>
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <script src="js/libraries/html2canvas.min.js"></script>
+    <script src="js/libraries/clipboard.min.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/utils.js?v=14"></script>
+  </head>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <script src="js/libraries/html2canvas.min.js"></script>
-  <script src="js/libraries/clipboard.min.js"></script>
-  <script src="js/menu.js"></script>
-  <script src="js/utils.js?v=14"></script>
-</head>
-
-<body>
+  <body>
     <main>
-        <div w3-include-html="navigation.html"></div>
-        <h2>Zinsformel</h2>
-        <div id="zinsformelForm" class="box">
-            <p>Das ist eine einfache MathML-Vorlage für die Zinsformel. Der Code kann direkt in HTML, also zum Beispiel
-                in Moodle in den TinyMCE-Editor (Quellcode-Ansicht) eingefügt werden. Die Formeln sind geeignet für die
-                Aktivität Test in Moodle, zum Beispiel für den Lückentext (Cloze).</p>
-            <br><label for="variable">Variable auswählen:</label>
-            <select id="variable">
-                <option value="Z">Z</option>
-                <option value="K">K</option>
-                <option value="p">p</option>
-                <option value="t">t</option>
-            </select><br>
-            <label>
-                <input type="checkbox" id="toggleSecondLine" data-on-change='[{"fn":"addOrRemoveSecondLine","args":[]}]'> Folgezeile
-            </label><br><br>
-                        <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"umstellen","args":[]}]'>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"/></svg>
-              Daten übernehmen
-            </button>
-        </div>
-        </div>
+      <div w3-include-html="navigation.html"></div>
+      <h2>Zinsformel</h2>
+      <div id="zinsformelForm" class="box">
+        <p>
+          Das ist eine einfache MathML-Vorlage für die Zinsformel. Der Code kann
+          direkt in HTML, also zum Beispiel in Moodle in den TinyMCE-Editor
+          (Quellcode-Ansicht) eingefügt werden. Die Formeln sind geeignet für
+          die Aktivität Test in Moodle, zum Beispiel für den Lückentext (Cloze).
+        </p>
+        <br /><label for="variable">Variable auswählen:</label>
+        <select id="variable">
+          <option value="Z">Z</option>
+          <option value="K">K</option>
+          <option value="p">p</option>
+          <option value="t">t</option></select
+        ><br />
+        <label>
+          <input
+            type="checkbox"
+            id="toggleSecondLine"
+            data-on-change='[{"fn":"addOrRemoveSecondLine","args":[]}]'
+          />
+          Folgezeile </label
+        ><br /><br />
+        <button
+          type="button"
+          class="btn-uebernehmen"
+          data-on-click='[{"fn":"umstellen","args":[]}]'
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 640 640"
+            fill="currentColor"
+            height="16"
+            width="16"
+            aria-hidden="true"
+          >
+            <path
+              d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"
+            />
+          </svg>
+          Daten übernehmen
+        </button>
+      </div>
 
-        <div id="zinsformelButtonContainer" style="margin:0 auto;">
-            <div>
-                <div id="zinsformelContainer"
-                    style="margin: 0 auto;margin-bottom: 30px;margin-top: 20px;padding: 30px;border: 1px solid #ccc">
-                    <math xmlns="http://www.w3.org/1998/Math/MathML" displaystyle="true"
-                        style="font-size:1.5rem; color: darkblue;overflow: hidden;">
-                        <mi>Z</mi>
-                        <mo>=</mo>
-                        <mfrac>
-                            <mrow>
-                                <mi>K</mi>
-                                <mo>&#x22C5;</mo>
-                                <mi>p</mi>
-                                <mo>&#x22C5;</mo>
-                                <mi>t</mi>
-                            </mrow>
-                            <mrow>
-                                <mn>100</mn>
-                                <mo>&#x22C5;</mo> <!-- Malpunkt -->
-                                <mn>360</mn>
-                            </mrow>
-                        </mfrac>
-                    </math>
-                </div>
-            </div>
-            <div class="exportButtons">
-                <button class="card-btn" type="button" data-on-click='[{"fn":"zinsformelHerunterladen","args":[]}]' data-tooltip="" aria-label="" title="">HTML</button>
-                <button class="card-btn" type="button" data-on-click='[{"fn":"zinsformelKopiereInZwischenablage","args":[]}]' data-tooltip="" aria-label="" title="">Zwischenablage</button>
-            </div><br>
+      <div id="zinsformelButtonContainer" style="margin: 0 auto">
+        <div>
+          <div
+            id="zinsformelContainer"
+            style="
+              margin: 0 auto;
+              margin-bottom: 30px;
+              margin-top: 20px;
+              padding: 30px;
+              border: 1px solid #ccc;
+            "
+          >
+            <math
+              xmlns="http://www.w3.org/1998/Math/MathML"
+              displaystyle="true"
+              style="font-size: 1.5rem; color: darkblue; overflow: hidden"
+            >
+              <mi>Z</mi>
+              <mo>=</mo>
+              <mfrac>
+                <mrow>
+                  <mi>K</mi>
+                  <mo>&#x22C5;</mo>
+                  <mi>p</mi>
+                  <mo>&#x22C5;</mo>
+                  <mi>t</mi>
+                </mrow>
+                <mrow>
+                  <mn>100</mn>
+                  <mo>&#x22C5;</mo>
+                  <!-- Malpunkt -->
+                  <mn>360</mn>
+                </mrow>
+              </mfrac>
+            </math>
+          </div>
         </div>
-
-
+        <div class="exportButtons">
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"zinsformelHerunterladen","args":[]}]'
+            data-tooltip=""
+            aria-label=""
+            title=""
+          >
+            HTML
+          </button>
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"zinsformelKopiereInZwischenablage","args":[]}]'
+            data-tooltip=""
+            aria-label=""
+            title=""
+          >
+            Zwischenablage
+          </button>
+        </div>
+        <br />
+      </div>
     </main>
     <script src="js/zinsformel.js"></script>
 
     <div w3-include-html="footer.html"></div>
-    </body>
-
+  </body>
 </html>

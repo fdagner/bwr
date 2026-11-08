@@ -1,4 +1,3 @@
-
 function generateRandomSaldo(min, max, round = 100) {
   return Math.round((Math.random() * (max - min) + min) / round) * round;
 }
@@ -16,24 +15,24 @@ function summe(arr) {
 // der zentrale Kontenplan (js/utils.js, kontoLabel()). Die Konstanten unten
 // sind die abgeleiteten Bezeichner (z. B. BK = '2800 BK').
 
-const GR   = kontoLabel('0500');   // Grundstücke
-const BVG  = kontoLabel('0530');   // Betriebs- und Verwaltungsgebäude
-const MA   = kontoLabel('0700');   // Maschinen und Anlagen
-const FP   = kontoLabel('0840');   // Fuhrpark
-const BM   = kontoLabel('0860');   // Büromaschinen
-const BGA  = kontoLabel('0870');   // Büromöbel und Geschäftsausstattung
-const FO   = kontoLabel('2400');   // Forderungen aus LL
-const BK   = kontoLabel('2800');   // Bank
-const KA   = kontoLabel('2880');   // Kasse
-const KBKV = kontoLabel('4200');   // Kurzfristige Bankverbindlichkeiten
-const LBKV = kontoLabel('4250');   // Langfristige Bankverbindlichkeiten
-const VE   = kontoLabel('4400');   // Verbindlichkeiten aus LL
-const VORST = kontoLabel('2600');  // Vorsteuer
-const UST  = kontoLabel('4800');   // Umsatzsteuer
-const UEFE = kontoLabel('5000');   // Umsatzerlöse für eigene Erzeugnisse
-const EK   = kontoLabel('3000');   // Eigenkapital
-const GUV  = kontoLabel('8020');   // Gewinn- und Verlustkonto
-const SBK  = kontoLabel('8010');   // Schlussbilanzkonto
+const GR = kontoLabel("0500"); // Grundstücke
+const BVG = kontoLabel("0530"); // Betriebs- und Verwaltungsgebäude
+const MA = kontoLabel("0700"); // Maschinen und Anlagen
+const FP = kontoLabel("0840"); // Fuhrpark
+const BM = kontoLabel("0860"); // Büromaschinen
+const BGA = kontoLabel("0870"); // Büromöbel und Geschäftsausstattung
+const FO = kontoLabel("2400"); // Forderungen aus LL
+const BK = kontoLabel("2800"); // Bank
+const KA = kontoLabel("2880"); // Kasse
+const KBKV = kontoLabel("4200"); // Kurzfristige Bankverbindlichkeiten
+const LBKV = kontoLabel("4250"); // Langfristige Bankverbindlichkeiten
+const VE = kontoLabel("4400"); // Verbindlichkeiten aus LL
+const VORST = kontoLabel("2600"); // Vorsteuer
+const UST = kontoLabel("4800"); // Umsatzsteuer
+const UEFE = kontoLabel("5000"); // Umsatzerlöse für eigene Erzeugnisse
+const EK = kontoLabel("3000"); // Eigenkapital
+const GUV = kontoLabel("8020"); // Gewinn- und Verlustkonto
+const SBK = kontoLabel("8010"); // Schlussbilanzkonto
 
 const AKTIV_REIHE = [GR, BVG, MA, FP, BM, BGA, FO, BK, KA];
 const BANK_PASSIV = [KBKV, LBKV];
@@ -41,29 +40,38 @@ const BANK_PASSIV = [KBKV, LBKV];
 // Anlagekonten: AB-Rahmen [min, max, Rundung]; optional kauf = Zukauf auf Ziel (VE) [min, max, Rundung]
 // Ohne kauf (GR, BVG, MA, FP) steht nur der AB im Konto.
 const ANLAGEN = {
-  [GR]:  { ab: [150000, 400000, 1000] },
+  [GR]: { ab: [150000, 400000, 1000] },
   [BVG]: { ab: [100000, 300000, 1000] },
-  [MA]:  { ab: [100000, 500000, 1000] },
-  [FP]:  { ab: [30000,  150000, 1000] },
-  [BM]:  { ab: [5000,   25000,  1000], kauf: [1000, 20000, 1000] },
-  [BGA]: { ab: [20000,  90000,  1000], kauf: [1000, 20000, 1000] },
+  [MA]: { ab: [100000, 500000, 1000] },
+  [FP]: { ab: [30000, 150000, 1000] },
+  [BM]: { ab: [5000, 25000, 1000], kauf: [1000, 20000, 1000] },
+  [BGA]: { ab: [20000, 90000, 1000], kauf: [1000, 20000, 1000] },
 };
 
 // Aufwandskonten, die im Haben von VE stehen (je eine Buchung, 1.000–5.000 €)
-const VE_AUFWAND_KONTEN = [kontoLabel('6000'), kontoLabel('6020')];
+const VE_AUFWAND_KONTEN = [kontoLabel("6000"), kontoLabel("6020")];
 
 // Umsatzsteuersatz; Beträge in 2400 FO und 4400 VE sind Bruttobeträge
 const UST_SATZ = 19;
-function mitUst(netto)    { return Math.round(netto * (100 + UST_SATZ)) / 100; }
-function ustBetrag(netto) { return Math.round(netto * UST_SATZ) / 100; }
+function mitUst(netto) {
+  return Math.round(netto * (100 + UST_SATZ)) / 100;
+}
+function ustBetrag(netto) {
+  return Math.round(netto * UST_SATZ) / 100;
+}
 
 function chkId(nr) {
-  return 'chk' + nr.split(' ')[0];
+  return "chk" + nr.split(" ")[0];
 }
 
 function getAusgewaehlteKonten() {
-  const aktiv = AKTIV_REIHE.filter(nr => nr === FO || nr === BK || document.getElementById(chkId(nr))?.checked);
-  const passiv = BANK_PASSIV.filter(nr => document.getElementById(chkId(nr))?.checked);
+  const aktiv = AKTIV_REIHE.filter(
+    (nr) =>
+      nr === FO || nr === BK || document.getElementById(chkId(nr))?.checked,
+  );
+  const passiv = BANK_PASSIV.filter(
+    (nr) => document.getElementById(chkId(nr))?.checked,
+  );
   return { aktiv, passiv };
 }
 
@@ -76,13 +84,14 @@ function verteileBetrag(nrListe, gesamt, rund) {
     const werte = {};
     let rest = Math.round(gesamt / rund) * rund;
     nrListe.forEach((nr, i) => {
-      const b = (i === nrListe.length - 1)
-        ? rest
-        : Math.round(gesamt * gew[i] / sumG / rund) * rund;
+      const b =
+        i === nrListe.length - 1
+          ? rest
+          : Math.round((gesamt * gew[i]) / sumG / rund) * rund;
       rest -= b;
       werte[nr] = b;
     });
-    if (Object.values(werte).every(b => b >= 5000)) return werte;
+    if (Object.values(werte).every((b) => b >= 5000)) return werte;
   }
   return null;
 }
@@ -91,45 +100,53 @@ function neuesKonto(istAktiv) {
   return { istAktiv, soll: [], haben: [] };
 }
 
-function aufTausend(x) { return Math.ceil(x / 1000) * 1000; }
+function aufTausend(x) {
+  return Math.ceil(x / 1000) * 1000;
+}
 
 function versucheAufgabe(aktivNr, passivNr) {
   // FO und BK sind immer dabei (Umsatzsteuer, Zahllast, Zahlungen)
   if (!aktivNr.includes(FO) || !aktivNr.includes(BK)) return null;
   const k = {};
 
-  const veAufwand = [];  // Haben in VE (brutto): Werkstoffeinkäufe
-  const veHaben   = [];  // Haben in VE (brutto): Anlagekäufe
-  const veSoll    = [];  // Soll in VE: Zahlungen per BK
-  const bkSoll    = [];  // Soll in BK: Zahlungen von Kunden
+  const veAufwand = []; // Haben in VE (brutto): Werkstoffeinkäufe
+  const veHaben = []; // Haben in VE (brutto): Anlagekäufe
+  const veSoll = []; // Soll in VE: Zahlungen per BK
+  const bkSoll = []; // Soll in BK: Zahlungen von Kunden
   let vorsteuer = 0;
   let umsatzsteuer = 0;
-  let aufwandNetto = 0;  // AWR + AWH (netto)
-  let uefeNetto = 0;     // UEFE (netto)
+  let aufwandNetto = 0; // AWR + AWH (netto)
+  let uefeNetto = 0; // UEFE (netto)
 
   // Zusatzbuchungen mit BK
-  const lbkvZugang = passivNr.includes(LBKV) ? generateRandomSaldo(10000, 50000, 1000) : 0; // Darlehensaufnahme
-  const kaAbhebung = aktivNr.includes(KA) ? generateRandomSaldo(500, 2000, 500) : 0;        // Barabhebung
+  const lbkvZugang = passivNr.includes(LBKV)
+    ? generateRandomSaldo(10000, 50000, 1000)
+    : 0; // Darlehensaufnahme
+  const kaAbhebung = aktivNr.includes(KA)
+    ? generateRandomSaldo(500, 2000, 500)
+    : 0; // Barabhebung
 
   // Anlagekonten: AB (+ bei BM/BGA 1–2 Käufe auf Ziel, netto im Konto, brutto in VE)
-  aktivNr.filter(nr => ANLAGEN[nr]).forEach(nr => {
-    const c = ANLAGEN[nr];
-    const konto = neuesKonto(true);
-    konto.soll.push({ label: 'AB', betrag: generateRandomSaldo(...c.ab) });
-    if (c.kauf) {
-      const n = anzahl12();
-      for (let i = 0; i < n; i++) {
-        const netto = generateRandomSaldo(...c.kauf);
-        konto.soll.push({ label: VE, betrag: netto });
-        veHaben.push({ label: `${nr}, ${VORST}`, betrag: mitUst(netto) });
-        vorsteuer += ustBetrag(netto);
+  aktivNr
+    .filter((nr) => ANLAGEN[nr])
+    .forEach((nr) => {
+      const c = ANLAGEN[nr];
+      const konto = neuesKonto(true);
+      konto.soll.push({ label: "AB", betrag: generateRandomSaldo(...c.ab) });
+      if (c.kauf) {
+        const n = anzahl12();
+        for (let i = 0; i < n; i++) {
+          const netto = generateRandomSaldo(...c.kauf);
+          konto.soll.push({ label: VE, betrag: netto });
+          veHaben.push({ label: `${nr}, ${VORST}`, betrag: mitUst(netto) });
+          vorsteuer += ustBetrag(netto);
+        }
       }
-    }
-    k[nr] = konto;
-  });
+      k[nr] = konto;
+    });
 
   // Werkstoffeinkäufe auf Ziel (AWR, AWH): brutto in VE
-  VE_AUFWAND_KONTEN.forEach(nr => {
+  VE_AUFWAND_KONTEN.forEach((nr) => {
     const netto = generateRandomSaldo(1000, 4000, 1000);
     veAufwand.push({ label: `${nr}, ${VORST}`, betrag: mitUst(netto) });
     vorsteuer += ustBetrag(netto);
@@ -141,20 +158,27 @@ function versucheAufgabe(aktivNr, passivNr) {
     const konto = neuesKonto(true);
     let netto = [];
     const nU = anzahl12();
-    for (let i = 0; i < nU; i++) netto.push(generateRandomSaldo(5000, 15000, 1000));
+    for (let i = 0; i < nU; i++)
+      netto.push(generateRandomSaldo(5000, 15000, 1000));
     const summeNetto = () => netto.reduce((s, b) => s + b, 0);
     // UEFE muss größer sein als AWR+AWH (Gewinn) und UST größer als VORST (Zahllast) → ggf. hochskalieren
-    const nettoMin = Math.max(aufwandNetto + 2000, Math.ceil((vorsteuer + 1000) / UST_SATZ) * 100);
+    const nettoMin = Math.max(
+      aufwandNetto + 2000,
+      Math.ceil((vorsteuer + 1000) / UST_SATZ) * 100,
+    );
     if (summeNetto() < nettoMin) {
       const ziel = aufTausend(nettoMin) + generateRandomSaldo(1000, 5000, 1000);
       const faktor = ziel / summeNetto();
-      netto = netto.map(b => Math.round(b * faktor / 1000) * 1000);
+      netto = netto.map((b) => Math.round((b * faktor) / 1000) * 1000);
       netto[netto.length - 1] += ziel - summeNetto();
     }
     uefeNetto = summeNetto();
     umsatzsteuer = netto.reduce((s, b) => s + ustBetrag(b), 0);
     if (umsatzsteuer <= vorsteuer || uefeNetto <= aufwandNetto) return null;
-    const uefe = netto.map(b => ({ label: `${UEFE}, ${UST}`, betrag: mitUst(b) }));
+    const uefe = netto.map((b) => ({
+      label: `${UEFE}, ${UST}`,
+      betrag: mitUst(b),
+    }));
 
     const zahlungen = [];
     const nZ = anzahl12();
@@ -163,8 +187,10 @@ function versucheAufgabe(aktivNr, passivNr) {
       zahlungen.push({ label: BK, betrag });
       bkSoll.push({ label: FO, betrag });
     }
-    const ab = aufTausend(Math.max(0, summe(zahlungen) - summe(uefe))) + generateRandomSaldo(3000, 30000, 1000);
-    konto.soll = [{ label: 'AB', betrag: ab }, ...uefe];
+    const ab =
+      aufTausend(Math.max(0, summe(zahlungen) - summe(uefe))) +
+      generateRandomSaldo(3000, 30000, 1000);
+    konto.soll = [{ label: "AB", betrag: ab }, ...uefe];
     konto.haben = zahlungen;
     k[FO] = konto;
   }
@@ -172,7 +198,11 @@ function versucheAufgabe(aktivNr, passivNr) {
   // VE: Soll 1–2× BK
   {
     const n = anzahl12();
-    for (let i = 0; i < n; i++) veSoll.push({ label: BK, betrag: generateRandomSaldo(2000, 10000, 1000) });
+    for (let i = 0; i < n; i++)
+      veSoll.push({
+        label: BK,
+        betrag: generateRandomSaldo(2000, 10000, 1000),
+      });
   }
 
   // BK: Haben auch Zahllast (UST − VORST, einmal im Jahr)
@@ -180,11 +210,13 @@ function versucheAufgabe(aktivNr, passivNr) {
     const konto = neuesKonto(true);
     const sollBuch = [...bkSoll];
     if (lbkvZugang) sollBuch.push({ label: LBKV, betrag: lbkvZugang });
-    const habenBuch = veSoll.map(b => ({ label: VE, betrag: b.betrag }));
+    const habenBuch = veSoll.map((b) => ({ label: VE, betrag: b.betrag }));
     if (kaAbhebung) habenBuch.push({ label: KA, betrag: kaAbhebung });
     habenBuch.push({ label: UST, betrag: umsatzsteuer - vorsteuer });
-    const ab = aufTausend(Math.max(0, summe(habenBuch) - summe(sollBuch))) + generateRandomSaldo(10000, 60000, 1000);
-    konto.soll = [{ label: 'AB', betrag: ab }, ...sollBuch];
+    const ab =
+      aufTausend(Math.max(0, summe(habenBuch) - summe(sollBuch))) +
+      generateRandomSaldo(10000, 60000, 1000);
+    konto.soll = [{ label: "AB", betrag: ab }, ...sollBuch];
     konto.haben = habenBuch;
     k[BK] = konto;
   }
@@ -192,7 +224,7 @@ function versucheAufgabe(aktivNr, passivNr) {
   // Kasse
   if (aktivNr.includes(KA)) {
     const konto = neuesKonto(true);
-    konto.soll = [{ label: 'AB', betrag: generateRandomSaldo(500, 5000, 500) }];
+    konto.soll = [{ label: "AB", betrag: generateRandomSaldo(500, 5000, 500) }];
     if (kaAbhebung) konto.soll.push({ label: BK, betrag: kaAbhebung });
     k[KA] = konto;
   }
@@ -200,14 +232,21 @@ function versucheAufgabe(aktivNr, passivNr) {
   // 4400 VE zusammensetzen (AB so wählen, dass der Saldo positiv bleibt)
   const veKonto = neuesKonto(false);
   const habenOhneAB = [...veAufwand, ...veHaben];
-  const veAB = aufTausend(Math.max(0, summe(veSoll) - summe(habenOhneAB))) + generateRandomSaldo(3000, 20000, 1000);
-  veKonto.haben = [{ label: 'AB', betrag: veAB }, ...habenOhneAB];
+  const veAB =
+    aufTausend(Math.max(0, summe(veSoll) - summe(habenOhneAB))) +
+    generateRandomSaldo(3000, 20000, 1000);
+  veKonto.haben = [{ label: "AB", betrag: veAB }, ...habenOhneAB];
   veKonto.soll = veSoll;
 
   // Aktiv geordnet
   const aktiv = {};
-  AKTIV_REIHE.forEach(nr => { if (k[nr]) aktiv[nr] = k[nr]; });
-  const aktivSumme = Object.values(aktiv).reduce((s, x) => s + (summe(x.soll) - summe(x.haben)), 0);
+  AKTIV_REIHE.forEach((nr) => {
+    if (k[nr]) aktiv[nr] = k[nr];
+  });
+  const aktivSumme = Object.values(aktiv).reduce(
+    (s, x) => s + (summe(x.soll) - summe(x.haben)),
+    0,
+  );
   const veSaldo = summe(veKonto.haben) - summe(veKonto.soll);
 
   // Bankverbindlichkeiten
@@ -229,22 +268,37 @@ function versucheAufgabe(aktivNr, passivNr) {
 
   const passiv = {};
   const ekKonto = neuesKonto(false);
-  ekKonto.haben = [{ label: 'AB', betrag: ekAB }, { label: GUV, betrag: gewinn }];
+  ekKonto.haben = [
+    { label: "AB", betrag: ekAB },
+    { label: GUV, betrag: gewinn },
+  ];
   passiv[EK] = ekKonto;
   for (const nr of passivNr) {
     const kk = neuesKonto(false);
     if (nr === LBKV && lbkvZugang) {
       const ab = bank[nr] - lbkvZugang;
       if (ab < 5000) return null;
-      kk.haben = [{ label: 'AB', betrag: ab }, { label: BK, betrag: lbkvZugang }];
+      kk.haben = [
+        { label: "AB", betrag: ab },
+        { label: BK, betrag: lbkvZugang },
+      ];
     } else {
-      kk.haben = [{ label: 'AB', betrag: bank[nr] }];
+      kk.haben = [{ label: "AB", betrag: bank[nr] }];
     }
     passiv[nr] = kk;
   }
   passiv[VE] = veKonto;
 
-  return { aktiv, passiv, summe: aktivSumme, ust: umsatzsteuer, vorst: vorsteuer, uefeNetto, aufwandNetto, gewinn };
+  return {
+    aktiv,
+    passiv,
+    summe: aktivSumme,
+    ust: umsatzsteuer,
+    vorst: vorsteuer,
+    uefeNetto,
+    aufwandNetto,
+    gewinn,
+  };
 }
 
 function erstelleBestandsabschluss(aktivNr, passivNr) {
@@ -258,7 +312,8 @@ function erstelleBestandsabschluss(aktivNr, passivNr) {
 // ── Salden ───────────────────────────────────────────────────────────────────
 
 function berechneSaldo(k) {
-  const s = summe(k.soll), h = summe(k.haben);
+  const s = summe(k.soll),
+    h = summe(k.haben);
   return { saldo: Math.abs(s - h), summe: Math.max(s, h) };
 }
 
@@ -267,7 +322,7 @@ function berechneSaldo(k) {
 function tkKopf(titel, klein) {
   // feste Spaltenbreiten → Mittellinie sitzt bei jedem Konto an derselben Stelle
   const w = klein ? [26, 24, 26, 24] : [25, 25, 25, 25];
-  return `<table class="tkonto${klein ? ' tkonto-klein' : ''}" style="border-collapse:collapse;table-layout:fixed;width:100%;background:#fff;font-size:1.0em;">
+  return `<table class="tkonto${klein ? " tkonto-klein" : ""}" style="border-collapse:collapse;table-layout:fixed;width:100%;background:#fff;font-size:1.0em;">
     <colgroup><col style="width:${w[0]}%"><col style="width:${w[1]}%"><col style="width:${w[2]}%"><col style="width:${w[3]}%"></colgroup>
     <thead><tr>
       <th style="text-align:left;font-weight:600;padding:4px 0;">Soll</th>
@@ -277,9 +332,15 @@ function tkKopf(titel, klein) {
 }
 
 function tkZeile(sLabel, sBetrag, hLabel, hBetrag) {
-  const fmt = b => (b === null || b === undefined) ? '&nbsp;' : formatBetrag(b);
+  const fmt = (b) =>
+    b === null || b === undefined ? "&nbsp;" : formatBetrag(b);
   // lange Buchungstexte (z. B. "5000 UEFE, 4800 UST") kleiner, kurze (AB, 2800 BK) normal
-  const lbl = l => !l ? '&nbsp;' : (l.length > 12 ? `<span style="font-size:0.82em;">${l}</span>` : l);
+  const lbl = (l) =>
+    !l
+      ? "&nbsp;"
+      : l.length > 12
+        ? `<span style="font-size:0.82em;">${l}</span>`
+        : l;
   return `<tr style="border-top:2px solid #ccc;">
       <td style="padding:3px 2px;white-space:nowrap;">${lbl(sLabel)}</td>
       <td style="text-align:right;padding:3px 4px 3px 2px;border-right:2px solid #999;min-width:100px;height:1.8em;">${fmt(sBetrag)}</td>
@@ -291,15 +352,15 @@ function tkZeile(sLabel, sBetrag, hLabel, hBetrag) {
 function tkSumme(sSumme, hSumme) {
   return `<tr style="border-top:2px solid #888;border-bottom:4px double #888;">
     <td style="padding:3px 2px;"></td>
-    <td style="text-align:right;padding:3px 4px;border-right:2px solid #999;font-weight:700;">${sSumme === null ? '&nbsp;' : formatBetrag(sSumme)}</td>
+    <td style="text-align:right;padding:3px 4px;border-right:2px solid #999;font-weight:700;">${sSumme === null ? "&nbsp;" : formatBetrag(sSumme)}</td>
     <td style="padding:3px 2px 3px 6px;"></td>
-    <td style="text-align:right;padding:3px 2px;font-weight:700;">${hSumme === null ? '&nbsp;' : formatBetrag(hSumme)}</td>
+    <td style="text-align:right;padding:3px 2px;font-weight:700;">${hSumme === null ? "&nbsp;" : formatBetrag(hSumme)}</td>
   </tr></tbody></table>`;
 }
 
 // Bestandskonto: Aufgabe (Buchungen) bzw. Lösung (mit Saldo über 8010 SBK)
 function renderTKonto(kontoNr, k, loesung) {
-  const zeilen = Math.max(k.soll.length, k.haben.length) + (loesung ? 1 : 2);   // Buchungen + freie Zeilen (Aufgabe: 2, Lösung: 1)
+  const zeilen = Math.max(k.soll.length, k.haben.length) + (loesung ? 1 : 2); // Buchungen + freie Zeilen (Aufgabe: 2, Lösung: 1)
   const soll = [...k.soll];
   const haben = [...k.haben];
   const { saldo, summe: sum } = berechneSaldo(k);
@@ -307,20 +368,21 @@ function renderTKonto(kontoNr, k, loesung) {
     if (k.istAktiv) haben.push({ label: SBK, betrag: saldo });
     else soll.push({ label: SBK, betrag: saldo });
   }
-  const klein = [...k.soll, ...k.haben].some(b => b.label.length > 12);   // lange Labels (FO, VE) → kleinere Schrift
+  const klein = [...k.soll, ...k.haben].some((b) => b.label.length > 12); // lange Labels (FO, VE) → kleinere Schrift
   let html = tkKopf(kontoNr, klein);
   for (let i = 0; i < zeilen; i++) {
-    const s = soll[i], h = haben[i];
+    const s = soll[i],
+      h = haben[i];
     html += tkZeile(s?.label, s?.betrag, h?.label, h?.betrag);
   }
-  return loesung ? html + tkSumme(sum, sum) : html + '</tbody></table>';
+  return loesung ? html + tkSumme(sum, sum) : html + "</tbody></table>";
 }
 
 // SBK AUFGABE – leer
 function renderTKontoSBKAufgabe(zeilen) {
   let html = tkKopf(SBK);
-  for (let i = 0; i < zeilen; i++) html += tkZeile('', null, '', null);
-  return html + '</tbody></table>';
+  for (let i = 0; i < zeilen; i++) html += tkZeile("", null, "", null);
+  return html + "</tbody></table>";
 }
 
 // SBK LÖSUNG – Aktivkonten im Soll, Passivkonten im Haben
@@ -330,8 +392,12 @@ function renderTKontoSBKLoesung(aktivSalden, passivSalden, sum) {
   const n = Math.max(a.length, p.length);
   let html = tkKopf(SBK);
   for (let i = 0; i < n; i++) {
-    html += tkZeile(a[i] ? a[i][0] : '', a[i] ? a[i][1] : null,
-                    p[i] ? p[i][0] : '', p[i] ? p[i][1] : null);
+    html += tkZeile(
+      a[i] ? a[i][0] : "",
+      a[i] ? a[i][1] : null,
+      p[i] ? p[i][0] : "",
+      p[i] ? p[i][1] : null,
+    );
   }
   return html + tkSumme(sum, sum);
 }
@@ -339,27 +405,39 @@ function renderTKontoSBKLoesung(aktivSalden, passivSalden, sum) {
 // ── HAUPTFUNKTION ────────────────────────────────────────────────────────────
 
 function zeigeZufaelligenBestandsabschluss() {
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   const { aktiv: aktivNr, passiv: passivNr } = getAusgewaehlteKonten();
   if (aktivNr.length === 0) {
-    container.innerHTML = '<p style="color:#b00;font-weight:600;">Bitte mindestens ein Aktivkonto auswählen.</p>';
+    container.innerHTML =
+      '<p style="color:#b00;font-weight:600;">Bitte mindestens ein Aktivkonto auswählen.</p>';
     return;
   }
 
   const ergebnis = erstelleBestandsabschluss(aktivNr, passivNr);
   if (!ergebnis) {
-    container.innerHTML = '<p style="color:#b00;font-weight:600;">Mit dieser Kontenauswahl lässt sich keine sinnvolle Aufgabe erzeugen. Bitte weitere Aktivkonten auswählen (z. B. Anlagekonten).</p>';
+    container.innerHTML =
+      '<p style="color:#b00;font-weight:600;">Mit dieser Kontenauswahl lässt sich keine sinnvolle Aufgabe erzeugen. Bitte weitere Aktivkonten auswählen (z. B. Anlagekonten).</p>';
     return;
   }
-  const { aktiv, passiv, summe: bilanzsumme, ust, vorst, uefeNetto, aufwandNetto, gewinn } = ergebnis;
+  const {
+    aktiv,
+    passiv,
+    summe: bilanzsumme,
+    ust,
+    vorst,
+    uefeNetto,
+    aufwandNetto,
+    gewinn,
+  } = ergebnis;
 
-  const anzahlSBK = Math.max(Object.keys(aktiv).length, Object.keys(passiv).length) + 1;   // eine Zeile extra
+  const anzahlSBK =
+    Math.max(Object.keys(aktiv).length, Object.keys(passiv).length) + 1; // eine Zeile extra
 
   // ── AUFGABE ────────────────────────────────────────────────────────────────
-  let html = '<h2>Aufgabe</h2>';
+  let html = "<h2>Aufgabe</h2>";
   html += `<p>Die folgenden Bestandskonten weisen zum Jahresende die aufgeführten Buchungen auf.<br>Ermittle die Salden und schließe alle Konten ab. Bilde die Buchungssätze.</p>`;
 
   html += `<div class="tkonto-grid">`;
@@ -375,9 +453,13 @@ function zeigeZufaelligenBestandsabschluss() {
 
   // ── LÖSUNG ─────────────────────────────────────────────────────────────────
   const aktivSalden = {};
-  Object.entries(aktiv).forEach(([nr, k]) => { aktivSalden[nr] = berechneSaldo(k).saldo; });
+  Object.entries(aktiv).forEach(([nr, k]) => {
+    aktivSalden[nr] = berechneSaldo(k).saldo;
+  });
   const passivSalden = {};
-  Object.entries(passiv).forEach(([nr, k]) => { passivSalden[nr] = berechneSaldo(k).saldo; });
+  Object.entries(passiv).forEach(([nr, k]) => {
+    passivSalden[nr] = berechneSaldo(k).saldo;
+  });
 
   html += `<h2 class="loesung" style="margin-top:2.5em">Lösung</h2>`;
 
@@ -385,19 +467,23 @@ function zeigeZufaelligenBestandsabschluss() {
   <table style="white-space:nowrap;background-color:#fff;font-family:courier;min-width:700px;"><tbody>`;
 
   const bsZeile = (soll, haben, betrag) => `<tr>
-      <td style="border-with:0px;padding:2px 10px 2px 0;white-space:nowrap;">${soll}</td>
-      <td style="border-with:0px;padding:2px 10px;text-align:right;min-width:120px;">${formatBetrag(betrag)} €</td>
-      <td style="border-with:0px;padding:2px 10px;text-align:center;">an</td>
-      <td style="border-with:0px;padding:2px 10px;white-space:nowrap;">${haben}</td>
-      <td style="border-with:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(betrag)} €</td>
+      <td style="border-width:0px;padding:2px 10px 2px 0;white-space:nowrap;">${soll}</td>
+      <td style="border-width:0px;padding:2px 10px;text-align:right;min-width:120px;">${formatBetrag(betrag)} €</td>
+      <td style="border-width:0px;padding:2px 10px;text-align:center;">an</td>
+      <td style="border-width:0px;padding:2px 10px;white-space:nowrap;">${haben}</td>
+      <td style="border-width:0px;padding:2px 0;text-align:right;min-width:120px;">${formatBetrag(betrag)} €</td>
     </tr>`;
 
   html += `<tr><td colspan="5" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">Schritt 1: Aktivkonten über SBK abschließen</td></tr>`;
-  Object.entries(aktivSalden).forEach(([nr, saldo]) => { html += bsZeile(SBK, nr, saldo); });
+  Object.entries(aktivSalden).forEach(([nr, saldo]) => {
+    html += bsZeile(SBK, nr, saldo);
+  });
 
   html += `<tr><td colspan="5" style="padding:6px 0;"></td></tr>`;
   html += `<tr><td colspan="5" style="padding:4px 0;color:#555;font-style:italic;font-size:0.95em;">Schritt 2: Passivkonten über SBK abschließen</td></tr>`;
-  Object.entries(passivSalden).forEach(([nr, saldo]) => { html += bsZeile(nr, SBK, saldo); });
+  Object.entries(passivSalden).forEach(([nr, saldo]) => {
+    html += bsZeile(nr, SBK, saldo);
+  });
 
   html += `</tbody></table><br>`;
 
@@ -517,37 +603,42 @@ Was du NICHT tust:
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(() => {
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(KI_ASSISTENT_PROMPT)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() => {
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
-    btn.textContent = 'Vorschau ausblenden ▲';
+    vorschau.style.display = "block";
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
 // ── DRUCK-CSS (identisch zu lb8-1-erfolgskonten.js) ──────────────────────────
 
 function addPrintCSS() {
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.innerHTML = `
     .tkonto-grid {
       display: flex;
@@ -617,18 +708,18 @@ function addPrintCSS() {
   document.head.appendChild(style);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Checkbox-Bezeichner aus dem zentralen Kontenplan befüllen (HTML trägt nur Nummern)
-  document.querySelectorAll('.kontoCheckboxBez[data-konto]').forEach(el => {
+  document.querySelectorAll(".kontoCheckboxBez[data-konto]").forEach((el) => {
     el.textContent = kontoLabel(el.dataset.konto);
   });
 
   zeigeZufaelligenBestandsabschluss();
   addPrintCSS();
 
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) {
     vorschauEl.value = KI_ASSISTENT_PROMPT;
-    vorschauEl.style.display = 'none';
+    vorschauEl.style.display = "none";
   }
 });

@@ -5,7 +5,7 @@
 let kundeWerkstoffe = "<i>[Modellunternehmen]</i>";
 let yamlDataWerkstoffe = [];
 function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
+  const stored = localStorage.getItem("userCompanies");
   return stored ? JSON.parse(stored) : [];
 }
 
@@ -16,12 +16,14 @@ function mergeUserCompaniesIntoYamlDataWerkstoffe() {
   yamlDataWerkstoffe = [...yamlDataWerkstoffe, ...userCompanies];
 
   yamlDataWerkstoffe.sort((a, b) => {
-    const brancheA = a.unternehmen?.branche || '';
-    const brancheB = b.unternehmen?.branche || '';
+    const brancheA = a.unternehmen?.branche || "";
+    const brancheB = b.unternehmen?.branche || "";
     return brancheA.localeCompare(brancheB);
   });
 
-  console.log(`${userCompanies.length} Benutzerunternehmen zu yamlDataWerkstoffe hinzugefügt. Gesamt: ${yamlDataWerkstoffe.length}`);
+  console.log(
+    `${userCompanies.length} Benutzerunternehmen zu yamlDataWerkstoffe hinzugefügt. Gesamt: ${yamlDataWerkstoffe.length}`,
+  );
 }
 
 // ============================================================================
@@ -40,10 +42,30 @@ const kontenWerkstoffe = {
 // ============================================================================
 
 const werkstoffArtikelDefaults = {
-  AWR: { belegName: "Rohstoffe",      einheit: "PAL", minNetto: 2000,  maxNetto: 20000 },
-  AWF: { belegName: "Fremdbauteile",  einheit: "PAL", minNetto: 1000,  maxNetto: 5000  },
-  AWH: { belegName: "Hilfsstoffe",    einheit: "PAL", minNetto: 1000,  maxNetto: 5000  },
-  AWB: { belegName: "Betriebsstoffe", einheit: "CO",  minNetto: 1000,  maxNetto: 15000 },
+  AWR: {
+    belegName: "Rohstoffe",
+    einheit: "PAL",
+    minNetto: 2000,
+    maxNetto: 20000,
+  },
+  AWF: {
+    belegName: "Fremdbauteile",
+    einheit: "PAL",
+    minNetto: 1000,
+    maxNetto: 5000,
+  },
+  AWH: {
+    belegName: "Hilfsstoffe",
+    einheit: "PAL",
+    minNetto: 1000,
+    maxNetto: 5000,
+  },
+  AWB: {
+    belegName: "Betriebsstoffe",
+    einheit: "CO",
+    minNetto: 1000,
+    maxNetto: 15000,
+  },
 };
 
 // AWB-Bezeichnungen – Fallback wenn kein eigener Name eingegeben
@@ -61,36 +83,43 @@ const awbBezeichnungenDefault = [
 function fillBezeichnungsfelder(unternehmensName) {
   if (!unternehmensName || !yamlDataWerkstoffe?.length) return;
 
-  const eintrag = yamlDataWerkstoffe.find(e => e.unternehmen?.name === unternehmensName);
+  const eintrag = yamlDataWerkstoffe.find(
+    (e) => e.unternehmen?.name === unternehmensName,
+  );
   if (!eintrag) return;
 
   // Werkstoffe unter unternehmen.werkstoffe (YAML) ODER Top-Level (manuell hinzugefügt)
   const werkstoffe = eintrag.unternehmen?.werkstoffe ?? eintrag.werkstoffe;
   if (!werkstoffe) return;
 
-  ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
+  ["AWR", "AWF", "AWH", "AWB"].forEach((konto) => {
     const liste = werkstoffe[konto];
     if (!Array.isArray(liste)) return;
-    [0, 1, 2].forEach(i => {
+    [0, 1, 2].forEach((i) => {
       const el = document.getElementById(`bezeichnung${konto}_${i}`);
       if (el) el.value = liste[i]?.name ?? liste[i] ?? "";
     });
   });
 }
 
-
 /**
  * Gibt das benutzerdefinierte Werkstoff-Objekt für das angegebene Konto zurück.
  * Wenn das Inputfeld leer ist, wird der Default-Wert verwendet.
  */
 function getWerkstoffArtikel(konto) {
-  const defaults = werkstoffArtikelDefaults[konto] || werkstoffArtikelDefaults["AWR"];
+  const defaults =
+    werkstoffArtikelDefaults[konto] || werkstoffArtikelDefaults["AWR"];
 
   // 1. Aus YAML des gewählten Unternehmens lesen
-  const selectedName = document.getElementById("werkstoffeKunde")?.value?.trim();
+  const selectedName = document
+    .getElementById("werkstoffeKunde")
+    ?.value?.trim();
   if (selectedName && yamlDataWerkstoffe?.length) {
-    const eintrag = yamlDataWerkstoffe.find(e => e.unternehmen?.name === selectedName);
-    const yamlListe = (eintrag?.unternehmen?.werkstoffe ?? eintrag?.werkstoffe)?.[konto];
+    const eintrag = yamlDataWerkstoffe.find(
+      (e) => e.unternehmen?.name === selectedName,
+    );
+    const yamlListe = (eintrag?.unternehmen?.werkstoffe ??
+      eintrag?.werkstoffe)?.[konto];
     if (Array.isArray(yamlListe) && yamlListe.length > 0) {
       // Inputfelder damit vorbelegen (einmalig, nur wenn noch leer)
       // → wird in fillBezeichnungsfelder() gemacht (s. u.)
@@ -99,15 +128,18 @@ function getWerkstoffArtikel(konto) {
 
   // 2. Inputfelder auslesen (können manuell oder per YAML befüllt sein)
   const kandidaten = [0, 1, 2]
-    .map(i => document.getElementById(`bezeichnung${konto}_${i}`)?.value?.trim() || "")
-    .filter(v => v.length > 0);
+    .map(
+      (i) =>
+        document.getElementById(`bezeichnung${konto}_${i}`)?.value?.trim() ||
+        "",
+    )
+    .filter((v) => v.length > 0);
 
-  if (kandidaten.length > 0) return { ...defaults, belegName: pickW(kandidaten) };
+  if (kandidaten.length > 0)
+    return { ...defaults, belegName: pickW(kandidaten) };
 
   return defaults;
 }
-
-
 
 /**
  * Gibt die AWB-Bezeichnung zurück:
@@ -117,8 +149,11 @@ function getWerkstoffArtikel(konto) {
 function getAwbBezeichnung() {
   // Alle drei AWB-Felder auslesen, leere ignorieren
   const kandidaten = [0, 1, 2]
-    .map(i => document.getElementById(`bezeichnungAWB_${i}`)?.value?.trim() || "")
-    .filter(v => v.length > 0);
+    .map(
+      (i) =>
+        document.getElementById(`bezeichnungAWB_${i}`)?.value?.trim() || "",
+    )
+    .filter((v) => v.length > 0);
   if (kandidaten.length > 0) return pickW(kandidaten);
   return pickW(awbBezeichnungenDefault);
 }
@@ -160,24 +195,35 @@ function getLieferantFuerGf(konto, awbArt) {
 // DYNAMISCHE LIEFERANTEN-ERMITTLUNG PER STAMMLIEFERANT (YAML)
 // ============================================================================
 
-function getLieferantenNameFuerWerkstoff(unternehmensName, werkstoffName, konto) {
+function getLieferantenNameFuerWerkstoff(
+  unternehmensName,
+  werkstoffName,
+  konto,
+) {
   if (!yamlDataWerkstoffe?.length) return null;
   let lieferantenId = null;
 
   // 1. Beim ausgewählten Unternehmen suchen
   if (unternehmensName) {
-    const eintrag = yamlDataWerkstoffe.find(e => e.unternehmen?.name === unternehmensName);
+    const eintrag = yamlDataWerkstoffe.find(
+      (e) => e.unternehmen?.name === unternehmensName,
+    );
     const werkstoffe = eintrag?.unternehmen?.werkstoffe ?? eintrag?.werkstoffe;
     if (werkstoffe) {
       const kontiZuPruefen = konto ? [konto] : ["AWR", "AWF", "AWH", "AWB"];
       for (const k of kontiZuPruefen) {
         const liste = werkstoffe[k];
         if (Array.isArray(liste)) {
-          const gefunden = liste.find(w => {
-            if (typeof w === 'object' && w !== null) return w.name === werkstoffName;
+          const gefunden = liste.find((w) => {
+            if (typeof w === "object" && w !== null)
+              return w.name === werkstoffName;
             return w === werkstoffName;
           });
-          if (gefunden && typeof gefunden === 'object' && gefunden.stammlieferant) {
+          if (
+            gefunden &&
+            typeof gefunden === "object" &&
+            gefunden.stammlieferant
+          ) {
             lieferantenId = gefunden.stammlieferant;
             break;
           }
@@ -194,11 +240,16 @@ function getLieferantenNameFuerWerkstoff(unternehmensName, werkstoffName, konto)
       for (const k of ["AWR", "AWF", "AWH", "AWB"]) {
         const liste = werkstoffe[k];
         if (Array.isArray(liste)) {
-          const gefunden = liste.find(w => {
-            if (typeof w === 'object' && w !== null) return w.name === werkstoffName;
+          const gefunden = liste.find((w) => {
+            if (typeof w === "object" && w !== null)
+              return w.name === werkstoffName;
             return w === werkstoffName;
           });
-          if (gefunden && typeof gefunden === 'object' && gefunden.stammlieferant) {
+          if (
+            gefunden &&
+            typeof gefunden === "object" &&
+            gefunden.stammlieferant
+          ) {
             lieferantenId = gefunden.stammlieferant;
             break;
           }
@@ -211,7 +262,9 @@ function getLieferantenNameFuerWerkstoff(unternehmensName, werkstoffName, konto)
   if (!lieferantenId) return null;
 
   // Unternehmen per ID finden
-  const unternehmenEintrag = yamlDataWerkstoffe.find(e => String(e.unternehmen?.id).trim() === String(lieferantenId).trim());
+  const unternehmenEintrag = yamlDataWerkstoffe.find(
+    (e) => String(e.unternehmen?.id).trim() === String(lieferantenId).trim(),
+  );
   return unternehmenEintrag?.unternehmen?.name || null;
 }
 
@@ -320,7 +373,11 @@ function pickW(arr) {
 }
 function parseNumericValueW(value) {
   if (!value) return "0";
-  return value.toString().replace(/[€\s]/g, "").replace(/\./g, "").replace(",", ".");
+  return value
+    .toString()
+    .replace(/[€\s]/g, "")
+    .replace(/\./g, "")
+    .replace(",", ".");
 }
 function generateRandomBetragW(min, max) {
   const s = 1000;
@@ -349,18 +406,31 @@ function tableWrapW(rowsHTML) {
 
 function bsEinfachW(sollKto, betrag, habenKto) {
   const b = formatCurrencyW(betrag);
-  return tableWrapW(
-    `<tr>${tdW(sollKto)}${tdW(b, "right")}${tdCW("an")}${tdW(habenKto)}${tdW(b, "right")}</tr>`,
-  ) + "<br>";
+  return (
+    tableWrapW(
+      `<tr>${tdW(sollKto)}${tdW(b, "right")}${tdCW("an")}${tdW(habenKto)}${tdW(b, "right")}</tr>`,
+    ) + "<br>"
+  );
 }
 
 function bsEinfachUstW(gf) {
-  const { sollKto, habenKto, nettoBetrag, Vorsteuer, bruttoBetrag,
-          rabatt, rabattProzent, listennetto, listenbrutto, rabattBetrag, angabeIstBrutto } = gf;
+  const {
+    sollKto,
+    habenKto,
+    nettoBetrag,
+    Vorsteuer,
+    bruttoBetrag,
+    rabatt,
+    rabattProzent,
+    listennetto,
+    listenbrutto,
+    rabattBetrag,
+    angabeIstBrutto,
+  } = gf;
 
   const bs = tableWrapW(
     `<tr>${tdW(sollKto)}${tdW(formatCurrencyW(nettoBetrag), "right")}${tdCW("")}${tdW("")}${tdW("", "right")}</tr>` +
-    `<tr>${tdW("VORST")}${tdW(formatCurrencyW(Vorsteuer), "right")}${tdCW("an")}${tdW(habenKto)}${tdW(formatCurrencyW(bruttoBetrag), "right")}</tr>`,
+      `<tr>${tdW("VORST")}${tdW(formatCurrencyW(Vorsteuer), "right")}${tdCW("an")}${tdW(habenKto)}${tdW(formatCurrencyW(bruttoBetrag), "right")}</tr>`,
   );
 
   function opRow(label, op, betrag) {
@@ -384,7 +454,7 @@ function bsEinfachUstW(gf) {
 
   let rows = "";
   if (rabatt && angabeIstBrutto) {
-    const ustLP = roundToTwoDecimalsW(listennetto * UST_REGEL / 100);
+    const ustLP = roundToTwoDecimalsW((listennetto * UST_REGEL) / 100);
     rows =
       startRow("Rechnungsbetrag", listenbrutto) +
       opRow("- Umsatzsteuer (${UST_REGEL} %)", "", ustLP) +
@@ -431,7 +501,9 @@ function initializeKontoAuswahlW() {
   if (!grid) return;
   grid.innerHTML = "";
   const used = new Set();
-  alleGfWerkstoffe.forEach((t) => (t.kontFilter || []).forEach((k) => used.add(k)));
+  alleGfWerkstoffe.forEach((t) =>
+    (t.kontFilter || []).forEach((k) => used.add(k)),
+  );
   Object.entries(kontenWerkstoffe).forEach(([kto, info]) => {
     if (!used.has(kto)) return;
     const item = document.createElement("div");
@@ -467,26 +539,35 @@ function updateAuswahlInfoW() {
   const n = Array.from(cbs).filter((c) => c.checked).length;
   if (n === 0) {
     el.textContent = "⚠️ Keine Konten ausgewählt – es werden alle verwendet";
-    el.style.background = "#fff3cd"; el.style.color = "#856404";
+    el.style.background = "#fff3cd";
+    el.style.color = "#856404";
   } else if (n === cbs.length) {
     el.textContent = "✓ Alle Konten ausgewählt";
-    el.style.background = "#d4edda"; el.style.color = "#155724";
+    el.style.background = "#d4edda";
+    el.style.color = "#155724";
   } else {
     el.textContent = `✓ ${n} von ${cbs.length} Konten ausgewählt`;
-    el.style.background = "#d1ecf1"; el.style.color = "#0c5460";
+    el.style.background = "#d1ecf1";
+    el.style.color = "#0c5460";
   }
 }
 
 function alleKontenAuswaehlenW() {
-  document.querySelectorAll("#kontoGridW input").forEach((c) => (c.checked = true));
+  document
+    .querySelectorAll("#kontoGridW input")
+    .forEach((c) => (c.checked = true));
   updateAuswahlInfoW();
 }
 function alleKontenAbwaehlenW() {
-  document.querySelectorAll("#kontoGridW input").forEach((c) => (c.checked = false));
+  document
+    .querySelectorAll("#kontoGridW input")
+    .forEach((c) => (c.checked = false));
   updateAuswahlInfoW();
 }
 function getAusgewaehlteKontenW() {
-  return Array.from(document.querySelectorAll("#kontoGridW input:checked")).map((c) => c.value);
+  return Array.from(document.querySelectorAll("#kontoGridW input:checked")).map(
+    (c) => c.value,
+  );
 }
 
 // ============================================================================
@@ -494,9 +575,27 @@ function getAusgewaehlteKontenW() {
 // ============================================================================
 
 function existiertInCoreWS(unternehmen, coreData) {
-  const key = String(unternehmen?.unternehmen?.id ?? '') + '|' + String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
-  const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
-  return (coreData || []).some(c => (String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase()) === key || String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name);
+  const key =
+    String(unternehmen?.unternehmen?.id ?? "") +
+    "|" +
+    String(unternehmen?.unternehmen?.name ?? "")
+      .trim()
+      .toLowerCase();
+  const name = String(unternehmen?.unternehmen?.name ?? "")
+    .trim()
+    .toLowerCase();
+  return (coreData || []).some(
+    (c) =>
+      String(c?.unternehmen?.id ?? "") +
+        "|" +
+        String(c?.unternehmen?.name ?? "")
+          .trim()
+          .toLowerCase() ===
+        key ||
+      String(c?.unternehmen?.name ?? "")
+        .trim()
+        .toLowerCase() === name,
+  );
 }
 
 function ladeYamlWerkstoffe() {
@@ -504,19 +603,28 @@ function ladeYamlWerkstoffe() {
     .then((r) => (r.ok ? r.text() : Promise.reject()))
     .then((txt) => {
       const coreData = jsyaml.load(txt) || [];
-      try { localStorage.setItem("standardYamlData", JSON.stringify(coreData)); } catch (e) {}
+      try {
+        localStorage.setItem("standardYamlData", JSON.stringify(coreData));
+      } catch (e) {}
       const saved = localStorage.getItem("uploadedYamlCompanyData");
       let zusaetzliche = [];
       if (saved) {
         try {
           const uploaded = JSON.parse(saved);
-          zusaetzliche = uploaded.filter(u => !existiertInCoreWS(u, coreData));
+          zusaetzliche = uploaded.filter(
+            (u) => !existiertInCoreWS(u, coreData),
+          );
           if (zusaetzliche.length === 0) {
             localStorage.removeItem("uploadedYamlCompanyData");
           } else if (zusaetzliche.length !== uploaded.length) {
-            localStorage.setItem("uploadedYamlCompanyData", JSON.stringify(zusaetzliche));
+            localStorage.setItem(
+              "uploadedYamlCompanyData",
+              JSON.stringify(zusaetzliche),
+            );
           }
-        } catch (e) { localStorage.removeItem("uploadedYamlCompanyData"); }
+        } catch (e) {
+          localStorage.removeItem("uploadedYamlCompanyData");
+        }
       }
       yamlDataWerkstoffe = [...coreData, ...zusaetzliche];
       mergeUserCompaniesIntoYamlDataWerkstoffe();
@@ -526,23 +634,22 @@ function ladeYamlWerkstoffe() {
   return false;
 }
 
-
-
-
-
 function fillCompanyDropdownW() {
   if (!yamlDataWerkstoffe?.length) return;
   const select = document.getElementById("werkstoffeKunde");
   if (!select) return;
   const sorted = [...yamlDataWerkstoffe].sort((a, b) => {
-    const bA = a.unternehmen?.branche || "", bB = b.unternehmen?.branche || "";
+    const bA = a.unternehmen?.branche || "",
+      bB = b.unternehmen?.branche || "";
     if (bA !== bB) return bA.localeCompare(bB);
     return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
   select.innerHTML = "";
   const ph = document.createElement("option");
-  ph.value = ""; ph.text = "— bitte Unternehmen auswählen —";
-  ph.disabled = true; ph.selected = true;
+  ph.value = "";
+  ph.text = "— bitte Unternehmen auswählen —";
+  ph.disabled = true;
+  ph.selected = true;
   select.appendChild(ph);
   sorted.forEach((c) => {
     const u = c.unternehmen;
@@ -561,11 +668,11 @@ function autoSelectMyCompanyW() {
   if (!name) {
     return;
   }
-  
+
   const sel = document.getElementById("werkstoffeKunde");
- 
-  const opt = Array.from(sel?.options || []).find(o => o.value === name);
-  
+
+  const opt = Array.from(sel?.options || []).find((o) => o.value === name);
+
   if (!opt) {
     return;
   }
@@ -587,7 +694,8 @@ let letzteGenerierteGfListeW = [];
 
 function erstelleZufallsGeschaeftsfallW() {
   const mitRabattOpt = document.getElementById("optMitRabattW").checked;
-  const vorstAngegeben = document.getElementById("optVorstAngegeben")?.checked ?? false;
+  const vorstAngegeben =
+    document.getElementById("optVorstAngegeben")?.checked ?? false;
   const ausgewaehlteKonten = getAusgewaehlteKontenW();
 
   const werkstoffKonten = ["AWR", "AWF", "AWH", "AWB"];
@@ -607,7 +715,8 @@ function erstelleZufallsGeschaeftsfallW() {
 
   // ── Werkstoff-Artikel und Bezeichnung aus Inputfeldern holen ─────────────
   const artikel = getWerkstoffArtikel(konto);
-  const awbArt = konto === "AWB" ? getAwbBezeichnung() : pickW(awbBezeichnungenDefault);
+  const awbArt =
+    konto === "AWB" ? getAwbBezeichnung() : pickW(awbBezeichnungenDefault);
 
   // Bezeichnung für Aufgabentext: AWB nutzt awbArt, alle anderen belegName
   const werkstoffBezeichnung = konto === "AWB" ? awbArt : artikel.belegName;
@@ -625,9 +734,11 @@ function erstelleZufallsGeschaeftsfallW() {
   if (listennetto < 1000) listennetto = 1000;
   if (rabatt) listennetto = passeNettoFuerRabattAn(listennetto, rabattProzent);
 
-  const rabattBetrag = rabatt ? Math.round((listennetto * rabattProzent) / 100) : 0;
+  const rabattBetrag = rabatt
+    ? Math.round((listennetto * rabattProzent) / 100)
+    : 0;
   const nettoBetrag = listennetto - rabattBetrag;
-  const Vorsteuer = roundToTwoDecimalsW(nettoBetrag * UST_REGEL / 100);
+  const Vorsteuer = roundToTwoDecimalsW((nettoBetrag * UST_REGEL) / 100);
   const bruttoBetrag = roundToTwoDecimalsW(nettoBetrag + Vorsteuer);
 
   // ── Aufgabentext ──────────────────────────────────────────────────────────
@@ -639,7 +750,9 @@ function erstelleZufallsGeschaeftsfallW() {
   const angabeIstBrutto = Math.random() < 0.5;
   let betragText;
   if (rabatt) {
-    const listenbrutto = roundToTwoDecimalsW(listennetto * (1 + UST_REGEL / 100));
+    const listenbrutto = roundToTwoDecimalsW(
+      listennetto * (1 + UST_REGEL / 100),
+    );
     betragText = angabeIstBrutto
       ? `Listenpreis: ${formatCurrencyW(listenbrutto)} (Rechnungsbetrag), es wird ein Rabatt in Höhe von ${rabattProzent}\u00a0% gewährt`
       : `Listenpreis: ${formatCurrencyW(listennetto)} netto, der Rabatt beträgt ${rabattProzent}\u00a0%`;
@@ -705,7 +818,10 @@ function erstelleBuchungssatzW(gf) {
 
 function erstelleLoesungsTextW(gf) {
   const fmtW = (v) =>
-    v.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+    v.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + " €";
 
   const bs = `${gf.sollKto} ${fmtW(gf.nettoBetrag)} / VORST ${fmtW(gf.Vorsteuer)} an ${gf.habenKto} ${fmtW(gf.bruttoBetrag)}`;
 
@@ -716,7 +832,11 @@ function erstelleLoesungsTextW(gf) {
   if (gf.rabatt && gf.angabeIstBrutto) {
     nr = [
       fmtLine("Rechnungsbetrag (Listenpreis brutto)", gf.listenbrutto),
-      fmtLine("- Umsatzsteuer (${UST_REGEL} %)", roundToTwoDecimalsW(gf.listennetto * UST_REGEL / 100), "- "),
+      fmtLine(
+        "- Umsatzsteuer (${UST_REGEL} %)",
+        roundToTwoDecimalsW((gf.listennetto * UST_REGEL) / 100),
+        "- ",
+      ),
       fmtLine("= Listeneinkaufspreis netto", gf.listennetto),
       fmtLine(`- Rabatt ${gf.rabattProzent} %`, gf.rabattBetrag, "- "),
       fmtLine("= Bezugspreis (netto)", gf.nettoBetrag),
@@ -755,7 +875,8 @@ function erstelleLoesungsTextW(gf) {
 function erstelleKiPromptTextW() {
   let aufgabenUndLoesungen = "";
   if (letzteGenerierteGfListeW.length === 0) {
-    aufgabenUndLoesungen = "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
+    aufgabenUndLoesungen =
+      "(Noch keine Aufgaben generiert. Bitte zuerst neue Aufgaben erstellen.)";
   } else {
     aufgabenUndLoesungen = letzteGenerierteGfListeW
       .map((gf, idx) => {
@@ -764,7 +885,10 @@ function erstelleKiPromptTextW() {
       })
       .join("\n\n---\n\n");
   }
-  return KI_ASSISTENT_PROMPT_VORLAGE.replace("###AUFGABEN und LÖSUNGEN###", aufgabenUndLoesungen);
+  return KI_ASSISTENT_PROMPT_VORLAGE.replace(
+    "###AUFGABEN und LÖSUNGEN###",
+    aufgabenUndLoesungen,
+  );
 }
 
 // ============================================================================
@@ -902,7 +1026,11 @@ function kopiereKiPrompt() {
         btn.classList.remove("ki-prompt-btn--success");
       }, 2500);
     })
-    .catch(() => zeigeModal("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."));
+    .catch(() =>
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      ),
+    );
 }
 
 function toggleKiPromptVorschau() {
@@ -929,18 +1057,23 @@ function erstelleBelegURLW(gf) {
   const params = new URLSearchParams();
   const bt = gf.typ.belegtyp;
   const now = new Date();
-  const tag   = String(now.getDate()).padStart(2, "0");
+  const tag = String(now.getDate()).padStart(2, "0");
   const monat = String(now.getMonth() + 1).padStart(2, "0");
-  const jahr  = String(now.getFullYear());
+  const jahr = String(now.getFullYear());
   const kv = document.getElementById("werkstoffeKunde")?.value?.trim() || "";
 
   params.set("beleg", bt);
 
   // Dynamische Lieferanten- / Empfängerermittlung über Stammlieferant oder Fallback
   const werkstoffName = gf.werkstoffBezeichnung || gf.artikelBelegName;
-  const dynamischerLieferant = getLieferantenNameFuerWerkstoff(kv, werkstoffName, gf.konto);
+  const dynamischerLieferant = getLieferantenNameFuerWerkstoff(
+    kv,
+    werkstoffName,
+    gf.konto,
+  );
   const fallbLieferant = getLieferantFuerGf(gf.konto, gf.awbArt)?.name;
-  const lieferantenName = dynamischerLieferant || fallbLieferant || gf.lieferantObj?.name;
+  const lieferantenName =
+    dynamischerLieferant || fallbLieferant || gf.lieferantObj?.name;
 
   if (bt === "rechnung") {
     if (lieferantenName) {
@@ -952,7 +1085,9 @@ function erstelleBelegURLW(gf) {
     params.set("einheit1", gf.einheit || "Stk");
     params.set(
       "einzelpreis1",
-      parseNumericValueW(formatCurrencyW(gf.rabatt ? gf.listennetto : gf.nettoBetrag)),
+      parseNumericValueW(
+        formatCurrencyW(gf.rabatt ? gf.listennetto : gf.nettoBetrag),
+      ),
     );
     if (gf.rabatt) params.set("rabatt", gf.rabattProzent);
     params.set("umsatzsteuer", "19");
@@ -994,7 +1129,7 @@ function erstelleBelegButtonW(nummer, gf) {
   const namen = { rechnung: "Eingangsrechnung", kontoauszug: "Kontoauszug" };
   const name = namen[gf.typ.belegtyp] || "Beleg";
   return `<button class="geschaeftsfall-beleg-button"
-    data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+    data-url="${url.replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
     title="${name} für Aufgabe ${nummer} erstellen"
     style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
     📄 ${nummer}. ${name} erstellen</button>`;
@@ -1045,9 +1180,9 @@ function zeigeZufaelligeGeschaeftsfaelleW() {
   aufgabenHTML += "</ol>";
   container.innerHTML = aufgabenHTML + loesungenHTML;
   const vorschau = document.getElementById("kiPromptVorschau");
-if (vorschau && vorschau.style.display !== "none") {
-  vorschau.textContent = erstelleKiPromptTextW();
-}
+  if (vorschau && vorschau.style.display !== "none") {
+    vorschau.textContent = erstelleKiPromptTextW();
+  }
 }
 
 // ============================================================================
@@ -1059,40 +1194,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const sel = document.getElementById("werkstoffeKunde");
   if (sel)
-sel.addEventListener("change", () => {
-  kundeWerkstoffe = sel.value.trim() || "<i>[Modellunternehmen]</i>";
-  
-  // Felder immer erst leeren
-  ["AWR", "AWF", "AWH", "AWB"].forEach(konto => {
-    [0, 1, 2].forEach(i => {
-      const el = document.getElementById(`bezeichnung${konto}_${i}`);
-      if (el) el.value = "";
+    sel.addEventListener("change", () => {
+      kundeWerkstoffe = sel.value.trim() || "<i>[Modellunternehmen]</i>";
+
+      // Felder immer erst leeren
+      ["AWR", "AWF", "AWH", "AWB"].forEach((konto) => {
+        [0, 1, 2].forEach((i) => {
+          const el = document.getElementById(`bezeichnung${konto}_${i}`);
+          if (el) el.value = "";
+        });
+      });
+
+      // Dann neu befüllen falls YAML-Daten vorhanden
+      if (sel.value.trim()) fillBezeichnungsfelder(sel.value.trim());
     });
-  });
-  
-  // Dann neu befüllen falls YAML-Daten vorhanden
-  if (sel.value.trim()) fillBezeichnungsfelder(sel.value.trim());
-});
 
   const vorschau = document.getElementById("kiPromptVorschau");
   if (vorschau) vorschau.textContent = erstelleKiPromptTextW();
 
-document.addEventListener(
-  "yamlDataWerkstoffeLoaded",
-  () => {
+  document.addEventListener(
+    "yamlDataWerkstoffeLoaded",
+    () => {
+      fillCompanyDropdownW();
+      autoSelectMyCompanyW();
+      zeigeZufaelligeGeschaeftsfaelleW();
+    },
+    { once: true },
+  );
+
+  ladeYamlWerkstoffe();
+
+  // Fallback: falls YAML schon im localStorage war und Event bereits gefeuert
+  if (yamlDataWerkstoffe?.length) {
     fillCompanyDropdownW();
     autoSelectMyCompanyW();
     zeigeZufaelligeGeschaeftsfaelleW();
-  },
-  { once: true },
-);
-
-ladeYamlWerkstoffe();
-
-// Fallback: falls YAML schon im localStorage war und Event bereits gefeuert
-if (yamlDataWerkstoffe?.length) {
-  fillCompanyDropdownW();
-  autoSelectMyCompanyW();
-  zeigeZufaelligeGeschaeftsfaelleW();
-}
+  }
 });

@@ -4,10 +4,27 @@
 // Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
 // Bei Änderungen nur KONTENPLAN in utils.js anpassen.
 const werkstoffe = [
-  { name: "Rohstoffe",      aufwand: kontoLabel('6000'), bestand: kontoLabel('2000'), faktor: 2 }, // Rohstoffe: größerer Zahlenbereich
-  { name: "Fremdbauteile",  aufwand: kontoLabel('6010'), bestand: kontoLabel('2010') },
-  { name: "Hilfsstoffe",    aufwand: kontoLabel('6020'), bestand: kontoLabel('2020') },
-  { name: "Betriebsstoffe", aufwand: kontoLabel('6030'), bestand: kontoLabel('2030') }
+  {
+    name: "Rohstoffe",
+    aufwand: kontoLabel("6000"),
+    bestand: kontoLabel("2000"),
+    faktor: 2,
+  }, // Rohstoffe: größerer Zahlenbereich
+  {
+    name: "Fremdbauteile",
+    aufwand: kontoLabel("6010"),
+    bestand: kontoLabel("2010"),
+  },
+  {
+    name: "Hilfsstoffe",
+    aufwand: kontoLabel("6020"),
+    bestand: kontoLabel("2020"),
+  },
+  {
+    name: "Betriebsstoffe",
+    aufwand: kontoLabel("6030"),
+    bestand: kontoLabel("2030"),
+  },
 ];
 
 // Hilfsfunktion für zufällige Bestände
@@ -22,7 +39,7 @@ function generateRandomBestand(faktor = 1) {
 // Formatierung (unverändert)
 
 function erstelleZufaelligeBestandsveraenderungen() {
-  const bestandsdaten = werkstoffe.map(w => {
+  const bestandsdaten = werkstoffe.map((w) => {
     // Rohstoffe bekommen explizit den 10-fachen Faktor
     const faktor = w.faktor || 1;
     const anfangs = generateRandomBestand(faktor);
@@ -45,20 +62,20 @@ function erstelleZufaelligeBestandsveraenderungen() {
 }
 
 function zeigeZufaelligeBestandsveraenderungen() {
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   const bestandsdaten = erstelleZufaelligeBestandsveraenderungen();
 
   // ── AUFGABE ───────────────────────────────────────────────────────────────
-  let html = '<h2>Aufgabe</h2>';
+  let html = "<h2>Aufgabe</h2>";
   html += `<p>Berechne die Bestandsveränderungen für die Werkstoffe:</p>`;
   html += `<table style="border-collapse: collapse; width: 100%; max-width: 900px; margin-bottom: 2em; font-family: courier;">`;
   html += `<thead><tr style="background:#f0f0f0;"><th style="padding:8px; text-align:left;">Werkstoff</th><th style="padding:8px; text-align:right;">Anfangsbestand</th><th style="padding:8px; text-align:right;">Schlussbestand</th><th style="padding:8px; text-align:right;">Bestandsveränderung</th><th style="padding:8px; text-align:left;min-width: 200px">Art</th></tr></thead>`;
   html += `<tbody>`;
-  bestandsdaten.forEach(d => {
+  bestandsdaten.forEach((d) => {
     html += `<tr style="border-bottom:1px solid #ccc;">
       <td style="padding:8px;">${d.name}</td>
       <td style="padding:8px; text-align:right;">${formatBetrag(d.anfangs)}</td>
@@ -78,12 +95,12 @@ function zeigeZufaelligeBestandsveraenderungen() {
   html += `<table style="border-collapse: collapse; width: 100%; max-width: 900px; margin-bottom: 2em; font-family: courier;">`;
   html += `<thead><tr style="background:#f0f0f0;"><th style="padding:8px; text-align:left;">Werkstoff</th><th style="padding:8px; text-align:right;">Anfangsbestand</th><th style="padding:8px; text-align:right;">Schlussbestand</th><th style="padding:8px; text-align:right;">Bestandsveränderung</th><th style="padding:8px; text-align:left;min-width: 200px">Art</th></tr></thead>`;
   html += `<tbody>`;
-  bestandsdaten.forEach(d => {
+  bestandsdaten.forEach((d) => {
     html += `<tr style="border-bottom:1px solid #ccc;">
       <td style="padding:8px;">${d.name}</td>
       <td style="padding:8px; text-align:right;">${formatBetrag(d.anfangs)}</td>
       <td style="padding:8px; text-align:right;">${formatBetrag(d.schluss)}</td>
-      <td style="padding:8px; text-align:right;">${d.veraenderung !== 0 ? formatBetrag(d.betrag) : '—'}</td>
+      <td style="padding:8px; text-align:right;">${d.veraenderung !== 0 ? formatBetrag(d.betrag) : "—"}</td>
       <td style="padding:8px;">${d.art}</td>
     </tr>`;
   });
@@ -95,23 +112,23 @@ function zeigeZufaelligeBestandsveraenderungen() {
   <table style="white-space:nowrap; background-color:#fff; font-family:courier; min-width:700px; border-collapse:collapse; margin:1em 0 1.8em 0;">
     <tbody>`;
 
-bestandsdaten.forEach(d => {
-  if (d.veraenderung !== 0) {
-    html += `
+  bestandsdaten.forEach((d) => {
+    if (d.veraenderung !== 0) {
+      html += `
     <tr>
-      <td style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">${d.buchung.split(' an ')[0]}</td>
+      <td style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">${d.buchung.split(" an ")[0]}</td>
       <td style="text-align:right; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px" tabindex="1"></td>
       <td style="text-align: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 80px" tabindex="1">an</td>
-      <td style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">${d.buchung.split(' an ')[1]}</td>
+      <td style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" tabindex="1">${d.buchung.split(" an ")[1]}</td>
       <td style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 160px; max-width: 160px; text-align: right" tabindex="1">${formatBetrag(d.betrag)} €</td>
     </tr>`;
-  } else {
-    html += `
+    } else {
+      html += `
     <tr>
       <td style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 150px; max-width: 150px" colspan="5" tabindex="1"><em>${d.name}: Keine Bestandsveränderung – keine Buchung</em></td>
     </tr>`;
-  }
-});
+    }
+  });
 
   html += `</tbody></table>`;
 
@@ -209,37 +226,40 @@ Was du NICHT tust:
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(() => {
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(KI_ASSISTENT_PROMPT)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() => {
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
-    btn.textContent = 'Vorschau ausblenden ▲';
+    vorschau.style.display = "block";
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   zeigeZufaelligeBestandsveraenderungen();
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) vorschauEl.textContent = KI_ASSISTENT_PROMPT;
 });
-
-

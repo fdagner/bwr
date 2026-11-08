@@ -1,572 +1,869 @@
 let collections = [];
-    let activeId = null;
-    let items = [];
-    let dragSrc = null;
+let activeId = null;
+let items = [];
+let dragSrc = null;
 
-    async function init() {
-      await Collection.ensureDefaultCollection();
-      await loadCollections();
-      await loadItems();
+async function init() {
+  await Collection.ensureDefaultCollection();
+  await loadCollections();
+  await loadItems();
+}
+
+function aktualisiereUeberschrift() {
+  const c = collections.find((x) => x.id === activeId);
+  document.getElementById("collectionTitle").textContent = c ? c.name : "";
+}
+
+function aktualisiereLoeschButtons() {
+  const mehrere = collections.length > 1;
+  document.getElementById("btnAlleLoeschen").style.display = mehrere
+    ? ""
+    : "none";
+  document.getElementById("btnSammlungLoeschen").style.display = mehrere
+    ? ""
+    : "none";
+}
+
+async function loadCollections() {
+  collections = await Collection.getCollections();
+  activeId = Collection.getActiveCollectionId();
+  // Gespeicherte aktive ID ist evtl. verwaist (Sammlung wurde gelöscht) –
+  // dann auf die erste vorhandene Sammlung zurückfallen und dauerhaft merken.
+  if (collections.length && !collections.some((c) => c.id === activeId)) {
+    activeId = collections[0].id;
+  }
+  if (activeId) Collection.setActiveCollectionId(activeId);
+  const sel = document.getElementById("collectionSelect");
+  sel.innerHTML = "";
+  collections.forEach((c) => {
+    const o = document.createElement("option");
+    o.value = c.id;
+    o.textContent = c.name;
+    if (c.id === activeId) o.selected = true;
+    sel.appendChild(o);
+  });
+  sel.onchange = async () => {
+    activeId = sel.value;
+    Collection.setActiveCollectionId(activeId);
+    aktualisiereUeberschrift();
+    await loadItems();
+  };
+  aktualisiereUeberschrift();
+  aktualisiereLoeschButtons();
+}
+
+async function loadItems() {
+  if (!activeId) {
+    items = [];
+    renderGrid();
+    return;
+  }
+  items = await Collection.getItems(activeId);
+  // Alte Einträge bereinigen: Endung aus Titel entfernen
+  for (const it of items) {
+    const cleaned = String(it.title || "")
+      .trim()
+      .replace(/\.[a-zA-Z0-9]{2,5}$/i, "")
+      .trim();
+    if (cleaned !== it.title) {
+      await Collection.updateItem(it.id, { title: cleaned });
+      it.title = cleaned;
     }
+  }
+  renderGrid();
+}
 
-    function aktualisiereUeberschrift() {
-      const c = collections.find(x => x.id === activeId);
-      document.getElementById('collectionTitle').textContent = c ? c.name : '';
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  aktualisiereUeberschrift();
+  const shown = items;
+  document.getElementById("countInfo").textContent =
+    shown.length +
+    " von " +
+    items.length +
+    " Einträge (max. " +
+    Collection.MAX_ITEMS +
+    ")";
+  const countInfoTop = document.getElementById("countInfoTop");
+  if (countInfoTop) {
+    countInfoTop.textContent =
+      "Sammlungen: " +
+      collections.length +
+      " (max. " +
+      Collection.MAX_COLLECTIONS +
+      ")";
+    countInfoTop.title =
+      "Anzahl angelegter Sammlungen (max. " +
+      Collection.MAX_COLLECTIONS +
+      " gesamt)";
+  }
+  document.getElementById("btnAlleEintraegeEntfernen").style.display =
+    items.length ? "" : "none";
+  if (shown.length === 0) {
+    grid.innerHTML =
+      '<p style="grid-column: 1 / -1; text-align: center; color: #666; font-style: italic; margin: 32px 0;">Keine Einträge. Füge über „+ Sammlung“ Inhalte hinzu.</p>';
+    return;
+  }
+  grid.innerHTML = "";
+  shown.forEach((it) => {
+    const card = document.createElement("div");
+    card.className = "sammlung-card";
+    card.draggable = true;
+    card.dataset.id = it.id;
+    const btnOpen =
+      it.type === "beleg" || it.type === "beleg-png" || it.type === "beleg-svg"
+        ? '<button type="button" class="card-btn" ' +
+          dataOn("click", "oeffneBeleg", it.id) +
+          ' title="Öffnen">Öffnen</button>'
+        : "";
+    const btnPng = it.pngContent
+      ? '<button type="button" class="card-btn" ' +
+        dataOn("click", "downloadBeleg", it.id, "png") +
+        ' title="PNG herunterladen">PNG</button>'
+      : "";
+    const hasSvg = !!(
+      it.svgContent ||
+      (it.content && String(it.content).trim().startsWith("<svg"))
+    );
+    const hasHtml = !!(
+      it.htmlContent ||
+      (!hasSvg && it.content && String(it.content).trim().startsWith("<"))
+    );
+    const btnSvg = hasSvg
+      ? '<button type="button" class="card-btn" ' +
+        dataOn("click", "downloadBeleg", it.id, "svg") +
+        ' title="SVG herunterladen">SVG</button>'
+      : "";
+    const btnHtml = hasHtml
+      ? '<button type="button" class="card-btn" ' +
+        dataOn("click", "downloadBeleg", it.id, "html") +
+        ' title="HTML herunterladen">HTML</button>'
+      : "";
+    const hasGrafik = !!(it.pngContent || it.thumbnail || hasSvg || hasHtml);
+    const btnClipboard = hasGrafik
+      ? '<button type="button" class="card-btn" ' +
+        dataOn("click", "kopiereBelegGrafik", it.id) +
+        ' title="Grafik in die Zwischenablage kopieren">Zwischenablage</button>'
+      : "";
+    const btnLink = it.shareUrl
+      ? '<button type="button" class="card-btn" ' +
+        dataOn("click", "kopiereLink", it.id) +
+        ' title="Link kopieren">Link</button>'
+      : "";
+    card.innerHTML =
+      '<textarea class="title-edit" rows="2" title="' +
+      escapeHtml(it.title) +
+      '" ' +
+      dataOn("change", "renameItem", it.id, "__VALUE__") +
+      ">" +
+      escapeHtml(
+        String(it.title || "")
+          .trim()
+          .replace(/\.[a-zA-Z0-9]{2,5}$/i, "")
+          .trim(),
+      ) +
+      "</textarea>" +
+      '<div class="preview" style="cursor:zoom-in;" title="Vergrößern" ' +
+      dataOn("click", "oeffneVorschau", it.id) +
+      ">" +
+      (it.thumbnail || it.content || "") +
+      "</div>" +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 2px;">' +
+      '<span class="badge ' +
+      it.type +
+      '">' +
+      it.type +
+      "</span>" +
+      "</div>" +
+      '<div class="card-actions">' +
+      btnOpen +
+      btnPng +
+      btnSvg +
+      btnHtml +
+      btnLink +
+      btnClipboard +
+      '<button type="button" class="card-btn card-btn-danger" ' +
+      dataOn("click", "deleteItem", it.id) +
+      ' title="Löschen">Löschen</button>' +
+      "</div>";
+    grid.appendChild(card);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+function dataOn(evt, fn, ...args) {
+  return (
+    "data-on-" +
+    evt +
+    "='" +
+    JSON.stringify([{ fn: fn, args: args }]).replace(/'/g, "&#39;") +
+    "'"
+  );
+}
+
+async function neueSammlung() {
+  if (collections.length >= Collection.MAX_COLLECTIONS) {
+    zeigeModal(
+      "Maximale Anzahl von " +
+        Collection.MAX_COLLECTIONS +
+        " Sammlungen erreicht. Bitte löschen Sie zuerst eine Sammlung.",
+    );
+    return;
+  }
+  const name = await frageModal("Name der neuen Sammlung:");
+  if (!name) return;
+  const c = await Collection.createCollection(name);
+  await loadCollections();
+  document.getElementById("collectionSelect").value = c.id;
+  activeId = c.id;
+  Collection.setActiveCollectionId(c.id);
+  await loadItems();
+}
+
+async function sammlungUmbenennen() {
+  const c = collections.find((x) => x.id === activeId);
+  if (!c) return;
+  const name = await frageModal("Neuer Name:", c.name);
+  if (!name) return;
+  await Collection.renameCollection(activeId, name);
+  await loadCollections();
+}
+
+async function sammlungLeeren() {
+  if (!confirm("Alle Einträge dieser Sammlung löschen?")) return;
+  await Collection.clearCollection(activeId);
+  await loadItems();
+}
+
+async function sammlungLoeschen() {
+  if (collections.length <= 1) {
+    zeigeModal("Die letzte Sammlung kann nicht gelöscht werden.");
+    return;
+  }
+  if (!confirm("Sammlung und alle Einträge löschen?")) return;
+  // Nach dem Löschen die nächste Sammlung (Listenende springt wieder auf Anfang) aktivieren
+  const idx = collections.findIndex((c) => c.id === activeId);
+  const nachfolger = collections[(idx + 1) % collections.length];
+  await Collection.deleteCollection(activeId);
+  if (nachfolger) Collection.setActiveCollectionId(nachfolger.id);
+  await loadCollections();
+  await loadItems();
+}
+
+async function alleSammlungenLoeschen() {
+  if (!confirm("WIRKLICH alle Sammlungen und Einträge löschen?")) return;
+  if (
+    !confirm("Diese Aktion kann nicht rückgängig gemacht werden. Fortfahren?")
+  )
+    return;
+  for (const c of collections) await Collection.deleteCollection(c.id);
+  await Collection.ensureDefaultCollection();
+  await loadCollections();
+  await loadItems();
+}
+
+async function deleteItem(id) {
+  if (!confirm("Eintrag löschen?")) return;
+  await Collection.deleteItem(id);
+  await loadItems();
+}
+
+async function renameItem(id, title) {
+  const cleaned = String(title || "")
+    .replace(/\.(png|svg|jpg|jpeg)$/i, "")
+    .trim();
+  await Collection.updateItem(id, { title: cleaned });
+}
+
+async function exportJSON() {
+  const col = collections.find((x) => x.id === activeId);
+  if (!col) {
+    zeigeModal("Keine Sammlung ausgewählt.");
+    return;
+  }
+  const its = await Collection.getItems(activeId);
+  const data = JSON.stringify({ collections: [col], items: its }, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = (col.name || "sammlung") + "-backup.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function zeigeImportDuplikatModal(name) {
+  // Gibt 'overwrite', 'new' oder 'cancel' zurueck
+  return new Promise(function (resolve) {
+    const overlay = document.createElement("div");
+    overlay.style.cssText =
+      "position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999;";
+    const box = document.createElement("div");
+    box.style.cssText =
+      "background:#fff;border-radius:10px;padding:18px;max-width:420px;width:92%;box-shadow:0 8px 24px rgba(0,0,0,.25);";
+    box.innerHTML =
+      '<h3 style="margin:0 0 12px;">Sammlung existiert bereits</h3>' +
+      '<p style="margin:0 0 14px;">Eine Sammlung mit dem Namen <strong>' +
+      escapeHtml(name) +
+      "</strong> existiert bereits.</p>" +
+      '<div style="display:flex;flex-direction:column;gap:8px;">' +
+      '<button type="button" id="btnOverwrite" style="padding:8px 12px;border:none;border-radius:4px;background:#2c5f2d;color:#fff;cursor:pointer;">Überschreiben (bestehende Einträge ersetzen)</button>' +
+      '<button type="button" id="btnNew" style="padding:8px 12px;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;cursor:pointer;">Neue Sammlung anlegen</button>' +
+      '<button type="button" id="btnCancel" style="padding:8px 12px;border:1px solid #ccc;border-radius:4px;background:#fff;cursor:pointer;color:#888;">Abbrechen</button>' +
+      "</div>";
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    box.querySelector("#btnOverwrite").onclick = function () {
+      overlay.remove();
+      resolve("overwrite");
+    };
+    box.querySelector("#btnNew").onclick = function () {
+      overlay.remove();
+      resolve("new");
+    };
+    box.querySelector("#btnCancel").onclick = function () {
+      overlay.remove();
+      resolve("cancel");
+    };
+  });
+}
+
+// Prüft eine Backup-Datei vor dem Import: JSON-Format + Inhalt/Struktur.
+// Gibt eine Liste mit Problembeschreibungen zurück (leer = ok).
+function validiereBackup(data) {
+  const probleme = [];
+  if (data === null || typeof data !== "object" || Array.isArray(data)) {
+    probleme.push(
+      'Die Datei enthält kein gültiges Backup-Format (erwartet: ein Objekt mit "collections" und/oder "items").',
+    );
+    return probleme;
+  }
+  const cols = data.collections;
+  const its = data.items;
+  if (cols === undefined && its === undefined) {
+    probleme.push(
+      'Es wurden weder Sammlungen ("collections") noch Einträge ("items") gefunden. Ist die Datei ein Backup von meinbwr.de?',
+    );
+    return probleme;
+  }
+  if (cols !== undefined && !Array.isArray(cols))
+    probleme.push('"collections" muss eine Liste sein.');
+  if (its !== undefined && !Array.isArray(its))
+    probleme.push('"items" muss eine Liste sein.');
+  if (probleme.length) return probleme;
+
+  (cols || []).forEach(function (c, i) {
+    if (c === null || typeof c !== "object") {
+      probleme.push("Sammlung " + (i + 1) + " ist kein gültiges Objekt.");
+    } else if (typeof c.name !== "string" || !c.name.trim()) {
+      probleme.push("Sammlung " + (i + 1) + " hat keinen Namen.");
     }
+  });
 
-        function aktualisiereLoeschButtons() {
-      const mehrere = collections.length > 1;
-      document.getElementById('btnAlleLoeschen').style.display = mehrere ? '' : 'none';
-      document.getElementById('btnSammlungLoeschen').style.display = mehrere ? '' : 'none';
+  let zaehlerOhneInhalt = 0;
+  (its || []).forEach(function (it, i) {
+    if (it === null || typeof it !== "object") {
+      probleme.push("Eintrag " + (i + 1) + " ist kein gültiges Objekt.");
+      return;
     }
-
-    async function loadCollections() {
-      collections = await Collection.getCollections();
-      activeId = Collection.getActiveCollectionId();
-      // Gespeicherte aktive ID ist evtl. verwaist (Sammlung wurde gelöscht) –
-      // dann auf die erste vorhandene Sammlung zurückfallen und dauerhaft merken.
-      if (collections.length && !collections.some(c => c.id === activeId)) {
-        activeId = collections[0].id;
-      }
-      if (activeId) Collection.setActiveCollectionId(activeId);
-      const sel = document.getElementById('collectionSelect');
-      sel.innerHTML = '';
-      collections.forEach(c => {
-        const o = document.createElement('option');
-        o.value = c.id; o.textContent = c.name;
-        if (c.id === activeId) o.selected = true;
-        sel.appendChild(o);
-      });
-        sel.onchange = async () => {
-        activeId = sel.value;
-        Collection.setActiveCollectionId(activeId);
-        aktualisiereUeberschrift();
-        await loadItems();
-      };
-      aktualisiereUeberschrift();
-      aktualisiereLoeschButtons();
+    const hatInhalt = [
+      "content",
+      "svgContent",
+      "htmlContent",
+      "pngContent",
+    ].some(
+      (feld) => typeof it[feld] === "string" && it[feld].trim().length > 0,
+    );
+    if (!hatInhalt) {
+      zaehlerOhneInhalt++;
+      probleme.push(
+        "Eintrag " +
+          (i + 1) +
+          (it.title ? " („" + String(it.title).slice(0, 40) + "“)" : "") +
+          " enthält keine Belegdaten (PNG/SVG/HTML).",
+      );
     }
+  });
+  // Nur meckern, wenn WIRKLICH kein einziger Eintrag importierbar ist
+  if (
+    Array.isArray(its) &&
+    its.length > 0 &&
+    zaehlerOhneInhalt === its.length
+  ) {
+    probleme.push(
+      "Keiner der " +
+        its.length +
+        " Einträge enthält importierbare Belegdaten.",
+    );
+  }
+  return probleme;
+}
 
-    async function loadItems() {
-      if (!activeId) { items = []; renderGrid(); return; }
-      items = await Collection.getItems(activeId);
-      // Alte Einträge bereinigen: Endung aus Titel entfernen
-      for (const it of items) {
-        const cleaned = String(it.title || '').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '').trim();
-        if (cleaned !== it.title) {
-          await Collection.updateItem(it.id, { title: cleaned });
-          it.title = cleaned;
-        }
-      }
-      renderGrid();
+async function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // 1) Format: .json-Datei?
+  if (!/\.json$/i.test(file.name)) {
+    zeigeModal(
+      '"' +
+        file.name +
+        '" ist keine JSON-Datei.\n\nBitte wählen Sie eine Backup-Datei („.json") aus, die Sie über „Backup (diese Sammlung)" erzeugt haben.',
+    );
+    event.target.value = "";
+    return;
+  }
+
+  // 2) JSON lesbar?
+  const text = await file.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    zeigeModal(
+      "Die Datei konnte nicht als JSON gelesen werden:\n" +
+        e.message +
+        "\n\nDie Datei ist möglicherweise beschädigt oder kein JSON-Backup.",
+    );
+    event.target.value = "";
+    return;
+  }
+
+  // 3) Inhalt structuriert prüfbar?
+  const probleme = validiereBackup(data);
+  if (probleme.length > 0) {
+    zeigeModal(
+      "Die Datei konnte nicht als Backup erkannt werden:\n\n– " +
+        probleme.join("\n– "),
+    );
+    event.target.value = "";
+    return;
+  }
+
+  // 4) Platzcheck: Einträge ohne Sammlungsangabe landen in der aktiven Sammlung
+  const importItems = Array.isArray(data.items) ? data.items : [];
+  const ohneSammlung = importItems.filter(
+    (it) =>
+      !(
+        Array.isArray(data.collections) &&
+        data.collections.some((c) => c.id === it.collectionId)
+      ),
+  );
+  if (
+    !(Array.isArray(data.collections) && data.collections.length > 0) &&
+    ohneSammlung.length > 0
+  ) {
+    const aktiveId = Collection.getActiveCollectionId();
+    const bestand = aktiveId ? await Collection.getItemCount(aktiveId) : 0;
+    if (bestand + ohneSammlung.length > Collection.MAX_ITEMS) {
+      zeigeModal(
+        "Zu wenig Platz: Die aktive Sammlung enthält bereits " +
+          bestand +
+          " von maximal " +
+          Collection.MAX_ITEMS +
+          " Einträgen, importiert werden sollten " +
+          ohneSammlung.length +
+          ".\n\n" +
+          "Tipp: Legen Sie vorher eine neue Sammlung an und importieren Sie dort hinein.",
+      );
+      event.target.value = "";
+      return;
     }
+  }
 
-    function renderGrid() {
-      const grid = document.getElementById('grid');
-      aktualisiereUeberschrift();
-      const shown = items;
-      document.getElementById('countInfo').textContent = shown.length + ' von ' + items.length + ' Einträge (max. ' + Collection.MAX_ITEMS + ')';
-      const countInfoTop = document.getElementById('countInfoTop');
-      if (countInfoTop) {
-        countInfoTop.textContent = 'Sammlungen: ' + collections.length + ' (max. ' + Collection.MAX_COLLECTIONS + ')';
-        countInfoTop.title = 'Anzahl angelegter Sammlungen (max. ' + Collection.MAX_COLLECTIONS + ' gesamt)';
-      }
-      document.getElementById('btnAlleEintraegeEntfernen').style.display = items.length ? '' : 'none';
-      if (shown.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #666; font-style: italic; margin: 32px 0;">Keine Einträge. Füge über „+ Sammlung“ Inhalte hinzu.</p>';
+  const existingCols = await Collection.getCollections();
+  // Sammlungs-Platzcheck: wie viele NEUE Sammlungen würde der Import erzeugen?
+  const neueCols = (data.collections || []).filter(
+    (c) =>
+      !existingCols.some(
+        (x) =>
+          (x.name || "").trim().toLowerCase() ===
+          (c.name || "").trim().toLowerCase(),
+      ),
+  );
+  if (existingCols.length + neueCols.length > Collection.MAX_COLLECTIONS) {
+    zeigeModal(
+      "Zu viele Sammlungen: Der Import bräuchte " +
+        neueCols.length +
+        " neue Sammlung/en, " +
+        "es sind aber insgesamt maximal " +
+        Collection.MAX_COLLECTIONS +
+        " Sammlungen erlaubt (aktuell " +
+        existingCols.length +
+        ").\n\n" +
+        "Tipp: Löschen Sie zuerst ältere oder leere Sammlungen.",
+    );
+    event.target.value = "";
+    return;
+  }
+  const idMap = {};
+  let firstImportedId = null;
+  for (const c of data.collections || []) {
+    const dup = existingCols.find(
+      (x) =>
+        (x.name || "").trim().toLowerCase() ===
+        (c.name || "").trim().toLowerCase(),
+    );
+    let targetId = null;
+    if (dup) {
+      const choice = await zeigeImportDuplikatModal(c.name);
+      if (choice === "cancel") {
+        event.target.value = "";
         return;
       }
-      grid.innerHTML = '';
-      shown.forEach(it => {
-        const card = document.createElement('div');
-        card.className = 'sammlung-card';
-        card.draggable = true;
-        card.dataset.id = it.id;
-        const btnOpen = (it.type === 'beleg' || it.type === 'beleg-png' || it.type === 'beleg-svg')
-          ? '<button type="button" class="card-btn" ' + dataOn('click', 'oeffneBeleg', it.id) + ' title="Öffnen">Öffnen</button>' : '';
-        const btnPng = it.pngContent ? '<button type="button" class="card-btn" ' + dataOn('click', 'downloadBeleg', it.id, 'png') + ' title="PNG herunterladen">PNG</button>' : '';
-        const hasSvg = !!(it.svgContent || (it.content && String(it.content).trim().startsWith('<svg')));
-        const hasHtml = !!(it.htmlContent || (!hasSvg && it.content && String(it.content).trim().startsWith('<')));
-        const btnSvg = hasSvg ? '<button type="button" class="card-btn" ' + dataOn('click', 'downloadBeleg', it.id, 'svg') + ' title="SVG herunterladen">SVG</button>' : '';
-        const btnHtml = hasHtml ? '<button type="button" class="card-btn" ' + dataOn('click', 'downloadBeleg', it.id, 'html') + ' title="HTML herunterladen">HTML</button>' : '';
-        const hasGrafik = !!(it.pngContent || it.thumbnail || hasSvg || hasHtml);
-        const btnClipboard = hasGrafik ? '<button type="button" class="card-btn" ' + dataOn('click', 'kopiereBelegGrafik', it.id) + ' title="Grafik in die Zwischenablage kopieren">Zwischenablage</button>' : '';
-        const btnLink = it.shareUrl ? '<button type="button" class="card-btn" ' + dataOn('click', 'kopiereLink', it.id) + ' title="Link kopieren">Link</button>' : '';
-        card.innerHTML =
-          '<textarea class="title-edit" rows="2" title="' + escapeHtml(it.title) + '" ' + dataOn('change', 'renameItem', it.id, '__VALUE__') + '>' + escapeHtml(String(it.title || '').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '').trim()) + '</textarea>' +
-          '<div class="preview" style="cursor:zoom-in;" title="Vergrößern" ' + dataOn('click', 'oeffneVorschau', it.id) + '>' + (it.thumbnail || it.content || '') + '</div>' +
-          '<div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 2px;">' +
-          '<span class="badge ' + it.type + '">' + it.type + '</span>' +
-          '</div>' +
-          '<div class="card-actions">' +
-          btnOpen + btnPng + btnSvg + btnHtml + btnLink + btnClipboard +
-          '<button type="button" class="card-btn card-btn-danger" ' + dataOn('click', 'deleteItem', it.id) + ' title="Löschen">Löschen</button>' +
-          '</div>';
-        grid.appendChild(card);
-      });
-    }
-
-    function escapeHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-    function dataOn(evt, fn, ...args) { return 'data-on-' + evt + "='" + JSON.stringify([{ fn: fn, args: args }]).replace(/'/g, '&#39;') + "'"; }
-
-    async function neueSammlung() {
-      if (collections.length >= Collection.MAX_COLLECTIONS) {
-        zeigeModal('Maximale Anzahl von ' + Collection.MAX_COLLECTIONS + ' Sammlungen erreicht. Bitte löschen Sie zuerst eine Sammlung.');
-        return;
-      }
-      const name = await frageModal('Name der neuen Sammlung:');
-      if (!name) return;
-      const c = await Collection.createCollection(name);
-      await loadCollections();
-      document.getElementById('collectionSelect').value = c.id;
-      activeId = c.id;
-      Collection.setActiveCollectionId(c.id);
-      await loadItems();
-    }
-
-    async function sammlungUmbenennen() {
-      const c = collections.find(x => x.id === activeId);
-      if (!c) return;
-      const name = await frageModal('Neuer Name:', c.name);
-      if (!name) return;
-      await Collection.renameCollection(activeId, name);
-      await loadCollections();
-    }
-
-    async function sammlungLeeren() {
-      if (!confirm('Alle Einträge dieser Sammlung löschen?')) return;
-      await Collection.clearCollection(activeId);
-      await loadItems();
-    }
-
-    async function sammlungLoeschen() {
-      if (collections.length <= 1) { zeigeModal('Die letzte Sammlung kann nicht gelöscht werden.'); return; }
-      if (!confirm('Sammlung und alle Einträge löschen?')) return;
-      // Nach dem Löschen die nächste Sammlung (Listenende springt wieder auf Anfang) aktivieren
-      const idx = collections.findIndex(c => c.id === activeId);
-      const nachfolger = collections[(idx + 1) % collections.length];
-      await Collection.deleteCollection(activeId);
-      if (nachfolger) Collection.setActiveCollectionId(nachfolger.id);
-      await loadCollections();
-      await loadItems();
-    }
-
-    async function alleSammlungenLoeschen() {
-      if (!confirm('WIRKLICH alle Sammlungen und Einträge löschen?')) return;
-      if (!confirm('Diese Aktion kann nicht rückgängig gemacht werden. Fortfahren?')) return;
-      for (const c of collections) await Collection.deleteCollection(c.id);
-      await Collection.ensureDefaultCollection();
-      await loadCollections();
-      await loadItems();
-    }
-
-    async function deleteItem(id) {
-      if (!confirm('Eintrag löschen?')) return;
-      await Collection.deleteItem(id);
-      await loadItems();
-    }
-
-    async function renameItem(id, title) {
-      const cleaned = String(title || '').replace(/\.(png|svg|jpg|jpeg)$/i, '').trim();
-      await Collection.updateItem(id, { title: cleaned });
-    }
-
-    async function exportJSON() {
-      const col = collections.find(x => x.id === activeId);
-      if (!col) { zeigeModal('Keine Sammlung ausgewählt.'); return; }
-      const its = await Collection.getItems(activeId);
-      const data = JSON.stringify({ collections: [col], items: its }, null, 2);
-      const blob = new Blob([data], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = (col.name || 'sammlung') + '-backup.json';
-      document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    async function zeigeImportDuplikatModal(name) {
-      // Gibt 'overwrite', 'new' oder 'cancel' zurueck
-      return new Promise(function (resolve) {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999;';
-        const box = document.createElement('div');
-        box.style.cssText = 'background:#fff;border-radius:10px;padding:18px;max-width:420px;width:92%;box-shadow:0 8px 24px rgba(0,0,0,.25);';
-        box.innerHTML =
-          '<h3 style="margin:0 0 12px;">Sammlung existiert bereits</h3>' +
-          '<p style="margin:0 0 14px;">Eine Sammlung mit dem Namen <strong>' + escapeHtml(name) + '</strong> existiert bereits.</p>' +
-          '<div style="display:flex;flex-direction:column;gap:8px;">' +
-          '<button type="button" id="btnOverwrite" style="padding:8px 12px;border:none;border-radius:4px;background:#2c5f2d;color:#fff;cursor:pointer;">Überschreiben (bestehende Einträge ersetzen)</button>' +
-          '<button type="button" id="btnNew" style="padding:8px 12px;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;cursor:pointer;">Neue Sammlung anlegen</button>' +
-          '<button type="button" id="btnCancel" style="padding:8px 12px;border:1px solid #ccc;border-radius:4px;background:#fff;cursor:pointer;color:#888;">Abbrechen</button>' +
-          '</div>';
-        overlay.appendChild(box);
-        document.body.appendChild(overlay);
-        box.querySelector('#btnOverwrite').onclick = function () { overlay.remove(); resolve('overwrite'); };
-        box.querySelector('#btnNew').onclick = function () { overlay.remove(); resolve('new'); };
-        box.querySelector('#btnCancel').onclick = function () { overlay.remove(); resolve('cancel'); };
-      });
-    }
-
-    // Prüft eine Backup-Datei vor dem Import: JSON-Format + Inhalt/Struktur.
-    // Gibt eine Liste mit Problembeschreibungen zurück (leer = ok).
-    function validiereBackup(data) {
-      const probleme = [];
-      if (data === null || typeof data !== 'object' || Array.isArray(data)) {
-        probleme.push('Die Datei enthält kein gültiges Backup-Format (erwartet: ein Objekt mit "collections" und/oder "items").');
-        return probleme;
-      }
-      const cols = data.collections;
-      const its = data.items;
-      if (cols === undefined && its === undefined) {
-        probleme.push('Es wurden weder Sammlungen ("collections") noch Einträge ("items") gefunden. Ist die Datei ein Backup von meinbwr.de?');
-        return probleme;
-      }
-      if (cols !== undefined && !Array.isArray(cols)) probleme.push('"collections" muss eine Liste sein.');
-      if (its !== undefined && !Array.isArray(its)) probleme.push('"items" muss eine Liste sein.');
-      if (probleme.length) return probleme;
-
-      (cols || []).forEach(function (c, i) {
-        if (c === null || typeof c !== 'object') {
-          probleme.push('Sammlung ' + (i + 1) + ' ist kein gültiges Objekt.');
-        } else if (typeof c.name !== 'string' || !c.name.trim()) {
-          probleme.push('Sammlung ' + (i + 1) + ' hat keinen Namen.');
-        }
-      });
-
-      let zaehlerOhneInhalt = 0;
-      (its || []).forEach(function (it, i) {
-        if (it === null || typeof it !== 'object') {
-          probleme.push('Eintrag ' + (i + 1) + ' ist kein gültiges Objekt.');
-          return;
-        }
-        const hatInhalt = ['content', 'svgContent', 'htmlContent', 'pngContent']
-          .some(feld => typeof it[feld] === 'string' && it[feld].trim().length > 0);
-        if (!hatInhalt) {
-          zaehlerOhneInhalt++;
-          probleme.push('Eintrag ' + (i + 1) + (it.title ? ' („' + String(it.title).slice(0, 40) + '“)' : '')
-            + ' enthält keine Belegdaten (PNG/SVG/HTML).');
-        }
-      });
-      // Nur meckern, wenn WIRKLICH kein einziger Eintrag importierbar ist
-      if (Array.isArray(its) && its.length > 0 && zaehlerOhneInhalt === its.length) {
-        probleme.push('Keiner der ' + its.length + ' Einträge enthält importierbare Belegdaten.');
-      }
-      return probleme;
-    }
-
-    async function importJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      // 1) Format: .json-Datei?
-      if (!/\.json$/i.test(file.name)) {
-        zeigeModal('"' + file.name + '" ist keine JSON-Datei.\n\nBitte wählen Sie eine Backup-Datei („.json") aus, die Sie über „Backup (diese Sammlung)" erzeugt haben.');
-        event.target.value = '';
-        return;
-      }
-
-      // 2) JSON lesbar?
-      const text = await file.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        zeigeModal('Die Datei konnte nicht als JSON gelesen werden:\n' + e.message + '\n\nDie Datei ist möglicherweise beschädigt oder kein JSON-Backup.');
-        event.target.value = '';
-        return;
-      }
-
-      // 3) Inhalt structuriert prüfbar?
-      const probleme = validiereBackup(data);
-      if (probleme.length > 0) {
-        zeigeModal('Die Datei konnte nicht als Backup erkannt werden:\n\n– ' + probleme.join('\n– '));
-        event.target.value = '';
-        return;
-      }
-
-      // 4) Platzcheck: Einträge ohne Sammlungsangabe landen in der aktiven Sammlung
-      const importItems = Array.isArray(data.items) ? data.items : [];
-      const ohneSammlung = importItems.filter(it => !(Array.isArray(data.collections) && data.collections.some(c => c.id === it.collectionId)));
-      if (!(Array.isArray(data.collections) && data.collections.length > 0) && ohneSammlung.length > 0) {
-        const aktiveId = Collection.getActiveCollectionId();
-        const bestand = aktiveId ? await Collection.getItemCount(aktiveId) : 0;
-        if (bestand + ohneSammlung.length > Collection.MAX_ITEMS) {
-          zeigeModal('Zu wenig Platz: Die aktive Sammlung enthält bereits ' + bestand + ' von maximal '
-            + Collection.MAX_ITEMS + ' Einträgen, importiert werden sollten ' + ohneSammlung.length + '.\n\n'
-            + 'Tipp: Legen Sie vorher eine neue Sammlung an und importieren Sie dort hinein.');
-          event.target.value = '';
-          return;
-        }
-      }
-
-      const existingCols = await Collection.getCollections();
-      // Sammlungs-Platzcheck: wie viele NEUE Sammlungen würde der Import erzeugen?
-      const neueCols = (data.collections || []).filter(c =>
-        !existingCols.some(x => (x.name || '').trim().toLowerCase() === (c.name || '').trim().toLowerCase()));
-      if (existingCols.length + neueCols.length > Collection.MAX_COLLECTIONS) {
-        zeigeModal('Zu viele Sammlungen: Der Import bräuchte ' + neueCols.length + ' neue Sammlung/en, '
-          + 'es sind aber insgesamt maximal ' + Collection.MAX_COLLECTIONS + ' Sammlungen erlaubt (aktuell ' + existingCols.length + ').\n\n'
-          + 'Tipp: Löschen Sie zuerst ältere oder leere Sammlungen.');
-        event.target.value = '';
-        return;
-      }
-      const idMap = {};
-      let firstImportedId = null;
-      for (const c of (data.collections || [])) {
-        const dup = existingCols.find(x => (x.name || '').trim().toLowerCase() === (c.name || '').trim().toLowerCase());
-        let targetId = null;
-        if (dup) {
-          const choice = await zeigeImportDuplikatModal(c.name);
-          if (choice === 'cancel') { event.target.value = ''; return; }
-          if (choice === 'overwrite') {
-            await Collection.clearCollection(dup.id);
-            targetId = dup.id;
-            await Collection.updateCollectionCover(dup.id, c.cover || {});
-          } else {
-            const aktuelleCols = await Collection.getCollections();
-            if (aktuelleCols.length >= Collection.MAX_COLLECTIONS) {
-              zeigeModal('Maximale Anzahl von ' + Collection.MAX_COLLECTIONS + ' Sammlungen erreicht. Seit dem Laden der Datei wurde bereits eine Sammlung angelegt (z. B. im zweiten Tab).');
-              event.target.value = '';
-              return;
-            }
-            const dateStr = new Date().toISOString().slice(0, 10);
-            const newC = await Collection.createCollection(c.name + ' ' + dateStr);
-            targetId = newC.id;
-            await Collection.updateCollectionCover(newC.id, c.cover || {});
-          }
-        } else {
-          const newC = await Collection.createCollection(c.name);
-          targetId = newC.id;
-          await Collection.updateCollectionCover(newC.id, c.cover || {});
-        }
-        idMap[c.id] = targetId;
-        if (!firstImportedId) firstImportedId = targetId;
-      }
-      const itemsToImport = (data.items || []).map(it => ({
-        collectionId: idMap[it.collectionId] || firstImportedId || Collection.getActiveCollectionId(),
-        type: it.type,
-        title: it.title,
-        content: it.content,
-        thumbnail: it.thumbnail,
-        pngContent: it.pngContent,
-        svgContent: it.svgContent,
-        htmlContent: it.htmlContent,
-        formState: it.formState,
-        containerId: it.containerId,
-        belegType: it.belegType,
-        shareUrl: it.shareUrl,
-        parentId: it.parentId ? (idMap[it.parentId] || null) : null
-      }));
-      try {
-        await Collection.addItems(itemsToImport);
-      } catch (e) {
-        const grund = (e && e.message === 'MAX_ITEMS')
-          ? 'die Obergrenze von ' + Collection.MAX_ITEMS + ' Einträgen pro Sammlung ist erreicht'
-          : ((e && e.message) || e);
-        zeigeModal('Der Import wurde abgebrochen: ' + grund + '.\n\nBereits übertragene Teile bleiben erhalten – bitte importieren Sie ggf. in eine neue Sammlung.');
-        await loadCollections();
-        await loadItems();
-        event.target.value = '';
-        return;
-      }
-      if (firstImportedId) {
-        Collection.setActiveCollectionId(firstImportedId);
-      }
-      await loadCollections();
-      await loadItems();
-      zeigeModal('Import abgeschlossen: ' + Object.keys(idMap).length + ' Sammlung(en), '
-        + itemsToImport.length + ' Eintrag(e) importiert. Die Sammlung wurde geöffnet.');
-      event.target.value = '';
-    }
-
-    async function downloadBeleg(id, format) {
-      const item = items.find(i => i.id === id);
-      if (!item) return;
-      let content = (format === 'png') ? (item.pngContent || '') : (format === 'html' ? (item.htmlContent || item.content || '') : (item.svgContent || item.content || ''));
-      if (!content) { zeigeModal('Keine Daten für diesen Beleg.'); return; }
-      const baseName = (item.title || 'beleg').trim().replace(/\.[a-zA-Z0-9]{2,5}$/i, '');
-      const ext = format === 'png' ? '.png' : (format === 'html' ? '.html' : '.svg');
-      const filename = baseName + ext;
-      if (format === 'png') {
-        const a = document.createElement('a');
-        a.href = content;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      } else if (format === 'html') {
-        const blob = new Blob([String(content)], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+      if (choice === "overwrite") {
+        await Collection.clearCollection(dup.id);
+        targetId = dup.id;
+        await Collection.updateCollectionCover(dup.id, c.cover || {});
       } else {
-        const cleaned = String(content)
-          .replace(/&nbsp;/g, '&#160;')
-          .replace(/&copy;/g, '&#169;')
-          .replace(/&reg;/g, '&#174;')
-          .replace(/&trade;/g, '&#8482;');
-        const blob = new Blob([cleaned], { type: 'image/svg+xml;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      }
-    }
-
-    function oeffneBeleg(id) {
-      window.location.href = 'belege.html?openBeleg=' + encodeURIComponent(id);
-    }
-
-    // ── Beleg als Grafik (PNG) in die Zwischenablage ──────────────────────
-    function svgMarkupZuBild(svgMarkup) {
-      return new Promise(function (aufs, fehler) {
-        const temp = document.createElement('div');
-        temp.innerHTML = svgMarkup;
-        const svgEl = temp.querySelector('svg');
-        if (!svgEl) { fehler(new Error('Keine SVG-Daten')); return; }
-        svgEl.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        let breite = parseFloat(svgEl.getAttribute('width')) || 0;
-        let hoehe = parseFloat(svgEl.getAttribute('height')) || 0;
-        const vb = (svgEl.getAttribute('viewBox') || '').match(/(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)/);
-        if (vb) { breite = +vb[3]; hoehe = +vb[4]; }
-        if (!breite || !hoehe) { breite = 800; hoehe = 600; }
-        svgEl.setAttribute('width', breite);
-        svgEl.setAttribute('height', hoehe);
-        const quelle = new XMLSerializer().serializeToString(svgEl);
-        const img = new Image();
-        img.onload = function () {
-          const cv = document.createElement('canvas');
-          cv.width = Math.round(breite * 2);
-          cv.height = Math.round(hoehe * 2);
-          const cx = cv.getContext('2d');
-          cx.fillStyle = '#ffffff';
-          cx.fillRect(0, 0, cv.width, cv.height);
-          cx.drawImage(img, 0, 0, cv.width, cv.height);
-          aufs(cv.toDataURL('image/png'));
-        };
-        img.onerror = fehler;
-        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(quelle);
-      });
-    }
-
-    function htmlBelegZuBild(htmlMarkup) {
-      return new Promise(function (aufs, fehler) {
-        function renderUndExportieren() {
-          const temp = document.createElement('div');
-          temp.style.cssText = 'position:fixed;left:-9999px;top:0;background:#fff;width:760px;';
-          temp.innerHTML = htmlMarkup;
-          document.body.appendChild(temp);
-          html2canvas(temp, { scale: 1.5, backgroundColor: '#ffffff' }).then(function (cv) {
-            temp.remove();
-            aufs(cv.toDataURL('image/png'));
-          }).catch(function (err) { temp.remove(); fehler(err); });
-        }
-        if (typeof html2canvas === 'function') { renderUndExportieren(); return; }
-        const sk = document.createElement('script');
-        sk.src = 'js/libraries/html2canvas.min.js';
-        sk.onload = renderUndExportieren;
-        sk.onerror = function () { fehler(new Error('html2canvas konnte nicht geladen werden')); };
-        document.head.appendChild(sk);
-      });
-    }
-
-    async function kopiereBelegGrafik(id) {
-      const it = items.find(i => i.id === id);
-      if (!it) return;
-      try {
-        let dataUrl = null;
-        if (it.pngContent && String(it.pngContent).startsWith('data:image/png')) {
-          dataUrl = it.pngContent;
-        } else if (it.thumbnail && String(it.thumbnail).startsWith('data:image/png')) {
-          dataUrl = it.thumbnail;
-        } else if (it.svgContent || (it.content && String(it.content).trim().startsWith('<svg'))) {
-          dataUrl = await svgMarkupZuBild(it.svgContent || it.content);
-        } else if (it.htmlContent || (it.content && String(it.content).trim().startsWith('<'))) {
-          dataUrl = await htmlBelegZuBild(it.htmlContent || it.content);
-        }
-        if (!dataUrl) { zeigeModal('Kein Grafikinhalt für diesen Eintrag vorhanden.'); return; }
-        const response = await fetch(dataUrl);
-        const blob = await response.blob();
-        if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
-          zeigeModal('Die Zwischenablage-Unterstützung (Grafik) ist in diesem Browser nicht verfügbar.');
+        const aktuelleCols = await Collection.getCollections();
+        if (aktuelleCols.length >= Collection.MAX_COLLECTIONS) {
+          zeigeModal(
+            "Maximale Anzahl von " +
+              Collection.MAX_COLLECTIONS +
+              " Sammlungen erreicht. Seit dem Laden der Datei wurde bereits eine Sammlung angelegt (z. B. im zweiten Tab).",
+          );
+          event.target.value = "";
           return;
         }
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        zeigeModal('Beleg-Grafik wurde in die Zwischenablage kopiert.');
-      } catch (err) {
-        console.error(err);
-        zeigeModal('Kopieren in die Zwischenablage fehlgeschlagen: ' + (err.message || err));
+        const dateStr = new Date().toISOString().slice(0, 10);
+        const newC = await Collection.createCollection(c.name + " " + dateStr);
+        targetId = newC.id;
+        await Collection.updateCollectionCover(newC.id, c.cover || {});
       }
+    } else {
+      const newC = await Collection.createCollection(c.name);
+      targetId = newC.id;
+      await Collection.updateCollectionCover(newC.id, c.cover || {});
     }
+    idMap[c.id] = targetId;
+    if (!firstImportedId) firstImportedId = targetId;
+  }
+  const itemsToImport = (data.items || []).map((it) => ({
+    collectionId:
+      idMap[it.collectionId] ||
+      firstImportedId ||
+      Collection.getActiveCollectionId(),
+    type: it.type,
+    title: it.title,
+    content: it.content,
+    thumbnail: it.thumbnail,
+    pngContent: it.pngContent,
+    svgContent: it.svgContent,
+    htmlContent: it.htmlContent,
+    formState: it.formState,
+    containerId: it.containerId,
+    belegType: it.belegType,
+    shareUrl: it.shareUrl,
+    parentId: it.parentId ? idMap[it.parentId] || null : null,
+  }));
+  try {
+    await Collection.addItems(itemsToImport);
+  } catch (e) {
+    const grund =
+      e && e.message === "MAX_ITEMS"
+        ? "die Obergrenze von " +
+          Collection.MAX_ITEMS +
+          " Einträgen pro Sammlung ist erreicht"
+        : (e && e.message) || e;
+    zeigeModal(
+      "Der Import wurde abgebrochen: " +
+        grund +
+        ".\n\nBereits übertragene Teile bleiben erhalten – bitte importieren Sie ggf. in eine neue Sammlung.",
+    );
+    await loadCollections();
+    await loadItems();
+    event.target.value = "";
+    return;
+  }
+  if (firstImportedId) {
+    Collection.setActiveCollectionId(firstImportedId);
+  }
+  await loadCollections();
+  await loadItems();
+  zeigeModal(
+    "Import abgeschlossen: " +
+      Object.keys(idMap).length +
+      " Sammlung(en), " +
+      itemsToImport.length +
+      " Eintrag(e) importiert. Die Sammlung wurde geöffnet.",
+  );
+  event.target.value = "";
+}
 
-    // Vorschaubild vergrößert anzeigen (Lightbox)
-    function oeffneVorschau(id) {
-      const it = items.find(i => i.id === id);
-      if (!it) return;
-      const inhalt = it.thumbnail || it.content || '';
-      if (!inhalt) return;
-      const overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:10000;cursor:zoom-out;';
-      const box = document.createElement('div');
-      box.style.cssText = 'position:relative;background:#fff;border-radius:8px;padding:34px 14px 14px;max-width:94vw;max-height:90vh;box-shadow:0 10px 40px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;';
-      const inhaltBox = document.createElement('div');
-      inhaltBox.style.cssText = 'overflow:auto;max-width:88vw;max-height:78vh;display:flex;align-items:center;justify-content:center;';
-      inhaltBox.innerHTML = inhalt;
-      inhaltBox.querySelectorAll('svg').forEach(function (s) {
-        s.style.maxWidth = '86vw'; s.style.maxHeight = '72vh';
-        s.style.width = 'auto'; s.style.height = 'auto'; s.style.display = 'block';
-      });
-      inhaltBox.querySelectorAll('img').forEach(function (im) {
-        im.style.maxWidth = '86vw'; im.style.maxHeight = '72vh';
-        im.style.width = 'auto'; im.style.height = 'auto'; im.style.objectFit = 'contain';
-      });
-      const closeBtn = document.createElement('button');
-      closeBtn.type = 'button';
-      closeBtn.textContent = '✕';
-      closeBtn.setAttribute('aria-label', 'Schließen');
-      closeBtn.style.cssText = 'position:absolute;top:6px;right:8px;border:none;background:transparent;font-size:22px;cursor:pointer;line-height:1;';
-      closeBtn.onclick = function (e) { e.stopPropagation(); overlay.remove(); };
-      box.appendChild(inhaltBox);
-      box.appendChild(closeBtn);
-      overlay.appendChild(box);
-      overlay.onclick = function () { overlay.remove(); };
-      box.onclick = function (e) { e.stopPropagation(); };
-      const escHandler = function (e) { if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', escHandler); } };
-      document.addEventListener('keydown', escHandler);
-      document.body.appendChild(overlay);
-    }
-
-    async function kopiereLink(id) {
-      const item = items.find(i => i.id === id);
-      if (!item || !item.shareUrl) { zeigeModal('Kein Link verfügbar.'); return; }
-      try {
-        await navigator.clipboard.writeText(item.shareUrl);
-        zeigeModal('Link in die Zwischenablage kopiert.');
-      } catch (e) {
-        const ta = document.createElement('textarea');
-        ta.value = item.shareUrl;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
-        zeigeModal('Link in die Zwischenablage kopiert.');
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => { init(); });
-        document.addEventListener('collectionChanged', () => {
-      activeId = Collection.getActiveCollectionId() || activeId;
-      const sel = document.getElementById('collectionSelect');
-      if (sel && activeId) sel.value = activeId;
-      aktualisiereUeberschrift();
-      loadItems();
+async function downloadBeleg(id, format) {
+  const item = items.find((i) => i.id === id);
+  if (!item) return;
+  let content =
+    format === "png"
+      ? item.pngContent || ""
+      : format === "html"
+        ? item.htmlContent || item.content || ""
+        : item.svgContent || item.content || "";
+  if (!content) {
+    zeigeModal("Keine Daten für diesen Beleg.");
+    return;
+  }
+  const baseName = (item.title || "beleg")
+    .trim()
+    .replace(/\.[a-zA-Z0-9]{2,5}$/i, "");
+  const ext = format === "png" ? ".png" : format === "html" ? ".html" : ".svg";
+  const filename = baseName + ext;
+  if (format === "png") {
+    const a = document.createElement("a");
+    a.href = content;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } else if (format === "html") {
+    const blob = new Blob([String(content)], {
+      type: "text/html;charset=utf-8",
     });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } else {
+    const cleaned = String(content)
+      .replace(/&nbsp;/g, "&#160;")
+      .replace(/&copy;/g, "&#169;")
+      .replace(/&reg;/g, "&#174;")
+      .replace(/&trade;/g, "&#8482;");
+    const blob = new Blob([cleaned], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+}
+
+function oeffneBeleg(id) {
+  window.location.href = "belege.html?openBeleg=" + encodeURIComponent(id);
+}
+
+// ── Beleg als Grafik (PNG) in die Zwischenablage ──────────────────────
+function svgMarkupZuBild(svgMarkup) {
+  return new Promise(function (aufs, fehler) {
+    const temp = document.createElement("div");
+    temp.innerHTML = svgMarkup;
+    const svgEl = temp.querySelector("svg");
+    if (!svgEl) {
+      fehler(new Error("Keine SVG-Daten"));
+      return;
+    }
+    svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    let breite = parseFloat(svgEl.getAttribute("width")) || 0;
+    let hoehe = parseFloat(svgEl.getAttribute("height")) || 0;
+    const vb = (svgEl.getAttribute("viewBox") || "").match(
+      /(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)/,
+    );
+    if (vb) {
+      breite = +vb[3];
+      hoehe = +vb[4];
+    }
+    if (!breite || !hoehe) {
+      breite = 800;
+      hoehe = 600;
+    }
+    svgEl.setAttribute("width", breite);
+    svgEl.setAttribute("height", hoehe);
+    const quelle = new XMLSerializer().serializeToString(svgEl);
+    const img = new Image();
+    img.onload = function () {
+      const cv = document.createElement("canvas");
+      cv.width = Math.round(breite * 2);
+      cv.height = Math.round(hoehe * 2);
+      const cx = cv.getContext("2d");
+      cx.fillStyle = "#ffffff";
+      cx.fillRect(0, 0, cv.width, cv.height);
+      cx.drawImage(img, 0, 0, cv.width, cv.height);
+      aufs(cv.toDataURL("image/png"));
+    };
+    img.onerror = fehler;
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(quelle);
+  });
+}
+
+function htmlBelegZuBild(htmlMarkup) {
+  return new Promise(function (aufs, fehler) {
+    function renderUndExportieren() {
+      const temp = document.createElement("div");
+      temp.style.cssText =
+        "position:fixed;left:-9999px;top:0;background:#fff;width:760px;";
+      temp.innerHTML = htmlMarkup;
+      document.body.appendChild(temp);
+      html2canvas(temp, { scale: 1.5, backgroundColor: "#ffffff" })
+        .then(function (cv) {
+          temp.remove();
+          aufs(cv.toDataURL("image/png"));
+        })
+        .catch(function (err) {
+          temp.remove();
+          fehler(err);
+        });
+    }
+    if (typeof html2canvas === "function") {
+      renderUndExportieren();
+      return;
+    }
+    const sk = document.createElement("script");
+    sk.src = "js/libraries/html2canvas.min.js";
+    sk.onload = renderUndExportieren;
+    sk.onerror = function () {
+      fehler(new Error("html2canvas konnte nicht geladen werden"));
+    };
+    document.head.appendChild(sk);
+  });
+}
+
+async function kopiereBelegGrafik(id) {
+  const it = items.find((i) => i.id === id);
+  if (!it) return;
+  try {
+    let dataUrl = null;
+    if (it.pngContent && String(it.pngContent).startsWith("data:image/png")) {
+      dataUrl = it.pngContent;
+    } else if (
+      it.thumbnail &&
+      String(it.thumbnail).startsWith("data:image/png")
+    ) {
+      dataUrl = it.thumbnail;
+    } else if (
+      it.svgContent ||
+      (it.content && String(it.content).trim().startsWith("<svg"))
+    ) {
+      dataUrl = await svgMarkupZuBild(it.svgContent || it.content);
+    } else if (
+      it.htmlContent ||
+      (it.content && String(it.content).trim().startsWith("<"))
+    ) {
+      dataUrl = await htmlBelegZuBild(it.htmlContent || it.content);
+    }
+    if (!dataUrl) {
+      zeigeModal("Kein Grafikinhalt für diesen Eintrag vorhanden.");
+      return;
+    }
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    if (!navigator.clipboard || typeof ClipboardItem === "undefined") {
+      zeigeModal(
+        "Die Zwischenablage-Unterstützung (Grafik) ist in diesem Browser nicht verfügbar.",
+      );
+      return;
+    }
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+    zeigeModal("Beleg-Grafik wurde in die Zwischenablage kopiert.");
+  } catch (err) {
+    console.error(err);
+    zeigeModal(
+      "Kopieren in die Zwischenablage fehlgeschlagen: " + (err.message || err),
+    );
+  }
+}
+
+// Vorschaubild vergrößert anzeigen (Lightbox)
+function oeffneVorschau(id) {
+  const it = items.find((i) => i.id === id);
+  if (!it) return;
+  const inhalt = it.thumbnail || it.content || "";
+  if (!inhalt) return;
+  const overlay = document.createElement("div");
+  overlay.style.cssText =
+    "position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:10000;cursor:zoom-out;";
+  const box = document.createElement("div");
+  box.style.cssText =
+    "position:relative;background:#fff;border-radius:8px;padding:34px 14px 14px;max-width:94vw;max-height:90vh;box-shadow:0 10px 40px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;";
+  const inhaltBox = document.createElement("div");
+  inhaltBox.style.cssText =
+    "overflow:auto;max-width:88vw;max-height:78vh;display:flex;align-items:center;justify-content:center;";
+  inhaltBox.innerHTML = inhalt;
+  inhaltBox.querySelectorAll("svg").forEach(function (s) {
+    s.style.maxWidth = "86vw";
+    s.style.maxHeight = "72vh";
+    s.style.width = "auto";
+    s.style.height = "auto";
+    s.style.display = "block";
+  });
+  inhaltBox.querySelectorAll("img").forEach(function (im) {
+    im.style.maxWidth = "86vw";
+    im.style.maxHeight = "72vh";
+    im.style.width = "auto";
+    im.style.height = "auto";
+    im.style.objectFit = "contain";
+  });
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.textContent = "✕";
+  closeBtn.setAttribute("aria-label", "Schließen");
+  closeBtn.style.cssText =
+    "position:absolute;top:6px;right:8px;border:none;background:transparent;font-size:22px;cursor:pointer;line-height:1;";
+  closeBtn.onclick = function (e) {
+    e.stopPropagation();
+    overlay.remove();
+  };
+  box.appendChild(inhaltBox);
+  box.appendChild(closeBtn);
+  overlay.appendChild(box);
+  overlay.onclick = function () {
+    overlay.remove();
+  };
+  box.onclick = function (e) {
+    e.stopPropagation();
+  };
+  const escHandler = function (e) {
+    if (e.key === "Escape") {
+      overlay.remove();
+      document.removeEventListener("keydown", escHandler);
+    }
+  };
+  document.addEventListener("keydown", escHandler);
+  document.body.appendChild(overlay);
+}
+
+async function kopiereLink(id) {
+  const item = items.find((i) => i.id === id);
+  if (!item || !item.shareUrl) {
+    zeigeModal("Kein Link verfügbar.");
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(item.shareUrl);
+    zeigeModal("Link in die Zwischenablage kopiert.");
+  } catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = item.shareUrl;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+    zeigeModal("Link in die Zwischenablage kopiert.");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  init();
+});
+document.addEventListener("collectionChanged", () => {
+  activeId = Collection.getActiveCollectionId() || activeId;
+  const sel = document.getElementById("collectionSelect");
+  if (sel && activeId) sel.value = activeId;
+  aktualisiereUeberschrift();
+  loadItems();
+});

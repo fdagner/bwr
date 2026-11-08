@@ -14,7 +14,6 @@ function getFamilienname() {
 }
 // ── Hilfsfunktionen ──────────────────────────────────────────────────────────
 
-
 const CURRENT_YEAR = new Date().getFullYear();
 
 function genJahresreihe(n) {
@@ -39,35 +38,35 @@ const TOOLBAR = {
 
 // Achsentitel-Style (einheitlich für alle Diagramme)
 const AXIS_TITLE_STYLE = {
-  fontSize: '16px',
-  fontFamily: 'Helvetica, Arial, sans-serif',
+  fontSize: "16px",
+  fontFamily: "Helvetica, Arial, sans-serif",
   fontWeight: 600,
-  color: '#263238'
+  color: "#263238",
 };
 
 // Achsen-Label-Style (Werte/Kategorien auf den Achsen)
 const AXIS_LABEL_STYLE = {
   style: {
-    fontSize: '14px',
-    fontFamily: 'Helvetica, Arial, sans-serif',
+    fontSize: "14px",
+    fontFamily: "Helvetica, Arial, sans-serif",
     fontWeight: 500,
-    colors: '#333'
-  }
+    colors: "#333",
+  },
 };
 
 // Datenlabel-Style für Liniendiagramme
 const DATALABEL_LINE_STYLE = {
-  fontSize: '14px',
-  fontFamily: 'Helvetica, Arial, sans-serif',
+  fontSize: "14px",
+  fontFamily: "Helvetica, Arial, sans-serif",
   fontWeight: 600,
 };
 
 // Datenlabel-Style für Säulen-/Balkendiagramme (weiß auf farbigem Hintergrund)
 const DATALABEL_BAR_STYLE = {
-  fontSize: '16px',
-  fontFamily: 'Helvetica, Arial, sans-serif',
+  fontSize: "16px",
+  fontFamily: "Helvetica, Arial, sans-serif",
   fontWeight: 200,
-  colors: ['#fff']
+  colors: ["#fff"],
 };
 
 // Grid-Einstellungen (einheitlich für alle Diagramme)
@@ -77,14 +76,14 @@ const GRID_CONFIG = {
     left: 10,
   },
   show: true,
-  borderColor: '#e5e7eb',
-  position: 'back',
+  borderColor: "#e5e7eb",
+  position: "back",
   xaxis: {
-    lines: { show: true, opacity: 0.35, width: 1 }
+    lines: { show: true, opacity: 0.35, width: 1 },
   },
   yaxis: {
-    lines: { show: true, opacity: 0.35, width: 1 }
-  }
+    lines: { show: true, opacity: 0.35, width: 1 },
+  },
 };
 
 // Stroke für Liniendiagramme
@@ -123,20 +122,20 @@ const aufgabenThemen = [
 
       return {
         kontext: `Familie ${name} – Heizkosten aktuelle Heizperiode`,
-        ergebnis: { abs: diff, einheit: '€', proz: prozent },
+        ergebnis: { abs: diff, einheit: "€", proz: prozent },
         chartOptions: {
           chart: { type: "line", height: 400, width: 650, toolbar: TOOLBAR },
           series: [{ name: "Heizkosten (€)", data: werte }],
           xaxis: {
             categories: monate,
             title: { text: "Heizperiode", style: AXIS_TITLE_STYLE },
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           yaxis: {
             title: { text: "Kosten in €", style: AXIS_TITLE_STYLE },
             min: 0,
             tickAmount: 6,
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           stroke: LINE_STROKE,
           markers: LINE_MARKERS,
@@ -179,7 +178,13 @@ const aufgabenThemen = [
     icon: "🛒",
     gen: () => {
       const name = getFamilienname();
-      const kategorien = ["Lebensmittel", "Wohnen", "Freizeit", "Kleidung", "Verkehr"];
+      const kategorien = [
+        "Lebensmittel",
+        "Wohnen",
+        "Freizeit",
+        "Kleidung",
+        "Verkehr",
+      ];
       const gesamt = pick([1800, 2000, 2400, 2800, 3000, 3200]);
       const anteilSets = [
         [25, 40, 15, 10, 10],
@@ -199,17 +204,17 @@ const aufgabenThemen = [
 
       return {
         kontext: `Familie ${name} – Monatliche Konsumausgaben (aktuelles Jahr)`,
-        ergebnis: { abs: gesamt, einheit: '€', proz: fragenProz },
+        ergebnis: { abs: gesamt, einheit: "€", proz: fragenProz },
         chartOptions: {
           chart: { type: "bar", height: 300, toolbar: TOOLBAR },
           series: [{ name: "Ausgaben (€)", data: werte }],
           xaxis: {
             categories: kategorien,
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           yaxis: {
             title: { text: "Betrag in €", style: AXIS_TITLE_STYLE },
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           colors: ["#1565C0"],
           plotOptions: { bar: { borderRadius: 1, columnWidth: "55%" } },
@@ -222,7 +227,7 @@ const aufgabenThemen = [
             enabled: true,
             formatter: (v) => v + " €",
             offsetY: 5,
-            style: DATALABEL_BAR_STYLE
+            style: DATALABEL_BAR_STYLE,
           },
         },
         aufgaben: [
@@ -249,7 +254,13 @@ const aufgabenThemen = [
     icon: "✈️",
     gen: () => {
       const name = getFamilienname();
-      const reiseziele = ["Mallorca", "Türkei", "Italien", "Kroatien", "Griechenland"];
+      const reiseziele = [
+        "Mallorca",
+        "Türkei",
+        "Italien",
+        "Kroatien",
+        "Griechenland",
+      ];
       const shuffledZiele = shuffle(reiseziele).slice(0, 5);
 
       const gv = pick([2500, 3000, 4500]);
@@ -257,7 +268,7 @@ const aufgabenThemen = [
       const tv = gv + (gv * p) / 100;
       const span = tv - gv;
       const mitte = [1, 2, 3].map(
-        (i) => Math.round((gv + (span * i) / 4) / 100) * 100
+        (i) => Math.round((gv + (span * i) / 4) / 100) * 100,
       );
 
       const allePreise = [gv, ...mitte, tv];
@@ -276,17 +287,17 @@ const aufgabenThemen = [
 
       return {
         kontext: `Familie ${name} vergleicht Urlaubsangebote, Pauschalreise 2 Personen`,
-        ergebnis: { abs: diff, einheit: '€', proz: prozDiff },
+        ergebnis: { abs: diff, einheit: "€", proz: prozDiff },
         chartOptions: {
           chart: { type: "bar", height: 300, toolbar: TOOLBAR },
           series: [{ name: "Preis (€)", data: sortedWerte }],
           xaxis: {
             categories: sortedNamen,
             title: { text: "Preis in €", style: AXIS_TITLE_STYLE },
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           yaxis: {
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           plotOptions: {
             bar: { horizontal: true, borderRadius: 4, barHeight: "80%" },
@@ -304,12 +315,12 @@ const aufgabenThemen = [
             style: DATALABEL_BAR_STYLE,
             background: {
               enabled: true,
-              foreColor: '#000000',
+              foreColor: "#000000",
               padding: 5,
               borderRadius: 4,
               borderWidth: 1,
-              opacity: 0.9
-            }
+              opacity: 0.9,
+            },
           },
         },
         aufgaben: [
@@ -340,14 +351,62 @@ const aufgabenThemen = [
       const jahre = genJahresreihe(5);
 
       const konfigurationen = [
-        { startKap: 500,  sparrate: 500,  zinssatz: 5,  werte: [25, 50, 150, 100, 150],   p: 50 },
-        { startKap: 500,  sparrate: 500,  zinssatz: 10, werte: [50, 100, 100, 200, 250],  p: 25 },
-        { startKap: 1000, sparrate: 500,  zinssatz: 5,  werte: [75, 50, 100, 125, 150],   p: 20 },
-        { startKap: 1000, sparrate: 500,  zinssatz: 10, werte: [150, 150, 200, 250, 150], p: -40 },
-        { startKap: 1000, sparrate: 1000, zinssatz: 5,  werte: [150, 100, 50, 200, 150],  p: -25 },
-        { startKap: 1000, sparrate: 1000, zinssatz: 10, werte: [100, 200, 100, 400, 500], p: 25 },
-        { startKap: 2000, sparrate: 1000, zinssatz: 5,  werte: [100, 150, 150, 250, 300], p: 20 },
-        { startKap: 2000, sparrate: 1000, zinssatz: 10, werte: [350, 300, 200, 500, 450], p: -10 },
+        {
+          startKap: 500,
+          sparrate: 500,
+          zinssatz: 5,
+          werte: [25, 50, 150, 100, 150],
+          p: 50,
+        },
+        {
+          startKap: 500,
+          sparrate: 500,
+          zinssatz: 10,
+          werte: [50, 100, 100, 200, 250],
+          p: 25,
+        },
+        {
+          startKap: 1000,
+          sparrate: 500,
+          zinssatz: 5,
+          werte: [75, 50, 100, 125, 150],
+          p: 20,
+        },
+        {
+          startKap: 1000,
+          sparrate: 500,
+          zinssatz: 10,
+          werte: [150, 150, 200, 250, 150],
+          p: -40,
+        },
+        {
+          startKap: 1000,
+          sparrate: 1000,
+          zinssatz: 5,
+          werte: [150, 100, 50, 200, 150],
+          p: -25,
+        },
+        {
+          startKap: 1000,
+          sparrate: 1000,
+          zinssatz: 10,
+          werte: [100, 200, 100, 400, 500],
+          p: 25,
+        },
+        {
+          startKap: 2000,
+          sparrate: 1000,
+          zinssatz: 5,
+          werte: [100, 150, 150, 250, 300],
+          p: 20,
+        },
+        {
+          startKap: 2000,
+          sparrate: 1000,
+          zinssatz: 10,
+          werte: [350, 300, 200, 500, 450],
+          p: -10,
+        },
       ];
       const config = pick(konfigurationen);
       const { startKap, zinssatz } = config;
@@ -359,20 +418,20 @@ const aufgabenThemen = [
 
       return {
         kontext: `Familie ${name} – Jährliche Zinseinnahmen`,
-        ergebnis: { abs: diff, einheit: '€', proz: prozent },
+        ergebnis: { abs: diff, einheit: "€", proz: prozent },
         chartOptions: {
           chart: { type: "line", height: 300, width: 650, toolbar: TOOLBAR },
           series: [{ name: "Zinseinnahmen (€)", data: werte }],
           xaxis: {
             categories: jahre,
             title: { text: "Jahr", style: AXIS_TITLE_STYLE },
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           yaxis: {
             title: { text: "Zinseinnahmen in €", style: AXIS_TITLE_STYLE },
             min: 0,
             tickAmount: 5,
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           stroke: LINE_STROKE,
           markers: LINE_MARKERS,
@@ -414,47 +473,59 @@ const aufgabenThemen = [
     icon: "⚡",
     gen: () => {
       const name = getFamilienname();
-const energieSets = [
-  {
-    monate: ["Januar", "Februar", "März", "April", "Mai"],
-    werte: [400, 300, 100, 100, 200],
-  },
-  {
-    monate: ["Januar", "Februar", "März", "April", "Mai"],
-    werte: [300, 100, 200, 200, 200],
-  },
-  {
-    monate: ["Januar", "Februar", "März", "April", "Mai"],
-    werte: [400, 200, 100, 200, 100],
-  },
-  {
-    monate: ["Januar", "Februar", "März", "April", "Mai"],
-    werte: [300, 200, 100, 200, 100],
-  },
-  {
-    monate: ["Januar", "Februar", "März", "April", "Mai"],
-    werte: [400, 300, 100, 200, 200],
-  },
-  {
-    monate: ["Januar", "Februar", "März", "April", "Mai"],
-    werte: [300, 400, 100, 200, 200],
-  },
-  {
-    monate: ["Januar", "Februar", "März", "April", "Mai"],
-    werte: [400, 300, 100, 100, 200],
-  },
-  {
-    monate: ["Januar", "Februar", "März", "April", "Mai"],
-    werte: [300, 400, 100, 200, 200],
-  },
-  { monate: ["Januar", "Februar", "März", "April", "Mai"], werte: [400, 200, 100, 300, 200] },
-  { monate: ["Januar", "Februar", "März", "April", "Mai"], werte: [300, 200, 100, 200, 200] },
-  { monate: ["Januar", "Februar", "März", "April", "Mai"], werte: [400, 300, 200, 100, 300] },
-];
-            const eindeutig = energieSets.filter(s => {
-        const mx = Math.max(...s.werte), mn = Math.min(...s.werte);
-        return s.werte.filter(v => v === mx).length === 1
-            && s.werte.filter(v => v === mn).length === 1;
+      const energieSets = [
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [400, 300, 100, 100, 200],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [300, 100, 200, 200, 200],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [400, 200, 100, 200, 100],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [300, 200, 100, 200, 100],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [400, 300, 100, 200, 200],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [300, 400, 100, 200, 200],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [400, 300, 100, 100, 200],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [300, 400, 100, 200, 200],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [400, 200, 100, 300, 200],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [300, 200, 100, 200, 200],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [400, 300, 200, 100, 300],
+        },
+      ];
+      const eindeutig = energieSets.filter((s) => {
+        const mx = Math.max(...s.werte),
+          mn = Math.min(...s.werte);
+        return (
+          s.werte.filter((v) => v === mx).length === 1 &&
+          s.werte.filter((v) => v === mn).length === 1
+        );
       });
       const ds = pick(eindeutig);
       const monate = ds.monate;
@@ -469,19 +540,19 @@ const energieSets = [
 
       return {
         kontext: `Familie ${name} – Monatlicher Energieverbrauch`,
-        ergebnis: { abs: diff, einheit: 'kWh', proz: p },
+        ergebnis: { abs: diff, einheit: "kWh", proz: p },
         chartOptions: {
           chart: { type: "bar", height: 300, toolbar: TOOLBAR },
           series: [{ name: "Verbrauch (kWh)", data: werte }],
           xaxis: {
             categories: monate,
             title: { text: `Monate`, style: AXIS_TITLE_STYLE },
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           yaxis: {
             title: { text: "Verbrauch in kWh", style: AXIS_TITLE_STYLE },
             min: 0,
-            labels: AXIS_LABEL_STYLE
+            labels: AXIS_LABEL_STYLE,
           },
           colors: ["#00838F"],
           plotOptions: { bar: { borderRadius: 4, columnWidth: "60%" } },
@@ -494,7 +565,7 @@ const energieSets = [
             enabled: true,
             formatter: (v) => v + " kWh",
             offsetY: 5,
-            style: DATALABEL_BAR_STYLE
+            style: DATALABEL_BAR_STYLE,
           },
         },
         aufgaben: [
@@ -516,7 +587,6 @@ const energieSets = [
       };
     },
   },
-
 ];
 
 // ============================================================================
@@ -553,20 +623,28 @@ function schreibeContainerHtml(container, html) {
 // (Diagramm-PNG) – joditeditor.js überspringt solche Container sonst (ApexCharts-Seite).
 function aktiviereContainerEditor(container) {
   if (window.JoditEditor && !container._jodit) {
-    container.setAttribute('data-jodit-init', '1');
-    try { window.JoditEditor.init(container); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+    container.setAttribute("data-jodit-init", "1");
+    try {
+      window.JoditEditor.init(container);
+    } catch (e) {
+      console.warn("Editor-Init fehlgeschlagen", e);
+    }
   }
 }
 
 let renderZaehler = 0;
-let letzteProzentDaten = null;   // { aufgabe, imgURI, breite } für den Moodle-Export
+let letzteProzentDaten = null; // { aufgabe, imgURI, breite } für den Moodle-Export
 
 function zeigeZufaelligeProzentAufgaben() {
-  renderedCharts.forEach(c => { try { c.destroy(); } catch (e) { } });
+  renderedCharts.forEach((c) => {
+    try {
+      c.destroy();
+    } catch (e) {}
+  });
   renderedCharts = [];
 
   const container = document.getElementById("Container");
-  const chartDiv  = document.getElementById("prozentChart");
+  const chartDiv = document.getElementById("prozentChart");
   if (!container) return;
   if (!chartDiv) {
     console.error("Element #prozentChart fehlt in der HTML-Datei.");
@@ -574,9 +652,9 @@ function zeigeZufaelligeProzentAufgaben() {
   }
   chartDiv.innerHTML = "";
 
-  const mein    = ++renderZaehler;
+  const mein = ++renderZaehler;
   letzteProzentDaten = null;
-  const thema   = getSelectedGenerator();
+  const thema = getSelectedGenerator();
   const aufgabe = thema.gen();
 
   // ── Aufgabenblatt im Container (das Diagramm kommt als PNG in den Platzhalter) ──
@@ -594,7 +672,7 @@ function zeigeZufaelligeProzentAufgaben() {
     <div id="diagramm-platzhalter" style="margin:0 0 1.5rem 0; min-height:60px; color:#888;">Diagramm wird erstellt …</div>
     <div style="padding:20px; background:white; border-radius:8px; margin-bottom:1.5rem;">
       <ol style="padding-left:1.6rem; line-height:1.6;">
-        ${aufgabe.aufgaben.map(a => `<li>${a.text}</li>`).join("")}
+        ${aufgabe.aufgaben.map((a) => `<li>${a.text}</li>`).join("")}
       </ol>
     </div>
     <div style="padding:20px;">${loesHtml}</div>`;
@@ -613,24 +691,25 @@ function zeigeZufaelligeProzentAufgaben() {
     chart: {
       ...aufgabe.chartOptions.chart,
       background: "#ffffff",
-      animations: { enabled: false },   // sonst wird eine halb gezeichnete Animation fotografiert
+      animations: { enabled: false }, // sonst wird eine halb gezeichnete Animation fotografiert
       toolbar: {
         ...TOOLBAR,
         export: {
           csv: { filename: exportName },
           svg: { filename: exportName },
-          png: { filename: exportName }
-        }
-      }
-    }
+          png: { filename: exportName },
+        },
+      },
+    },
   };
 
   setTimeout(() => {
-    if (mein !== renderZaehler) return;   // inzwischen neue Aufgabe erstellt
+    if (mein !== renderZaehler) return; // inzwischen neue Aufgabe erstellt
     const chart = new ApexCharts(chartDiv, chartOptions);
     renderedCharts.push(chart);
 
-    chart.render()
+    chart
+      .render()
       .then(() => chart.dataURI({ scale: 2 }))
       .then(({ imgURI }) => {
         if (mein !== renderZaehler) return;
@@ -641,7 +720,7 @@ function zeigeZufaelligeProzentAufgaben() {
         const imgHtml = `<img src="${imgURI}" alt="${alt}" style="display:block; max-width:100%; height:auto; width:${breite}px;">`;
         aufgabeHtml = aufgabeHtml.replace(
           '<div id="diagramm-platzhalter" style="margin:0 0 1.5rem 0; min-height:60px; color:#888;">Diagramm wird erstellt …</div>',
-          imgHtml
+          imgHtml,
         );
         schreibeContainerHtml(container, aufgabeHtml);
 
@@ -652,12 +731,12 @@ function zeigeZufaelligeProzentAufgaben() {
         // Container mit generierten Bildern (Muster aus lb8-2-bestellmenge).
         aktiviereContainerEditor(container);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Diagramm konnte nicht erstellt werden:", err);
         if (mein !== renderZaehler) return;
         aufgabeHtml = aufgabeHtml.replace(
-          'Diagramm wird erstellt …',
-          'Diagramm konnte nicht erstellt werden.'
+          "Diagramm wird erstellt …",
+          "Diagramm konnte nicht erstellt werden.",
         );
         schreibeContainerHtml(container, aufgabeHtml);
         aktiviereContainerEditor(container);
@@ -720,10 +799,14 @@ function kopiereKiPromptProz() {
       const btn = document.getElementById("kiPromptKopierenBtn");
       const orig = btn.innerHTML;
       btn.innerHTML = "✅ Kopiert!";
-      setTimeout(() => { btn.innerHTML = orig; }, 2500);
+      setTimeout(() => {
+        btn.innerHTML = orig;
+      }, 2500);
     })
     .catch(() => {
-      zeigeModal("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.");
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
     });
 }
 
@@ -742,61 +825,85 @@ function toggleKiPromptVorschauProz() {
 // ============================================================================
 
 // ── Einstellungen ───────────────────────────────────────────────────────────
-const MOODLE_PD_PRAEFIX = '7.1-00#T';          // ← an dein Schema anpassen
-const MOODLE_PD_TITELENDE = 'meinBwR-Nennen-Berechnen'; // ← ggf. anpassen
-const PD_DIAGRAMMARTEN = ['Liniendiagramm', 'Säulendiagramm', 'Balkendiagramm', 'Kreisdiagramm'];
-const PD_GRUENDE = ['einen Verlauf', 'einen Vergleich', 'eine Rangliste', 'einen Anteil an einem Ganzen'];
+const MOODLE_PD_PRAEFIX = "7.1-00#T"; // ← an dein Schema anpassen
+const MOODLE_PD_TITELENDE = "meinBwR-Nennen-Berechnen"; // ← ggf. anpassen
+const PD_DIAGRAMMARTEN = [
+  "Liniendiagramm",
+  "Säulendiagramm",
+  "Balkendiagramm",
+  "Kreisdiagramm",
+];
+const PD_GRUENDE = [
+  "einen Verlauf",
+  "einen Vergleich",
+  "eine Rangliste",
+  "einen Anteil an einem Ganzen",
+];
 
 // ── Hilfsfunktionen ─────────────────────────────────────────────────────────
 function pdEsc(s) {
-  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 function pdCdata(s) {
-  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
 }
 
 // Eindeutige, zeitabhängige ID (yyMMddHHmmss), pro Browser streng aufsteigend
 function pdIdBasis() {
-  const SCHLUESSEL = 'moodleProzentDiagrammLetzteIdSekunde';
+  const SCHLUESSEL = "moodleProzentDiagrammLetzteIdSekunde";
   let sek = Math.floor(Date.now() / 1000);
   try {
     const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
     if (sek <= letzte) sek = letzte + 1;
     localStorage.setItem(SCHLUESSEL, String(sek));
-  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  } catch (e) {
+    /* ohne localStorage: nur Zeitstempel */
+  }
   const d = new Date(sek * 1000);
-  const p = n => String(n).padStart(2, '0');
+  const p = (n) => String(n).padStart(2, "0");
   return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
 }
 
 // Diagrammart und Begründung aus den Diagramm-Optionen ableiten
 function pdDiagrammart(chartOptions) {
-  if (chartOptions.chart?.type === 'line') return { art: 'Liniendiagramm', grund: 'einen Verlauf' };
-  if (chartOptions.plotOptions?.bar?.horizontal) return { art: 'Balkendiagramm', grund: 'eine Rangliste' };
-  return { art: 'Säulendiagramm', grund: 'einen Vergleich' };
+  if (chartOptions.chart?.type === "line")
+    return { art: "Liniendiagramm", grund: "einen Verlauf" };
+  if (chartOptions.plotOptions?.bar?.horizontal)
+    return { art: "Balkendiagramm", grund: "eine Rangliste" };
+  return { art: "Säulendiagramm", grund: "einen Vergleich" };
 }
 
 // Schreibweisen einer Zahl. Musterlösung (erster Eintrag): mit zwei Dezimalstellen,
 // bei zweiDezMuster=false ohne Dezimalstellen. Zusätzlich ohne Tausenderpunkt und bei
 // positiven Werten mit „+“.
 function pdZahlVarianten(wert, zweiDezMuster) {
-  const zwei = wert.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const kurz = zwei.replace(/,00$/, '').replace(/(,\d)0$/, '$1');
+  const zwei = wert.toLocaleString("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  const kurz = zwei.replace(/,00$/, "").replace(/(,\d)0$/, "$1");
   const basis = zweiDezMuster ? [zwei, kurz] : [kurz, zwei];
-  const ohneTausender = basis.map(z => z.replace(/\./g, ''));
+  const ohneTausender = basis.map((z) => z.replace(/\./g, ""));
   let liste = [...new Set([...basis, ...ohneTausender])];
-  if (wert > 0) liste = [...liste, ...liste.map(z => '+' + z)];
+  if (wert > 0) liste = [...liste, ...liste.map((z) => "+" + z)];
   return liste;
 }
 
 function pdLueckeZahl(wert, einheit) {
-  const zweiDez = einheit === '€' || einheit === '%';
-  const antworten = pdZahlVarianten(wert, zweiDez).map(z => `=${z} ${einheit}`);
-  return `{1:SHORTANSWER:${antworten.join('~')}}`;
+  const zweiDez = einheit === "€" || einheit === "%";
+  const antworten = pdZahlVarianten(wert, zweiDez).map(
+    (z) => `=${z} ${einheit}`,
+  );
+  return `{1:SHORTANSWER:${antworten.join("~")}}`;
 }
 
 function pdLueckeAuswahl(optionen, richtig) {
-  return `{1:MULTICHOICE_S:${optionen.map(o => (o === richtig ? '=' : '') + o).join('~')}}`;
+  return `{1:MULTICHOICE_S:${optionen.map((o) => (o === richtig ? "=" : "") + o).join("~")}}`;
 }
 
 // ── XML aufbauen ────────────────────────────────────────────────────────────
@@ -807,23 +914,28 @@ function pdBaueClozeXml(daten) {
   const { art, grund } = pdDiagrammart(aufgabe.chartOptions);
 
   const titel = `${MOODLE_PD_PRAEFIX}${pdIdBasis()}${MOODLE_PD_TITELENDE}`;
-  const bildName = 'diagramm.png';
-  const alt = aufgabe.chartOptions.title?.text || 'Diagramm';
-  const base64 = String(imgURI).replace(/^data:image\/png;base64,/, '');
+  const bildName = "diagramm.png";
+  const alt = aufgabe.chartOptions.title?.text || "Diagramm";
+  const base64 = String(imgURI).replace(/^data:image\/png;base64,/, "");
 
   const punkte = [
     `${a[0].text}<br>Es handelt sich um ein ${pdLueckeAuswahl(PD_DIAGRAMMARTEN, art)}. ` +
       `Sie wird hier verwendet, weil es um ${pdLueckeAuswahl(PD_GRUENDE, grund)} geht.`,
     `${a[1].text}<br>${pdLueckeZahl(e.abs, e.einheit)}`,
-    `${a[2].text}<br>${pdLueckeZahl(e.proz, '%')}`,
+    `${a[2].text}<br>${pdLueckeZahl(e.proz, "%")}`,
   ];
 
   const fragetext =
     `<p><img src="@@PLUGINFILE@@/${bildName}" alt="${pdEsc(alt)}" width="${breite}" style="max-width:100%;height:auto;"></p>` +
-    `<ol>${punkte.map(p => `<li style="margin-bottom:1em;">${p}</li>`).join('')}</ol>`;
+    `<ol>${punkte.map((p) => `<li style="margin-bottom:1em;">${p}</li>`).join("")}</ol>`;
 
-  const rechenweg = '<p><strong>Lösung</strong></p>' +
-    a.map((x, i) => `<p><strong>Aufgabe ${i + 1}:</strong><br>${x.loesung}</p>`).join('');
+  const rechenweg =
+    "<p><strong>Lösung</strong></p>" +
+    a
+      .map(
+        (x, i) => `<p><strong>Aufgabe ${i + 1}:</strong><br>${x.loesung}</p>`,
+      )
+      .join("");
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
   xml += `  <question type="cloze">\n`;
@@ -838,19 +950,21 @@ function pdBaueClozeXml(daten) {
 
 // ── Button-Handler ──────────────────────────────────────────────────────────
 function exportiereMoodle() {
-  if (typeof letzteProzentDaten === 'undefined' || !letzteProzentDaten) {
-    zeigeModal('Bitte zuerst eine Aufgabe erstellen und warten, bis das Diagramm angezeigt wird.');
+  if (typeof letzteProzentDaten === "undefined" || !letzteProzentDaten) {
+    zeigeModal(
+      "Bitte zuerst eine Aufgabe erstellen und warten, bis das Diagramm angezeigt wird.",
+    );
     return;
   }
   const xml = pdBaueClozeXml(letzteProzentDaten);
 
   const d = new Date();
-  const p = n => String(n).padStart(2, '0');
+  const p = (n) => String(n).padStart(2, "0");
   const dateiname = `quiz-prozentdiagramm-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
 
-  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = dateiname;
   document.body.appendChild(a);
@@ -859,11 +973,9 @@ function exportiereMoodle() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-
 // ── Initialisierung ──────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) vorschauEl.textContent = KI_ASSISTENT_PROMPT_PROZ;
   setTimeout(zeigeZufaelligeProzentAufgaben, 300);
 });
-

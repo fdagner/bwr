@@ -22,20 +22,19 @@ function formatNumberWithSpace(number) {
 // Globale Variable für das Chart
 let gewinnschwelleChart = null;
 
-
 function validateAndGenerateChart() {
   const fixkostenInput = document.getElementById("fixkosten");
   const variablestückkostenInput = document.getElementById(
-    "variablestückkosten"
+    "variablestückkosten",
   );
   const nettoverkaufserlösestückInput = document.getElementById(
-    "nettoverkaufserlösestück"
+    "nettoverkaufserlösestück",
   );
 
   const fixkosten = parseFloat(fixkostenInput.value);
   const variablestückkosten = parseFloat(variablestückkostenInput.value);
   const nettoverkaufserlösestück = parseFloat(
-    nettoverkaufserlösestückInput.value
+    nettoverkaufserlösestückInput.value,
   );
 
   if (
@@ -50,7 +49,7 @@ function validateAndGenerateChart() {
     nettoverkaufserlösestück > 50000
   ) {
     zeigeModal(
-      "Bitte geben Sie gültige positive Werte ein:\nFixkosten: 0 - 999999999\nVariable Stückkosten: 0 - 100000\nNettoverkaufserlöse pro Stück: 0 - 50000"
+      "Bitte geben Sie gültige positive Werte ein:\nFixkosten: 0 - 999999999\nVariable Stückkosten: 0 - 100000\nNettoverkaufserlöse pro Stück: 0 - 50000",
     );
     return;
   }
@@ -62,7 +61,7 @@ function calculateData(
   fixkosten,
   variablestückkosten,
   nettoverkaufserlösestück,
-  maxMenge
+  maxMenge,
 ) {
   let gewinnschwelle;
   let gewinnschwellenmenge;
@@ -94,57 +93,83 @@ function svgElementNachPng(svgEl, skalierung) {
       const breite = Math.round(mass.width || svgEl.clientWidth || 800);
       const hoehe = Math.round(mass.height || svgEl.clientHeight || 480);
       const klon = svgEl.cloneNode(true);
-      klon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-      klon.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-      klon.setAttribute('width', String(breite));
-      klon.setAttribute('height', String(hoehe));
-      if (!klon.getAttribute('viewBox')) klon.setAttribute('viewBox', '0 0 ' + breite + ' ' + hoehe);
+      klon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      klon.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+      klon.setAttribute("width", String(breite));
+      klon.setAttribute("height", String(hoehe));
+      if (!klon.getAttribute("viewBox"))
+        klon.setAttribute("viewBox", "0 0 " + breite + " " + hoehe);
       // CSS-Klassen-Stile (z. B. Beschriftungen der Linien) als Inline-Styles
       // übernehmen – in <style>-Blöcken definierte Styles überleben das Klonen
       // nicht, ohne sie rendert der Browser beim PNG nur schwarze Flächen
-      const quelle = svgEl.querySelectorAll('*');
-      const ziel = klon.querySelectorAll('*');
-      const cssProps = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing', 'text-anchor', 'dominant-baseline', 'opacity'];
+      const quelle = svgEl.querySelectorAll("*");
+      const ziel = klon.querySelectorAll("*");
+      const cssProps = [
+        "fill",
+        "stroke",
+        "stroke-width",
+        "stroke-dasharray",
+        "stroke-linecap",
+        "font-family",
+        "font-size",
+        "font-weight",
+        "font-style",
+        "letter-spacing",
+        "text-anchor",
+        "dominant-baseline",
+        "opacity",
+      ];
       for (let i = 0; i < ziel.length; i++) {
         if (!quelle[i]) break;
-        let inline = ziel[i].getAttribute('style') || '';
+        let inline = ziel[i].getAttribute("style") || "";
         for (const p of cssProps) {
           const v = getComputedStyle(quelle[i]).getPropertyValue(p);
-          if (v) inline += p + ':' + v + ';';
+          if (v) inline += p + ":" + v + ";";
         }
-        ziel[i].setAttribute('style', inline);
+        ziel[i].setAttribute("style", inline);
       }
       // Beschriftungen sichtbar erzwingen – ApexCharts steuert deren Deckkraft
       // über Opacity, das Raster-Abbild bekommt sonst unsichtbare Texte
-      klon.querySelectorAll('.apexcharts-point-annotations, .apexcharts-point-annotations *').forEach(el => {
-        el.setAttribute('style', (el.getAttribute('style') || '') + 'opacity:1;');
-      });
-      let quelltext = '';
-      if (typeof XMLSerializer === 'function') quelltext = new XMLSerializer().serializeToString(klon);
+      klon
+        .querySelectorAll(
+          ".apexcharts-point-annotations, .apexcharts-point-annotations *",
+        )
+        .forEach((el) => {
+          el.setAttribute(
+            "style",
+            (el.getAttribute("style") || "") + "opacity:1;",
+          );
+        });
+      let quelltext = "";
+      if (typeof XMLSerializer === "function")
+        quelltext = new XMLSerializer().serializeToString(klon);
       const bildSvg = new Image();
       bildSvg.onload = () => {
-        const leinwand = document.createElement('canvas');
+        const leinwand = document.createElement("canvas");
         leinwand.width = Math.round(breite * skalierung);
         leinwand.height = Math.round(hoehe * skalierung);
-        const cx = leinwand.getContext('2d');
-        cx.fillStyle = '#ffffff';
+        const cx = leinwand.getContext("2d");
+        cx.fillStyle = "#ffffff";
         cx.fillRect(0, 0, leinwand.width, leinwand.height);
         cx.drawImage(bildSvg, 0, 0, leinwand.width, leinwand.height);
-        aufs(leinwand.toDataURL('image/png'));
+        aufs(leinwand.toDataURL("image/png"));
       };
       bildSvg.onerror = fehler;
-      bildSvg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(quelltext);
-    } catch (e) { fehler(e); }
+      bildSvg.src =
+        "data:image/svg+xml;charset=utf-8," + encodeURIComponent(quelltext);
+    } catch (e) {
+      fehler(e);
+    }
   });
 }
 
 async function generateChart() {
   let fixkosten = parseFloat(document.getElementById("fixkosten").value);
   let variablestückkosten = parseFloat(
-    document.getElementById("variablestückkosten").value
+    document.getElementById("variablestückkosten").value,
   );
   let nettoverkaufserlösestück = parseFloat(
-    document.getElementById("nettoverkaufserlösestück").value
+    document.getElementById("nettoverkaufserlösestück").value,
   );
 
   if (
@@ -155,18 +180,19 @@ async function generateChart() {
     zeigeModal("Please enter valid numeric values for all fields.");
     return;
   }
-  
+
   let maxMenge;
   let gewinnschwelleNenner = nettoverkaufserlösestück - variablestückkosten;
   if (gewinnschwelleNenner > 0) {
-    const rawMaxMenge = Math.ceil(
-      (fixkosten / (nettoverkaufserlösestück - variablestückkosten)) * 2
-    ) || 1000;
-    
+    const rawMaxMenge =
+      Math.ceil(
+        (fixkosten / (nettoverkaufserlösestück - variablestückkosten)) * 2,
+      ) || 1000;
+
     // Round maxMenge to a nice round number
     const magnitude = Math.pow(10, Math.floor(Math.log10(rawMaxMenge)));
     const normalized = rawMaxMenge / magnitude;
-    
+
     let roundedNormalized;
     if (normalized <= 1.5) roundedNormalized = 1.5;
     else if (normalized <= 2) roundedNormalized = 2;
@@ -177,11 +203,11 @@ async function generateChart() {
     else if (normalized <= 6) roundedNormalized = 6;
     else if (normalized <= 8) roundedNormalized = 8;
     else roundedNormalized = 10;
-    
+
     maxMenge = roundedNormalized * magnitude;
   } else {
     zeigeModal(
-      "Ungültige Werte: die Nettoverkaufserlöse müssen höher als die Variablen Stückkosten sein."
+      "Ungültige Werte: die Nettoverkaufserlöse müssen höher als die Variablen Stückkosten sein.",
     );
     return;
   }
@@ -196,7 +222,7 @@ async function generateChart() {
     fixkosten,
     variablestückkosten,
     nettoverkaufserlösestück,
-    maxMenge
+    maxMenge,
   );
 
   // Destroy existing chart if it exists
@@ -207,53 +233,57 @@ async function generateChart() {
   // Store gewinnschwelle values for use in event handlers
   const gewinnschwelleValue = gewinnschwelle;
   const gewinnschwellenmengeValue = gewinnschwellenmenge;
-  
+
   // Calculate optimal number of ticks and nice round step size
   const calculateNiceAxisValues = (max) => {
     const magnitude = Math.pow(10, Math.floor(Math.log10(max)));
     const normalized = max / magnitude;
-    
+
     let step, tickCount;
     if (normalized <= 1.5) {
-      step = magnitude * 0.1;       // e.g., 1500 -> step 100
-      tickCount = 15;               // 0, 100, 200, ..., 1400, 1500
+      step = magnitude * 0.1; // e.g., 1500 -> step 100
+      tickCount = 15; // 0, 100, 200, ..., 1400, 1500
     } else if (normalized <= 2) {
-      step = magnitude * 0.25;      // e.g., 2000 -> step 250
-      tickCount = 8;                // 0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000
+      step = magnitude * 0.25; // e.g., 2000 -> step 250
+      tickCount = 8; // 0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000
     } else if (normalized <= 2.5) {
-      step = magnitude * 0.25;      // e.g., 2500 -> step 250
-      tickCount = 10;               // 0, 250, 500, ..., 2250, 2500
+      step = magnitude * 0.25; // e.g., 2500 -> step 250
+      tickCount = 10; // 0, 250, 500, ..., 2250, 2500
     } else if (normalized <= 3) {
-      step = magnitude * 0.25;      // e.g., 3000 -> step 250
-      tickCount = 12;               // 0, 250, 500, ..., 2750, 3000
+      step = magnitude * 0.25; // e.g., 3000 -> step 250
+      tickCount = 12; // 0, 250, 500, ..., 2750, 3000
     } else if (normalized <= 4) {
-      step = magnitude * 0.5;       // e.g., 4000 -> step 500
-      tickCount = 8;                // 0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000
+      step = magnitude * 0.5; // e.g., 4000 -> step 500
+      tickCount = 8; // 0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000
     } else if (normalized <= 5) {
-      step = magnitude * 0.5;       // e.g., 5000 -> step 500
-      tickCount = 10;               // 0, 500, 1000, ..., 4500, 5000
+      step = magnitude * 0.5; // e.g., 5000 -> step 500
+      tickCount = 10; // 0, 500, 1000, ..., 4500, 5000
     } else if (normalized <= 6) {
-      step = magnitude * 0.5;       // e.g., 6000 -> step 500
-      tickCount = 12;               // 0, 500, 1000, ..., 5500, 6000
+      step = magnitude * 0.5; // e.g., 6000 -> step 500
+      tickCount = 12; // 0, 500, 1000, ..., 5500, 6000
     } else if (normalized <= 8) {
-      step = magnitude * 0.5;       // e.g., 8000 -> step 500
-      tickCount = 16;               // 0, 500, 1000, 1500, ..., 7500, 8000
+      step = magnitude * 0.5; // e.g., 8000 -> step 500
+      tickCount = 16; // 0, 500, 1000, 1500, ..., 7500, 8000
     } else {
-      step = magnitude * 1;         // e.g., 10000 -> step 1000
-      tickCount = 10;               // 0, 1000, 2000, ..., 9000, 10000
+      step = magnitude * 1; // e.g., 10000 -> step 1000
+      tickCount = 10; // 0, 1000, 2000, ..., 9000, 10000
     }
-    
+
     // Generate exact tick positions
     const ticks = [];
     for (let i = 0; i <= tickCount; i++) {
       ticks.push(i * step);
     }
-    
+
     return { step, ticks, tickCount };
   };
-  
-  const { step: axisStep, ticks: axisTicks, tickCount: axisTickCount } = calculateNiceAxisValues(maxMenge);
-  
+
+  const {
+    step: axisStep,
+    ticks: axisTicks,
+    tickCount: axisTickCount,
+  } = calculateNiceAxisValues(maxMenge);
+
   // Variable to track if Gewinnschwelle is visible
   let gewinnschwelleVisible = true;
 
@@ -261,51 +291,51 @@ async function generateChart() {
   const options = {
     series: [
       {
-        name: 'Nettoverkaufserlöse',
-        type: 'line',
+        name: "Nettoverkaufserlöse",
+        type: "line",
         data: [
           [0, 0],
-          [maxMenge, nettoverkaufserlöse]
-        ]
+          [maxMenge, nettoverkaufserlöse],
+        ],
       },
       {
-        name: 'Gesamtkosten',
-        type: 'line',
+        name: "Gesamtkosten",
+        type: "line",
         data: [
           [0, fixkosten],
-          [maxMenge, gesamtkosten]
-        ]
+          [maxMenge, gesamtkosten],
+        ],
       },
       {
-        name: 'Variablen Kosten',
-        type: 'line',
+        name: "Variablen Kosten",
+        type: "line",
         data: [
           [0, 0],
-          [maxMenge, variablekosten]
-        ]
+          [maxMenge, variablekosten],
+        ],
       },
       {
-        name: 'Fixkosten',
-        type: 'line',
+        name: "Fixkosten",
+        type: "line",
         data: [
           [0, fixkosten],
-          [maxMenge, fixkosten]
-        ]
+          [maxMenge, fixkosten],
+        ],
       },
       {
-        name: 'Gewinnschwelle',
-        type: 'line',
+        name: "Gewinnschwelle",
+        type: "line",
         data: [
           [0, gewinnschwellenmenge],
           [gewinnschwelle, gewinnschwellenmenge],
-          [gewinnschwelle, 0]
-        ]
-      }
+          [gewinnschwelle, 0],
+        ],
+      },
     ],
     chart: {
       height: 500,
-      type: 'line',
-      background: '#ffffff',
+      type: "line",
+      background: "#ffffff",
       // Animationen aus (wie lb8-2-bestellmenge) – sonst bleiben die
       // Direktbeschriftungen der Linien unsichtbar (Opacity 0)
       animations: { enabled: false },
@@ -318,58 +348,58 @@ async function generateChart() {
           zoomin: true,
           zoomout: true,
           pan: true,
-          reset: true
-        }
+          reset: true,
+        },
       },
       events: {
-        legendClick: function(chartContext, seriesIndex, config) {
+        legendClick: function (chartContext, seriesIndex, config) {
           // Check if the clicked series is "Gewinnschwelle" (index 4)
           if (seriesIndex === 4) {
             gewinnschwelleVisible = !gewinnschwelleVisible;
-            
+
             // Toggle annotations visibility
             if (gewinnschwelleVisible) {
               chartContext.addXaxisAnnotation({
-                id: 'gewinnschwelle-x',
+                id: "gewinnschwelle-x",
                 x: gewinnschwelleValue,
                 strokeDashArray: 5,
-                borderColor: '#000',
+                borderColor: "#000",
                 label: {
-                  borderColor: '#000',
+                  borderColor: "#000",
                   style: {
-                    color: '#fff',
-                    background: '#000'
+                    color: "#fff",
+                    background: "#000",
                   },
-                  text: 'Gewinnschwelle'
-                }
+                  text: "Gewinnschwelle",
+                },
               });
               chartContext.addYaxisAnnotation({
-                id: 'gewinnschwelle-y',
+                id: "gewinnschwelle-y",
                 y: gewinnschwellenmengeValue,
                 strokeDashArray: 5,
-                borderColor: '#000'
+                borderColor: "#000",
               });
             } else {
-              chartContext.removeAnnotation('gewinnschwelle-x');
-              chartContext.removeAnnotation('gewinnschwelle-y');
+              chartContext.removeAnnotation("gewinnschwelle-x");
+              chartContext.removeAnnotation("gewinnschwelle-y");
             }
           }
-        }
-      }
+        },
+      },
     },
     // Dunkle, drucker-/kopierfeste Farben; Linien mit unterscheidbaren Mustern
     // (wie lb8-2-bestellmenge): Erlöse gestrichelt, Gesamtkosten durchgezogen,
     // Variablen Kosten gepunktet, Fixkosten gepunktet (horizontal), Gewinnschwelle Hilfslinie
-    colors: ['#1F4E79', '#262626', '#C00000', '#843C0C', '#000000'],
+    colors: ["#1F4E79", "#262626", "#C00000", "#843C0C", "#000000"],
     stroke: {
       width: [5, 5, 5, 5, 2],
-      dashArray: [10, 0, 2, 2, 5]
+      dashArray: [10, 0, 2, 2, 5],
     },
     markers: {
       size: [0, 0, 0, 0, 6],
       hover: {
-        sizeOffset: 6
-      }
+        sizeOffset: 6,
+      },
     },
     // Direkte Beschriftung an den Linien für den Schwarz-Weiß-Druck
     // (wie lb8-2-bestellmenge) – die Gewinnschwelle/die Gewinnschwellenmenge
@@ -377,38 +407,106 @@ async function generateChart() {
     annotations: {
       points: [
         {
-          x: maxMenge, y: nettoverkaufserlöse, marker: { size: 0 },
-          label: { text: 'Nettoverkaufserlöse', textAnchor: 'end', offsetX: -12, offsetY: -14, borderColor: 'transparent', borderWidth: 0, style: { background: '#fff9c4', color: '#1F4E79', fontSize: '15px', fontWeight: 700, fontFamily: 'Arial, Helvetica, sans-serif', padding: { left: 6, right: 6, top: 2, bottom: 2 } } }
+          x: maxMenge,
+          y: nettoverkaufserlöse,
+          marker: { size: 0 },
+          label: {
+            text: "Nettoverkaufserlöse",
+            textAnchor: "end",
+            offsetX: -12,
+            offsetY: -14,
+            borderColor: "transparent",
+            borderWidth: 0,
+            style: {
+              background: "#fff9c4",
+              color: "#1F4E79",
+              fontSize: "15px",
+              fontWeight: 700,
+              fontFamily: "Arial, Helvetica, sans-serif",
+              padding: { left: 6, right: 6, top: 2, bottom: 2 },
+            },
+          },
         },
         {
-          x: maxMenge, y: gesamtkosten, marker: { size: 0 },
-          label: { text: 'Gesamtkosten', textAnchor: 'end', offsetX: -12, offsetY: 22, borderColor: 'transparent', borderWidth: 0, style: { background: '#fff9c4', color: '#262626', fontSize: '15px', fontWeight: 700, fontFamily: 'Arial, Helvetica, sans-serif', padding: { left: 6, right: 6, top: 2, bottom: 2 } } }
+          x: maxMenge,
+          y: gesamtkosten,
+          marker: { size: 0 },
+          label: {
+            text: "Gesamtkosten",
+            textAnchor: "end",
+            offsetX: -12,
+            offsetY: 22,
+            borderColor: "transparent",
+            borderWidth: 0,
+            style: {
+              background: "#fff9c4",
+              color: "#262626",
+              fontSize: "15px",
+              fontWeight: 700,
+              fontFamily: "Arial, Helvetica, sans-serif",
+              padding: { left: 6, right: 6, top: 2, bottom: 2 },
+            },
+          },
         },
         {
-          x: maxMenge, y: variablekosten, marker: { size: 0 },
-          label: { text: 'Variablen Kosten', textAnchor: 'end', offsetX: -12, offsetY: 22, borderColor: 'transparent', borderWidth: 0, style: { background: '#fff9c4', color: '#C00000', fontSize: '15px', fontWeight: 700, fontFamily: 'Arial, Helvetica, sans-serif', padding: { left: 6, right: 6, top: 2, bottom: 2 } } }
+          x: maxMenge,
+          y: variablekosten,
+          marker: { size: 0 },
+          label: {
+            text: "Variablen Kosten",
+            textAnchor: "end",
+            offsetX: -12,
+            offsetY: 22,
+            borderColor: "transparent",
+            borderWidth: 0,
+            style: {
+              background: "#fff9c4",
+              color: "#C00000",
+              fontSize: "15px",
+              fontWeight: 700,
+              fontFamily: "Arial, Helvetica, sans-serif",
+              padding: { left: 6, right: 6, top: 2, bottom: 2 },
+            },
+          },
         },
         {
-          x: maxMenge, y: fixkosten, marker: { size: 0 },
-          label: { text: 'Fixkosten', textAnchor: 'end', offsetX: -12, offsetY: -14, borderColor: 'transparent', borderWidth: 0, style: { background: '#fff9c4', color: '#843C0C', fontSize: '15px', fontWeight: 700, fontFamily: 'Arial, Helvetica, sans-serif', padding: { left: 6, right: 6, top: 2, bottom: 2 } } }
-        }
-      ]
+          x: maxMenge,
+          y: fixkosten,
+          marker: { size: 0 },
+          label: {
+            text: "Fixkosten",
+            textAnchor: "end",
+            offsetX: -12,
+            offsetY: -14,
+            borderColor: "transparent",
+            borderWidth: 0,
+            style: {
+              background: "#fff9c4",
+              color: "#843C0C",
+              fontSize: "15px",
+              fontWeight: 700,
+              fontFamily: "Arial, Helvetica, sans-serif",
+              padding: { left: 6, right: 6, top: 2, bottom: 2 },
+            },
+          },
+        },
+      ],
     },
     title: {
-      text: 'Gewinnschwelle',
-      align: 'center',
+      text: "Gewinnschwelle",
+      align: "center",
       style: {
-        fontSize: '20px',
-        fontWeight: 'bold'
-      }
+        fontSize: "20px",
+        fontWeight: "bold",
+      },
     },
     xaxis: {
-      type: 'numeric',
+      type: "numeric",
       title: {
-        text: 'Absatz (verkaufte Menge)',
+        text: "Absatz (verkaufte Menge)",
         style: {
-          fontSize: '14px'
-        }
+          fontSize: "14px",
+        },
       },
       min: 0,
       max: maxMenge,
@@ -416,26 +514,26 @@ async function generateChart() {
       forceNiceScale: false,
       decimalsInFloat: 0,
       labels: {
-        formatter: function(val) {
+        formatter: function (val) {
           // Round to nearest step
           const rounded = Math.round(val / axisStep) * axisStep;
-          return rounded.toLocaleString('de-DE');
+          return rounded.toLocaleString("de-DE");
         },
-        rotate: 0
+        rotate: 0,
       },
       axisBorder: {
-        show: true
+        show: true,
       },
       axisTicks: {
-        show: true
-      }
+        show: true,
+      },
     },
     yaxis: {
       title: {
-        text: 'Umsatz / Kosten',
+        text: "Umsatz / Kosten",
         style: {
-          fontSize: '14px'
-        }
+          fontSize: "14px",
+        },
       },
       min: 0,
       // Maxima reichlich bemessen, damit alle Linien inkl. Beschriftung
@@ -444,61 +542,63 @@ async function generateChart() {
       max: nettoverkaufserlöse * 1.1,
       tickAmount: 8,
       labels: {
-        formatter: function(val) {
-          return val.toLocaleString('de-DE', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-          }) + ' €';
-        }
-      }
+        formatter: function (val) {
+          return (
+            val.toLocaleString("de-DE", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }) + " €"
+          );
+        },
+      },
     },
     legend: {
-      position: 'bottom',
-      fontSize: '16px',
+      position: "bottom",
+      fontSize: "16px",
       markers: {
         width: 12,
-        height: 12
-      }
+        height: 12,
+      },
     },
     tooltip: {
       shared: true,
       intersect: false,
       x: {
-        formatter: function(val) {
-          return 'Menge: ' + Math.round(val).toLocaleString('de-DE');
-        }
+        formatter: function (val) {
+          return "Menge: " + Math.round(val).toLocaleString("de-DE");
+        },
       },
       y: {
-        formatter: function(val) {
+        formatter: function (val) {
           return formatCurrency(val);
-        }
-      }
+        },
+      },
     },
     grid: {
       show: true,
-      borderColor: '#e0e0e0',
+      borderColor: "#e0e0e0",
       strokeDashArray: 0,
-      position: 'back',
+      position: "back",
       xaxis: {
         lines: {
-          show: true
-        }
-      },   
+          show: true,
+        },
+      },
       yaxis: {
         lines: {
-          show: true
-        }
-      }
+          show: true,
+        },
+      },
     },
     crosshairs: {
       show: true,
-      position: 'back',
+      position: "back",
       stroke: {
-        color: '#b6b6b6',
+        color: "#b6b6b6",
         width: 1,
-        dashArray: 3
-      }
-    }
+        dashArray: 3,
+      },
+    },
   };
 
   // Chart erstellen
@@ -509,7 +609,7 @@ async function generateChart() {
   // Verzögerung: ApexCharts zeichnet die Annotation-Labels (Beschriftung der
   // Linien) erst nach dem Auflösen des render()-Promises – wie bei
   // lb8-2-bestellmenge, sonst fehlen die Bezeichnungen im PNG
-  await new Promise(warten => setTimeout(warten, 1200));
+  await new Promise((warten) => setTimeout(warten, 1200));
 
   // Grafik als PNG für die Aufgabe exportieren – wie bei lb8-2-bestellmenge
   // wird das gerenderte LIVE-SVG gerastert, damit die Direktbeschriftungen der
@@ -524,39 +624,39 @@ async function generateChart() {
       aufgabeGrafik = `<img src="${imgURI}" alt="Gewinnschwellendiagramm" style="max-width:700px;width:100%">`;
     }
   } catch (e) {
-    console.warn('Chart-Export fehlgeschlagen', e);
+    console.warn("Chart-Export fehlgeschlagen", e);
   }
 
   // Add annotations after chart is rendered
   gewinnschwelleChart.addXaxisAnnotation({
-    id: 'gewinnschwelle-x',
+    id: "gewinnschwelle-x",
     x: gewinnschwelleValue,
     strokeDashArray: 5,
-    borderColor: '#000',
+    borderColor: "#000",
     label: {
-      borderColor: '#000',
+      borderColor: "#000",
       style: {
-        color: '#fff',
-        background: '#000'
+        color: "#fff",
+        background: "#000",
       },
-      text: 'Gewinnschwelle'
-    }
+      text: "Gewinnschwelle",
+    },
   });
-  
+
   gewinnschwelleChart.addYaxisAnnotation({
-    id: 'gewinnschwelle-y',
+    id: "gewinnschwelle-y",
     y: gewinnschwellenmengeValue,
     strokeDashArray: 5,
-    borderColor: '#000'
+    borderColor: "#000",
   });
 
   // Aufgabe und Lösung generieren
   let deckungsbeitragstück = nettoverkaufserlösestück - variablestückkosten;
-  
+
   // Für die Verlust-Variante: Zufallszahl zwischen 10-25% unter der Gewinnschwelle
   let zufallszahl = Math.floor(Math.random() * 16) + 10;
   gewinnschwelleMitVerlust = Math.round(
-    gewinnschwelle - (zufallszahl * gewinnschwelle) / 100
+    gewinnschwelle - (zufallszahl * gewinnschwelle) / 100,
   );
   let deckungsbeitraGesamtmitVerlust =
     deckungsbeitragstück * gewinnschwelleMitVerlust;
@@ -575,13 +675,13 @@ async function generateChart() {
   gewinnschwelle = parseFloat(gewinnschwelle);
   gewinnschwelle = formatDecimal(gewinnschwelle);
   deckungsbeitraGesamtmitVerlust = formatCurrency(
-    deckungsbeitraGesamtmitVerlust
+    deckungsbeitraGesamtmitVerlust,
   );
 
   let aufgabeSatz;
   const aufgabenVariante = document.getElementById("aufgabenVariante").value;
   let randomAufgabeSatz;
-  
+
   if (aufgabenVariante === "variante1") {
     randomAufgabeSatz = 0.3; // Will trigger variant 1 (< 0.5)
   } else if (aufgabenVariante === "variante2") {
@@ -589,7 +689,7 @@ async function generateChart() {
   } else {
     randomAufgabeSatz = 0.3; // Variante 3 (Grafik); wird im Zweig eigenständig behandelt
   }
-  
+
   aufgabeSatz = `<h2>Aufgabe</h2>`;
   if (aufgabenVariante === "variante3") {
     // Variante 3: Nur das Grafikdiagramm ist gegeben (ohne Beschriftung der
@@ -615,7 +715,7 @@ async function generateChart() {
     loesungSatz += `<p>Die Gewinnschwelle liegt am Schnittpunkt der Gesamtkostenlinie mit der Linie der Nettoverkaufserlöse. Von diesem Punkt geht man senkrecht nach unten bis zur x-Achse.</p>`;
     loesungSatz += `<br>`;
     loesungSatz += `<p><b>Abgelesene Gewinnschwellenmenge: ${gewinnzone} Stück</b></p>`;
-   } else {
+  } else {
     loesungSatz += `<table style="border-collapse: collapse;white-space:nowrap;width:350px;margin: 0 0">`;
     loesungSatz += `<tbody>`;
     loesungSatz += `<tr>`;
@@ -665,27 +765,35 @@ async function generateChart() {
   // Aufgabe steht: Editor (Jodit) aktivieren – einmalig. data-jodit-init erlaubt
   // den Adopt auch auf ApexCharts-Seiten (Muster aus lb8-2-bestellmenge).
   if (window.JoditEditor && !gsContainer._jodit) {
-    gsContainer.setAttribute('data-jodit-init', '1');
-    try { window.JoditEditor.init(gsContainer); } catch (e) { console.warn('Editor-Init fehlgeschlagen', e); }
+    gsContainer.setAttribute("data-jodit-init", "1");
+    try {
+      window.JoditEditor.init(gsContainer);
+    } catch (e) {
+      console.warn("Editor-Init fehlgeschlagen", e);
+    }
   }
 }
 
 // Hilfsfunktionen: Inhalt bzw. sichtbares Element des Aufgaben-Containers,
 // unabhängig davon ob der Jodit-Editor aktiv ist.
 function gsAufgabeHtml() {
-  const el = document.getElementById('gewinnschwelleAufgabeContainer');
-  if (!el) return '';
-  let html = (window.JoditEditor && el._jodit) ? window.JoditEditor.getHTML(el) : el.innerHTML;
+  const el = document.getElementById("gewinnschwelleAufgabeContainer");
+  if (!el) return "";
+  let html =
+    window.JoditEditor && el._jodit
+      ? window.JoditEditor.getHTML(el)
+      : el.innerHTML;
   // Seitenumbruch-Marker (nur für den Druck) entfernen
-  return html.replace(/<div class="seitenumbruch"[^>]*>[\s\S]*?<\/div>/g, '')
-             .replace(/<div class="seitenumbruch"[^>]*><\/div>/g, '');
+  return html
+    .replace(/<div class="seitenumbruch"[^>]*>[\s\S]*?<\/div>/g, "")
+    .replace(/<div class="seitenumbruch"[^>]*><\/div>/g, "");
 }
 
 function gsAufgabeElement() {
-  const el = document.getElementById('gewinnschwelleAufgabeContainer');
+  const el = document.getElementById("gewinnschwelleAufgabeContainer");
   if (window.JoditEditor && el && el._jodit) {
     // nach dem Adopt ist el ausgeblendet – sichtbaren Editor-Inhalt erfassen
-    return el._jodit.editor || el.closest('.jodit-container') || el;
+    return el._jodit.editor || el.closest(".jodit-container") || el;
   }
   return el;
 }
@@ -705,25 +813,27 @@ function gewinnschwelleHerunterladenAlsPNG() {
 }
 
 function gewinnschwelleKopiereInZwischenablage() {
-  const gewinnschwelleHTML = gsAufgabeHtml().replace(/&nbsp;/g, ' ');
-  navigator.clipboard.writeText(gewinnschwelleHTML)
-    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+  const gewinnschwelleHTML = gsAufgabeHtml().replace(/&nbsp;/g, " ");
+  navigator.clipboard
+    .writeText(gewinnschwelleHTML)
+    .then(() => zeigeModal("Code wurde in die Zwischenablage kopiert"))
+    .catch((err) =>
+      console.error("Fehler beim Kopieren in die Zwischenablage:", err),
+    );
 }
 
 function gewinnschwelleHerunterladen() {
-  const emailHTML = gsAufgabeHtml().replace(/&nbsp;/g, ' ');
-  const blob = new Blob([emailHTML], { type: 'html' });
-  const a = document.createElement('a');
+  const emailHTML = gsAufgabeHtml().replace(/&nbsp;/g, " ");
+  const blob = new Blob([emailHTML], { type: "html" });
+  const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = 'gewinnschwelle.html';
+  a.download = "gewinnschwelle.html";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 }
 
 // Aufgabe beim Seitenaufruf automatisch erzeugen (Defaultwerte des Formulars)
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   validateAndGenerateChart();
 });
-

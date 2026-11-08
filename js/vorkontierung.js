@@ -2,87 +2,101 @@
 const parsedData = jsyaml.load(kontoAuswahlYAML);
 
 function generiereVorkontierung() {
-  const anzahlZeilenVorkontierung = document.getElementById('anzahlZeilenVorkontierung').value;
-  const vorkontierungContainer = document.getElementById('vorkontierungContainer');
-  const vorkontierungButtonContainer = document.getElementById('vorkontierungButtonContainer');
+  const anzahlZeilenVorkontierung = document.getElementById(
+    "anzahlZeilenVorkontierung",
+  ).value;
+  const vorkontierungContainer = document.getElementById(
+    "vorkontierungContainer",
+  );
+  const vorkontierungButtonContainer = document.getElementById(
+    "vorkontierungButtonContainer",
+  );
 
-  let vorkontierungHTML = '<table style="font-family:courier;min-width:775px;border-collapse:collapse"><caption>Vorkontierung</caption><tbody>'
-                        + '<tr style="text-align: center;background-color:#ededed;font-weight: bold;white-space:nowrap;">'
-                        + '<th>BA</th>'
-                        + '<th>Datum</th>'
-                        + '<th>Soll</th>'
-                        + '<th>Haben</th>'
-                        + '<th>BNR</th>'
-                        + '<th>Text</th>'
-                        + '<th>B/N</th>'
-                        + '<th>Betrag in €</th>'
-                        + '<th>UCo</th>'
-                        + '</tr>';
+  let vorkontierungHTML =
+    '<table style="font-family:courier;min-width:775px;border-collapse:collapse"><caption>Vorkontierung</caption><tbody>' +
+    '<tr style="text-align: center;background-color:#ededed;font-weight: bold;white-space:nowrap;">' +
+    "<th>BA</th>" +
+    "<th>Datum</th>" +
+    "<th>Soll</th>" +
+    "<th>Haben</th>" +
+    "<th>BNR</th>" +
+    "<th>Text</th>" +
+    "<th>B/N</th>" +
+    "<th>Betrag in €</th>" +
+    "<th>UCo</th>" +
+    "</tr>";
 
   for (let i = 0; i < anzahlZeilenVorkontierung; i++) {
-    vorkontierungHTML += '<tr style="background-color:#fff;">'
-    vorkontierungHTML += '<td style="width:25px;max-width:25px;border: 1px solid #ccc;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;">B</td>'
-                      + '<td style="width:80px;max-width:100px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:110px;max-width:140px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:110px;max-width:140px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:15px;max-width:15px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:160px;max-width:180px;border: 1px solid #ccc;padding: .75rem;"></td>'
-                      + '<td style="width:50px;max-width:50px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:110px;max-width:130px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-                      + '<td style="width:80px;max-width:110px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>'
-    vorkontierungHTML += '</tr>';
+    vorkontierungHTML += '<tr style="background-color:#fff;">';
+    vorkontierungHTML +=
+      '<td style="width:25px;max-width:25px;border: 1px solid #ccc;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;">B</td>' +
+      '<td style="width:80px;max-width:100px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>' +
+      '<td style="width:110px;max-width:140px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>' +
+      '<td style="width:110px;max-width:140px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>' +
+      '<td style="width:15px;max-width:15px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>' +
+      '<td style="width:160px;max-width:180px;border: 1px solid #ccc;padding: .75rem;"></td>' +
+      '<td style="width:50px;max-width:50px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>' +
+      '<td style="width:110px;max-width:130px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>' +
+      '<td style="width:80px;max-width:110px;border: 1px solid #ccc;padding: .75rem;white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></td>';
+    vorkontierungHTML += "</tr>";
   }
 
-  vorkontierungHTML += '</tbody></table>';
+  vorkontierungHTML += "</tbody></table>";
   vorkontierungContainer.innerHTML = vorkontierungHTML;
 
   // Display the buttons after generation
-  vorkontierungButtonContainer.style.display = 'block';
+  vorkontierungButtonContainer.style.display = "block";
 }
 
-
 function vorkontierungHerunterladen() {
-  const vorkontierungHTML = document.getElementById('vorkontierungContainer').innerHTML;
-  const blob = new Blob([vorkontierungHTML], { type: 'text/html' });
-  const a = document.createElement('a');
+  const vorkontierungHTML = document.getElementById(
+    "vorkontierungContainer",
+  ).innerHTML;
+  const blob = new Blob([vorkontierungHTML], { type: "text/html" });
+  const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = 'vorkontierung.html';
+  a.download = "vorkontierung.html";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 }
 
 function vorkontierungKopiereInZwischenablage() {
-  const vorkontierungHTML = document.getElementById('vorkontierungContainer').innerHTML;
-  navigator.clipboard.writeText(vorkontierungHTML)
-    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+  const vorkontierungHTML = document.getElementById(
+    "vorkontierungContainer",
+  ).innerHTML;
+  navigator.clipboard
+    .writeText(vorkontierungHTML)
+    .then(() => zeigeModal("Code wurde in die Zwischenablage kopiert"))
+    .catch((err) =>
+      console.error("Fehler beim Kopieren in die Zwischenablage:", err),
+    );
 }
 
 function vorkontierungHerunterladenAlsPNG() {
-  const vorkontierungContainer = document.getElementById('vorkontierungContainer');
+  const vorkontierungContainer = document.getElementById(
+    "vorkontierungContainer",
+  );
 
-  html2canvas(vorkontierungContainer, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
+  html2canvas(vorkontierungContainer, optionshtml2canvas).then((canvas) => {
+    const dataURL = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
     a.href = dataURL;
-    a.download = 'vorkontierung.png';
+    a.download = "vorkontierung.png";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   });
 }
 
-let clipboardVorkontierung = new ClipboardJS('#officeButtonVorkontierung');
+let clipboardVorkontierung = new ClipboardJS("#officeButtonVorkontierung");
 
-clipboardVorkontierung.on('success', function (e) {
+clipboardVorkontierung.on("success", function (e) {
   console.log("Die Tabelle wurde in die Zwischenablage kopiert.");
   zeigeModal("Die Tabelle wurde in die Zwischenablage kopiert.");
 });
 
-clipboardVorkontierung.on('error', function (e) {
+clipboardVorkontierung.on("error", function (e) {
   console.error("Fehler beim Kopieren der Tabelle: ", e.action);
   zeigeModal("Fehler beim Kopieren der Tabelle.");
 });
-
-

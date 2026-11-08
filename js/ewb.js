@@ -1,88 +1,98 @@
- // Kundenliste für Einzelwertberichtigung
-    const ewbKunden = [
-      { name: "Müller Handels GmbH", ort: "Landshut" },
-      { name: "Schmidt & Partner KG", ort: "Coburg" },
-      { name: "Bauer Großhandel e. K.", ort: "Hösbach" },
-      { name: "Weber Trading GmbH", ort: "Bamberg" },
-      { name: "Fischer Import-Export", ort: "Würzburg" },
-      { name: "Hoffmann Vertrieb e. K.", ort: "Nürnberg" },
-      { name: "Schneider & Söhne GbR", ort: "Fürth" },
-      { name: "Lehmann Handelshaus", ort: "Erlangen" },
-      { name: "Wagner Commerce GmbH", ort: "Regensburg" },
-      { name: "Kraus Handelskontor", ort: "Ingolstadt" },
-      { name: "Zimmermann Trading", ort: "Augsburg" },
-      { name: "Meier & Co. KG", ort: "Passau" },
-      { name: "Schulz Handel e. K.", ort: "Aschaffenburg" },
-      { name: "Koch Großhandel GmbH", ort: "Schweinfurt" },
-      { name: "Becker Handelsgesellschaft", ort: "Kempten" }
-    ];
+// Kundenliste für Einzelwertberichtigung
+const ewbKunden = [
+  { name: "Müller Handels GmbH", ort: "Landshut" },
+  { name: "Schmidt & Partner KG", ort: "Coburg" },
+  { name: "Bauer Großhandel e. K.", ort: "Hösbach" },
+  { name: "Weber Trading GmbH", ort: "Bamberg" },
+  { name: "Fischer Import-Export", ort: "Würzburg" },
+  { name: "Hoffmann Vertrieb e. K.", ort: "Nürnberg" },
+  { name: "Schneider & Söhne GbR", ort: "Fürth" },
+  { name: "Lehmann Handelshaus", ort: "Erlangen" },
+  { name: "Wagner Commerce GmbH", ort: "Regensburg" },
+  { name: "Kraus Handelskontor", ort: "Ingolstadt" },
+  { name: "Zimmermann Trading", ort: "Augsburg" },
+  { name: "Meier & Co. KG", ort: "Passau" },
+  { name: "Schulz Handel e. K.", ort: "Aschaffenburg" },
+  { name: "Koch Großhandel GmbH", ort: "Schweinfurt" },
+  { name: "Becker Handelsgesellschaft", ort: "Kempten" },
+];
 
-    // Funktion zum Generieren einer zufälligen Zahl zwischen min und max
-    function ewbZufallsZahl(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+// Funktion zum Generieren einer zufälligen Zahl zwischen min und max
+function ewbZufallsZahl(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-    // Funktion zum Generieren eines glatten Betrags (durch 100 teilbar)
-    function ewbGlatterBetrag(min, max) {
-      const betrag = ewbZufallsZahl(min, max);
-      const gerundet = Math.round(betrag / 100) * 100;
-      return Math.max(gerundet, min); // Sicherstellen, dass Minimum eingehalten wird
-    }
+// Funktion zum Generieren eines glatten Betrags (durch 100 teilbar)
+function ewbGlatterBetrag(min, max) {
+  const betrag = ewbZufallsZahl(min, max);
+  const gerundet = Math.round(betrag / 100) * 100;
+  return Math.max(gerundet, min); // Sicherstellen, dass Minimum eingehalten wird
+}
 
-    // Funktion zum Generieren eines zufälligen Ausfall-Prozentsatzes in 10er-Schritten (10, 20, 30...90%)
-    function ewbZufaelligerAusfallProzent() {
-      const schritte = [10, 20, 30, 40, 50, 60, 70, 80, 90];
-      return schritte[ewbZufallsZahl(0, schritte.length - 1)];
-    }
+// Funktion zum Generieren eines zufälligen Ausfall-Prozentsatzes in 10er-Schritten (10, 20, 30...90%)
+function ewbZufaelligerAusfallProzent() {
+  const schritte = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+  return schritte[ewbZufallsZahl(0, schritte.length - 1)];
+}
 
-    // Funktion zum Formatieren von Zahlen im deutschen Format
-    function ewbFormatiereEuro(betrag) {
-      return betrag.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
-    }
+// Funktion zum Formatieren von Zahlen im deutschen Format
+function ewbFormatiereEuro(betrag) {
+  return (
+    betrag.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + " €"
+  );
+}
 
-    // Funktion zum Berechnen der UST
-    function ewbBerechneUST(nettobetrag) {
-      return Math.round(nettobetrag * UST_REGEL / 100 * 100) / 100;
-    }
+// Funktion zum Berechnen der UST
+function ewbBerechneUST(nettobetrag) {
+  return Math.round(((nettobetrag * UST_REGEL) / 100) * 100) / 100;
+}
 
-    // Funktion zum Generieren der Tabelle
-    function ewbZeigeZufaelligeTabelle() {
-      const anzahlKunden = parseInt(document.getElementById('ewbAnzahlKunden').value);
-      
-      // Zufällige Kunden auswählen
-      const verfuegbareKunden = [...ewbKunden];
-      const ausgewaehlteKunden = [];
-      
-      for (let i = 0; i < anzahlKunden; i++) {
-        const index = ewbZufallsZahl(0, verfuegbareKunden.length - 1);
-        ausgewaehlteKunden.push(verfuegbareKunden[index]);
-        verfuegbareKunden.splice(index, 1);
-      }
-      
-      // Daten für jeden Kunden generieren
-      const kundenDaten = ausgewaehlteKunden.map(kunde => {
-        const nettobetrag = ewbGlatterBetrag(20, 800) * 100; // 2.000 bis 80.000 € (20-800 * 100)
-        const ust = ewbBerechneUST(nettobetrag);
-        const bruttobetrag = nettobetrag + ust;
-        const ausfallProzent = ewbZufaelligerAusfallProzent(); // 10% bis 90%
-        const ausfallBetrag = Math.round(nettobetrag * ausfallProzent / 100);
-        
-        return {
-          name: kunde.name,
-          ort: kunde.ort,
-          bruttobetrag: bruttobetrag,
-          ust: ust,
-          nettobetrag: nettobetrag,
-          ausfallProzent: ausfallProzent,
-          ausfallBetrag: ausfallBetrag
-        };
-      });
-      
-      // Summe der geschätzten Ausfälle berechnen
-      const summeDerAusfaelle = kundenDaten.reduce((sum, kunde) => sum + kunde.ausfallBetrag, 0);
-      
-      // HTML für Aufgabe generieren (ohne blaue Werte)
-      let htmlAufgabe = `
+// Funktion zum Generieren der Tabelle
+function ewbZeigeZufaelligeTabelle() {
+  const anzahlKunden = parseInt(
+    document.getElementById("ewbAnzahlKunden").value,
+  );
+
+  // Zufällige Kunden auswählen
+  const verfuegbareKunden = [...ewbKunden];
+  const ausgewaehlteKunden = [];
+
+  for (let i = 0; i < anzahlKunden; i++) {
+    const index = ewbZufallsZahl(0, verfuegbareKunden.length - 1);
+    ausgewaehlteKunden.push(verfuegbareKunden[index]);
+    verfuegbareKunden.splice(index, 1);
+  }
+
+  // Daten für jeden Kunden generieren
+  const kundenDaten = ausgewaehlteKunden.map((kunde) => {
+    const nettobetrag = ewbGlatterBetrag(20, 800) * 100; // 2.000 bis 80.000 € (20-800 * 100)
+    const ust = ewbBerechneUST(nettobetrag);
+    const bruttobetrag = nettobetrag + ust;
+    const ausfallProzent = ewbZufaelligerAusfallProzent(); // 10% bis 90%
+    const ausfallBetrag = Math.round((nettobetrag * ausfallProzent) / 100);
+
+    return {
+      name: kunde.name,
+      ort: kunde.ort,
+      bruttobetrag: bruttobetrag,
+      ust: ust,
+      nettobetrag: nettobetrag,
+      ausfallProzent: ausfallProzent,
+      ausfallBetrag: ausfallBetrag,
+    };
+  });
+
+  // Summe der geschätzten Ausfälle berechnen
+  const summeDerAusfaelle = kundenDaten.reduce(
+    (sum, kunde) => sum + kunde.ausfallBetrag,
+    0,
+  );
+
+  // HTML für Aufgabe generieren (ohne blaue Werte)
+  let htmlAufgabe = `
         <h2>Aufgabe</h2>
         <p>Zweifelhaften Forderungen werden am Abschlussstichtag mit ihrem individuellen Ausfallrisiko bewertet. Bilde den Buchungssatz zur vorbereitenden Abschlussbuchung am 31.12</p>
         <br>
@@ -99,9 +109,9 @@
           </thead>
           <tbody>
       `;
-      
-      kundenDaten.forEach(kunde => {
-        htmlAufgabe += `
+
+  kundenDaten.forEach((kunde) => {
+    htmlAufgabe += `
             <tr>
               <td style="border: 1px solid #000; padding: 8px;">${kunde.name}<br>${kunde.ort}</td>
               <td style="border: 1px solid #000; padding: 8px; text-align: right;">${ewbFormatiereEuro(kunde.bruttobetrag)}</td>
@@ -111,9 +121,9 @@
               <td style="border: 1px solid #000; padding: 8px; text-align: right;"></td>
             </tr>
         `;
-      });
-      
-      htmlAufgabe += `
+  });
+
+  htmlAufgabe += `
             <tr>
               <td colspan="5" style="border: 1px solid #000; padding: 8px; text-align: right; font-weight: bold; color: red;">Summe der geschätzten Ausfälle</td>
               <td style="border: 1px solid #000; padding: 8px; text-align: right; font-weight: bold;"></td>
@@ -122,9 +132,9 @@
         </table>
         <br><br>
       `;
-      
-      // HTML für Lösung generieren (mit allen Werten)
-      let htmlLoesung = `
+
+  // HTML für Lösung generieren (mit allen Werten)
+  let htmlLoesung = `
         <h2 class="loesung">Lösung</h2>
         <table style="width: 100%; max-width: 750px; border-collapse: collapse; font-size: 14px;">
           <thead>
@@ -139,9 +149,9 @@
           </thead>
           <tbody>
       `;
-      
-      kundenDaten.forEach(kunde => {
-        htmlLoesung += `
+
+  kundenDaten.forEach((kunde) => {
+    htmlLoesung += `
             <tr>
               <td style="border: 1px solid #000; padding: 8px;">${kunde.name}<br>${kunde.ort}</td>
               <td style="border: 1px solid #000; padding: 8px; text-align: right;">${ewbFormatiereEuro(kunde.bruttobetrag)}</td>
@@ -151,9 +161,9 @@
               <td style="border: 1px solid #000; padding: 8px; text-align: right; color: #0066cc;">${ewbFormatiereEuro(kunde.ausfallBetrag)}</td>
             </tr>
         `;
-      });
-      
-      htmlLoesung += `
+  });
+
+  htmlLoesung += `
             <tr>
               <td colspan="5" style="border: 1px solid #000; padding: 8px; text-align: right; font-weight: bold; color: red;">Summe der geschätzten Ausfälle</td>
               <td style="border: 1px solid #000; padding: 8px; text-align: right; font-weight: bold; color: red;">${ewbFormatiereEuro(summeDerAusfaelle)}</td>
@@ -174,16 +184,13 @@
           </tbody>
         </table>
       `;
-      
-      document.getElementById('Container').innerHTML = htmlAufgabe + htmlLoesung;
-    }
 
-    // Export-Funktionen
-    
-    
-    
-    // Beim Laden der Seite automatisch einen BAB erstellen
-    document.addEventListener("DOMContentLoaded", function() {
-      ewbZeigeZufaelligeTabelle();
-    });
+  document.getElementById("Container").innerHTML = htmlAufgabe + htmlLoesung;
+}
 
+// Export-Funktionen
+
+// Beim Laden der Seite automatisch einen BAB erstellen
+document.addEventListener("DOMContentLoaded", function () {
+  ewbZeigeZufaelligeTabelle();
+});

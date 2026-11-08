@@ -1,82 +1,233 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BwR-Kontle – Interaktives BwR-Lernspiel | meinbwr.de BwR</title>
-  <meta name="description" content="BwR-Kontle: Interaktives BwR-Lernspiel zu Kontenrahmen und Buchungssätzen für die Realschule Bayern.">
-  <link rel="canonical" href="https://www.meinbwr.de/kontle.html">
-  <meta name="robots" content="index, follow">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BwR-Kontle – Interaktives BwR-Lernspiel | meinbwr.de BwR</title>
+    <meta
+      name="description"
+      content="BwR-Kontle: Interaktives BwR-Lernspiel zu Kontenrahmen und Buchungssätzen für die Realschule Bayern."
+    />
+    <link rel="canonical" href="https://www.meinbwr.de/kontle.html" />
+    <meta name="robots" content="index, follow" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="BwR-Kontle – Interaktives BwR-Lernspiel | meinbwr.de">
-  <meta property="og:description" content="BwR-Kontle: Interaktives BwR-Lernspiel zu Kontenrahmen und Buchungssätzen für die Realschule Bayern.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.meinbwr.de/kontle.html">
-  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
-  <meta property="og:locale" content="de_DE">
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="BwR-Kontle – Interaktives BwR-Lernspiel | meinbwr.de"
+    />
+    <meta
+      property="og:description"
+      content="BwR-Kontle: Interaktives BwR-Lernspiel zu Kontenrahmen und Buchungssätzen für die Realschule Bayern."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.meinbwr.de/kontle.html" />
+    <meta
+      property="og:site_name"
+      content="meinbwr.de – BwR Realschule Bayern"
+    />
+    <meta property="og:locale" content="de_DE" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="BwR-Kontle – Interaktives BwR-Lernspiel | meinbwr.de">
-  <meta name="twitter:description" content="BwR-Kontle: Interaktives BwR-Lernspiel zu Kontenrahmen und Buchungssätzen für die Realschule Bayern.">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="BwR-Kontle – Interaktives BwR-Lernspiel | meinbwr.de"
+    />
+    <meta
+      name="twitter:description"
+      content="BwR-Kontle: Interaktives BwR-Lernspiel zu Kontenrahmen und Buchungssätzen für die Realschule Bayern."
+    />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#2c5f2d">
-  <meta name="color-scheme" content="light">
+    <!-- Theme -->
+    <meta name="theme-color" content="#2c5f2d" />
+    <meta name="color-scheme" content="light" />
 
-  <!-- Strukturierte Daten -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "BwR-Kontle",
-    "description": "BwR-Kontle: Interaktives BwR-Lernspiel zu Kontenrahmen und Buchungssätzen für die Realschule Bayern.",
-    "url": "https://www.meinbwr.de/kontle.html",
-    "inLanguage": "de-DE",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "meinbwr.de – BwR Realschule Bayern",
-      "url": "https://www.meinbwr.de/"
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 2, "name": "Sonstiges", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 3, "name": "BwR-Kontle", "item": "https://www.meinbwr.de/kontle.html" }
-      ]
-    }
-  }
-  </script>
+    <!-- Strukturierte Daten -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "BwR-Kontle",
+        "description": "BwR-Kontle: Interaktives BwR-Lernspiel zu Kontenrahmen und Buchungssätzen für die Realschule Bayern.",
+        "url": "https://www.meinbwr.de/kontle.html",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "meinbwr.de – BwR Realschule Bayern",
+          "url": "https://www.meinbwr.de/"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Sonstiges",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "BwR-Kontle",
+              "item": "https://www.meinbwr.de/kontle.html"
+            }
+          ]
+        }
+      }
+    </script>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <script src="js/menu.js?v=15"></script>
-  <script src="js/libraries/canvas-confetti.min.js"></script>
-  <script src="js/utils.js?v=14"></script>
-</head>
-<body>
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <script src="js/menu.js?v=15"></script>
+
+    <script src="js/utils.js?v=14"></script>
+  </head>
+  <body>
     <main>
-    <div w3-include-html="navigation.html"></div> 
-    <h2>BwR-Kontle</h2>
- <p>Welches Konto aus dem Kontenplan Bayerische Realschule wird gesucht?<br>Grenzenloser Spielspaß: <i class="fa fa-gamepad" aria-hidden="true"></i> bei jedem Seitenaufruf wird ein neues Konto
-    gesucht.</p>
+      <div w3-include-html="navigation.html"></div>
+      <h2>BwR-Kontle</h2>
+      <p>
+        Welches Konto aus dem Kontenplan Bayerische Realschule wird gesucht?<br />Grenzenloser
+        Spielspaß: <i class="fa fa-gamepad" aria-hidden="true"></i> bei jedem
+        Seitenaufruf wird ein neues Konto gesucht.
+      </p>
 
-<div class="wordle">
-    <h1>BwR-Kontle</h1>
-    <div id="grid"></div>
-    <div id="keyboard"></div>
-</div>
+      <div id="Container">
+        <div class="wordle">
+          <h1>BwR-Kontle</h1>
+          <div id="grid"></div>
+          <div id="keyboard"></div>
+        </div>
+      </div>
 
-<style>
-.button,.wordle{color:#fff;display:flex}.button,.keys,.rows,.wordle{display:flex}.wordle{touch-action:pan-x pan-y pinch-zoom;background:#111;font-family:sans-serif;text-align:center;text-transform:uppercase;flex-direction:column}#grid{flex:1 1 auto}.button{border:0;padding:4px!important;margin:2px!important;height:2.5em;border-radius:4px;cursor:pointer;user-select:none;flex:1;justify-content:center;align-items:center;text-transform:lowercase}#keyboard{margin:10px auto;padding:0!important;max-width:500px;width:100%}.wordle .cell{width:60px;height:60px;line-height:60px;display:inline-block;margin:4px;font-size:40px;font-weight:700;perspective:1000px}.cell .back,.wordle .cell .front{border:2px solid #444;backface-visibility:hidden;position:absolute;top:0;right:0;bottom:0;left:0}.keys{margin:0 auto 2px;touch-action:manipulation}.rows{flex-direction:row;flex-wrap:nowrap;justify-content:center}.cell.solved .surface{transform:rotateX(180deg)}.cell .surface{transition-duration:2s;transform-style:preserve-3d;position:relative;width:100%;height:100%}.cell .front{z-index:2}.cell.solved .front{display:none}.cell .back{z-index:1;transform:rotateX(180deg)}@keyframes press{from{opacity:.5;transform:scale(.95)}50%{opacity:.85;transform:scale(1.1)}to{opacity:1;transform:scale(1)}}
-</style>
+      <div class="export-buttons" data-exports="html,source"></div>
 
-</main>
-<div w3-include-html="footer.html"></div> 
-<script src="js/kontle-inline.js"></script>
-</body>
+      <style>
+        .button,
+        .keys,
+        .rows,
+        .wordle {
+          display: flex;
+        }
+        .wordle {
+          touch-action: pan-x pan-y pinch-zoom;
+          background: #f5f7fa;
+          color: #2c3e50;
+          font-family: sans-serif;
+          text-align: center;
+          text-transform: uppercase;
+          flex-direction: column;
+        }
+        #grid {
+          flex: 1 1 auto;
+        }
+        .button {
+          border: 0;
+          padding: 4px !important;
+          margin: 2px !important;
+          height: 2.5em;
+          border-radius: 4px;
+          cursor: pointer;
+          user-select: none;
+          flex: 1;
+          justify-content: center;
+          align-items: center;
+          text-transform: lowercase;
+          background: #e0e6ed;
+          color: #2c3e50;
+        }
+        .button:hover {
+          background: #d0d8e4;
+        }
+        #keyboard {
+          margin: 10px auto;
+          padding: 0 !important;
+          max-width: 500px;
+          width: 100%;
+        }
+        .wordle .cell {
+          width: 60px;
+          height: 60px;
+          line-height: 60px;
+          display: inline-block;
+          margin: 4px;
+          font-size: 40px;
+          font-weight: 700;
+          perspective: 1000px;
+          color: #2c3e50;
+        }
+        .cell .back,
+        .wordle .cell .front {
+          border: 2px solid #b0b8c4;
+          backface-visibility: hidden;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background: #ffffff;
+        }
+        .keys {
+          margin: 0 auto 2px;
+          touch-action: manipulation;
+        }
+        .rows {
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: center;
+        }
+        .cell.solved .surface {
+          transform: rotateX(180deg);
+        }
+        .cell .surface {
+          transition-duration: 2s;
+          transform-style: preserve-3d;
+          position: relative;
+          width: 100%;
+          height: 100%;
+        }
+        .cell .front {
+          z-index: 2;
+          background: #ffffff;
+        }
+        .cell.solved .front {
+          display: none;
+        }
+        .cell .back {
+          z-index: 1;
+          transform: rotateX(180deg);
+          background: #e8ecf1;
+        }
+        @keyframes press {
+          from {
+            opacity: 0.5;
+            transform: scale(0.95);
+          }
+          50% {
+            opacity: 0.85;
+            transform: scale(1.1);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+      </style>
+    </main>
+    <div w3-include-html="footer.html"></div>
+    <script src="js/export-buttons.js"></script>
+    <script src="js/kontle-inline.js"></script>
+  </body>
 </html>

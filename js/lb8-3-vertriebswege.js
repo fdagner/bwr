@@ -2,15 +2,11 @@
 // GLOBALE VARIABLEN
 // ============================================================================
 
-let kunde = '<i>[Modellunternehmen]</i>';
+let kunde = "<i>[Modellunternehmen]</i>";
 
 // ============================================================================
 // YAML-DATEN LADEN (identisch zum Marketing-Generator)
 // ============================================================================
-
-
-
-
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -20,37 +16,37 @@ function fillCompanyDropdowns() {
   if (!yamlData || yamlData.length === 0) return;
 
   const sortedCompanies = [...yamlData].sort((a, b) => {
-    const brancheA = a.unternehmen?.branche || '';
-    const brancheB = b.unternehmen?.branche || '';
+    const brancheA = a.unternehmen?.branche || "";
+    const brancheB = b.unternehmen?.branche || "";
     if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
-    return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+    return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
 
-  const kundeSelect = document.getElementById('vertriebKunde');
+  const kundeSelect = document.getElementById("vertriebKunde");
   if (!kundeSelect) return;
 
-  kundeSelect.innerHTML = '';
-  const opt = document.createElement('option');
-  opt.value = '';
-  opt.text = '— bitte Unternehmen auswählen —';
+  kundeSelect.innerHTML = "";
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "— bitte Unternehmen auswählen —";
   opt.disabled = true;
   opt.selected = true;
   kundeSelect.appendChild(opt);
 
-  sortedCompanies.forEach(company => {
+  sortedCompanies.forEach((company) => {
     const u = company.unternehmen;
     if (!u?.name) return;
 
     const displayText = u.branche
-      ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
-      : `${u.name} ${u.rechtsform || ''}`.trim();
+      ? `${u.branche} – ${u.name} ${u.rechtsform || ""}`.trim()
+      : `${u.name} ${u.rechtsform || ""}`.trim();
 
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = u.name;
     option.textContent = displayText;
-    option.dataset.id = u.id || '';
-    option.dataset.rechtsform = u.rechtsform || '';
-    option.dataset.branche = u.branche || '';
+    option.dataset.id = u.id || "";
+    option.dataset.rechtsform = u.rechtsform || "";
+    option.dataset.branche = u.branche || "";
 
     kundeSelect.appendChild(option);
   });
@@ -191,127 +187,153 @@ const ICONS = {
 // ============================================================================
 
 const vertriebswege = {
-
   direkt_online: {
-    label: 'Direkter Vertrieb – Online-Shop',
+    label: "Direkter Vertrieb – Online-Shop",
     stufen: 0,
     stationen: [
-      { iconKey: 'hersteller',     bezeichnung: 'Hersteller' },
-      { iconKey: 'onlineshop',     bezeichnung: 'Eigener Online-Shop' },
-      { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
+      { iconKey: "hersteller", bezeichnung: "Hersteller" },
+      { iconKey: "onlineshop", bezeichnung: "Eigener Online-Shop" },
+      { iconKey: "endverbraucher", bezeichnung: "Endverbraucher" },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
-      (u) => `${u} plant, seinen Absatz zu steigern. Im Rahmen der Marketingplanung stellt das Unternehmen seinen aktuellen Vertriebsweg grafisch dar:`,
-      (u) => `Im Zuge der Vertriebsanalyse dokumentiert ${u} den Weg seiner Produkte bis zum Kunden in der folgenden Übersicht:`,
+      (u) =>
+        `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
+      (u) =>
+        `${u} plant, seinen Absatz zu steigern. Im Rahmen der Marketingplanung stellt das Unternehmen seinen aktuellen Vertriebsweg grafisch dar:`,
+      (u) =>
+        `Im Zuge der Vertriebsanalyse dokumentiert ${u} den Weg seiner Produkte bis zum Kunden in der folgenden Übersicht:`,
     ],
-    loesung: () => `Es liegt ein <strong>direkter Vertrieb</strong> vor, da das Unternehmen seine Produkte über einen eigenen Online-Shop unmittelbar an die Endverbraucher verkauft. Es ist kein Zwischenhändler eingeschaltet.`,
+    loesung: () =>
+      `Es liegt ein <strong>direkter Vertrieb</strong> vor, da das Unternehmen seine Produkte über einen eigenen Online-Shop unmittelbar an die Endverbraucher verkauft. Es ist kein Zwischenhändler eingeschaltet.`,
   },
 
   direkt_laden: {
-    label: 'Direkter Vertrieb – Eigener Laden',
+    label: "Direkter Vertrieb – Eigener Laden",
     stufen: 0,
     stationen: [
-      { iconKey: 'hersteller',     bezeichnung: 'Hersteller' },
-      { iconKey: 'eigenerLaden',   bezeichnung: 'Eigenes Ladengeschäft' },
-      { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
+      { iconKey: "hersteller", bezeichnung: "Hersteller" },
+      { iconKey: "eigenerLaden", bezeichnung: "Eigenes Ladengeschäft" },
+      { iconKey: "endverbraucher", bezeichnung: "Endverbraucher" },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
-      (u) => `Im Rahmen einer Marketinganalyse legt ${u} dar, wie seine Produkte zum Kunden gelangen:`,
-      (u) => `${u} hat seinen Vertrieb kürzlich überprüft. Die folgende Grafik zeigt den aktuellen Absatzweg:`,
+      (u) =>
+        `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
+      (u) =>
+        `Im Rahmen einer Marketinganalyse legt ${u} dar, wie seine Produkte zum Kunden gelangen:`,
+      (u) =>
+        `${u} hat seinen Vertrieb kürzlich überprüft. Die folgende Grafik zeigt den aktuellen Absatzweg:`,
     ],
-    loesung: () => `Es liegt ein <strong>direkter Vertrieb</strong> vor, da das Unternehmen seine Produkte über ein eigenes Ladengeschäft unmittelbar an die Endverbraucher abgibt. Es ist kein Zwischenhändler eingeschaltet.`,
+    loesung: () =>
+      `Es liegt ein <strong>direkter Vertrieb</strong> vor, da das Unternehmen seine Produkte über ein eigenes Ladengeschäft unmittelbar an die Endverbraucher abgibt. Es ist kein Zwischenhändler eingeschaltet.`,
   },
 
   direkt_aussendienst: {
-    label: 'Direkter Vertrieb – Außendienst',
+    label: "Direkter Vertrieb – Außendienst",
     stufen: 0,
     stationen: [
-      { iconKey: 'hersteller',     bezeichnung: 'Hersteller' },
-      { iconKey: 'aussendienst',   bezeichnung: 'Außendienstmitarbeiter' },
-      { iconKey: 'endverbraucher', bezeichnung: 'Gewerbekunde' },
+      { iconKey: "hersteller", bezeichnung: "Hersteller" },
+      { iconKey: "aussendienst", bezeichnung: "Außendienstmitarbeiter" },
+      { iconKey: "endverbraucher", bezeichnung: "Gewerbekunde" },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
-      (u) => `Zur Vorbereitung auf eine Marketingbesprechung dokumentiert ${u} seinen Vertriebsweg in der folgenden Grafik:`,
-      (u) => `${u} überprüft seine Vertriebsstrategie. Die Grafik zeigt, wie das Unternehmen seine Produkte aktuell absetzt:`,
+      (u) =>
+        `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
+      (u) =>
+        `Zur Vorbereitung auf eine Marketingbesprechung dokumentiert ${u} seinen Vertriebsweg in der folgenden Grafik:`,
+      (u) =>
+        `${u} überprüft seine Vertriebsstrategie. Die Grafik zeigt, wie das Unternehmen seine Produkte aktuell absetzt:`,
     ],
-    loesung: () => `Es liegt ein <strong>direkter Vertrieb</strong> vor, da das Unternehmen seine Produkte durch eigene Außendienstmitarbeiter unmittelbar an die Gewerbekunden verkauft. Es ist kein Zwischenhändler eingeschaltet.`,
+    loesung: () =>
+      `Es liegt ein <strong>direkter Vertrieb</strong> vor, da das Unternehmen seine Produkte durch eigene Außendienstmitarbeiter unmittelbar an die Gewerbekunden verkauft. Es ist kein Zwischenhändler eingeschaltet.`,
   },
 
-   indirekt_handelsvertreter: {
-    label: 'Indirekter Vertrieb – Handelsvertreter',
+  indirekt_handelsvertreter: {
+    label: "Indirekter Vertrieb – Handelsvertreter",
     stufen: 0,
     stationen: [
-      { iconKey: 'hersteller',     bezeichnung: 'Hersteller' },
-      { iconKey: 'handelsvertreter',   bezeichnung: 'Handelsvertreter' },
-      { iconKey: 'endverbraucher', bezeichnung: 'Gewerbekunde' },
+      { iconKey: "hersteller", bezeichnung: "Hersteller" },
+      { iconKey: "handelsvertreter", bezeichnung: "Handelsvertreter" },
+      { iconKey: "endverbraucher", bezeichnung: "Gewerbekunde" },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
-      (u) => `Zur Vorbereitung auf eine Marketingbesprechung dokumentiert ${u} seinen Vertriebsweg in der folgenden Grafik:`,
-      (u) => `${u} überprüft seine Vertriebsstrategie. Die Grafik zeigt, wie das Unternehmen seine Produkte aktuell absetzt:`,
+      (u) =>
+        `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
+      (u) =>
+        `Zur Vorbereitung auf eine Marketingbesprechung dokumentiert ${u} seinen Vertriebsweg in der folgenden Grafik:`,
+      (u) =>
+        `${u} überprüft seine Vertriebsstrategie. Die Grafik zeigt, wie das Unternehmen seine Produkte aktuell absetzt:`,
     ],
-    loesung: () => `Es liegt ein <strong>indirekter Vertrieb</strong> vor, da das Unternehmen seine Produkte durch einen Handelsvertreter an die Gewerbekunden verkauft.`,
+    loesung: () =>
+      `Es liegt ein <strong>indirekter Vertrieb</strong> vor, da das Unternehmen seine Produkte durch einen Handelsvertreter an die Gewerbekunden verkauft.`,
   },
 
   indirekt_1: {
-    label: 'Indirekter Vertrieb',
+    label: "Indirekter Vertrieb",
     stufen: 1,
     stationen: [
-      { iconKey: 'hersteller',     bezeichnung: 'Hersteller' },
-      { iconKey: 'einzelhaendler', bezeichnung: 'Einzelhändler' },
-      { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
+      { iconKey: "hersteller", bezeichnung: "Hersteller" },
+      { iconKey: "einzelhaendler", bezeichnung: "Einzelhändler" },
+      { iconKey: "endverbraucher", bezeichnung: "Endverbraucher" },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
-      (u) => `Im Rahmen der jährlichen Vertriebsplanung stellt ${u} seinen Absatzweg grafisch dar:`,
-      (u) => `${u} analysiert seine Vermarktungsstrategie. Die folgende Grafik zeigt, wie das Unternehmen seine Produkte zum Kunden bringt:`,
+      (u) =>
+        `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
+      (u) =>
+        `Im Rahmen der jährlichen Vertriebsplanung stellt ${u} seinen Absatzweg grafisch dar:`,
+      (u) =>
+        `${u} analysiert seine Vermarktungsstrategie. Die folgende Grafik zeigt, wie das Unternehmen seine Produkte zum Kunden bringt:`,
     ],
-    loesung: () => `Es liegt ein <strong>indirekter Vertrieb</strong> vor, da die Produkte nicht unmittelbar an die Endverbraucher, sondern über den Einzelhandel als Zwischenhändler verkauft werden. Es handelt sich um einen indirekten Vertriebsweg.`,
+    loesung: () =>
+      `Es liegt ein <strong>indirekter Vertrieb</strong> vor, da die Produkte nicht unmittelbar an die Endverbraucher, sondern über den Einzelhandel als Zwischenhändler verkauft werden. Es handelt sich um einen indirekten Vertriebsweg.`,
   },
 
   indirekt_2: {
-    label: 'Indirekter Vertrieb',
+    label: "Indirekter Vertrieb",
     stufen: 2,
     stationen: [
-      { iconKey: 'hersteller',     bezeichnung: 'Hersteller' },
-      { iconKey: 'grosshaendler',  bezeichnung: 'Großhändler' },
-      { iconKey: 'einzelhaendler', bezeichnung: 'Einzelhändler' },
-      { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
+      { iconKey: "hersteller", bezeichnung: "Hersteller" },
+      { iconKey: "grosshaendler", bezeichnung: "Großhändler" },
+      { iconKey: "einzelhaendler", bezeichnung: "Einzelhändler" },
+      { iconKey: "endverbraucher", bezeichnung: "Endverbraucher" },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
-      (u) => `Im Rahmen der Vertriebsanalyse zeigt ${u} den Weg seiner Produkte bis zum Endkunden:`,
-      (u) => `${u} überarbeitet seine Absatzstrategie und dokumentiert hierzu den bestehenden Vertriebsweg:`,
+      (u) =>
+        `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
+      (u) =>
+        `Im Rahmen der Vertriebsanalyse zeigt ${u} den Weg seiner Produkte bis zum Endkunden:`,
+      (u) =>
+        `${u} überarbeitet seine Absatzstrategie und dokumentiert hierzu den bestehenden Vertriebsweg:`,
     ],
-    loesung: () => `Es liegt ein <strong>indirekter Vertrieb</strong> vor, da die Produkte nicht unmittelbar an die Endverbraucher, sondern über den Groß- und Einzelhandel an die Endverbraucher verkauft werden. Es handelt sich um einen indirekten Vertriebsweg.`,
+    loesung: () =>
+      `Es liegt ein <strong>indirekter Vertrieb</strong> vor, da die Produkte nicht unmittelbar an die Endverbraucher, sondern über den Groß- und Einzelhandel an die Endverbraucher verkauft werden. Es handelt sich um einen indirekten Vertriebsweg.`,
   },
 
   indirekt_3: {
-    label: 'Indirekter Vertrieb',
+    label: "Indirekter Vertrieb",
     stufen: 3,
     stationen: [
-      { iconKey: 'hersteller',     bezeichnung: 'Hersteller' },
-      { iconKey: 'handelsvertreter', bezeichnung: 'Handelsvertreter' },
-      { iconKey: 'grosshaendler',  bezeichnung: 'Großhändler' },
-      { iconKey: 'einzelhaendler', bezeichnung: 'Einzelhändler' },
-      { iconKey: 'endverbraucher', bezeichnung: 'Endverbraucher' },
+      { iconKey: "hersteller", bezeichnung: "Hersteller" },
+      { iconKey: "handelsvertreter", bezeichnung: "Handelsvertreter" },
+      { iconKey: "grosshaendler", bezeichnung: "Großhändler" },
+      { iconKey: "einzelhaendler", bezeichnung: "Einzelhändler" },
+      { iconKey: "endverbraucher", bezeichnung: "Endverbraucher" },
     ],
     formulierungen: [
-      (u) => `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
-      (u) => `Im Rahmen der Exportstrategie stellt ${u} dar, wie seine Produkte international zum Endkunden gelangen:`,
-      (u) => `${u} importiert Waren aus dem Ausland und verkauft sie über mehrere Stufen. Die Grafik zeigt den vollständigen Absatzweg:`,
+      (u) =>
+        `${u} möchte sich in diesem Geschäftsjahr mehr um die Vermarktung seiner Produkte kümmern. Mit folgender Grafik wird der bisherige Vertriebsweg verdeutlicht:`,
+      (u) =>
+        `Im Rahmen der Exportstrategie stellt ${u} dar, wie seine Produkte international zum Endkunden gelangen:`,
+      (u) =>
+        `${u} importiert Waren aus dem Ausland und verkauft sie über mehrere Stufen. Die Grafik zeigt den vollständigen Absatzweg:`,
     ],
-    loesung: () => `Es liegt ein <strong>indirekter Vertrieb</strong> vor, da die Produkte über drei Zwischenstufen – Handelsvertreter, Großhändler und Einzelhändler – an die Endverbraucher gelangen. Es handelt sich um einen indirekten Vertriebsweg.`,
+    loesung: () =>
+      `Es liegt ein <strong>indirekter Vertrieb</strong> vor, da die Produkte über drei Zwischenstufen – Handelsvertreter, Großhändler und Einzelhändler – an die Endverbraucher gelangen. Es handelt sich um einen indirekten Vertriebsweg.`,
   },
 };
 
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-
 
 const unternehmensVarianten = [
   (name) => name,
@@ -328,7 +350,6 @@ const unternehmensVarianten = [
 // ============================================================================
 
 const ICON_SVGS = {
-
   hersteller: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
     <rect x="6" y="30" width="52" height="26" rx="2" fill="none" stroke="#222" stroke-width="3"/>
     <rect x="11" y="18" width="8" height="14" fill="none" stroke="#222" stroke-width="2.5"/>
@@ -416,17 +437,17 @@ function renderIconsToBase64() {
 
     keys.forEach((key) => {
       const svgStr = ICON_SVGS[key];
-      const blob = new Blob([svgStr], { type: 'image/svg+xml' });
+      const blob = new Blob([svgStr], { type: "image/svg+xml" });
       const url = URL.createObjectURL(blob);
       const img = new Image();
 
       img.onload = () => {
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         canvas.width = 64;
         canvas.height = 64;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, 64, 64);
-        iconBase64Cache[key] = canvas.toDataURL('image/png');
+        iconBase64Cache[key] = canvas.toDataURL("image/png");
         URL.revokeObjectURL(url);
         done++;
         if (done === keys.length) resolve();
@@ -434,7 +455,7 @@ function renderIconsToBase64() {
 
       img.onerror = () => {
         // Fallback: kein Icon
-        iconBase64Cache[key] = '';
+        iconBase64Cache[key] = "";
         done++;
         if (done === keys.length) resolve();
       };
@@ -454,10 +475,10 @@ function erstelleKettenGrafik(stationen) {
   let html = `<table style="border-collapse:collapse; margin:12px 0;"><tr>`;
 
   stationen.forEach((station, idx) => {
-    const b64 = iconBase64Cache[station.iconKey] || '';
+    const b64 = iconBase64Cache[station.iconKey] || "";
     const iconTag = b64
       ? `<img src="${b64}" width="48" height="48" style="display:block; margin:0 auto 4px; max-width:48px !important; height:48px !important; width:48px !important;" alt="${station.bezeichnung}">`
-      : '';
+      : "";
 
     html += `<td style="border:1px solid #bbb; padding:8px 14px; text-align:center; vertical-align:bottom; font-weight:bold; font-size:0.82rem; background:#fff; min-width:70px;">`;
     html += iconTag;
@@ -478,20 +499,20 @@ function erstelleKettenGrafik(stationen) {
 // ============================================================================
 
 function zeigeZufaelligeVertriebswege() {
-  const anzahlSelect = document.getElementById('vertriebAnzahl');
-  const anzahl = parseInt(anzahlSelect?.value || '4');
-  const container = document.getElementById('Container');
+  const anzahlSelect = document.getElementById("vertriebAnzahl");
+  const anzahl = parseInt(anzahlSelect?.value || "4");
+  const container = document.getElementById("Container");
 
   if (!container) {
     console.error("Container nicht gefunden");
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
-  const kundeSelect = document.getElementById('vertriebKunde');
-  const kundeValue = kundeSelect?.value?.trim() || '';
-  const anzeigeName = kundeValue || '[Modellunternehmen]';
+  const kundeSelect = document.getElementById("vertriebKunde");
+  const kundeValue = kundeSelect?.value?.trim() || "";
+  const anzeigeName = kundeValue || "[Modellunternehmen]";
 
   // Vertriebsweg-Keys in zufälliger Reihenfolge, bei Bedarf wiederholen
   const alleKeys = Object.keys(vertriebswege);
@@ -501,7 +522,7 @@ function zeigeZufaelligeVertriebswege() {
   }
   aufgabenListe = aufgabenListe.slice(0, anzahl);
 
-  let aufgabenHTML = '<h2>Aufgaben Vertriebswege</h2><ol>';
+  let aufgabenHTML = "<h2>Aufgaben Vertriebswege</h2><ol>";
   let loesungenHTML = '<h2 class="loesung">Lösung</h2>';
 
   aufgabenListe.forEach((key, idx) => {
@@ -523,7 +544,7 @@ function zeigeZufaelligeVertriebswege() {
     loesungenHTML += `</div>`;
   });
 
-  aufgabenHTML += '</ol>';
+  aufgabenHTML += "</ol>";
   container.innerHTML = aufgabenHTML + loesungenHTML;
 }
 
@@ -593,31 +614,36 @@ Was du NICHT tust:
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(err => {
-    console.error('Fehler beim Kopieren:', err);
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(KI_ASSISTENT_PROMPT)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch((err) => {
+      console.error("Fehler beim Kopieren:", err);
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
-    btn.textContent = 'Vorschau ausblenden ▲';
+    vorschau.style.display = "block";
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
@@ -625,15 +651,15 @@ function toggleKiPromptVorschau() {
 // INITIALISIERUNG
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  const kundeSelect = document.getElementById('vertriebKunde');
+document.addEventListener("DOMContentLoaded", () => {
+  const kundeSelect = document.getElementById("vertriebKunde");
 
   if (kundeSelect && kundeSelect.value) {
     kunde = kundeSelect.value.trim();
   }
 
-  kundeSelect.addEventListener('change', () => {
-    kunde = kundeSelect.value.trim() || '';
+  kundeSelect.addEventListener("change", () => {
+    kunde = kundeSelect.value.trim() || "";
   });
 
   // Dropdown befüllen → "Modellunternehmen" wählen → Aufgaben starten,
@@ -643,36 +669,40 @@ document.addEventListener('DOMContentLoaded', () => {
     autoSelectMyCompany();
     zeigeZufaelligeVertriebswege();
   } else {
-    document.addEventListener('yamlDataLoaded', () => {
-      fillCompanyDropdowns();
-      autoSelectMyCompany();
-      zeigeZufaelligeVertriebswege();
-    }, { once: true });
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
+        fillCompanyDropdowns();
+        autoSelectMyCompany();
+        zeigeZufaelligeVertriebswege();
+      },
+      { once: true },
+    );
   }
 
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) {
     vorschauEl.textContent = KI_ASSISTENT_PROMPT;
   }
 });
 
 function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
+  const myCompanyName = localStorage.getItem("myCompany");
   if (!myCompanyName) return;
 
-  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-  dropdowns.forEach(dropdown => {
+  const dropdowns = document.querySelectorAll("select.meinUnternehmen");
+  dropdowns.forEach((dropdown) => {
     const options = Array.from(dropdown.options);
-    const matchingOption = options.find(opt => opt.value === myCompanyName);
+    const matchingOption = options.find((opt) => opt.value === myCompanyName);
     if (matchingOption) {
       dropdown.value = myCompanyName;
-      const event = new Event('change', { bubbles: true });
+      const event = new Event("change", { bubbles: true });
       dropdown.dispatchEvent(event);
     }
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Erst Icons als Base64 rendern UND auf YAML-Daten warten, dann Aufgaben starten
   renderIconsToBase64().then(function () {
     const startAufgaben = function () {
@@ -683,7 +713,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (yamlData && yamlData.length > 0) {
       startAufgaben();
     } else {
-      document.addEventListener('yamlDataLoaded', startAufgaben, { once: true });
+      document.addEventListener("yamlDataLoaded", startAufgaben, {
+        once: true,
+      });
     }
   });
 });

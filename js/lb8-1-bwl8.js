@@ -1,85 +1,102 @@
 // Begin Marketing
 
 function updateChartPoint(pointIndex, value) {
-  const chartLine = document.getElementById('chartLine');
-  let d = chartLine.getAttribute('d');
+  const chartLine = document.getElementById("chartLine");
+  let d = chartLine.getAttribute("d");
 
-  d = d.replace(new RegExp(`(${pointIndex * 100 + 25},)([0-9]+)`), (_, prefix, oldValue) => `${prefix}${300 - value}`);
+  d = d.replace(
+    new RegExp(`(${pointIndex * 100 + 25},)([0-9]+)`),
+    (_, prefix, oldValue) => `${prefix}${300 - value}`,
+  );
 
-  chartLine.setAttribute('d', d);
+  chartLine.setAttribute("d", d);
 }
 
 let labelsVisible = true;
 let colorlabelsVisible = true;
 
-
 function cycleToggleLabels() {
-  const labels = document.querySelectorAll('.label');
+  const labels = document.querySelectorAll(".label");
 
-  labels.forEach(label => label.style.display = labelsVisible ? 'none' : 'inline');
+  labels.forEach(
+    (label) => (label.style.display = labelsVisible ? "none" : "inline"),
+  );
 
   labelsVisible = !labelsVisible;
 }
 
 function cycleToggleColorlabels() {
-  const colorlabels = document.querySelectorAll('.colorlabel');
+  const colorlabels = document.querySelectorAll(".colorlabel");
 
-  colorlabels.forEach(colorlabel => colorlabel.style.display = colorlabelsVisible ? 'none' : 'inline');
+  colorlabels.forEach(
+    (colorlabel) =>
+      (colorlabel.style.display = colorlabelsVisible ? "none" : "inline"),
+  );
 
   colorlabelsVisible = !colorlabelsVisible;
 }
 
-
 function produktlebenszyklusHerunterladen() {
-  const produktlebenszyklusHTML = document.getElementById('produktlebenszyklusContainer').innerHTML;
-  const blob = new Blob([produktlebenszyklusHTML], { type: 'text/html' });
-  const a = document.createElement('a');
+  const produktlebenszyklusHTML = document.getElementById(
+    "produktlebenszyklusContainer",
+  ).innerHTML;
+  const blob = new Blob([produktlebenszyklusHTML], { type: "text/html" });
+  const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = 'produktlebenszyklus.svg';
+  a.download = "produktlebenszyklus.svg";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 }
 
 function produktlebenszyklusKopiereInZwischenablage() {
-  const produktlebenszyklusHTML = document.getElementById('produktlebenszyklusContainer').innerHTML;
-  navigator.clipboard.writeText(produktlebenszyklusHTML)
-    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+  const produktlebenszyklusHTML = document.getElementById(
+    "produktlebenszyklusContainer",
+  ).innerHTML;
+  navigator.clipboard
+    .writeText(produktlebenszyklusHTML)
+    .then(() => zeigeModal("Code wurde in die Zwischenablage kopiert"))
+    .catch((err) =>
+      console.error("Fehler beim Kopieren in die Zwischenablage:", err),
+    );
 }
 
 function produktlebenszyklusHerunterladenAlsPNG() {
-  const produktlebenszyklusContainer = document.getElementById('produktlebenszyklusContainer');
+  const produktlebenszyklusContainer = document.getElementById(
+    "produktlebenszyklusContainer",
+  );
 
-  html2canvas(produktlebenszyklusContainer, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = 'produktlebenszyklus.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
+  html2canvas(produktlebenszyklusContainer, optionshtml2canvas).then(
+    (canvas) => {
+      const dataURL = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "produktlebenszyklus.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    },
+  );
 }
 
 function randomizePortfolios() {
   const portfolios = [
-    document.getElementById('portfolioA').value,
-    document.getElementById('portfolioB').value,
-    document.getElementById('portfolioC').value,
-    document.getElementById('portfolioD').value
+    document.getElementById("portfolioA").value,
+    document.getElementById("portfolioB").value,
+    document.getElementById("portfolioC").value,
+    document.getElementById("portfolioD").value,
   ];
 
   function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  const svg = document.getElementById('portfolioSVG');
+  const svg = document.getElementById("portfolioSVG");
 
-  const existingItems = svg.querySelectorAll('.item');
-  existingItems.forEach(item => item.remove());
+  const existingItems = svg.querySelectorAll(".item");
+  existingItems.forEach((item) => item.remove());
 
-  portfolios.forEach(portfolio => {
+  portfolios.forEach((portfolio) => {
     let x, y;
     switch (portfolio) {
       case portfolios[0]:
@@ -102,32 +119,34 @@ function randomizePortfolios() {
         break;
     }
 
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', x);
-    circle.setAttribute('cy', y);
-    circle.setAttribute('r', 10);
-    circle.setAttribute('fill', getRandomColor());
-    circle.classList.add('item');
-    circle.classList.add('circle');
+    const circle = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "circle",
+    );
+    circle.setAttribute("cx", x);
+    circle.setAttribute("cy", y);
+    circle.setAttribute("r", 10);
+    circle.setAttribute("fill", getRandomColor());
+    circle.classList.add("item");
+    circle.classList.add("circle");
     svg.appendChild(circle);
 
-    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', x);
-    text.setAttribute('y', y);
-    text.setAttribute('font-size', 18);
-    text.setAttribute('fill', '#333');
-    text.setAttribute('transform', 'translate(15,5)');
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", x);
+    text.setAttribute("y", y);
+    text.setAttribute("font-size", 18);
+    text.setAttribute("fill", "#333");
+    text.setAttribute("transform", "translate(15,5)");
     text.textContent = portfolio;
-    text.classList.add('item');
-    text.classList.add('text');
+    text.classList.add("item");
+    text.classList.add("text");
     svg.appendChild(text);
   });
 }
 
-
 function getRandomColor() {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
+  const letters = "0123456789ABCDEF";
+  let color = "#";
   for (let i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
@@ -137,54 +156,59 @@ function getRandomColor() {
 let textLabelsVisible = true;
 let circleLabelsVisible = true;
 
-
 function portfolioToggleText() {
-  const textlabels = document.querySelectorAll('.text');
+  const textlabels = document.querySelectorAll(".text");
 
-  textlabels.forEach(textlabel => textlabel.style.display = textLabelsVisible ? 'none' : 'inline');
+  textlabels.forEach(
+    (textlabel) =>
+      (textlabel.style.display = textLabelsVisible ? "none" : "inline"),
+  );
 
   textLabelsVisible = !textLabelsVisible;
 }
 
 function portfolioToggleCircle() {
-  const circlelabels = document.querySelectorAll('.circle');
+  const circlelabels = document.querySelectorAll(".circle");
 
-  circlelabels.forEach(circlelabel => circlelabel.style.display = circleLabelsVisible ? 'none' : 'inline');
+  circlelabels.forEach(
+    (circlelabel) =>
+      (circlelabel.style.display = circleLabelsVisible ? "none" : "inline"),
+  );
 
   circleLabelsVisible = !circleLabelsVisible;
 }
 
-
 function portfolioHerunterladen() {
-  const portfolioHTML = document.getElementById('portfolioContainer').innerHTML;
-  const blob = new Blob([portfolioHTML], { type: 'text/html' });
-  const a = document.createElement('a');
+  const portfolioHTML = document.getElementById("portfolioContainer").innerHTML;
+  const blob = new Blob([portfolioHTML], { type: "text/html" });
+  const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = 'portfolio.svg';
+  a.download = "portfolio.svg";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 }
 
 function portfolioKopiereInZwischenablage() {
-  const portfolioHTML = document.getElementById('portfolioContainer').innerHTML;
-  navigator.clipboard.writeText(portfolioHTML)
-    .then(() => zeigeModal('Code wurde in die Zwischenablage kopiert'))
-    .catch(err => console.error('Fehler beim Kopieren in die Zwischenablage:', err));
+  const portfolioHTML = document.getElementById("portfolioContainer").innerHTML;
+  navigator.clipboard
+    .writeText(portfolioHTML)
+    .then(() => zeigeModal("Code wurde in die Zwischenablage kopiert"))
+    .catch((err) =>
+      console.error("Fehler beim Kopieren in die Zwischenablage:", err),
+    );
 }
 
 function portfolioHerunterladenAlsPNG() {
-  const portfolioContainer = document.getElementById('portfolioContainer');
+  const portfolioContainer = document.getElementById("portfolioContainer");
 
-  html2canvas(portfolioContainer, optionshtml2canvas).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
+  html2canvas(portfolioContainer, optionshtml2canvas).then((canvas) => {
+    const dataURL = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
     a.href = dataURL;
-    a.download = 'portfolio.png';
+    a.download = "portfolio.png";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   });
 }
-
-

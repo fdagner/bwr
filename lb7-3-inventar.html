@@ -1,260 +1,594 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventar – Zufallsgenerator &amp; Übungen | meinbwr.de BwR</title>
+    <meta
+      name="description"
+      content="Kostenloses BwR-Tool: Erstellen Sie ein Inventar mit Zufallszahlen für den BwR-Unterricht an der Realschule Bayern. Ideal für Übungen und Klassenarbeiten."
+    />
+    <link rel="canonical" href="https://www.meinbwr.de/lb7-3-inventar.html" />
+    <meta name="robots" content="index, follow" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inventar – Zufallsgenerator &amp; Übungen | meinbwr.de BwR</title>
-  <meta name="description" content="Kostenloses BwR-Tool: Erstellen Sie ein Inventar mit Zufallszahlen für den BwR-Unterricht an der Realschule Bayern. Ideal für Übungen und Klassenarbeiten.">
-  <link rel="canonical" href="https://www.meinbwr.de/lb7-3-inventar.html">
-  <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Inventar – Zufallsgenerator &amp; Übungen | meinbwr.de"
+    />
+    <meta
+      property="og:description"
+      content="Kostenloses BwR-Tool: Erstellen Sie ein Inventar mit Zufallszahlen für den BwR-Unterricht an der Realschule Bayern. Ideal für Übungen und Klassenarbeiten."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.meinbwr.de/lb7-3-inventar.html"
+    />
+    <meta
+      property="og:site_name"
+      content="meinbwr.de – BwR Realschule Bayern"
+    />
+    <meta property="og:locale" content="de_DE" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Inventar – Zufallsgenerator &amp; Übungen | meinbwr.de">
-  <meta property="og:description" content="Kostenloses BwR-Tool: Erstellen Sie ein Inventar mit Zufallszahlen für den BwR-Unterricht an der Realschule Bayern. Ideal für Übungen und Klassenarbeiten.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.meinbwr.de/lb7-3-inventar.html">
-  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
-  <meta property="og:locale" content="de_DE">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Inventar – Zufallsgenerator &amp; Übungen | meinbwr.de"
+    />
+    <meta
+      name="twitter:description"
+      content="Kostenloses BwR-Tool: Erstellen Sie ein Inventar mit Zufallszahlen für den BwR-Unterricht an der Realschule Bayern."
+    />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Inventar – Zufallsgenerator &amp; Übungen | meinbwr.de">
-  <meta name="twitter:description" content="Kostenloses BwR-Tool: Erstellen Sie ein Inventar mit Zufallszahlen für den BwR-Unterricht an der Realschule Bayern.">
+    <!-- Theme -->
+    <meta name="theme-color" content="#2c5f2d" />
+    <meta name="color-scheme" content="light" />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#2c5f2d">
-  <meta name="color-scheme" content="light">
+    <!-- Strukturierte Daten -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Inventar – Zufallsgenerator & Übungen",
+        "description": "Kostenloses BwR-Tool: Erstellen Sie ein Inventar mit Zufallszahlen für den BwR-Unterricht an der Realschule Bayern. Ideal für Übungen und Klassenarbeiten.",
+        "url": "https://www.meinbwr.de/lb7-3-inventar.html",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "meinbwr.de – BwR Realschule Bayern",
+          "url": "https://www.meinbwr.de/"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "BwR 7",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Inventar",
+              "item": "https://www.meinbwr.de/lb7-3-inventar.html"
+            }
+          ]
+        }
+      }
+    </script>
 
-  <!-- Strukturierte Daten -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Inventar – Zufallsgenerator & Übungen",
-    "description": "Kostenloses BwR-Tool: Erstellen Sie ein Inventar mit Zufallszahlen für den BwR-Unterricht an der Realschule Bayern. Ideal für Übungen und Klassenarbeiten.",
-    "url": "https://www.meinbwr.de/lb7-3-inventar.html",
-    "inLanguage": "de-DE",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "meinbwr.de – BwR Realschule Bayern",
-      "url": "https://www.meinbwr.de/"
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 2, "name": "BwR 7", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 3, "name": "Inventar", "item": "https://www.meinbwr.de/lb7-3-inventar.html" }
-      ]
-    }
-  }
-  </script>
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <link rel="stylesheet" href="css/jodit.min.css" />
+    <script src="js/libraries/html2canvas.min.js"></script>
+    <script src="js/utils.js?v=14"></script>
+    <script src="js/kontenplan.js"></script>
+    <script src="js/libraries/js-yaml.min.js"></script>
+    <script src="js/libraries/clipboard.min.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/libraries/jodit.min.js?v=69"></script>
+    <script src="js/joditeditor.js?v=69"></script>
+  </head>
+  <body>
+    <main>
+      <div w3-include-html="navigation.html"></div>
+      <h2>Inventar</h2>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <link rel="stylesheet" href="css/jodit.min.css">
-  <script src="js/libraries/html2canvas.min.js"></script>
-  <script src="js/utils.js?v=14"></script>
-  <script src="js/kontenplan.js"></script>
-  <script src="js/libraries/js-yaml.min.js"></script>
-  <script src="js/libraries/clipboard.min.js"></script>
-  <script src="js/menu.js"></script>
-  <script src="js/libraries/jodit.min.js?v=68"></script>
-  <script src="js/joditeditor.js?v=69"></script>
-</head>
-<main>
-  <div w3-include-html="navigation.html"></div> 
-  <h2>Inventar</h2>
-
-  <div class="box">
-    <p>Sie können hier ein Inventar mit Zufallszahlen erstellen.</p>
-        <button type="button" class="btn-zufall" data-on-click='[{"fn":"generateRandomInventar","args":[]}]'>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="M205.4 66.3C167 56 127.5 78.8 117.3 117.2L66.5 306.7C56.2 345.1 79 384.6 117.4 394.9L306.9 445.7C345.3 456 384.8 433.2 395.1 394.8L445.9 205.3C456.2 166.9 433.4 127.4 395 117.1L205.4 66.3zM228.4 272C222.3 262.1 222.1 249.6 227.8 239.5C233.5 229.4 244.3 223.2 256 223.3C267.6 223.4 278.2 229.8 283.8 240C289.9 249.9 290.1 262.4 284.4 272.5C278.7 282.6 267.9 288.8 256.2 288.7C244.6 288.6 234 282.2 228.4 272zM143.2 284.3C153.1 278.2 165.6 278 175.7 283.7C185.8 289.4 192 300.2 191.9 311.9C191.8 323.5 185.4 334.1 175.2 339.7C165.3 345.8 152.8 346 142.7 340.3C132.6 334.6 126.4 323.8 126.5 312.1C126.6 300.5 133 289.9 143.2 284.3zM328.2 380.7C318.3 386.8 305.8 387 295.7 381.3C285.6 375.6 279.4 364.8 279.5 353.1C279.6 341.5 286 330.9 296.2 325.3C306.1 319.2 318.6 319 328.7 324.7C338.8 330.4 345 341.2 344.9 352.9C344.8 364.5 338.4 375.1 328.2 380.7zM337.2 172.3C347.1 166.2 359.6 166 369.7 171.7C379.8 177.4 386 188.2 385.9 199.9C385.8 211.5 379.4 222.1 369.2 227.7C359.3 233.8 346.8 234 336.7 228.3C326.6 222.6 320.4 211.8 320.5 200.1C320.6 188.5 327 177.9 337.2 172.3zM216.2 186.7C206.3 192.8 193.8 193 183.7 187.3C173.6 181.6 167.4 170.8 167.5 159.1C167.6 147.5 174 136.9 184.2 131.3C194.1 125.2 206.6 125 216.7 130.7C226.8 136.4 233 147.2 232.9 158.9C232.8 170.5 226.4 181.1 216.2 186.7zM482 256L441.4 407.2C424.2 471.2 358.4 509.2 294.4 492.1L256.1 481.8L256.1 512C256.1 547.3 284.8 576 320.1 576L512.1 576C547.4 576 576.1 547.3 576.1 512L576.1 320C576.1 284.7 547.4 256 512.1 256L482 256z"/></svg>
-      Neue Aufgabe
-    </button>
-  </div><br>
-  <div id="inventarContainer" style="width:680px;margin: 0 auto" contenteditable="true">
-    <table style="width:650px;border-collapse:collapse;background-color: #fff;" id="inventarTable">
-      <tr style="padding-left:6px;border: 1px solid #000;background-color: #98bbff;font-weight: bold">
-        <td style="width:50%"></td>
-        <td style="text-align:center">Vorspalte</td>
-        <td style="text-align:center">Hauptspalte</td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000"><b>A. Vermögen</b></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000"><b>I. Anlagevermögen</b></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="GR">Grundstücke</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="GR-value"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="BVG">Betriebs- und Verwaltungsgebäude</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BVG-value"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="MA">Maschinen und Anlagen</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="MA-value"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="FP">Fuhrpark</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FP-value"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000;text-indent: 2em;" id="FP1">LKW</td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FP1-value"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000;text-indent: 2em;" id="FP2">PKW</td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FP2-value"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="BM">Büromaschinen</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BM-value"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="BGA">Büromöbel und Geschäftsausstattung</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BGA-value"></td>
-      </tr>
-      <tr style="background-color: #ccc">
-        <td style="padding-left:6px;border: 1px solid #000" id="AV"><b>Summe des Anlagevermögens</b></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="AV-value">
-          <b></b>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000"><b>II. Umlaufvermögen</b></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="VORR">Vorräte</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="VORR-value">
-        </td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="FO">Forderungen</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FO-value"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="BK">Bank</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BK-value"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000;text-indent: 2em;" id="BK1">KreditBank</td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BK1-value"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000;text-indent: 2em;" id="BK2">StadtBank</td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="BK2-value"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="KA">Kasse</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="KA-value"></td>
-      </tr>
-      <tr style="background-color: #ccc">
-        <td style="padding-left:6px;border: 1px solid #000" id="UV"><b>Summe des Umlaufvermögens</b></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="UV-value">
-          <b></b>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000"><b>B. Schulden</b></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000">I. Langfristige Schulden</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="LBKV">Langfristige Bankverbindlichkeiten</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="LBKV-value">
-        </td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000">II. Kurzfristige Schulden</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="KBKV">Kurzfristige Bankverbindlichkeiten</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="KBKV-value">
-        </td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="VE">Verbindlichkeiten</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="VE-value"></td>
-      </tr>
-      <tr style="background-color: #ccc">
-        <td style="padding-left:6px;border: 1px solid #000" id="FK"><b>Summe der Schulden</b></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FK-value">
-          <b></b>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000"><b>C. Ermittlung des Reinvermögens</b></td>
-        <td style="padding-left:6px;border: 1px solid #000">
-        </td>
-        <td style="padding-left:6px;border: 1px solid #000">
-          </td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="AVUV">Summe des Vermögens</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="AVUV-value">
-        </td>
-      </tr>
-      <tr>
-        <td style="padding-left:6px;border: 1px solid #000" id="FK2"> - Summe der Schulden</td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px" id="FKSum-value">
-        </td>
-      </tr>
-      <tr style="background-color: #ccc">
-        <td style="padding-left:6px;border: 1px solid #000" id="EK"><b> = Eigenkapital (Reinvermögen)</b></td>
-        <td style="padding-left:6px;border: 1px solid #000"></td>
-        <td style="padding-left:6px;border: 1px solid #000;text-align: right;padding-right:6px;font-weight: bold"
-          id="EK-Value">
-        </td>
-      </tr>
-    </table>
-
-  </div>
-
-  </main>
-  <script src="js/lb7-3-inventar.js"></script>
-  <div w3-include-html="footer.html"></div> 
-  </main>
-</body>
+      <div class="box">
+        <p>Sie können hier ein Inventar mit Zufallszahlen erstellen.</p>
+        <button
+          type="button"
+          class="btn-zufall"
+          data-on-click='[{"fn":"generateRandomInventar","args":[]}]'
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 640 640"
+            fill="currentColor"
+            height="16"
+            width="16"
+            aria-hidden="true"
+          >
+            <path
+              d="M205.4 66.3C167 56 127.5 78.8 117.3 117.2L66.5 306.7C56.2 345.1 79 384.6 117.4 394.9L306.9 445.7C345.3 456 384.8 433.2 395.1 394.8L445.9 205.3C456.2 166.9 433.4 127.4 395 117.1L205.4 66.3zM228.4 272C222.3 262.1 222.1 249.6 227.8 239.5C233.5 229.4 244.3 223.2 256 223.3C267.6 223.4 278.2 229.8 283.8 240C289.9 249.9 290.1 262.4 284.4 272.5C278.7 282.6 267.9 288.8 256.2 288.7C244.6 288.6 234 282.2 228.4 272zM143.2 284.3C153.1 278.2 165.6 278 175.7 283.7C185.8 289.4 192 300.2 191.9 311.9C191.8 323.5 185.4 334.1 175.2 339.7C165.3 345.8 152.8 346 142.7 340.3C132.6 334.6 126.4 323.8 126.5 312.1C126.6 300.5 133 289.9 143.2 284.3zM328.2 380.7C318.3 386.8 305.8 387 295.7 381.3C285.6 375.6 279.4 364.8 279.5 353.1C279.6 341.5 286 330.9 296.2 325.3C306.1 319.2 318.6 319 328.7 324.7C338.8 330.4 345 341.2 344.9 352.9C344.8 364.5 338.4 375.1 328.2 380.7zM337.2 172.3C347.1 166.2 359.6 166 369.7 171.7C379.8 177.4 386 188.2 385.9 199.9C385.8 211.5 379.4 222.1 369.2 227.7C359.3 233.8 346.8 234 336.7 228.3C326.6 222.6 320.4 211.8 320.5 200.1C320.6 188.5 327 177.9 337.2 172.3zM216.2 186.7C206.3 192.8 193.8 193 183.7 187.3C173.6 181.6 167.4 170.8 167.5 159.1C167.6 147.5 174 136.9 184.2 131.3C194.1 125.2 206.6 125 216.7 130.7C226.8 136.4 233 147.2 232.9 158.9C232.8 170.5 226.4 181.1 216.2 186.7zM482 256L441.4 407.2C424.2 471.2 358.4 509.2 294.4 492.1L256.1 481.8L256.1 512C256.1 547.3 284.8 576 320.1 576L512.1 576C547.4 576 576.1 547.3 576.1 512L576.1 320C576.1 284.7 547.4 256 512.1 256L482 256z"
+            />
+          </svg>
+          Neue Aufgabe
+        </button>
+      </div>
+      <br />
+      <div
+        id="inventarContainer"
+        style="width: 680px; margin: 0 auto"
+        contenteditable="true"
+      >
+        <table
+          style="
+            width: 650px;
+            border-collapse: collapse;
+            background-color: #fff;
+          "
+          id="inventarTable"
+        >
+          <tr
+            style="
+              padding-left: 6px;
+              border: 1px solid #000;
+              background-color: #98bbff;
+              font-weight: bold;
+            "
+          >
+            <td style="width: 50%"></td>
+            <td style="text-align: center">Vorspalte</td>
+            <td style="text-align: center">Hauptspalte</td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000">
+              <b>A. Vermögen</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000">
+              <b>I. Anlagevermögen</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="GR">
+              Grundstücke
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="GR-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="BVG">
+              Betriebs- und Verwaltungsgebäude
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="BVG-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="MA">
+              Maschinen und Anlagen
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="MA-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="FP">
+              Fuhrpark
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="FP-value"
+            ></td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-indent: 2em;
+              "
+              id="FP1"
+            >
+              LKW
+            </td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="FP1-value"
+            ></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-indent: 2em;
+              "
+              id="FP2"
+            >
+              PKW
+            </td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="FP2-value"
+            ></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="BM">
+              Büromaschinen
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="BM-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="BGA">
+              Büromöbel und Geschäftsausstattung
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="BGA-value"
+            ></td>
+          </tr>
+          <tr style="background-color: #ccc">
+            <td style="padding-left: 6px; border: 1px solid #000" id="AV">
+              <b>Summe des Anlagevermögens</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="AV-value"
+            >
+              <b></b>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000">
+              <b>II. Umlaufvermögen</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="VORR">
+              Vorräte
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="VORR-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="FO">
+              Forderungen
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="FO-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="BK">
+              Bank
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="BK-value"
+            ></td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-indent: 2em;
+              "
+              id="BK1"
+            >
+              KreditBank
+            </td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="BK1-value"
+            ></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-indent: 2em;
+              "
+              id="BK2"
+            >
+              StadtBank
+            </td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="BK2-value"
+            ></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="KA">
+              Kasse
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="KA-value"
+            ></td>
+          </tr>
+          <tr style="background-color: #ccc">
+            <td style="padding-left: 6px; border: 1px solid #000" id="UV">
+              <b>Summe des Umlaufvermögens</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="UV-value"
+            >
+              <b></b>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000">
+              <b>B. Schulden</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000">
+              I. Langfristige Schulden
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="LBKV">
+              Langfristige Bankverbindlichkeiten
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="LBKV-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000">
+              II. Kurzfristige Schulden
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="KBKV">
+              Kurzfristige Bankverbindlichkeiten
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="KBKV-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="VE">
+              Verbindlichkeiten
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="VE-value"
+            ></td>
+          </tr>
+          <tr style="background-color: #ccc">
+            <td style="padding-left: 6px; border: 1px solid #000" id="FK">
+              <b>Summe der Schulden</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="FK-value"
+            >
+              <b></b>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000">
+              <b>C. Ermittlung des Reinvermögens</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="AVUV">
+              Summe des Vermögens
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="AVUV-value"
+            ></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 6px; border: 1px solid #000" id="FK2">
+              - Summe der Schulden
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+              "
+              id="FKSum-value"
+            ></td>
+          </tr>
+          <tr style="background-color: #ccc">
+            <td style="padding-left: 6px; border: 1px solid #000" id="EK">
+              <b> = Eigenkapital (Reinvermögen)</b>
+            </td>
+            <td style="padding-left: 6px; border: 1px solid #000"></td>
+            <td
+              style="
+                padding-left: 6px;
+                border: 1px solid #000;
+                text-align: right;
+                padding-right: 6px;
+                font-weight: bold;
+              "
+              id="EK-Value"
+            ></td>
+          </tr>
+        </table>
+      </div>
+    </main>
+    <script src="js/lb7-3-inventar.js"></script>
+    <div w3-include-html="footer.html"></div>
+  </body>
 </html>

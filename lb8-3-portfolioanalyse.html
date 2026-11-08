@@ -1,174 +1,432 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolioanalyse BCG-Matrix | meinbwr.de BwR</title>
+    <meta
+      name="description"
+      content="Kostenloses BwR-Tool: Erstelle interaktiv oder zufällig eine BCG-Portfolioanalyse (Stars, Cash Cows, Question Marks, Poor Dogs). Passe Marktanteil & Marktwachstum an, sieh das Diagramm live (Chart.js). Ideal für BwR Jahrgangsstufe 8 Realschule Bayern – Strategische Unternehmensführung, Produktportfolio-Analyse, Prüfungsvorbereitung. Export als Bild/Text möglich."
+    />
+    <link
+      rel="canonical"
+      href="https://www.meinbwr.de/lb8-3-portfolioanalyse.html"
+    />
+    <meta name="robots" content="index, follow" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolioanalyse BCG-Matrix | meinbwr.de BwR</title>
-  <meta name="description" content="Kostenloses BwR-Tool: Erstelle interaktiv oder zufällig eine BCG-Portfolioanalyse (Stars, Cash Cows, Question Marks, Poor Dogs). Passe Marktanteil & Marktwachstum an, sieh das Diagramm live (Chart.js). Ideal für BwR Jahrgangsstufe 8 Realschule Bayern – Strategische Unternehmensführung, Produktportfolio-Analyse, Prüfungsvorbereitung. Export als Bild/Text möglich.">
-  <link rel="canonical" href="https://www.meinbwr.de/lb8-3-portfolioanalyse.html">
-  <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="BCG-Portfolioanalyse Generator – interaktive Matrix BwR | meinbwr.de"
+    />
+    <meta
+      property="og:description"
+      content="Interaktives Tool: Füge Produkte ein (oder lass zufällig generieren) → sieh sofort die BCG-Matrix mit Stars, Cash Cows, Question Marks, Poor Dogs. Marktwachstum & relativer Marktanteil frei editierbar. Perfekt für BwR 8 Realschule Bayern – Strategie & Portfolioanalyse. Mit Export und Diagramm."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.meinbwr.de/lb8-3-portfolioanalyse.html"
+    />
+    <meta
+      property="og:site_name"
+      content="meinbwr.de – BwR Realschule Bayern"
+    />
+    <meta property="og:locale" content="de_DE" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="BCG-Portfolioanalyse Generator – interaktive Matrix BwR | meinbwr.de">
-  <meta property="og:description" content="Interaktives Tool: Füge Produkte ein (oder lass zufällig generieren) → sieh sofort die BCG-Matrix mit Stars, Cash Cows, Question Marks, Poor Dogs. Marktwachstum & relativer Marktanteil frei editierbar. Perfekt für BwR 8 Realschule Bayern – Strategie & Portfolioanalyse. Mit Export und Diagramm.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.meinbwr.de/lb8-3-portfolioanalyse.html">
-  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
-  <meta property="og:locale" content="de_DE">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="BCG-Portfolioanalyse Generator – interaktive Matrix BwR | meinbwr.de"
+    />
+    <meta
+      name="twitter:description"
+      content="Interaktives Tool: Füge Produkte ein (oder lass zufällig generieren) → sieh sofort die BCG-Matrix mit Stars, Cash Cows, Question Marks, Poor Dogs. Marktwachstum & relativer Marktanteil frei editierbar. Perfekt für BwR 8 Realschule Bayern – Strategie & Portfolioanalyse. Mit Export und Diagramm."
+    />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="BCG-Portfolioanalyse Generator – interaktive Matrix BwR | meinbwr.de">
-  <meta name="twitter:description" content="Interaktives Tool: Füge Produkte ein (oder lass zufällig generieren) → sieh sofort die BCG-Matrix mit Stars, Cash Cows, Question Marks, Poor Dogs. Marktwachstum & relativer Marktanteil frei editierbar. Perfekt für BwR 8 Realschule Bayern – Strategie & Portfolioanalyse. Mit Export und Diagramm.">
+    <!-- Theme -->
+    <meta name="theme-color" content="#2c5f2d" />
+    <meta name="color-scheme" content="light" />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#2c5f2d">
-  <meta name="color-scheme" content="light">
+    <!-- Strukturierte Daten -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Portfolioanalyse BCG-Matrix",
+        "description": "Kostenloses BwR-Tool: Erstelle interaktiv oder zufällig eine BCG-Portfolioanalyse (Stars, Cash Cows, Question Marks, Poor Dogs). Passe Marktanteil & Marktwachstum an, sieh das Diagramm live (Chart.js). Ideal für BwR Jahrgangsstufe 8 Realschule Bayern – Strategische Unternehmensführung, Produktportfolio-Analyse, Prüfungsvorbereitung. Export als Bild/Text möglich.",
+        "url": "https://www.meinbwr.de/lb8-3-portfolioanalyse.html",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "meinbwr.de – BwR Realschule Bayern",
+          "url": "https://www.meinbwr.de/"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "BwR 8",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Portfolioanalyse",
+              "item": "https://www.meinbwr.de/lb8-3-portfolioanalyse.html"
+            }
+          ]
+        }
+      }
+    </script>
 
-  <!-- Strukturierte Daten -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Portfolioanalyse BCG-Matrix",
-    "description": "Kostenloses BwR-Tool: Erstelle interaktiv oder zufällig eine BCG-Portfolioanalyse (Stars, Cash Cows, Question Marks, Poor Dogs). Passe Marktanteil & Marktwachstum an, sieh das Diagramm live (Chart.js). Ideal für BwR Jahrgangsstufe 8 Realschule Bayern – Strategische Unternehmensführung, Produktportfolio-Analyse, Prüfungsvorbereitung. Export als Bild/Text möglich.",
-    "url": "https://www.meinbwr.de/lb8-3-portfolioanalyse.html",
-    "inLanguage": "de-DE",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "meinbwr.de – BwR Realschule Bayern",
-      "url": "https://www.meinbwr.de/"
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 2, "name": "BwR 8", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 3, "name": "Portfolioanalyse", "item": "https://www.meinbwr.de/lb8-3-portfolioanalyse.html" }
-      ]
-    }
-  }
-  </script>
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <link rel="stylesheet" href="css/jodit.min.css" />
+    <script src="js/menu.js?v=15"></script>
+    <script src="js/libraries/html2canvas.min.js"></script>
+    <script src="js/libraries/clipboard.min.js"></script>
+    <script src="js/libraries/chart.umd.min.js"></script>
+    <script src="js/utils.js?v=14"></script>
+    <script src="js/libraries/jodit.min.js?v=69"></script>
+    <script src="js/joditeditor.js?v=69"></script>
+    <script src="js/collection.js?v=36"></script>
+  </head>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <link rel="stylesheet" href="css/jodit.min.css">
-  <script src="js/menu.js?v=15"></script>
-  <script src="js/libraries/html2canvas.min.js"></script>
-  <script src="js/libraries/clipboard.min.js"></script>
-  <script src="js/libraries/chart.umd.min.js"></script>
-  <script src="js/utils.js?v=14"></script>
-  <script src="js/libraries/jodit.min.js?v=68"></script>
-  <script src="js/joditeditor.js?v=69"></script>
-<script src="js/collection.js?v=36"></script>
-</head>
+  <body>
+    <main>
+      <div w3-include-html="navigation.html"></div>
+      <h2>Portfolioanalyse</h2>
+      <div class="box">
+        <h3>Portfolio-Einträge</h3>
 
-<body>
-  <main>
-    <div w3-include-html="navigation.html"></div>
-    <h2>Portfolioanalyse</h2>
-    <div class="box">
-  <h3>Portfolio-Einträge</h3>
-  
-  <div id="portfolioEntries" class="grid-dynamic">
-    <!-- Die 4 Standardfelder kommen per JavaScript rein -->
-  </div>
-
-  <div style="margin: 20px 0; text-align:center;">
-    <button data-on-click='[{"fn":"addPortfolioEntry","args":[]}]'>+ Neuen Eintrag hinzufügen</button>
-                <div class="btn-aktion-row">
-                    <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"generatePortfolio","args":[]}]'>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"/></svg>
-            Daten übernehmen
-          </button>
-                    <button type="button" class="btn-zufall" data-on-click='[{"fn":"randomizePortfolios","args":[]}]'>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="M205.4 66.3C167 56 127.5 78.8 117.3 117.2L66.5 306.7C56.2 345.1 79 384.6 117.4 394.9L306.9 445.7C345.3 456 384.8 433.2 395.1 394.8L445.9 205.3C456.2 166.9 433.4 127.4 395 117.1L205.4 66.3zM228.4 272C222.3 262.1 222.1 249.6 227.8 239.5C233.5 229.4 244.3 223.2 256 223.3C267.6 223.4 278.2 229.8 283.8 240C289.9 249.9 290.1 262.4 284.4 272.5C278.7 282.6 267.9 288.8 256.2 288.7C244.6 288.6 234 282.2 228.4 272zM143.2 284.3C153.1 278.2 165.6 278 175.7 283.7C185.8 289.4 192 300.2 191.9 311.9C191.8 323.5 185.4 334.1 175.2 339.7C165.3 345.8 152.8 346 142.7 340.3C132.6 334.6 126.4 323.8 126.5 312.1C126.6 300.5 133 289.9 143.2 284.3zM328.2 380.7C318.3 386.8 305.8 387 295.7 381.3C285.6 375.6 279.4 364.8 279.5 353.1C279.6 341.5 286 330.9 296.2 325.3C306.1 319.2 318.6 319 328.7 324.7C338.8 330.4 345 341.2 344.9 352.9C344.8 364.5 338.4 375.1 328.2 380.7zM337.2 172.3C347.1 166.2 359.6 166 369.7 171.7C379.8 177.4 386 188.2 385.9 199.9C385.8 211.5 379.4 222.1 369.2 227.7C359.3 233.8 346.8 234 336.7 228.3C326.6 222.6 320.4 211.8 320.5 200.1C320.6 188.5 327 177.9 337.2 172.3zM216.2 186.7C206.3 192.8 193.8 193 183.7 187.3C173.6 181.6 167.4 170.8 167.5 159.1C167.6 147.5 174 136.9 184.2 131.3C194.1 125.2 206.6 125 216.7 130.7C226.8 136.4 233 147.2 232.9 158.9C232.8 170.5 226.4 181.1 216.2 186.7zM482 256L441.4 407.2C424.2 471.2 358.4 509.2 294.4 492.1L256.1 481.8L256.1 512C256.1 547.3 284.8 576 320.1 576L512.1 576C547.4 576 576.1 547.3 576.1 512L576.1 320C576.1 284.7 547.4 256 512.1 256L482 256z"/></svg>
-                Zufallswerte
-              </button>
+        <div id="portfolioEntries" class="grid-dynamic">
+          <!-- Die 4 Standardfelder kommen per JavaScript rein -->
         </div>
-  </div>
-</div>
 
-      <div class="flex-row"><button data-on-click='[{"fn":"portfolioToggleText","args":[]}]'><svg xmlns="http://www.w3.org/2000/svg" height="14"
-            width="12" fill="#ff4800"
-            viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path
-              d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
-          </svg> Text</button>
-        <button data-on-click='[{"fn":"portfolioToggleCircle","args":[]}]'><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
-            fill="#ff4800"
-            viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-            <path
-              d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
-          </svg> Farbe</button>
-        <button data-on-click='[{"fn":"portfolioToggleGitter","args":[]}]'><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12"
-        fill="#ff4800"
-        viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-        <path
-          d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z" />
-      </svg> Gitter</button>
+        <div style="margin: 20px 0; text-align: center">
+          <button data-on-click='[{"fn":"addPortfolioEntry","args":[]}]'>
+            + Neuen Eintrag hinzufügen
+          </button>
+          <div class="btn-aktion-row">
+            <button
+              type="button"
+              class="btn-uebernehmen"
+              data-on-click='[{"fn":"generatePortfolio","args":[]}]'
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 640 640"
+                fill="currentColor"
+                height="16"
+                width="16"
+                aria-hidden="true"
+              >
+                <path
+                  d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"
+                />
+              </svg>
+              Daten übernehmen
+            </button>
+            <button
+              type="button"
+              class="btn-zufall"
+              data-on-click='[{"fn":"randomizePortfolios","args":[]}]'
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 640 640"
+                fill="currentColor"
+                height="16"
+                width="16"
+                aria-hidden="true"
+              >
+                <path
+                  d="M205.4 66.3C167 56 127.5 78.8 117.3 117.2L66.5 306.7C56.2 345.1 79 384.6 117.4 394.9L306.9 445.7C345.3 456 384.8 433.2 395.1 394.8L445.9 205.3C456.2 166.9 433.4 127.4 395 117.1L205.4 66.3zM228.4 272C222.3 262.1 222.1 249.6 227.8 239.5C233.5 229.4 244.3 223.2 256 223.3C267.6 223.4 278.2 229.8 283.8 240C289.9 249.9 290.1 262.4 284.4 272.5C278.7 282.6 267.9 288.8 256.2 288.7C244.6 288.6 234 282.2 228.4 272zM143.2 284.3C153.1 278.2 165.6 278 175.7 283.7C185.8 289.4 192 300.2 191.9 311.9C191.8 323.5 185.4 334.1 175.2 339.7C165.3 345.8 152.8 346 142.7 340.3C132.6 334.6 126.4 323.8 126.5 312.1C126.6 300.5 133 289.9 143.2 284.3zM328.2 380.7C318.3 386.8 305.8 387 295.7 381.3C285.6 375.6 279.4 364.8 279.5 353.1C279.6 341.5 286 330.9 296.2 325.3C306.1 319.2 318.6 319 328.7 324.7C338.8 330.4 345 341.2 344.9 352.9C344.8 364.5 338.4 375.1 328.2 380.7zM337.2 172.3C347.1 166.2 359.6 166 369.7 171.7C379.8 177.4 386 188.2 385.9 199.9C385.8 211.5 379.4 222.1 369.2 227.7C359.3 233.8 346.8 234 336.7 228.3C326.6 222.6 320.4 211.8 320.5 200.1C320.6 188.5 327 177.9 337.2 172.3zM216.2 186.7C206.3 192.8 193.8 193 183.7 187.3C173.6 181.6 167.4 170.8 167.5 159.1C167.6 147.5 174 136.9 184.2 131.3C194.1 125.2 206.6 125 216.7 130.7C226.8 136.4 233 147.2 232.9 158.9C232.8 170.5 226.4 181.1 216.2 186.7zM482 256L441.4 407.2C424.2 471.2 358.4 509.2 294.4 492.1L256.1 481.8L256.1 512C256.1 547.3 284.8 576 320.1 576L512.1 576C547.4 576 576.1 547.3 576.1 512L576.1 320C576.1 284.7 547.4 256 512.1 256L482 256z"
+                />
+              </svg>
+              Zufallswerte
+            </button>
+          </div>
+        </div>
       </div>
-       </div>
-    <div id="Container" style="min-width: 700px">
-      <svg id="portfolioSVG" style="width:100%;background-color:#fff;" xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-20 -20 780 440" style="background-color:#fff;padding:0px;width:100%;max-width:780px" data-on-load='[{"fn":"SVGonLoadKontoauszug","args":[]}]' width="780" height="440">
-        <!-- Achsen -->
-        <line x1="50" y1="380" x2="600" y2="380" stroke="#333" stroke-width="2" />
-        <line x1="50" y1="0" x2="50" y2="380" stroke="#333" stroke-width="2" />
-        <!-- Unterteilung -->
-        <g class="gitter">
-        <line x1="50" y1="95" x2="600" y2="95" stroke="#ccc" stroke-dasharray="2,2" stroke-width="1" />
-        <line x1="50" y1="0" x2="600" y2="0" stroke="#ccc" stroke-dasharray="2,2" stroke-width="1" />
-        <line x1="50" y1="190" x2="600" y2="190" stroke="#333" stroke-dasharray="2,2" stroke-width="1" />
-        <line x1="50" y1="285" x2="600" y2="285" stroke="#ccc" stroke-dasharray="2,2" stroke-width="1" />
-        <line x1="325" y1="380" x2="325" y2="0" stroke="#333" stroke-dasharray="2,2" stroke-width="1" />
-        <line x1="187.5" y1="380" x2="187.5" y2="0" stroke="#ccc" stroke-dasharray="2,2" stroke-width="1" />
-        <line x1="462.5" y1="380" x2="462.5" y2="0" stroke="#ccc" stroke-dasharray="2,2" stroke-width="1" />
-        <line x1="600" y1="380" x2="600" y2="0" stroke="#ccc" stroke-dasharray="2,2" stroke-width="1" />
-        </g>
-        <!-- X-Achse Unterteilung und Beschriftung -->
-        <text x="60" y="395" font-size="12" fill="#333" text-anchor="middle">0 %</text>
-        <text x="187.5" y="395" font-size="12" fill="#333" text-anchor="middle">50 %</text>
-        <text x="325" y="395" font-size="12" fill="#333" text-anchor="middle">100 %</text>
-        <text x="462.5" y="395" font-size="12" fill="#333" text-anchor="middle">150 %</text>
-        <text x="600" y="395" font-size="12" fill="#333" text-anchor="middle">200 %</text>
-        <!-- Y-Achse Unterteilung und Beschriftung -->
-        <text x="30" y="5" font-size="12" fill="#333" text-anchor="middle">40 %</text>
-        <text x="30" y="195" font-size="12" fill="#333" text-anchor="middle">20 %</text>
-        <text x="30" y="380" font-size="12" fill="#333" text-anchor="middle">0 %</text>
-        <!-- Datenpunkte -->
-        <!-- Portfolio D -->
-        <circle class="item circle" cx="160" cy="260" r="10" fill="#e4e" />
-        <text class="item text" x="160" y="260" font-size="18" fill="#333" transform="translate(15,5)">🐶 Poor
-          Dogs</text>
-        <!-- Portfolio B -->
-        <circle class="item circle" cx="430" cy="140" r="10" fill="#e74c3c" />
-        <text class="item text" x="430" y="140" font-size="18" fill="#333" transform="translate(15,5)">⭐ Stars</text>
-        <!-- Portfolio C -->
-        <circle class="item circle" cx="460" cy="260" r="10" fill="#5f5f5f" />
-        <text class="item text" x="460" y="260" font-size="18" fill="#333" transform="translate(15,5)">🐮Cash
-          Cows</text>
-        <!-- Portfolio A -->
-        <circle class="item circle" r="10" fill="#000" />
-        <text class="item text" font-size="18" fill="#333" transform="translate(15,5)">❓Question
-          Mark</text>
 
-        <!-- Beschriftungen -->
-        <text x="-30" y="30" font-size="14" fill="#333" transform="rotate(-90, 20, 40)">Marktwachstum</text>
-        <text x="550" y="410" font-size="14" fill="#333">Relativer Marktanteil</text>
-      </svg>
-    </div>
+      <div class="flex-row">
+        <button data-on-click='[{"fn":"portfolioToggleText","args":[]}]'>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="14"
+            width="12"
+            fill="#ff4800"
+            viewBox="0 0 448 512"
+          >
+            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"
+            />
+          </svg>
+          Text
+        </button>
+        <button data-on-click='[{"fn":"portfolioToggleCircle","args":[]}]'>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="14"
+            width="12"
+            fill="#ff4800"
+            viewBox="0 0 448 512"
+          >
+            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"
+            />
+          </svg>
+          Farbe
+        </button>
+        <button data-on-click='[{"fn":"portfolioToggleGitter","args":[]}]'>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="14"
+            width="12"
+            fill="#ff4800"
+            viewBox="0 0 448 512"
+          >
+            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"
+            />
+          </svg>
+          Gitter
+        </button>
+      </div>
+      <div id="Container" style="min-width: 700px">
+        <svg
+          id="portfolioSVG"
+          style="width: 100%; background-color: #fff"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="-20 -20 780 440"
+          style="
+            background-color: #fff;
+            padding: 0px;
+            width: 100%;
+            max-width: 780px;
+          "
+          data-on-load='[{"fn":"SVGonLoadKontoauszug","args":[]}]'
+          width="780"
+          height="440"
+        >
+          <!-- Achsen -->
+          <line
+            x1="50"
+            y1="380"
+            x2="600"
+            y2="380"
+            stroke="#333"
+            stroke-width="2"
+          />
+          <line
+            x1="50"
+            y1="0"
+            x2="50"
+            y2="380"
+            stroke="#333"
+            stroke-width="2"
+          />
+          <!-- Unterteilung -->
+          <g class="gitter">
+            <line
+              x1="50"
+              y1="95"
+              x2="600"
+              y2="95"
+              stroke="#ccc"
+              stroke-dasharray="2,2"
+              stroke-width="1"
+            />
+            <line
+              x1="50"
+              y1="0"
+              x2="600"
+              y2="0"
+              stroke="#ccc"
+              stroke-dasharray="2,2"
+              stroke-width="1"
+            />
+            <line
+              x1="50"
+              y1="190"
+              x2="600"
+              y2="190"
+              stroke="#333"
+              stroke-dasharray="2,2"
+              stroke-width="1"
+            />
+            <line
+              x1="50"
+              y1="285"
+              x2="600"
+              y2="285"
+              stroke="#ccc"
+              stroke-dasharray="2,2"
+              stroke-width="1"
+            />
+            <line
+              x1="325"
+              y1="380"
+              x2="325"
+              y2="0"
+              stroke="#333"
+              stroke-dasharray="2,2"
+              stroke-width="1"
+            />
+            <line
+              x1="187.5"
+              y1="380"
+              x2="187.5"
+              y2="0"
+              stroke="#ccc"
+              stroke-dasharray="2,2"
+              stroke-width="1"
+            />
+            <line
+              x1="462.5"
+              y1="380"
+              x2="462.5"
+              y2="0"
+              stroke="#ccc"
+              stroke-dasharray="2,2"
+              stroke-width="1"
+            />
+            <line
+              x1="600"
+              y1="380"
+              x2="600"
+              y2="0"
+              stroke="#ccc"
+              stroke-dasharray="2,2"
+              stroke-width="1"
+            />
+          </g>
+          <!-- X-Achse Unterteilung und Beschriftung -->
+          <text x="60" y="395" font-size="12" fill="#333" text-anchor="middle">
+            0 %
+          </text>
+          <text
+            x="187.5"
+            y="395"
+            font-size="12"
+            fill="#333"
+            text-anchor="middle"
+          >
+            50 %
+          </text>
+          <text x="325" y="395" font-size="12" fill="#333" text-anchor="middle">
+            100 %
+          </text>
+          <text
+            x="462.5"
+            y="395"
+            font-size="12"
+            fill="#333"
+            text-anchor="middle"
+          >
+            150 %
+          </text>
+          <text x="600" y="395" font-size="12" fill="#333" text-anchor="middle">
+            200 %
+          </text>
+          <!-- Y-Achse Unterteilung und Beschriftung -->
+          <text x="30" y="5" font-size="12" fill="#333" text-anchor="middle">
+            40 %
+          </text>
+          <text x="30" y="195" font-size="12" fill="#333" text-anchor="middle">
+            20 %
+          </text>
+          <text x="30" y="380" font-size="12" fill="#333" text-anchor="middle">
+            0 %
+          </text>
+          <!-- Datenpunkte -->
+          <!-- Portfolio D -->
+          <circle class="item circle" cx="160" cy="260" r="10" fill="#e4e" />
+          <text
+            class="item text"
+            x="160"
+            y="260"
+            font-size="18"
+            fill="#333"
+            transform="translate(15,5)"
+          >
+            🐶 Poor Dogs
+          </text>
+          <!-- Portfolio B -->
+          <circle class="item circle" cx="430" cy="140" r="10" fill="#e74c3c" />
+          <text
+            class="item text"
+            x="430"
+            y="140"
+            font-size="18"
+            fill="#333"
+            transform="translate(15,5)"
+          >
+            ⭐ Stars
+          </text>
+          <!-- Portfolio C -->
+          <circle class="item circle" cx="460" cy="260" r="10" fill="#5f5f5f" />
+          <text
+            class="item text"
+            x="460"
+            y="260"
+            font-size="18"
+            fill="#333"
+            transform="translate(15,5)"
+          >
+            🐮Cash Cows
+          </text>
+          <!-- Portfolio A -->
+          <circle class="item circle" r="10" fill="#000" />
+          <text
+            class="item text"
+            font-size="18"
+            fill="#333"
+            transform="translate(15,5)"
+          >
+            ❓Question Mark
+          </text>
 
-         <div class="export-buttons" data-exports="png,svg,source"></div> 
- 
+          <!-- Beschriftungen -->
+          <text
+            x="-30"
+            y="30"
+            font-size="14"
+            fill="#333"
+            transform="rotate(-90, 20, 40)"
+          >
+            Marktwachstum
+          </text>
+          <text x="550" y="410" font-size="14" fill="#333">
+            Relativer Marktanteil
+          </text>
+        </svg>
+      </div>
 
-  </main>
-  <script src="js/lb8-3-portfolioanalyse.js"></script>
-       <script src="js/export-buttons.js"></script>
-  <div w3-include-html="footer.html"></div>
+      <div class="export-buttons" data-exports="png,svg,source"></div>
+    </main>
+    <script src="js/lb8-3-portfolioanalyse.js"></script>
+    <script src="js/export-buttons.js"></script>
+    <div w3-include-html="footer.html"></div>
   </body>
-
 </html>

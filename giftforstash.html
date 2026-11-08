@@ -1,122 +1,218 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stash-Pack-Generator – BwR Unterricht | meinbwr.de BwR</title>
+    <meta
+      name="description"
+      content="Stash-Texte für den BwR-Unterricht – mit Compliments für gelungene Beiträge."
+    />
+    <link rel="canonical" href="https://www.meinbwr.de/giftforstash.html" />
+    <meta name="robots" content="index, follow" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stash-Pack-Generator – BwR Unterricht | meinbwr.de BwR</title>
-  <meta name="description" content="Stash-Texte für den BwR-Unterricht – mit Compliments für gelungene Beiträge.">
-  <link rel="canonical" href="https://www.meinbwr.de/giftforstash.html">
-  <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Stash-Pack-Generator – BwR Unterricht | meinbwr.de"
+    />
+    <meta
+      property="og:description"
+      content="Stash-Texte für den BwR-Unterricht – mit Compliments für gelungene Beiträge."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.meinbwr.de/giftforstash.html"
+    />
+    <meta
+      property="og:site_name"
+      content="meinbwr.de – BwR Realschule Bayern"
+    />
+    <meta property="og:locale" content="de_DE" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Stash-Pack-Generator – BwR Unterricht | meinbwr.de">
-  <meta property="og:description" content="Stash-Texte für den BwR-Unterricht – mit Compliments für gelungene Beiträge.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.meinbwr.de/giftforstash.html">
-  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
-  <meta property="og:locale" content="de_DE">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Stash-Pack-Generator – BwR Unterricht | meinbwr.de"
+    />
+    <meta
+      name="twitter:description"
+      content="Stash-Texte für den BwR-Unterricht – mit Compliments für gelungene Beiträge."
+    />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Stash-Pack-Generator – BwR Unterricht | meinbwr.de">
-  <meta name="twitter:description" content="Stash-Texte für den BwR-Unterricht – mit Compliments für gelungene Beiträge.">
+    <!-- Theme -->
+    <meta name="theme-color" content="#2c5f2d" />
+    <meta name="color-scheme" content="light" />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#2c5f2d">
-  <meta name="color-scheme" content="light">
+    <!-- Strukturierte Daten -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Stash-Pack-Generator",
+        "description": "Stash-Texte für den BwR-Unterricht – mit Compliments für gelungene Beiträge.",
+        "url": "https://www.meinbwr.de/giftforstash.html",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "meinbwr.de – BwR Realschule Bayern",
+          "url": "https://www.meinbwr.de/"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Sonstiges",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Stash-Pack-Generator",
+              "item": "https://www.meinbwr.de/giftforstash.html"
+            }
+          ]
+        }
+      }
+    </script>
 
-  <!-- Strukturierte Daten -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Stash-Pack-Generator",
-    "description": "Stash-Texte für den BwR-Unterricht – mit Compliments für gelungene Beiträge.",
-    "url": "https://www.meinbwr.de/giftforstash.html",
-    "inLanguage": "de-DE",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "meinbwr.de – BwR Realschule Bayern",
-      "url": "https://www.meinbwr.de/"
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 2, "name": "Sonstiges", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 3, "name": "Stash-Pack-Generator", "item": "https://www.meinbwr.de/giftforstash.html" }
-      ]
-    }
-  }
-  </script>
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <script src="js/menu.js?v=15"></script>
+    <script src="js/libraries/html2canvas.min.js"></script>
+    <script src="js/libraries/clipboard.min.js"></script>
+    <script src="js/libraries/filesaver.min.js"></script>
+    <script src="js/utils.js?v=14"></script>
+  </head>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <script src="js/menu.js?v=15"></script>
-  <script src="js/libraries/html2canvas.min.js"></script>
-  <script src="js/libraries/clipboard.min.js"></script>
-  <script src="js/libraries/filesaver.min.js"></script>
-  <script src="js/utils.js?v=14"></script>
-</head>
+  <body>
+    <style>
+      input[name="code_weight[]"] {
+        width: 50px;
+      }
+    </style>
+    <main>
+      <div w3-include-html="navigation.html"></div>
+      <h2>Generator für Stash-Packs</h2>
+      <div class="box">
+        <img src="media/pic/stash.png" style="min-width: 200px; width: 50%" />
+        <p>
+          Dieses Script generiert für den Block Stash in mebis
+          Multiple-Choice-Fragen. Anstatt einzelne Stash-Objekte im Kurs zu
+          platzieren, können ganze Packs mit der Aktivität Lektion verteilt
+          werden.
+        </p>
 
-<body>
-  <style>
-    input[name="code_weight[]"] {
-      width: 50px;
-    }
-  </style><main>
-  <div w3-include-html="navigation.html"></div> 
-<h2>Generator für Stash-Packs</h2>
-  <div class="box">
-      <img src="media/pic/stash.png" style="min-width:200px;width:50%">
-  <p>Dieses Script generiert für den Block Stash in mebis Multiple-Choice-Fragen. Anstatt einzelne Stash-Objekte im Kurs zu platzieren, 
-    können ganze Packs mit der Aktivität Lektion verteilt werden.</p>
-
-    
- <!-- Dateiupload -->
-  <p>Codes per Datei hochladen: <input type="file" id="file-input" data-on-change='[{"fn":"handleFileUpload","args":[]}]'></p>
-  <details><summary>Dateiformat</summary>
-  <ul>
-    <li>Lade eine Datei mit einer Liste der secret-Codes hoch (eine Zeile ein Code, Gewichtung mit Komma getrennt eintragen).<br><br>Beispiel:<br>Ztn87,4<br>6hdhn,2<br>Ize45hn,3<br><br></li>
-    <li>Oder lade eine Datei mit einer Liste der Shortcodes hoch (eine Zeile ein Shortcode, Gewichtung direkt dahinter eintragen).<br><br>Beispiel:<br>[stashdrop secret="Ztn87" text="Pick up!" image]4<br>[stashdrop secret="6hdhn" text="Pick up!" image]2<br>[stashdrop secret="Ize45hn text="Pick up!" image]3</li>
-  </ul>
-  </details><br>
-  <!-- Inputfelder für die Codes -->
-  <div style="display: flex">
-    <div id="input-container">
-      <input type="text" name="code[]" value="" maxlength="20"><input type="number" name="code_weight[]" value="1" min="0" max="1000000"><br>
-      <input type="text" name="code[]" value="" maxlength="20"><input type="number" name="code_weight[]" value="1" min="0" max="1000000"><br>
-    </div>
-  </div><br>
-  <button data-on-click='[{"fn":"addInput","args":[]}]'>Weiteren Code hinzufügen</button>
-  <!-- Eingabefeld für die Beschriftung der Optionen -->
-  <p>Text für die einzelnen Optionen in der Fragestellung:</p>
-  <input id="optionen-beschriftung" type="text" value="Wähle mich!" maxlength="60">
-  <!-- Eingabefeld für die Beschriftung der Optionen -->
-  <p>Text für das Einsammeln der Stash-Objekte:</p>
-  <input id="pickup-mitteilung" type="text" value="Sammle mich!" maxlength="60">
-  <!-- Auswahlfeld für die Anzahl der Antwortoptionen -->
-  <p>Anzahl der Antwortoptionen:</p>
-  <input id="optionen-auswahl" type="number" min="1" max="10" value="4">
-  <!-- Auswahlfeld für die Anzahl der Objekte pro Auswahl -->
-  <p>Anzahl der Objekte pro Option</p>
-  <input type="number" id="anzahl-stashdrop" name="anzahl-stashdrop" min="0" max="20" value="1">
-  <!-- Checkbox für keine doppelten Objekte -->
-  <p><input type="checkbox" id="keine-doppelten-objekte"> Keine doppelten Objekte pro Option (gilt nur bei Gewichtung = 1)</p>
-  <!-- Auswahlfeld für die Anzahl der Fragen -->
-  <p>Anzahl der zu generierenden Fragen:</p>
-  <input id="anzahl-auswahl" type="number" min="1" max="30" value="10">
-  <!-- Button zum Generieren der Fragen -->
-  <button data-on-click='[{"fn":"generateQuestions","args":[]}]'>Fragen generieren</button>
-  <!-- Container für die generierten Fragen -->
-  <div id="fragen-container"></div>
-
- </main>
-    <div w3-include-html="footer.html"></div> 
+        <!-- Dateiupload -->
+        <p>
+          Codes per Datei hochladen:
+          <input
+            type="file"
+            id="file-input"
+            data-on-change='[{"fn":"handleFileUpload","args":[]}]'
+          />
+        </p>
+        <details>
+          <summary>Dateiformat</summary>
+          <ul>
+            <li>
+              Lade eine Datei mit einer Liste der secret-Codes hoch (eine Zeile
+              ein Code, Gewichtung mit Komma getrennt eintragen).<br /><br />Beispiel:<br />Ztn87,4<br />6hdhn,2<br />Ize45hn,3<br /><br />
+            </li>
+            <li>
+              Oder lade eine Datei mit einer Liste der Shortcodes hoch (eine
+              Zeile ein Shortcode, Gewichtung direkt dahinter eintragen).<br /><br />Beispiel:<br />[stashdrop
+              secret="Ztn87" text="Pick up!" image]4<br />[stashdrop
+              secret="6hdhn" text="Pick up!" image]2<br />[stashdrop
+              secret="Ize45hn text="Pick up!" image]3
+            </li>
+          </ul>
+        </details>
+        <br />
+        <!-- Inputfelder für die Codes -->
+        <div style="display: flex">
+          <div id="input-container">
+            <input type="text" name="code[]" value="" maxlength="20" /><input
+              type="number"
+              name="code_weight[]"
+              value="1"
+              min="0"
+              max="1000000"
+            /><br />
+            <input type="text" name="code[]" value="" maxlength="20" /><input
+              type="number"
+              name="code_weight[]"
+              value="1"
+              min="0"
+              max="1000000"
+            /><br />
+          </div>
+        </div>
+        <br />
+        <button data-on-click='[{"fn":"addInput","args":[]}]'>
+          Weiteren Code hinzufügen
+        </button>
+        <!-- Eingabefeld für die Beschriftung der Optionen -->
+        <p>Text für die einzelnen Optionen in der Fragestellung:</p>
+        <input
+          id="optionen-beschriftung"
+          type="text"
+          value="Wähle mich!"
+          maxlength="60"
+        />
+        <!-- Eingabefeld für die Beschriftung der Optionen -->
+        <p>Text für das Einsammeln der Stash-Objekte:</p>
+        <input
+          id="pickup-mitteilung"
+          type="text"
+          value="Sammle mich!"
+          maxlength="60"
+        />
+        <!-- Auswahlfeld für die Anzahl der Antwortoptionen -->
+        <p>Anzahl der Antwortoptionen:</p>
+        <input id="optionen-auswahl" type="number" min="1" max="10" value="4" />
+        <!-- Auswahlfeld für die Anzahl der Objekte pro Auswahl -->
+        <p>Anzahl der Objekte pro Option</p>
+        <input
+          type="number"
+          id="anzahl-stashdrop"
+          name="anzahl-stashdrop"
+          min="0"
+          max="20"
+          value="1"
+        />
+        <!-- Checkbox für keine doppelten Objekte -->
+        <p>
+          <input type="checkbox" id="keine-doppelten-objekte" /> Keine doppelten
+          Objekte pro Option (gilt nur bei Gewichtung = 1)
+        </p>
+        <!-- Auswahlfeld für die Anzahl der Fragen -->
+        <p>Anzahl der zu generierenden Fragen:</p>
+        <input id="anzahl-auswahl" type="number" min="1" max="30" value="10" />
+        <!-- Button zum Generieren der Fragen -->
+        <button data-on-click='[{"fn":"generateQuestions","args":[]}]'>
+          Fragen generieren
+        </button>
+        <!-- Container für die generierten Fragen -->
+        <div id="fragen-container"></div>
+      </div>
+    </main>
+    <div w3-include-html="footer.html"></div>
     <script src="js/giftforstash-inline.js"></script>
-</body>
-
+  </body>
 </html>

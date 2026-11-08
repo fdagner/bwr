@@ -1,173 +1,286 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Optimale Bestellmenge BwR | meinbwr.de BwR</title>
+    <meta
+      name="description"
+      content="Kostenloses BwR-Tool: Berechne die optimale Bestellmenge (Andler-Modell) mit individuellen Werten – erhalte Tabelle, Kostenvergleich und interaktives Diagramm (ApexCharts). Ideal für Beschaffungsplanung Klasse 8 Realschule Bayern, Inventur- & Lagerkosten-Übungen, Klassenarbeiten und Prüfungsvorbereitung."
+    />
+    <link
+      rel="canonical"
+      href="https://www.meinbwr.de/lb8-1-bestellmenge.html"
+    />
+    <meta name="robots" content="index, follow" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Optimale Bestellmenge BwR | meinbwr.de BwR</title>
-  <meta name="description" content="Kostenloses BwR-Tool: Berechne die optimale Bestellmenge (Andler-Modell) mit individuellen Werten – erhalte Tabelle, Kostenvergleich und interaktives Diagramm (ApexCharts). Ideal für Beschaffungsplanung Klasse 8 Realschule Bayern, Inventur- & Lagerkosten-Übungen, Klassenarbeiten und Prüfungsvorbereitung.">
-  <link rel="canonical" href="https://www.meinbwr.de/lb8-1-bestellmenge.html">
-  <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Optimale Bestellmenge – Tabelle + Diagramm BwR Tool | meinbwr.de"
+    />
+    <meta
+      property="og:description"
+      content="Eingabe: Optimale Menge/Häufigkeit, Bestellkosten, Schrittweite → sofort Tabelle mit Gesamtkosten, Lager-/Bestellkosten und grafischem Schnittpunkt. Perfekt für BwR 8 Realschule Bayern – Materialwirtschaft, Kostenvergleich, grafische Analyse. Export als PNG/Clipboard möglich."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.meinbwr.de/lb8-1-bestellmenge.html"
+    />
+    <meta
+      property="og:site_name"
+      content="meinbwr.de – BwR Realschule Bayern"
+    />
+    <meta property="og:locale" content="de_DE" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Optimale Bestellmenge – Tabelle + Diagramm BwR Tool | meinbwr.de">
-  <meta property="og:description" content="Eingabe: Optimale Menge/Häufigkeit, Bestellkosten, Schrittweite → sofort Tabelle mit Gesamtkosten, Lager-/Bestellkosten und grafischem Schnittpunkt. Perfekt für BwR 8 Realschule Bayern – Materialwirtschaft, Kostenvergleich, grafische Analyse. Export als PNG/Clipboard möglich.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.meinbwr.de/lb8-1-bestellmenge.html">
-  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
-  <meta property="og:locale" content="de_DE">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Optimale Bestellmenge – Tabelle + Diagramm BwR Tool | meinbwr.de"
+    />
+    <meta
+      name="twitter:description"
+      content="Eingabe: Optimale Menge/Häufigkeit, Bestellkosten, Schrittweite → sofort Tabelle mit Gesamtkosten, Lager-/Bestellkosten und grafischem Schnittpunkt. Perfekt für BwR 8 Realschule Bayern – Materialwirtschaft, Kostenvergleich, grafische Analyse. Export als PNG/Clipboard möglich."
+    />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Optimale Bestellmenge – Tabelle + Diagramm BwR Tool | meinbwr.de">
-  <meta name="twitter:description" content="Eingabe: Optimale Menge/Häufigkeit, Bestellkosten, Schrittweite → sofort Tabelle mit Gesamtkosten, Lager-/Bestellkosten und grafischem Schnittpunkt. Perfekt für BwR 8 Realschule Bayern – Materialwirtschaft, Kostenvergleich, grafische Analyse. Export als PNG/Clipboard möglich.">
+    <!-- Theme -->
+    <meta name="theme-color" content="#2c5f2d" />
+    <meta name="color-scheme" content="light" />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#2c5f2d">
-  <meta name="color-scheme" content="light">
+    <!-- Strukturierte Daten -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Optimale Bestellmenge",
+        "description": "Kostenloses BwR-Tool: Berechne die optimale Bestellmenge (Andler-Modell) mit individuellen Werten – erhalte Tabelle, Kostenvergleich und interaktives Diagramm (ApexCharts). Ideal für Beschaffungsplanung Klasse 8 Realschule Bayern, Inventur- & Lagerkosten-Übungen, Klassenarbeiten und Prüfungsvorbereitung.",
+        "url": "https://www.meinbwr.de/lb8-1-bestellmenge.html",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "meinbwr.de – BwR Realschule Bayern",
+          "url": "https://www.meinbwr.de/"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "BwR 8",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Bestellmenge",
+              "item": "https://www.meinbwr.de/lb8-1-bestellmenge.html"
+            }
+          ]
+        }
+      }
+    </script>
 
-  <!-- Strukturierte Daten -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Optimale Bestellmenge",
-    "description": "Kostenloses BwR-Tool: Berechne die optimale Bestellmenge (Andler-Modell) mit individuellen Werten – erhalte Tabelle, Kostenvergleich und interaktives Diagramm (ApexCharts). Ideal für Beschaffungsplanung Klasse 8 Realschule Bayern, Inventur- & Lagerkosten-Übungen, Klassenarbeiten und Prüfungsvorbereitung.",
-    "url": "https://www.meinbwr.de/lb8-1-bestellmenge.html",
-    "inLanguage": "de-DE",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "meinbwr.de – BwR Realschule Bayern",
-      "url": "https://www.meinbwr.de/"
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 2, "name": "BwR 8", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 3, "name": "Bestellmenge", "item": "https://www.meinbwr.de/lb8-1-bestellmenge.html" }
-      ]
-    }
-  }
-  </script>
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <link rel="stylesheet" href="css/jodit.min.css" />
+    <script src="js/menu.js?v=15"></script>
+    <script src="js/libraries/html2canvas.min.js"></script>
+    <script src="js/libraries/clipboard.min.js"></script>
+    <script src="js/libraries/js-yaml.min.js"></script>
+    <script src="js/utils.js?v=14"></script>
+    <script src="js/libraries/jodit.min.js?v=69"></script>
+    <script src="js/joditeditor.js?v=69"></script>
+    <script src="js/collection.js?v=36"></script>
+    <script src="js/libraries/apexcharts.min.js"></script>
+  </head>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <link rel="stylesheet" href="css/jodit.min.css">
-  <script src="js/menu.js?v=15"></script>
-  <script src="js/libraries/html2canvas.min.js"></script>
-  <script src="js/libraries/clipboard.min.js"></script>
-  <script src="js/libraries/js-yaml.min.js"></script>
-  <script src="js/utils.js?v=14"></script>
-  <script src="js/libraries/jodit.min.js?v=68"></script>
-  <script src="js/joditeditor.js?v=69"></script>
-<script src="js/collection.js?v=36"></script>
-  <script src="js/libraries/apexcharts.min.js"></script>
-</head>
+  <body>
+    <main>
+      <div w3-include-html="navigation.html"></div>
+      <h2>Optimale Bestellmenge</h2>
+      <div class="box">
+        <p>
+          Hier können Sie automatisch eine vollständige Aufgabe zur optimalen
+          Bestellmenge erstellen. Sie besteht aus einem Interview, Tabelle,
+          Diagramm und drei Arbeitsaufträgen. Alle Werte im Interview werden aus
+          den Eingabefeldern berechnet.
+        </p>
+        <p>
+          Geben Sie Ihre Wunschwerte als Ganzzahlen an. Die Schrittweite sollte
+          ein Teiler der Bestellhäufigkeit sein: Je höher die Schrittweite,
+          desto kürzer die Tabelle. Empfehlenswert sind 5er oder 10er Schritte.
+          Die Berechnung ergibt immer einen ganzzahligen und passgenauen
+          Schnittpunkt, bei dem Bestellkosten und Lagerhaltungskosten gleich
+          hoch sind. Sollen die Werte unterschiedlich sein und der Schnittpunkt
+          rechnerisch nicht ganzzahlig, geben Sie bei der optimalen
+          Bestellhäufigkeit eine Kommazahl an.
+        </p>
 
-<body>
-  <main>
-    <div w3-include-html="navigation.html"></div>
-    <h2>Optimale Bestellmenge</h2>
-    <div class="box">
-      <p>Hier können Sie automatisch eine vollständige Aufgabe zur optimalen
-        Bestellmenge erstellen. Sie besteht aus einem Interview, Tabelle, Diagramm und drei Arbeitsaufträgen. Alle Werte im Interview werden aus den Eingabefeldern berechnet.</p>
-      <p>Geben Sie Ihre Wunschwerte als Ganzzahlen an. Die Schrittweite sollte ein Teiler der Bestellhäufigkeit sein:
-        Je höher die Schrittweite, desto kürzer die Tabelle. Empfehlenswert sind 5er oder 10er Schritte.
-        Die Berechnung ergibt immer einen ganzzahligen und passgenauen Schnittpunkt, bei dem Bestellkosten und
-        Lagerhaltungskosten gleich hoch sind.
-        Sollen die Werte unterschiedlich sein und der Schnittpunkt rechnerisch nicht ganzzahlig, geben Sie bei der
-        optimalen Bestellhäufigkeit eine Kommazahl an.</p>
+        <h3>Unternehmen auswählen</h3>
+        <div class="flex-row">
+          <label for="bmUnternehmen">Modellunternehmen:</label>
+          <select id="bmUnternehmen" class="meinUnternehmen"></select>
+        </div>
 
-      <h3>Unternehmen auswählen</h3>
-      <div class="flex-row">
-        <label for="bmUnternehmen">Modellunternehmen:</label>
-        <select id="bmUnternehmen" class="meinUnternehmen"></select>
+        <h3>Daten</h3>
+
+        <div class="grid3">
+          <fieldset class="vorlage-green" style="max-width: 350px">
+            <legend>Fall-Typ</legend>
+            <div class="form-field">
+              <select
+                class="dropdown"
+                id="bmVariante"
+                data-on-change='[{"fn":"berechneOptimaleBestellmengeUndHaeufigkeit","args":[]}]'
+              >
+                <option value="1" selected>
+                  Interview, Tabelle und Diagramm
+                </option>
+                <option value="2">Nur Diagramm (Bestellmenge ablesen)</option>
+                <option value="3">Nur Tabelle (Bestellmenge ermitteln)</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <fieldset class="vorlage-red" style="max-width: 350px">
+            <legend>Bestellparameter</legend>
+            <div class="form-field">
+              <label for="optimaleBestellmenge">Optimale Bestellmenge</label>
+              <input
+                type="number"
+                id="optimaleBestellmenge"
+                placeholder="Optimale Bestellmenge eingeben"
+                value="100"
+                required
+              />
+
+              <label for="optimaleBestellhaeufigkeit"
+                >Optimale Bestellhäufigkeit</label
+              >
+              <input
+                type="number"
+                id="optimaleBestellhaeufigkeit"
+                max="365"
+                placeholder="Optimale Bestellhäufigkeit eingeben"
+                value="30"
+                required
+              />
+
+              <label for="bestellkosten"
+                >Bestellkosten pro Bestellung (€)</label
+              >
+              <input
+                type="number"
+                id="bestellkosten"
+                placeholder="Bestellkosten eingeben"
+                value="50"
+                required
+              />
+
+              <label for="schrittweite">Schrittweite</label>
+              <input type="number" id="schrittweite" value="5" required />
+            </div>
+          </fieldset>
+
+          <fieldset class="vorlage-blue" style="max-width: 350px">
+            <legend>Berechnete Werte</legend>
+            <div class="form-field">
+              <label>Berechnete Lagerkosten je Stück</label>
+              <p><span id="lagerkosten">...</span></p>
+
+              <label>Gesamte Bestellmenge (Bedarf)</label>
+              <p><span id="bedarf">...</span></p>
+
+              <label for="haeufigkeitVon"
+                >Bestellhäufigkeit anzeigen von – bis</label
+              >
+              <input
+                type="number"
+                id="haeufigkeitVon"
+                min="1"
+                max="100"
+                value="10"
+                required
+              />
+              –
+              <input
+                type="number"
+                id="haeufigkeitBis"
+                min="2"
+                max="199"
+                value="50"
+                required
+              />
+            </div>
+          </fieldset>
+        </div>
+
+        <p style="margin-top: 10px" hidden>
+          <label>
+            <input
+              type="checkbox"
+              id="chartAlsPng"
+              data-on-change='[{"fn":"aktualisiereDiagrammPng","args":[]}]'
+              checked
+            />
+            Diagramm als Grafik in der Aufgabe unter der Tabelle einfügen (wird
+            mit exportiert)
+          </label>
+        </p>
+
+        <br />
+        <div class="btn-aktion-row">
+          <button
+            type="button"
+            class="btn-uebernehmen"
+            data-on-click='[{"fn":"berechneOptimaleBestellmengeUndHaeufigkeit","args":[]}]'
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 640 640"
+              fill="currentColor"
+              height="16"
+              width="16"
+              aria-hidden="true"
+            >
+              <path
+                d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"
+              />
+            </svg>
+            Daten übernehmen
+          </button>
+        </div>
+
+        <br /><br />
+        <div style="overflow-x: auto">
+          <div id="chart" style="width: 100%; min-width: 750px"></div>
+        </div>
+        <p style="text-align: center">
+          Über das Diagramm-Menü lässt sich die Grafik als CSV, SVG oder PNG
+          exportieren.
+        </p>
       </div>
 
-      <h3>Daten</h3>
+      <div id="Container" style="min-width: 700px" contenteditable="true"></div>
 
-      <div class="grid3">
-        <fieldset class="vorlage-green" style="max-width: 350px">
-          <legend>Fall-Typ</legend>
-          <div class="form-field">
-            <select class="dropdown" id="bmVariante" data-on-change='[{"fn":"berechneOptimaleBestellmengeUndHaeufigkeit","args":[]}]'>
-              <option value="1" selected>Interview, Tabelle und Diagramm</option>
-              <option value="2">Nur Diagramm (Bestellmenge ablesen)</option>
-              <option value="3">Nur Tabelle (Bestellmenge ermitteln)</option>
-            </select>
-          </div>
-        </fieldset>
-
-        <fieldset class="vorlage-red" style="max-width: 350px">
-          <legend>Bestellparameter</legend>
-          <div class="form-field">
-            <label for="optimaleBestellmenge">Optimale Bestellmenge</label>
-            <input type="number" id="optimaleBestellmenge" placeholder="Optimale Bestellmenge eingeben" value="100" required>
-
-            <label for="optimaleBestellhaeufigkeit">Optimale Bestellhäufigkeit</label>
-            <input type="number" id="optimaleBestellhaeufigkeit" max="365" placeholder="Optimale Bestellhäufigkeit eingeben" value="30" required>
-
-            <label for="bestellkosten">Bestellkosten pro Bestellung (€)</label>
-            <input type="number" id="bestellkosten" placeholder="Bestellkosten eingeben" value="50" required>
-
-            <label for="schrittweite">Schrittweite</label>
-            <input type="number" id="schrittweite" value="5" required>
-          </div>
-        </fieldset>
-
-        <fieldset class="vorlage-blue" style="max-width: 350px">
-          <legend>Berechnete Werte</legend>
-          <div class="form-field">
-            <label>Berechnete Lagerkosten je Stück</label>
-            <p><span id="lagerkosten">...</span></p>
-
-            <label>Gesamte Bestellmenge (Bedarf)</label>
-            <p><span id="bedarf">...</span></p>
-
-            <label for="haeufigkeitVon">Bestellhäufigkeit anzeigen von – bis</label>
-            <input type="number" id="haeufigkeitVon" min="1" max="100" value="10" required>
-            –
-            <input type="number" id="haeufigkeitBis" min="2" max="199" value="50" required>
-          </div>
-        </fieldset>
-      </div>
-
-      <p style="margin-top:10px;" hidden>
-        <label>
-          <input type="checkbox" id="chartAlsPng" data-on-change='[{"fn":"aktualisiereDiagrammPng","args":[]}]' checked>
-          Diagramm als Grafik in der Aufgabe unter der Tabelle einfügen (wird mit exportiert)
-        </label>
-      </p>
-
-      <br>
-      <div class="btn-aktion-row">
-        <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"berechneOptimaleBestellmengeUndHaeufigkeit","args":[]}]'>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"/></svg>
-          Daten übernehmen
-        </button>
-      </div>
-
-
-
-      <br><br>
-      <div style="overflow-x:auto;">
-        <div id="chart" style="width: 100%;min-width: 750px;"></div>
-      </div>
-      <p style="text-align:center">Über das Diagramm-Menü lässt sich die Grafik als CSV, SVG oder PNG exportieren.</p>
-</div>
-
-      <div id="Container" style="min-width: 700px" contenteditable="true"></div>  
-
-
-      <br>
-    <br>
-  
-  </main>
-  <script src="js/lb8-2-bestellmenge.js?v=23"></script>
-  <div w3-include-html="footer.html"></div>
+      <br />
+      <br />
+    </main>
+    <script src="js/lb8-2-bestellmenge.js?v=23"></script>
+    <div w3-include-html="footer.html"></div>
   </body>
-
 </html>

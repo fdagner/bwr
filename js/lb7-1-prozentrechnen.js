@@ -6,21 +6,23 @@ let letzteGenerierteAufgaben = [];
 
 // ── Hilfsfunktionen ──────────────────────────────────────────────────────────
 
-
 // Euro-Beträge: Tausenderpunkt nach deutschem Standard (1.000 €)
 function fmtE(n) {
   return Number.isInteger(n)
-    ? n.toLocaleString('de-DE')
-    : n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    ? n.toLocaleString("de-DE")
+    : n.toLocaleString("de-DE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
 }
 // Stückzahlen (Personen, Schüler, mAh usw.): schmales Leerzeichen als Tausendertrenner (1 000)
 function fmt(n) {
-  return n.toLocaleString('de-DE').replace(/\./g, '\u202F');
+  return n.toLocaleString("de-DE").replace(/\./g, "\u202F");
 }
 
 // Lösungs-Builder: je nach Einheit den richtigen Formatter wählen
 function fmtU(n, einheit) {
-  return einheit === '€' ? fmtE(n) : fmt(n);
+  return einheit === "€" ? fmtE(n) : fmt(n);
 }
 
 // ============================================================================
@@ -31,428 +33,680 @@ function fmtU(n, einheit) {
 // ============================================================================
 
 const AUFGABEN_DB = [
-
   // ── RABATT & PREISSENKUNGEN ───────────────────────────────────────────────
   {
-    sache: 'Winterjacke',
-    einheit: '€',
-    kategorie: 'Rabatt & Preissenkung',
-    emoji: '🧥',
+    sache: "Winterjacke",
+    einheit: "€",
+    kategorie: "Rabatt & Preissenkung",
+    emoji: "🧥",
     daten: [
-      { G: 80,  p: 25 }, { G: 120, p: 25 }, { G: 200, p: 25 },
-      { G: 160, p: 25 }, { G: 100, p: 20 }, { G: 240, p: 25 },
+      { G: 80, p: 25 },
+      { G: 120, p: 25 },
+      { G: 200, p: 25 },
+      { G: 160, p: 25 },
+      { G: 100, p: 20 },
+      { G: 240, p: 25 },
     ],
-    textW:  (d) => `Eine Winterjacke kostet ${fmtE(d.G)} €. Im Winterschlussverkauf gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
-    textG:  (d) => `Im Sale beträgt der Rabatt auf eine Winterjacke ${d.p} %. Du sparst ${fmtE(d.W)} €. Berechne den ursprünglichen Preis der Jacke.`,
-    textp:  (d) => `Eine Winterjacke kostet regulär ${fmtE(d.G)} €. Im Sale kostet sie nur ${fmtE(d.Gv)} €. Berechne den Rabatt in Prozent.`,
-    textGv: (d) => `Eine Winterjacke kostet ${fmtE(d.G)} €. Der Shop gibt ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
-    textGe: (d) => `Eine Winterjacke kostet ${fmtE(d.G)} €. Der Hersteller erhöht den Preis um ${d.p} %. Berechne den neuen Preis.`,
- 
-    textGe_r: (d) => `Eine Winterjacke kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
-    textGv_r: (d) => `Eine Winterjacke kostet nach einem Rabatt von ${d.p} % nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
+    textW: (d) =>
+      `Eine Winterjacke kostet ${fmtE(d.G)} €. Im Winterschlussverkauf gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
+    textG: (d) =>
+      `Im Sale beträgt der Rabatt auf eine Winterjacke ${d.p} %. Du sparst ${fmtE(d.W)} €. Berechne den ursprünglichen Preis der Jacke.`,
+    textp: (d) =>
+      `Eine Winterjacke kostet regulär ${fmtE(d.G)} €. Im Sale kostet sie nur ${fmtE(d.Gv)} €. Berechne den Rabatt in Prozent.`,
+    textGv: (d) =>
+      `Eine Winterjacke kostet ${fmtE(d.G)} €. Der Shop gibt ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
+    textGe: (d) =>
+      `Eine Winterjacke kostet ${fmtE(d.G)} €. Der Hersteller erhöht den Preis um ${d.p} %. Berechne den neuen Preis.`,
+
+    textGe_r: (d) =>
+      `Eine Winterjacke kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
+    textGv_r: (d) =>
+      `Eine Winterjacke kostet nach einem Rabatt von ${d.p} % nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
   },
   {
-    sache: 'Smartphone',
-    einheit: '€',
-    kategorie: 'Rabatt & Preissenkung',
-    emoji: '📱',
+    sache: "Smartphone",
+    einheit: "€",
+    kategorie: "Rabatt & Preissenkung",
+    emoji: "📱",
     daten: [
-      { G: 400, p: 25 }, { G: 600, p: 20 }, { G: 800, p: 25 },
-      { G: 500, p: 20 }, { G: 1000, p: 20 }, { G: 480, p: 25 },
+      { G: 400, p: 25 },
+      { G: 600, p: 20 },
+      { G: 800, p: 25 },
+      { G: 500, p: 20 },
+      { G: 1000, p: 20 },
+      { G: 480, p: 25 },
     ],
-    textW:  (d) => `Ein Smartphone kostet ${fmtE(d.G)} €. Der Händler gibt ${d.p} % Rabatt. Berechne den Rabattbetrag.`,
-    textG:  (d) => `Ein Smartphone ist um ${d.p} % rabattiert. Der Preisnachlass beträgt ${fmtE(d.W)} €. Berechne den ursprünglichen Preis.`,
-    textp:  (d) => `Ein Smartphone kostet regulär ${fmtE(d.G)} €. Im Angebot zahlt man ${fmtE(d.Gv)} €. Um wie viel Prozent wurde der Preis gesenkt?`,
-    textGv: (d) => `Ein Smartphone kostet ${fmtE(d.G)} €. Online gibt es ${d.p} % Rabatt. Berechne den Aktionspreis.`,
-    textGe: (d) => `Ein Smartphone kostet ${fmtE(d.G)} €. Der Händler erhöht den Preis um ${d.p} %. Berechne den neuen Preis.`,
- 
-    textGe_r: (d) => `Ein Smartphone kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
-    textGv_r: (d) => `Ein Smartphone kostet im Angebot (${d.p} % Rabatt) nur ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
+    textW: (d) =>
+      `Ein Smartphone kostet ${fmtE(d.G)} €. Der Händler gibt ${d.p} % Rabatt. Berechne den Rabattbetrag.`,
+    textG: (d) =>
+      `Ein Smartphone ist um ${d.p} % rabattiert. Der Preisnachlass beträgt ${fmtE(d.W)} €. Berechne den ursprünglichen Preis.`,
+    textp: (d) =>
+      `Ein Smartphone kostet regulär ${fmtE(d.G)} €. Im Angebot zahlt man ${fmtE(d.Gv)} €. Um wie viel Prozent wurde der Preis gesenkt?`,
+    textGv: (d) =>
+      `Ein Smartphone kostet ${fmtE(d.G)} €. Online gibt es ${d.p} % Rabatt. Berechne den Aktionspreis.`,
+    textGe: (d) =>
+      `Ein Smartphone kostet ${fmtE(d.G)} €. Der Händler erhöht den Preis um ${d.p} %. Berechne den neuen Preis.`,
+
+    textGe_r: (d) =>
+      `Ein Smartphone kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
+    textGv_r: (d) =>
+      `Ein Smartphone kostet im Angebot (${d.p} % Rabatt) nur ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
   },
   {
-    sache: 'Fahrrad',
-    einheit: '€',
-    kategorie: 'Rabatt & Preissenkung',
-    emoji: '🚴',
+    sache: "Fahrrad",
+    einheit: "€",
+    kategorie: "Rabatt & Preissenkung",
+    emoji: "🚴",
     daten: [
-      { G: 400, p: 25 }, { G: 600, p: 20 }, { G: 800, p: 25 },
-      { G: 500, p: 20 }, { G: 1000, p: 20 }, { G: 300, p: 20 },
+      { G: 400, p: 25 },
+      { G: 600, p: 20 },
+      { G: 800, p: 25 },
+      { G: 500, p: 20 },
+      { G: 1000, p: 20 },
+      { G: 300, p: 20 },
     ],
-    textW:  (d) => `Ein Fahrrad kostet ${fmtE(d.G)} €. Im Herbst gibt es ${d.p} % Saisonrabatt. Berechne die Ersparnis in Euro.`,
-    textG:  (d) => `Beim Saisonschlussverkauf gibt es ${d.p} % auf Fahrräder. Der Rabatt beträgt ${fmtE(d.W)} €. Berechne den Originalpreis.`,
-    textp:  (d) => `Ein Fahrrad kostet normalerweise ${fmtE(d.G)} €. Im Sale zahlt man nur ${fmtE(d.Gv)} €. Berechne den Preisnachlass in Prozent.`,
-    textGv: (d) => `Ein Fahrrad kostet ${fmtE(d.G)} €. Die Filiale reduziert es um ${d.p} %. Berechne den neuen Preis.`,
-    textGe: (d) => `Ein Fahrrad kostet ${fmtE(d.G)} €. Wegen gestiegener Materialkosten erhöht sich der Preis um ${d.p} %. Berechne den neuen Preis.`,
- 
-    textGe_r: (d) => `Ein Fahrrad kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
-    textGv_r: (d) => `Ein Fahrrad kostet nach dem Saisonrabatt (${d.p} %) nur noch ${fmtE(d.Gv)} €. Berechne den regulären Preis.`,
+    textW: (d) =>
+      `Ein Fahrrad kostet ${fmtE(d.G)} €. Im Herbst gibt es ${d.p} % Saisonrabatt. Berechne die Ersparnis in Euro.`,
+    textG: (d) =>
+      `Beim Saisonschlussverkauf gibt es ${d.p} % auf Fahrräder. Der Rabatt beträgt ${fmtE(d.W)} €. Berechne den Originalpreis.`,
+    textp: (d) =>
+      `Ein Fahrrad kostet normalerweise ${fmtE(d.G)} €. Im Sale zahlt man nur ${fmtE(d.Gv)} €. Berechne den Preisnachlass in Prozent.`,
+    textGv: (d) =>
+      `Ein Fahrrad kostet ${fmtE(d.G)} €. Die Filiale reduziert es um ${d.p} %. Berechne den neuen Preis.`,
+    textGe: (d) =>
+      `Ein Fahrrad kostet ${fmtE(d.G)} €. Wegen gestiegener Materialkosten erhöht sich der Preis um ${d.p} %. Berechne den neuen Preis.`,
+
+    textGe_r: (d) =>
+      `Ein Fahrrad kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
+    textGv_r: (d) =>
+      `Ein Fahrrad kostet nach dem Saisonrabatt (${d.p} %) nur noch ${fmtE(d.Gv)} €. Berechne den regulären Preis.`,
   },
   {
-    sache: 'Turnschuhe',
-    einheit: '€',
-    kategorie: 'Rabatt & Preissenkung',
-    emoji: '👟',
+    sache: "Turnschuhe",
+    einheit: "€",
+    kategorie: "Rabatt & Preissenkung",
+    emoji: "👟",
     daten: [
-      { G: 80, p: 25 }, { G: 100, p: 20 }, { G: 120, p: 25 },
-      { G: 60, p: 20 }, { G: 160, p: 25 }, { G: 200, p: 20 },
+      { G: 80, p: 25 },
+      { G: 100, p: 20 },
+      { G: 120, p: 25 },
+      { G: 60, p: 20 },
+      { G: 160, p: 25 },
+      { G: 200, p: 20 },
     ],
-    textW:  (d) => `Ein Paar Turnschuhe kostet ${fmtE(d.G)} €. Im Sale gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
-    textG:  (d) => `Turnschuhe sind um ${d.p} % reduziert. Du sparst ${fmtE(d.W)} €. Berechne den ursprünglichen Preis.`,
-    textp:  (d) => `Ein Paar Turnschuhe kostet regulär ${fmtE(d.G)} €. Im Angebot zahlt man ${fmtE(d.Gv)} €. Berechne den Rabatt in Prozent.`,
-    textGv: (d) => `Ein Paar Turnschuhe kostet ${fmtE(d.G)} €. Der Shop wirbt mit ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
-    textGe: (d) => `Turnschuhe kosten ${fmtE(d.G)} €. Die neue Kollektion ist um ${d.p} % teurer. Berechne den Preis des neuen Modells.`,
- 
-    textGe_r: (d) => `Turnschuhe kosten nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
-    textGv_r: (d) => `Turnschuhe kosten im Sale (${d.p} % Rabatt) nur noch ${fmtE(d.Gv)} €. Berechne den regulären Preis.`,
+    textW: (d) =>
+      `Ein Paar Turnschuhe kostet ${fmtE(d.G)} €. Im Sale gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
+    textG: (d) =>
+      `Turnschuhe sind um ${d.p} % reduziert. Du sparst ${fmtE(d.W)} €. Berechne den ursprünglichen Preis.`,
+    textp: (d) =>
+      `Ein Paar Turnschuhe kostet regulär ${fmtE(d.G)} €. Im Angebot zahlt man ${fmtE(d.Gv)} €. Berechne den Rabatt in Prozent.`,
+    textGv: (d) =>
+      `Ein Paar Turnschuhe kostet ${fmtE(d.G)} €. Der Shop wirbt mit ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
+    textGe: (d) =>
+      `Turnschuhe kosten ${fmtE(d.G)} €. Die neue Kollektion ist um ${d.p} % teurer. Berechne den Preis des neuen Modells.`,
+
+    textGe_r: (d) =>
+      `Turnschuhe kosten nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
+    textGv_r: (d) =>
+      `Turnschuhe kosten im Sale (${d.p} % Rabatt) nur noch ${fmtE(d.Gv)} €. Berechne den regulären Preis.`,
   },
   {
-    sache: 'Spielekonsole',
-    einheit: '€',
-    kategorie: 'Rabatt & Preissenkung',
-    emoji: '🎮',
+    sache: "Spielekonsole",
+    einheit: "€",
+    kategorie: "Rabatt & Preissenkung",
+    emoji: "🎮",
     daten: [
-      { G: 400, p: 25 }, { G: 500, p: 20 }, { G: 600, p: 25 },
-      { G: 300, p: 20 }, { G: 800, p: 25 }, { G: 200, p: 25 },
+      { G: 400, p: 25 },
+      { G: 500, p: 20 },
+      { G: 600, p: 25 },
+      { G: 300, p: 20 },
+      { G: 800, p: 25 },
+      { G: 200, p: 25 },
     ],
-    textW:  (d) => `Eine Spielekonsole kostet ${fmtE(d.G)} €. Am Black Friday gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
-    textG:  (d) => `Eine Spielekonsole ist um ${d.p} % reduziert. Der Rabatt beträgt ${fmtE(d.W)} €. Berechne den ursprünglichen Preis.`,
-    textp:  (d) => `Eine Spielekonsole kostet regulär ${fmtE(d.G)} €. Im Angebot zahlt man ${fmtE(d.Gv)} €. Berechne den Preisnachlass in Prozent.`,
-    textGv: (d) => `Eine Spielekonsole kostet ${fmtE(d.G)} €. Der Online-Shop gibt ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
-    textGe: (d) => `Eine Spielekonsole kostet ${fmtE(d.G)} €. Durch einen Chip-Engpass steigt der Preis um ${d.p} %. Berechne den neuen Preis.`,
- 
-    textGe_r: (d) => `Eine Spielekonsole kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
-    textGv_r: (d) => `Eine Spielekonsole kostet am Black Friday (${d.p} % Rabatt) nur ${fmtE(d.Gv)} €. Berechne den Originalpreis.`,
+    textW: (d) =>
+      `Eine Spielekonsole kostet ${fmtE(d.G)} €. Am Black Friday gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
+    textG: (d) =>
+      `Eine Spielekonsole ist um ${d.p} % reduziert. Der Rabatt beträgt ${fmtE(d.W)} €. Berechne den ursprünglichen Preis.`,
+    textp: (d) =>
+      `Eine Spielekonsole kostet regulär ${fmtE(d.G)} €. Im Angebot zahlt man ${fmtE(d.Gv)} €. Berechne den Preisnachlass in Prozent.`,
+    textGv: (d) =>
+      `Eine Spielekonsole kostet ${fmtE(d.G)} €. Der Online-Shop gibt ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
+    textGe: (d) =>
+      `Eine Spielekonsole kostet ${fmtE(d.G)} €. Durch einen Chip-Engpass steigt der Preis um ${d.p} %. Berechne den neuen Preis.`,
+
+    textGe_r: (d) =>
+      `Eine Spielekonsole kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
+    textGv_r: (d) =>
+      `Eine Spielekonsole kostet am Black Friday (${d.p} % Rabatt) nur ${fmtE(d.Gv)} €. Berechne den Originalpreis.`,
   },
   // ── UMSATZSTEUER ─────────────────────────────────────────────────────────
   // Regelsteuersatz 19 %: G × 19 ÷ 100 ganzzahlig → G Vielfaches von 100
   {
-    sache: 'Laptop',
-    einheit: '€',
+    sache: "Laptop",
+    einheit: "€",
     kategorie: `Umsatzsteuer (${UST_REGEL} %)`,
-    emoji: '💻',
+    emoji: "💻",
     daten: [
-      { G: 500,  p: UST_REGEL }, { G: 1000, p: UST_REGEL }, { G: 200, p: UST_REGEL },
-      { G: 300,  p: UST_REGEL }, { G: 700,  p: UST_REGEL }, { G: 400, p: UST_REGEL },
+      { G: 500, p: UST_REGEL },
+      { G: 1000, p: UST_REGEL },
+      { G: 200, p: UST_REGEL },
+      { G: 300, p: UST_REGEL },
+      { G: 700, p: UST_REGEL },
+      { G: 400, p: UST_REGEL },
     ],
-    textW:  (d) => `Der Nettopreis eines Laptops beträgt ${fmtE(d.G)} €. Der Umsatzsteuersatz beträgt ${d.p} %. Berechne den Umsatzsteuerbetrag.`,
-    textG:  (d) => `Die Umsatzsteuer (${d.p} %) für einen Laptop beträgt ${fmtE(d.W)} €. Berechne den Nettopreis.`,
-    textp:  (d) => `Ein Laptop kostet netto ${fmtE(d.G)} €. Brutto zahlt man ${fmtE(d.Ge)} €. Berechne den Umsatzsteuersatz in Prozent.`,
-    textGv: (d) => `Ein Laptop wird zu einem Bruttopreis von ${fmtE(d.Ge)} € angeboten (inkl. ${d.p} % USt.). Berechne den Nettopreis.`,
-    textGe: (d) => `Ein Laptop hat einen Nettopreis von ${fmtE(d.G)} €. Berechne den Bruttopreis inklusive ${d.p} % Umsatzsteuer.`,
- 
-    textGe_r: (d) => `Ein Laptop kostet brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettopreis.`,
-    textGv_r: (d) => `Ein Laptop kostet nach ${d.p} % Rabatt nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
+    textW: (d) =>
+      `Der Nettopreis eines Laptops beträgt ${fmtE(d.G)} €. Der Umsatzsteuersatz beträgt ${d.p} %. Berechne den Umsatzsteuerbetrag.`,
+    textG: (d) =>
+      `Die Umsatzsteuer (${d.p} %) für einen Laptop beträgt ${fmtE(d.W)} €. Berechne den Nettopreis.`,
+    textp: (d) =>
+      `Ein Laptop kostet netto ${fmtE(d.G)} €. Brutto zahlt man ${fmtE(d.Ge)} €. Berechne den Umsatzsteuersatz in Prozent.`,
+    textGv: (d) =>
+      `Ein Laptop wird zu einem Bruttopreis von ${fmtE(d.Ge)} € angeboten (inkl. ${d.p} % USt.). Berechne den Nettopreis.`,
+    textGe: (d) =>
+      `Ein Laptop hat einen Nettopreis von ${fmtE(d.G)} €. Berechne den Bruttopreis inklusive ${d.p} % Umsatzsteuer.`,
+
+    textGe_r: (d) =>
+      `Ein Laptop kostet brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettopreis.`,
+    textGv_r: (d) =>
+      `Ein Laptop kostet nach ${d.p} % Rabatt nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
   },
   {
-    sache: 'Handwerkerrechnung',
-    einheit: '€',
+    sache: "Handwerkerrechnung",
+    einheit: "€",
     kategorie: `Umsatzsteuer (${UST_REGEL} %)`,
-    emoji: '🔧',
+    emoji: "🔧",
     daten: [
-      { G: 300,  p: UST_REGEL }, { G: 500,  p: UST_REGEL }, { G: 400, p: UST_REGEL },
-      { G: 600,  p: UST_REGEL }, { G: 800,  p: UST_REGEL }, { G: 1000, p: UST_REGEL },
+      { G: 300, p: UST_REGEL },
+      { G: 500, p: UST_REGEL },
+      { G: 400, p: UST_REGEL },
+      { G: 600, p: UST_REGEL },
+      { G: 800, p: UST_REGEL },
+      { G: 1000, p: UST_REGEL },
     ],
-    textW:  (d) => `Eine Handwerkerrechnung beläuft sich netto auf ${fmtE(d.G)} €. Der Umsatzsteuersatz beträgt ${d.p} %. Berechne den Umsatzsteuerbetrag.`,
-    textG:  (d) => `Auf einer Handwerkerrechnung stehen ${fmtE(d.W)} € Umsatzsteuer (${d.p} %). Berechne den Nettobetrag.`,
-    textp:  (d) => `Eine Handwerkerrechnung beträgt netto ${fmtE(d.G)} € und brutto ${fmtE(d.Ge)} €. Welchen Umsatzsteuersatz hat der Handwerker berechnet?`,
-    textGv: (d) => `Eine Handwerkerrechnung beträgt brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettobetrag.`,
-    textGe: (d) => `Eine Handwerkerleistung kostet netto ${fmtE(d.G)} €. Berechne den Bruttobetrag bei ${d.p} % Umsatzsteuer.`,
- 
-    textGe_r: (d) => `Eine Handwerkerrechnung beträgt brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettobetrag.`,
-    textGv_r: (d) => `Nach einem Preisnachlass von ${d.p} % beträgt eine Rechnung noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Rechnungsbetrag.`,
+    textW: (d) =>
+      `Eine Handwerkerrechnung beläuft sich netto auf ${fmtE(d.G)} €. Der Umsatzsteuersatz beträgt ${d.p} %. Berechne den Umsatzsteuerbetrag.`,
+    textG: (d) =>
+      `Auf einer Handwerkerrechnung stehen ${fmtE(d.W)} € Umsatzsteuer (${d.p} %). Berechne den Nettobetrag.`,
+    textp: (d) =>
+      `Eine Handwerkerrechnung beträgt netto ${fmtE(d.G)} € und brutto ${fmtE(d.Ge)} €. Welchen Umsatzsteuersatz hat der Handwerker berechnet?`,
+    textGv: (d) =>
+      `Eine Handwerkerrechnung beträgt brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettobetrag.`,
+    textGe: (d) =>
+      `Eine Handwerkerleistung kostet netto ${fmtE(d.G)} €. Berechne den Bruttobetrag bei ${d.p} % Umsatzsteuer.`,
+
+    textGe_r: (d) =>
+      `Eine Handwerkerrechnung beträgt brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettobetrag.`,
+    textGv_r: (d) =>
+      `Nach einem Preisnachlass von ${d.p} % beträgt eine Rechnung noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Rechnungsbetrag.`,
   },
   // Ermäßigter Steuersatz 7 %: G × 7 ÷ 100 ganzzahlig → G Vielfaches von 100
   {
-    sache: 'Lebensmitteleinkauf',
-    einheit: '€',
-    kategorie: 'Umsatzsteuer (7 %)',
-    emoji: '🛒',
+    sache: "Lebensmitteleinkauf",
+    einheit: "€",
+    kategorie: "Umsatzsteuer (7 %)",
+    emoji: "🛒",
     daten: [
-      { G: 100, p: 7 }, { G: 200, p: 7 }, { G: 300, p: 7 },
-      { G: 400, p: 7 }, { G: 500, p: 7 }, { G: 600, p: 7 },
+      { G: 100, p: 7 },
+      { G: 200, p: 7 },
+      { G: 300, p: 7 },
+      { G: 400, p: 7 },
+      { G: 500, p: 7 },
+      { G: 600, p: 7 },
     ],
-    textW:  (d) => `Der Nettobetrag eines Lebensmitteleinkaufs beträgt ${fmtE(d.G)} €. Der ermäßigte Umsatzsteuersatz beträgt ${d.p} %. Berechne den Umsatzsteuerbetrag.`,
-    textG:  (d) => `Die Umsatzsteuer (${d.p} %, ermäßigt) für Lebensmittel beträgt ${fmtE(d.W)} €. Berechne den Nettobetrag.`,
-    textp:  (d) => `Lebensmittel kosten netto ${fmtE(d.G)} € und brutto ${fmtE(d.Ge)} €. Berechne den Umsatzsteuersatz in Prozent.`,
-    textGv: (d) => `Ein Lebensmitteleinkauf kostet brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettopreis.`,
-    textGe: (d) => `Lebensmittel kosten netto ${fmtE(d.G)} €. Berechne den Bruttobetrag inklusive ${d.p} % Umsatzsteuer (ermäßigter Steuersatz).`,
- 
-    textGe_r: (d) => `Ein Lebensmitteleinkauf kostet brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt., ermäßigt). Berechne den Nettobetrag.`,
-    textGv_r: (d) => `Nach einem Rabatt von ${d.p} % kostet ein Lebensmitteleinkauf nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
+    textW: (d) =>
+      `Der Nettobetrag eines Lebensmitteleinkaufs beträgt ${fmtE(d.G)} €. Der ermäßigte Umsatzsteuersatz beträgt ${d.p} %. Berechne den Umsatzsteuerbetrag.`,
+    textG: (d) =>
+      `Die Umsatzsteuer (${d.p} %, ermäßigt) für Lebensmittel beträgt ${fmtE(d.W)} €. Berechne den Nettobetrag.`,
+    textp: (d) =>
+      `Lebensmittel kosten netto ${fmtE(d.G)} € und brutto ${fmtE(d.Ge)} €. Berechne den Umsatzsteuersatz in Prozent.`,
+    textGv: (d) =>
+      `Ein Lebensmitteleinkauf kostet brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt.). Berechne den Nettopreis.`,
+    textGe: (d) =>
+      `Lebensmittel kosten netto ${fmtE(d.G)} €. Berechne den Bruttobetrag inklusive ${d.p} % Umsatzsteuer (ermäßigter Steuersatz).`,
+
+    textGe_r: (d) =>
+      `Ein Lebensmitteleinkauf kostet brutto ${fmtE(d.Ge)} € (inkl. ${d.p} % USt., ermäßigt). Berechne den Nettobetrag.`,
+    textGv_r: (d) =>
+      `Nach einem Rabatt von ${d.p} % kostet ein Lebensmitteleinkauf nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
   },
   // ── KONSUM & HAUSHALT ─────────────────────────────────────────────────────
   {
-    sache: 'Monatliches Taschengeld',
-    einheit: '€',
-    kategorie: 'Konsum & Haushalt',
-    emoji: '💰',
+    sache: "Monatliches Taschengeld",
+    einheit: "€",
+    kategorie: "Konsum & Haushalt",
+    emoji: "💰",
     daten: [
-      { G: 40,  p: 25 }, { G: 80,  p: 25 }, { G: 100, p: 20 },
-      { G: 60,  p: 20 }, { G: 50,  p: 20 }, { G: 120, p: 25 },
+      { G: 40, p: 25 },
+      { G: 80, p: 25 },
+      { G: 100, p: 20 },
+      { G: 60, p: 20 },
+      { G: 50, p: 20 },
+      { G: 120, p: 25 },
     ],
-    textW:  (d) => `Lisa bekommt ${fmtE(d.G)} € Taschengeld im Monat und spart ${d.p} % davon. Berechne den monatlichen Sparbetrag.`,
-    textG:  (d) => `Lena gibt ${d.p} % ihres Taschengeldes für Süßigkeiten aus. Das sind ${fmtE(d.W)} €. Berechne das gesamte monatliche Taschengeld.`,
-    textp:  (d) => `Paul bekommt ${fmtE(d.G)} € Taschengeld. Er gibt ${fmtE(d.W)} € für Videospiele aus. Berechne den prozentualen Anteil für Videospiele.`,
-    textGv: (d) => `Das Taschengeld soll um ${d.p} % gekürzt werden. Derzeit erhält man ${fmtE(d.G)} €. Berechne den Betrag nach der Kürzung.`,
-    textGe: (d) => `Das Taschengeld wird um ${d.p} % erhöht. Derzeit beträgt es ${fmtE(d.G)} €. Berechne das neue Taschengeld.`,
- 
-    textGe_r: (d) => `Nach einer Erhöhung um ${d.p} % beträgt das Taschengeld ${fmtE(d.Ge)} €. Berechne das ursprüngliche Taschengeld.`,
-    textGv_r: (d) => `Nach einer Kürzung um ${d.p} % beträgt das Taschengeld nur noch ${fmtE(d.Gv)} €. Berechne das ursprüngliche Taschengeld.`,
+    textW: (d) =>
+      `Lisa bekommt ${fmtE(d.G)} € Taschengeld im Monat und spart ${d.p} % davon. Berechne den monatlichen Sparbetrag.`,
+    textG: (d) =>
+      `Lena gibt ${d.p} % ihres Taschengeldes für Süßigkeiten aus. Das sind ${fmtE(d.W)} €. Berechne das gesamte monatliche Taschengeld.`,
+    textp: (d) =>
+      `Paul bekommt ${fmtE(d.G)} € Taschengeld. Er gibt ${fmtE(d.W)} € für Videospiele aus. Berechne den prozentualen Anteil für Videospiele.`,
+    textGv: (d) =>
+      `Das Taschengeld soll um ${d.p} % gekürzt werden. Derzeit erhält man ${fmtE(d.G)} €. Berechne den Betrag nach der Kürzung.`,
+    textGe: (d) =>
+      `Das Taschengeld wird um ${d.p} % erhöht. Derzeit beträgt es ${fmtE(d.G)} €. Berechne das neue Taschengeld.`,
+
+    textGe_r: (d) =>
+      `Nach einer Erhöhung um ${d.p} % beträgt das Taschengeld ${fmtE(d.Ge)} €. Berechne das ursprüngliche Taschengeld.`,
+    textGv_r: (d) =>
+      `Nach einer Kürzung um ${d.p} % beträgt das Taschengeld nur noch ${fmtE(d.Gv)} €. Berechne das ursprüngliche Taschengeld.`,
   },
   {
-    sache: 'Monatliche Handykosten',
-    einheit: '€',
-    kategorie: 'Konsum & Haushalt',
-    emoji: '📞',
+    sache: "Monatliche Handykosten",
+    einheit: "€",
+    kategorie: "Konsum & Haushalt",
+    emoji: "📞",
     daten: [
-      { G: 40,  p: 25 }, { G: 60,  p: 25 }, { G: 80,  p: 25 },
-      { G: 30,  p: 20 }, { G: 50,  p: 20 }, { G: 100, p: 20 },
+      { G: 40, p: 25 },
+      { G: 60, p: 25 },
+      { G: 80, p: 25 },
+      { G: 30, p: 20 },
+      { G: 50, p: 20 },
+      { G: 100, p: 20 },
     ],
-    textW:  (d) => `Ein Handytarif kostet ${fmtE(d.G)} € im Monat. Der Anbieter gewährt ${d.p} % Rabatt im ersten Jahr. Berechne die monatliche Ersparnis.`,
-    textG:  (d) => `Ein Mobilfunkanbieter wirbt: „Spare ${d.p} % – nur noch ${fmtE(d.Gv)} € im Monat!" Berechne den ursprünglichen Monatspreis.`,
-    textp:  (d) => `Ein Handytarif kostet bisher ${fmtE(d.G)} € monatlich. Im Aktionsangebot beträgt der Tarif nur ${fmtE(d.Gv)} €. Berechne den Preisnachlass in Prozent.`,
-    textGv: (d) => `Dein Handytarif kostet ${fmtE(d.G)} € monatlich. Du wechselst und sparst ${d.p} %. Berechne den neuen Monatspreis.`,
-    textGe: (d) => `Ein Handytarif kostet ${fmtE(d.G)} € monatlich. Ab dem nächsten Monat wird er um ${d.p} % teurer. Berechne den neuen Monatspreis.`,
- 
-    textGe_r: (d) => `Ein Handytarif kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} € monatlich. Berechne den ursprünglichen Monatspreis.`,
-    textGv_r: (d) => `Nach einem Wechselrabatt von ${d.p} % zahlt man für einen Tarif nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
+    textW: (d) =>
+      `Ein Handytarif kostet ${fmtE(d.G)} € im Monat. Der Anbieter gewährt ${d.p} % Rabatt im ersten Jahr. Berechne die monatliche Ersparnis.`,
+    textG: (d) =>
+      `Ein Mobilfunkanbieter wirbt: „Spare ${d.p} % – nur noch ${fmtE(d.Gv)} € im Monat!" Berechne den ursprünglichen Monatspreis.`,
+    textp: (d) =>
+      `Ein Handytarif kostet bisher ${fmtE(d.G)} € monatlich. Im Aktionsangebot beträgt der Tarif nur ${fmtE(d.Gv)} €. Berechne den Preisnachlass in Prozent.`,
+    textGv: (d) =>
+      `Dein Handytarif kostet ${fmtE(d.G)} € monatlich. Du wechselst und sparst ${d.p} %. Berechne den neuen Monatspreis.`,
+    textGe: (d) =>
+      `Ein Handytarif kostet ${fmtE(d.G)} € monatlich. Ab dem nächsten Monat wird er um ${d.p} % teurer. Berechne den neuen Monatspreis.`,
+
+    textGe_r: (d) =>
+      `Ein Handytarif kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} € monatlich. Berechne den ursprünglichen Monatspreis.`,
+    textGv_r: (d) =>
+      `Nach einem Wechselrabatt von ${d.p} % zahlt man für einen Tarif nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
   },
   {
-    sache: 'Kinokarte',
-    einheit: '€',
-    kategorie: 'Freizeit',
-    emoji: '🎬',
+    sache: "Kinokarte",
+    einheit: "€",
+    kategorie: "Freizeit",
+    emoji: "🎬",
     daten: [
-      { G: 10,  p: 20 }, { G: 15, p: 20 }, { G: 20, p: 25 },
-      { G: 12,  p: 25 }, { G: 8,  p: 25 }, { G: 16, p: 25 },
+      { G: 10, p: 20 },
+      { G: 15, p: 20 },
+      { G: 20, p: 25 },
+      { G: 12, p: 25 },
+      { G: 8, p: 25 },
+      { G: 16, p: 25 },
     ],
-    textW:  (d) => `Eine Kinokarte kostet ${fmtE(d.G)} €. Montags gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag.`,
-    textG:  (d) => `Schüler erhalten ${d.p} % Ermäßigung auf die Kinokarte. Die Ermäßigung beträgt ${fmtE(d.W)} €. Berechne den regulären Kartenpreis.`,
-    textp:  (d) => `Eine Kinokarte kostet regulär ${fmtE(d.G)} €. Mit Schülerausweis zahlt man ${fmtE(d.Gv)} €. Berechne die Ermäßigung in Prozent.`,
-    textGv: (d) => `Eine Kinokarte kostet ${fmtE(d.G)} €. Am Dienstag gibt es ${d.p} % Ermäßigung. Berechne den ermäßigten Preis.`,
-    textGe: (d) => `Eine Kinokarte kostet ${fmtE(d.G)} €. Das Kino erhöht die Preise um ${d.p} %. Berechne den neuen Kartenpreis.`,
- 
-    textGe_r: (d) => `Eine Kinokarte kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
-    textGv_r: (d) => `Mit Schülerausweis zahlt man für eine Kinokarte (${d.p} % Ermäßigung) nur ${fmtE(d.Gv)} €. Berechne den regulären Kartenpreis.`,
+    textW: (d) =>
+      `Eine Kinokarte kostet ${fmtE(d.G)} €. Montags gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag.`,
+    textG: (d) =>
+      `Schüler erhalten ${d.p} % Ermäßigung auf die Kinokarte. Die Ermäßigung beträgt ${fmtE(d.W)} €. Berechne den regulären Kartenpreis.`,
+    textp: (d) =>
+      `Eine Kinokarte kostet regulär ${fmtE(d.G)} €. Mit Schülerausweis zahlt man ${fmtE(d.Gv)} €. Berechne die Ermäßigung in Prozent.`,
+    textGv: (d) =>
+      `Eine Kinokarte kostet ${fmtE(d.G)} €. Am Dienstag gibt es ${d.p} % Ermäßigung. Berechne den ermäßigten Preis.`,
+    textGe: (d) =>
+      `Eine Kinokarte kostet ${fmtE(d.G)} €. Das Kino erhöht die Preise um ${d.p} %. Berechne den neuen Kartenpreis.`,
+
+    textGe_r: (d) =>
+      `Eine Kinokarte kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
+    textGv_r: (d) =>
+      `Mit Schülerausweis zahlt man für eine Kinokarte (${d.p} % Ermäßigung) nur ${fmtE(d.Gv)} €. Berechne den regulären Kartenpreis.`,
   },
   {
-    sache: 'Schulranzen',
-    einheit: '€',
-    kategorie: 'Konsum & Haushalt',
-    emoji: '🎒',
+    sache: "Schulranzen",
+    einheit: "€",
+    kategorie: "Konsum & Haushalt",
+    emoji: "🎒",
     daten: [
-      { G: 80,  p: 25 }, { G: 100, p: 20 }, { G: 120, p: 25 },
-      { G: 60,  p: 20 }, { G: 160, p: 25 }, { G: 200, p: 20 },
+      { G: 80, p: 25 },
+      { G: 100, p: 20 },
+      { G: 120, p: 25 },
+      { G: 60, p: 20 },
+      { G: 160, p: 25 },
+      { G: 200, p: 20 },
     ],
-    textW:  (d) => `Ein Schulranzen kostet ${fmtE(d.G)} €. Beim Schulanfangsangebot gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
-    textG:  (d) => `Ein Schulranzen ist um ${d.p} % reduziert. Der Rabatt beträgt ${fmtE(d.W)} €. Berechne den Originalpreis.`,
-    textp:  (d) => `Ein Schulranzen kostet ${fmtE(d.G)} €. Nach dem Schulstart kostet er nur noch ${fmtE(d.Gv)} €. Berechne den Rabatt in Prozent.`,
-    textGv: (d) => `Ein Schulranzen kostet ${fmtE(d.G)} € und wird um ${d.p} % rabattiert. Berechne den Preis nach Rabatt.`,
-    textGe: (d) => `Ein Schulranzen kostet ${fmtE(d.G)} €. Im nächsten Jahr steigt der Preis um ${d.p} %. Berechne den neuen Preis.`,
- 
-    textGe_r: (d) => `Ein Schulranzen kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
-    textGv_r: (d) => `Ein Schulranzen kostet nach dem Schulanfangsrabatt (${d.p} %) nur noch ${fmtE(d.Gv)} €. Berechne den Originalpreis.`,
+    textW: (d) =>
+      `Ein Schulranzen kostet ${fmtE(d.G)} €. Beim Schulanfangsangebot gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
+    textG: (d) =>
+      `Ein Schulranzen ist um ${d.p} % reduziert. Der Rabatt beträgt ${fmtE(d.W)} €. Berechne den Originalpreis.`,
+    textp: (d) =>
+      `Ein Schulranzen kostet ${fmtE(d.G)} €. Nach dem Schulstart kostet er nur noch ${fmtE(d.Gv)} €. Berechne den Rabatt in Prozent.`,
+    textGv: (d) =>
+      `Ein Schulranzen kostet ${fmtE(d.G)} € und wird um ${d.p} % rabattiert. Berechne den Preis nach Rabatt.`,
+    textGe: (d) =>
+      `Ein Schulranzen kostet ${fmtE(d.G)} €. Im nächsten Jahr steigt der Preis um ${d.p} %. Berechne den neuen Preis.`,
+
+    textGe_r: (d) =>
+      `Ein Schulranzen kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
+    textGv_r: (d) =>
+      `Ein Schulranzen kostet nach dem Schulanfangsrabatt (${d.p} %) nur noch ${fmtE(d.Gv)} €. Berechne den Originalpreis.`,
   },
   // ── SUPERMARKT & LEBENSMITTEL ─────────────────────────────────────────────
   {
-    sache: 'Wocheneinkauf',
-    einheit: '€',
-    kategorie: 'Supermarkt',
-    emoji: '🛍️',
+    sache: "Wocheneinkauf",
+    einheit: "€",
+    kategorie: "Supermarkt",
+    emoji: "🛍️",
     daten: [
-      { G: 80,  p: 25 }, { G: 100, p: 20 }, { G: 120, p: 25 },
-      { G: 200, p: 25 }, { G: 160, p: 25 }, { G: 50,  p: 20 },
+      { G: 80, p: 25 },
+      { G: 100, p: 20 },
+      { G: 120, p: 25 },
+      { G: 200, p: 25 },
+      { G: 160, p: 25 },
+      { G: 50, p: 20 },
     ],
-    textW:  (d) => `Der Wocheneinkauf kostet ${fmtE(d.G)} €. Mit der App spart man ${d.p} %. Berechne die Ersparnis in Euro.`,
-    textG:  (d) => `Familie Müller hat beim Wocheneinkauf ${d.p} % gespart. Die Ersparnis beträgt ${fmtE(d.W)} €. Berechne den ursprünglichen Einkaufspreis.`,
-    textp:  (d) => `Der Wocheneinkauf kostet regulär ${fmtE(d.G)} €. Mit Treuekarte zahlt man ${fmtE(d.Gv)} €. Berechne die Ersparnis in Prozent.`,
-    textGv: (d) => `Der Wocheneinkauf kostet ${fmtE(d.G)} €. Mit dem Supermarkt-Coupon gibt es ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
-    textGe: (d) => `Der Wocheneinkauf kostet ${fmtE(d.G)} €. Durch Inflation steigen die Preise um ${d.p} %. Berechne den neuen Einkaufspreis.`,
- 
-    textGe_r: (d) => `Der Wocheneinkauf kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Einkaufspreis.`,
-    textGv_r: (d) => `Mit einem Coupon (${d.p} % Rabatt) zahlt man für den Wocheneinkauf nur ${fmtE(d.Gv)} €. Berechne den regulären Einkaufspreis.`,
+    textW: (d) =>
+      `Der Wocheneinkauf kostet ${fmtE(d.G)} €. Mit der App spart man ${d.p} %. Berechne die Ersparnis in Euro.`,
+    textG: (d) =>
+      `Familie Müller hat beim Wocheneinkauf ${d.p} % gespart. Die Ersparnis beträgt ${fmtE(d.W)} €. Berechne den ursprünglichen Einkaufspreis.`,
+    textp: (d) =>
+      `Der Wocheneinkauf kostet regulär ${fmtE(d.G)} €. Mit Treuekarte zahlt man ${fmtE(d.Gv)} €. Berechne die Ersparnis in Prozent.`,
+    textGv: (d) =>
+      `Der Wocheneinkauf kostet ${fmtE(d.G)} €. Mit dem Supermarkt-Coupon gibt es ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
+    textGe: (d) =>
+      `Der Wocheneinkauf kostet ${fmtE(d.G)} €. Durch Inflation steigen die Preise um ${d.p} %. Berechne den neuen Einkaufspreis.`,
+
+    textGe_r: (d) =>
+      `Der Wocheneinkauf kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Einkaufspreis.`,
+    textGv_r: (d) =>
+      `Mit einem Coupon (${d.p} % Rabatt) zahlt man für den Wocheneinkauf nur ${fmtE(d.Gv)} €. Berechne den regulären Einkaufspreis.`,
   },
   {
-    sache: 'Drogerieeinkauf',
-    einheit: '€',
-    kategorie: 'Supermarkt',
-    emoji: '🧴',
+    sache: "Drogerieeinkauf",
+    einheit: "€",
+    kategorie: "Supermarkt",
+    emoji: "🧴",
     daten: [
-      { G: 20, p: 25 }, { G: 40, p: 25 }, { G: 30, p: 20 },
-      { G: 50, p: 20 }, { G: 60, p: 25 }, { G: 80, p: 25 },
+      { G: 20, p: 25 },
+      { G: 40, p: 25 },
+      { G: 30, p: 20 },
+      { G: 50, p: 20 },
+      { G: 60, p: 25 },
+      { G: 80, p: 25 },
     ],
-    textW:  (d) => `Ein Drogerieeinkauf kostet ${fmtE(d.G)} €. Mit der Kundenkarte spart man ${d.p} %. Berechne die Ersparnis in Euro.`,
-    textG:  (d) => `In der Drogerie gibt es ${d.p} % auf alle Pflegeprodukte. Du sparst ${fmtE(d.W)} €. Berechne den ursprünglichen Einkaufspreis.`,
-    textp:  (d) => `Ein Drogerieeinkauf kostet regulär ${fmtE(d.G)} €. Mit Coupon zahlt man ${fmtE(d.Gv)} €. Berechne die Ersparnis in Prozent.`,
-    textGv: (d) => `Ein Drogerieeinkauf kostet ${fmtE(d.G)} €. Am Aktionstag gibt es ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
-    textGe: (d) => `Ein Drogerieeinkauf kostet ${fmtE(d.G)} €. Der Hersteller erhöht die Preise um ${d.p} %. Berechne den neuen Einkaufspreis.`,
- 
-    textGe_r: (d) => `Ein Drogerieeinkauf kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Einkaufspreis.`,
-    textGv_r: (d) => `Mit der Kundenkarte (${d.p} % Rabatt) zahlt man für einen Drogerieeinkauf nur ${fmtE(d.Gv)} €. Berechne den regulären Einkaufspreis.`,
+    textW: (d) =>
+      `Ein Drogerieeinkauf kostet ${fmtE(d.G)} €. Mit der Kundenkarte spart man ${d.p} %. Berechne die Ersparnis in Euro.`,
+    textG: (d) =>
+      `In der Drogerie gibt es ${d.p} % auf alle Pflegeprodukte. Du sparst ${fmtE(d.W)} €. Berechne den ursprünglichen Einkaufspreis.`,
+    textp: (d) =>
+      `Ein Drogerieeinkauf kostet regulär ${fmtE(d.G)} €. Mit Coupon zahlt man ${fmtE(d.Gv)} €. Berechne die Ersparnis in Prozent.`,
+    textGv: (d) =>
+      `Ein Drogerieeinkauf kostet ${fmtE(d.G)} €. Am Aktionstag gibt es ${d.p} % Rabatt. Berechne den Preis nach Rabatt.`,
+    textGe: (d) =>
+      `Ein Drogerieeinkauf kostet ${fmtE(d.G)} €. Der Hersteller erhöht die Preise um ${d.p} %. Berechne den neuen Einkaufspreis.`,
+
+    textGe_r: (d) =>
+      `Ein Drogerieeinkauf kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Einkaufspreis.`,
+    textGv_r: (d) =>
+      `Mit der Kundenkarte (${d.p} % Rabatt) zahlt man für einen Drogerieeinkauf nur ${fmtE(d.Gv)} €. Berechne den regulären Einkaufspreis.`,
   },
   {
-    sache: 'Kaffeemaschine',
-    einheit: '€',
-    kategorie: 'Supermarkt',
-    emoji: '☕',
+    sache: "Kaffeemaschine",
+    einheit: "€",
+    kategorie: "Supermarkt",
+    emoji: "☕",
     daten: [
-      { G: 80,  p: 25 }, { G: 100, p: 20 }, { G: 120, p: 25 },
-      { G: 200, p: 25 }, { G: 160, p: 25 }, { G: 300, p: 20 },
+      { G: 80, p: 25 },
+      { G: 100, p: 20 },
+      { G: 120, p: 25 },
+      { G: 200, p: 25 },
+      { G: 160, p: 25 },
+      { G: 300, p: 20 },
     ],
-    textW:  (d) => `Eine Kaffeemaschine kostet ${fmtE(d.G)} €. Im Angebot gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
-    textG:  (d) => `Eine Kaffeemaschine ist um ${d.p} % reduziert. Du sparst ${fmtE(d.W)} €. Berechne den ursprünglichen Preis.`,
-    textp:  (d) => `Eine Kaffeemaschine kostet regulär ${fmtE(d.G)} €. Im Aktionspreis zahlt man ${fmtE(d.Gv)} €. Berechne den Rabatt in Prozent.`,
-    textGv: (d) => `Eine Kaffeemaschine kostet ${fmtE(d.G)} €. Der Händler gibt ${d.p} % Aktionsrabatt. Berechne den Aktionspreis.`,
-    textGe: (d) => `Eine Kaffeemaschine kostet ${fmtE(d.G)} €. Der Preis steigt um ${d.p} %. Berechne den neuen Preis.`,
- 
-    textGe_r: (d) => `Eine Kaffeemaschine kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
-    textGv_r: (d) => `Eine Kaffeemaschine kostet im Angebot (${d.p} % Rabatt) nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
+    textW: (d) =>
+      `Eine Kaffeemaschine kostet ${fmtE(d.G)} €. Im Angebot gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
+    textG: (d) =>
+      `Eine Kaffeemaschine ist um ${d.p} % reduziert. Du sparst ${fmtE(d.W)} €. Berechne den ursprünglichen Preis.`,
+    textp: (d) =>
+      `Eine Kaffeemaschine kostet regulär ${fmtE(d.G)} €. Im Aktionspreis zahlt man ${fmtE(d.Gv)} €. Berechne den Rabatt in Prozent.`,
+    textGv: (d) =>
+      `Eine Kaffeemaschine kostet ${fmtE(d.G)} €. Der Händler gibt ${d.p} % Aktionsrabatt. Berechne den Aktionspreis.`,
+    textGe: (d) =>
+      `Eine Kaffeemaschine kostet ${fmtE(d.G)} €. Der Preis steigt um ${d.p} %. Berechne den neuen Preis.`,
+
+    textGe_r: (d) =>
+      `Eine Kaffeemaschine kostet nach einer Preiserhöhung von ${d.p} % nun ${fmtE(d.Ge)} €. Berechne den ursprünglichen Preis.`,
+    textGv_r: (d) =>
+      `Eine Kaffeemaschine kostet im Angebot (${d.p} % Rabatt) nur noch ${fmtE(d.Gv)} €. Berechne den ursprünglichen Preis.`,
   },
   // ── BEVÖLKERUNG & ANTEILE ─────────────────────────────────────────────────
   {
-    sache: 'Schüler einer Klasse',
-    einheit: 'Schüler',
-    kategorie: 'Anteile & Zusammensetzung',
-    emoji: '👩‍🏫',
+    sache: "Schüler einer Klasse",
+    einheit: "Schüler",
+    kategorie: "Anteile & Zusammensetzung",
+    emoji: "👩‍🏫",
     daten: [
-      { G: 20, p: 25 }, { G: 30, p: 20 }, { G: 25, p: 20 },
-      { G: 40, p: 25 }, { G: 20, p: 20 }, { G: 30, p: 10 },
+      { G: 20, p: 25 },
+      { G: 30, p: 20 },
+      { G: 25, p: 20 },
+      { G: 40, p: 25 },
+      { G: 20, p: 20 },
+      { G: 30, p: 10 },
     ],
-    textW:  (d) => `Eine Klasse hat ${fmt(d.G)} Schüler. ${d.p} % kommen mit dem Fahrrad zur Schule. Berechne die Anzahl dieser Schüler.`,
-    textG:  (d) => `In einer Klasse sind ${d.p} % der Schüler krank. Das sind ${fmt(d.W)} Schüler. Berechne die Gesamtzahl der Schüler.`,
-    textp:  (d) => `In einer Klasse mit ${fmt(d.G)} Schülern sind ${fmt(d.W)} Mädchen. Berechne den Anteil der Mädchen in Prozent.`,
-    textGv: (d) => `Eine Klasse hat ${fmt(d.G)} Schüler. ${d.p} % fehlen krankheitsbedingt. Berechne die Anzahl der anwesenden Schüler.`,
-    textGe: (d) => `Eine Klasse hat ${fmt(d.G)} Schüler. Durch Zuzüge wächst sie um ${d.p} %. Berechne die neue Schülerzahl.`,
- 
-    textGe_r: (d) => `Eine Klasse zählt nach Zuzügen (${d.p} % mehr) nun ${fmt(d.Ge)} Schüler. Berechne die ursprüngliche Schülerzahl.`,
-    textGv_r: (d) => `Nach Abgängen (${d.p} % weniger) hat eine Klasse nur noch ${fmt(d.Gv)} Schüler. Berechne die ursprüngliche Schülerzahl.`,
+    textW: (d) =>
+      `Eine Klasse hat ${fmt(d.G)} Schüler. ${d.p} % kommen mit dem Fahrrad zur Schule. Berechne die Anzahl dieser Schüler.`,
+    textG: (d) =>
+      `In einer Klasse sind ${d.p} % der Schüler krank. Das sind ${fmt(d.W)} Schüler. Berechne die Gesamtzahl der Schüler.`,
+    textp: (d) =>
+      `In einer Klasse mit ${fmt(d.G)} Schülern sind ${fmt(d.W)} Mädchen. Berechne den Anteil der Mädchen in Prozent.`,
+    textGv: (d) =>
+      `Eine Klasse hat ${fmt(d.G)} Schüler. ${d.p} % fehlen krankheitsbedingt. Berechne die Anzahl der anwesenden Schüler.`,
+    textGe: (d) =>
+      `Eine Klasse hat ${fmt(d.G)} Schüler. Durch Zuzüge wächst sie um ${d.p} %. Berechne die neue Schülerzahl.`,
+
+    textGe_r: (d) =>
+      `Eine Klasse zählt nach Zuzügen (${d.p} % mehr) nun ${fmt(d.Ge)} Schüler. Berechne die ursprüngliche Schülerzahl.`,
+    textGv_r: (d) =>
+      `Nach Abgängen (${d.p} % weniger) hat eine Klasse nur noch ${fmt(d.Gv)} Schüler. Berechne die ursprüngliche Schülerzahl.`,
   },
   {
-    sache: 'Schüler einer Schule',
-    einheit: 'Schüler',
-    kategorie: 'Anteile & Zusammensetzung',
-    emoji: '🏫',
+    sache: "Schüler einer Schule",
+    einheit: "Schüler",
+    kategorie: "Anteile & Zusammensetzung",
+    emoji: "🏫",
     daten: [
-      { G: 400, p: 25 }, { G: 500, p: 20 }, { G: 600, p: 25 },
-      { G: 800, p: 25 }, { G: 400, p: 20 }, { G: 600, p: 20 },
+      { G: 400, p: 25 },
+      { G: 500, p: 20 },
+      { G: 600, p: 25 },
+      { G: 800, p: 25 },
+      { G: 400, p: 20 },
+      { G: 600, p: 20 },
     ],
-    textW:  (d) => `Eine Schule hat ${fmt(d.G)} Schüler. ${d.p} % nutzen die Schulbibliothek regelmäßig. Berechne die Anzahl dieser Schüler.`,
-    textG:  (d) => `${d.p} % der Schüler einer Schule nehmen am Mittagessen teil. Das sind ${fmt(d.W)} Schüler. Berechne die Gesamtzahl der Schüler.`,
-    textp:  (d) => `Eine Schule hat ${fmt(d.G)} Schüler. ${fmt(d.W)} davon fahren mit dem Bus. Berechne den Anteil der Busfahrer in Prozent.`,
-    textGv: (d) => `Eine Schule hat ${fmt(d.G)} Schüler. Durch Umzüge wechseln ${d.p} % die Schule. Berechne die Anzahl der verbleibenden Schüler.`,
-    textGe: (d) => `Eine Schule hat ${fmt(d.G)} Schüler. Im nächsten Jahr wächst sie um ${d.p} %. Berechne die neue Schülerzahl.`,
- 
-    textGe_r: (d) => `Eine Schule hat nach einem Zuwachs von ${d.p} % nun ${fmt(d.Ge)} Schüler. Berechne die ursprüngliche Schülerzahl.`,
-    textGv_r: (d) => `Nach Umzügen (${d.p} % weniger) hat eine Schule nur noch ${fmt(d.Gv)} Schüler. Berechne die ursprüngliche Schülerzahl.`,
+    textW: (d) =>
+      `Eine Schule hat ${fmt(d.G)} Schüler. ${d.p} % nutzen die Schulbibliothek regelmäßig. Berechne die Anzahl dieser Schüler.`,
+    textG: (d) =>
+      `${d.p} % der Schüler einer Schule nehmen am Mittagessen teil. Das sind ${fmt(d.W)} Schüler. Berechne die Gesamtzahl der Schüler.`,
+    textp: (d) =>
+      `Eine Schule hat ${fmt(d.G)} Schüler. ${fmt(d.W)} davon fahren mit dem Bus. Berechne den Anteil der Busfahrer in Prozent.`,
+    textGv: (d) =>
+      `Eine Schule hat ${fmt(d.G)} Schüler. Durch Umzüge wechseln ${d.p} % die Schule. Berechne die Anzahl der verbleibenden Schüler.`,
+    textGe: (d) =>
+      `Eine Schule hat ${fmt(d.G)} Schüler. Im nächsten Jahr wächst sie um ${d.p} %. Berechne die neue Schülerzahl.`,
+
+    textGe_r: (d) =>
+      `Eine Schule hat nach einem Zuwachs von ${d.p} % nun ${fmt(d.Ge)} Schüler. Berechne die ursprüngliche Schülerzahl.`,
+    textGv_r: (d) =>
+      `Nach Umzügen (${d.p} % weniger) hat eine Schule nur noch ${fmt(d.Gv)} Schüler. Berechne die ursprüngliche Schülerzahl.`,
   },
   {
-    sache: 'Einwohner einer Gemeinde',
-    einheit: 'Einwohner',
-    kategorie: 'Anteile & Zusammensetzung',
-    emoji: '🏘️',
+    sache: "Einwohner einer Gemeinde",
+    einheit: "Einwohner",
+    kategorie: "Anteile & Zusammensetzung",
+    emoji: "🏘️",
     daten: [
-      { G: 2000,  p: 25 }, { G: 5000,  p: 20 }, { G: 10000, p: 20 },
-      { G: 4000,  p: 25 }, { G: 8000,  p: 25 }, { G: 6000,  p: 20 },
+      { G: 2000, p: 25 },
+      { G: 5000, p: 20 },
+      { G: 10000, p: 20 },
+      { G: 4000, p: 25 },
+      { G: 8000, p: 25 },
+      { G: 6000, p: 20 },
     ],
-    textW:  (d) => `Eine Gemeinde hat ${fmt(d.G)} Einwohner. ${d.p} % besitzen ein Auto. Berechne die Anzahl der Autobesitzer.`,
-    textG:  (d) => `${d.p} % der Einwohner einer Gemeinde sind unter 18 Jahre alt. Das sind ${fmt(d.W)} Personen. Berechne die Gesamtzahl der Einwohner.`,
-    textp:  (d) => `Eine Gemeinde hat ${fmt(d.G)} Einwohner. ${fmt(d.W)} davon sind Rentner. Berechne den Anteil der Rentner in Prozent.`,
-    textGv: (d) => `Eine Gemeinde hat ${fmt(d.G)} Einwohner. ${d.p} % sind in dieser Woche im Urlaub. Berechne die Anzahl der vor Ort verbliebenen Einwohner.`,
-    textGe: (d) => `Eine Gemeinde hat ${fmt(d.G)} Einwohner. Durch Zuzüge wächst sie um ${d.p} %. Berechne die neue Einwohnerzahl.`,
- 
-    textGe_r: (d) => `Eine Gemeinde hat nach einem Zuzug von ${d.p} % nun ${fmt(d.Ge)} Einwohner. Berechne die ursprüngliche Einwohnerzahl.`,
-    textGv_r: (d) => `Nach Wegzügen (${d.p} % weniger) hat eine Gemeinde nur noch ${fmt(d.Gv)} Einwohner. Berechne die ursprüngliche Einwohnerzahl.`,
+    textW: (d) =>
+      `Eine Gemeinde hat ${fmt(d.G)} Einwohner. ${d.p} % besitzen ein Auto. Berechne die Anzahl der Autobesitzer.`,
+    textG: (d) =>
+      `${d.p} % der Einwohner einer Gemeinde sind unter 18 Jahre alt. Das sind ${fmt(d.W)} Personen. Berechne die Gesamtzahl der Einwohner.`,
+    textp: (d) =>
+      `Eine Gemeinde hat ${fmt(d.G)} Einwohner. ${fmt(d.W)} davon sind Rentner. Berechne den Anteil der Rentner in Prozent.`,
+    textGv: (d) =>
+      `Eine Gemeinde hat ${fmt(d.G)} Einwohner. ${d.p} % sind in dieser Woche im Urlaub. Berechne die Anzahl der vor Ort verbliebenen Einwohner.`,
+    textGe: (d) =>
+      `Eine Gemeinde hat ${fmt(d.G)} Einwohner. Durch Zuzüge wächst sie um ${d.p} %. Berechne die neue Einwohnerzahl.`,
+
+    textGe_r: (d) =>
+      `Eine Gemeinde hat nach einem Zuzug von ${d.p} % nun ${fmt(d.Ge)} Einwohner. Berechne die ursprüngliche Einwohnerzahl.`,
+    textGv_r: (d) =>
+      `Nach Wegzügen (${d.p} % weniger) hat eine Gemeinde nur noch ${fmt(d.Gv)} Einwohner. Berechne die ursprüngliche Einwohnerzahl.`,
   },
   {
-    sache: 'Belegschaft eines Betriebs',
-    einheit: 'Mitarbeiter',
-    kategorie: 'Anteile & Zusammensetzung',
-    emoji: '🏭',
+    sache: "Belegschaft eines Betriebs",
+    einheit: "Mitarbeiter",
+    kategorie: "Anteile & Zusammensetzung",
+    emoji: "🏭",
     daten: [
-      { G: 80,  p: 25 }, { G: 200, p: 25 }, { G: 120, p: 25 },
-      { G: 400, p: 20 }, { G: 80,  p: 20 }, { G: 100, p: 20 },
+      { G: 80, p: 25 },
+      { G: 200, p: 25 },
+      { G: 120, p: 25 },
+      { G: 400, p: 20 },
+      { G: 80, p: 20 },
+      { G: 100, p: 20 },
     ],
-    textW:  (d) => `Ein Unternehmen beschäftigt ${fmt(d.G)} Mitarbeiter. ${d.p} % sind in Teilzeit tätig. Berechne die Anzahl der Teilzeitbeschäftigten.`,
-    textG:  (d) => `In einem Betrieb sind ${d.p} % der Beschäftigten Frauen. Das sind ${fmt(d.W)} Mitarbeiterinnen. Berechne die Gesamtzahl der Mitarbeiter.`,
-    textp:  (d) => `Ein Betrieb hat ${fmt(d.G)} Mitarbeiter, davon sind ${fmt(d.W)} Männer. Berechne den Männeranteil in Prozent.`,
-    textGv: (d) => `Ein Betrieb hat ${fmt(d.G)} Mitarbeiter. Durch Stellenabbau werden ${d.p} % entlassen. Berechne die Anzahl der verbleibenden Mitarbeiter.`,
-    textGe: (d) => `Ein Betrieb hat ${fmt(d.G)} Mitarbeiter und stellt ${d.p} % mehr ein. Berechne die neue Mitarbeiterzahl.`,
- 
-    textGe_r: (d) => `Ein Betrieb hat nach einer Aufstockung um ${d.p} % nun ${fmt(d.Ge)} Mitarbeiter. Berechne die ursprüngliche Mitarbeiterzahl.`,
-    textGv_r: (d) => `Nach Stellenabbau (${d.p} % weniger) hat ein Betrieb nur noch ${fmt(d.Gv)} Mitarbeiter. Berechne die ursprüngliche Mitarbeiterzahl.`,
+    textW: (d) =>
+      `Ein Unternehmen beschäftigt ${fmt(d.G)} Mitarbeiter. ${d.p} % sind in Teilzeit tätig. Berechne die Anzahl der Teilzeitbeschäftigten.`,
+    textG: (d) =>
+      `In einem Betrieb sind ${d.p} % der Beschäftigten Frauen. Das sind ${fmt(d.W)} Mitarbeiterinnen. Berechne die Gesamtzahl der Mitarbeiter.`,
+    textp: (d) =>
+      `Ein Betrieb hat ${fmt(d.G)} Mitarbeiter, davon sind ${fmt(d.W)} Männer. Berechne den Männeranteil in Prozent.`,
+    textGv: (d) =>
+      `Ein Betrieb hat ${fmt(d.G)} Mitarbeiter. Durch Stellenabbau werden ${d.p} % entlassen. Berechne die Anzahl der verbleibenden Mitarbeiter.`,
+    textGe: (d) =>
+      `Ein Betrieb hat ${fmt(d.G)} Mitarbeiter und stellt ${d.p} % mehr ein. Berechne die neue Mitarbeiterzahl.`,
+
+    textGe_r: (d) =>
+      `Ein Betrieb hat nach einer Aufstockung um ${d.p} % nun ${fmt(d.Ge)} Mitarbeiter. Berechne die ursprüngliche Mitarbeiterzahl.`,
+    textGv_r: (d) =>
+      `Nach Stellenabbau (${d.p} % weniger) hat ein Betrieb nur noch ${fmt(d.Gv)} Mitarbeiter. Berechne die ursprüngliche Mitarbeiterzahl.`,
   },
   {
-    sache: 'Vereinsmitglieder',
-    einheit: 'Mitglieder',
-    kategorie: 'Anteile & Zusammensetzung',
-    emoji: '⚽',
+    sache: "Vereinsmitglieder",
+    einheit: "Mitglieder",
+    kategorie: "Anteile & Zusammensetzung",
+    emoji: "⚽",
     daten: [
-      { G: 200, p: 25 }, { G: 400, p: 25 }, { G: 300, p: 20 },
-      { G: 500, p: 20 }, { G: 80,  p: 25 }, { G: 100, p: 20 },
+      { G: 200, p: 25 },
+      { G: 400, p: 25 },
+      { G: 300, p: 20 },
+      { G: 500, p: 20 },
+      { G: 80, p: 25 },
+      { G: 100, p: 20 },
     ],
-    textW:  (d) => `Ein Sportverein hat ${fmt(d.G)} Mitglieder. ${d.p} % davon nehmen an Turnieren teil. Berechne die Anzahl der Turnierteilnehmer.`,
-    textG:  (d) => `${d.p} % der Vereinsmitglieder sind Jugendliche. Das sind ${fmt(d.W)} Personen. Berechne die Gesamtzahl der Vereinsmitglieder.`,
-    textp:  (d) => `Ein Verein hat ${fmt(d.G)} Mitglieder. ${fmt(d.W)} davon sind weiblich. Berechne den Frauenanteil in Prozent.`,
-    textGv: (d) => `Ein Verein hat ${fmt(d.G)} Mitglieder. ${d.p} % treten aus. Berechne die Anzahl der verbleibenden Mitglieder.`,
-    textGe: (d) => `Ein Verein hat ${fmt(d.G)} Mitglieder. Durch eine Werbeaktion steigt die Zahl um ${d.p} %. Berechne die neue Mitgliederzahl.`,
- 
-    textGe_r: (d) => `Ein Verein hat nach einer Werbeaktion (${d.p} % mehr) nun ${fmt(d.Ge)} Mitglieder. Berechne die ursprüngliche Mitgliederzahl.`,
-    textGv_r: (d) => `Nach Austritten (${d.p} % weniger) hat ein Verein nur noch ${fmt(d.Gv)} Mitglieder. Berechne die ursprüngliche Mitgliederzahl.`,
+    textW: (d) =>
+      `Ein Sportverein hat ${fmt(d.G)} Mitglieder. ${d.p} % davon nehmen an Turnieren teil. Berechne die Anzahl der Turnierteilnehmer.`,
+    textG: (d) =>
+      `${d.p} % der Vereinsmitglieder sind Jugendliche. Das sind ${fmt(d.W)} Personen. Berechne die Gesamtzahl der Vereinsmitglieder.`,
+    textp: (d) =>
+      `Ein Verein hat ${fmt(d.G)} Mitglieder. ${fmt(d.W)} davon sind weiblich. Berechne den Frauenanteil in Prozent.`,
+    textGv: (d) =>
+      `Ein Verein hat ${fmt(d.G)} Mitglieder. ${d.p} % treten aus. Berechne die Anzahl der verbleibenden Mitglieder.`,
+    textGe: (d) =>
+      `Ein Verein hat ${fmt(d.G)} Mitglieder. Durch eine Werbeaktion steigt die Zahl um ${d.p} %. Berechne die neue Mitgliederzahl.`,
+
+    textGe_r: (d) =>
+      `Ein Verein hat nach einer Werbeaktion (${d.p} % mehr) nun ${fmt(d.Ge)} Mitglieder. Berechne die ursprüngliche Mitgliederzahl.`,
+    textGv_r: (d) =>
+      `Nach Austritten (${d.p} % weniger) hat ein Verein nur noch ${fmt(d.Gv)} Mitglieder. Berechne die ursprüngliche Mitgliederzahl.`,
   },
   {
-    sache: 'Wahlbeteiligung',
-    einheit: 'Personen',
-    kategorie: 'Anteile & Zusammensetzung',
-    emoji: '🗳️',
+    sache: "Wahlbeteiligung",
+    einheit: "Personen",
+    kategorie: "Anteile & Zusammensetzung",
+    emoji: "🗳️",
     daten: [
-      { G: 2000,  p: 25 }, { G: 4000,  p: 25 }, { G: 5000,  p: 20 },
-      { G: 8000,  p: 25 }, { G: 10000, p: 20 }, { G: 6000,  p: 20 },
+      { G: 2000, p: 25 },
+      { G: 4000, p: 25 },
+      { G: 5000, p: 20 },
+      { G: 8000, p: 25 },
+      { G: 10000, p: 20 },
+      { G: 6000, p: 20 },
     ],
-    textW:  (d) => `In einer Stadt gibt es ${fmt(d.G)} Wahlberechtigte. Die Wahlbeteiligung beträgt ${d.p} %. Berechne die Anzahl der Wähler.`,
-    textG:  (d) => `Bei einer Wahl haben ${d.p} % der Wahlberechtigten gewählt. Das waren ${fmt(d.W)} Personen. Berechne die Gesamtzahl der Wahlberechtigten.`,
-    textp:  (d) => `Von ${fmt(d.G)} Wahlberechtigten gingen ${fmt(d.W)} zur Wahl. Berechne die Wahlbeteiligung in Prozent.`,
-    textGv: (d) => `Bei der letzten Wahl stimmten ${fmt(d.G)} Personen für Partei X. Diesmal ging die Stimmenanzahl um ${d.p} % zurück. Berechne die neue Stimmenzahl für Partei X.`,
-    textGe: (d) => `Bei der letzten Wahl haben ${fmt(d.G)} Personen gewählt. Diesmal steigt die Wahlbeteiligung um ${d.p} %. Berechne die Anzahl der Wähler.`,
- 
-    textGe_r: (d) => `Die Wahlbeteiligung stieg um ${d.p} %. Es wählten ${fmt(d.Ge)} Personen. Berechne die Anzahl der Wähler bei der letzten Wahl.`,
-    textGv_r: (d) => `Die Wahlbeteiligung sank um ${d.p} %. Es wählten nur noch ${fmt(d.Gv)} Personen. Berechne die Anzahl der Wähler bei der letzten Wahl.`,
+    textW: (d) =>
+      `In einer Stadt gibt es ${fmt(d.G)} Wahlberechtigte. Die Wahlbeteiligung beträgt ${d.p} %. Berechne die Anzahl der Wähler.`,
+    textG: (d) =>
+      `Bei einer Wahl haben ${d.p} % der Wahlberechtigten gewählt. Das waren ${fmt(d.W)} Personen. Berechne die Gesamtzahl der Wahlberechtigten.`,
+    textp: (d) =>
+      `Von ${fmt(d.G)} Wahlberechtigten gingen ${fmt(d.W)} zur Wahl. Berechne die Wahlbeteiligung in Prozent.`,
+    textGv: (d) =>
+      `Bei der letzten Wahl stimmten ${fmt(d.G)} Personen für Partei X. Diesmal ging die Stimmenanzahl um ${d.p} % zurück. Berechne die neue Stimmenzahl für Partei X.`,
+    textGe: (d) =>
+      `Bei der letzten Wahl haben ${fmt(d.G)} Personen gewählt. Diesmal steigt die Wahlbeteiligung um ${d.p} %. Berechne die Anzahl der Wähler.`,
+
+    textGe_r: (d) =>
+      `Die Wahlbeteiligung stieg um ${d.p} %. Es wählten ${fmt(d.Ge)} Personen. Berechne die Anzahl der Wähler bei der letzten Wahl.`,
+    textGv_r: (d) =>
+      `Die Wahlbeteiligung sank um ${d.p} %. Es wählten nur noch ${fmt(d.Gv)} Personen. Berechne die Anzahl der Wähler bei der letzten Wahl.`,
   },
   // ── TECHNIK ───────────────────────────────────────────────────────────────
   {
-    sache: 'Smartphone-Akku',
-    einheit: 'mAh',
-    kategorie: 'Technik & Alltag',
-    emoji: '🔋',
+    sache: "Smartphone-Akku",
+    einheit: "mAh",
+    kategorie: "Technik & Alltag",
+    emoji: "🔋",
     daten: [
-      { G: 4000, p: 25 }, { G: 5000, p: 20 }, { G: 6000, p: 25 },
-      { G: 8000, p: 25 }, { G: 2000, p: 25 }, { G: 3000, p: 20 },
+      { G: 4000, p: 25 },
+      { G: 5000, p: 20 },
+      { G: 6000, p: 25 },
+      { G: 8000, p: 25 },
+      { G: 2000, p: 25 },
+      { G: 3000, p: 20 },
     ],
-    textW:  (d) => `Ein Smartphone-Akku fasst ${fmt(d.G)} mAh. Nach dem Laden ist er zu ${d.p} % geladen. Berechne die geladene Kapazität in mAh.`,
-    textG:  (d) => `Ein Akku wurde um ${fmt(d.W)} mAh aufgeladen. Das entspricht ${d.p} % der Gesamtkapazität. Berechne die Gesamtkapazität in mAh.`,
-    textp:  (d) => `Ein Akku hat eine Kapazität von ${fmt(d.G)} mAh. Nach dem Laden sind ${fmt(d.W)} mAh geladen. Berechne den Ladestand in Prozent.`,
-    textGv: (d) => `Ein Akku hat eine Kapazität von ${fmt(d.G)} mAh. Nach einer Nacht ist er um ${d.p} % entladen. Berechne die verbleibende Kapazität in mAh.`,
-    textGe: (d) => `Ein Akku hat ${fmt(d.G)} mAh Kapazität. Das neue Modell hat ${d.p} % mehr. Berechne die Kapazität des neuen Akkus in mAh.`,
- 
-    textGe_r: (d) => `Ein neuer Akku hat ${d.p} % mehr Kapazität und fasst ${fmt(d.Ge)} mAh. Berechne die Kapazität des alten Akkus.`,
-    textGv_r: (d) => `Ein Akku hat nach Alterung (${d.p} % weniger) nur noch ${fmt(d.Gv)} mAh. Berechne die ursprüngliche Kapazität.`,
+    textW: (d) =>
+      `Ein Smartphone-Akku fasst ${fmt(d.G)} mAh. Nach dem Laden ist er zu ${d.p} % geladen. Berechne die geladene Kapazität in mAh.`,
+    textG: (d) =>
+      `Ein Akku wurde um ${fmt(d.W)} mAh aufgeladen. Das entspricht ${d.p} % der Gesamtkapazität. Berechne die Gesamtkapazität in mAh.`,
+    textp: (d) =>
+      `Ein Akku hat eine Kapazität von ${fmt(d.G)} mAh. Nach dem Laden sind ${fmt(d.W)} mAh geladen. Berechne den Ladestand in Prozent.`,
+    textGv: (d) =>
+      `Ein Akku hat eine Kapazität von ${fmt(d.G)} mAh. Nach einer Nacht ist er um ${d.p} % entladen. Berechne die verbleibende Kapazität in mAh.`,
+    textGe: (d) =>
+      `Ein Akku hat ${fmt(d.G)} mAh Kapazität. Das neue Modell hat ${d.p} % mehr. Berechne die Kapazität des neuen Akkus in mAh.`,
+
+    textGe_r: (d) =>
+      `Ein neuer Akku hat ${d.p} % mehr Kapazität und fasst ${fmt(d.Ge)} mAh. Berechne die Kapazität des alten Akkus.`,
+    textGv_r: (d) =>
+      `Ein Akku hat nach Alterung (${d.p} % weniger) nur noch ${fmt(d.Gv)} mAh. Berechne die ursprüngliche Kapazität.`,
   },
   {
-    sache: 'Ladezeit (Schnellladung)',
-    einheit: 'Minuten',
-    kategorie: 'Technik & Alltag',
-    emoji: '⚡',
+    sache: "Ladezeit (Schnellladung)",
+    einheit: "Minuten",
+    kategorie: "Technik & Alltag",
+    emoji: "⚡",
     daten: [
-      { G: 100, p: 25 }, { G: 120, p: 25 }, { G: 200, p: 25 },
-      { G: 80,  p: 25 }, { G: 160, p: 25 }, { G: 60,  p: 20 },
+      { G: 100, p: 25 },
+      { G: 120, p: 25 },
+      { G: 200, p: 25 },
+      { G: 80, p: 25 },
+      { G: 160, p: 25 },
+      { G: 60, p: 20 },
     ],
-    textW:  (d) => `Ein Tablet braucht ${fmt(d.G)} Minuten zum vollständigen Aufladen. Der Akku ist bereits zu ${d.p} % geladen. Berechne die bisherige Ladezeit in Minuten.`,
-    textG:  (d) => `Ein Schnellladegerät verkürzt die Ladezeit um ${d.p} %. Es spart ${fmt(d.W)} Minuten. Berechne die Ladezeit ohne Schnellladung.`,
-    textp:  (d) => `Ein Akku lädt normalerweise ${fmt(d.G)} Minuten. Mit Schnellladung dauert es nur ${fmt(d.Gv)} Minuten. Berechne die Zeitersparnis in Prozent.`,
-    textGv: (d) => `Ein Akku lädt normalerweise ${fmt(d.G)} Minuten. Ein Schnellladegerät reduziert die Zeit um ${d.p} %. Berechne die Ladezeit mit Schnellladegerät.`,
-    textGe: (d) => `Ein Akku lädt in ${fmt(d.G)} Minuten. Ein langsameres Ladegerät braucht ${d.p} % länger. Berechne die Ladezeit mit dem langsameren Gerät.`,
- 
-    textGe_r: (d) => `Ein langsameres Ladegerät braucht ${d.p} % länger und lädt in ${fmt(d.Ge)} Minuten. Berechne die Ladezeit mit dem normalen Gerät.`,
-    textGv_r: (d) => `Mit Schnellladung (${d.p} % schneller) lädt ein Akku in nur ${fmt(d.Gv)} Minuten. Berechne die Ladezeit ohne Schnellladung.`,
+    textW: (d) =>
+      `Ein Tablet braucht ${fmt(d.G)} Minuten zum vollständigen Aufladen. Der Akku ist bereits zu ${d.p} % geladen. Berechne die bisherige Ladezeit in Minuten.`,
+    textG: (d) =>
+      `Ein Schnellladegerät verkürzt die Ladezeit um ${d.p} %. Es spart ${fmt(d.W)} Minuten. Berechne die Ladezeit ohne Schnellladung.`,
+    textp: (d) =>
+      `Ein Akku lädt normalerweise ${fmt(d.G)} Minuten. Mit Schnellladung dauert es nur ${fmt(d.Gv)} Minuten. Berechne die Zeitersparnis in Prozent.`,
+    textGv: (d) =>
+      `Ein Akku lädt normalerweise ${fmt(d.G)} Minuten. Ein Schnellladegerät reduziert die Zeit um ${d.p} %. Berechne die Ladezeit mit Schnellladegerät.`,
+    textGe: (d) =>
+      `Ein Akku lädt in ${fmt(d.G)} Minuten. Ein langsameres Ladegerät braucht ${d.p} % länger. Berechne die Ladezeit mit dem langsameren Gerät.`,
+
+    textGe_r: (d) =>
+      `Ein langsameres Ladegerät braucht ${d.p} % länger und lädt in ${fmt(d.Ge)} Minuten. Berechne die Ladezeit mit dem normalen Gerät.`,
+    textGv_r: (d) =>
+      `Mit Schnellladung (${d.p} % schneller) lädt ein Akku in nur ${fmt(d.Gv)} Minuten. Berechne die Ladezeit ohne Schnellladung.`,
   },
 ];
 
@@ -461,21 +715,51 @@ const AUFGABEN_DB = [
 // ============================================================================
 
 const AUFGABEN_TYPEN_DEF = {
-  W:    { cbId: 'cb-W',    label: 'Prozentwert (W)',               buildText: (e, d) => e.textW(d),    buildLoesung: buildLoesungW    },
-  G:    { cbId: 'cb-G',    label: 'Grundwert (G)',                 buildText: (e, d) => e.textG(d),    buildLoesung: buildLoesungG    },
-  p:    { cbId: 'cb-p',    label: 'Prozentsatz (p %)',             buildText: (e, d) => e.textp(d),    buildLoesung: buildLoesungp    },
- Gv: {
-  cbId: 'cb-Gv',
-  label: 'Verminderter GW (G → G−)',
-  buildText: (e, d) => e.textGv(d),
-  buildLoesung: (e, d) =>
-    e.kategorie.startsWith('Umsatzsteuer')
-      ? buildLoesungGe_r(e, d)
-      : buildLoesungGv(e, d)
-},
-  Gv_r: { cbId: 'cb-Gv_r',label: 'Grundwert aus G− berechnen',   buildText: (e, d) => e.textGv_r(d), buildLoesung: buildLoesungGv_r },
-  Ge:   { cbId: 'cb-Ge',  label: 'Vermehrter GW (G → G+)',        buildText: (e, d) => e.textGe(d),   buildLoesung: buildLoesungGe   },
-  Ge_r: { cbId: 'cb-Ge_r',label: 'Grundwert aus G+ berechnen',   buildText: (e, d) => e.textGe_r(d), buildLoesung: buildLoesungGe_r },
+  W: {
+    cbId: "cb-W",
+    label: "Prozentwert (W)",
+    buildText: (e, d) => e.textW(d),
+    buildLoesung: buildLoesungW,
+  },
+  G: {
+    cbId: "cb-G",
+    label: "Grundwert (G)",
+    buildText: (e, d) => e.textG(d),
+    buildLoesung: buildLoesungG,
+  },
+  p: {
+    cbId: "cb-p",
+    label: "Prozentsatz (p %)",
+    buildText: (e, d) => e.textp(d),
+    buildLoesung: buildLoesungp,
+  },
+  Gv: {
+    cbId: "cb-Gv",
+    label: "Verminderter GW (G → G−)",
+    buildText: (e, d) => e.textGv(d),
+    buildLoesung: (e, d) =>
+      e.kategorie.startsWith("Umsatzsteuer")
+        ? buildLoesungGe_r(e, d)
+        : buildLoesungGv(e, d),
+  },
+  Gv_r: {
+    cbId: "cb-Gv_r",
+    label: "Grundwert aus G− berechnen",
+    buildText: (e, d) => e.textGv_r(d),
+    buildLoesung: buildLoesungGv_r,
+  },
+  Ge: {
+    cbId: "cb-Ge",
+    label: "Vermehrter GW (G → G+)",
+    buildText: (e, d) => e.textGe(d),
+    buildLoesung: buildLoesungGe,
+  },
+  Ge_r: {
+    cbId: "cb-Ge_r",
+    label: "Grundwert aus G+ berechnen",
+    buildText: (e, d) => e.textGe_r(d),
+    buildLoesung: buildLoesungGe_r,
+  },
 };
 
 // ============================================================================
@@ -596,13 +880,13 @@ function buildLoesungGv_r(eintrag, d) {
 // ============================================================================
 
 function ergaenzeDaten(d) {
-  const r2 = x => Math.round(x * 100) / 100;
+  const r2 = (x) => Math.round(x * 100) / 100;
   return {
-    G:  d.G,
-    p:  d.p,
-    W:  r2(d.G * d.p / 100),
-    Gv: r2(d.G * (100 - d.p) / 100),
-    Ge: r2(d.G * (100 + d.p) / 100),
+    G: d.G,
+    p: d.p,
+    W: r2((d.G * d.p) / 100),
+    Gv: r2((d.G * (100 - d.p)) / 100),
+    Ge: r2((d.G * (100 + d.p)) / 100),
   };
 }
 
@@ -611,7 +895,7 @@ function ergaenzeDaten(d) {
 // ============================================================================
 
 function getAktiveTypen() {
-  return Object.keys(AUFGABEN_TYPEN_DEF).filter(typ => {
+  return Object.keys(AUFGABEN_TYPEN_DEF).filter((typ) => {
     const cb = document.getElementById(AUFGABEN_TYPEN_DEF[typ].cbId);
     return cb && cb.checked;
   });
@@ -619,7 +903,7 @@ function getAktiveTypen() {
 
 function generiereAufgaben() {
   const aktiveTypen = getAktiveTypen();
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
 
   if (aktiveTypen.length === 0) {
@@ -627,7 +911,7 @@ function generiereAufgaben() {
     return;
   }
 
-  const anzahl = parseInt(document.getElementById('anzahlSelect').value) || 5;
+  const anzahl = parseInt(document.getElementById("anzahlSelect").value) || 5;
   const shuffledEintraege = shuffle(AUFGABEN_DB);
   const aufgabenListe = [];
 
@@ -666,8 +950,8 @@ function generiereAufgaben() {
   container.innerHTML = aufgabenHtml + loesungenHtml;
 
   // KI-Prompt-Vorschau aktualisieren falls sichtbar
-  const vorschau = document.getElementById('kiPromptVorschau');
-  if (vorschau && getComputedStyle(vorschau).display !== 'none') {
+  const vorschau = document.getElementById("kiPromptVorschau");
+  if (vorschau && getComputedStyle(vorschau).display !== "none") {
     vorschau.textContent = erstelleKiPromptText();
   }
 }
@@ -750,63 +1034,71 @@ AUFGABEN MIT MUSTERLÖSUNGEN (nur zur Kontrolle, nie ungefragt oder vorab zeigen
 `;
 
 function erstelleKiPromptText() {
-  let aufgabenBlock = '';
+  let aufgabenBlock = "";
 
   if (letzteGenerierteAufgaben.length === 0) {
-    aufgabenBlock = '(Noch keine Aufgaben generiert.)';
+    aufgabenBlock = "(Noch keine Aufgaben generiert.)";
   } else {
-    aufgabenBlock = letzteGenerierteAufgaben.map(({ typ, eintrag, d }, i) => {
-      const def = AUFGABEN_TYPEN_DEF[typ];
+    aufgabenBlock = letzteGenerierteAufgaben
+      .map(({ typ, eintrag, d }, i) => {
+        const def = AUFGABEN_TYPEN_DEF[typ];
 
-      const aufgabeKlartext = def.buildText(eintrag, d)
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/\s{2,}/g, ' ')
-        .trim();
+        const aufgabeKlartext = def
+          .buildText(eintrag, d)
+          .replace(/<[^>]+>/g, "")
+          .replace(/&nbsp;/g, " ")
+          .replace(/\s{2,}/g, " ")
+          .trim();
 
-      const loesungKlartext = def.buildLoesung(eintrag, d)
-        .replace(/<sub>/gi, '').replace(/<\/sub>/gi, '')
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/\n\s*\n/g, '\n')
-        .trim();
+        const loesungKlartext = def
+          .buildLoesung(eintrag, d)
+          .replace(/<sub>/gi, "")
+          .replace(/<\/sub>/gi, "")
+          .replace(/<[^>]+>/g, "")
+          .replace(/&nbsp;/g, " ")
+          .replace(/\n\s*\n/g, "\n")
+          .trim();
 
-      return `--- Aufgabe ${i + 1} ---
+        return `--- Aufgabe ${i + 1} ---
 Typ: ${def.label}
 Thema: ${eintrag.emoji} ${eintrag.sache} (${eintrag.kategorie})
 Aufgabe: ${aufgabeKlartext}
 
 Musterlösung:
 ${loesungKlartext}`;
-    }).join('\n\n');
+      })
+      .join("\n\n");
   }
 
-  return KI_ASSISTENT_PROMPT.replace('###AUFGABEN###', aufgabenBlock);
+  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN###", aufgabenBlock);
 }
 
 function kopiereKiPrompt() {
   navigator.clipboard
     .writeText(erstelleKiPromptText())
     .then(() => {
-      const btn = document.getElementById('kiPromptKopierenBtn');
+      const btn = document.getElementById("kiPromptKopierenBtn");
       const orig = btn.innerHTML;
-      btn.innerHTML = '✅ Kopiert!';
-      setTimeout(() => { btn.innerHTML = orig; }, 2500);
+      btn.innerHTML = "✅ Kopiert!";
+      setTimeout(() => {
+        btn.innerHTML = orig;
+      }, 2500);
     })
     .catch(() => {
-      zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
     });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const hidden = getComputedStyle(vorschau).display === 'none';
-  vorschau.style.display = hidden ? 'block' : 'none';
-  btn.textContent = hidden ? 'Vorschau ausblenden ▲' : 'Prompt anzeigen ▼';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const hidden = getComputedStyle(vorschau).display === "none";
+  vorschau.style.display = hidden ? "block" : "none";
+  btn.textContent = hidden ? "Vorschau ausblenden ▲" : "Prompt anzeigen ▼";
   if (hidden) vorschau.textContent = erstelleKiPromptText();
 }
-
 
 // ============================================================================
 // MOODLE-XML-EXPORT – PROZENTRECHNEN (Fragetyp „Kurzantwort“ / shortanswer)
@@ -816,63 +1108,86 @@ function toggleKiPromptVorschau() {
 // ============================================================================
 
 // ── Einstellungen ───────────────────────────────────────────────────────────
-const MOODLE_PROZENT_PRAEFIX_STANDARD = '7.1-07';   // Prozentwert, Grundwert, Prozentsatz
-const MOODLE_PROZENT_PRAEFIX_VERMEHRT = '7.1-08';   // vermehrter / verminderter Grundwert
-const MOODLE_PROZENT_TRENNER = '#R';                 // Nach Präfix
-const MOODLE_PROZENT_TITELENDE = 'meinBwR-Berechnen';
-const MOODLE_PROZENT_GRUPPE_08 = ['Gv', 'Gv_r', 'Ge', 'Ge_r'];
+const MOODLE_PROZENT_PRAEFIX_STANDARD = "7.1-07"; // Prozentwert, Grundwert, Prozentsatz
+const MOODLE_PROZENT_PRAEFIX_VERMEHRT = "7.1-08"; // vermehrter / verminderter Grundwert
+const MOODLE_PROZENT_TRENNER = "#R"; // Nach Präfix
+const MOODLE_PROZENT_TITELENDE = "meinBwR-Berechnen";
+const MOODLE_PROZENT_GRUPPE_08 = ["Gv", "Gv_r", "Ge", "Ge_r"];
 
 // ── Hilfsfunktionen ─────────────────────────────────────────────────────────
 function mpEsc(s) {
-  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function mpCdata(s) {
-  return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>';
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
 }
 
 // Eindeutige, zeitabhängige ID-Basis (yyMMddHHmmss). Pro Browser garantiert streng
 // aufsteigend: Wird innerhalb derselben Sekunde erneut exportiert, rückt sie um 1 Sekunde vor.
 function mpIdBasis() {
-  const SCHLUESSEL = 'moodleProzentLetzteIdSekunde';
+  const SCHLUESSEL = "moodleProzentLetzteIdSekunde";
   let sek = Math.floor(Date.now() / 1000);
   try {
     const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
     if (sek <= letzte) sek = letzte + 1;
     localStorage.setItem(SCHLUESSEL, String(sek));
-  } catch (e) { /* ohne localStorage: nur Zeitstempel */ }
+  } catch (e) {
+    /* ohne localStorage: nur Zeitstempel */
+  }
   const d = new Date(sek * 1000);
-  const p = n => String(n).padStart(2, '0');
+  const p = (n) => String(n).padStart(2, "0");
   return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
 }
 
 // Bei Umsatzsteuer-Aufgaben vom Typ „Gv“ steht im Text der Bruttopreis und der Nettopreis
 // ist gesucht – das ist rechnerisch „Grundwert aus vermehrtem Grundwert“ (Ge_r).
 function mpEffektiverTyp(typ, eintrag) {
-  if (typ === 'Gv' && String(eintrag.kategorie || '').startsWith('Umsatzsteuer')) return 'Ge_r';
+  if (
+    typ === "Gv" &&
+    String(eintrag.kategorie || "").startsWith("Umsatzsteuer")
+  )
+    return "Ge_r";
   return typ;
 }
 
 // Gesuchter Wert je Aufgabentyp
 function mpLoesungswert(typ, d) {
   switch (typ) {
-    case 'W':    return d.W;
-    case 'G':    return d.G;
-    case 'p':    return d.p;
-    case 'Gv':   return d.Gv;
-    case 'Ge':   return d.Ge;
-    case 'Gv_r': return d.G;
-    case 'Ge_r': return d.G;
-    default:     return d.G;
+    case "W":
+      return d.W;
+    case "G":
+      return d.G;
+    case "p":
+      return d.p;
+    case "Gv":
+      return d.Gv;
+    case "Ge":
+      return d.Ge;
+    case "Gv_r":
+      return d.G;
+    case "Ge_r":
+      return d.G;
+    default:
+      return d.G;
   }
 }
 
 // Alle Schreibweisen einer Zahl: 20 / 20,00 bzw. 20,5 / 20,50 (jeweils auch mit Punkt und ohne Tausenderpunkt)
 function mpZahlVarianten(wert) {
-  const zwei = wert.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const kurz = zwei.replace(/,00$/, '').replace(/(,\d)0$/, '$1');
+  const zwei = wert.toLocaleString("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  const kurz = zwei.replace(/,00$/, "").replace(/(,\d)0$/, "$1");
   const basis = [zwei, kurz];
-  const ohneTausender = basis.map(z => z.replace(/\./g, ''));
+  const ohneTausender = basis.map((z) => z.replace(/\./g, ""));
   return [...new Set([...basis, ...ohneTausender])];
 }
 
@@ -881,16 +1196,16 @@ function mpAntworten(typ, eintrag, d) {
   const wert = mpLoesungswert(typ, d);
   const liste = [];
 
-if (typ === 'p') {
-  mpZahlVarianten(wert).forEach(z => liste.push(`${z} %`));
-} else if (eintrag.einheit === '€') {
-  mpZahlVarianten(wert).forEach(z => liste.push(`${z} €`));
-} else {
+  if (typ === "p") {
+    mpZahlVarianten(wert).forEach((z) => liste.push(`${z} %`));
+  } else if (eintrag.einheit === "€") {
+    mpZahlVarianten(wert).forEach((z) => liste.push(`${z} €`));
+  } else {
     // Stückzahlen/Einheiten (Schüler, mAh, Minuten …): mit und ohne Einheit, mit/ohne Tausenderpunkt
     const roh = String(wert);
-    const punkt = wert.toLocaleString('de-DE');
-    const leer = punkt.replace(/\./g, ' ');
-    [roh, punkt, leer].forEach(z => {
+    const punkt = wert.toLocaleString("de-DE");
+    const leer = punkt.replace(/\./g, " ");
+    [roh, punkt, leer].forEach((z) => {
       liste.push(z, `${z} ${eintrag.einheit}`);
     });
   }
@@ -910,10 +1225,13 @@ function mpBaueXml(aufgaben) {
     const praefix = MOODLE_PROZENT_GRUPPE_08.includes(eff)
       ? MOODLE_PROZENT_PRAEFIX_VERMEHRT
       : MOODLE_PROZENT_PRAEFIX_STANDARD;
-    const id = `${basis}${String(i + 1).padStart(3, '0')}`;
+    const id = `${basis}${String(i + 1).padStart(3, "0")}`;
     const titel = `${praefix}${MOODLE_PROZENT_TRENNER}${id}${MOODLE_PROZENT_TITELENDE}`;
 
-    const text = def.buildText(eintrag, d).replace(/\s{2,}/g, ' ').trim();
+    const text = def
+      .buildText(eintrag, d)
+      .replace(/\s{2,}/g, " ")
+      .trim();
     const rechenweg = `<p><strong>Rechenweg</strong></p>${effDef.buildLoesung(eintrag, d)}`;
     const antworten = mpAntworten(eff, eintrag, d);
 
@@ -922,30 +1240,33 @@ function mpBaueXml(aufgaben) {
     xml += `    <questiontext format="html">\n      <text>${mpCdata(`<p>${text}</p>`)}</text>\n    </questiontext>\n`;
     xml += `    <generalfeedback format="html">\n      <text>${mpCdata(rechenweg)}</text>\n    </generalfeedback>\n`;
     xml += `    <defaultgrade>1</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n    <usecase>0</usecase>\n`;
-    antworten.forEach(a => {
+    antworten.forEach((a) => {
       xml += `    <answer fraction="100" format="moodle_auto_format">\n      <text>${mpEsc(a)}</text>\n      <feedback format="html">\n        <text></text>\n      </feedback>\n    </answer>\n`;
     });
     xml += `  </question>\n\n`;
   });
 
-  return xml + '</quiz>\n';
+  return xml + "</quiz>\n";
 }
 
 // ── Button-Handler ──────────────────────────────────────────────────────────
 function exportiereMoodle() {
-  if (typeof letzteGenerierteAufgaben === 'undefined' || !letzteGenerierteAufgaben.length) {
-    zeigeModal('Bitte zuerst Aufgaben erstellen.');
+  if (
+    typeof letzteGenerierteAufgaben === "undefined" ||
+    !letzteGenerierteAufgaben.length
+  ) {
+    zeigeModal("Bitte zuerst Aufgaben erstellen.");
     return;
   }
   const xml = mpBaueXml(letzteGenerierteAufgaben);
 
   const d = new Date();
-  const p = n => String(n).padStart(2, '0');
+  const p = (n) => String(n).padStart(2, "0");
   const dateiname = `quiz-prozentrechnen-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
 
-  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = dateiname;
   document.body.appendChild(a);
@@ -955,8 +1276,8 @@ function exportiereMoodle() {
 }
 
 // ── Initialisierung ──────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+document.addEventListener("DOMContentLoaded", () => {
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   setTimeout(() => {
     generiereAufgaben();
     if (vorschauEl) vorschauEl.textContent = erstelleKiPromptText();

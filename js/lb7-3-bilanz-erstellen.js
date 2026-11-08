@@ -3,19 +3,61 @@
 // ============================================================================
 
 const bilanzPostenDefinitionen = [
-  { id: "GR",   name: "Grundstücke",                         kategorie: "AV", min: 200000, max: 550000 },
-  { id: "BVG",  name: "Betriebs- und Verwaltungsgebäude",    kategorie: "AV", min: 500000, max: 2000000 },
-  { id: "MA",   name: "Maschinen und Anlagen",                kategorie: "AV", min: 10000,  max: 200000 },
-  { id: "FP",   name: "Fuhrpark",                             kategorie: "AV", min: 10000,  max: 100000 },
-  { id: "BM",   name: "Büromaschinen",                        kategorie: "AV", min: 5000,   max: 20000 },
-  { id: "BGA",  name: "Büromöbel- und Geschäftsausstattung",  kategorie: "AV", min: 10000,  max: 50000 },
-  { id: "VORR", name: "Vorräte",                              kategorie: "UV", min: 20000,  max: 100000 },
-  { id: "FO",   name: "Forderungen an Kunden",                kategorie: "UV", min: 2000,   max: 300000 },
-  { id: "BK",   name: "Bank",                                 kategorie: "UV", min: 40000,  max: 400000 },
-  { id: "KA",   name: "Kasse",                                kategorie: "UV", min: 1000,   max: 15000 },
-  { id: "LBKV", name: "Langfristige Bankverbindlichkeiten",   kategorie: "FK", min: 50000,  max: 200000 },
-  { id: "KBKV", name: "Kurzfristige Bankverbindlichkeiten",   kategorie: "FK", min: 1000,   max: 50000 },
-  { id: "VE",   name: "Verbindlichkeiten a. LL.",             kategorie: "FK", min: 5000,   max: 50000 },
+  { id: "GR", name: "Grundstücke", kategorie: "AV", min: 200000, max: 550000 },
+  {
+    id: "BVG",
+    name: "Betriebs- und Verwaltungsgebäude",
+    kategorie: "AV",
+    min: 500000,
+    max: 2000000,
+  },
+  {
+    id: "MA",
+    name: "Maschinen und Anlagen",
+    kategorie: "AV",
+    min: 10000,
+    max: 200000,
+  },
+  { id: "FP", name: "Fuhrpark", kategorie: "AV", min: 10000, max: 100000 },
+  { id: "BM", name: "Büromaschinen", kategorie: "AV", min: 5000, max: 20000 },
+  {
+    id: "BGA",
+    name: "Büromöbel- und Geschäftsausstattung",
+    kategorie: "AV",
+    min: 10000,
+    max: 50000,
+  },
+  { id: "VORR", name: "Vorräte", kategorie: "UV", min: 20000, max: 100000 },
+  {
+    id: "FO",
+    name: "Forderungen an Kunden",
+    kategorie: "UV",
+    min: 2000,
+    max: 300000,
+  },
+  { id: "BK", name: "Bank", kategorie: "UV", min: 40000, max: 400000 },
+  { id: "KA", name: "Kasse", kategorie: "UV", min: 1000, max: 15000 },
+  {
+    id: "LBKV",
+    name: "Langfristige Bankverbindlichkeiten",
+    kategorie: "FK",
+    min: 50000,
+    max: 200000,
+  },
+  {
+    id: "KBKV",
+    name: "Kurzfristige Bankverbindlichkeiten",
+    kategorie: "FK",
+    min: 1000,
+    max: 50000,
+  },
+  {
+    id: "VE",
+    name: "Verbindlichkeiten a. LL.",
+    kategorie: "FK",
+    min: 5000,
+    max: 50000,
+  },
 ];
 
 // ============================================================================
@@ -26,8 +68,6 @@ function getRandomValueInRange(min, max) {
   const randomValue = Math.ceil(Math.random() * (max - min + 1)) + min;
   return Math.ceil(randomValue / 5000) * 5000;
 }
-
-
 
 // ============================================================================
 // GLOBALE VARIABLE FÜR DIE ZULETZT GENERIERTEN POSTEN (für KI-Prompt)
@@ -85,7 +125,7 @@ Du wartest stets auf die Eingabe des Schülers und gibst nichts vor. Dein Ziel i
 `;
 
 function erstellePostenText(posten) {
-  return posten.map(p => `- ${p.name}: ${formatCurrency(p.wert)}`).join('\n');
+  return posten.map((p) => `- ${p.name}: ${formatCurrency(p.wert)}`).join("\n");
 }
 
 function erstelleKiPromptText() {
@@ -100,18 +140,18 @@ function erstelleKiPromptText() {
 // ============================================================================
 
 function generiereAufgabe() {
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
 
-  const posten = bilanzPostenDefinitionen.map(def => ({
+  const posten = bilanzPostenDefinitionen.map((def) => ({
     ...def,
-    wert: getRandomValueInRange(def.min, def.max)
+    wert: getRandomValueInRange(def.min, def.max),
   }));
   letztePosten = posten;
 
-  const av = posten.filter(p => p.kategorie === "AV");
-  const uv = posten.filter(p => p.kategorie === "UV");
-  const fk = posten.filter(p => p.kategorie === "FK");
+  const av = posten.filter((p) => p.kategorie === "AV");
+  const uv = posten.filter((p) => p.kategorie === "UV");
+  const fk = posten.filter((p) => p.kategorie === "FK");
 
   const avSumme = av.reduce((sum, p) => sum + p.wert, 0);
   const uvSumme = uv.reduce((sum, p) => sum + p.wert, 0);
@@ -131,7 +171,7 @@ function generiereAufgabe() {
           <th style="text-align:right;padding:4px 6px;">Betrag</th>
         </tr>`;
 
-  shuffled.forEach(p => {
+  shuffled.forEach((p) => {
     aufgabenHTML += `
         <tr style="border-top:1px solid #AAAAAA;">
           <td style="padding:4px 6px;">${p.name}</td>
@@ -163,14 +203,14 @@ function generiereAufgabe() {
   // Fremdkapital immer direkt unter dem Eigenkapital steht — unabhängig davon,
   // wie viele Anlagevermögen-Posten es gibt (kein Leerraum dazwischen).
   const aktivaZeilen = [
-    ...av.map(p => ({ label: p.name, value: formatCurrency(p.wert) })),
+    ...av.map((p) => ({ label: p.name, value: formatCurrency(p.wert) })),
     { label: "II. Umlaufvermögen", value: "", bold: true },
-    ...uv.map(p => ({ label: p.name, value: formatCurrency(p.wert) })),
+    ...uv.map((p) => ({ label: p.name, value: formatCurrency(p.wert) })),
   ];
 
   const passivaZeilen = [
     { label: "II. Fremdkapital", value: "", bold: true },
-    ...fk.map(p => ({ label: p.name, value: formatCurrency(p.wert) })),
+    ...fk.map((p) => ({ label: p.name, value: formatCurrency(p.wert) })),
   ];
 
   const zeilenAnzahl = Math.max(aktivaZeilen.length, passivaZeilen.length);
@@ -200,8 +240,8 @@ function generiereAufgabe() {
 
   container.innerHTML = aufgabenHTML + loesungHTML;
 
-  const vorschau = document.getElementById('kiPromptVorschau');
-  if (vorschau && getComputedStyle(vorschau).display !== 'none') {
+  const vorschau = document.getElementById("kiPromptVorschau");
+  if (vorschau && getComputedStyle(vorschau).display !== "none") {
     vorschau.textContent = erstelleKiPromptText();
   }
 }
@@ -224,20 +264,24 @@ function kopiereKiPrompt() {
         btn.classList.remove("ki-prompt-btn--success");
       }, 2500);
     })
-    .catch(() => zeigeModal("Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren."));
+    .catch(() =>
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      ),
+    );
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
+    vorschau.style.display = "block";
     vorschau.textContent = erstelleKiPromptText();
-    btn.textContent = 'Vorschau ausblenden ▲';
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
@@ -245,8 +289,8 @@ function toggleKiPromptVorschau() {
 // INITIALISIERUNG
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+document.addEventListener("DOMContentLoaded", () => {
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) {
     vorschauEl.textContent = KI_ASSISTENT_PROMPT;
   }

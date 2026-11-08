@@ -6,20 +6,26 @@
 // ============================================================================
 
 function moodleErfasseStaat(d) {
-  const nr = String(d.nr).padStart(2, '0');
+  const nr = String(d.nr).padStart(2, "0");
 
   // Steuern/Gebühren: Aufwandskonto an Verbindlichkeiten, gleicher Betrag, keine Vorsteuer
   const zeilen = [
-    { d: d.aufwandskonto, da: moodleBetrag(d.betrag), c: d.zahlungskonto, ca: moodleBetrag(d.betrag) },
+    {
+      d: d.aufwandskonto,
+      da: moodleBetrag(d.betrag),
+      c: d.zahlungskonto,
+      ca: moodleBetrag(d.betrag),
+    },
   ];
 
-  let feedback = '<p>Keine Vorsteuer: Steuern und Gebühren an Behörden enthalten keine Umsatzsteuer.</p>';
+  let feedback =
+    "<p>Keine Vorsteuer: Steuern und Gebühren an Behörden enthalten keine Umsatzsteuer.</p>";
   if (d.messbetrag && d.hebesatz) {
     feedback += `<p>Grundsteuer = Steuermessbetrag (${d.messbetrag} €) × Hebesatz (${d.hebesatz} %)</p>`;
   }
 
   moodleFragen.push({
-    name: `${String(d.typName).replace(/[\/\\]/g, '-')}_${nr}`,
+    name: `${String(d.typName).replace(/[\/\\]/g, "-")}_${nr}`,
     text: `<p>Bilde den Buchungssatz mit Kontennummern.</p><p>${d.satz}</p>`,
     feedback,
     zeilen,

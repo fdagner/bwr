@@ -1,32 +1,39 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parameter &amp; Kennzahlen – Übersicht | meinbwr.de BwR</title>
+    <meta
+      name="description"
+      content="Übersicht aller zentralen Parameter, Sätze und Kennzahlen aus js/utils.js – Steuern, Zinsen, Sozialversicherung, Familie, Ausbildung."
+    />
+    <link
+      rel="canonical"
+      href="https://www.meinbwr.de/parameter-uebersicht.html"
+    />
+    <meta name="robots" content="index, follow" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parameter &amp; Kennzahlen – Übersicht | meinbwr.de BwR</title>
-  <meta name="description" content="Übersicht aller zentralen Parameter, Sätze und Kennzahlen aus js/utils.js – Steuern, Zinsen, Sozialversicherung, Familie, Ausbildung.">
-  <link rel="canonical" href="https://www.meinbwr.de/parameter-uebersicht.html">
-  <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <script src="js/menu.js?v=15"></script>
+    <script src="js/libraries/js-yaml.min.js"></script>
+    <script src="js/utils.js?v=14"></script>
+  </head>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <script src="js/menu.js?v=15"></script>
-  <script src="js/libraries/js-yaml.min.js"></script>
-  <script src="js/utils.js?v=14"></script>
-</head>
+  <body>
+    <main>
+      <div w3-include-html="navigation.html"></div>
+      <h2>Parameter &amp; Kennzahlen – aktuelle Übersicht</h2>
 
-<body><main>
-    
-    <div w3-include-html="navigation.html"></div>
-    <h2>Parameter &amp; Kennzahlen – aktuelle Übersicht</h2>
-  
-    <div id="uebersicht" class="box"></div>
-</main>
+      <div id="uebersicht" class="box"></div>
+    </main>
     <div w3-include-html="footer.html"></div>
     <script src="js/parameter-uebersicht-inline.js"></script>
-</body>
-
+  </body>
 </html>

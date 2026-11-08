@@ -6,23 +6,25 @@ let yamlData = [];
 let vdUnternehmen = "";
 
 function getUserCompanies() {
-  const stored = localStorage.getItem('userCompanies');
+  const stored = localStorage.getItem("userCompanies");
   return stored ? JSON.parse(stored) : [];
 }
 
 function mergeUserCompaniesIntoYamlData() {
   const userCompanies = getUserCompanies();
-  
+
   if (userCompanies.length > 0) {
     yamlData = [...yamlData, ...userCompanies];
-    
+
     yamlData.sort((a, b) => {
-      const brancheA = a.unternehmen?.branche || '';
-      const brancheB = b.unternehmen?.branche || '';
+      const brancheA = a.unternehmen?.branche || "";
+      const brancheB = b.unternehmen?.branche || "";
       return brancheA.localeCompare(brancheB);
     });
-    
-    console.log(`${userCompanies.length} Benutzerunternehmen zu yamlData hinzugefügt. Gesamt: ${yamlData.length}`);
+
+    console.log(
+      `${userCompanies.length} Benutzerunternehmen zu yamlData hinzugefügt. Gesamt: ${yamlData.length}`,
+    );
   }
 }
 
@@ -32,13 +34,17 @@ function mergeUserCompaniesIntoYamlData() {
 
 const RABATT_SAETZE_VD = [5, 10, 15, 20];
 
-function pickVD(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function pickVD(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
 function fmtVD(value) {
-  return value.toLocaleString("de-DE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }) + " €";
+  return (
+    value.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + " €"
+  );
 }
 
 function moodleZahl(betrag) {
@@ -51,7 +57,7 @@ function moodleZahl(betrag) {
 // Moodle SHORTANSWER-Cloze: akzeptiert "1.710,00 €" und "1.710,00"
 // Inline-Cloze-Syntax mit € als Pflichtantwort, ohne € als Alternative
 function clozeInline(betrag) {
-  const mitEuro  = moodleZahl(betrag) + " €";
+  const mitEuro = moodleZahl(betrag) + " €";
   const ohneEuro = moodleZahl(betrag);
   return `{1:SHORTANSWER:=${mitEuro}~=${ohneEuro}}`;
 }
@@ -75,9 +81,27 @@ function genNettoOhneRabattVD() {
 // ============================================================================
 
 function existiertInCoreVD(unternehmen, coreData) {
-  const key = String(unternehmen?.unternehmen?.id ?? '') + '|' + String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
-  const name = String(unternehmen?.unternehmen?.name ?? '').trim().toLowerCase();
-  return (coreData || []).some(c => (String(c?.unternehmen?.id ?? '') + '|' + String(c?.unternehmen?.name ?? '').trim().toLowerCase()) === key || String(c?.unternehmen?.name ?? '').trim().toLowerCase() === name);
+  const key =
+    String(unternehmen?.unternehmen?.id ?? "") +
+    "|" +
+    String(unternehmen?.unternehmen?.name ?? "")
+      .trim()
+      .toLowerCase();
+  const name = String(unternehmen?.unternehmen?.name ?? "")
+    .trim()
+    .toLowerCase();
+  return (coreData || []).some(
+    (c) =>
+      String(c?.unternehmen?.id ?? "") +
+        "|" +
+        String(c?.unternehmen?.name ?? "")
+          .trim()
+          .toLowerCase() ===
+        key ||
+      String(c?.unternehmen?.name ?? "")
+        .trim()
+        .toLowerCase() === name,
+  );
 }
 
 function ladeYamlVD() {
@@ -85,19 +109,28 @@ function ladeYamlVD() {
     .then((r) => (r.ok ? r.text() : Promise.reject()))
     .then((txt) => {
       const coreData = jsyaml.load(txt) || [];
-      try { localStorage.setItem("standardYamlData", JSON.stringify(coreData)); } catch (e) {}
+      try {
+        localStorage.setItem("standardYamlData", JSON.stringify(coreData));
+      } catch (e) {}
       const saved = localStorage.getItem("uploadedYamlCompanyData");
       let zusaetzliche = [];
       if (saved) {
         try {
           const uploaded = JSON.parse(saved);
-          zusaetzliche = uploaded.filter(u => !existiertInCoreVD(u, coreData));
+          zusaetzliche = uploaded.filter(
+            (u) => !existiertInCoreVD(u, coreData),
+          );
           if (zusaetzliche.length === 0) {
             localStorage.removeItem("uploadedYamlCompanyData");
           } else if (zusaetzliche.length !== uploaded.length) {
-            localStorage.setItem("uploadedYamlCompanyData", JSON.stringify(zusaetzliche));
+            localStorage.setItem(
+              "uploadedYamlCompanyData",
+              JSON.stringify(zusaetzliche),
+            );
           }
-        } catch (e) { localStorage.removeItem("uploadedYamlCompanyData"); }
+        } catch (e) {
+          localStorage.removeItem("uploadedYamlCompanyData");
+        }
       }
       yamlData = [...coreData, ...zusaetzliche];
       mergeUserCompaniesIntoYamlData();
@@ -107,19 +140,21 @@ function ladeYamlVD() {
   return false;
 }
 
-
-
 function fuellDropdownVD() {
   const sel = document.getElementById("vdKunde");
   if (!sel || !yamlData.length) return;
-  const sorted = [...yamlData].sort((a, b) =>
-    (a.unternehmen?.branche || "").localeCompare(b.unternehmen?.branche || "") ||
-    (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "")
+  const sorted = [...yamlData].sort(
+    (a, b) =>
+      (a.unternehmen?.branche || "").localeCompare(
+        b.unternehmen?.branche || "",
+      ) || (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || ""),
   );
   sel.innerHTML = "";
   const ph = document.createElement("option");
-  ph.value = ""; ph.textContent = "— bitte Unternehmen auswählen —";
-  ph.disabled = true; ph.selected = true;
+  ph.value = "";
+  ph.textContent = "— bitte Unternehmen auswählen —";
+  ph.disabled = true;
+  ph.selected = true;
   sel.appendChild(ph);
   sorted.forEach((c) => {
     const u = c.unternehmen;
@@ -134,7 +169,10 @@ function fuellDropdownVD() {
   const my = localStorage.getItem("myCompany");
   if (my) {
     const opt = Array.from(sel.options).find((o) => o.value === my);
-    if (opt) { sel.value = my; vdUnternehmen = my; }
+    if (opt) {
+      sel.value = my;
+      vdUnternehmen = my;
+    }
   }
 }
 
@@ -155,11 +193,13 @@ function getUnternehmenInfoVD(name) {
 }
 
 function getZufaelligenKaeuferVD(verkaeufername) {
-  if (!yamlData.length) return { name: "Musterhandel GmbH", strasse: "", plz: "", ort: "" };
+  if (!yamlData.length)
+    return { name: "Musterhandel GmbH", strasse: "", plz: "", ort: "" };
   const andere = yamlData.filter(
-    (e) => e.unternehmen?.name && e.unternehmen.name !== verkaeufername
+    (e) => e.unternehmen?.name && e.unternehmen.name !== verkaeufername,
   );
-  if (!andere.length) return { name: "Musterhandel GmbH", strasse: "", plz: "", ort: "" };
+  if (!andere.length)
+    return { name: "Musterhandel GmbH", strasse: "", plz: "", ort: "" };
   const u = pickVD(andere).unternehmen;
   return {
     name: `${u.name} ${u.rechtsform ?? ""}`.trim(),
@@ -179,30 +219,48 @@ function getZufaelligenKaeuferVD(verkaeufername) {
 
 const VARIANTEN_OHNE_RABATT = [
   // ── vorwärts ──────────────────────────────────────────────────
-  { felder: new Set(["ust", "brutto"]),                          rueckwaerts: false },
-  { felder: new Set(["nettobetrag", "ust", "brutto"]),           rueckwaerts: false },
-  { felder: new Set(["gesamtpreis", "ust", "brutto"]),           rueckwaerts: false },
-  { felder: new Set(["gesamtpreis", "nettobetrag", "ust", "brutto"]), rueckwaerts: false },
+  { felder: new Set(["ust", "brutto"]), rueckwaerts: false },
+  { felder: new Set(["nettobetrag", "ust", "brutto"]), rueckwaerts: false },
+  { felder: new Set(["gesamtpreis", "ust", "brutto"]), rueckwaerts: false },
+  {
+    felder: new Set(["gesamtpreis", "nettobetrag", "ust", "brutto"]),
+    rueckwaerts: false,
+  },
   // ── rückwärts (Rechnungsbetrag gegeben) ───────────────────────
-  { felder: new Set(["nettobetrag", "ust"]),                     rueckwaerts: true  },
-  { felder: new Set(["gesamtpreis", "nettobetrag", "ust"]),      rueckwaerts: true  },
+  { felder: new Set(["nettobetrag", "ust"]), rueckwaerts: true },
+  { felder: new Set(["gesamtpreis", "nettobetrag", "ust"]), rueckwaerts: true },
 ];
 
 const VARIANTEN_MIT_RABATT = [
   // ── vorwärts ──────────────────────────────────────────────────
-  { felder: new Set(["rabatt", "ziel", "ust", "brutto"]),        rueckwaerts: false },
-  { felder: new Set(["nettobetrag", "rabatt", "ziel", "ust", "brutto"]), rueckwaerts: false },
-  { felder: new Set(["gesamtpreis", "nettobetrag", "rabatt", "ziel", "ust", "brutto"]), rueckwaerts: false },
+  { felder: new Set(["rabatt", "ziel", "ust", "brutto"]), rueckwaerts: false },
+  {
+    felder: new Set(["nettobetrag", "rabatt", "ziel", "ust", "brutto"]),
+    rueckwaerts: false,
+  },
+  {
+    felder: new Set([
+      "gesamtpreis",
+      "nettobetrag",
+      "rabatt",
+      "ziel",
+      "ust",
+      "brutto",
+    ]),
+    rueckwaerts: false,
+  },
   // ── rückwärts (Rechnungsbetrag gegeben) ───────────────────────
-  { felder: new Set(["ziel", "ust"]),                            rueckwaerts: true  },
-  { felder: new Set(["rabatt", "ziel", "ust"]),                  rueckwaerts: true  },
-  { felder: new Set(["nettobetrag", "rabatt", "ziel", "ust"]),   rueckwaerts: true  },
+  { felder: new Set(["ziel", "ust"]), rueckwaerts: true },
+  { felder: new Set(["rabatt", "ziel", "ust"]), rueckwaerts: true },
+  {
+    felder: new Set(["nettobetrag", "rabatt", "ziel", "ust"]),
+    rueckwaerts: true,
+  },
 ];
 
 // ============================================================================
 // VORDRUCK ERSTELLEN
 // ============================================================================
-
 
 // ============================================================================
 // VORDRUCK – AUSGANGSRECHNUNG (BwR 7)
@@ -225,33 +283,37 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
     listennetto = nettoBetrag;
   }
   const rabattBetrag = listennetto - nettoBetrag;
-  const ust    = Math.round(nettoBetrag * UST_REGEL / 100);
+  const ust = Math.round((nettoBetrag * UST_REGEL) / 100);
   const brutto = nettoBetrag + ust;
 
-  const mengePool   = [1, 2, 4, 5, 10].filter((m) => listennetto % m === 0);
-  const menge       = pickVD(mengePool.length ? mengePool : [1]);
+  const mengePool = [1, 2, 4, 5, 10].filter((m) => listennetto % m === 0);
+  const menge = pickVD(mengePool.length ? mengePool : [1]);
   const einzelpreis = listennetto / menge;
 
-  const now  = new Date();
-  const tag  = String(now.getDate()).padStart(2, "0");
-  const mon  = String(now.getMonth() + 1).padStart(2, "0");
+  const now = new Date();
+  const tag = String(now.getDate()).padStart(2, "0");
+  const mon = String(now.getMonth() + 1).padStart(2, "0");
   const jahr = now.getFullYear();
   const reNr = 1000 + Math.floor(Math.random() * 8999);
 
-  const absName    = verkInfo ? verkInfo.name    : (verkName || "[Unternehmen]");
-  const absAdresse = verkInfo ? `${verkInfo.strasse}, ${verkInfo.plz} ${verkInfo.ort}` : "";
-  const absKontakt = verkInfo ? [verkInfo.telefon, verkInfo.email].filter(Boolean).join(" · ") : "";
-  const absUst     = verkInfo?.ust_id ? `USt-IdNr.: ${verkInfo.ust_id}` : "";
+  const absName = verkInfo ? verkInfo.name : verkName || "[Unternehmen]";
+  const absAdresse = verkInfo
+    ? `${verkInfo.strasse}, ${verkInfo.plz} ${verkInfo.ort}`
+    : "";
+  const absKontakt = verkInfo
+    ? [verkInfo.telefon, verkInfo.email].filter(Boolean).join(" · ")
+    : "";
+  const absUst = verkInfo?.ust_id ? `USt-IdNr.: ${verkInfo.ust_id}` : "";
 
-  const varianten   = mitRabatt ? VARIANTEN_MIT_RABATT : VARIANTEN_OHNE_RABATT;
-  const variante    = pickVD(varianten);
-  const leerFelder  = variante.felder;
+  const varianten = mitRabatt ? VARIANTEN_MIT_RABATT : VARIANTEN_OHNE_RABATT;
+  const variante = pickVD(varianten);
+  const leerFelder = variante.felder;
   const rueckwaerts = variante.rueckwaerts;
 
   const clozeAktiv = document.getElementById("optClozeVD")?.checked ?? false;
 
   // ── Hilfsfunktionen ──────────────────────────────────────────────────────
-  const mono     = `font-family:'Courier New',monospace;`;
+  const mono = `font-family:'Courier New',monospace;`;
   const leerFeld = `display:inline-block;width:130px;height:20px;border-bottom:1.5px solid #999;background:#fafaf7;vertical-align:bottom;`;
   const clozeSpan = `font-family:'Courier New',monospace;font-size:10.5px;color:#1a5276;background:#eaf4fb;border:1px dashed #5dade2;border-radius:3px;padding:1px 5px;`;
 
@@ -266,25 +328,42 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
   }
 
   const gesamtpreisZelle = leerFelder.has("gesamtpreis")
-    ? (clozeAktiv
-        ? `<td style="text-align:right;padding:8px 9px;border-bottom:1px solid #eee;${mono}"><span style="${clozeSpan}">${clozeInline(listennetto)}</span></td>`
-        : `<td style="text-align:right;padding:8px 9px;border-bottom:1px solid #eee;"><span style="${leerFeld}"></span></td>`)
+    ? clozeAktiv
+      ? `<td style="text-align:right;padding:8px 9px;border-bottom:1px solid #eee;${mono}"><span style="${clozeSpan}">${clozeInline(listennetto)}</span></td>`
+      : `<td style="text-align:right;padding:8px 9px;border-bottom:1px solid #eee;"><span style="${leerFeld}"></span></td>`
     : `<td style="text-align:right;padding:8px 9px;border-bottom:1px solid #eee;"><span style="font-size:13px;${mono}">${fmtVD(listennetto)}</span></td>`;
 
   // Summenzeile als <tr> – mit leerer Spalte links für Word-Rechtsausrichtung
   function sumZeile(label, wertHTML, opts = {}) {
     const { fett = false, doppelLinie = false, letzte = false } = opts;
-    const bTop       = doppelLinie ? "border-top:2px solid #555;" : "border-top:1px solid #eee;";
-    const bBot       = letzte ? "" : "border-bottom:1px solid #eee;";
-    const tdBase     = "padding:5px 9px;font-size:12px;" + bTop + bBot;
+    const bTop = doppelLinie
+      ? "border-top:2px solid #555;"
+      : "border-top:1px solid #eee;";
+    const bBot = letzte ? "" : "border-bottom:1px solid #eee;";
+    const tdBase = "padding:5px 9px;font-size:12px;" + bTop + bBot;
     const labelStyle = fett ? "font-weight:700;font-size:13px;" : "color:#444;";
     const spanLabel = "font-size:12px;" + labelStyle + "white-space:nowrap;";
-    const spanWert  = "font-size:13px;" + mono + "white-space:nowrap;";
+    const spanWert = "font-size:13px;" + mono + "white-space:nowrap;";
     return (
       "<tr>" +
-        "<td style=\"" + bTop + bBot + "\"></td>" +
-        "<td style=\"" + tdBase + "width:180px;\"><span style=\"" + spanLabel + "\">" + label + "</span></td>" +
-        "<td style=\"" + tdBase + "text-align:right;width:150px;\"><span style=\"" + spanWert + "\">" + wertHTML + "</span></td>" +
+      '<td style="' +
+      bTop +
+      bBot +
+      '"></td>' +
+      '<td style="' +
+      tdBase +
+      'width:180px;"><span style="' +
+      spanLabel +
+      '">' +
+      label +
+      "</span></td>" +
+      '<td style="' +
+      tdBase +
+      'text-align:right;width:150px;"><span style="' +
+      spanWert +
+      '">' +
+      wertHTML +
+      "</span></td>" +
       "</tr>"
     );
   }
@@ -292,23 +371,39 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
   // ── Summenblock ──────────────────────────────────────────────────────────
   let summenRows = "";
   if (mitRabatt) {
-    summenRows += sumZeile("Nettobetrag (Listenpreis)",                            zelle("nettobetrag", listennetto));
-    summenRows += sumZeile(`Rabatt <span style="font-size:11px;color:#888;">${rabattProzent}&nbsp;%</span>`, zelle("rabatt", rabattBetrag));
-    summenRows += sumZeile("Zielverkaufspreis",                                    zelle("ziel", nettoBetrag));
+    summenRows += sumZeile(
+      "Nettobetrag (Listenpreis)",
+      zelle("nettobetrag", listennetto),
+    );
+    summenRows += sumZeile(
+      `Rabatt <span style="font-size:11px;color:#888;">${rabattProzent}&nbsp;%</span>`,
+      zelle("rabatt", rabattBetrag),
+    );
+    summenRows += sumZeile("Zielverkaufspreis", zelle("ziel", nettoBetrag));
   } else {
-    summenRows += sumZeile("Nettobetrag",                                          zelle("nettobetrag", listennetto));
+    summenRows += sumZeile("Nettobetrag", zelle("nettobetrag", listennetto));
   }
-  summenRows += sumZeile(`Umsatzsteuer <span style="font-size:11px;color:#888;">19&nbsp;%</span>`, zelle("ust", ust));
-  summenRows += sumZeile("Rechnungsbetrag",                                        zelle("brutto", brutto), { fett: true, doppelLinie: true, letzte: true });
+  summenRows += sumZeile(
+    `Umsatzsteuer <span style="font-size:11px;color:#888;">19&nbsp;%</span>`,
+    zelle("ust", ust),
+  );
+  summenRows += sumZeile("Rechnungsbetrag", zelle("brutto", brutto), {
+    fett: true,
+    doppelLinie: true,
+    letzte: true,
+  });
 
   // ── Lösungsblock ─────────────────────────────────────────────────────────
   let loesungHTML = '<h2 class="loesung">Lösung:</h2>';
-  if (rueckwaerts) loesungHTML += `<em>Rückwärtsrechnung – Rechnungsbetrag ist gegeben:</em><br>`;
+  if (rueckwaerts)
+    loesungHTML += `<em>Rückwärtsrechnung – Rechnungsbetrag ist gegeben:</em><br>`;
 
-  if (leerFelder.has("gesamtpreis")) loesungHTML += `Menge ${menge} × Einzelpreis ${fmtVD(einzelpreis)} = <strong>Gesamtpreis ${fmtVD(listennetto)}</strong><br>`;
+  if (leerFelder.has("gesamtpreis"))
+    loesungHTML += `Menge ${menge} × Einzelpreis ${fmtVD(einzelpreis)} = <strong>Gesamtpreis ${fmtVD(listennetto)}</strong><br>`;
 
   if (mitRabatt) {
-    if (leerFelder.has("nettobetrag")) loesungHTML += `Nettobetrag (Listenpreis) = Gesamtpreis = <strong>${fmtVD(listennetto)}</strong><br>`;
+    if (leerFelder.has("nettobetrag"))
+      loesungHTML += `Nettobetrag (Listenpreis) = Gesamtpreis = <strong>${fmtVD(listennetto)}</strong><br>`;
     if (leerFelder.has("rabatt")) {
       if (rueckwaerts)
         loesungHTML += `Rabatt: Zielverkaufspreis ÷ (1 − ${rabattProzent}/100) × ${rabattProzent}/100 = <strong>${fmtVD(rabattBetrag)}</strong><br>`;
@@ -327,7 +422,8 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
       else
         loesungHTML += `Umsatzsteuer: ${fmtVD(nettoBetrag)} × 19&nbsp;% = <strong>${fmtVD(ust)}</strong><br>`;
     }
-    if (leerFelder.has("brutto")) loesungHTML += `Rechnungsbetrag: ${fmtVD(nettoBetrag)} + ${fmtVD(ust)} = <strong>${fmtVD(brutto)}</strong>`;
+    if (leerFelder.has("brutto"))
+      loesungHTML += `Rechnungsbetrag: ${fmtVD(nettoBetrag)} + ${fmtVD(ust)} = <strong>${fmtVD(brutto)}</strong>`;
   } else {
     if (leerFelder.has("nettobetrag")) {
       if (rueckwaerts)
@@ -341,7 +437,8 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
       else
         loesungHTML += `Umsatzsteuer: ${fmtVD(listennetto)} × 19&nbsp;% = <strong>${fmtVD(ust)}</strong><br>`;
     }
-    if (leerFelder.has("brutto")) loesungHTML += `Rechnungsbetrag: ${fmtVD(nettoBetrag)} + ${fmtVD(ust)} = <strong>${fmtVD(brutto)}</strong>`;
+    if (leerFelder.has("brutto"))
+      loesungHTML += `Rechnungsbetrag: ${fmtVD(nettoBetrag)} + ${fmtVD(ust)} = <strong>${fmtVD(brutto)}</strong>`;
   }
 
   // ── Haupt-HTML (komplett tabellenbasiert) ─────────────────────────────────
@@ -435,18 +532,22 @@ function aktualisiereClozeAnzeige() {
   erstelleVordrucke();
 }
 
-
 // ============================================================================
 // HAUPTFUNKTION
 // ============================================================================
 
 function erstelleVordrucke() {
-  const verkName  = document.getElementById("vdKunde")?.value?.trim() || "";
-  const produkt   = document.getElementById("vdProdukt")?.value?.trim() || "Fertigerzeugnisse";
+  const verkName = document.getElementById("vdKunde")?.value?.trim() || "";
+  const produkt =
+    document.getElementById("vdProdukt")?.value?.trim() || "Fertigerzeugnisse";
   const mitRabatt = document.getElementById("optMitRabattVD")?.checked ?? false;
-  const verkInfo  = getUnternehmenInfoVD(verkName);
-  document.getElementById("vordruck-ausgabe").innerHTML =
-    erstelleVordruck(verkName, verkInfo, produkt, mitRabatt);
+  const verkInfo = getUnternehmenInfoVD(verkName);
+  document.getElementById("vordruck-ausgabe").innerHTML = erstelleVordruck(
+    verkName,
+    verkInfo,
+    produkt,
+    mitRabatt,
+  );
 }
 
 // ============================================================================
@@ -501,13 +602,19 @@ Am Ende fragst du, ob eine weitere Übung gewünscht ist.
 `;
 
 function kopiereKiPromptVD() {
-  navigator.clipboard.writeText(KI_ASSISTENT_PROMPT).then(() => {
-    const btn = document.getElementById("kiPromptKopierenBtnVD");
-    const orig = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add("ki-prompt-btn--success");
-    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove("ki-prompt-btn--success"); }, 2500);
-  }).catch(() => zeigeModal("Kopieren nicht möglich."));
+  navigator.clipboard
+    .writeText(KI_ASSISTENT_PROMPT)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtnVD");
+      const orig = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() => zeigeModal("Kopieren nicht möglich."));
 }
 
 function togglekiPromptVorschau() {
@@ -524,15 +631,23 @@ function togglekiPromptVorschau() {
 
 document.addEventListener("DOMContentLoaded", () => {
   const sel = document.getElementById("vdKunde");
-  if (sel) sel.addEventListener("change", () => { vdUnternehmen = sel.value; });
+  if (sel)
+    sel.addEventListener("change", () => {
+      vdUnternehmen = sel.value;
+    });
 
   const vorschau = document.getElementById("kiPromptVorschau");
   if (vorschau) vorschau.textContent = KI_ASSISTENT_PROMPT;
 
-  document.addEventListener("yamlDataLoaded", () => {    // ← NEU
-    fuellDropdownVD();
-    setTimeout(erstelleVordrucke, 150);
-  }, { once: true });
+  document.addEventListener(
+    "yamlDataLoaded",
+    () => {
+      // ← NEU
+      fuellDropdownVD();
+      setTimeout(erstelleVordrucke, 150);
+    },
+    { once: true },
+  );
 
   ladeYamlVD();
 

@@ -7,7 +7,7 @@ let ortGewerbesteuer = "der Stadt";
 let yamlDataGewerbesteuer = [];
 
 function getUserCompaniesGst() {
-  const stored = localStorage.getItem('userCompanies');
+  const stored = localStorage.getItem("userCompanies");
   return stored ? JSON.parse(stored) : [];
 }
 
@@ -16,8 +16,8 @@ function mergeUserCompaniesIntoYamlDataGst() {
   if (userCompanies.length === 0) return;
   yamlDataGewerbesteuer = [...yamlDataGewerbesteuer, ...userCompanies];
   yamlDataGewerbesteuer.sort((a, b) => {
-    const bA = a.unternehmen?.branche || '';
-    const bB = b.unternehmen?.branche || '';
+    const bA = a.unternehmen?.branche || "";
+    const bB = b.unternehmen?.branche || "";
     return bA.localeCompare(bB);
   });
 }
@@ -49,22 +49,22 @@ const weicheStandortfaktorenPool = [
 ];
 
 const standortfaktorIcons = {
-  "günstige Grundstückspreise und Mieten":                    "€",
-  "gute Verkehrsanbindung (Autobahn, Bahn)":                  "🚆",
-  "niedriger Gewerbesteuerhebesatz im Vergleich zur Region":  "📋",
+  "günstige Grundstückspreise und Mieten": "€",
+  "gute Verkehrsanbindung (Autobahn, Bahn)": "🚆",
+  "niedriger Gewerbesteuerhebesatz im Vergleich zur Region": "📋",
   "gut ausgebaute Infrastruktur (Breitband, Energieversorgung)": "⚡",
-  "Nähe zu Lieferanten und Zulieferern":                      "📦",
-  "verfügbare Gewerbeflächen und Industriegebiete":           "🏭",
-  "niedrige Lohnkosten im regionalen Vergleich":              "💶",
-  "Förderprogramme und Subventionen des Landes Bayern":       "📑",
-  "hohe Lebensqualität und attraktives Wohnumfeld":           "🏡",
-  "gutes Bildungsangebot (Schulen, Hochschulen)":             "🎓",
-  "vielfältige Erholungs-, Kultur- und Freizeitangebote":     "🎭",
-  "gute medizinische Versorgung":                             "🏥",
-  "soziales Umfeld und Gemeinschaftsgefühl":                  "🤝",
-  "attraktive Naturlage und Erholungsgebiete in der Umgebung":"🌳",
-  "gutes Image der Stadt / Region":                           "⭐",
-  "familienfreundliche Einrichtungen (Kitas, Betreuung)":     "👨‍👩‍👧",
+  "Nähe zu Lieferanten und Zulieferern": "📦",
+  "verfügbare Gewerbeflächen und Industriegebiete": "🏭",
+  "niedrige Lohnkosten im regionalen Vergleich": "💶",
+  "Förderprogramme und Subventionen des Landes Bayern": "📑",
+  "hohe Lebensqualität und attraktives Wohnumfeld": "🏡",
+  "gutes Bildungsangebot (Schulen, Hochschulen)": "🎓",
+  "vielfältige Erholungs-, Kultur- und Freizeitangebote": "🎭",
+  "gute medizinische Versorgung": "🏥",
+  "soziales Umfeld und Gemeinschaftsgefühl": "🤝",
+  "attraktive Naturlage und Erholungsgebiete in der Umgebung": "🌳",
+  "gutes Image der Stadt / Region": "⭐",
+  "familienfreundliche Einrichtungen (Kitas, Betreuung)": "👨‍👩‍👧",
 };
 
 function getIcon(text) {
@@ -76,10 +76,12 @@ function getIcon(text) {
 // ============================================================================
 
 function formatCurrencyGst(value) {
-  return value.toLocaleString("de-DE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }) + "";
+  return (
+    value.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + ""
+  );
 }
 
 function roundToTwoGst(num) {
@@ -96,14 +98,18 @@ function shuffleArray(arr) {
 }
 
 function generateRandomGewerbeertrag() {
-  const min = 100, max = 800;
+  const min = 100,
+    max = 800;
   const val = (Math.floor(Math.random() * (max - min + 1)) + min) * 1000;
   const rest = Math.floor(Math.random() * 9) * 100;
   return val + rest;
 }
 
 function generateRandomHebesatz() {
-  const h = [300,310,320,330,340,350,360,370,380,390,400,410,420,430,440,450,460,470,480,490];
+  const h = [
+    300, 310, 320, 330, 340, 350, 360, 370, 380, 390, 400, 410, 420, 430, 440,
+    450, 460, 470, 480, 490,
+  ];
   return h[Math.floor(Math.random() * h.length)];
 }
 
@@ -113,7 +119,11 @@ function generateRandomHebesatz() {
 
 function validatePositiveNumber(val, fieldName) {
   const n = parseFloat(val.toString().replace(",", "."));
-  if (isNaN(n) || n < 0) return { valid: false, error: `"${fieldName}" muss eine positive Zahl sein.` };
+  if (isNaN(n) || n < 0)
+    return {
+      valid: false,
+      error: `"${fieldName}" muss eine positive Zahl sein.`,
+    };
   return { valid: true, value: n };
 }
 
@@ -124,7 +134,9 @@ function showValidationError(msg) {
   el.style.display = msg ? "block" : "none";
 }
 
-function clearValidationError() { showValidationError(""); }
+function clearValidationError() {
+  showValidationError("");
+}
 
 // ============================================================================
 // INPUT-WERTE AUSLESEN
@@ -132,33 +144,52 @@ function clearValidationError() { showValidationError(""); }
 
 function getGstInputValues() {
   const errors = [];
-  const gewerbeertragRaw  = document.getElementById("inputGewerbeertrag")?.value  || "0";
-  const freibetragRaw     = document.getElementById("inputFreibetrag")?.value     || "0";
-  const steuermesszahlRaw = document.getElementById("inputSteuermesszahl")?.value || "0";
-  const hebesatzRaw       = document.getElementById("inputHebesatz")?.value       || "0";
+  const gewerbeertragRaw =
+    document.getElementById("inputGewerbeertrag")?.value || "0";
+  const freibetragRaw =
+    document.getElementById("inputFreibetrag")?.value || "0";
+  const steuermesszahlRaw =
+    document.getElementById("inputSteuermesszahl")?.value || "0";
+  const hebesatzRaw = document.getElementById("inputHebesatz")?.value || "0";
 
-  const gV = validatePositiveNumber(gewerbeertragRaw.replace(/\./g,"").replace(",","."),  "Gewerbeertrag");
-  const fV = validatePositiveNumber(freibetragRaw.replace(/\./g,"").replace(",","."),     "Freibetrag");
-  const mV = validatePositiveNumber(steuermesszahlRaw.replace(",","."),                   "Steuermesszahl");
-  const hV = validatePositiveNumber(hebesatzRaw.replace(",","."),                         "Hebesatz");
+  const gV = validatePositiveNumber(
+    gewerbeertragRaw.replace(/\./g, "").replace(",", "."),
+    "Gewerbeertrag",
+  );
+  const fV = validatePositiveNumber(
+    freibetragRaw.replace(/\./g, "").replace(",", "."),
+    "Freibetrag",
+  );
+  const mV = validatePositiveNumber(
+    steuermesszahlRaw.replace(",", "."),
+    "Steuermesszahl",
+  );
+  const hV = validatePositiveNumber(hebesatzRaw.replace(",", "."), "Hebesatz");
 
   if (!gV.valid) errors.push(gV.error);
   if (!fV.valid) errors.push(fV.error);
   if (!mV.valid) errors.push(mV.error);
   if (!hV.valid) errors.push(hV.error);
-  if (errors.length > 0) { showValidationError(errors.join(" | ")); return null; }
+  if (errors.length > 0) {
+    showValidationError(errors.join(" | "));
+    return null;
+  }
 
-  const gewerbeertrag  = gV.value;
-  const freibetrag     = fV.value;
+  const gewerbeertrag = gV.value;
+  const freibetrag = fV.value;
   const steuermesszahl = mV.value;
-  const hebesatz       = hV.value;
+  const hebesatz = hV.value;
 
   if (freibetrag >= gewerbeertrag) {
-    showValidationError("Der Freibetrag darf nicht größer oder gleich dem Gewerbeertrag sein.");
+    showValidationError(
+      "Der Freibetrag darf nicht größer oder gleich dem Gewerbeertrag sein.",
+    );
     return null;
   }
   if (steuermesszahl <= 0 || steuermesszahl > 100) {
-    showValidationError("Die Steuermesszahl muss zwischen 0 und 100 liegen (z.\u00a0B. 3,5).");
+    showValidationError(
+      "Die Steuermesszahl muss zwischen 0 und 100 liegen (z.\u00a0B. 3,5).",
+    );
     return null;
   }
   if (hebesatz < 200 || hebesatz > 900) {
@@ -167,20 +198,31 @@ function getGstInputValues() {
   }
 
   // Grundsteuer A + B aus Inputs lesen
-  const grundsteuerARaw = document.getElementById("inputGrundsteuerA")?.value || "340";
-  const grundsteuerBRaw = document.getElementById("inputGrundsteuerB")?.value || "340";
-  const grundsteuerA = parseFloat(grundsteuerARaw.replace(",",".")) || 340;
-  const grundsteuerB = parseFloat(grundsteuerBRaw.replace(",",".")) || 340;
+  const grundsteuerARaw =
+    document.getElementById("inputGrundsteuerA")?.value || "340";
+  const grundsteuerBRaw =
+    document.getElementById("inputGrundsteuerB")?.value || "340";
+  const grundsteuerA = parseFloat(grundsteuerARaw.replace(",", ".")) || 340;
+  const grundsteuerB = parseFloat(grundsteuerBRaw.replace(",", ".")) || 340;
 
   clearValidationError();
-  return { gewerbeertrag, freibetrag, steuermesszahl, hebesatz, grundsteuerA, grundsteuerB };
+  return {
+    gewerbeertrag,
+    freibetrag,
+    steuermesszahl,
+    hebesatz,
+    grundsteuerA,
+    grundsteuerB,
+  };
 }
 
 function getCheckedStandortfaktoren(pool) {
   const result = [];
-  document.querySelectorAll(`input[type="checkbox"][data-pool="${pool}"]:checked`).forEach(cb => {
-    result.push(cb.value);
-  });
+  document
+    .querySelectorAll(`input[type="checkbox"][data-pool="${pool}"]:checked`)
+    .forEach((cb) => {
+      result.push(cb.value);
+    });
   return result;
 }
 
@@ -188,10 +230,15 @@ function getCheckedStandortfaktoren(pool) {
 // BERECHNUNG
 // ============================================================================
 
-function berechneGewerbesteuer(gewerbeertrag, freibetrag, steuermesszahl, hebesatz) {
+function berechneGewerbesteuer(
+  gewerbeertrag,
+  freibetrag,
+  steuermesszahl,
+  hebesatz,
+) {
   const steuerpflichtiger = gewerbeertrag - freibetrag;
-  const messbetrag        = roundToTwoGst((steuermesszahl / 100) * steuerpflichtiger);
-  const gewerbesteuer     = roundToTwoGst((hebesatz / 100) * messbetrag);
+  const messbetrag = roundToTwoGst((steuermesszahl / 100) * steuerpflichtiger);
+  const gewerbesteuer = roundToTwoGst((hebesatz / 100) * messbetrag);
   return { steuerpflichtiger, messbetrag, gewerbesteuer };
 }
 
@@ -199,25 +246,39 @@ function berechneGewerbesteuer(gewerbeertrag, freibetrag, steuermesszahl, hebesa
 // STADTVORLAGE HTML – modern, inline-CSS, Faktoren gemischt
 // ============================================================================
 
-function erstelleStadtVorlageHTML(ort, hebesatz, grundsteuerA, grundsteuerB, faktoren) {
-  const stadtName = (ort && ort !== "der Stadt") ? ort.toUpperCase() : "STADT";
-  const gemischt  = shuffleArray(faktoren);
+function erstelleStadtVorlageHTML(
+  ort,
+  hebesatz,
+  grundsteuerA,
+  grundsteuerB,
+  faktoren,
+) {
+  const stadtName = ort && ort !== "der Stadt" ? ort.toUpperCase() : "STADT";
+  const gemischt = shuffleArray(faktoren);
 
-  const faktorenItems = gemischt.map(f => `
+  const faktorenItems = gemischt
+    .map(
+      (f) => `
     <div style="display:flex; align-items:flex-start; gap:10px; padding:7px 16px; border-top:1px solid rgba(255,255,255,0.4);">
       <span style="font-size:1.05em; flex-shrink:0; width:22px; text-align:center; margin-top:1px;">${getIcon(f)}</span>
       <span style="font-size:0.91em; color:#1a2a4a; line-height:1.4;">${f}</span>
-    </div>`).join("");
+    </div>`,
+    )
+    .join("");
 
   const steuerZeilen = [
-    ["Grundsteuer A",        `${grundsteuerA}\u00a0%`],
-    ["Grundsteuer B",        `${grundsteuerB}\u00a0%`],
+    ["Grundsteuer A", `${grundsteuerA}\u00a0%`],
+    ["Grundsteuer B", `${grundsteuerB}\u00a0%`],
     ["Gewerbesteuer Hebesatz", `${hebesatz}\u00a0%`],
-  ].map(([label, wert]) => `
+  ]
+    .map(
+      ([label, wert]) => `
     <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 16px; border-bottom:1px solid rgba(0,60,120,0.1);">
       <span style="font-size:0.91em; color:#1a2a4a;">${label}</span>
       <span style="font-weight:700; font-size:0.91em; color:#1a3a6a; white-space:nowrap;">${wert}</span>
-    </div>`).join("");
+    </div>`,
+    )
+    .join("");
 
   return `
 <table style="
@@ -297,7 +358,14 @@ function erstelleStadtVorlageHTML(ort, hebesatz, grundsteuerA, grundsteuerB, fak
 // ============================================================================
 
 function erstelleAufgabenHTML(values, faktoren) {
-  const { gewerbeertrag, freibetrag, steuermesszahl, hebesatz, grundsteuerA, grundsteuerB } = values;
+  const {
+    gewerbeertrag,
+    freibetrag,
+    steuermesszahl,
+    hebesatz,
+    grundsteuerA,
+    grundsteuerB,
+  } = values;
   const unternehmen = kundeGewerbesteuer;
   const ort = ortGewerbesteuer;
 
@@ -339,9 +407,9 @@ function erstelleLoesungHTML(values) {
   const unternehmen = kundeGewerbesteuer;
   const ort = ortGewerbesteuer;
 
-  const harte  = getCheckedStandortfaktoren("hart");
+  const harte = getCheckedStandortfaktoren("hart");
   const weiche = getCheckedStandortfaktoren("weich");
-  const harteText  = harte.length  ? harte.join(", ")  : "keine";
+  const harteText = harte.length ? harte.join(", ") : "keine";
   const weicheText = weiche.length ? weiche.join(", ") : "keine";
 
   return `
@@ -381,7 +449,7 @@ function erstelleLoesungHTML(values) {
         <div style="display:flex; align-items:center; gap:16px; margin:14px 0; font-size:0.96em; flex-wrap:wrap;">
           <span style="min-width:220px; color:#333;">Gewerbesteuermessbetrag in Euro:</span>
           <span style="display:inline-flex; flex-direction:column; align-items:center; font-family:courier,monospace;">
-            <span style="padding:1px 8px;">${steuermesszahl.toLocaleString("de-DE",{minimumFractionDigits:1,maximumFractionDigits:2})} · ${steuerpflichtiger.toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+            <span style="padding:1px 8px;">${steuermesszahl.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 2 })} · ${steuerpflichtiger.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             <span style="display:block; width:100%; border-top:1px solid #333; margin:1px 0;"></span>
             <span style="padding:1px 8px;">100</span>
           </span>
@@ -390,7 +458,7 @@ function erstelleLoesungHTML(values) {
         <div style="display:flex; align-items:center; gap:16px; margin:14px 0; font-size:0.96em; flex-wrap:wrap;">
           <span style="min-width:220px; color:#333;">Gewerbesteuer in Euro:</span>
           <span style="display:inline-flex; flex-direction:column; align-items:center; font-family:courier,monospace;">
-            <span style="padding:1px 8px;">${hebesatz} · ${messbetrag.toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+            <span style="padding:1px 8px;">${hebesatz} · ${messbetrag.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             <span style="display:block; width:100%; border-top:1px solid #333; margin:1px 0;"></span>
             <span style="padding:1px 8px;">100</span>
           </span>
@@ -414,23 +482,33 @@ function erstelleLoesungHTML(values) {
 // ============================================================================
 
 function erstelleCheckboxUI() {
-  const colStyle   = "display:flex; flex-direction:column; gap:0;";
-  const headStyle  = "font-weight:600; font-size:0.88em; color:#444; margin-bottom:6px;";
-  const labelStyle = "display:grid; grid-template-columns:18px 1fr; align-items:flex-start; gap:6px; margin:3px 0; font-size:0.91em; cursor:pointer; line-height:1.35;";
-  const cbStyle    = "margin-top:3px; justify-self:start;";
+  const colStyle = "display:flex; flex-direction:column; gap:0;";
+  const headStyle =
+    "font-weight:600; font-size:0.88em; color:#444; margin-bottom:6px;";
+  const labelStyle =
+    "display:grid; grid-template-columns:18px 1fr; align-items:flex-start; gap:6px; margin:3px 0; font-size:0.91em; cursor:pointer; line-height:1.35;";
+  const cbStyle = "margin-top:3px; justify-self:start;";
 
   // Erste zwei jeweils vorausgewählt
-  const harteChecks = harteStandortfaktorenPool.map((f, i) => `
+  const harteChecks = harteStandortfaktorenPool
+    .map(
+      (f, i) => `
     <label style="${labelStyle}">
       <input type="checkbox" data-pool="hart" value="${f}" style="${cbStyle}"${i < 2 ? " checked" : ""}>
       <span>${getIcon(f)}&nbsp;${f}</span>
-    </label>`).join("");
+    </label>`,
+    )
+    .join("");
 
-  const weicheChecks = weicheStandortfaktorenPool.map((f, i) => `
+  const weicheChecks = weicheStandortfaktorenPool
+    .map(
+      (f, i) => `
     <label style="${labelStyle}">
       <input type="checkbox" data-pool="weich" value="${f}" style="${cbStyle}"${i < 2 ? " checked" : ""}>
       <span>${getIcon(f)}&nbsp;${f}</span>
-    </label>`).join("");
+    </label>`,
+    )
+    .join("");
 
   return `
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px 28px; margin:8px 0 4px 0;">
@@ -465,7 +543,9 @@ function ladeYamlGewerbesteuer() {
       mergeUserCompaniesIntoYamlDataGst();
       document.dispatchEvent(new Event("yamlDataGewerbesteuerLoaded"));
       return true;
-    } catch (e) { /* ignorieren */ }
+    } catch (e) {
+      /* ignorieren */
+    }
   }
   fetch("js/unternehmen.yml")
     .then((r) => (r.ok ? r.text() : Promise.reject()))
@@ -474,7 +554,9 @@ function ladeYamlGewerbesteuer() {
       mergeUserCompaniesIntoYamlDataGst();
       document.dispatchEvent(new Event("yamlDataGewerbesteuerLoaded"));
     })
-    .catch(() => { document.dispatchEvent(new Event("yamlDataGewerbesteuerLoaded")); });
+    .catch(() => {
+      document.dispatchEvent(new Event("yamlDataGewerbesteuerLoaded"));
+    });
   return false;
 }
 
@@ -483,14 +565,17 @@ function fillCompanyDropdownGst() {
   const select = document.getElementById("gstKunde");
   if (!select) return;
   const sorted = [...yamlDataGewerbesteuer].sort((a, b) => {
-    const bA = a.unternehmen?.branche || "", bB = b.unternehmen?.branche || "";
+    const bA = a.unternehmen?.branche || "",
+      bB = b.unternehmen?.branche || "";
     if (bA !== bB) return bA.localeCompare(bB);
     return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
   select.innerHTML = "";
   const ph = document.createElement("option");
-  ph.value = ""; ph.text = "— bitte Unternehmen auswählen —";
-  ph.disabled = true; ph.selected = true;
+  ph.value = "";
+  ph.text = "— bitte Unternehmen auswählen —";
+  ph.disabled = true;
+  ph.selected = true;
   select.appendChild(ph);
   sorted.forEach((c) => {
     const u = c.unternehmen;
@@ -506,7 +591,9 @@ function fillCompanyDropdownGst() {
 
 function getOrtFromYaml(name) {
   if (!yamlDataGewerbesteuer?.length || !name) return null;
-  const eintrag = yamlDataGewerbesteuer.find(e => e.unternehmen?.name === name);
+  const eintrag = yamlDataGewerbesteuer.find(
+    (e) => e.unternehmen?.name === name,
+  );
   return eintrag?.unternehmen?.adresse?.ort || null;
 }
 
@@ -514,7 +601,7 @@ function autoSelectMyCompanyGst() {
   const name = localStorage.getItem("myCompany");
   if (!name) return;
   const sel = document.getElementById("gstKunde");
-  const opt = Array.from(sel?.options || []).find(o => o.value === name);
+  const opt = Array.from(sel?.options || []).find((o) => o.value === name);
   if (!opt) return;
   sel.value = name;
   setKundeGst(name);
@@ -536,8 +623,8 @@ function setKundeGst(name) {
 
 function setzeZufallswerte() {
   const gewerbeertrag = generateRandomGewerbeertrag();
-  const freibetrag    = 24500;
-  const hebesatz      = generateRandomHebesatz();
+  const freibetrag = 24500;
+  const hebesatz = generateRandomHebesatz();
 
   const elG = document.getElementById("inputGewerbeertrag");
   const elF = document.getElementById("inputFreibetrag");
@@ -558,12 +645,14 @@ function zeigeGewerbesteuerAufgaben() {
   const values = getGstInputValues();
   if (!values) return;
 
-  const harte  = getCheckedStandortfaktoren("hart");
+  const harte = getCheckedStandortfaktoren("hart");
   const weiche = getCheckedStandortfaktoren("weich");
   const alleFaktoren = [...harte, ...weiche];
 
   if (alleFaktoren.length === 0) {
-    showValidationError("Bitte wählen Sie mindestens einen Standortfaktor aus.");
+    showValidationError(
+      "Bitte wählen Sie mindestens einen Standortfaktor aus.",
+    );
     return;
   }
   clearValidationError();
@@ -580,8 +669,7 @@ function zeigeGewerbesteuerAufgaben() {
   };
 
   container.innerHTML =
-    erstelleAufgabenHTML(values, alleFaktoren) +
-    erstelleLoesungHTML(values);
+    erstelleAufgabenHTML(values, alleFaktoren) + erstelleLoesungHTML(values);
 
   // KI-Prompt-Vorschau aktualisieren falls sichtbar
   const vorschau = document.getElementById("kiPromptVorschau");
@@ -651,16 +739,23 @@ function erstelleKiPromptText() {
   if (!letzteGstAufgabe) {
     return KI_ASSISTENT_PROMPT.replace(
       "###AUFGABEN und LÖSUNGEN###",
-      "(Noch keine Aufgabe generiert. Bitte zuerst Aufgaben erstellen.)"
+      "(Noch keine Aufgabe generiert. Bitte zuerst Aufgaben erstellen.)",
     );
   }
 
   const { values, faktoren, ort, unternehmen } = letzteGstAufgabe;
-  const { gewerbeertrag, freibetrag, steuermesszahl, hebesatz, grundsteuerA, grundsteuerB } = values;
+  const {
+    gewerbeertrag,
+    freibetrag,
+    steuermesszahl,
+    hebesatz,
+    grundsteuerA,
+    grundsteuerB,
+  } = values;
   const { steuerpflichtiger, messbetrag, gewerbesteuer } =
     berechneGewerbesteuer(gewerbeertrag, freibetrag, steuermesszahl, hebesatz);
 
-  const harte  = getCheckedStandortfaktoren("hart");
+  const harte = getCheckedStandortfaktoren("hart");
   const weiche = getCheckedStandortfaktoren("weich");
 
   const aufgabenText = `
@@ -688,31 +783,39 @@ Aufgabe 2:
 − Freibetrag:                     ${formatCurrencyGst(freibetrag)}
 = Steuerpflichtiger Gewerbeertrag:${formatCurrencyGst(steuerpflichtiger)}
 
-  Messbetrag = ${steuermesszahl} × ${steuerpflichtiger.toLocaleString("de-DE",{minimumFractionDigits:2})} / 100 = ${formatCurrencyGst(messbetrag)}
-  Gewerbesteuer = ${hebesatz} × ${messbetrag.toLocaleString("de-DE",{minimumFractionDigits:2})} / 100 = ${formatCurrencyGst(gewerbesteuer)}
+  Messbetrag = ${steuermesszahl} × ${steuerpflichtiger.toLocaleString("de-DE", { minimumFractionDigits: 2 })} / 100 = ${formatCurrencyGst(messbetrag)}
+  Gewerbesteuer = ${hebesatz} × ${messbetrag.toLocaleString("de-DE", { minimumFractionDigits: 2 })} / 100 = ${formatCurrencyGst(gewerbesteuer)}
 
 Aufgabe 3:
   Harte Standortfaktoren:  ${harte.join(", ") || "keine"}
   Weiche Standortfaktoren: ${weiche.join(", ") || "keine"}
 `.trim();
 
-  return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", aufgabenText);
+  return KI_ASSISTENT_PROMPT.replace(
+    "###AUFGABEN und LÖSUNGEN###",
+    aufgabenText,
+  );
 }
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(erstelleKiPromptText()).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(err => {
-    console.error('Fehler beim Kopieren:', err);
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(erstelleKiPromptText())
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch((err) => {
+      console.error("Fehler beim Kopieren:", err);
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
@@ -756,9 +859,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ortEl.addEventListener("input", () => {
       ortGewerbesteuer = ortEl.value.trim() || "der Stadt";
     });
-    
   }
-
 
   document.addEventListener(
     "yamlDataGewerbesteuerLoaded",
@@ -767,7 +868,7 @@ document.addEventListener("DOMContentLoaded", () => {
       autoSelectMyCompanyGst();
       setzeZufallswerte();
     },
-    { once: true }
+    { once: true },
   );
 
   ladeYamlGewerbesteuer();
@@ -777,16 +878,16 @@ document.addEventListener("DOMContentLoaded", () => {
     autoSelectMyCompanyGst();
     setzeZufallswerte();
   }
-    zeigeGewerbesteuerAufgaben();
+  zeigeGewerbesteuerAufgaben();
 });
 
 // Container nach erster Generierung sichtbar machen (ehemals Inline-Script)
-(function() {
+(function () {
   const _origZeige = window.zeigeGewerbesteuerAufgaben;
-  if (typeof _origZeige !== 'function') return;
-  window.zeigeGewerbesteuerAufgaben = function() {
+  if (typeof _origZeige !== "function") return;
+  window.zeigeGewerbesteuerAufgaben = function () {
     _origZeige();
-    const c = document.getElementById('gstContainer');
-    if (c && c.innerHTML.trim()) c.style.display = 'block';
+    const c = document.getElementById("gstContainer");
+    if (c && c.innerHTML.trim()) c.style.display = "block";
   };
 })();

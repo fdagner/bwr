@@ -1,69 +1,86 @@
 // ============================================================================
 // GLOBALE VARIABLEN
 // ============================================================================
-let kunde = '<i>[Modellunternehmen]</i>';
+let kunde = "<i>[Modellunternehmen]</i>";
 let letzteGenerierteGfListeEinkauf = []; // Name aus der Vorlage beibehalten (Kompatibilität mit export-buttons.js)
 
 // ============================================================================
 // INLINE-STYLE-KONSTANTEN (für HTML-Export – kein externes CSS nötig)
 // ============================================================================
 const S = {
-  kartenGrid: 'display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0 20px;',
-  karte: 'border:2px solid #e625cc;border-radius:8px;padding:16px 18px;background-color: #f7e5f7;font-size:0.93em;font-family:inherit;',
-  karteAufgabe: 'border:2px solid #1565c0;border-radius:8px;padding:16px 18px;background:#f0f4ff;font-size:0.93em;font-family:inherit;',
-  karteGuenstig: 'border:2px solid #2e7d32;border-radius:8px;padding:16px 18px;background:#f1f8f1;font-size:0.93em;font-family:inherit;',
-  loesungStack: 'display:grid;grid-template-columns:1fr;gap:18px;margin:14px 0 20px;',
-  lKarte: 'border:1px solid #ccc;border-radius:6px;padding:16px 18px;background:#fff;font-size:0.93em;font-family:inherit;',
-  lKarteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;',
-  karteTitel: 'font-weight:700;font-size:1.05em;margin-bottom:10px;color:#1a237e;display:flex;align-items:center;gap:8px;flex-wrap:wrap;',
-  badgeGuenstig: 'font-size:0.72em;padding:2px 8px;border-radius:10px;font-weight:600;background:#2e7d32;color:#fff;',
-  kalkTable: 'width:100%;border-collapse:collapse;font-size:0.91em;margin-bottom:10px;',
-  kalkErgebnisTd: 'padding:2px 4px;font-weight:700;border-top:1px solid #bbb;',
-  kalkErgebnisTdR: 'padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;font-weight:700;border-top:1px solid #bbb;',
-  kalkNormalTd: 'padding:2px 4px;',
-  kalkNormalTdR: 'padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;',
-  kalkPctTd: 'padding:2px 4px;text-align:right;white-space:nowrap;min-width:58px;',
-  kalkPctResultTd: 'padding:2px 4px;text-align:right;white-space:nowrap;min-width:58px;font-weight:700;border-top:1px solid #bbb;',
-  fazit: 'margin-top:16px;padding:12px 16px;background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;font-size:0.93em;line-height:1.7;',
-  fazitViolett: 'margin-top:8px;padding:12px 16px;background:#f9f0ff;border-left:4px solid #7b1fa2;border-radius:0 6px 6px 0;font-size:0.93em;line-height:1.7;',
-  aufgabeBox: 'background:#fff;border:1px solid #ddd;border-radius:6px;padding:14px 18px;margin-bottom:16px;line-height:1.7;',
-  aufgabeOl: 'margin:6px 0 0 18px;padding:0;',
-  aufgabeLi: 'margin-bottom:5px;',
-  h2: 'font-size:1.3em;',
-  h3: 'font-size:1.1em;',
-  liefererLabel: 'font-size:0.85em;color:#555;margin-bottom:10px;',
-  formelLabel: 'font-size:0.8em;color:#666;',
+  kartenGrid:
+    "display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0 20px;",
+  karte:
+    "border:2px solid #e625cc;border-radius:8px;padding:16px 18px;background-color: #f7e5f7;font-size:0.93em;font-family:inherit;",
+  karteAufgabe:
+    "border:2px solid #1565c0;border-radius:8px;padding:16px 18px;background:#f0f4ff;font-size:0.93em;font-family:inherit;",
+  karteGuenstig:
+    "border:2px solid #2e7d32;border-radius:8px;padding:16px 18px;background:#f1f8f1;font-size:0.93em;font-family:inherit;",
+  loesungStack:
+    "display:grid;grid-template-columns:1fr;gap:18px;margin:14px 0 20px;",
+  lKarte:
+    "border:1px solid #ccc;border-radius:6px;padding:16px 18px;background:#fff;font-size:0.93em;font-family:inherit;",
+  lKarteTitel: "font-weight:700;font-size:1.05em;margin-bottom:10px;",
+  karteTitel:
+    "font-weight:700;font-size:1.05em;margin-bottom:10px;color:#1a237e;display:flex;align-items:center;gap:8px;flex-wrap:wrap;",
+  badgeGuenstig:
+    "font-size:0.72em;padding:2px 8px;border-radius:10px;font-weight:600;background:#2e7d32;color:#fff;",
+  kalkTable:
+    "width:100%;border-collapse:collapse;font-size:0.91em;margin-bottom:10px;",
+  kalkErgebnisTd: "padding:2px 4px;font-weight:700;border-top:1px solid #bbb;",
+  kalkErgebnisTdR:
+    "padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;font-weight:700;border-top:1px solid #bbb;",
+  kalkNormalTd: "padding:2px 4px;",
+  kalkNormalTdR:
+    "padding:2px 4px;text-align:right;font-family:Courier New,monospace;white-space:nowrap;min-width:90px;",
+  kalkPctTd:
+    "padding:2px 4px;text-align:right;white-space:nowrap;min-width:58px;",
+  kalkPctResultTd:
+    "padding:2px 4px;text-align:right;white-space:nowrap;min-width:58px;font-weight:700;border-top:1px solid #bbb;",
+  fazit:
+    "margin-top:16px;padding:12px 16px;background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;font-size:0.93em;line-height:1.7;",
+  fazitViolett:
+    "margin-top:8px;padding:12px 16px;background:#f9f0ff;border-left:4px solid #7b1fa2;border-radius:0 6px 6px 0;font-size:0.93em;line-height:1.7;",
+  aufgabeBox:
+    "background:#fff;border:1px solid #ddd;border-radius:6px;padding:14px 18px;margin-bottom:16px;line-height:1.7;",
+  aufgabeOl: "margin:6px 0 0 18px;padding:0;",
+  aufgabeLi: "margin-bottom:5px;",
+  h2: "font-size:1.3em;",
+  h3: "font-size:1.1em;",
+  liefererLabel: "font-size:0.85em;color:#555;margin-bottom:10px;",
+  formelLabel: "font-size:0.8em;color:#666;",
 };
 
 // ============================================================================
 // BANKEN (Auswahlliste)
 // ============================================================================
 const BANKEN = [
-  'Sparbank Lenggries',
-  'Bayeralpbank Bad Tölz',
-  'Volksbank Chiemgau',
-  'Raiffeisenbank Altmühltal',
-  'Frankenbank Bamberg',
-  'Allgäubank Kempten',
-  'Donaubank Regensburg',
-  'Isarbank München',
-  'Oberpfalzbank Amberg',
-  'Sparkasse Fränkische Schweiz',
+  "Sparbank Lenggries",
+  "Bayeralpbank Bad Tölz",
+  "Volksbank Chiemgau",
+  "Raiffeisenbank Altmühltal",
+  "Frankenbank Bamberg",
+  "Allgäubank Kempten",
+  "Donaubank Regensburg",
+  "Isarbank München",
+  "Oberpfalzbank Amberg",
+  "Sparkasse Fränkische Schweiz",
 ];
 
 function fillBankDropdowns() {
-  ['kkBankA', 'kkBankB'].forEach(id => {
+  ["kkBankA", "kkBankB"].forEach((id) => {
     const sel = document.getElementById(id);
     if (!sel) return;
-    sel.innerHTML = '';
-    BANKEN.forEach(b => {
-      const o = document.createElement('option');
-      o.value = b; o.textContent = b;
+    sel.innerHTML = "";
+    BANKEN.forEach((b) => {
+      const o = document.createElement("option");
+      o.value = b;
+      o.textContent = b;
       sel.appendChild(o);
     });
   });
-  const a = document.getElementById('kkBankA');
-  const b = document.getElementById('kkBankB');
+  const a = document.getElementById("kkBankA");
+  const b = document.getElementById("kkBankB");
   if (a) a.selectedIndex = 0;
   if (b) b.selectedIndex = 1;
 }
@@ -75,20 +92,22 @@ function fillBankDropdowns() {
 // Ohne gewähltes Modellunternehmen bleibt das Standardverhalten (Zufall).
 // ============================================================================
 function bankDesUnternehmens() {
-  const sel = document.getElementById('kkKreditnehmer');
-  const name = sel ? sel.value : '';
-  if (!name || !window.yamlData || !Array.isArray(window.yamlData)) return '';
-  const eintrag = window.yamlData.find(e => e.unternehmen?.name === name);
-  return (eintrag && eintrag.unternehmen.bank) ? eintrag.unternehmen.bank.trim() : '';
+  const sel = document.getElementById("kkKreditnehmer");
+  const name = sel ? sel.value : "";
+  if (!name || !window.yamlData || !Array.isArray(window.yamlData)) return "";
+  const eintrag = window.yamlData.find((e) => e.unternehmen?.name === name);
+  return eintrag && eintrag.unternehmen.bank
+    ? eintrag.unternehmen.bank.trim()
+    : "";
 }
 
 function setzeBankA() {
-  const selA = document.getElementById('kkBankA');
+  const selA = document.getElementById("kkBankA");
   const bank = bankDesUnternehmens();
   if (!selA || !bank) return false;
-  let opt = Array.from(selA.options).find(o => o.value === bank);
+  let opt = Array.from(selA.options).find((o) => o.value === bank);
   if (!opt) {
-    opt = document.createElement('option');
+    opt = document.createElement("option");
     opt.value = bank;
     opt.textContent = bank;
     selA.insertBefore(opt, selA.options[0] || null); // neue Bank oben einsortieren
@@ -103,39 +122,43 @@ function setzeBankA() {
 // Nutzer angepasst werden; Zufallssätze orientieren sich am geänderten Wert.
 // ============================================================================
 function initialisiereHrsEinstellung() {
-  const input = document.getElementById('kkHrs');
-  const eingabefeld = document.getElementById('kkHrsBannerWert');
+  const input = document.getElementById("kkHrs");
+  const eingabefeld = document.getElementById("kkHrsBannerWert");
 
   function aktualisiere() {
     const satz = getHauptrefinanzierungssatz();
-    const txt = satz.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' %';
+    const txt =
+      satz.toLocaleString("de-DE", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      }) + " %";
     if (eingabefeld) eingabefeld.textContent = txt;
     if (input && document.activeElement !== input) input.value = String(satz); // type=number: Punkt-Schreibweise
   }
 
   if (input) {
-    input.addEventListener('change', () => {
-      const v = parseFloat(String(input.value).trim().replace(',', '.'));
+    input.addEventListener("change", () => {
+      const v = parseFloat(String(input.value).trim().replace(",", "."));
       if (!isNaN(v) && v >= 0 && v <= 20) {
         setHauptrefinanzierungssatz(v);
         // laufende Aufgabe mit neuem Ankerwert neu würfeln
         befuelleZufallswerte();
-        if (typeof zeigeZufaelligenSatz === 'function') zeigeZufaelligenSatz();
+        if (typeof zeigeZufaelligenSatz === "function") zeigeZufaelligenSatz();
       } else {
-        zeigeModal('Bitte einen Wert zwischen 0 und 20 % eingeben.');
+        zeigeModal("Bitte einen Wert zwischen 0 und 20 % eingeben.");
         aktualisiere();
       }
     });
   }
-  const stdBtn = document.getElementById('kkHrsStandard');
+  const stdBtn = document.getElementById("kkHrsStandard");
   if (stdBtn) {
-    stdBtn.addEventListener('click', () => {
+    stdBtn.addEventListener("click", () => {
       resetHauptrefinanzierungssatz();
       befuelleZufallswerte();
-      if (typeof zeigeZufaelligenSatz === 'function') zeigeZufaelligenSatz();
+      if (typeof zeigeZufaelligenSatz === "function") zeigeZufaelligenSatz();
     });
   }
-  document.addEventListener('hrschange', aktualisiere);
+  document.addEventListener("hrschange", aktualisiere);
   aktualisiere();
 }
 
@@ -143,18 +166,15 @@ function initialisiereHrsEinstellung() {
 // YAML-LADEN
 // ============================================================================
 
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   fillBankDropdowns();
   initialisiereHrsEinstellung();
 
-  const nehmerSelect = document.getElementById('kkKreditnehmer');
+  const nehmerSelect = document.getElementById("kkKreditnehmer");
   if (nehmerSelect) {
     if (nehmerSelect.value) kunde = nehmerSelect.value.trim();
-    nehmerSelect.addEventListener('change', () => {
-      kunde = nehmerSelect.value.trim() || '';
+    nehmerSelect.addEventListener("change", () => {
+      kunde = nehmerSelect.value.trim() || "";
       // Bank des gewählten Modellunternehmens sofort im Angebot A setzen
       // (ohne Auswahl bleibt das Zufallsverhalten)
       setzeBankA();
@@ -162,39 +182,57 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Dropdown füllen, sobald Unternehmensdaten da sind
-  document.addEventListener('yamlDataLoaded', () => {
-    fillCompanyDropdown();
-    autoSelectMyCompany();
-    befuelleZufallswerte();  // Felder beim ersten Laden befüllen
-    zeigeZufaelligenSatz();  // Aufgabe sofort rendern
-  }, { once: true });
-
+  document.addEventListener(
+    "yamlDataLoaded",
+    () => {
+      fillCompanyDropdown();
+      autoSelectMyCompany();
+      befuelleZufallswerte(); // Felder beim ersten Laden befüllen
+      zeigeZufaelligenSatz(); // Aufgabe sofort rendern
+    },
+    { once: true },
+  );
 });
 
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
 
-function rndInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-function rndOf(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function rndInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function rndOf(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
-function fmtZahl(v, min = 0, max = 2) { return v.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: max }); }
-function fmtProzent(v) { return `${fmtZahl(v, 0, 2)}&nbsp;%`; }
-function fmtEffektiv(v) { return `${fmtZahl(v, 2, 2)}&nbsp;%`; }
+function fmtZahl(v, min = 0, max = 2) {
+  return v.toLocaleString("de-DE", {
+    minimumFractionDigits: min,
+    maximumFractionDigits: max,
+  });
+}
+function fmtProzent(v) {
+  return `${fmtZahl(v, 0, 2)}&nbsp;%`;
+}
+function fmtEffektiv(v) {
+  return `${fmtZahl(v, 2, 2)}&nbsp;%`;
+}
 
 // ============================================================================
 // INPUT-VALIDIERUNG
 // ============================================================================
 const AV_INPUT_RULES = {
-  kkKredit: { label: 'Kreditbetrag', min: 100, max: 1000000, integer: true },
-  kkTage: { label: 'Laufzeit (Tage)', min: 30, max: 3600, integer: true },
-  kkZinsA: { label: 'Zinssatz A', min: 0, max: 15, integer: false },
-  kkZinsB: { label: 'Zinssatz B', min: 0, max: 15, integer: false },
-  kkDisagioA: { label: 'Disagio A', min: 0, max: 10, integer: false },
-  kkDisagioB: { label: 'Disagio B', min: 0, max: 10, integer: false },
+  kkKredit: { label: "Kreditbetrag", min: 100, max: 1000000, integer: true },
+  kkTage: { label: "Laufzeit (Tage)", min: 30, max: 3600, integer: true },
+  kkZinsA: { label: "Zinssatz A", min: 0, max: 15, integer: false },
+  kkZinsB: { label: "Zinssatz B", min: 0, max: 15, integer: false },
+  kkDisagioA: { label: "Disagio A", min: 0, max: 10, integer: false },
+  kkDisagioB: { label: "Disagio B", min: 0, max: 10, integer: false },
 };
 
-function enthaeltUnsicherenInhalt(str) { return /[<>"'`;&|{}()\[\]\\\/]/.test(str); }
+function enthaeltUnsicherenInhalt(str) {
+  return /[<>"'`;&|{}()\[\]\\\/]/.test(str);
+}
 
 function validiereAlleInputs() {
   const errors = [];
@@ -202,32 +240,56 @@ function validiereAlleInputs() {
     const el = document.getElementById(id);
     if (!el) continue;
     const raw = el.value.trim();
-    if (raw === '') { el.classList.remove('av-input-fehler'); continue; }
-    if (enthaeltUnsicherenInhalt(raw)) { errors.push(`„${rule.label}": Ungültige Zeichen.`); el.classList.add('av-input-fehler'); continue; }
-    const v = parseFloat(raw.replace(',', '.'));
-    if (isNaN(v)) { errors.push(`„${rule.label}": Bitte eine gültige Zahl.`); el.classList.add('av-input-fehler'); continue; }
-    if (rule.integer && !Number.isInteger(v)) { errors.push(`„${rule.label}": Bitte eine ganze Zahl.`); el.classList.add('av-input-fehler'); continue; }
-    if (v < rule.min || v > rule.max) { errors.push(`„${rule.label}": Muss zwischen ${rule.min} und ${rule.max} liegen.`); el.classList.add('av-input-fehler'); continue; }
-    el.classList.remove('av-input-fehler');
+    if (raw === "") {
+      el.classList.remove("av-input-fehler");
+      continue;
+    }
+    if (enthaeltUnsicherenInhalt(raw)) {
+      errors.push(`„${rule.label}": Ungültige Zeichen.`);
+      el.classList.add("av-input-fehler");
+      continue;
+    }
+    const v = parseFloat(raw.replace(",", "."));
+    if (isNaN(v)) {
+      errors.push(`„${rule.label}": Bitte eine gültige Zahl.`);
+      el.classList.add("av-input-fehler");
+      continue;
+    }
+    if (rule.integer && !Number.isInteger(v)) {
+      errors.push(`„${rule.label}": Bitte eine ganze Zahl.`);
+      el.classList.add("av-input-fehler");
+      continue;
+    }
+    if (v < rule.min || v > rule.max) {
+      errors.push(
+        `„${rule.label}": Muss zwischen ${rule.min} und ${rule.max} liegen.`,
+      );
+      el.classList.add("av-input-fehler");
+      continue;
+    }
+    el.classList.remove("av-input-fehler");
   }
   return { valid: errors.length === 0, errors };
 }
 
 function zeigeValidierungsFehler(errors) {
-  document.getElementById('av-validierungs-banner')?.remove();
+  document.getElementById("av-validierungs-banner")?.remove();
   if (errors.length === 0) return;
-  const banner = document.createElement('div');
-  banner.id = 'av-validierungs-banner';
-  banner.style.cssText = 'background:#fdecea;border:1px solid #e53935;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:0.88em;color:#b71c1c;line-height:1.7;';
-  banner.innerHTML = `<strong>⚠️ Eingabefehler:</strong><ul style="margin:4px 0 0 16px;padding:0;">${errors.map(e => `<li>${e}</li>`).join('')}</ul>`;
-  const btn = document.querySelector('button[data-on-click*="zeigeZufaelligenSatz"]');
-  if (btn) btn.insertAdjacentElement('beforebegin', banner);
+  const banner = document.createElement("div");
+  banner.id = "av-validierungs-banner";
+  banner.style.cssText =
+    "background:#fdecea;border:1px solid #e53935;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:0.88em;color:#b71c1c;line-height:1.7;";
+  banner.innerHTML = `<strong>⚠️ Eingabefehler:</strong><ul style="margin:4px 0 0 16px;padding:0;">${errors.map((e) => `<li>${e}</li>`).join("")}</ul>`;
+  const btn = document.querySelector(
+    'button[data-on-click*="zeigeZufaelligenSatz"]',
+  );
+  if (btn) btn.insertAdjacentElement("beforebegin", banner);
 }
 
 (function injectValidierungsCSS() {
-  if (document.getElementById('av-validierung-style')) return;
-  const s = document.createElement('style');
-  s.id = 'av-validierung-style';
+  if (document.getElementById("av-validierung-style")) return;
+  const s = document.createElement("style");
+  s.id = "av-validierung-style";
   s.textContent = `.av-input-fehler{border-color:#e53935!important;background:#fff5f5!important;}`;
   document.head.appendChild(s);
 })();
@@ -236,12 +298,24 @@ function zeigeValidierungsFehler(errors) {
 // KALKULATION: EFFEKTIVER ZINSSATZ (360-Tage-Methode)
 // ============================================================================
 function berechneKredit(kredit, zins, disagio, tage) {
-  const disagioBetrag = roundToTwoDecimals(kredit * disagio / 100);
+  const disagioBetrag = roundToTwoDecimals((kredit * disagio) / 100);
   const auszahlung = roundToTwoDecimals(kredit - disagioBetrag);
-  const zinsen = roundToTwoDecimals(kredit * zins * tage / (100 * 360));
+  const zinsen = roundToTwoDecimals((kredit * zins * tage) / (100 * 360));
   const kosten = roundToTwoDecimals(zinsen + disagioBetrag);
-  const effektiv = roundToTwoDecimals(kosten * 100 * 360 / (auszahlung * tage));
-  return { kredit, zins, disagio, tage, disagioBetrag, auszahlung, zinsen, kosten, effektiv };
+  const effektiv = roundToTwoDecimals(
+    (kosten * 100 * 360) / (auszahlung * tage),
+  );
+  return {
+    kredit,
+    zins,
+    disagio,
+    tage,
+    disagioBetrag,
+    auszahlung,
+    zinsen,
+    kosten,
+    effektiv,
+  };
 }
 
 // ============================================================================
@@ -254,21 +328,20 @@ function berechneKredit(kredit, zins, disagio, tage) {
 // 720 = 2 Jahre, 1080 = 3 Jahre usw. – so kommt die 360-Tage-Rechnung auf
 // glatte Jahreszinsergebnisse.
 const KREDIT_LAUFZEITEN = [
-    90, 100, 200, 250, 300, 360, 400, 450, 500, 600,
-    720, 750, 800, 900, 1000, 1080, 1200, 1250,
-    1440, 1500, 1800, 2000, 2250, 2500, 2700, 3000, 3600
+  90, 100, 200, 250, 300, 360, 400, 450, 500, 600, 720, 750, 800, 900, 1000,
+  1080, 1200, 1250, 1440, 1500, 1800, 2000, 2250, 2500, 2700, 3000, 3600,
 ];
 function genKonditionen(kredit, tage) {
   // Zinssätze bewegen sich im Korridor um den Hauptrefinanzierungssatz (Ankerwert,
   // siehe js/utils.js): Unternehmenskredit, gute Bonität = Ankerwert × 1,5 bis × 2,5.
-  const bereich = zinsbereich('unternehmenskredit-gut');
+  const bereich = zinsbereich("unternehmenskredit-gut");
 
   // SONDERFALL Ankerwert 0 (oder sehr klein): Der Faktor-Korridor kollabiert auf
   // einen Punkt bzw. wird so schmal, dass zwei unterscheidbare Nominalzinssätze
   // unmöglich sind. Dann erhalten beide Angebote denselben (korridor-)Zinssatz
   // und unterscheiden sich nur über das Disagio – der effektive Zinssatz entsteht
   // allein aus dem Disagio. Berechnung bleibt vollständig korrekt.
-  const korridorSchmal = (bereich.max - bereich.min) < 0.2;
+  const korridorSchmal = bereich.max - bereich.min < 0.2;
   if (korridorSchmal) {
     const z = bereich.min;
     const dA = rndOf([0, 0.5, 1, 1.5, 2]);
@@ -278,13 +351,14 @@ function genKonditionen(kredit, tage) {
 
   let ergebnis = null;
   for (let i = 0; i < 60; i++) {
-    const zA = zufallsZinsWert('unternehmenskredit-gut');
+    const zA = zufallsZinsWert("unternehmenskredit-gut");
     const dA = rndOf([0, 0.5, 1, 1.5, 2]);
     const deltaZ = rndInt(1, 4) / 10;
     const deltaD = rndOf([0.5, 1, 1.5]);
     const bNiedrigerZins = Math.random() < 0.5;
     // Angebot B im selben Korridor halten
-    let zBRaw = Math.round((bNiedrigerZins ? zA - deltaZ : zA + deltaZ) * 10) / 10;
+    let zBRaw =
+      Math.round((bNiedrigerZins ? zA - deltaZ : zA + deltaZ) * 10) / 10;
     const zB = Math.min(bereich.max, Math.max(bereich.min, zBRaw));
     const dB = bNiedrigerZins ? dA + deltaD : Math.max(0, dA - deltaD);
     if (zB === zA || dB === dA) continue;
@@ -297,20 +371,23 @@ function genKonditionen(kredit, tage) {
 }
 
 function befuelleZufallswerte() {
-  const kredit = rndOf([10000, 15000, 20000, 25000, 30000, 40000, 45000, 50000, 60000, 75000, 80000, 100000]);
+  const kredit = rndOf([
+    10000, 15000, 20000, 25000, 30000, 40000, 45000, 50000, 60000, 75000, 80000,
+    100000,
+  ]);
   const tage = rndOf(KREDIT_LAUFZEITEN);
   const k = genKonditionen(kredit, tage);
-  document.getElementById('kkKredit').value = kredit;
-  document.getElementById('kkTage').value = tage;
-  document.getElementById('kkZinsA').value = k.zA;
-  document.getElementById('kkDisagioA').value = k.dA;
-  document.getElementById('kkZinsB').value = k.zB;
-  document.getElementById('kkDisagioB').value = k.dB;
+  document.getElementById("kkKredit").value = kredit;
+  document.getElementById("kkTage").value = tage;
+  document.getElementById("kkZinsA").value = k.zA;
+  document.getElementById("kkDisagioA").value = k.dA;
+  document.getElementById("kkZinsB").value = k.zB;
+  document.getElementById("kkDisagioB").value = k.dB;
 
   // Banken wählen: Mit ausgewähltem Modellunternehmen bekommt Angebot A
   // dessen Bank (aus der unternehmen.yml); ansonsten Zufall für beide.
-  const selA = document.getElementById('kkBankA');
-  const selB = document.getElementById('kkBankB');
+  const selA = document.getElementById("kkBankA");
+  const selB = document.getElementById("kkBankB");
   if (selA && selB) {
     const hatUnternehmBankA = setzeBankA();
     if (!hatUnternehmBankA && selA.options.length > 1) {
@@ -332,19 +409,30 @@ function befuelleZufallswerte() {
 function fillCompanyDropdown() {
   if (!yamlData || yamlData.length === 0) return;
   const sorted = [...yamlData].sort((a, b) => {
-    const bA = a.unternehmen?.branche || '', bB = b.unternehmen?.branche || '';
-    return bA !== bB ? bA.localeCompare(bB) : (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+    const bA = a.unternehmen?.branche || "",
+      bB = b.unternehmen?.branche || "";
+    return bA !== bB
+      ? bA.localeCompare(bB)
+      : (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
-  const sel = document.getElementById('kkKreditnehmer');
+  const sel = document.getElementById("kkKreditnehmer");
   if (!sel) return;
-  sel.innerHTML = '';
-  const leer = document.createElement('option');
-  leer.value = ''; leer.text = '— bitte Unternehmen auswählen —'; leer.disabled = true; leer.selected = true;
+  sel.innerHTML = "";
+  const leer = document.createElement("option");
+  leer.value = "";
+  leer.text = "— bitte Unternehmen auswählen —";
+  leer.disabled = true;
+  leer.selected = true;
   sel.appendChild(leer);
-  sorted.forEach(c => {
-    const u = c.unternehmen; if (!u?.name) return;
-    const t = u.branche ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim() : `${u.name} ${u.rechtsform || ''}`.trim();
-    const o = document.createElement('option'); o.value = u.name; o.textContent = t;
+  sorted.forEach((c) => {
+    const u = c.unternehmen;
+    if (!u?.name) return;
+    const t = u.branche
+      ? `${u.branche} – ${u.name} ${u.rechtsform || ""}`.trim()
+      : `${u.name} ${u.rechtsform || ""}`.trim();
+    const o = document.createElement("option");
+    o.value = u.name;
+    o.textContent = t;
     sel.appendChild(o);
   });
 }
@@ -355,13 +443,13 @@ function fillCompanyDropdown() {
 function kalkZeileNormal(label, wert) {
   return `<tr><td style="${S.kalkNormalTd}">${label}</td><td style="${S.kalkNormalTdR}">${wert}</td></tr>`;
 }
-function kalkZeileNormalPct(label, wert, pct = '') {
+function kalkZeileNormalPct(label, wert, pct = "") {
   return `<tr><td style="${S.kalkNormalTd}">${label}</td><td style="${S.kalkNormalTdR}">${wert}</td><td style="${S.kalkPctTd}">${pct}</td></tr>`;
 }
 function kalkZeileErgebnis(label, wert) {
   return `<tr><td style="${S.kalkErgebnisTd}">${label}</td><td style="${S.kalkErgebnisTdR}">${wert}</td></tr>`;
 }
-function kalkZeileErgebnisPct(label, wert, pct = '') {
+function kalkZeileErgebnisPct(label, wert, pct = "") {
   return `<tr><td style="${S.kalkErgebnisTd}">${label}</td><td style="${S.kalkErgebnisTdR}">${wert}</td><td style="${S.kalkPctResultTd}">${pct}</td></tr>`;
 }
 
@@ -373,37 +461,41 @@ function zeigeZufaelligenSatz() {
   zeigeValidierungsFehler(validierung.errors);
   if (!validierung.valid) return;
 
-  const variante = parseInt(document.getElementById('kkVariante')?.value) || 2;
+  const variante = parseInt(document.getElementById("kkVariante")?.value) || 2;
   // B-Feld ausblenden, wenn nur Angebot A (Hausbank) berechnet wird
-  const feldB = document.getElementById('kkFeldB');
-  if (feldB) feldB.style.display = (variante === 1) ? 'none' : '';
+  const feldB = document.getElementById("kkFeldB");
+  if (feldB) feldB.style.display = variante === 1 ? "none" : "";
 
   // Legenden der Eingabefelder (oben) an den Fall-Typ anpassen
-  const legendeA = document.querySelector('#kkFeldA legend');
-  if (legendeA) legendeA.textContent = (variante === 1) ? ' Angebot A – zum Berechnen' : ' Angebot A – vorgegeben';
-  const legendeB = document.querySelector('#kkFeldB legend');
-  if (legendeB) legendeB.textContent = ' Angebot B – zum Berechnen';
+  const legendeA = document.querySelector("#kkFeldA legend");
+  if (legendeA)
+    legendeA.textContent =
+      variante === 1 ? " Angebot A – zum Berechnen" : " Angebot A – vorgegeben";
+  const legendeB = document.querySelector("#kkFeldB legend");
+  if (legendeB) legendeB.textContent = " Angebot B – zum Berechnen";
 
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   letzteGenerierteGfListeEinkauf = [];
 
-  const nameA = document.getElementById('kkBankA')?.value || 'Bank A';
-  const nameB = document.getElementById('kkBankB')?.value || 'Bank B';
-  const nehmer = document.getElementById('kkKreditnehmer')?.value?.trim() || String(kunde).replace(/<[^>]+>/g, '');
+  const nameA = document.getElementById("kkBankA")?.value || "Bank A";
+  const nameB = document.getElementById("kkBankB")?.value || "Bank B";
+  const nehmer =
+    document.getElementById("kkKreditnehmer")?.value?.trim() ||
+    String(kunde).replace(/<[^>]+>/g, "");
 
   function leseInput(id, def) {
     const el = document.getElementById(id);
-    if (!el || el.value === '') return def;
-    const v = parseFloat(el.value.replace(',', '.'));
+    if (!el || el.value === "") return def;
+    const v = parseFloat(el.value.replace(",", "."));
     return isNaN(v) ? def : v;
   }
 
-  const kredit = leseInput('kkKredit', 45000);
-  const tage = leseInput('kkTage', 1888);
-  const zinsA = leseInput('kkZinsA', 1.9);
-  const disagioA = leseInput('kkDisagioA', 0.5);
-  const zinsB = leseInput('kkZinsB', 1.7);
-  const disagioB = leseInput('kkDisagioB', 1);
+  const kredit = leseInput("kkKredit", 45000);
+  const tage = leseInput("kkTage", 1888);
+  const zinsA = leseInput("kkZinsA", 1.9);
+  const disagioA = leseInput("kkDisagioA", 0.5);
+  const zinsB = leseInput("kkZinsB", 1.7);
+  const disagioB = leseInput("kkDisagioB", 1);
 
   const kalkA = berechneKredit(kredit, zinsA, disagioA, tage);
   const kalkB = berechneKredit(kredit, zinsB, disagioB, tage);
@@ -412,42 +504,52 @@ function zeigeZufaelligenSatz() {
   const istAGuenstig = kalkA.effektiv <= kalkB.effektiv;
   const guenstigerName = istAGuenstig ? nameA : nameB;
   const teurerName = istAGuenstig ? nameB : nameA;
-  const guenstigerBrief = istAGuenstig ? 'A' : 'B';
-  const teurerBrief = istAGuenstig ? 'B' : 'A';
+  const guenstigerBrief = istAGuenstig ? "A" : "B";
+  const teurerBrief = istAGuenstig ? "B" : "A";
   const kalkGuenstig = istAGuenstig ? kalkA : kalkB;
   const kalkTeuer = istAGuenstig ? kalkB : kalkA;
-  const diffPP = fmtZahl(roundToTwoDecimals(Math.abs(kalkA.effektiv - kalkB.effektiv)), 2, 2);
+  const diffPP = fmtZahl(
+    roundToTwoDecimals(Math.abs(kalkA.effektiv - kalkB.effektiv)),
+    2,
+    2,
+  );
 
   // ── AUFGABE ──────────────────────────────────────────────────────────
   const zeilenAufgabe = (kal, effText) => `
-    ${kalkZeileNormal('Kreditbetrag', formatCurrency(kredit))}
-    ${kalkZeileNormal('Zinssatz p.&nbsp;a.', fmtProzent(kal.zins))}
-    ${kalkZeileNormal('Disagio', fmtProzent(kal.disagio))}
-    ${kalkZeileNormal('Laufzeit (Tage)', fmtZahl(tage, 0, 0))}
-    ${kalkZeileErgebnis('Effektiver Zinssatz', effText)}`;
+    ${kalkZeileNormal("Kreditbetrag", formatCurrency(kredit))}
+    ${kalkZeileNormal("Zinssatz p.&nbsp;a.", fmtProzent(kal.zins))}
+    ${kalkZeileNormal("Disagio", fmtProzent(kal.disagio))}
+    ${kalkZeileNormal("Laufzeit (Tage)", fmtZahl(tage, 0, 0))}
+    ${kalkZeileErgebnis("Effektiver Zinssatz", effText)}`;
 
   const karteA_aufgabe = `
 <div style="${S.karte}">
   <div style="${S.karteTitel}">Angebot A</div>
   <div style="${S.liefererLabel}">Bank: <strong>${nameA}</strong></div>
-  <table style="${S.kalkTable}">${zeilenAufgabe(kalkA, variante === 1 ? '<strong>?</strong>' : `<strong>${fmtEffektiv(kalkA.effektiv)}</strong>`)}</table>
+  <table style="${S.kalkTable}">${zeilenAufgabe(kalkA, variante === 1 ? "<strong>?</strong>" : `<strong>${fmtEffektiv(kalkA.effektiv)}</strong>`)}</table>
 </div>`;
 
-  const karteB_aufgabe = (variante === 1) ? '' : `
+  const karteB_aufgabe =
+    variante === 1
+      ? ""
+      : `
 <div style="${S.karteAufgabe}">
   <div style="${S.karteTitel}">Angebot B</div>
   <div style="${S.liefererLabel}">Bank: <strong>${nameB}</strong></div>
-  <table style="${S.kalkTable}">${zeilenAufgabe(kalkB, '<strong>?</strong>')}</table>
+  <table style="${S.kalkTable}">${zeilenAufgabe(kalkB, "<strong>?</strong>")}</table>
 </div>`;
 
-  const aufgabeHtml = (variante === 1) ? `
+  const aufgabeHtml =
+    variante === 1
+      ? `
 <h2 style="${S.h2}">Aufgabe – Effektiver Zinssatz</h2>
 <div style="${S.aufgabeBox}">
   <p>${nehmer} benötigt ein Darlehen über ${formatCurrency(kredit)} bei der Hausbank <i>${nameA}</i> (Laufzeit ${fmtZahl(tage, 0, 0)} Tage).</p>
   <ol style="${S.aufgabeOl}">
     <li style="${S.aufgabeLi}">Berechne den effektiven Zinssatz des Darlehensangebots der <i>${nameA}</i>.</li>
   </ol>
-</div>` : `
+</div>`
+      : `
 <h2 style="${S.h2}">Aufgabe – Kreditvergleich</h2>
 <div style="${S.aufgabeBox}">
   <p>${nehmer} benötigt ein Darlehen über ${formatCurrency(kredit)} und holt zwei Kreditangebote ein:</p>
@@ -458,45 +560,46 @@ function zeigeZufaelligenSatz() {
 </div>`;
 
   // ── LÖSUNG ───────────────────────────────────────────────────────────
-function loesungKarte(brief, bank, kal, guenstig) {
-  const proz = fmtZahl(100 - kal.disagio, 0, 2);
+  function loesungKarte(brief, bank, kal, guenstig) {
+    const proz = fmtZahl(100 - kal.disagio, 0, 2);
 
-  return `
+    return `
 <div style="${S.lKarte}">
   <div style="${S.lKarteTitel}">
     Lösung: Angebot ${brief} – ${bank}
-    ${guenstig && !gleich ? '<strong>(niedrigster effektiver Zins)</strong>' : ''}
+    ${guenstig && !gleich ? "<strong>(niedrigster effektiver Zins)</strong>" : ""}
   </div>
   <table style="${S.kalkTable}">
-    ${kalkZeileNormalPct('Kreditbetrag', formatCurrency(kal.kredit), '100&nbsp;%')}
-    ${kalkZeileNormalPct('− Disagio', `− ${formatCurrency(kal.disagioBetrag)}`, fmtProzent(kal.disagio))}
-    ${kalkZeileErgebnisPct('= Auszahlungsbetrag', formatCurrency(kal.auszahlung), `${proz}&nbsp;%`)}
+    ${kalkZeileNormalPct("Kreditbetrag", formatCurrency(kal.kredit), "100&nbsp;%")}
+    ${kalkZeileNormalPct("− Disagio", `− ${formatCurrency(kal.disagioBetrag)}`, fmtProzent(kal.disagio))}
+    ${kalkZeileErgebnisPct("= Auszahlungsbetrag", formatCurrency(kal.auszahlung), `${proz}&nbsp;%`)}
   </table>
   <div style="${S.formelLabel}">Zinsen in Euro: ${fmtZahl(kal.kredit, 2, 2)} · ${fmtZahl(kal.zins, 0, 2)} · ${fmtZahl(kal.tage, 0, 0)} ÷ (100 · 360)</div>
   <table style="${S.kalkTable}">
-    ${kalkZeileErgebnis('= Zinsen', formatCurrency(kal.zinsen))}
-    ${kalkZeileNormal('+ Disagio', formatCurrency(kal.disagioBetrag))}
-    ${kalkZeileErgebnis('= Kreditkosten', formatCurrency(kal.kosten))}
+    ${kalkZeileErgebnis("= Zinsen", formatCurrency(kal.zinsen))}
+    ${kalkZeileNormal("+ Disagio", formatCurrency(kal.disagioBetrag))}
+    ${kalkZeileErgebnis("= Kreditkosten", formatCurrency(kal.kosten))}
   </table>
   <div style="${S.formelLabel}">Effektive Verzinsung: (${fmtZahl(kal.zinsen, 2, 2)} + ${fmtZahl(kal.disagioBetrag, 2, 2)}) · 100 · 360 ÷ (${fmtZahl(kal.auszahlung, 2, 2)} · ${fmtZahl(kal.tage, 0, 0)})</div>
   <table style="${S.kalkTable}">
-    ${kalkZeileErgebnis('= Effektiver Zinssatz', `<strong>${fmtEffektiv(kal.effektiv)}</strong>`)}
+    ${kalkZeileErgebnis("= Effektiver Zinssatz", `<strong>${fmtEffektiv(kal.effektiv)}</strong>`)}
   </table>
 </div>`;
-}
+  }
 
-  const karteA_loesung = loesungKarte('A', nameA, kalkA, istAGuenstig);
-  const karteB_loesung = loesungKarte('B', nameB, kalkB, !istAGuenstig);
+  const karteA_loesung = loesungKarte("A", nameA, kalkA, istAGuenstig);
+  const karteB_loesung = loesungKarte("B", nameB, kalkB, !istAGuenstig);
 
   // Hinweis: Nominalzins vs. effektiver Zins
   const niedrigerNominalIstA = kalkA.zins < kalkB.zins;
   const nominalGleich = kalkA.zins === kalkB.zins;
   const nominalNiedrigerName = niedrigerNominalIstA ? nameA : nameB;
   const nominalNiedrigerZins = niedrigerNominalIstA ? kalkA.zins : kalkB.zins;
-  const nominalNiedrigerBrief = niedrigerNominalIstA ? 'A' : 'B';
+  const nominalNiedrigerBrief = niedrigerNominalIstA ? "A" : "B";
   let hinweisText;
   if (gleich) {
-    hinweisText = 'Beide Angebote haben denselben effektiven Zinssatz und sind damit gleich teuer. Dann können nichtmonetäre Faktoren (z.&nbsp;B. Beratung, bestehende Kundenbeziehung, Sondertilgungsmöglichkeiten) den Ausschlag geben.';
+    hinweisText =
+      "Beide Angebote haben denselben effektiven Zinssatz und sind damit gleich teuer. Dann können nichtmonetäre Faktoren (z.&nbsp;B. Beratung, bestehende Kundenbeziehung, Sondertilgungsmöglichkeiten) den Ausschlag geben.";
   } else if (!nominalGleich && nominalNiedrigerBrief !== guenstigerBrief) {
     hinweisText = `Obwohl die ${nominalNiedrigerName} mit ${fmtProzent(nominalNiedrigerZins)} den niedrigeren Nominalzinssatz bietet, ist Angebot ${guenstigerBrief} (${guenstigerName}) effektiv günstiger. Der Grund: Das höhere Disagio der ${nominalNiedrigerName} verringert den Auszahlungsbetrag, die Zinsen werden aber weiterhin auf den vollen Kreditbetrag berechnet.`;
   } else if (!nominalGleich) {
@@ -520,10 +623,13 @@ function loesungKarte(brief, bank, kal, guenstig) {
 </div>
 <div style="margin-top:8px;line-height:1.7;"><strong>Hinweis:</strong> ${hinweisText}</div>`;
 
-  const loesungHtml = (variante === 1) ? `
+  const loesungHtml =
+    variante === 1
+      ? `
 <h2 style="${S.h2}" class="loesung">Lösung</h2>
 <h3 style="${S.h3}">Aufgabe – Effektiver Zinssatz ${nameA}</h3>
-<div style="${S.loesungStack}">${karteA_loesung}</div>` : `
+<div style="${S.loesungStack}">${karteA_loesung}</div>`
+      : `
 <h2 style="${S.h2}" class="loesung">Lösung</h2>
 <h3 style="${S.h3}">Aufgabe 1 – Effektiver Zinssatz Angebot B (${nameB})</h3>
 <div style="${S.loesungStack}">${karteA_loesung}${karteB_loesung}</div>
@@ -545,24 +651,27 @@ ${fazitHtml}`;
       gleich
         ? `Beide Angebote haben denselben effektiven Zinssatz (${fmtZahl(kalkA.effektiv, 2, 2)} %).`
         : `Günstigeres Angebot: ${guenstigerBrief} (${guenstigerName}) mit ${fmtZahl(kalkGuenstig.effektiv, 2, 2)} % statt ${fmtZahl(kalkTeuer.effektiv, 2, 2)} % (Differenz ${diffPP} Prozentpunkte).`,
-    ].join('\n'),
+    ].join("\n"),
   });
 
-  const vorschau = document.getElementById('kiPromptVorschau');
-  if (vorschau && vorschau.style.display !== 'none') vorschau.textContent = erstelleKiPromptText();
+  const vorschau = document.getElementById("kiPromptVorschau");
+  if (vorschau && vorschau.style.display !== "none")
+    vorschau.textContent = erstelleKiPromptText();
 }
 
 // ============================================================================
 // AUTO-SELECT MEIN UNTERNEHMEN
 // ============================================================================
 function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
+  const myCompanyName = localStorage.getItem("myCompany");
   if (!myCompanyName) return;
-  document.querySelectorAll('select.meinUnternehmen').forEach(dropdown => {
-    const match = Array.from(dropdown.options).find(opt => opt.value === myCompanyName);
+  document.querySelectorAll("select.meinUnternehmen").forEach((dropdown) => {
+    const match = Array.from(dropdown.options).find(
+      (opt) => opt.value === myCompanyName,
+    );
     if (match) {
       dropdown.value = myCompanyName;
-      dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+      dropdown.dispatchEvent(new Event("change", { bubbles: true }));
     }
   });
 }
@@ -571,9 +680,15 @@ function autoSelectMyCompany() {
 // KI-PROMPT
 // ============================================================================
 function erstelleKiPromptText() {
-  const al = letzteGenerierteGfListeEinkauf.length === 0
-    ? "(Noch keine Aufgaben generiert.)"
-    : letzteGenerierteGfListeEinkauf.map((e, i) => `Aufgabe ${i + 1}:\n${e.aufgabe}\n\nMusterlösung ${i + 1}:\n${e.loesung}`).join("\n\n---\n\n");
+  const al =
+    letzteGenerierteGfListeEinkauf.length === 0
+      ? "(Noch keine Aufgaben generiert.)"
+      : letzteGenerierteGfListeEinkauf
+          .map(
+            (e, i) =>
+              `Aufgabe ${i + 1}:\n${e.aufgabe}\n\nMusterlösung ${i + 1}:\n${e.loesung}`,
+          )
+          .join("\n\n---\n\n");
   return KI_ASSISTENT_PROMPT.replace("###AUFGABEN und LÖSUNGEN###", al);
 }
 
@@ -631,42 +746,64 @@ Weise am Schluss auf DIN 5008 hin: Tausenderpunkt, zwei Nachkommastellen, €-Ze
 `;
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(erstelleKiPromptText()).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    const orig = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('ki-prompt-btn--success'); }, 2500);
-  }).catch(() => zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
+  navigator.clipboard
+    .writeText(erstelleKiPromptText())
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      const orig = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch(() =>
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      ),
+    );
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
-  const hidden = getComputedStyle(vorschau).display === 'none';
-  if (hidden) { vorschau.style.display = 'block'; vorschau.textContent = erstelleKiPromptText(); btn.textContent = 'Vorschau ausblenden ▲'; }
-  else { vorschau.style.display = 'none'; btn.textContent = 'Prompt anzeigen ▼'; }
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
+  const hidden = getComputedStyle(vorschau).display === "none";
+  if (hidden) {
+    vorschau.style.display = "block";
+    vorschau.textContent = erstelleKiPromptText();
+    btn.textContent = "Vorschau ausblenden ▲";
+  } else {
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
+  }
 }
 
 // ============================================================================
 // INIT
 // ============================================================================
 // Würfel-Icon (Font Awesome Free v7, "dice") für den dynamischen Zufallsbutton
-const DICE_PATH = 'M205.4 66.3C167 56 127.5 78.8 117.3 117.2L66.5 306.7C56.2 345.1 79 384.6 117.4 394.9L306.9 445.7C345.3 456 384.8 433.2 395.1 394.8L445.9 205.3C456.2 166.9 433.4 127.4 395 117.1L205.4 66.3zM228.4 272C222.3 262.1 222.1 249.6 227.8 239.5C233.5 229.4 244.3 223.2 256 223.3C267.6 223.4 278.2 229.8 283.8 240C289.9 249.9 290.1 262.4 284.4 272.5C278.7 282.6 267.9 288.8 256.2 288.7C244.6 288.6 234 282.2 228.4 272zM143.2 284.3C153.1 278.2 165.6 278 175.7 283.7C185.8 289.4 192 300.2 191.9 311.9C191.8 323.5 185.4 334.1 175.2 339.7C165.3 345.8 152.8 346 142.7 340.3C132.6 334.6 126.4 323.8 126.5 312.1C126.6 300.5 133 289.9 143.2 284.3zM328.2 380.7C318.3 386.8 305.8 387 295.7 381.3C285.6 375.6 279.4 364.8 279.5 353.1C279.6 341.5 286 330.9 296.2 325.3C306.1 319.2 318.6 319 328.7 324.7C338.8 330.4 345 341.2 344.9 352.9C344.8 364.5 338.4 375.1 328.2 380.7zM337.2 172.3C347.1 166.2 359.6 166 369.7 171.7C379.8 177.4 386 188.2 385.9 199.9C385.8 211.5 379.4 222.1 369.2 227.7C359.3 233.8 346.8 234 336.7 228.3C326.6 222.6 320.4 211.8 320.5 200.1C320.6 188.5 327 177.9 337.2 172.3zM216.2 186.7C206.3 192.8 193.8 193 183.7 187.3C173.6 181.6 167.4 170.8 167.5 159.1C167.6 147.5 174 136.9 184.2 131.3C194.1 125.2 206.6 125 216.7 130.7C226.8 136.4 233 147.2 232.9 158.9C232.8 170.5 226.4 181.1 216.2 186.7zM482 256L441.4 407.2C424.2 471.2 358.4 509.2 294.4 492.1L256.1 481.8L256.1 512C256.1 547.3 284.8 576 320.1 576L512.1 576C547.4 576 576.1 547.3 576.1 512L576.1 320C576.1 284.7 547.4 256 512.1 256L482 256z';
+const DICE_PATH =
+  "M205.4 66.3C167 56 127.5 78.8 117.3 117.2L66.5 306.7C56.2 345.1 79 384.6 117.4 394.9L306.9 445.7C345.3 456 384.8 433.2 395.1 394.8L445.9 205.3C456.2 166.9 433.4 127.4 395 117.1L205.4 66.3zM228.4 272C222.3 262.1 222.1 249.6 227.8 239.5C233.5 229.4 244.3 223.2 256 223.3C267.6 223.4 278.2 229.8 283.8 240C289.9 249.9 290.1 262.4 284.4 272.5C278.7 282.6 267.9 288.8 256.2 288.7C244.6 288.6 234 282.2 228.4 272zM143.2 284.3C153.1 278.2 165.6 278 175.7 283.7C185.8 289.4 192 300.2 191.9 311.9C191.8 323.5 185.4 334.1 175.2 339.7C165.3 345.8 152.8 346 142.7 340.3C132.6 334.6 126.4 323.8 126.5 312.1C126.6 300.5 133 289.9 143.2 284.3zM328.2 380.7C318.3 386.8 305.8 387 295.7 381.3C285.6 375.6 279.4 364.8 279.5 353.1C279.6 341.5 286 330.9 296.2 325.3C306.1 319.2 318.6 319 328.7 324.7C338.8 330.4 345 341.2 344.9 352.9C344.8 364.5 338.4 375.1 328.2 380.7zM337.2 172.3C347.1 166.2 359.6 166 369.7 171.7C379.8 177.4 386 188.2 385.9 199.9C385.8 211.5 379.4 222.1 369.2 227.7C359.3 233.8 346.8 234 336.7 228.3C326.6 222.6 320.4 211.8 320.5 200.1C320.6 188.5 327 177.9 337.2 172.3zM216.2 186.7C206.3 192.8 193.8 193 183.7 187.3C173.6 181.6 167.4 170.8 167.5 159.1C167.6 147.5 174 136.9 184.2 131.3C194.1 125.2 206.6 125 216.7 130.7C226.8 136.4 233 147.2 232.9 158.9C232.8 170.5 226.4 181.1 216.2 186.7zM482 256L441.4 407.2C424.2 471.2 358.4 509.2 294.4 492.1L256.1 481.8L256.1 512C256.1 547.3 284.8 576 320.1 576L512.1 576C547.4 576 576.1 547.3 576.1 512L576.1 320C576.1 284.7 547.4 256 512.1 256L482 256z";
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   // "Zufallswerte"-Button (einheitlicher Aktionsbutton) direkt vor "Neue Aufgabe" einfügen
-  const aufgabeBtn = document.querySelector('button[data-on-click*="zeigeZufaelligenSatz"]');
-  if (aufgabeBtn && !document.getElementById('avNeueZufallswerteBtn')) {
-    const zBtn = document.createElement('button');
-    zBtn.id = 'avNeueZufallswerteBtn';
-    zBtn.type = 'button';
-    zBtn.className = 'btn-zufall';
-    zBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="' + DICE_PATH + '"/></svg>Zufallswerte';
+  const aufgabeBtn = document.querySelector(
+    'button[data-on-click*="zeigeZufaelligenSatz"]',
+  );
+  if (aufgabeBtn && !document.getElementById("avNeueZufallswerteBtn")) {
+    const zBtn = document.createElement("button");
+    zBtn.id = "avNeueZufallswerteBtn";
+    zBtn.type = "button";
+    zBtn.className = "btn-zufall";
+    zBtn.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="' +
+      DICE_PATH +
+      '"/></svg>Zufallswerte';
     zBtn.onclick = befuelleZufallswerte;
-    aufgabeBtn.insertAdjacentElement('beforebegin', zBtn);
+    aufgabeBtn.insertAdjacentElement("beforebegin", zBtn);
   }
 
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) vorschauEl.textContent = erstelleKiPromptText();
 });

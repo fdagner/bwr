@@ -3,7 +3,7 @@
 // BwR Realschule Bayern, Klasse 9/10
 // ============================================================================
 
-let kunde = '<i>[Modellunternehmen]</i>';
+let kunde = "<i>[Modellunternehmen]</i>";
 let letzteAufgabe = null;
 
 // ============================================================================
@@ -12,86 +12,99 @@ let letzteAufgabe = null;
 
 // ── Konten: zentral aus dem Kontenplan (js/utils.js) bezogen ────────────────
 // Nur Kontonummern angeben – Abkürzung und Label liefert kontoLabel().
-const VORST = kontoLabel('2600');   // Vorsteuer
-const VE    = kontoLabel('4400');   // Verbindlichkeiten aus LL
-const ABSA  = kontoLabel('6520');   // Abschreibungen auf Sachanlagen
+const VORST = kontoLabel("2600"); // Vorsteuer
+const VE = kontoLabel("4400"); // Verbindlichkeiten aus LL
+const ABSA = kontoLabel("6520"); // Abschreibungen auf Sachanlagen
 
 const anlagenKonfig = {
   MA: {
-    label: 'Maschinen & Anlagen', konto: kontoLabel('0700'),
+    label: "Maschinen & Anlagen",
+    konto: kontoLabel("0700"),
     // Branche-Schlüssel für YAML-Filterung
-    yamlBranche: ['Maschinen'],
+    yamlBranche: ["Maschinen"],
     positionen: [
-      { bezeichnung: 'CNC-Fräsmaschine',    nd: 7 },
-      { bezeichnung: 'Drehmaschine',         nd: 6 },
-      { bezeichnung: 'Schweißanlage',        nd: 10 },
-      { bezeichnung: 'Förderanlage',         nd: 10 },
-      { bezeichnung: 'Hydraulikpresse',      nd: 10 },
-      { bezeichnung: 'Kompressoranlage',     nd: 12 },
+      { bezeichnung: "CNC-Fräsmaschine", nd: 7 },
+      { bezeichnung: "Drehmaschine", nd: 6 },
+      { bezeichnung: "Schweißanlage", nd: 10 },
+      { bezeichnung: "Förderanlage", nd: 10 },
+      { bezeichnung: "Hydraulikpresse", nd: 10 },
+      { bezeichnung: "Kompressoranlage", nd: 12 },
     ],
     preisRange: { min: 20000, max: 150000 },
-    nebenkostenArt: 'Montage',
+    nebenkostenArt: "Montage",
     nebenkosten: { min: 400, max: 3000 },
     rabattProzent: [5, 10, 20],
   },
   FP: {
-    label: 'Fuhrpark', konto: kontoLabel('0840'),
-    yamlBranche: ['Fuhrpark'],
+    label: "Fuhrpark",
+    konto: kontoLabel("0840"),
+    yamlBranche: ["Fuhrpark"],
     positionen: [
-      { bezeichnung: 'LKW',          nd:  9 },
-      { bezeichnung: 'Lieferwagen',          nd:  8 },
-      { bezeichnung: 'PKW / Kombi',          nd:  6 },
-      { bezeichnung: 'Transporter',          nd:  8 },
-      { bezeichnung: 'Anhänger / Auflieger', nd: 11 },
+      { bezeichnung: "LKW", nd: 9 },
+      { bezeichnung: "Lieferwagen", nd: 8 },
+      { bezeichnung: "PKW / Kombi", nd: 6 },
+      { bezeichnung: "Transporter", nd: 8 },
+      { bezeichnung: "Anhänger / Auflieger", nd: 11 },
     ],
     preisRange: { min: 22000, max: 150000 },
-    nebenkostenArt: 'Zulassung',
+    nebenkostenArt: "Zulassung",
     nebenkosten: { min: 200, max: 1500 },
     rabattProzent: [5, 10, , 15, 20],
   },
   BM: {
-    label: 'Büromaschinen', konto: kontoLabel('0860'),
-    yamlBranche: ['Büro'],
+    label: "Büromaschinen",
+    konto: kontoLabel("0860"),
+    yamlBranche: ["Büro"],
     positionen: [
-      { bezeichnung: 'Server (Rack-Server)',    nd: 5 },
-      { bezeichnung: 'Fotokopierer / MFP',      nd: 7 },
-      { bezeichnung: 'Frankiermaschine',        nd: 7 },
-      { bezeichnung: 'Dokumentenscanner',       nd: 5 },
-      { bezeichnung: 'Kassenanlage (POS)',      nd: 7 },
-      { bezeichnung: 'Notebook-Workstation',    nd: 3 },
+      { bezeichnung: "Server (Rack-Server)", nd: 5 },
+      { bezeichnung: "Fotokopierer / MFP", nd: 7 },
+      { bezeichnung: "Frankiermaschine", nd: 7 },
+      { bezeichnung: "Dokumentenscanner", nd: 5 },
+      { bezeichnung: "Kassenanlage (POS)", nd: 7 },
+      { bezeichnung: "Notebook-Workstation", nd: 3 },
     ],
     preisRange: { min: 2000, max: 10000 },
-    nebenkostenArt: 'Installation',
+    nebenkostenArt: "Installation",
     nebenkosten: { min: 100, max: 800 },
     rabattProzent: [5, 10],
   },
   BGA: {
-    label: 'Büromöbel & Geschäftsausstattung', konto: kontoLabel('0870'),
-    yamlBranche: ['Büro'],
+    label: "Büromöbel & Geschäftsausstattung",
+    konto: kontoLabel("0870"),
+    yamlBranche: ["Büro"],
     positionen: [
-      { bezeichnung: 'Büromöbelgarnitur',         nd: 13 },
-      { bezeichnung: 'Empfangstheke',             nd: 10 },
-      { bezeichnung: 'Konferenzraumausstattung',  nd: 13 },
-      { bezeichnung: 'Ladeneinrichtung',          nd: 8 },
+      { bezeichnung: "Büromöbelgarnitur", nd: 13 },
+      { bezeichnung: "Empfangstheke", nd: 10 },
+      { bezeichnung: "Konferenzraumausstattung", nd: 13 },
+      { bezeichnung: "Ladeneinrichtung", nd: 8 },
     ],
     preisRange: { min: 3000, max: 25000 },
-    nebenkostenArt: 'Lieferung',
+    nebenkostenArt: "Lieferung",
     nebenkosten: { min: 150, max: 1200 },
     rabattProzent: [5, 10, 20],
-  }
+  },
 };
 
-const kategorieKeys = ['MA', 'FP', 'BM', 'BGA'];
+const kategorieKeys = ["MA", "FP", "BM", "BGA"];
 
 const monatsnamen = [
-  'Januar','Februar','März','April','Mai','Juni',
-  'Juli','August','September','Oktober','November','Dezember'
+  "Januar",
+  "Februar",
+  "März",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Dezember",
 ];
 
 // ============================================================================
 // HILFSFUNKTIONEN
 // ============================================================================
-
 
 function rnd(min, max, step = 100) {
   const steps = Math.floor((max - min) / step);
@@ -99,20 +112,21 @@ function rnd(min, max, step = 100) {
 }
 
 function formatEuro(v) {
-  return v.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0€';
+  return (
+    v.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + "\u00a0€"
+  );
 }
 
 function formatProzent(p) {
-  return p.toLocaleString('de-DE') + '\u00a0%';
+  return p.toLocaleString("de-DE") + "\u00a0%";
 }
 
 // ============================================================================
 // YAML / UNTERNEHMEN LADEN
 // ============================================================================
-
-
-
-
 
 // ============================================================================
 // DROPDOWN BEFÜLLEN
@@ -122,46 +136,48 @@ function fillCompanyDropdowns() {
   if (!yamlData || yamlData.length === 0) return;
 
   const sortedCompanies = [...yamlData].sort((a, b) => {
-    const brancheA = a.unternehmen?.branche || '';
-    const brancheB = b.unternehmen?.branche || '';
+    const brancheA = a.unternehmen?.branche || "";
+    const brancheB = b.unternehmen?.branche || "";
     if (brancheA !== brancheB) return brancheA.localeCompare(brancheB);
-    return (a.unternehmen?.name || '').localeCompare(b.unternehmen?.name || '');
+    return (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
   });
 
-  const kundeSelect = document.getElementById('marketingKunde');
+  const kundeSelect = document.getElementById("marketingKunde");
   if (!kundeSelect) return;
 
-  kundeSelect.innerHTML = '';
-  const opt = document.createElement('option');
-  opt.value = '';
-  opt.text = '— bitte Unternehmen auswählen —';
+  kundeSelect.innerHTML = "";
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "— bitte Unternehmen auswählen —";
   opt.disabled = true;
   opt.selected = true;
   kundeSelect.appendChild(opt);
 
-  sortedCompanies.forEach(company => {
+  sortedCompanies.forEach((company) => {
     const u = company.unternehmen;
     if (!u?.name) return;
     const displayText = u.branche
-      ? `${u.branche} – ${u.name} ${u.rechtsform || ''}`.trim()
-      : `${u.name} ${u.rechtsform || ''}`.trim();
-    const option = document.createElement('option');
+      ? `${u.branche} – ${u.name} ${u.rechtsform || ""}`.trim()
+      : `${u.name} ${u.rechtsform || ""}`.trim();
+    const option = document.createElement("option");
     option.value = u.name;
     option.textContent = displayText;
-    option.dataset.branche = u.branche || '';
+    option.dataset.branche = u.branche || "";
     kundeSelect.appendChild(option);
   });
 }
 
 function autoSelectMyCompany() {
-  const myCompanyName = localStorage.getItem('myCompany');
+  const myCompanyName = localStorage.getItem("myCompany");
   if (!myCompanyName) return;
-  const dropdowns = document.querySelectorAll('select.meinUnternehmen');
-  dropdowns.forEach(dropdown => {
-    const match = Array.from(dropdown.options).find(o => o.value === myCompanyName);
+  const dropdowns = document.querySelectorAll("select.meinUnternehmen");
+  dropdowns.forEach((dropdown) => {
+    const match = Array.from(dropdown.options).find(
+      (o) => o.value === myCompanyName,
+    );
     if (match) {
       dropdown.value = myCompanyName;
-      dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+      dropdown.dispatchEvent(new Event("change", { bubbles: true }));
     }
   });
 }
@@ -175,20 +191,22 @@ function getLieferantFuer(katKey) {
 
   // Fallback-Namen falls YAML leer
   const fallbacks = {
-    MA:  'Maschinenbau GmbH',
-    FP:  'AutoHaus AG',
-    BM:  'Bürotechnik GmbH',
-    BGA: 'Büromöbel AG'
+    MA: "Maschinenbau GmbH",
+    FP: "AutoHaus AG",
+    BM: "Bürotechnik GmbH",
+    BGA: "Büromöbel AG",
   };
 
   if (!yamlData || yamlData.length === 0) {
-    return fallbacks[katKey] || 'Lieferant GmbH';
+    return fallbacks[katKey] || "Lieferant GmbH";
   }
 
   // Firmen nach passender Branche filtern
-  const passend = yamlData.filter(c => {
-    const b = (c.unternehmen?.branche || '').toLowerCase();
-    return conf.yamlBranche.some(w => b.toLowerCase().includes(w.toLowerCase()));
+  const passend = yamlData.filter((c) => {
+    const b = (c.unternehmen?.branche || "").toLowerCase();
+    return conf.yamlBranche.some((w) =>
+      b.toLowerCase().includes(w.toLowerCase()),
+    );
   });
 
   const pool = passend.length > 0 ? passend : yamlData;
@@ -197,7 +215,7 @@ function getLieferantFuer(katKey) {
   // Vollständiger Name inkl. Rechtsform
   return u?.rechtsform
     ? `${u.name} ${u.rechtsform}`.trim()
-    : (u?.name || fallbacks[katKey]);
+    : u?.name || fallbacks[katKey];
 }
 
 // ============================================================================
@@ -232,9 +250,14 @@ function erstelleGeschaeftsfallText(d) {
 
 function ermittleArtikel(bezeichnung) {
   const bez = bezeichnung.toLowerCase();
-  if (/anlage|maschine|presse|garnitur|station|theke|ausstattung|einrichtung|werkzeugmaschine/.test(bez)) return 'eine';
-  if (/fahrzeug|system|gerät/.test(bez)) return 'ein';
-  return 'einen';
+  if (
+    /anlage|maschine|presse|garnitur|station|theke|ausstattung|einrichtung|werkzeugmaschine/.test(
+      bez,
+    )
+  )
+    return "eine";
+  if (/fahrzeug|system|gerät/.test(bez)) return "ein";
+  return "einen";
 }
 
 // ============================================================================
@@ -243,13 +266,17 @@ function ermittleArtikel(bezeichnung) {
 
 function schreibeZufaelligeWerteInInputs() {
   const katKey = getSelectedKategorie();
-  const conf   = anlagenKonfig[katKey];
+  const conf = anlagenKonfig[katKey];
   const anlage = pick(conf.positionen);
 
-  const rbtProzent = (Math.random() < 0.7) ? pick(conf.rabattProzent.filter(Boolean)) : 0;
-  const nbk        = (Math.random() < 0.8) ? rnd(conf.nebenkosten.min, conf.nebenkosten.max, 50) : 0;
-  const monat      = Math.ceil(Math.random() * 12);
-  const nd         = anlage.nd;
+  const rbtProzent =
+    Math.random() < 0.7 ? pick(conf.rabattProzent.filter(Boolean)) : 0;
+  const nbk =
+    Math.random() < 0.8
+      ? rnd(conf.nebenkosten.min, conf.nebenkosten.max, 50)
+      : 0;
+  const monat = Math.ceil(Math.random() * 12);
+  const nd = anlage.nd;
 
   // AP so wählen, dass (ap - rbt + nbk) durch nd teilbar ist
   // → ap muss Vielfaches von snapUnit UND von nd sein (wenn kein nbk, sonst trial & error)
@@ -260,7 +287,8 @@ function schreibeZufaelligeWerteInInputs() {
     const kgv = lcm(snapUnit, nd);
     const minSteps = Math.ceil(conf.preisRange.min / kgv);
     const maxSteps = Math.floor(conf.preisRange.max / kgv);
-    const step = minSteps + Math.floor(Math.random() * (maxSteps - minSteps + 1));
+    const step =
+      minSteps + Math.floor(Math.random() * (maxSteps - minSteps + 1));
     ap = step * kgv;
   } else {
     // Ohne Rabatt: (ap + nbk) muss durch nd teilbar sein
@@ -271,26 +299,29 @@ function schreibeZufaelligeWerteInInputs() {
     if (ap < conf.preisRange.min) ap += nd;
   }
 
-  document.getElementById('akInput').value           = ap;
-  document.getElementById('rabattInput').value       = rbtProzent;
-  document.getElementById('bezugskostenInput').value = nbk;
-  document.getElementById('kaufMonatInput').value    = monat;
-  document.getElementById('ndInput').value           = nd;
+  document.getElementById("akInput").value = ap;
+  document.getElementById("rabattInput").value = rbtProzent;
+  document.getElementById("bezugskostenInput").value = nbk;
+  document.getElementById("kaufMonatInput").value = monat;
+  document.getElementById("ndInput").value = nd;
 }
 
 // Hilfsfunktion: kleinstes gemeinsames Vielfaches
-function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
-function lcm(a, b) { return (a * b) / gcd(a, b); }
-
+function gcd(a, b) {
+  return b === 0 ? a : gcd(b, a % b);
+}
+function lcm(a, b) {
+  return (a * b) / gcd(a, b);
+}
 
 // ============================================================================
 // HAUPTGENERATOR
 // ============================================================================
 
 function getSelectedKategorie() {
-  const sel = document.getElementById('anlageSelect');
-  const val = sel ? sel.value : '-1';
-  return (val === '-1') ? pick(kategorieKeys) : val;
+  const sel = document.getElementById("anlageSelect");
+  const val = sel ? sel.value : "-1";
+  return val === "-1" ? pick(kategorieKeys) : val;
 }
 
 /**
@@ -313,24 +344,27 @@ function zeigeAbschreibungMitManuellen() {
  * Kernfunktion: liest Inputs, berechnet alle Werte, rendert Aufgabe + Lösung.
  */
 function zeigeAufgabeMitInputs() {
-  const akIn    = document.getElementById('akInput').value.trim();
-  const rbtIn   = document.getElementById('rabattInput').value.trim();
-  const nbkIn   = document.getElementById('bezugskostenInput').value.trim();
-  const monatIn = document.getElementById('kaufMonatInput').value.trim();
-  const ndIn    = document.getElementById('ndInput').value.trim();
+  const akIn = document.getElementById("akInput").value.trim();
+  const rbtIn = document.getElementById("rabattInput").value.trim();
+  const nbkIn = document.getElementById("bezugskostenInput").value.trim();
+  const monatIn = document.getElementById("kaufMonatInput").value.trim();
+  const ndIn = document.getElementById("ndInput").value.trim();
 
   const katKey = getSelectedKategorie();
-  const conf   = anlagenKonfig[katKey];
+  const conf = anlagenKonfig[katKey];
   const anlage = pick(conf.positionen);
 
   // === Eingaben auslesen ===
-  let ap = akIn ? parseFloat(akIn) : rnd(conf.preisRange.min, conf.preisRange.max, 500);
+  let ap = akIn
+    ? parseFloat(akIn)
+    : rnd(conf.preisRange.min, conf.preisRange.max, 500);
 
-  const rbtProzent = (rbtIn !== '') ? parseFloat(rbtIn) : 0;
-  const nbk        = nbkIn ? parseInt(nbkIn) : 0;
-  const monat      = (monatIn && parseInt(monatIn) >= 1 && parseInt(monatIn) <= 12)
-                       ? parseInt(monatIn)
-                       : Math.ceil(Math.random() * 12);
+  const rbtProzent = rbtIn !== "" ? parseFloat(rbtIn) : 0;
+  const nbk = nbkIn ? parseInt(nbkIn) : 0;
+  const monat =
+    monatIn && parseInt(monatIn) >= 1 && parseInt(monatIn) <= 12
+      ? parseInt(monatIn)
+      : Math.ceil(Math.random() * 12);
 
   let nd = ndIn ? parseInt(ndIn) : anlage.nd;
 
@@ -338,56 +372,68 @@ function zeigeAufgabeMitInputs() {
   // AK-Rundung: AP anpassen, Rabatt korrekt halten
   // =============================================
 
-let rbt = 0;
+  let rbt = 0;
 
-if (rbtProzent > 0) {
-  // snapUnit stellt sicher, dass ap × rbtProzent/100 immer ganzzahlig ist
-  // 10% → snap auf 10er | 5% → snap auf 20er | 20% → snap auf 5er | 15% → snap auf 20er
-  const snapUnit = Math.round(100 / rbtProzent);
-  ap  = Math.round(ap / snapUnit) * snapUnit;
-  rbt = ap * rbtProzent / 100;   // garantiert ganzzahlig
-}
+  if (rbtProzent > 0) {
+    // snapUnit stellt sicher, dass ap × rbtProzent/100 immer ganzzahlig ist
+    // 10% → snap auf 10er | 5% → snap auf 20er | 20% → snap auf 5er | 15% → snap auf 20er
+    const snapUnit = Math.round(100 / rbtProzent);
+    ap = Math.round(ap / snapUnit) * snapUnit;
+    rbt = (ap * rbtProzent) / 100; // garantiert ganzzahlig
+  }
 
-// AK direkt berechnen – kein zweites Runden mehr
-let ak = ap - rbt + nbk;
+  // AK direkt berechnen – kein zweites Runden mehr
+  let ak = ap - rbt + nbk;
 
-// AK auf Vielfaches von nd runden NUR wenn kein Rabatt,
-// weil sonst rbt wieder schief wird.
-// Mit Rabatt: ap wurde bereits so gewählt, dass ak "schön" ist.
-if (rbtProzent === 0) {
-  ak = Math.round(ak / nd) * nd;
-}
-
+  // AK auf Vielfaches von nd runden NUR wenn kein Rabatt,
+  // weil sonst rbt wieder schief wird.
+  // Mit Rabatt: ap wurde bereits so gewählt, dass ak "schön" ist.
+  if (rbtProzent === 0) {
+    ak = Math.round(ak / nd) * nd;
+  }
 
   // =============================================
 
   // Umsatzsteuer
-  const gesamtVorst  = Math.round(ak * UST_REGEL / 100 * 100) / 100;
+  const gesamtVorst = Math.round(((ak * UST_REGEL) / 100) * 100) / 100;
   const gesamtBrutto = Math.round((ak + gesamtVorst) * 100) / 100;
 
   // Abschreibung zeitanteilig
-  const monate        = 13 - monat;
-  const afaJahr       = ak / nd;                    // jetzt immer ganzzahlig
-  const afaErstesJahr = Math.round(afaJahr * monate / 12 * 100) / 100;
+  const monate = 13 - monat;
+  const afaJahr = ak / nd; // jetzt immer ganzzahlig
+  const afaErstesJahr = Math.round(((afaJahr * monate) / 12) * 100) / 100;
 
   const lieferant = getLieferantFuer(katKey);
-  const kundeEl = document.getElementById('marketingKunde');
-  const kunde = (kundeEl && kundeEl.value) ? kundeEl.value : '<i>[Modellunternehmen]</i>';
+  const kundeEl = document.getElementById("marketingKunde");
+  const kunde =
+    kundeEl && kundeEl.value ? kundeEl.value : "<i>[Modellunternehmen]</i>";
 
   letzteAufgabe = {
-    katKey, conf, anlage,
-    ap, rbtProzent, rbt, nbk, ak,
-    gesamtVorst, gesamtBrutto,
-    monat, nd, monate, afaJahr, afaErstesJahr,
-    lieferant, kunde
+    katKey,
+    conf,
+    anlage,
+    ap,
+    rbtProzent,
+    rbt,
+    nbk,
+    ak,
+    gesamtVorst,
+    gesamtBrutto,
+    monat,
+    nd,
+    monate,
+    afaJahr,
+    afaErstesJahr,
+    lieferant,
+    kunde,
   };
 
   renderAufgaben();
   renderBelegButtons();
 
   // KI-Prompt aktualisieren falls sichtbar
-  const vorschau = document.getElementById('kiPromptVorschau');
-  if (vorschau && getComputedStyle(vorschau).display !== 'none') {
+  const vorschau = document.getElementById("kiPromptVorschau");
+  if (vorschau && getComputedStyle(vorschau).display !== "none") {
     vorschau.textContent = erstelleKiPromptText();
   }
 }
@@ -398,12 +444,25 @@ if (rbtProzent === 0) {
 
 function renderAufgaben() {
   const d = letzteAufgabe;
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
 
-  const { conf, anlage, ap, rbtProzent, rbt, nbk, ak,
-          gesamtVorst, gesamtBrutto,
-          monat, nd, monate, afaJahr, afaErstesJahr } = d;
+  const {
+    conf,
+    anlage,
+    ap,
+    rbtProzent,
+    rbt,
+    nbk,
+    ak,
+    gesamtVorst,
+    gesamtBrutto,
+    monat,
+    nd,
+    monate,
+    afaJahr,
+    afaErstesJahr,
+  } = d;
 
   const monatName = monatsnamen[monat - 1];
 
@@ -411,7 +470,7 @@ function renderAufgaben() {
   const aufgaben = [
     `Berechne die Anschaffungskosten (AK).`,
     `Bilde den Buchungssatz zum Geschäftsfall.`,
-    `Bilde den Buchungssatz zur Abschreibung zum 31. Dezember.`
+    `Bilde den Buchungssatz zur Abschreibung zum 31. Dezember.`,
   ];
 
   // ── Lösung 1 – Nebenrechnung AK ───────────────────────────────────────────
@@ -451,18 +510,18 @@ function renderAufgaben() {
   let l2 = `
 <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
   <tr>
-    <td style="border-with:0;min-width:160px;">${conf.konto}</td>
-    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(ak)}</td>
-    <td style="border-with:0;text-align:center;min-width:50px;"></td>
-    <td style="border-with:0;min-width:90px;"></td>
-    <td style="border-with:0;min-width:145px;"></td>
+    <td style="border-width:0;min-width:160px;">${conf.konto}</td>
+    <td style="border-width:0;text-align:right;min-width:145px;">${formatEuro(ak)}</td>
+    <td style="border-width:0;text-align:center;min-width:50px;"></td>
+    <td style="border-width:0;min-width:90px;"></td>
+    <td style="border-width:0;min-width:145px;"></td>
   </tr>
   <tr>
-    <td>${VORST}</td>
-    <td style="border-with:0;text-align:right;">${formatEuro(gesamtVorst)}</td>
-    <td style="border-with:0;text-align:center;">an</td>
-    <td style="border-with:0;">${VE}</td>
-    <td style="border-with:0;text-align:right;">${formatEuro(gesamtBrutto)}</td>
+    <td style="border-width:0;">${VORST}</td>
+    <td style="border-width:0;text-align:right;">${formatEuro(gesamtVorst)}</td>
+    <td style="border-width:0;text-align:center;">an</td>
+    <td style="border-width:0;">${VE}</td>
+    <td style="border-width:0;text-align:right;">${formatEuro(gesamtBrutto)}</td>
   </tr>
 </table>`;
   // ── Lösung 3 – zeitanteilige Abschreibung + Buchungssatz AfA ─────────────
@@ -472,11 +531,11 @@ function renderAufgaben() {
   l3 += `
 <table style="border: 1px solid #ccc; white-space:nowrap; background-color:#fff; font-family:courier; width:600px; margin:0 0 6px;">
   <tr>
-    <td style="border-with:0;min-width:160px;">${ABSA}</td>
-    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
-    <td style="border-with:0;text-align:center;min-width:50px;">an</td>
-    <td style="border-with:0;">${conf.konto}</td>
-    <td style="border-with:0;text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
+    <td style="border-width:0;min-width:160px;">${ABSA}</td>
+    <td style="border-width:0;text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
+    <td style="border-width:0;text-align:center;min-width:50px;">an</td>
+    <td style="border-width:0;">${conf.konto}</td>
+    <td style="border-width:0;text-align:right;min-width:145px;">${formatEuro(afaErstesJahr)}</td>
   </tr>
 </table>`;
   const loesungen = [l1, l2, l3];
@@ -492,17 +551,21 @@ function renderAufgaben() {
         ${erstelleGeschaeftsfallText(d)}
       </div>
 
-      <ol>${aufgaben.map(a => `<li>${a}</li>`).join('')}</ol>
+      <ol>${aufgaben.map((a) => `<li>${a}</li>`).join("")}</ol>
     </div>
 
     <div class="loesung-section">
       <h2 class="loesung">Lösung</h2>
-      ${loesungen.map((l, i) => `
+      ${loesungen
+        .map(
+          (l, i) => `
         <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px;
                     padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
           <strong>Aufgabe\u00a0${i + 1}:</strong><br>${l}
         </div>
-      `).join('')}
+      `,
+        )
+        .join("")}
     </div>
   `;
 }
@@ -513,65 +576,77 @@ function renderAufgaben() {
 
 function renderBelegButtons() {
   const d = letzteAufgabe;
-  const col = document.getElementById('button-column');
+  const col = document.getElementById("button-column");
   if (!col) return;
-  col.innerHTML = '';
+  col.innerHTML = "";
 
-  const { katKey, conf, anlage, ap, rbtProzent, rbt, nbk, ak, nd, monat, lieferant } = d;
-  const monatStr = monat.toString().padStart(2, '0');
+  const {
+    katKey,
+    conf,
+    anlage,
+    ap,
+    rbtProzent,
+    rbt,
+    nbk,
+    ak,
+    nd,
+    monat,
+    lieferant,
+  } = d;
+  const monatStr = monat.toString().padStart(2, "0");
   const jahr = new Date().getFullYear().toString();
 
   // ── Rechnung ──────────────────────────────────────────────────────────────
   const rParams = new URLSearchParams();
-  rParams.set('beleg', 'rechnung');
-  rParams.set('artikel1', anlage.bezeichnung);
-  rParams.set('menge1', '1');
-  rParams.set('einheit1', '');
-  rParams.set('einzelpreis1', ap.toString());
-  rParams.set('umsatzsteuer', '19');
-  rParams.set('tag', '05');
-  rParams.set('monat', monatStr);
-  rParams.set('jahr', jahr);
-  rParams.set('zahlungsziel', '30');
-  rParams.set('skonto', '2');
-  rParams.set('skontofrist', '14');
-  rParams.set('lieferer', lieferant);        // Lieferant aus YAML übergeben
+  rParams.set("beleg", "rechnung");
+  rParams.set("artikel1", anlage.bezeichnung);
+  rParams.set("menge1", "1");
+  rParams.set("einheit1", "");
+  rParams.set("einzelpreis1", ap.toString());
+  rParams.set("umsatzsteuer", "19");
+  rParams.set("tag", "05");
+  rParams.set("monat", monatStr);
+  rParams.set("jahr", jahr);
+  rParams.set("zahlungsziel", "30");
+  rParams.set("skonto", "2");
+  rParams.set("skontofrist", "14");
+  rParams.set("lieferer", lieferant); // Lieferant aus YAML übergeben
   // Rabatt als Prozentwert übergeben (statt absoluter Betrag)
-  if (rbtProzent > 0) rParams.set('rabatt', rbtProzent.toString());
+  if (rbtProzent > 0) rParams.set("rabatt", rbtProzent.toString());
   if (nbk > 0) {
-    rParams.set('bezugskosten', nbk.toString());
-    rParams.set('bezugskostenart', conf.nebenkostenArt);
+    rParams.set("bezugskosten", nbk.toString());
+    rParams.set("bezugskostenart", conf.nebenkostenArt);
   }
   const rechnungURL = `belege.html?${rParams.toString()}`;
 
   // ── Anlagenkarte ──────────────────────────────────────────────────────────
   const aParams = new URLSearchParams();
-  aParams.set('beleg', 'anlagenkarte');
-  aParams.set('bezeichnung', anlage.bezeichnung);
-  aParams.set('anlagenkonto', conf.konto);
-  aParams.set('anschaffungskosten', ak.toString());
-  aParams.set('nutzungsdauer', nd.toString());
-  aParams.set('tag', '05');
-  aParams.set('monat', monatStr);
-  aParams.set('jahr', jahr);
-  aParams.set('lieferant', lieferant);       // Lieferant aus YAML übergeben
+  aParams.set("beleg", "anlagenkarte");
+  aParams.set("bezeichnung", anlage.bezeichnung);
+  aParams.set("anlagenkonto", conf.konto);
+  aParams.set("anschaffungskosten", ak.toString());
+  aParams.set("nutzungsdauer", nd.toString());
+  aParams.set("tag", "05");
+  aParams.set("monat", monatStr);
+  aParams.set("jahr", jahr);
+  aParams.set("lieferant", lieferant); // Lieferant aus YAML übergeben
   const karteURL = `belege.html?${aParams.toString()}`;
 
-  const btnWrap1 = document.createElement('div');
-  btnWrap1.style.margin = '12px 0';
+  const btnWrap1 = document.createElement("div");
+  btnWrap1.style.margin = "12px 0";
   btnWrap1.innerHTML = `
     <button class="geschaeftsfall-beleg-button"
-      data-url="${rechnungURL}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+      data-url="${rechnungURL.replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
       style="width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;">
       📄 Rechnung erstellen
     </button>`;
   col.appendChild(btnWrap1);
 
-  const btnWrap2 = document.createElement('div');
-  btnWrap2.style.margin = '12px 0';
+  const btnWrap2 = document.createElement("div");
+  btnWrap2.style.margin = "12px 0";
   btnWrap2.innerHTML = `
     <button class="geschaeftsfall-beleg-button"
-      data-url="${karteURL}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
+      data-url="${karteURL.replace(/&/g, "&amp;")}" data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
       style="width:100%; padding:10px 12px; font-size:14px;">
       🗂️ Anlagenkarte erstellen
     </button>`;
@@ -627,15 +702,34 @@ Erinnerungswert: am Ende der Nutzungsdauer verbleiben 1,00 €.
 `;
 
 function erstelleKiPromptText() {
-  if (!letzteAufgabe) return KI_BASE_PROMPT.replace('###AUFGABEN###', '(Noch keine Aufgabe generiert.)');
+  if (!letzteAufgabe)
+    return KI_BASE_PROMPT.replace(
+      "###AUFGABEN###",
+      "(Noch keine Aufgabe generiert.)",
+    );
 
   const d = letzteAufgabe;
-  const { conf, anlage, ap, rbtProzent, rbt, nbk, ak,
-          gesamtVorst, gesamtBrutto, monat, nd, monate,
-          afaJahr, afaErstesJahr, lieferant, kunde } = d;
+  const {
+    conf,
+    anlage,
+    ap,
+    rbtProzent,
+    rbt,
+    nbk,
+    ak,
+    gesamtVorst,
+    gesamtBrutto,
+    monat,
+    nd,
+    monate,
+    afaJahr,
+    afaErstesJahr,
+    lieferant,
+    kunde,
+  } = d;
   const monatName = monatsnamen[monat - 1];
 
-  const gfText = erstelleGeschaeftsfallText(d).replace(/<[^>]+>/g, '');
+  const gfText = erstelleGeschaeftsfallText(d).replace(/<[^>]+>/g, "");
 
   const kontext = `
 ## Geschäftsfall
@@ -643,8 +737,8 @@ ${gfText}
 
 ## Lösung (nur für den Assistenten – dem Schüler nicht zeigen!)
 Anschaffungspreis: ${formatEuro(ap)}
-${rbtProzent > 0 ? '− Treuerabatt (' + formatProzent(rbtProzent) + '): − ' + formatEuro(rbt) : ''}
-${nbk > 0 ? '+ ' + conf.nebenkostenArt + ': + ' + formatEuro(nbk) : ''}
+${rbtProzent > 0 ? "− Treuerabatt (" + formatProzent(rbtProzent) + "): − " + formatEuro(rbt) : ""}
+${nbk > 0 ? "+ " + conf.nebenkostenArt + ": + " + formatEuro(nbk) : ""}
 = Anschaffungskosten (AK): ${formatEuro(ak)}
 
 Vorsteuer ${UST_REGEL} % auf ${formatEuro(ak)}: ${formatEuro(gesamtVorst)}
@@ -660,32 +754,41 @@ Buchungssatz AfA:
 6520 ABSA ${formatEuro(afaErstesJahr)} an ${conf.konto} ${formatEuro(afaErstesJahr)}
 `;
 
-  return KI_BASE_PROMPT.replace('###AUFGABEN###', kontext);
+  return KI_BASE_PROMPT.replace("###AUFGABEN###", kontext);
 }
 
 function kopiereKiPromptKauf() {
   const text = erstelleKiPromptText();
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    if (!btn) return;
-    const orig = btn.innerHTML;
-    btn.innerHTML = '✅ Kopiert!';
-    setTimeout(() => { btn.innerHTML = orig; }, 2500);
-  }).catch(() => zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.'));
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      if (!btn) return;
+      const orig = btn.innerHTML;
+      btn.innerHTML = "✅ Kopiert!";
+      setTimeout(() => {
+        btn.innerHTML = orig;
+      }, 2500);
+    })
+    .catch(() =>
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      ),
+    );
 }
 
 function toggleKiPromptVorschauKauf() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn      = document.getElementById('kiPromptToggleBtn');
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
   if (!vorschau || !btn) return;
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.textContent   = erstelleKiPromptText();
-    vorschau.style.display = 'block';
-    btn.textContent = 'Vorschau ausblenden ▲';
+    vorschau.textContent = erstelleKiPromptText();
+    vorschau.style.display = "block";
+    btn.textContent = "Vorschau ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
@@ -693,11 +796,11 @@ function toggleKiPromptVorschauKauf() {
 // INITIALISIERUNG
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  const kundeSelect = document.getElementById('marketingKunde');
+document.addEventListener("DOMContentLoaded", () => {
+  const kundeSelect = document.getElementById("marketingKunde");
   if (kundeSelect) {
-    kundeSelect.addEventListener('change', () => {
-      kunde = kundeSelect.value.trim() || '<i>[Modellunternehmen]</i>';
+    kundeSelect.addEventListener("change", () => {
+      kunde = kundeSelect.value.trim() || "<i>[Modellunternehmen]</i>";
     });
   }
 
@@ -708,13 +811,21 @@ document.addEventListener('DOMContentLoaded', () => {
     autoSelectMyCompany();
     zeigeZufaelligeAufgabe();
   } else {
-    document.addEventListener('yamlDataLoaded', () => {
-      fillCompanyDropdowns();
-      autoSelectMyCompany();
-      zeigeZufaelligeAufgabe();
-    }, { once: true });
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
+        fillCompanyDropdowns();
+        autoSelectMyCompany();
+        zeigeZufaelligeAufgabe();
+      },
+      { once: true },
+    );
   }
 
-  const vorschauEl = document.getElementById('kiPromptVorschau');
-  if (vorschauEl) vorschauEl.textContent = KI_BASE_PROMPT.replace('###AUFGABEN###', '(Noch keine Aufgabe generiert.)');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
+  if (vorschauEl)
+    vorschauEl.textContent = KI_BASE_PROMPT.replace(
+      "###AUFGABEN###",
+      "(Noch keine Aufgabe generiert.)",
+    );
 });

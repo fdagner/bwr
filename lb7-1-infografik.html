@@ -1,271 +1,544 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Infografik-Generator | meinbwr.de BwR</title>
+    <meta
+      name="description"
+      content="Kostenloses BwR-Tool: Erstelle professionelle Infografiken mit Balken-, Säulen-, Linien- und Kreisdiagrammen. Farbschemas, CSV-Import, PNG/SVG-Export."
+    />
+    <link rel="canonical" href="https://www.meinbwr.de/lb7-1-infografik.html" />
+    <meta name="robots" content="index, follow" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Infografik-Generator | meinbwr.de BwR</title>
-  <meta name="description" content="Kostenloses BwR-Tool: Erstelle professionelle Infografiken mit Balken-, Säulen-, Linien- und Kreisdiagrammen. Farbschemas, CSV-Import, PNG/SVG-Export.">
-  <link rel="canonical" href="https://www.meinbwr.de/lb7-1-infografik.html">
-  <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Infografik-Generator | meinbwr.de" />
+    <meta
+      property="og:description"
+      content="Erstelle professionelle Infografiken mit verschiedenen Diagrammtypen. Ideal für BwR Realschule Bayern."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.meinbwr.de/lb7-1-infografik.html"
+    />
+    <meta
+      property="og:site_name"
+      content="meinbwr.de – BwR Realschule Bayern"
+    />
+    <meta property="og:locale" content="de_DE" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Infografik-Generator | meinbwr.de">
-  <meta property="og:description" content="Erstelle professionelle Infografiken mit verschiedenen Diagrammtypen. Ideal für BwR Realschule Bayern.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.meinbwr.de/lb7-1-infografik.html">
-  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
-  <meta property="og:locale" content="de_DE">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Infografik-Generator | meinbwr.de" />
+    <meta
+      name="twitter:description"
+      content="Erstelle professionelle Infografiken mit verschiedenen Diagrammtypen. Ideal für BwR Realschule Bayern."
+    />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Infografik-Generator | meinbwr.de">
-  <meta name="twitter:description" content="Erstelle professionelle Infografiken mit verschiedenen Diagrammtypen. Ideal für BwR Realschule Bayern.">
+    <!-- Theme -->
+    <meta name="theme-color" content="#2c5f2d" />
+    <meta name="color-scheme" content="light" />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#2c5f2d">
-  <meta name="color-scheme" content="light">
+    <!-- Strukturierte Daten -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Infografik-Generator",
+        "description": "Kostenloses BwR-Tool: Erstelle professionelle Infografiken mit Balken-, Säulen-, Linien- und Kreisdiagrammen. Farbschemas, CSV-Import, PNG/SVG-Export.",
+        "url": "https://www.meinbwr.de/lb7-1-infografik.html",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "meinbwr.de – BwR Realschule Bayern",
+          "url": "https://www.meinbwr.de/"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Lebensgestaltung 7",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Infografik-Generator",
+              "item": "https://www.meinbwr.de/lb7-1-infografik.html"
+            }
+          ]
+        }
+      }
+    </script>
 
-  <!-- Strukturierte Daten -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Infografik-Generator",
-    "description": "Kostenloses BwR-Tool: Erstelle professionelle Infografiken mit Balken-, Säulen-, Linien- und Kreisdiagrammen. Farbschemas, CSV-Import, PNG/SVG-Export.",
-    "url": "https://www.meinbwr.de/lb7-1-infografik.html",
-    "inLanguage": "de-DE",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "meinbwr.de – BwR Realschule Bayern",
-      "url": "https://www.meinbwr.de/"
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 2, "name": "Lebensgestaltung 7", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 3, "name": "Infografik-Generator", "item": "https://www.meinbwr.de/lb7-1-infografik.html" }
-      ]
-    }
-  }
-  </script>
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <script src="js/menu.js"></script>
+    <script src="js/libraries/html2canvas.min.js"></script>
+    <script src="js/libraries/apexcharts.min.js"></script>
+  </head>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <script src="js/menu.js"></script>
-  <script src="js/libraries/html2canvas.min.js"></script>
-  <script src="js/libraries/apexcharts.min.js"></script>
-</head>
-
-<body>
+  <body>
     <main>
-        <div w3-include-html="navigation.html"></div>
-        <h2>Infografik-Generator</h2>
+      <div w3-include-html="navigation.html"></div>
+      <h2>Infografik-Generator</h2>
 
-        <!-- ════ EINSTELLUNGEN in der Box ════ -->
-        <div class="box">
-            <p>Erstellen Sie professionelle Infografiken mit verschiedenen Diagrammtypen. Wählen Sie eine Vorlage oder geben Sie eigene Daten ein.</p>
+      <!-- ════ EINSTELLUNGEN in der Box ════ -->
+      <div class="box">
+        <p>
+          Erstellen Sie professionelle Infografiken mit verschiedenen
+          Diagrammtypen. Wählen Sie eine Vorlage oder geben Sie eigene Daten
+          ein.
+        </p>
 
-          <div class="ig-full">
-    <label>Vorlage laden</label>
-    <select id="inp-template" data-on-change='[{"fn":"loadTemplate","args":["__VALUE__"]}]'>
-        <option value="">— Vorlage wählen —</option>
-    </select>
-</div>
-
-                <hr style="grid-column:1/-1;border:none;border-top:1px solid #e0e0e0;margin:4px 0;" />
-
-                <!-- Metadaten -->
-                <div class="ig-full">
-                    <label>Titel <span style="color:#aaa;font-weight:normal;">(Pflichtfeld)</span></label>
-                    <div class="ig-field-wrap">
-                        <input type="text" id="inp-title" placeholder="Titel der Infografik" maxlength="80"
-                            data-on-input='[{"fn":"updateCharCounter","args":["__THIS__",80]},{"fn":"validateField","args":["__THIS__",1]}]' onpaste="sanitizePaste(event, 80)" />
-                        <div style="display:flex;justify-content:space-between;">
-                            <div class="ig-field-error" id="err-title">Bitte einen Titel eingeben.</div>
-                            <div class="ig-char-counter" id="counter-inp-title">0 / 80</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ig-full">
-                    <label>Untertitel</label>
-                    <div class="ig-field-wrap">
-                        <input type="text" id="inp-subtitle" placeholder="Untertitel / Teilüberschrift" maxlength="120"
-                            data-on-input='[{"fn":"updateCharCounter","args":["__THIS__",120]}]' onpaste="sanitizePaste(event, 120)" />
-                        <div class="ig-char-counter" id="counter-inp-subtitle" style="text-align:right;">0 / 120</div>
-                    </div>
-                </div>
-                <div>
-                    <label>Quelle</label>
-                    <div class="ig-field-wrap">
-                        <input type="text" id="inp-source" placeholder="z. B. Statistisches Bundesamt, 2024" maxlength="100"
-                            data-on-input='[{"fn":"updateCharCounter","args":["__THIS__",100]}]' onpaste="sanitizePaste(event, 100)" />
-                        <div class="ig-char-counter" id="counter-inp-source" style="text-align:right;">0 / 100</div>
-                    </div>
-                </div>
-                <div>
-                    <label>Einheit</label>
-                    <div class="ig-field-wrap">
-                        <input type="text" id="inp-unit" placeholder="z. B. Mrd. €" maxlength="30"
-                            data-on-input='[{"fn":"updateCharCounter","args":["__THIS__",30]}]' onpaste="sanitizePaste(event, 30)"  />
-                        <div class="ig-char-counter" id="counter-inp-unit" style="text-align:right;">0 / 30</div>
-                    </div>
-                </div>
-                <div>
-                    <label>Achsenbeschriftung</label>
-                    <input type="text" id="inp-xlabel" placeholder="z. B. Jahr" maxlength="60" />
-                </div>
-                <div>
-                    <label>Diagrammart</label>
-                    <select id="inp-charttype">
-                        <option value="bar">Balkendiagramm</option>
-                        <option value="column">Säulendiagramm</option>
-                        <option value="line">Liniendiagramm</option>
-                        <option value="pie">Kreisdiagramm</option>
-                        <option value="donut">Ringdiagramm</option>
-                    </select>
-                </div>
-
-                <!-- Datenpunkte -->
-                <div id="ig-data-section">
-                    <label>Datenpunkte</label>
-
-                    <div class="ig-sort-bar">
-                        <button class="ig-sort-btn" data-on-click='[{"fn":"sortRows","args":["desc"]}]'>↓ Absteigend</button>
-                        <button class="ig-sort-btn" data-on-click='[{"fn":"sortRows","args":["asc"]}]'>↑ Aufsteigend</button>
-                        <button class="ig-sort-btn" data-on-click='[{"fn":"sortRows","args":["alpha"]}]'>A–Z</button>
-                        <button class="ig-sort-btn active" id="sort-manual-btn" data-on-click='[{"fn":"sortRows","args":["manual"]}]'>✥ Manuell</button>
-                        <button class="ig-sort-btn" style="margin-left:auto" data-on-click='[{"fn":"openCsvModal","args":[]}]'>📂 CSV importieren</button>
-                    </div>
-
-                    <div class="ig-data-header">
-                        <span></span>
-                        <span>Bezeichnung</span>
-                        <span>Wert</span>
-                        <span></span>
-                    </div>
-                    <div id="data-rows"></div>
-                    <button class="ig-btn-add" data-on-click='[{"fn":"addRow","args":[]}]'>+ Datenpunkt hinzufügen</button>
-                </div>
-
-                <!-- Datenbeschriftung -->
-                <div>
-                    <label>Datenbeschriftung anzeigen</label>
-                    <select id="inp-datalabel-show">
-                        <option value="yes">Ja</option>
-                        <option value="no">Nein</option>
-                    </select>
-                </div>
-                <div>
-                    <label>1000er-Trennung</label>
-                    <select id="inp-thousand-sep">
-                        <option value="point">Tausenderpunkt (1.234)</option>
-                        <option value="space">Leerzeichen (1 234)</option>
-                        <option value="none">Keine Trennung (1234)</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Schriftfarbe</label>
-                    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-                        <!-- id="inp-label-auto-wrap" ermöglicht Ein-/Ausblenden per JS -->
-                        <label id="inp-label-auto-wrap" style="display:flex;align-items:center;gap:4px;font-size:.8rem;color:#555;cursor:pointer;">
-                            <input type="checkbox" id="inp-label-auto" checked data-on-change='[{"fn":"toggleLabelColorAuto","args":[]}]'
-                                style="width:auto;accent-color:#1f4e79;" />
-                            Auto (Kontrast)
-                        </label>
-                        <div id="inp-label-color-wrap" style="display:flex;gap:6px;align-items:center;opacity:.35;pointer-events:none;flex:1;">
-                            <input type="color" id="inp-label-color" value="#333333"
-                                style="width:36px;height:32px;padding:2px;border-radius:3px;cursor:pointer;flex-shrink:0;border:1px solid #ccc;" />
-                            <input type="text" id="inp-label-color-hex" value="#333333"
-                                style="flex:1;" placeholder="#333333" data-on-input='[{"fn":"syncColorFromHex","args":[]}]' pattern="^#[0-9a-fA-F]{6}$" />
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <label>Position der Beschriftung</label>
-                    <select id="inp-label-position"></select>
-                </div>
-                <div id="ig-xaxis-wrap" style="display:none;">
-                    <label>X-Achse anzeigen</label>
-                    <select id="inp-xaxis-show">
-                        <option value="no">Nein</option>
-                        <option value="yes">Ja</option>
-                    </select>
-                </div>
-
-                <!-- Farbschema -->
-                <div class="ig-full">
-                    <label>Farbschema</label>
-                    <div class="ig-schemes" id="color-schemes"></div>
-                </div>
-
-                <!-- Button -->
-                <div class="ig-full" style="margin-top:4px;">
-                                        <button type="button" class="btn-uebernehmen" data-on-click='[{"fn":"generate","args":[]}]' id="generate-chart">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" height="16" width="16" aria-hidden="true"><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"/></svg>
-                      Daten übernehmen
-                    </button>
-                </div>
+        <div class="ig-full">
+          <label>Vorlage laden</label>
+          <select
+            id="inp-template"
+            data-on-change='[{"fn":"loadTemplate","args":["__VALUE__"]}]'
+          >
+            <option value="">— Vorlage wählen —</option>
+          </select>
         </div>
 
-        <!-- ════ INFOGRAFIK-AUSGABE ════ -->
-        <div id="ig-output-area" style="min-width: 750px">
-            <div class="ig-chart-card" id="ig-chart-card">
-                <div id="ig-out-title"    class="ig-chart-title"     style="display:none"></div>
-                <div id="ig-out-subtitle" class="ig-chart-subtitle"  style="display:none"></div>
-                <div id="ig-chart-container"></div>
-                <div class="ig-chart-footer" id="ig-chart-footer" style="display:none">
-                    <span id="ig-out-source"></span>
+        <hr
+          style="
+            grid-column: 1/-1;
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 4px 0;
+          "
+        />
 
-                </div>
+        <!-- Metadaten -->
+        <div class="ig-full">
+          <label
+            >Titel
+            <span style="color: #aaa; font-weight: normal"
+              >(Pflichtfeld)</span
+            ></label
+          >
+          <div class="ig-field-wrap">
+            <input
+              type="text"
+              id="inp-title"
+              placeholder="Titel der Infografik"
+              maxlength="80"
+              data-on-input='[{"fn":"updateCharCounter","args":["__THIS__",80]},{"fn":"validateField","args":["__THIS__",1]}]'
+              data-on-paste='[{"fn":"sanitizePaste","args":["__EVENT__",80]}]'
+            />
+            <div style="display: flex; justify-content: space-between">
+              <div class="ig-field-error" id="err-title">
+                Bitte einen Titel eingeben.
+              </div>
+              <div class="ig-char-counter" id="counter-inp-title">0 / 80</div>
             </div>
-            <p id="ig-placeholder">← Daten eingeben und auf „Infografik erstellen" klicken</p>
-            <div class="ig-export-bar" id="ig-export-bar" style="display:none;">
-
-              
-</div>
-   <div class="exportButtons">
-                <button class="card-btn" type="button" data-on-click='[{"fn":"exportPng","args":[]}]' data-tooltip="Als PNG herunterladen" aria-label="" title="Als PNG herunterladen">PNG</button>
-                <button class="card-btn" type="button" data-on-click='[{"fn":"exportSvg","args":[]}]' data-tooltip="Als SVG herunterladen" aria-label="Als SVG herunterladen" title="Als SVG herunterladen">SVG</button>
-                <button class="card-btn" type="button" data-on-click='[{"fn":"downloadCsv","args":[]}]' data-tooltip="CSV herunterladen" aria-label="" title="CSV herunterladen">CSV</button>
+          </div>
+        </div>
+        <div class="ig-full">
+          <label>Untertitel</label>
+          <div class="ig-field-wrap">
+            <input
+              type="text"
+              id="inp-subtitle"
+              placeholder="Untertitel / Teilüberschrift"
+              maxlength="120"
+              data-on-input='[{"fn":"updateCharCounter","args":["__THIS__",120]}]'
+              data-on-paste='[{"fn":"sanitizePaste","args":["__EVENT__",120]}]'
+            />
+            <div
+              class="ig-char-counter"
+              id="counter-inp-subtitle"
+              style="text-align: right"
+            >
+              0 / 120
             </div>
+          </div>
+        </div>
+        <div>
+          <label>Quelle</label>
+          <div class="ig-field-wrap">
+            <input
+              type="text"
+              id="inp-source"
+              placeholder="z. B. Statistisches Bundesamt, 2024"
+              maxlength="100"
+              data-on-input='[{"fn":"updateCharCounter","args":["__THIS__",100]}]'
+              data-on-paste='[{"fn":"sanitizePaste","args":["__EVENT__",100]}]'
+            />
+            <div
+              class="ig-char-counter"
+              id="counter-inp-source"
+              style="text-align: right"
+            >
+              0 / 100
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Einheit</label>
+          <div class="ig-field-wrap">
+            <input
+              type="text"
+              id="inp-unit"
+              placeholder="z. B. Mrd. €"
+              maxlength="30"
+              data-on-input='[{"fn":"updateCharCounter","args":["__THIS__",30]}]'
+              data-on-paste='[{"fn":"sanitizePaste","args":["__EVENT__",30]}]'
+            />
+            <div
+              class="ig-char-counter"
+              id="counter-inp-unit"
+              style="text-align: right"
+            >
+              0 / 30
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Achsenbeschriftung</label>
+          <input
+            type="text"
+            id="inp-xlabel"
+            placeholder="z. B. Jahr"
+            maxlength="60"
+          />
+        </div>
+        <div>
+          <label>Diagrammart</label>
+          <select id="inp-charttype">
+            <option value="bar">Balkendiagramm</option>
+            <option value="column">Säulendiagramm</option>
+            <option value="line">Liniendiagramm</option>
+            <option value="pie">Kreisdiagramm</option>
+            <option value="donut">Ringdiagramm</option>
+          </select>
         </div>
 
-   
+        <!-- Datenpunkte -->
+        <div id="ig-data-section">
+          <label>Datenpunkte</label>
+
+          <div class="ig-sort-bar">
+            <button
+              class="ig-sort-btn"
+              data-on-click='[{"fn":"sortRows","args":["desc"]}]'
+            >
+              ↓ Absteigend
+            </button>
+            <button
+              class="ig-sort-btn"
+              data-on-click='[{"fn":"sortRows","args":["asc"]}]'
+            >
+              ↑ Aufsteigend
+            </button>
+            <button
+              class="ig-sort-btn"
+              data-on-click='[{"fn":"sortRows","args":["alpha"]}]'
+            >
+              A–Z
+            </button>
+            <button
+              class="ig-sort-btn active"
+              id="sort-manual-btn"
+              data-on-click='[{"fn":"sortRows","args":["manual"]}]'
+            >
+              ✥ Manuell
+            </button>
+            <button
+              class="ig-sort-btn"
+              style="margin-left: auto"
+              data-on-click='[{"fn":"openCsvModal","args":[]}]'
+            >
+              📂 CSV importieren
+            </button>
+          </div>
+
+          <div class="ig-data-header">
+            <span></span>
+            <span>Bezeichnung</span>
+            <span>Wert</span>
+            <span></span>
+          </div>
+          <div id="data-rows"></div>
+          <button
+            class="ig-btn-add"
+            data-on-click='[{"fn":"addRow","args":[]}]'
+          >
+            + Datenpunkt hinzufügen
+          </button>
+        </div>
+
+        <!-- Datenbeschriftung -->
+        <div>
+          <label>Datenbeschriftung anzeigen</label>
+          <select id="inp-datalabel-show">
+            <option value="yes">Ja</option>
+            <option value="no">Nein</option>
+          </select>
+        </div>
+        <div>
+          <label>1000er-Trennung</label>
+          <select id="inp-thousand-sep">
+            <option value="point">Tausenderpunkt (1.234)</option>
+            <option value="space">Leerzeichen (1 234)</option>
+            <option value="none">Keine Trennung (1234)</option>
+          </select>
+        </div>
+        <div>
+          <label>Schriftfarbe</label>
+          <div
+            style="
+              display: flex;
+              gap: 6px;
+              align-items: center;
+              flex-wrap: wrap;
+            "
+          >
+            <!-- id="inp-label-auto-wrap" ermöglicht Ein-/Ausblenden per JS -->
+            <label
+              id="inp-label-auto-wrap"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 0.8rem;
+                color: #555;
+                cursor: pointer;
+              "
+            >
+              <input
+                type="checkbox"
+                id="inp-label-auto"
+                checked
+                data-on-change='[{"fn":"toggleLabelColorAuto","args":[]}]'
+                style="width: auto; accent-color: #1f4e79"
+              />
+              Auto (Kontrast)
+            </label>
+            <div
+              id="inp-label-color-wrap"
+              style="
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                opacity: 0.35;
+                pointer-events: none;
+                flex: 1;
+              "
+            >
+              <input
+                type="color"
+                id="inp-label-color"
+                value="#333333"
+                style="
+                  width: 36px;
+                  height: 32px;
+                  padding: 2px;
+                  border-radius: 3px;
+                  cursor: pointer;
+                  flex-shrink: 0;
+                  border: 1px solid #ccc;
+                "
+              />
+              <input
+                type="text"
+                id="inp-label-color-hex"
+                value="#333333"
+                style="flex: 1"
+                placeholder="#333333"
+                data-on-input='[{"fn":"syncColorFromHex","args":[]}]'
+                pattern="^#[0-9a-fA-F]{6}$"
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Position der Beschriftung</label>
+          <select id="inp-label-position"></select>
+        </div>
+        <div id="ig-xaxis-wrap" style="display: none">
+          <label>X-Achse anzeigen</label>
+          <select id="inp-xaxis-show">
+            <option value="no">Nein</option>
+            <option value="yes">Ja</option>
+          </select>
+        </div>
+
+        <!-- Farbschema -->
+        <div class="ig-full">
+          <label>Farbschema</label>
+          <div class="ig-schemes" id="color-schemes"></div>
+        </div>
+
+        <!-- Button -->
+        <div class="ig-full" style="margin-top: 4px">
+          <button
+            type="button"
+            class="btn-uebernehmen"
+            data-on-click='[{"fn":"generate","args":[]}]'
+            id="generate-chart"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 640 640"
+              fill="currentColor"
+              height="16"
+              width="16"
+              aria-hidden="true"
+            >
+              <path
+                d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"
+              />
+            </svg>
+            Daten übernehmen
+          </button>
+        </div>
+      </div>
+
+      <!-- ════ INFOGRAFIK-AUSGABE ════ -->
+      <div id="ig-output-area" style="min-width: 750px">
+        <div class="ig-chart-card" id="ig-chart-card">
+          <div
+            id="ig-out-title"
+            class="ig-chart-title"
+            style="display: none"
+          ></div>
+          <div
+            id="ig-out-subtitle"
+            class="ig-chart-subtitle"
+            style="display: none"
+          ></div>
+          <div id="ig-chart-container"></div>
+          <div
+            class="ig-chart-footer"
+            id="ig-chart-footer"
+            style="display: none"
+          >
+            <span id="ig-out-source"></span>
+          </div>
+        </div>
+        <p id="ig-placeholder">
+          ← Daten eingeben und auf „Infografik erstellen" klicken
+        </p>
+        <div
+          class="ig-export-bar"
+          id="ig-export-bar"
+          style="display: none"
+        ></div>
+        <div class="exportButtons">
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"exportPng","args":[]}]'
+            data-tooltip="Als PNG herunterladen"
+            aria-label=""
+            title="Als PNG herunterladen"
+          >
+            PNG
+          </button>
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"exportSvg","args":[]}]'
+            data-tooltip="Als SVG herunterladen"
+            aria-label="Als SVG herunterladen"
+            title="Als SVG herunterladen"
+          >
+            SVG
+          </button>
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"downloadCsv","args":[]}]'
+            data-tooltip="CSV herunterladen"
+            aria-label=""
+            title="CSV herunterladen"
+          >
+            CSV
+          </button>
+        </div>
+      </div>
     </main>
 
     <!-- ════ CSV MODAL ════ -->
     <div class="ig-modal-overlay" id="csv-modal">
-        <div class="ig-modal">
-            <h3>CSV importieren</h3>
-            <div class="ig-modal-row">
-                <label>CSV-Datei wählen (Trennzeichen: Semikolon)</label>
-                <input type="file" id="csv-file" accept=".csv,.txt"
-                    style="width:100%;padding:5px;font-size:.82rem;border:1px solid #ccc;border-radius:3px;box-sizing:border-box;"
-                    data-on-change='[{"fn":"previewCsv","args":[]}]' />
-            </div>
-            <div class="ig-modal-row">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                    <input type="checkbox" id="csv-skip-header" checked style="width:auto;" />
-                    Erste Zeile als Kopfzeile überspringen
-                </label>
-            </div>
-            <div class="ig-modal-row">
-                <label>Vorschau</label>
-                <div class="ig-csv-preview" id="csv-preview">— noch keine Datei gewählt —</div>
-            </div>
-            <div class="ig-modal-btns">
-                <button class="ig-btn-secondary" data-on-click='[{"fn":"closeCsvModal","args":[]}]'>Abbrechen</button>
-                <button class="ig-btn-primary"   data-on-click='[{"fn":"importCsv","args":[]}]'>Importieren</button>
-            </div>
+      <div class="ig-modal">
+        <h3>CSV importieren</h3>
+        <div class="ig-modal-row">
+          <label>CSV-Datei wählen (Trennzeichen: Semikolon)</label>
+          <input
+            type="file"
+            id="csv-file"
+            accept=".csv,.txt"
+            style="
+              width: 100%;
+              padding: 5px;
+              font-size: 0.82rem;
+              border: 1px solid #ccc;
+              border-radius: 3px;
+              box-sizing: border-box;
+            "
+            data-on-change='[{"fn":"previewCsv","args":[]}]'
+          />
         </div>
+        <div class="ig-modal-row">
+          <label
+            style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              cursor: pointer;
+            "
+          >
+            <input
+              type="checkbox"
+              id="csv-skip-header"
+              checked
+              style="width: auto"
+            />
+            Erste Zeile als Kopfzeile überspringen
+          </label>
+        </div>
+        <div class="ig-modal-row">
+          <label>Vorschau</label>
+          <div class="ig-csv-preview" id="csv-preview">
+            — noch keine Datei gewählt —
+          </div>
+        </div>
+        <div class="ig-modal-btns">
+          <button
+            class="ig-btn-secondary"
+            data-on-click='[{"fn":"closeCsvModal","args":[]}]'
+          >
+            Abbrechen
+          </button>
+          <button
+            class="ig-btn-primary"
+            data-on-click='[{"fn":"importCsv","args":[]}]'
+          >
+            Importieren
+          </button>
+        </div>
+      </div>
     </div>
 
     <script src="js/utils.js?v=14"></script>
-  <script src="js/lb7-1-infografik.js"></script>
+    <script src="js/lb7-1-infografik.js"></script>
     <div w3-include-html="footer.html"></div>
-    </body>
+  </body>
 </html>

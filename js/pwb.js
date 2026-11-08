@@ -1,41 +1,49 @@
-   // Funktion zum Generieren einer zufälligen Zahl zwischen min und max
-    function pwbZufallsZahl(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+// Funktion zum Generieren einer zufälligen Zahl zwischen min und max
+function pwbZufallsZahl(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-    // Funktion zum Generieren eines glatten Betrags (durch 100 teilbar)
-    function pwbGlatterBetrag(min, max) {
-      const betrag = pwbZufallsZahl(min, max);
-      const gerundet = Math.round(betrag / 100) * 100;
-      return Math.max(gerundet, min);
-    }
+// Funktion zum Generieren eines glatten Betrags (durch 100 teilbar)
+function pwbGlatterBetrag(min, max) {
+  const betrag = pwbZufallsZahl(min, max);
+  const gerundet = Math.round(betrag / 100) * 100;
+  return Math.max(gerundet, min);
+}
 
-    // Funktion zum Formatieren von Zahlen im deutschen Format
-    function pwbFormatiereEuro(betrag) {
-      return betrag.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
-    }
+// Funktion zum Formatieren von Zahlen im deutschen Format
+function pwbFormatiereEuro(betrag) {
+  return (
+    betrag.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + " €"
+  );
+}
 
-    // Funktion zum Formatieren von Prozent
-    
-    // Funktion zum Berechnen der UST
-    function pwbBerechneUST(nettobetrag) {
-      return Math.round(nettobetrag * UST_REGEL / 100 * 100) / 100;
-    }
+// Funktion zum Formatieren von Prozent
 
-    // Funktion zum Generieren der Tabelle
-    function pwbZeigeZufaelligeTabelle() {
-      const pwbProzent = parseFloat(document.getElementById('pwbProzentsatz').value);
-      
-      // Einwandfreie Forderungen netto generieren (40.000 bis 400.000 €)
-      const forderungenNetto = pwbGlatterBetrag(400, 4000) * 100;
-      
-      // Berechnungen
-      const ust = pwbBerechneUST(forderungenNetto);
-      const forderungenBrutto = forderungenNetto + ust;
-      const pwbBetrag = Math.round(forderungenNetto * pwbProzent / 100 * 100) / 100;
-      
-      // HTML für Aufgabe generieren (ohne blaue Werte)
-      let htmlAufgabe = `
+// Funktion zum Berechnen der UST
+function pwbBerechneUST(nettobetrag) {
+  return Math.round(((nettobetrag * UST_REGEL) / 100) * 100) / 100;
+}
+
+// Funktion zum Generieren der Tabelle
+function pwbZeigeZufaelligeTabelle() {
+  const pwbProzent = parseFloat(
+    document.getElementById("pwbProzentsatz").value,
+  );
+
+  // Einwandfreie Forderungen netto generieren (40.000 bis 400.000 €)
+  const forderungenNetto = pwbGlatterBetrag(400, 4000) * 100;
+
+  // Berechnungen
+  const ust = pwbBerechneUST(forderungenNetto);
+  const forderungenBrutto = forderungenNetto + ust;
+  const pwbBetrag =
+    Math.round(((forderungenNetto * pwbProzent) / 100) * 100) / 100;
+
+  // HTML für Aufgabe generieren (ohne blaue Werte)
+  let htmlAufgabe = `
         <h2>Aufgabe</h2>
         <h3>Abrechnungsschema:</h3>
         <table style="border-collapse: collapse; font-size: 14px; margin-top: 20px;">
@@ -68,9 +76,9 @@
         </table>
         <br><br>
       `;
-      
-      // HTML für Lösung generieren (mit allen Werten)
-      let htmlLoesung = `
+
+  // HTML für Lösung generieren (mit allen Werten)
+  let htmlLoesung = `
         <h2 class="loesung">Lösung</h2>
         <table style="border-collapse: collapse; font-size: 14px; margin-top: 20px;">
           <tbody>
@@ -114,16 +122,13 @@
           </tbody>
         </table>
       `;
-      
-      document.getElementById('Container').innerHTML = htmlAufgabe + htmlLoesung;
-    }
 
-    // Export-Funktionen
-    
-    
-    
-     // Beim Laden der Seite automatisch einen BAB erstellen
-    document.addEventListener("DOMContentLoaded", function() {
-      pwbZeigeZufaelligeTabelle();
-    });
+  document.getElementById("Container").innerHTML = htmlAufgabe + htmlLoesung;
+}
 
+// Export-Funktionen
+
+// Beim Laden der Seite automatisch einen BAB erstellen
+document.addEventListener("DOMContentLoaded", function () {
+  pwbZeigeZufaelligeTabelle();
+});

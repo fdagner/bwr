@@ -1,443 +1,883 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      meinbwr.de – BwR Unterrichtsmaterial &amp; Belege-Generator Realschule
+      Bayern
+    </title>
+    <meta
+      name="description"
+      content="Kostenloses BwR-Portal für bayerische Realschulen: Erstelle Belege, Geschäftsfälle, T-Konten, Schemata, Diagramme &amp; Aufgaben – alles ByCS-optimiert (PNG/SVG/Clipboard). Lokal im Browser, keine Registrierung, datenschutzkonform. Ideal für Rechnungswesen-Unterricht, Prüfungen &amp; Leistungsnachweise."
+    />
+    <link rel="canonical" href="https://www.meinbwr.de/" />
+    <meta name="robots" content="index, follow" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: ws: wss: https://fdagner.de; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
-  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>meinbwr.de – BwR Unterrichtsmaterial &amp; Belege-Generator Realschule Bayern</title>
-  <meta name="description" content="Kostenloses BwR-Portal für bayerische Realschulen: Erstelle Belege, Geschäftsfälle, T-Konten, Schemata, Diagramme &amp; Aufgaben – alles ByCS-optimiert (PNG/SVG/Clipboard). Lokal im Browser, keine Registrierung, datenschutzkonform. Ideal für Rechnungswesen-Unterricht, Prüfungen &amp; Leistungsnachweise.">
-  <link rel="canonical" href="https://www.meinbwr.de/">
-  <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="meinbwr.de – BwR Unterrichtsmaterial &amp; Belege-Generator Realschule Bayern"
+    />
+    <meta
+      property="og:description"
+      content="Alles, was du für BwR brauchst: Belege (Rechnung, Kassenbon, Kontoauszug, Lohnabrechnung …), T-Konten, Schemata, zufällige Geschäftsfälle, Diagramme – komplett lokal im Browser. ByCS-kompatibel (PNG/SVG). Kostenlos, ohne Anmeldung, datenschutzkonform."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.meinbwr.de/" />
+    <meta
+      property="og:image"
+      content="https://www.meinbwr.de/media/pic/startseite-vorschau.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="meinbwr.de Startseite – Belege, T-Konten, Schemata und Geschäftsfälle für BwR Realschule"
+    />
+    <meta
+      property="og:site_name"
+      content="meinbwr.de – BwR Realschule Bayern"
+    />
+    <meta property="og:locale" content="de_DE" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="meinbwr.de – BwR Unterrichtsmaterial &amp; Belege-Generator Realschule Bayern">
-  <meta property="og:description" content="Alles, was du für BwR brauchst: Belege (Rechnung, Kassenbon, Kontoauszug, Lohnabrechnung …), T-Konten, Schemata, zufällige Geschäftsfälle, Diagramme – komplett lokal im Browser. ByCS-kompatibel (PNG/SVG). Kostenlos, ohne Anmeldung, datenschutzkonform.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.meinbwr.de/">
-  <meta property="og:image" content="https://www.meinbwr.de/media/pic/startseite-vorschau.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="meinbwr.de Startseite – Belege, T-Konten, Schemata und Geschäftsfälle für BwR Realschule">
-  <meta property="og:site_name" content="meinbwr.de – BwR Realschule Bayern">
-  <meta property="og:locale" content="de_DE">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="meinbwr.de – BwR Belege, T-Konten &amp; Schemata für Realschule Bayern"
+    />
+    <
+    <meta
+      name="twitter:description"
+      content="Kostenloses Tool für BwR-Unterricht: Belege erstellen, Geschäftsfälle generieren, T-Konten &amp; Schemata – alles ByCS-optimiert &amp; lokal im Browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.meinbwr.de/media/pic/startseite-vorschau.jpg"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="BwR Portal meinbwr.de – Startseite mit Slideshow und Modellunternehmen"
+    />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="meinbwr.de – BwR Belege, T-Konten &amp; Schemata für Realschule Bayern">
-  <meta name="twitter:description" content="Kostenloses Tool für BwR-Unterricht: Belege erstellen, Geschäftsfälle generieren, T-Konten &amp; Schemata – alles ByCS-optimiert &amp; lokal im Browser.">
-  <meta name="twitter:image" content="https://www.meinbwr.de/media/pic/startseite-vorschau.jpg">
-  <meta name="twitter:image:alt" content="BwR Portal meinbwr.de – Startseite mit Slideshow und Modellunternehmen">
+    <!-- Theme -->
+    <meta name="theme-color" content="#2c5f2d" />
+    <meta name="color-scheme" content="light" />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#2c5f2d">
-  <meta name="color-scheme" content="light">
+    <!-- Strukturierte Daten -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "meinbwr.de – BwR Unterrichtsmaterial & Belege-Generator",
+        "description": "Kostenloses BwR-Portal für bayerische Realschulen: Erstelle Belege, Geschäftsfälle, T-Konten, Schemata, Diagramme & Aufgaben – alles ByCS-optimiert (PNG/SVG/Clipboard).",
+        "url": "https://www.meinbwr.de/",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "meinbwr.de – BwR Realschule Bayern",
+          "url": "https://www.meinbwr.de/"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Startseite",
+              "item": "https://www.meinbwr.de/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "meinbwr.de",
+              "item": "https://www.meinbwr.de/"
+            }
+          ]
+        }
+      }
+    </script>
 
-  <!-- Strukturierte Daten -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "meinbwr.de – BwR Unterrichtsmaterial & Belege-Generator",
-    "description": "Kostenloses BwR-Portal für bayerische Realschulen: Erstelle Belege, Geschäftsfälle, T-Konten, Schemata, Diagramme & Aufgaben – alles ByCS-optimiert (PNG/SVG/Clipboard).",
-    "url": "https://www.meinbwr.de/",
-    "inLanguage": "de-DE",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "meinbwr.de – BwR Realschule Bayern",
-      "url": "https://www.meinbwr.de/"
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 2, "name": "Startseite", "item": "https://www.meinbwr.de/" },
-        { "@type": "ListItem", "position": 3, "name": "meinbwr.de", "item": "https://www.meinbwr.de/" }
-      ]
-    }
-  }
-  </script>
+    <link rel="stylesheet" href="css/style.css?v=14" />
+    <script src="js/menu.js?v=15"></script>
+    <script src="js/libraries/js-yaml.min.js"></script>
+    <script src="js/utils.js?v=15"></script>
+  </head>
 
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <script src="js/menu.js?v=15"></script>
-  <script src="js/libraries/js-yaml.min.js"></script>
-  <script src="js/utils.js?v=14"></script>
-</head>
+  <body>
+    <main>
+      <div w3-include-html="navigation.html"></div>
+      <p style="text-align: justify">
+        <br />
+        <b
+          >Erstellen Sie für den BwR-Unterricht an der bayerischen Realschule
+          mit wenigen Klicks Belege, Geschäftsfälle, Aufgaben, Diagramme,
+          T-Konten, Schemata und KI-Chatbot-Vorlagen – jederzeit
+          weiterverarbeitbar und in exportierbaren Formaten, die optimal für die
+          ByCS Lernplattform geeignet sind.</b
+        >
+      </p>
 
-<body>
-  <main>
-    <div w3-include-html="navigation.html"></div>
-    <p style="text-align: justify;">
-      <br>
-      <b>Erstellen Sie für den BwR-Unterricht an der bayerischen Realschule mit wenigen Klicks Belege, Geschäftsfälle, Aufgaben, Diagramme, T-Konten, Schemata und KI-Chatbot-Vorlagen – jederzeit weiterverarbeitbar und in exportierbaren Formaten, die optimal für die ByCS Lernplattform geeignet sind.</b>
-    </p>
-    </p>
-    <!-- Slideshow container -->
-    <div class="slideshow-container">
-
-      <!-- Full-width images with number and caption text -->
-      <div class="mySlides fade">
-        <div class="numbertext">1 / 4</div>
-        <img src="media/pic/Folie1.PNG" alt="Belege" style="width:100%">
-        <div class="text">Belege</div>
-      </div>
-
-      <div class="mySlides fade">
-        <div class="numbertext">1 / 4</div>
-        <img src="media/pic/Folie4.PNG" alt="Belege" style="width:100%">
-        <div class="text">Belege</div>
-      </div>
-
-      <div class="mySlides fade">
-        <div class="numbertext">2 / 4</div>
-        <img src="media/pic/Folie2.PNG" alt="BWL-Vorlagen" style="width:100%">
-        <div class="text">BWL-Vorlagen</div>
-      </div>
-
-      <div class="mySlides fade">
-        <div class="numbertext">3 / 4</div>
-        <img src="media/pic/Folie3.PNG" alt="Geschäftsfälle und Schemata" style="width:100%">
-        <div class="text">Geschäftsfälle und Schemata</div>
-      </div>
-
-            <div class="mySlides fade">
-        <div class="numbertext">4 / 4</div>
-        <img src="media/pic/Folie5.PNG" alt="Geschäftsfälle und Schemata" style="width:100%">
-        <div class="text">Geschäftsfälle und Schemata</div>
-      </div>
-
-      <!-- Next and previous buttons -->
-      <a class="prev" data-on-click='[{"fn":"plusSlides","args":[-1]}]'>&#10094;</a>
-      <a class="next" data-on-click='[{"fn":"plusSlides","args":[1]}]'>&#10095;</a>
-    </div>
-    <br>
-
-<section id="news" class="news-slider" aria-label="Neuigkeiten und neue Funktionen">
-  <h2>Neuigkeiten</h2>
-  <div class="news-wrap">
-    <button type="button" class="news-nav news-prev" aria-label="Vorherige Neuigkeit">❮</button>
-    <div class="news-track" id="newsTrack" tabindex="0"></div>
-    <button type="button" class="news-nav news-next" aria-label="Nächste Neuigkeit">❯</button>
-  </div>
-  <div class="news-dots" id="newsDots"></div>
-</section>
-
-    <section id="modellunternehmen">
-
-      <h2 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 1.5rem;">
-        Modellunternehmen verwalten
-      </h2>
-
-       <div class="modellunternehmen-section"
-     style="margin: 0 auto; padding: 16px 20px; background: #f8f9fa; border-radius: 10px; border: 1px solid #e0e0e0;">
-    <label for="allCompaniesDropdown" style="font-weight: 600; display: block; margin-bottom: 8px;">
-        Alle verfügbaren Unternehmen:
-    </label>
-    <div style="display: flex; gap: 10px; align-items: start;">
-      <div class="flex-row"><select id="allCompaniesDropdown" 
-                style="flex: 1; max-width: 400px; padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px;">
-            <option value="">— Bitte auswählen —</option>
-        </select>
-        <button id="setMyCompanyButton" 
-                data-on-click='[{"fn":"setAsMyCompany","args":[]}]' 
-                disabled>
-            ★ Als Modellunternehmen verwenden
-        </button></div>
-    </div>
-
-    <div id="companyPreview" style="margin-top: 16px; padding: 12px; background: #fff; border: 0px solid #ddd; border-radius: 6px; min-height: 80px;">
-        Wählen Sie ein Unternehmen aus, um Details zu sehen.
-    </div>
-        <div id="myCompanyStatus" style="margin-top: 8px; padding: 8px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px; display: none;">
-        <strong>Aktuell als Modellunternehmen gespeichert:</strong> <span id="myCompanyName">-</span>
-        <button data-on-click='[{"fn":"clearMyCompany","args":[]}]' style="margin-left: 10px; padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 0.85em;">
-            ✕ Entfernen
-        </button>
-    </div>
-</div>
-<br>
-           <details>
-        <summary><strong>Unternehmen importieren/exportieren</strong></summary>
-      <div class="modellunternehmen-section"
-        style="margin: 0 auto; padding: 16px 20px; background: #f8f9fa; border-radius: 10px; border: 1px solid #e0e0e0;">
-
-        <p style="color: #555; line-height: 1.5; margin: 0 0 16px 0; font-size: 0.95rem;">
-          Importieren/exportieren Sie eine Liste von Unternehmen. Die Daten werden nur im Browser gespeichert.
-        </p>
-
-        <!-- Drag & Drop + Upload Bereich -->
-        <div id="dropZone"
-          style="background: white; padding: 14px; border-radius: 8px; border: 2px dashed #ccc; text-align: center; margin: 12px 0; cursor: pointer; transition: all 0.2s;"
-          ondragover="this.style.borderColor='var(--accent-color)'; this.style.background='#f0f8ff';"
-          ondragleave="this.style.borderColor='#ccc'; this.style.background='white';"
-          data-on-click='[{"fn":"__clickElement","args":["fileInput"]}]'>
-
-          <label for="fileInput"
-            style="display: block; margin-bottom: 6px; font-weight: 500; color: #444; font-size: 0.95rem; cursor: pointer;">
-            .yml-Datei hochladen (Drag & Drop oder Klick)
-          </label>
-
-          <input type="file" id="fileInput" accept=".yml" data-on-change='[{"fn":"handleFileUpload","args":[]}]' style="display: none;">
-
-          <p id="dropZoneText" style="margin: 8px 0 0; color: #777; font-size: 0.9rem;">
-            Datei hierher ziehen oder klicken
-          </p>
+      <!-- Slideshow container -->
+      <div class="slideshow-container">
+        <!-- Full-width images with number and caption text -->
+        <div class="mySlides fade">
+          <div class="numbertext">1 / 4</div>
+          <img src="media/pic/Folie1.PNG" alt="Belege" style="width: 100%" />
+          <div class="text">Belege</div>
         </div>
-        <div>
-          <strong>Status:</strong>
-          <span id="localStorageStatus" style="font-style: italic; color: #666;">
-            Lädt...
-          </span>
+
+        <div class="mySlides fade">
+          <div class="numbertext">1 / 4</div>
+          <img src="media/pic/Folie4.PNG" alt="Belege" style="width: 100%" />
+          <div class="text">Belege</div>
         </div>
-        <!-- Status + Buttons -->
+
+        <div class="mySlides fade">
+          <div class="numbertext">2 / 4</div>
+          <img
+            src="media/pic/Folie2.PNG"
+            alt="BWL-Vorlagen"
+            style="width: 100%"
+          />
+          <div class="text">BWL-Vorlagen</div>
+        </div>
+
+        <div class="mySlides fade">
+          <div class="numbertext">3 / 4</div>
+          <img
+            src="media/pic/Folie3.PNG"
+            alt="Geschäftsfälle und Schemata"
+            style="width: 100%"
+          />
+          <div class="text">Geschäftsfälle und Schemata</div>
+        </div>
+
+        <div class="mySlides fade">
+          <div class="numbertext">4 / 4</div>
+          <img
+            src="media/pic/Folie5.PNG"
+            alt="Geschäftsfälle und Schemata"
+            style="width: 100%"
+          />
+          <div class="text">Geschäftsfälle und Schemata</div>
+        </div>
+
+        <!-- Next and previous buttons -->
+        <a class="prev" data-on-click='[{"fn":"plusSlides","args":[-1]}]'
+          >&#10094;</a
+        >
+        <a class="next" data-on-click='[{"fn":"plusSlides","args":[1]}]'
+          >&#10095;</a
+        >
+      </div>
+      <br />
+
+      <section
+        id="news"
+        class="news-slider"
+        aria-label="Neuigkeiten und neue Funktionen"
+      >
+        <h2>Neuigkeiten</h2>
+        <div class="news-wrap">
+          <button
+            type="button"
+            class="news-nav news-prev"
+            aria-label="Vorherige Neuigkeit"
+          >
+            ❮
+          </button>
+          <div class="news-track" id="newsTrack" tabindex="0"></div>
+          <button
+            type="button"
+            class="news-nav news-next"
+            aria-label="Nächste Neuigkeit"
+          >
+            ❯
+          </button>
+        </div>
+        <div class="news-dots" id="newsDots"></div>
+      </section>
+
+      <section id="modellunternehmen">
+        <h2 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 1.5rem">
+          Modellunternehmen verwalten
+        </h2>
+
         <div
-          style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-top: 16px; font-size: 0.9rem;">
+          class="modellunternehmen-section"
+          style="
+            margin: 0 auto;
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+          "
+        >
+          <label
+            for="allCompaniesDropdown"
+            style="font-weight: 600; display: block; margin-bottom: 8px"
+          >
+            Alle verfügbaren Unternehmen:
+          </label>
+          <div style="display: flex; gap: 10px; align-items: start">
+            <div class="flex-row">
+              <select
+                id="allCompaniesDropdown"
+                style="
+                  flex: 1;
+                  max-width: 400px;
+                  padding: 10px;
+                  font-size: 1rem;
+                  border: 1px solid #ccc;
+                  border-radius: 6px;
+                "
+              >
+                <option value="">— Bitte auswählen —</option>
+              </select>
+              <button
+                id="setMyCompanyButton"
+                data-on-click='[{"fn":"setAsMyCompany","args":[]}]'
+                disabled
+              >
+                ★ Als Modellunternehmen verwenden
+              </button>
+            </div>
+          </div>
 
-
-          <div style="display: flex; gap: 10px;" id="exportbutton">
-            <button data-on-click='[{"fn":"deleteAndLoadDefaultData","args":[]}]'>
-              Daten zurücksetzen
+          <div
+            id="companyPreview"
+            style="
+              margin-top: 16px;
+              padding: 12px;
+              background: #fff;
+              border: 0px solid #ddd;
+              border-radius: 6px;
+              min-height: 80px;
+            "
+          >
+            Wählen Sie ein Unternehmen aus, um Details zu sehen.
+          </div>
+          <div
+            id="myCompanyStatus"
+            style="
+              margin-top: 8px;
+              padding: 8px;
+              background: #d1ecf1;
+              border: 1px solid #bee5eb;
+              border-radius: 4px;
+              display: none;
+            "
+          >
+            <strong>Aktuell als Modellunternehmen gespeichert:</strong>
+            <span id="myCompanyName">-</span>
+            <button
+              data-on-click='[{"fn":"clearMyCompany","args":[]}]'
+              style="
+                margin-left: 10px;
+                padding: 4px 8px;
+                background: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 0.85em;
+              "
+            >
+              ✕ Entfernen
             </button>
           </div>
-        </div></div></details>
-<br>
-           
-        <!-- JavaScript für Drag & Drop (direkt danach oder in deinem <details>
-        <summary><strong>Unternehmen manuell hinzufügen</strong></summary>
-          <h3>Meine hinzugefügten Unternehmen</h3>
-      <div id="userCompanyList" style="margin-top: 15px;">
-        <!-- Wird dynamisch gefüllt -->
-      </div><br>
-        <div class="box" style="margin-top: 15px;">
-          <form id="addCompanyForm" data-on-submit='[{"fn":"handleAddCompanyForm","args":["__EVENT__"]}]'>
-            <div class="grid3">
-
-              <fieldset class="vorlage-green" style="max-width: none;">
-                <legend>🏢 Basisdaten</legend>
-
-                <div class="form-field">
-                  <label for="newCompanyName">Firmenname: *</label>
-                  <input type="text" id="newCompanyName" required placeholder="z.B. ABC-Bikes" maxlength="50"
-                    title="Keine Sonderzeichen wie <, >, {, } erlaubt">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyRechtsform">Rechtsformzusatz: *</label>
-                  <select id="newCompanyRechtsform" required>
-                    <option value="">-- Bitte wählen --</option>
-                    <option value="e. K.">e. K.</option>
-                    <option value="e. Kfr.">e. Kfr.</option>
-                    <option value="GmbH">GmbH</option>
-                    <option value="UG">UG</option>
-                    <option value="AG">AG</option>
-                    <option value="OHG">OHG</option>
-                    <option value="KG">KG</option>
-                    <option value="GmbH & Co. KG">GmbH & Co. KG</option>
-                  </select>
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyBranche">Branche: *</label>
-                  <input type="text" id="newCompanyBranche" required placeholder="z.B. Fahrradhandel" maxlength="50"
-                    title="Keine Sonderzeichen wie <, >, {, } erlaubt">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyMotto">Motto: *</label>
-                  <input type="text" id="newCompanyMotto" required placeholder="z.B. Fahrräder von A bis Z!"
-                    maxlength="100" title="Keine Sonderzeichen wie <, >, {, } erlaubt">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyInhaber">Inhaber/Geschäftsführer: *</label>
-                  <input type="text" id="newCompanyInhaber" required placeholder="z.B. Erna Kistner" maxlength="50"
-                    pattern="[a-zA-ZäöüÄÖÜß\s\.,'\-]*"
-                    title="Nur Buchstaben und Sonderzeichen wie Bindestrich, Punkt, Komma, Apostroph">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyLogo">Logo hochladen:</label>
-                  <input type="file" id="newCompanyLogo" accept="image/svg+xml" data-on-change='[{"fn":"handleLogoUpload","args":["__EVENT__"]}]'>
-                  <small style="color: #666;">Max. 500KB | Nur SVG (optional)</small>
-                  <div id="logoPreview" style="margin-top: 10px;">
-                    <small style="color: #666;">Keine Datei ausgewählt</small>
-                  </div>
-                </div>
-              </fieldset>
-
-              <fieldset class="vorlage-blue" style="max-width: none;">
-                <legend>📍 Adresse &amp; Kontakt</legend>
-
-                <div class="form-field">
-                  <label for="newCompanyStrasse">Straße &amp; Hausnummer: *</label>
-                  <input type="text" id="newCompanyStrasse" required placeholder="z.B. Schwabacher Weg 50" maxlength="60"
-                    pattern="[a-zA-Z0-9äöüÄÖÜß\s\.,'\-]*"
-                    title="Buchstaben, Zahlen und gängige Sonderzeichen erlaubt">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyPLZ">PLZ: *</label>
-                  <input type="text" id="newCompanyPLZ" required placeholder="z.B. 85049" maxlength="5" pattern="[0-9]{5}"
-                    title="Genau 5 Ziffern">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyOrt">Ort: *</label>
-                  <input type="text" id="newCompanyOrt" required placeholder="z.B. Ingolstadt" maxlength="50"
-                    pattern="[a-zA-ZäöüÄÖÜß\s\-]*" title="Nur Buchstaben, Leerzeichen und Bindestrich">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyTelefon">Telefon: *</label>
-                  <input type="tel" id="newCompanyTelefon" required placeholder="z.B. 0841 0802020" maxlength="25"
-                    pattern="[0-9\s+\(\)\-]*" title="Nur Zahlen und Zeichen: + - ( ) Leerzeichen">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyEmail">E-Mail: *</label>
-                  <input type="email" id="newCompanyEmail" required placeholder="z.B. info@firma.de" maxlength="60"
-                    title="Gültige E-Mail-Adresse erforderlich">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyInternet">Internet: *</label>
-                  <input type="text" id="newCompanyInternet" required placeholder="z.B. www.firma.de" maxlength="60"
-                    pattern="[a-zA-Z0-9\.\:\-]*" title="Nur Buchstaben, Zahlen und . - :">
-                </div>
-              </fieldset>
-
-              <fieldset class="vorlage-red" style="max-width: none;">
-                <legend>💶 Finanz- &amp; Steuerdaten</legend>
-
-                <div class="form-field">
-                  <label for="newCompanyBank">Bank: *</label>
-                  <input type="text" id="newCompanyBank" required placeholder="z.B. BavarianBank" maxlength="50"
-                         pattern="[a-zA-Z0-9äöüÄÖÜß\s\.\-]*">
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyIBAN">IBAN: *</label>
-                  <div style="display:flex; gap:8px; align-items:center;">
-                    <input type="text" id="newCompanyIBAN" required placeholder="DE89370400440532013000" maxlength="34"
-                           style="flex:1; text-transform:uppercase">
-                    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
-                      <input type="checkbox" id="randomIBAN" data-on-change='[{"fn":"generateRandomField","args":["iban"]}]'>
-                      🎲
-                    </label>
-                  </div>
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyBIC">BIC: *</label>
-                  <div style="display:flex; gap:8px; align-items:center;">
-                    <input type="text" id="newCompanyBIC" required placeholder="COBADEFFXXX" maxlength="11"
-                           style="flex:1; text-transform:uppercase">
-                    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
-                      <input type="checkbox" id="randomBIC" data-on-change='[{"fn":"generateRandomField","args":["bic"]}]'>
-                      🎲
-                    </label>
-                  </div>
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyUstID">USt-IdNr.: *</label>
-                  <div style="display:flex; gap:8px; align-items:center;">
-                    <input type="text" id="newCompanyUstID" required placeholder="DE123456789" maxlength="25"
-                           style="flex:1; text-transform:uppercase">
-                    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
-                      <input type="checkbox" id="randomUstID" data-on-change='[{"fn":"generateRandomField","args":["ustid"]}]'>
-                      🎲
-                    </label>
-                  </div>
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanySteuernummer">Steuernummer: *</label>
-                  <div style="display:flex; gap:8px; align-items:center;">
-                    <input type="text" id="newCompanySteuernummer" required placeholder="181/001/11111" maxlength="20">
-                    <label style="white-space:nowrap; font-size:0.85rem; cursor:pointer; color:#007bff;" title="Zufallswert generieren">
-                      <input type="checkbox" id="randomSteuernummer" data-on-change='[{"fn":"generateRandomField","args":["steuernummer"]}]'>
-                      🎲
-                    </label>
-                  </div>
-                </div>
-
-                <div class="form-field">
-                  <label for="newCompanyAkzent">Akzentfarbe: *</label>
-                  <input type="color" id="newCompanyAkzent" required value="#7db9f5" style="height: 38px; padding: 2px;">
-                </div>
-              </fieldset>
-              <fieldset class="vorlage-grey" style="max-width: none; grid-column: 1 / -1;">
-                <legend>🪵 Werkstoffe</legend>
-                <p style="color:#666; font-size:0.9rem; margin:0 0 12px;">
-                  Optional: Tragen Sie Werkstoffe ein. <strong>Bezeichnungen bitte im Plural</strong>
-                  (z.&nbsp;B. „Mechaniken", „Holzleime"), jeweils mit Einheit sowie Preis min. und max.
-                  Der passende <strong>Stamm-Lieferant</strong> wird je Kategorie automatisch im Hintergrund hinterlegt.
-                </p>
-                <div class="grid3" style="gap:16px;">
-                  <div class="form-field">
-                    <label for="newCompanyAWR"><strong>AWR</strong> – Rohstoffe</label>
-                    <textarea id="newCompanyAWR" rows="5" placeholder="z.B. Fichtenholzdecken&#10;Ahornholzböden"
-                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
-                  </div>
-                  <div class="form-field">
-                    <label for="newCompanyAWF"><strong>AWF</strong> – Fremdbauteile</label>
-                    <textarea id="newCompanyAWF" rows="5" placeholder="z.B. Mechaniken&#10;Saitensets"
-                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
-                  </div>
-                  <div class="form-field">
-                    <label for="newCompanyAWH"><strong>AWH</strong> – Hilfsstoffe</label>
-                    <textarea id="newCompanyAWH" rows="5" placeholder="z.B. Holzleime&#10;Schellacklösungen"
-                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
-                  </div>
-                  <div class="form-field">
-                    <label for="newCompanyAWB"><strong>AWB</strong> – Betriebsstoffe</label>
-                    <textarea id="newCompanyAWB" rows="5" placeholder="z.B. Strom&#10;Maschinenöle"
-                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; resize:vertical;"></textarea>
-                  </div>
-                </div>
-              </fieldset>
-              <fieldset class="vorlage-pink" style="max-width: none; grid-column: 1 / -1;">
-                <legend>📦 Fertigerzeugnisse</legend>
-                <p style="color:#666; font-size:0.9rem; margin:0 0 12px;">
-                  Optional: Erzeugnisse des Hauptwerks eintragen. <strong>Bezeichnungen bitte im Plural</strong>
-                  (z.&nbsp;B. „Bürostühle", „Konferenztische"), jeweils mit Preis min. und max.
-                </p>
-                <div class="form-field" style="margin-bottom: 10px;">
-                  <div id="newCompanyFertigerzeugnisse"></div>
-                </div>
-                <button type="button" data-on-click='[{"fn":"addFertigerzeugnisRow","args":[]}]'
-                  style="background:#28a745; color:white; border:0; border-radius:4px; padding:7px 12px; cursor:pointer;">
-                  + Fertigerzeugnis hinzufügen
-                </button>
-              </fieldset>
-            </div>
-
-            <br>
-            <button type="submit"
-              style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
-              ✓ Unternehmen hinzufügen
-            </button>
-          </form>
         </div>
-      </details>
-<br>
-    
+        <br />
+        <details>
+          <summary>
+            <strong>Unternehmen importieren/exportieren</strong>
+          </summary>
+          <div
+            class="modellunternehmen-section"
+            style="
+              margin: 0 auto;
+              padding: 16px 20px;
+              background: #f8f9fa;
+              border-radius: 10px;
+              border: 1px solid #e0e0e0;
+            "
+          >
+            <p
+              style="
+                color: #555;
+                line-height: 1.5;
+                margin: 0 0 16px 0;
+                font-size: 0.95rem;
+              "
+            >
+              Importieren/exportieren Sie eine Liste von Unternehmen. Die Daten
+              werden nur im Browser gespeichert.
+            </p>
 
-    </section>
+            <!-- Drag & Drop + Upload Bereich -->
+            <div
+              id="dropZone"
+              style="
+                background: white;
+                padding: 14px;
+                border-radius: 8px;
+                border: 2px dashed #ccc;
+                text-align: center;
+                margin: 12px 0;
+                cursor: pointer;
+                transition: all 0.2s;
+              "
+              data-on-click='[{"fn":"__clickElement","args":["fileInput"]}]'
+            >
+              <label
+                for="fileInput"
+                style="
+                  display: block;
+                  margin-bottom: 6px;
+                  font-weight: 500;
+                  color: #444;
+                  font-size: 0.95rem;
+                  cursor: pointer;
+                "
+              >
+                .yml-Datei hochladen (Drag & Drop oder Klick)
+              </label>
 
-    
+              <input
+                type="file"
+                id="fileInput"
+                accept=".yml"
+                data-on-change='[{"fn":"handleFileUpload","args":[]}]'
+                style="display: none"
+              />
 
-   
+              <p
+                id="dropZoneText"
+                style="margin: 8px 0 0; color: #777; font-size: 0.9rem"
+              >
+                Datei hierher ziehen oder klicken
+              </p>
+            </div>
+            <div>
+              <strong>Status:</strong>
+              <span
+                id="localStorageStatus"
+                style="font-style: italic; color: #666"
+              >
+                Lädt...
+              </span>
+            </div>
+            <!-- Status + Buttons -->
+            <div
+              style="
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 16px;
+                font-size: 0.9rem;
+              "
+            >
+              <div style="display: flex; gap: 10px" id="exportbutton">
+                <button
+                  data-on-click='[{"fn":"deleteAndLoadDefaultData","args":[]}]'
+                >
+                  Daten zurücksetzen
+                </button>
+              </div>
+            </div>
+          </div>
+        </details>
+        <br />
 
+        <!-- JavaScript für Drag & Drop -->
+        <details>
+          <summary><strong>Unternehmen manuell hinzufügen</strong></summary>
+          <h3>Meine hinzugefügten Unternehmen</h3>
+          <div id="userCompanyList" style="margin-top: 15px">
+            <!-- Wird dynamisch gefüllt -->
+          </div>
+          <br />
+          <div class="box" style="margin-top: 15px">
+            <form
+              id="addCompanyForm"
+              data-on-submit='[{"fn":"handleAddCompanyForm","args":["__EVENT__"]}]'
+            >
+              <div class="grid3">
+                <fieldset class="vorlage-green" style="max-width: none">
+                  <legend>🏢 Basisdaten</legend>
 
+                  <div class="form-field">
+                    <label for="newCompanyName">Firmenname: *</label>
+                    <input
+                      type="text"
+                      id="newCompanyName"
+                      required
+                      placeholder="z.B. ABC-Bikes"
+                      maxlength="50"
+                      title="Keine Sonderzeichen wie <, >, {, } erlaubt"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyRechtsform"
+                      >Rechtsformzusatz: *</label
+                    >
+                    <select id="newCompanyRechtsform" required>
+                      <option value="">-- Bitte wählen --</option>
+                      <option value="e. K.">e. K.</option>
+                      <option value="e. Kfr.">e. Kfr.</option>
+                      <option value="GmbH">GmbH</option>
+                      <option value="UG">UG</option>
+                      <option value="AG">AG</option>
+                      <option value="OHG">OHG</option>
+                      <option value="KG">KG</option>
+                      <option value="GmbH & Co. KG">GmbH & Co. KG</option>
+                    </select>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyBranche">Branche: *</label>
+                    <input
+                      type="text"
+                      id="newCompanyBranche"
+                      required
+                      placeholder="z.B. Fahrradhandel"
+                      maxlength="50"
+                      title="Keine Sonderzeichen wie <, >, {, } erlaubt"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyMotto">Motto: *</label>
+                    <input
+                      type="text"
+                      id="newCompanyMotto"
+                      required
+                      placeholder="z.B. Fahrräder von A bis Z!"
+                      maxlength="100"
+                      title="Keine Sonderzeichen wie <, >, {, } erlaubt"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyInhaber"
+                      >Inhaber/Geschäftsführer: *</label
+                    >
+                    <input
+                      type="text"
+                      id="newCompanyInhaber"
+                      required
+                      placeholder="z.B. Erna Kistner"
+                      maxlength="50"
+                      pattern="[a-zA-ZäöüÄÖÜß\s\.,'\-]*"
+                      title="Nur Buchstaben und Sonderzeichen wie Bindestrich, Punkt, Komma, Apostroph"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyLogo">Logo hochladen:</label>
+                    <input
+                      type="file"
+                      id="newCompanyLogo"
+                      accept="image/svg+xml"
+                      data-on-change='[{"fn":"handleLogoUpload","args":["__EVENT__"]}]'
+                    />
+                    <small style="color: #666"
+                      >Max. 500KB | Nur SVG (optional)</small
+                    >
+                    <div id="logoPreview" style="margin-top: 10px">
+                      <small style="color: #666">Keine Datei ausgewählt</small>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset class="vorlage-blue" style="max-width: none">
+                  <legend>📍 Adresse &amp; Kontakt</legend>
+
+                  <div class="form-field">
+                    <label for="newCompanyStrasse"
+                      >Straße &amp; Hausnummer: *</label
+                    >
+                    <input
+                      type="text"
+                      id="newCompanyStrasse"
+                      required
+                      placeholder="z.B. Schwabacher Weg 50"
+                      maxlength="60"
+                      pattern="[a-zA-Z0-9äöüÄÖÜß\s\.,'\-]*"
+                      title="Buchstaben, Zahlen und gängige Sonderzeichen erlaubt"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyPLZ">PLZ: *</label>
+                    <input
+                      type="text"
+                      id="newCompanyPLZ"
+                      required
+                      placeholder="z.B. 85049"
+                      maxlength="5"
+                      pattern="[0-9]{5}"
+                      title="Genau 5 Ziffern"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyOrt">Ort: *</label>
+                    <input
+                      type="text"
+                      id="newCompanyOrt"
+                      required
+                      placeholder="z.B. Ingolstadt"
+                      maxlength="50"
+                      pattern="[a-zA-ZäöüÄÖÜß\s\-]*"
+                      title="Nur Buchstaben, Leerzeichen und Bindestrich"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyTelefon">Telefon: *</label>
+                    <input
+                      type="tel"
+                      id="newCompanyTelefon"
+                      required
+                      placeholder="z.B. 0841 0802020"
+                      maxlength="25"
+                      pattern="[0-9\s+\(\)\-]*"
+                      title="Nur Zahlen und Zeichen: + - ( ) Leerzeichen"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyEmail">E-Mail: *</label>
+                    <input
+                      type="email"
+                      id="newCompanyEmail"
+                      required
+                      placeholder="z.B. info@firma.de"
+                      maxlength="60"
+                      title="Gültige E-Mail-Adresse erforderlich"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyInternet">Internet: *</label>
+                    <input
+                      type="text"
+                      id="newCompanyInternet"
+                      required
+                      placeholder="z.B. www.firma.de"
+                      maxlength="60"
+                      pattern="[a-zA-Z0-9\.\:\-]*"
+                      title="Nur Buchstaben, Zahlen und . - :"
+                    />
+                  </div>
+                </fieldset>
+
+                <fieldset class="vorlage-red" style="max-width: none">
+                  <legend>💶 Finanz- &amp; Steuerdaten</legend>
+
+                  <div class="form-field">
+                    <label for="newCompanyBank">Bank: *</label>
+                    <input
+                      type="text"
+                      id="newCompanyBank"
+                      required
+                      placeholder="z.B. BavarianBank"
+                      maxlength="50"
+                      pattern="[a-zA-Z0-9äöüÄÖÜß\s\.\-]*"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyIBAN">IBAN: *</label>
+                    <div style="display: flex; gap: 8px; align-items: center">
+                      <input
+                        type="text"
+                        id="newCompanyIBAN"
+                        required
+                        placeholder="DE89370400440532013000"
+                        maxlength="34"
+                        style="flex: 1; text-transform: uppercase"
+                      />
+                      <label
+                        style="
+                          white-space: nowrap;
+                          font-size: 0.85rem;
+                          cursor: pointer;
+                          color: #007bff;
+                        "
+                        title="Zufallswert generieren"
+                      >
+                        <input
+                          type="checkbox"
+                          id="randomIBAN"
+                          data-on-change='[{"fn":"generateRandomField","args":["iban"]}]'
+                        />
+                        🎲
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyBIC">BIC: *</label>
+                    <div style="display: flex; gap: 8px; align-items: center">
+                      <input
+                        type="text"
+                        id="newCompanyBIC"
+                        required
+                        placeholder="COBADEFFXXX"
+                        maxlength="11"
+                        style="flex: 1; text-transform: uppercase"
+                      />
+                      <label
+                        style="
+                          white-space: nowrap;
+                          font-size: 0.85rem;
+                          cursor: pointer;
+                          color: #007bff;
+                        "
+                        title="Zufallswert generieren"
+                      >
+                        <input
+                          type="checkbox"
+                          id="randomBIC"
+                          data-on-change='[{"fn":"generateRandomField","args":["bic"]}]'
+                        />
+                        🎲
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyUstID">USt-IdNr.: *</label>
+                    <div style="display: flex; gap: 8px; align-items: center">
+                      <input
+                        type="text"
+                        id="newCompanyUstID"
+                        required
+                        placeholder="DE123456789"
+                        maxlength="25"
+                        style="flex: 1; text-transform: uppercase"
+                      />
+                      <label
+                        style="
+                          white-space: nowrap;
+                          font-size: 0.85rem;
+                          cursor: pointer;
+                          color: #007bff;
+                        "
+                        title="Zufallswert generieren"
+                      >
+                        <input
+                          type="checkbox"
+                          id="randomUstID"
+                          data-on-change='[{"fn":"generateRandomField","args":["ustid"]}]'
+                        />
+                        🎲
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanySteuernummer">Steuernummer: *</label>
+                    <div style="display: flex; gap: 8px; align-items: center">
+                      <input
+                        type="text"
+                        id="newCompanySteuernummer"
+                        required
+                        placeholder="181/001/11111"
+                        maxlength="20"
+                      />
+                      <label
+                        style="
+                          white-space: nowrap;
+                          font-size: 0.85rem;
+                          cursor: pointer;
+                          color: #007bff;
+                        "
+                        title="Zufallswert generieren"
+                      >
+                        <input
+                          type="checkbox"
+                          id="randomSteuernummer"
+                          data-on-change='[{"fn":"generateRandomField","args":["steuernummer"]}]'
+                        />
+                        🎲
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="newCompanyAkzent">Akzentfarbe: *</label>
+                    <input
+                      type="color"
+                      id="newCompanyAkzent"
+                      required
+                      value="#7db9f5"
+                      style="height: 38px; padding: 2px"
+                    />
+                  </div>
+                </fieldset>
+                <fieldset
+                  class="vorlage-grey"
+                  style="max-width: none; grid-column: 1 / -1"
+                >
+                  <legend>🪵 Werkstoffe</legend>
+                  <p style="color: #666; font-size: 0.9rem; margin: 0 0 12px">
+                    Optional: Tragen Sie Werkstoffe ein.
+                    <strong>Bezeichnungen bitte im Plural</strong> (z.&nbsp;B.
+                    „Mechaniken", „Holzleime"), jeweils mit Einheit sowie Preis
+                    min. und max. Der passende
+                    <strong>Stamm-Lieferant</strong> wird je Kategorie
+                    automatisch im Hintergrund hinterlegt.
+                  </p>
+                  <div class="grid3" style="gap: 16px">
+                    <div class="form-field">
+                      <label for="newCompanyAWR"
+                        ><strong>AWR</strong> – Rohstoffe</label
+                      >
+                      <textarea
+                        id="newCompanyAWR"
+                        rows="5"
+                        placeholder="z.B. Fichtenholzdecken&#10;Ahornholzböden"
+                        style="
+                          width: 100%;
+                          padding: 8px;
+                          border: 1px solid #ccc;
+                          border-radius: 4px;
+                          font-size: 0.9rem;
+                          resize: vertical;
+                        "
+                      ></textarea>
+                    </div>
+                    <div class="form-field">
+                      <label for="newCompanyAWF"
+                        ><strong>AWF</strong> – Fremdbauteile</label
+                      >
+                      <textarea
+                        id="newCompanyAWF"
+                        rows="5"
+                        placeholder="z.B. Mechaniken&#10;Saitensets"
+                        style="
+                          width: 100%;
+                          padding: 8px;
+                          border: 1px solid #ccc;
+                          border-radius: 4px;
+                          font-size: 0.9rem;
+                          resize: vertical;
+                        "
+                      ></textarea>
+                    </div>
+                    <div class="form-field">
+                      <label for="newCompanyAWH"
+                        ><strong>AWH</strong> – Hilfsstoffe</label
+                      >
+                      <textarea
+                        id="newCompanyAWH"
+                        rows="5"
+                        placeholder="z.B. Holzleime&#10;Schellacklösungen"
+                        style="
+                          width: 100%;
+                          padding: 8px;
+                          border: 1px solid #ccc;
+                          border-radius: 4px;
+                          font-size: 0.9rem;
+                          resize: vertical;
+                        "
+                      ></textarea>
+                    </div>
+                    <div class="form-field">
+                      <label for="newCompanyAWB"
+                        ><strong>AWB</strong> – Betriebsstoffe</label
+                      >
+                      <textarea
+                        id="newCompanyAWB"
+                        rows="5"
+                        placeholder="z.B. Strom&#10;Maschinenöle"
+                        style="
+                          width: 100%;
+                          padding: 8px;
+                          border: 1px solid #ccc;
+                          border-radius: 4px;
+                          font-size: 0.9rem;
+                          resize: vertical;
+                        "
+                      ></textarea>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset
+                  class="vorlage-pink"
+                  style="max-width: none; grid-column: 1 / -1"
+                >
+                  <legend>📦 Fertigerzeugnisse</legend>
+                  <p style="color: #666; font-size: 0.9rem; margin: 0 0 12px">
+                    Optional: Erzeugnisse des Hauptwerks eintragen.
+                    <strong>Bezeichnungen bitte im Plural</strong>
+                    (z.&nbsp;B. „Bürostühle", „Konferenztische"), jeweils mit
+                    Preis min. und max.
+                  </p>
+                  <div class="form-field" style="margin-bottom: 10px">
+                    <div id="newCompanyFertigerzeugnisse"></div>
+                  </div>
+                  <button
+                    type="button"
+                    data-on-click='[{"fn":"addFertigerzeugnisRow","args":[]}]'
+                    style="
+                      background: #28a745;
+                      color: white;
+                      border: 0;
+                      border-radius: 4px;
+                      padding: 7px 12px;
+                      cursor: pointer;
+                    "
+                  >
+                    + Fertigerzeugnis hinzufügen
+                  </button>
+                </fieldset>
+              </div>
+
+              <br />
+              <button
+                type="submit"
+                style="
+                  background: #28a745;
+                  color: white;
+                  padding: 10px 20px;
+                  border: none;
+                  border-radius: 4px;
+                  cursor: pointer;
+                  font-size: 16px;
+                "
+              >
+                ✓ Unternehmen hinzufügen
+              </button>
+            </form>
+          </div>
+        </details>
+        <br />
+      </section>
     </main>
-  <script src="js/index.js?v=5"></script>
-  <div w3-include-html="footer.html"></div>
+    <script src="js/index.js?v=5"></script>
+    <div w3-include-html="footer.html"></div>
 
-  <script src="js/index-inline.js"></script>
-</body>
-
+    <script src="js/index-inline.js"></script>
+  </body>
 </html>

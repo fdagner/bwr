@@ -3,21 +3,38 @@
 // ============================================================================
 
 const KONTENPLAN_AUSWAHL_NR = [
-  '0500','0530','0700','0840','0860','0870',
-  '2600','2800','2880',
-  '2400',
-  '3000',
-  '4200','4250','4400','4800',
-  '8010','8020',
-  '6000','6010','6020','6030',
-  '5000',
+  "0500",
+  "0530",
+  "0700",
+  "0840",
+  "0860",
+  "0870",
+  "2600",
+  "2800",
+  "2880",
+  "2400",
+  "3000",
+  "4200",
+  "4250",
+  "4400",
+  "4800",
+  "8010",
+  "8020",
+  "6000",
+  "6010",
+  "6020",
+  "6030",
+  "5000",
 ];
 
 function getKonto(nr) {
-  return (typeof KONTENPLAN_NACH_NR !== 'undefined' && KONTENPLAN_NACH_NR[nr]) || null;
+  return (
+    (typeof KONTENPLAN_NACH_NR !== "undefined" && KONTENPLAN_NACH_NR[nr]) ||
+    null
+  );
 }
 
-const KONTEN = KONTENPLAN_AUSWAHL_NR.map(nr => getKonto(nr)).filter(Boolean);
+const KONTEN = KONTENPLAN_AUSWAHL_NR.map((nr) => getKonto(nr)).filter(Boolean);
 
 let letzteZeilen = [];
 let letzteSchwierigkeit = 2;
@@ -36,17 +53,17 @@ function pickRandom(arr, n) {
 }
 
 function generiereAufgabe() {
-  const sel = document.getElementById('schwierigkeit');
+  const sel = document.getElementById("schwierigkeit");
   const schw = sel ? parseInt(sel.value, 10) : 2;
-  letzteSchwierigkeit = (schw === 1) ? 1 : 2;
+  letzteSchwierigkeit = schw === 1 ? 1 : 2;
 
-  const zSel = document.getElementById('zeilenAnzahl');
+  const zSel = document.getElementById("zeilenAnzahl");
   const anzahl = zSel ? parseInt(zSel.value, 10) : 5;
   const n = Math.min(Math.max(anzahl || 5, 5), 20, KONTEN.length);
 
   const gewaehlt = pickRandom(KONTEN, n);
 
-  letzteZeilen = gewaehlt.map(konto => {
+  letzteZeilen = gewaehlt.map((konto) => {
     const spalten = shuffle([0, 1, 2]).slice(0, letzteSchwierigkeit);
     return { konto, gaps: spalten };
   });
@@ -60,28 +77,30 @@ function istLuecke(zeile, col) {
 }
 
 function baueAufgabeKiText() {
-  const spaltenNamen = ['Kontennummer', 'Kontenabkürzung', 'Kontenbezeichnung'];
+  const spaltenNamen = ["Kontennummer", "Kontenabkürzung", "Kontenbezeichnung"];
   let t = `Kontenplan – Lückentext (Schwierigkeitsgrad ${letzteSchwierigkeit}).\n`;
-  t += `Ergänze die fehlenden Werte (je Zeile ${letzteSchwierigkeit === 1 ? 'ein Wert' : 'zwei Werte'}).\n\n`;
-  t += 'Tabelle:\n';
-  t += 'Kontennummer | Kontenabkürzung | Kontenbezeichnung\n';
-  letzteZeilen.forEach(z => {
+  t += `Ergänze die fehlenden Werte (je Zeile ${letzteSchwierigkeit === 1 ? "ein Wert" : "zwei Werte"}).\n\n`;
+  t += "Tabelle:\n";
+  t += "Kontennummer | Kontenabkürzung | Kontenbezeichnung\n";
+  letzteZeilen.forEach((z) => {
     const vals = [z.konto.nr, z.konto.abk, z.konto.name].map((v, ci) =>
-      istLuecke(z, ci) ? '___' : v);
-    t += vals.join(' | ') + '\n';
+      istLuecke(z, ci) ? "___" : v,
+    );
+    t += vals.join(" | ") + "\n";
   });
-  t += '\nLösung (vollständige Tabelle):\n';
-  t += 'Kontennummer | Kontenabkürzung | Kontenbezeichnung\n';
-  letzteZeilen.forEach(z => {
+  t += "\nLösung (vollständige Tabelle):\n";
+  t += "Kontennummer | Kontenabkürzung | Kontenbezeichnung\n";
+  letzteZeilen.forEach((z) => {
     t += `${z.konto.nr} | ${z.konto.abk} | ${z.konto.name}\n`;
   });
   return t;
 }
 
-const ZELLE = 'padding:8px; border:1px solid #999; min-height:4.6em; height:4.6em; vertical-align:middle;';
+const ZELLE =
+  "padding:8px; border:1px solid #999; min-height:4.6em; height:4.6em; vertical-align:middle;";
 
 function renderAufgabe() {
-  const container = document.getElementById('Container');
+  const container = document.getElementById("Container");
   if (!container) return;
 
   const head = `
@@ -95,15 +114,17 @@ function renderAufgabe() {
       </thead>
       <tbody>`;
 
-  let body = '';
+  let body = "";
   letzteZeilen.forEach((z) => {
-    const zellen = [z.konto.nr, z.konto.abk, z.konto.name].map((val, ci) => {
-      if (istLuecke(z, ci)) {
-        // Lücke: kein Eingabefeld, nur freier Raum (zwei Zeilen hoch)
-        return `<td style="${ZELLE}">&nbsp;</td>`;
-      }
-      return `<td style="${ZELLE}">${val}</td>`;
-    }).join('');
+    const zellen = [z.konto.nr, z.konto.abk, z.konto.name]
+      .map((val, ci) => {
+        if (istLuecke(z, ci)) {
+          // Lücke: kein Eingabefeld, nur freier Raum (zwei Zeilen hoch)
+          return `<td style="${ZELLE}">&nbsp;</td>`;
+        }
+        return `<td style="${ZELLE}">${val}</td>`;
+      })
+      .join("");
     body += `<tr style="height:4.6em;">${zellen}</tr>`;
   });
 
@@ -113,7 +134,7 @@ function renderAufgabe() {
     <h2>Aufgabe: Kontenplan</h2>
     <h3>Ergänze die fehlenden Werte in der Tabelle.</h3>
     <div style="background:#fff; border:1px solid #dde3ea; border-radius:8px; padding:14px 18px; margin-bottom:12px; font-size:16px; line-height:1.7;">
-      In der folgenden Tabelle fehlen je Zeile ${letzteSchwierigkeit === 1 ? 'ein Wert' : 'zwei Werte'} (Kontennummer, Abkürzung oder Bezeichnung). Trage die fehlenden Werte ein.
+      In der folgenden Tabelle fehlen je Zeile ${letzteSchwierigkeit === 1 ? "ein Wert" : "zwei Werte"} (Kontennummer, Abkürzung oder Bezeichnung). Trage die fehlenden Werte ein.
     </div>
     ${tabelle}
     <h2 class="loesung">Lösung</h2>
@@ -130,7 +151,7 @@ function baueLoesungsTabelle() {
       <th style="${ZELLE} background:#6b7f99; color:#fff;">Kontenabkürzung</th>
       <th style="${ZELLE} background:#6b7f99; color:#fff;">Kontenbezeichnung</th>
     </tr></thead><tbody>`;
-  letzteZeilen.forEach(z => {
+  letzteZeilen.forEach((z) => {
     html += `<tr style="height:4.6em;">
       <td style="${ZELLE}">${z.konto.nr}</td>
       <td style="${ZELLE}">${z.konto.abk}</td>
@@ -144,26 +165,39 @@ function baueLoesungsTabelle() {
 // ============================================================================
 // MOODLE CLOZE EXPORT
 // ============================================================================
-function mxEsc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function mxCdata(s) { return '<![CDATA[' + String(s ?? '').replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>'; }
+function mxEsc(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+function mxCdata(s) {
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
+}
 function mxIdBasis() {
-  const SCHLUESSEL = 'moodleKontenplanLetzteIdSekunde';
+  const SCHLUESSEL = "moodleKontenplanLetzteIdSekunde";
   let sek = Math.floor(Date.now() / 1000);
   try {
     const letzte = Number(localStorage.getItem(SCHLUESSEL)) || 0;
     if (sek <= letzte) sek = letzte + 1;
     localStorage.setItem(SCHLUESSEL, String(sek));
-  } catch (e) { /* ohne localStorage */ }
+  } catch (e) {
+    /* ohne localStorage */
+  }
   const d = new Date(sek * 1000);
-  const p = n => String(n).padStart(2, '0');
+  const p = (n) => String(n).padStart(2, "0");
   return `${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
 }
 
 function baueKontenplanClozeXml() {
   if (!letzteZeilen.length) return null;
 
-  const zelle = 'border:1px solid #555; padding:4px 10px;';
-  const kopf  = 'border:1px solid #555; padding:4px 10px; background-color:#d9d9d9;';
+  const zelle = "border:1px solid #555; padding:4px 10px;";
+  const kopf =
+    "border:1px solid #555; padding:4px 10px; background-color:#d9d9d9;";
 
   let table = `
     <table style="border-collapse:collapse; font-family:inherit; min-width:560px;">
@@ -173,14 +207,16 @@ function baueKontenplanClozeXml() {
         <th style="${kopf}">Kontenbezeichnung</th>
       </tr></thead><tbody>`;
 
-  letzteZeilen.forEach(z => {
+  letzteZeilen.forEach((z) => {
     const werte = [z.konto.nr, z.konto.abk, z.konto.name];
-    const zellen = werte.map((w, ci) => {
-      if (z.gaps.includes(ci)) {
-        return `<td style="${zelle} text-align:center;">{1:SHORTANSWER:=${mxEsc(w)}}</td>`;
-      }
-      return `<td style="${zelle}">${mxEsc(w)}</td>`;
-    }).join('');
+    const zellen = werte
+      .map((w, ci) => {
+        if (z.gaps.includes(ci)) {
+          return `<td style="${zelle} text-align:center;">{1:SHORTANSWER:=${mxEsc(w)}}</td>`;
+        }
+        return `<td style="${zelle}">${mxEsc(w)}</td>`;
+      })
+      .join("");
     table += `<tr>${zellen}</tr>`;
   });
   table += `</tbody></table>`;
@@ -202,13 +238,16 @@ function baueKontenplanClozeXml() {
 
 function exportiereMoodle() {
   const xml = baueKontenplanClozeXml();
-  if (!xml) { zeigeModal('Bitte zuerst Aufgaben erstellen.'); return; }
+  if (!xml) {
+    zeigeModal("Bitte zuerst Aufgaben erstellen.");
+    return;
+  }
   const d = new Date();
-  const p = n => String(n).padStart(2, '0');
-  const dateiname = `cloze-kontenplan-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
-  const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+  const p = (n) => String(n).padStart(2, "0");
+  const dateiname = `cloze-kontenplan-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = dateiname;
   document.body.appendChild(a);
@@ -267,54 +306,61 @@ let letzteAufgabeKiText = null;
 
 function setzeAufgabeKiText(text) {
   letzteAufgabeKiText = text;
-  const vorschauEl = document.getElementById('kiPromptVorschau');
+  const vorschauEl = document.getElementById("kiPromptVorschau");
   if (vorschauEl) vorschauEl.textContent = erstelleKiPromptText();
 }
 
 function erstelleKiPromptText() {
-  return KI_ASSISTENT_PROMPT.replace('###AUFGABEN und LOESUNGEN###',
-    letzteAufgabeKiText || '(Noch keine Aufgabe generiert.)');
+  return KI_ASSISTENT_PROMPT.replace(
+    "###AUFGABEN und LOESUNGEN###",
+    letzteAufgabeKiText || "(Noch keine Aufgabe generiert.)",
+  );
 }
 
 function kopiereKiPrompt() {
-  navigator.clipboard.writeText(erstelleKiPromptText()).then(() => {
-    const btn = document.getElementById('kiPromptKopierenBtn');
-    if (!btn) return;
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
-    btn.classList.add('ki-prompt-btn--success');
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.classList.remove('ki-prompt-btn--success');
-    }, 2500);
-  }).catch(err => {
-    console.error('Fehler beim Kopieren:', err);
-    zeigeModal('Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.');
-  });
+  navigator.clipboard
+    .writeText(erstelleKiPromptText())
+    .then(() => {
+      const btn = document.getElementById("kiPromptKopierenBtn");
+      if (!btn) return;
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopiert!`;
+      btn.classList.add("ki-prompt-btn--success");
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("ki-prompt-btn--success");
+      }, 2500);
+    })
+    .catch((err) => {
+      console.error("Fehler beim Kopieren:", err);
+      zeigeModal(
+        "Kopieren nicht möglich. Bitte manuell aus dem Textfeld kopieren.",
+      );
+    });
 }
 
 function toggleKiPromptVorschau() {
-  const vorschau = document.getElementById('kiPromptVorschau');
-  const btn = document.getElementById('kiPromptToggleBtn');
+  const vorschau = document.getElementById("kiPromptVorschau");
+  const btn = document.getElementById("kiPromptToggleBtn");
   if (!vorschau) return;
-  const isHidden = getComputedStyle(vorschau).display === 'none';
+  const isHidden = getComputedStyle(vorschau).display === "none";
   if (isHidden) {
-    vorschau.style.display = 'block';
-    if (btn) btn.textContent = 'Prompt ausblenden ▲';
+    vorschau.style.display = "block";
+    if (btn) btn.textContent = "Prompt ausblenden ▲";
   } else {
-    vorschau.style.display = 'none';
-    if (btn) btn.textContent = 'Prompt anzeigen ▼';
+    vorschau.style.display = "none";
+    if (btn) btn.textContent = "Prompt anzeigen ▼";
   }
 }
 
 // ============================================================================
 // INIT
 // ============================================================================
-document.addEventListener('DOMContentLoaded', () => {
-  const sel = document.getElementById('schwierigkeit');
-  if (sel) sel.addEventListener('change', () => generiereAufgabe());
-  const zsel = document.getElementById('zeilenAnzahl');
-  if (zsel) zsel.addEventListener('change', () => generiereAufgabe());
+document.addEventListener("DOMContentLoaded", () => {
+  const sel = document.getElementById("schwierigkeit");
+  if (sel) sel.addEventListener("change", () => generiereAufgabe());
+  const zsel = document.getElementById("zeilenAnzahl");
+  if (zsel) zsel.addEventListener("change", () => generiereAufgabe());
   generiereAufgabe();
 });
 
