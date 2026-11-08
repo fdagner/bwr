@@ -92,6 +92,30 @@ if (jahrBescheidFeld) {
 
 // Kassenbon: Artikel 2/3 nur bei Klassisch/eBon, nicht bei Taxi
 const kassenbonDropdown = document.getElementById("svgDropdownKassenbon");
+// UST-Dropdowns aus den zentralen Sätzen in utils.js befüllen
+// (A – Regelsatz, B – ermäßigter Satz, C – steuerfrei)
+function kassenbonUstDropdownsBefuellen() {
+  const saetze = [
+    [window.UST_REGEL, "A – " + window.UST_REGEL + " % (regulär)"],
+    [window.UST_ERMAESSIGT, "B – " + window.UST_ERMAESSIGT + " % (vermindert)"],
+    [0, "C – 0 % (steuerfrei)"],
+  ];
+  for (const id of [
+    "kassenbonUSTInput",
+    "kassenbonUSTInput2",
+    "kassenbonUSTInput3",
+  ]) {
+    const select = document.getElementById(id);
+    if (!select || select.options.length > 0 || !window.UST_REGEL) continue;
+    for (const [wert, text] of saetze) {
+      const option = document.createElement("option");
+      option.value = String(wert);
+      option.textContent = text;
+      select.appendChild(option);
+    }
+  }
+}
+
 if (kassenbonDropdown) {
   const kassenbonArtikelSichtbar = () => {
     const taxi = kassenbonDropdown.value === "kassenbontaxi.svg";
@@ -101,7 +125,11 @@ if (kassenbonDropdown) {
     });
   };
   kassenbonDropdown.addEventListener("change", kassenbonArtikelSichtbar);
-  window.addEventListener("load", kassenbonArtikelSichtbar);
+  window.addEventListener("load", () => {
+    kassenbonArtikelSichtbar();
+    kassenbonUstDropdownsBefuellen();
+  });
+  document.addEventListener("DOMContentLoaded", kassenbonUstDropdownsBefuellen);
 }
 
 // "Skript verwenden": aktuelles Jahr ins Jahr-Feld eintragen (das Feld ist

@@ -214,6 +214,21 @@ const UST_ERMAESSIGT = 7; // % ermäßigter Satz
 window.UST_REGEL = UST_REGEL;
 window.UST_ERMAESSIGT = UST_ERMAESSIGT;
 
+// Kennzeichen für Belege: A = Regelsatz (regulär), B = ermäßigter Satz,
+// C = steuerfrei (0 %).
+// UST_KENNZEICHEN(satz) → "A" | "B" | "C" | "" (unbekannter Satz)
+const UST_CODE_REGEL = "A";
+const UST_CODE_ERMAESSIGT = "B";
+const UST_CODE_NULL = "C";
+function UST_KENNZEICHEN(satz) {
+  const v = parseFloat(String(satz ?? "").replace(",", "."));
+  if (v === UST_REGEL) return UST_CODE_REGEL;
+  if (v === UST_ERMAESSIGT) return UST_CODE_ERMAESSIGT;
+  if (v === 0) return UST_CODE_NULL;
+  return "";
+}
+window.UST_KENNZEICHEN = UST_KENNZEICHEN;
+
 // ============================================================================
 // EINKOMMENSTEUERTARIF (aktuell gültiger Jahrgang: jahr-Feld unten)
 // ============================================================================

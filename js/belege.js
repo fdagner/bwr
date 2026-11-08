@@ -3724,7 +3724,7 @@ const BELEG_APPLY_CONFIG = {
       }
 
       // Artikelzeilen füllen (Bezeichnung ab 22 Zeichen mit "…" kürzen,
-      // damit sie nicht in den Netto-Preis läuft)
+      // damit sie nicht in den Netto-Preis läuft; UST-Kennzeichen A/B/C)
       artikel.forEach((artikelObj, idx) => {
         const n = idx + 1;
         const zweckId = "kassenbonZweck" + (n === 1 ? "" : n);
@@ -3733,8 +3733,16 @@ const BELEG_APPLY_CONFIG = {
         if (zweckElem) {
           const zweck = artikelObj.zweck;
           zweckElem.textContent =
-            zweck.length > 22 ? zweck.slice(0, 21).trimEnd() + "…" : zweck;
+            zweck.length > 20 ? zweck.slice(0, 19).trimEnd() + "…" : zweck;
         }
+        // Kennzeichen A (regulär) / B (vermindert) / C (steuerfrei)
+        const code =
+          typeof window.UST_KENNZEICHEN === "function"
+            ? window.UST_KENNZEICHEN(artikelObj.ust)
+            : "";
+        document.querySelectorAll(".kassenbonUstCode" + n).forEach((el) => {
+          el.textContent = code;
+        });
         const nettoElem = document.getElementById("kassenbonBetrag" + n);
         if (nettoElem)
           nettoElem.textContent = FormatHelper.currency(artikelObj.netto);
@@ -3764,9 +3772,18 @@ const BELEG_APPLY_CONFIG = {
         FormatHelper.currency(summeNetto);
 
       // UST-Satz anzeigen, wenn alle Artikel denselben Satz haben
+      // (Kennzeichen A/B/C stehen an den Bezeichnungen)
       const saetze = [...new Set(artikel.map((a) => String(a.ust)))];
       document.getElementById("kassenbonUST").textContent =
         saetze.length === 1 ? saetze[0] : "";
+
+      // Legende unten mit den aktuellen Sätzen aus utils.js füllen
+      const ustA = document.getElementById("kassenbonUstA");
+      if (ustA && window.UST_REGEL !== undefined)
+        ustA.textContent = String(window.UST_REGEL);
+      const ustB = document.getElementById("kassenbonUstB");
+      if (ustB && window.UST_ERMAESSIGT !== undefined)
+        ustB.textContent = String(window.UST_ERMAESSIGT);
 
       document.getElementById("kassenbonUSTBetrag").textContent =
         FormatHelper.currency(FormatHelper.roundToTwo(summeUSTBetrag));
