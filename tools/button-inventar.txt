@@ -1,0 +1,394 @@
+assistent.html:L73:: []  "Eingangsrechnung mit Werkstoffen" :: onclick= :: id=eingangsrechnungBtn
+assistent.html:L74:: []  "Ausgangsrechnung mit Fertigerzeugnissen" :: onclick= :: id=ausgangsrechnungBtn
+assistent.html:L96:: []  "Lösungsvorschlag" :: onclick= :: id=generateBtn
+bab.html:L77:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generateBAB() :: id=
+belege.html:L92:: [tablinks]  "Beleg importieren" :: onclick=openCity(event, 'import') :: id=defaultOpen
+belege.html:L93:: [tablinks]  "Rechnung/Angebot/Gutschrift" :: onclick=openCity(event, 'rechnung') :: id=
+belege.html:L94:: [tablinks]  "Kontoauszug" :: onclick=openCity(event, 'kontoauszug') :: id=
+belege.html:L95:: [tablinks]  "Quittung" :: onclick=openCity(event, 'quittung') :: id=
+belege.html:L96:: [tablinks]  "Kassenbon" :: onclick=openCity(event, 'kassenbon') :: id=
+belege.html:L97:: [tablinks]  "Mail" :: onclick=openCity(event, 'email') :: id=
+belege.html:L98:: [tablinks]  "Zeitungsartikel" :: onclick=openCity(event, 'newspaper') :: id=
+belege.html:L99:: [tablinks]  "Lohn-/Gehaltsabrechnung" :: onclick=openCity(event, 'lohnabrechnung') :: id=
+belege.html:L100:: [tablinks]  "Lohn-/Gehaltsjournal" :: onclick=openCity(event, 'lohnjournal') :: id=
+belege.html:L101:: [tablinks]  "Bescheid" :: onclick=openCity(event, 'bescheid') :: id=
+belege.html:L102:: [tablinks]  "Mahnung" :: onclick=openCity(event, 'mahnung') :: id=
+belege.html:L103:: [tablinks]  "Anlagenkarte" :: onclick=openCity(event, 'anlagenkarte') :: id=
+belege.html:L104:: [tablinks]  "Wertpapiere" :: onclick=openCity(event, 'wertpapiere') :: id=
+belege.html:L379:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=applySVGholen() :: id=
+belege.html:L383:: [btn-zufall] (+3 Zeilen) "Zufallswerte" :: onclick=zufaelligeAusgangsrechnungErstellen() :: id=
+belege.html:L387:: [btn-zufall] (+3 Zeilen) "Zufallswerte" :: onclick=zufaelligeEingangsrechnungErstellen() :: id=
+belege.html:L404:: [card-btn] (+3 Zeilen) "PNG" :: onclick=exportDokument('rechnung','png') :: id=
+belege.html:L409:: [card-btn] (+4 Zeilen) "SVG" :: onclick=exportDokument('rechnung','svg') :: id=
+belege.html:L415:: [card-btn] (+4 Zeilen) "SVG-Code" :: onclick=exportDokument('rechnung','clipboard') :: id=
+belege.html:L421:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('rechnung') :: id=
+belege.html:L422:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('rechnung1Container') :: id=
+belege.html:L599:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=applySVGholen() :: id=
+belege.html:L613:: [card-btn] (+3 Zeilen) "PNG" :: onclick=exportDokument('kontoauszug','png') :: id=
+belege.html:L618:: [card-btn] (+3 Zeilen) "SVG" :: onclick=exportDokument('kontoauszug','svg') :: id=
+belege.html:L623:: [card-btn] (+4 Zeilen) "SVG-Code" :: onclick=exportDokument('kontoauszug','clipboard') :: id=
+belege.html:L629:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('kontoauszug') :: id=
+belege.html:L630:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('kontoauszugContainer') :: id=
+belege.html:L774:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=quittungApplySVGholen() :: id=
+belege.html:L788:: [card-btn] (+3 Zeilen) "PNG" :: onclick=exportDokument('quittung','png') :: id=
+belege.html:L793:: [card-btn] (+3 Zeilen) "SVG" :: onclick=exportDokument('quittung','svg') :: id=
+belege.html:L798:: [card-btn] (+4 Zeilen) "SVG-Code" :: onclick=exportDokument('quittung','clipboard') :: id=
+belege.html:L804:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('quittung') :: id=
+belege.html:L805:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('quittungContainer') :: id=
+belege.html:L959:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=kassenbonApplySVGholen() :: id=
+belege.html:L973:: [card-btn] (+3 Zeilen) "PNG" :: onclick=exportDokument('kassenbon','png') :: id=
+belege.html:L977:: [card-btn] (+3 Zeilen) "SVG" :: onclick=exportDokument('kassenbon','svg') :: id=
+belege.html:L981:: [card-btn] (+4 Zeilen) "SVG-Code" :: onclick=exportDokument('kassenbon','clipboard') :: id=
+belege.html:L987:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('kassenbon') :: id=
+belege.html:L988:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('kassenbonContainer') :: id=
+belege.html:L1042:: []  "Zurücksetzen" :: onclick=emailZuruecksetzen() :: id=
+belege.html:L1054:: [card-btn] (+3 Zeilen) "PNG" :: onclick=exportDokument('email','png') :: id=
+belege.html:L1058:: [card-btn] (+3 Zeilen) "HTML-Datei" :: onclick=emailHerunterladen() :: id=
+belege.html:L1062:: [card-btn] (+4 Zeilen) "HTML-Code" :: onclick=exportDokument('email','clipboard') :: id=
+belege.html:L1068:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('email') :: id=
+belege.html:L1069:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('emailContainer') :: id=
+belege.html:L1110:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick= :: id=newspaperApplyChangesButton
+belege.html:L1138:: [card-btn]  "PNG" :: onclick=exportDokument('newspaper','png') :: id=
+belege.html:L1139:: [card-btn]  "Zwischenablage (Text)" :: onclick= :: id=officeButtonNewspaper
+belege.html:L1140:: [card-btn]  "HTML-Datei" :: onclick=newspaperHerunterladen() :: id=
+belege.html:L1141:: [card-btn]  "HTML-Code" :: onclick=exportDokument('newspaper','clipboard') :: id=
+belege.html:L1142:: [card-btn]  "Zwischenablage (Grafik)" :: onclick=kopiereGrafikInZwischenablage('newspaper') :: id=
+belege.html:L1143:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('newspaperContainer') :: id=
+belege.html:L1325:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=lohnabrechnungApplySVGholen() :: id=
+belege.html:L1340:: [card-btn] (+3 Zeilen) "PNG" :: onclick=exportDokument('lohnabrechnung','png') :: id=
+belege.html:L1344:: [card-btn] (+3 Zeilen) "SVG" :: onclick=exportDokument('lohnabrechnung','svg') :: id=
+belege.html:L1348:: [card-btn] (+2 Zeilen) "SVG-Code" :: onclick=exportDokument('lohnabrechnung','clipboard') :: id=
+belege.html:L1352:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('lohnabrechnung') :: id=
+belege.html:L1353:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('lohnabrechnungContainer') :: id=
+belege.html:L1395:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=journalApplySVGholen() :: id=
+belege.html:L1410:: [card-btn] (+2 Zeilen) "PNG" :: onclick=exportDokument('lohnjournal','png') :: id=
+belege.html:L1413:: [card-btn] (+2 Zeilen) "SVG" :: onclick=exportDokument('lohnjournal','svg') :: id=
+belege.html:L1416:: [card-btn] (+2 Zeilen) "SVG-Code" :: onclick=exportDokument('lohnjournal','clipboard') :: id=
+belege.html:L1420:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('lohnjournal') :: id=
+belege.html:L1421:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('lohnjournalContainer') :: id=
+belege.html:L1431:: [card-btn] (+2 Zeilen) "PNG" :: onclick=exportDokument('lohnjournalBS','png') :: id=
+belege.html:L1434:: [card-btn] (+2 Zeilen) "Zwischenablage (Text)" :: onclick= :: id=officeButtonLohnjournalBuchungssatz
+belege.html:L1437:: [card-btn] (+2 Zeilen) "HTML-Datei" :: onclick=lohnjournalBuchungssatzHerunterladen() :: id=
+belege.html:L1440:: [card-btn] (+2 Zeilen) "HTML-Code" :: onclick=exportDokument('lohnjournalBS','clipboard') :: id=
+belege.html:L1444:: [card-btn]  "Zwischenablage (Grafik)" :: onclick=kopiereGrafikInZwischenablage('lohnjournalBS') :: id=
+belege.html:L1590:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=bescheidApplySVGholen() :: id=
+belege.html:L1603:: [card-btn] (+2 Zeilen) "PNG" :: onclick=exportDokument('bescheid','png') :: id=
+belege.html:L1606:: [card-btn] (+2 Zeilen) "SVG" :: onclick=exportDokument('bescheid','svg') :: id=
+belege.html:L1609:: [card-btn] (+2 Zeilen) "SVG-Code" :: onclick=exportDokument('bescheid','clipboard') :: id=
+belege.html:L1613:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('bescheid') :: id=
+belege.html:L1614:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('bescheidContainer') :: id=
+belege.html:L1790:: [] (+1 Zeilen) "Standard" :: onclick= :: id=mahnungZinssatzStandard
+belege.html:L1828:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=mahnungApplySVGholen() :: id=
+belege.html:L1841:: [card-btn] (+2 Zeilen) "PNG" :: onclick=exportDokument('mahnung','png') :: id=
+belege.html:L1844:: [card-btn] (+2 Zeilen) "SVG" :: onclick=exportDokument('mahnung','svg') :: id=
+belege.html:L1847:: [card-btn] (+2 Zeilen) "SVG-Code" :: onclick=exportDokument('mahnung','clipboard') :: id=
+belege.html:L1851:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('mahnung') :: id=
+belege.html:L1852:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('mahnungContainer') :: id=
+belege.html:L2100:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=anlagenkarteApplySVGholen() :: id=
+belege.html:L2114:: [card-btn] (+3 Zeilen) "PNG" :: onclick=exportDokument('anlagenkarte','png') :: id=
+belege.html:L2118:: [card-btn] (+3 Zeilen) "SVG" :: onclick=exportDokument('anlagenkarte','svg') :: id=
+belege.html:L2122:: [card-btn] (+3 Zeilen) "SVG-Code" :: onclick=exportDokument('anlagenkarte','clipboard') :: id=
+belege.html:L2127:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('anlagenkarte') :: id=
+belege.html:L2128:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('anlagenkarteContainer') :: id=
+belege.html:L2277:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=wertpapiereApplySVGholen() :: id=
+belege.html:L2291:: [card-btn] (+3 Zeilen) "PNG" :: onclick=exportDokument('wertpapiere','png') :: id=
+belege.html:L2295:: [card-btn] (+3 Zeilen) "SVG" :: onclick=exportDokument('wertpapiere','svg') :: id=
+belege.html:L2299:: [card-btn] (+3 Zeilen) "SVG-Code" :: onclick=exportDokument('wertpapiere','clipboard') :: id=
+belege.html:L2304:: [card-btn]  "Zwischenablage" :: onclick=kopiereGrafikInZwischenablage('wertpapiere') :: id=
+belege.html:L2305:: [card-btn] (+1 Zeilen) "+ Sammlung" :: onclick=belegZurSammlung('wertpapiereContainer') :: id=
+bilanz10.html:L115:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generateBilanzUndKennzahlen() :: id=
+buchungssatz.html:L81:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereBuchungssatz() :: id=
+buchungssatz.html:L91:: [card-btn]  "PNG" :: onclick=buchungssatzHerunterladenAlsPNG() :: id=
+buchungssatz.html:L92:: [card-btn]  "Office" :: onclick= :: id=officeButtonBuchungssatz
+buchungssatz.html:L93:: [card-btn]  "HTML" :: onclick=buchungssatzHerunterladen() :: id=
+buchungssatz.html:L94:: [card-btn]  "Zwischenablage" :: onclick=buchungssatzKopiereInZwischenablage() :: id=
+download_svg.html:L2:: [card-btn]  "PNG" :: onclick=HerunterladenAlsPNGSVG() :: id=
+download_svg.html:L3:: [card-btn]  "SVG" :: onclick=exportSVGSVG() :: id=
+download_svg.html:L4:: [card-btn]  "SVG-Code" :: onclick=KopiereInZwischenablageSVG() :: id=
+download_svg_leer.html:L2:: [card-btn]  "PNG" :: onclick=HerunterladenAlsPNGSVGLeer() :: id=
+download_svg_leer.html:L3:: [card-btn]  "SVG" :: onclick=exportSVGSVGLeer() :: id=
+download_svg_leer.html:L4:: [card-btn]  "SVG-Code" :: onclick=KopiereInZwischenablageSVGLeer() :: id=
+downloads.html:L2:: [card-btn]  "PNG" :: onclick=HerunterladenAlsPNG() :: id=
+downloads.html:L3:: [card-btn]  "Office" :: onclick= :: id=officeButton
+downloads.html:L4:: [card-btn]  "HTML" :: onclick=Herunterladen() :: id=
+downloads.html:L5:: [card-btn]  "Zwischenablage" :: onclick=KopiereInZwischenablage() :: id=
+downloads.html:L6:: [card-btn]  "Drucken" :: onclick=drucken() :: id=
+downloads2.html:L2:: [card-btn]  "PNG" :: onclick=HerunterladenAlsPNG() :: id=
+downloads2.html:L3:: [card-btn]  "SVG" :: onclick=exportSVG() :: id=
+downloads2.html:L4:: [card-btn]  "Quelltext" :: onclick=KopiereInZwischenablage() :: id=
+downloads3.html:L2:: [card-btn] (+1 Zeilen) "Moodle-Fragetyp (XML)" :: onclick=exportiereMoodle() :: id=
+ewb.html:L83:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=ewbZeigeZufaelligeTabelle() :: id=
+giftforstash.html:L210:: []  "Weiteren Code hinzufügen" :: onclick=addInput() :: id=
+giftforstash.html:L229:: []  "Fragen generieren" :: onclick=generateQuestions() :: id=
+hilfe.html:L104:: [tablinks]  "Erste Schritte" :: onclick=openCity(event, 'schnellstart') :: id=defaultOpen
+hilfe.html:L105:: [tablinks]  "FAQ" :: onclick=openCity(event, 'faq') :: id=
+index.html:L122:: [news-nav news-prev]  "❮" :: onclick= :: id=
+index.html:L124:: [news-nav news-next]  "❯" :: onclick= :: id=
+index.html:L145:: [] (+4 Zeilen) "★ Als Modellunternehmen verwenden" :: onclick=setAsMyCompany() :: id=setMyCompanyButton
+index.html:L157:: [] (+2 Zeilen) "✕ Entfernen" :: onclick=clearMyCompany() :: id=
+index.html:L202:: [] (+2 Zeilen) "Daten zurücksetzen" :: onclick=deleteAndLoadDefaultData() :: id=
+index.html:L477:: [] (+3 Zeilen) "+ Fertigerzeugnis hinzufügen" :: onclick=addFertigerzeugnisRow() :: id=
+index.html:L485:: [] (+3 Zeilen) "✓ Unternehmen hinzufügen" :: onclick= :: id=
+investitionsrechnung.html:L67:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=setAnschaffungskosten() :: id=
+investitionsrechnung.html:L254:: [card-btn]  "PNG" :: onclick=investitionsrechnungHerunterladenAlsPNG() :: id=
+investitionsrechnung.html:L255:: [card-btn]  "Office" :: onclick= :: id=officeButtonInvestitionsrechnung
+investitionsrechnung.html:L256:: [card-btn]  "HTML" :: onclick=investitionsrechnungHerunterladen() :: id=
+investitionsrechnung.html:L257:: [card-btn]  "Zwischenablage" :: onclick=investitionsrechnungKopiereInZwischenablage() :: id=
+kariert.html:L80:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick= :: id=generate
+kariert.html:L93:: [card-btn]  "Office" :: onclick= :: id=officeButtontablecontainer
+kariert.html:L95:: [card-btn]  "SVG" :: onclick=svgcontainerHerunterladen() :: id=
+lb10-4-fremdbezug.html:L155:: [btn-zufall] (+3 Zeilen) "Zufallswerte" :: onclick=zeigeZufaelligeAufgabe() :: id=
+lb10-4-fremdbezug.html:L159:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=generateProblem() :: id=
+lb10-4-fremdbezug.html:L203:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb10-4-fremdbezug.html:L213:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb10-4-gewinnschwelle.html:L127:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=validateAndGenerateChart() :: id=
+lb10-4-teilkostenrechnung.html:L276:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgabe() :: id=
+lb10-4-teilkostenrechnung.html:L322:: [ki-prompt-btn ki-prompt-btn--primary] (+11 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb10-4-teilkostenrechnung.html:L334:: [ki-prompt-btn ki-prompt-btn--ghost] (+6 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-1-einkommensarten.html:L118:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeEinkommensaufgaben() :: id=
+lb7-1-einkommensarten.html:L160:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-1-einkommensarten.html:L170:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-1-haushaltsplan.html:L115:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeHaushaltsplaene() :: id=
+lb7-1-haushaltsplan.html:L157:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-1-haushaltsplan.html:L167:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-1-infografik.html:L136:: [ig-sort-btn]  "↓ Absteigend" :: onclick=sortRows('desc') :: id=
+lb7-1-infografik.html:L137:: [ig-sort-btn]  "↑ Aufsteigend" :: onclick=sortRows('asc') :: id=
+lb7-1-infografik.html:L138:: [ig-sort-btn]  "A–Z" :: onclick=sortRows('alpha') :: id=
+lb7-1-infografik.html:L139:: [ig-sort-btn active]  "✥ Manuell" :: onclick=sortRows('manual') :: id=sort-manual-btn
+lb7-1-infografik.html:L140:: [ig-sort-btn]  "📂 CSV importieren" :: onclick=openCsvModal() :: id=
+lb7-1-infografik.html:L150:: [ig-btn-add]  "+ Datenpunkt hinzufügen" :: onclick=addRow() :: id=
+lb7-1-infografik.html:L206:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=generate() :: id=generate-chart
+lb7-1-infografik.html:L230:: [card-btn]  "PNG" :: onclick=exportPng() :: id=
+lb7-1-infografik.html:L231:: [card-btn]  "SVG" :: onclick=exportSvg() :: id=
+lb7-1-infografik.html:L232:: [card-btn]  "CSV" :: onclick=downloadCsv() :: id=
+lb7-1-infografik.html:L260:: [ig-btn-secondary]  "Abbrechen" :: onclick=closeCsvModal() :: id=
+lb7-1-infografik.html:L261:: [ig-btn-primary]  "Importieren" :: onclick=importCsv() :: id=
+lb7-1-konsumgewohnheiten.html:L104:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeKonsumaufgaben() :: id=
+lb7-1-konsumgewohnheiten.html:L147:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-1-konsumgewohnheiten.html:L157:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-1-prozentdiagramm.html:L106:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeProzentAufgaben() :: id=
+lb7-1-prozentdiagramm.html:L155:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPromptProz() :: id=kiPromptKopierenBtn
+lb7-1-prozentdiagramm.html:L169:: [ki-prompt-btn ki-prompt-btn--ghost] (+6 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschauProz() :: id=kiPromptToggleBtn
+lb7-1-prozentrechnen.html:L118:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgaben() :: id=
+lb7-1-prozentrechnen.html:L160:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-1-prozentrechnen.html:L170:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-1-zahlungsarten.html:L106:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeZahlungsaufgaben() :: id=
+lb7-1-zahlungsarten.html:L154:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-1-zahlungsarten.html:L168:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-2-funktionsbereiche.html:L94:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeWahrFalsch() :: id=
+lb7-2-funktionsbereiche.html:L137:: [ki-prompt-btn ki-prompt-btn--primary] (+7 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-2-funktionsbereiche.html:L145:: [ki-prompt-btn ki-prompt-btn--ghost] (+2 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-2-leitbild.html:L117:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeLeitbilder() :: id=
+lb7-2-leitbild.html:L160:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-2-leitbild.html:L170:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-2-name.html:L112:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgaben() :: id=
+lb7-2-name.html:L155:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-2-name.html:L165:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-2-unternehmensziele.html:L74:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=updateZiele() :: id=
+lb7-3-bilanz-erstellen.html:L80:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgabe() :: id=
+lb7-3-bilanz-erstellen.html:L127:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-3-bilanz-erstellen.html:L141:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-3-bilanz7.html:L74:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generateRandomBilanz7() :: id=
+lb7-3-buchungsatz.html:L121:: []  "Alle auswählen" :: onclick=alleKontenAuswaehlen() :: id=
+lb7-3-buchungsatz.html:L122:: []  "Alle abwählen" :: onclick=alleKontenAbwaehlen() :: id=
+lb7-3-buchungsatz.html:L131:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelle() :: id=
+lb7-3-buchungsatz.html:L135:: []  "Drucken" :: onclick=window.print() :: id=
+lb7-3-buchungsatz.html:L179:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-3-buchungsatz.html:L193:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-3-inventar.html:L73:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generateRandomInventar() :: id=
+lb7-4-buchungslesen-werkstoffe.html:L117:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgabe() :: id=
+lb7-4-einkauf.html:L184:: []  "Alle auswählen" :: onclick=alleKontenAuswaehlenW() :: id=
+lb7-4-einkauf.html:L185:: []  "Alle abwählen" :: onclick=alleKontenAbwaehlenW() :: id=
+lb7-4-einkauf.html:L194:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelleW() :: id=
+lb7-4-einkauf.html:L237:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-4-einkauf.html:L251:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-4-verkauf.html:L129:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelleV() :: id=
+lb7-4-verkauf.html:L172:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-4-verkauf.html:L186:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-4-vordruck.html:L116:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=erstelleVordrucke() :: id=
+lb7-4-vordruck.html:L158:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPromptVD() :: id=kiPromptKopierenBtnVD
+lb7-4-vordruck.html:L172:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=togglekiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-5-eigenkapitalvergleich.html:L135:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeEkAufgaben() :: id=
+lb7-5-eigenkapitalvergleich.html:L179:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb7-5-eigenkapitalvergleich.html:L193:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb7-5-inventurdifferenzen.html:L72:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=updateTable() :: id=
+lb8-1-anfangsbestand.html:L74:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligenAnfangsbestand() :: id=
+lb8-1-anfangsbestand.html:L105:: [ki-prompt-btn ki-prompt-btn--primary] (+11 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-1-anfangsbestand.html:L117:: [ki-prompt-btn ki-prompt-btn--ghost] (+4 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-1-bestand.html:L74:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeBestandsveraenderungen() :: id=
+lb8-1-bestand.html:L110:: [ki-prompt-btn ki-prompt-btn--primary] (+11 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-1-bestand.html:L122:: [ki-prompt-btn ki-prompt-btn--ghost] (+4 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-1-bestandskonten.html:L99:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligenBestandsabschluss() :: id=
+lb8-1-bestandskonten.html:L103:: [] (+2 Zeilen) "📄 T-Konten-Blatt drucken" :: onclick=window.print() :: id=
+lb8-1-bestandskonten.html:L133:: [ki-prompt-btn ki-prompt-btn--primary] (+11 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-1-bestandskonten.html:L145:: [ki-prompt-btn ki-prompt-btn--ghost] (+4 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-1-einkauf.html:L171:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligenSatz() :: id=
+lb8-1-einkauf.html:L227:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-1-einkauf.html:L241:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-1-erfolgskonten.html:L118:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligenBestandsabschluss() :: id=
+lb8-1-erfolgskonten.html:L123:: [] (+2 Zeilen) "📄 T-Konten-Blatt drucken" :: onclick=window.print() :: id=
+lb8-1-erfolgskonten.html:L154:: [ki-prompt-btn ki-prompt-btn--primary] (+11 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-1-erfolgskonten.html:L166:: [ki-prompt-btn ki-prompt-btn--ghost] (+4 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-1-guv.html:L74:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligenAbschluss() :: id=
+lb8-1-guv.html:L117:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-1-guv.html:L131:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-2-angebotsvergleich.html:L234:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligenSatz() :: id=
+lb8-2-angebotsvergleich.html:L269:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-2-angebotsvergleich.html:L278:: [ki-prompt-btn ki-prompt-btn--ghost] (+1 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-2-bestellmenge.html:L136:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=berechneOptimaleBestellmengeUndHaeufigkeit() :: id=
+lb8-3-buchungmarketing.html:L110:: []  "Alle auswählen" :: onclick=alleKontenAuswaehlen() :: id=
+lb8-3-buchungmarketing.html:L111:: []  "Alle abwählen" :: onclick=alleKontenAbwaehlen() :: id=
+lb8-3-buchungmarketing.html:L119:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelle() :: id=
+lb8-3-buchungmarketing.html:L172:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-3-buchungmarketing.html:L186:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-3-portfolioanalyse.html:L80:: []  "+ Neuen Eintrag hinzufügen" :: onclick=addPortfolioEntry() :: id=
+lb8-3-portfolioanalyse.html:L82:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=generatePortfolio() :: id=
+lb8-3-portfolioanalyse.html:L86:: [btn-zufall] (+3 Zeilen) "Zufallswerte" :: onclick=randomizePortfolios() :: id=
+lb8-3-portfolioanalyse.html:L94:: [] (+5 Zeilen) "Text" :: onclick=portfolioToggleText() :: id=
+lb8-3-portfolioanalyse.html:L100:: [] (+5 Zeilen) "Farbe" :: onclick=portfolioToggleCircle() :: id=
+lb8-3-portfolioanalyse.html:L106:: [] (+5 Zeilen) "Gitter" :: onclick=portfolioToggleGitter() :: id=
+lb8-3-preisdifferenzierung.html:L118:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgaben() :: id=
+lb8-3-preisdifferenzierung.html:L161:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-3-preisdifferenzierung.html:L175:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-3-preisstrategien.html:L109:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligePreisstrategien() :: id=
+lb8-3-preisstrategien.html:L151:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-3-preisstrategien.html:L165:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-3-produktlebenszyklus.html:L91:: [] (+5 Zeilen) "Markierung hinzufügen" :: onclick=addMarkierung() :: id=addMarkierungBtn
+lb8-3-produktlebenszyklus.html:L100:: [] (+4 Zeilen) "Legende" :: onclick=cycleToggleLabels() :: id=
+lb8-3-produktlebenszyklus.html:L105:: [] (+4 Zeilen) "Farbe" :: onclick=cycleToggleColorlabels() :: id=
+lb8-3-vertriebswege.html:L106:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeVertriebswege() :: id=
+lb8-3-vertriebswege.html:L146:: [ki-prompt-btn ki-prompt-btn--primary] (+11 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-3-vertriebswege.html:L159:: [ki-prompt-btn ki-prompt-btn--ghost] (+6 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-3-zielkonflikte.html:L128:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeZielbeziehungen() :: id=
+lb8-3-zielkonflikte.html:L172:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-3-zielkonflikte.html:L186:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-4-ausgangsfrachten.html:L118:: []  "Alle auswählen" :: onclick=alleKontenAuswaehlen() :: id=
+lb8-4-ausgangsfrachten.html:L119:: []  "Alle abwählen" :: onclick=alleKontenAbwaehlen() :: id=
+lb8-4-ausgangsfrachten.html:L128:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelle() :: id=
+lb8-4-ausgangsfrachten.html:L181:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-4-ausgangsfrachten.html:L195:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-4-verkauf.html:L128:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=verkaufZeigeZufaelligenSatz() :: id=
+lb8-4-verkauf.html:L177:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-4-verkauf.html:L191:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-5-entgeltformen.html:L105:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeEntgeltformen() :: id=
+lb8-5-entgeltformen.html:L151:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-5-entgeltformen.html:L165:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-5-lebenslauf.html:L82:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick= :: id=generate-btn
+lb8-5-personalzusatzkosten.html:L102:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgaben() :: id=
+lb8-5-personalzusatzkosten.html:L149:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-5-personalzusatzkosten.html:L159:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-6-buchungenstaat.html:L110:: []  "Alle auswählen" :: onclick=alleKontenAuswaehlen() :: id=
+lb8-6-buchungenstaat.html:L111:: []  "Alle abwählen" :: onclick=alleKontenAbwaehlen() :: id=
+lb8-6-buchungenstaat.html:L119:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelle() :: id=
+lb8-6-buchungenstaat.html:L172:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-6-buchungenstaat.html:L186:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb8-6-gewerbesteuer.html:L140:: [btn-zufall] (+3 Zeilen) "Zufallswerte" :: onclick=setzeZufallswerte(); clearValidationError(); :: id=
+lb8-6-gewerbesteuer.html:L155:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=zeigeGewerbesteuerAufgaben() :: id=
+lb8-6-gewerbesteuer.html:L206:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb8-6-gewerbesteuer.html:L220:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-1-aufbauorganisation.html:L102:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgaben() :: id=
+lb9-1-aufbauorganisation.html:L147:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-1-aufbauorganisation.html:L157:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-1-fuehrung.html:L110:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgaben() :: id=
+lb9-1-fuehrung.html:L160:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-1-fuehrung.html:L170:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-1-fuehrungsstil.html:L100:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereAufgaben() :: id=
+lb9-1-fuehrungsstil.html:L146:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-1-fuehrungsstil.html:L156:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-1-organigramm.html:L202:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=erstelleModell() :: id=
+lb9-1-organigramm.html:L206:: [btn-zufall] (+3 Zeilen) "Zufallswerte" :: onclick=neuePersonen() :: id=
+lb9-2-abschreibungen.html:L112:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=zeigeAbschreibungMitManuellen() :: id=
+lb9-2-abschreibungen.html:L159:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPromptAfa() :: id=kiPromptKopierenBtn
+lb9-2-abschreibungen.html:L168:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschauAfa() :: id=kiPromptToggleBtn
+lb9-2-abschreibungskreislauf.html:L103:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeWahrFalsch() :: id=
+lb9-2-abschreibungskreislauf.html:L148:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-2-abschreibungskreislauf.html:L157:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-2-sachanlagen.html:L145:: [btn-zufall] (+3 Zeilen) "Zufallswerte" :: onclick=zeigeZufaelligeAufgabe() :: id=
+lb9-2-sachanlagen.html:L149:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=zeigeAbschreibungMitManuellen() :: id=
+lb9-2-sachanlagen.html:L192:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPromptKauf() :: id=kiPromptKopierenBtn
+lb9-2-sachanlagen.html:L201:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschauKauf() :: id=kiPromptToggleBtn
+lb9-2-weiterebuchungen.html:L123:: []  "Alle auswählen" :: onclick=alleKontenAuswaehlen() :: id=
+lb9-2-weiterebuchungen.html:L124:: []  "Alle abwählen" :: onclick=alleKontenAbwaehlen() :: id=
+lb9-2-weiterebuchungen.html:L132:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelle() :: id=
+lb9-2-weiterebuchungen.html:L185:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-2-weiterebuchungen.html:L195:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-3-buchungenkreditbereich.html:L136:: []  "Alle auswählen" :: onclick=alleTypenAuswaehlen() :: id=
+lb9-3-buchungenkreditbereich.html:L137:: []  "Alle abwählen" :: onclick=alleTypenAbwaehlen() :: id=
+lb9-3-buchungenkreditbereich.html:L145:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelle() :: id=
+lb9-3-buchungenkreditbereich.html:L196:: [ki-prompt-btn ki-prompt-btn--primary] (+9 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-3-buchungenkreditbereich.html:L207:: [ki-prompt-btn ki-prompt-btn--ghost] (+3 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-3-darlehen.html:L94:: [btn-zufall] (+3 Zeilen) "Zufallswerte" :: onclick=zufallswerteSetzen() :: id=
+lb9-3-darlehen.html:L98:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=zeigeDarlehensAufgabe() :: id=
+lb9-3-darlehen.html:L137:: [ki-prompt-btn ki-prompt-btn--primary]  "📋 Prompt kopieren" :: onclick=kopiereKiPromptDarlehen() :: id=kiPromptKopierenBtn
+lb9-3-darlehen.html:L138:: [ki-prompt-btn ki-prompt-btn--ghost]  "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschauDarlehen() :: id=kiPromptToggleBtn
+lb9-3-kreditvergleich.html:L129:: []  "Standard" :: onclick= :: id=kkHrsStandard
+lb9-3-kreditvergleich.html:L167:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligenSatz() :: id=
+lb9-3-kreditvergleich.html:L201:: [ki-prompt-btn ki-prompt-btn--primary] (+8 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-3-kreditvergleich.html:L210:: [ki-prompt-btn ki-prompt-btn--ghost] (+1 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-4-aktienkurs.html:L118:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick= :: id=generate-chart
+lb9-4-aktienkurs.html:L123:: []  "Drucken" :: onclick=window.print() :: id=
+lb9-4-buchungenkapitalanlage.html:L110:: []  "Alle auswählen" :: onclick=alleKontenAuswaehlen() :: id=
+lb9-4-buchungenkapitalanlage.html:L111:: []  "Alle abwählen" :: onclick=alleKontenAbwaehlen() :: id=
+lb9-4-buchungenkapitalanlage.html:L119:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeGeschaeftsfaelle() :: id=
+lb9-4-buchungenkapitalanlage.html:L168:: [ki-prompt-btn ki-prompt-btn--primary] (+12 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-4-buchungenkapitalanlage.html:L182:: [ki-prompt-btn ki-prompt-btn--ghost] (+7 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+lb9-4-magischesdreieck.html:L97:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=zeigeZufaelligeWahrFalsch() :: id=
+lb9-4-magischesdreieck.html:L141:: [ki-prompt-btn ki-prompt-btn--primary] (+7 Zeilen) "Prompt kopieren" :: onclick=kopiereKiPrompt() :: id=kiPromptKopierenBtn
+lb9-4-magischesdreieck.html:L149:: [ki-prompt-btn ki-prompt-btn--ghost] (+2 Zeilen) "Prompt anzeigen ▼" :: onclick=toggleKiPromptVorschau() :: id=kiPromptToggleBtn
+navigation.html:L31:: [nav-toggle]  "☰ Menü" :: onclick= :: id=
+navigation.html:L36:: [dropbtn] (+6 Zeilen) "Belege" :: onclick= :: id=
+navigation.html:L52:: [dropbtn] (+6 Zeilen) "BwR 7" :: onclick= :: id=
+navigation.html:L61:: [sub-dropbtn]  "Lernbereich 1 ▸" :: onclick= :: id=
+navigation.html:L73:: [sub-dropbtn]  "Lernbereich 2 ▸" :: onclick= :: id=
+navigation.html:L82:: [sub-dropbtn]  "Lernbereich 3 ▸" :: onclick= :: id=
+navigation.html:L93:: [sub-dropbtn]  "Lernbereich 4 ▸" :: onclick= :: id=
+navigation.html:L102:: [sub-dropbtn]  "Lernbereich 5 ▸" :: onclick= :: id=
+navigation.html:L113:: [dropbtn] (+6 Zeilen) "BwR 8" :: onclick= :: id=
+navigation.html:L122:: [sub-dropbtn]  "Lernbereich 1 ▸" :: onclick= :: id=
+navigation.html:L131:: [sub-dropbtn]  "Lernbereich 2 ▸" :: onclick= :: id=
+navigation.html:L141:: [sub-dropbtn]  "Lernbereich 3 ▸" :: onclick= :: id=
+navigation.html:L153:: [sub-dropbtn]  "Lernbereich 4 ▸" :: onclick= :: id=
+navigation.html:L160:: [sub-dropbtn]  "Lernbereich 5 ▸" :: onclick= :: id=
+navigation.html:L169:: [sub-dropbtn]  "Lernbereich 6 ▸" :: onclick= :: id=
+navigation.html:L178:: [dropbtn] (+6 Zeilen) "BwR 9" :: onclick= :: id=
+navigation.html:L188:: [sub-dropbtn]  "Lernbereich 1 ▸" :: onclick= :: id=
+navigation.html:L198:: [sub-dropbtn]  "Lernbereich 2 ▸" :: onclick= :: id=
+navigation.html:L209:: [sub-dropbtn]  "Lernbereich 3 ▸" :: onclick= :: id=
+navigation.html:L218:: [sub-dropbtn]  "Lernbereich 4 ▸" :: onclick= :: id=
+navigation.html:L227:: [sub-dropbtn]  "Lernbereich 5 ▸" :: onclick= :: id=
+navigation.html:L238:: [dropbtn] (+6 Zeilen) "BwR 10" :: onclick= :: id=
+navigation.html:L247:: [sub-dropbtn] (+1 Zeilen) "Lernbereich 1 ▸" :: onclick= :: id=
+navigation.html:L253:: [sub-dropbtn]  "Lernbereich 2 ▸" :: onclick= :: id=
+navigation.html:L261:: [sub-dropbtn] (+2 Zeilen) "Lernbereich 3 ▸" :: onclick= :: id=
+navigation.html:L273:: [sub-dropbtn]  "Lernbereich 4 ▸" :: onclick= :: id=
+navigation.html:L287:: [dropbtn] (+6 Zeilen) "Vorlagen" :: onclick= :: id=
+pwb.html:L86:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=pwbZeigeZufaelligeTabelle() :: id=
+sammlung.html:L34:: []  "+ Neue Sammlung" :: onclick=neueSammlung() :: id=
+sammlung.html:L35:: []  "Backup importieren" :: onclick=document.getElementById('importJson').click() :: id=
+sammlung.html:L36:: [] (+1 Zeilen) "Alle Sammlungen löschen" :: onclick=alleSammlungenLoeschen() :: id=btnAlleLoeschen
+sammlung.html:L46:: []  "Umbenennen" :: onclick=sammlungUmbenennen() :: id=
+sammlung.html:L47:: []  "Backup (diese Sammlung)" :: onclick=exportJSON() :: id=
+sammlung.html:L49:: []  "Alle Einträge entfernen" :: onclick=sammlungLeeren() :: id=btnAlleEintraegeEntfernen
+sammlung.html:L50:: []  "Diese Sammlung löschen" :: onclick=sammlungLoeschen() :: id=btnSammlungLoeschen
+sammlung.html:L152:: [card-btn]  "Öffnen" :: onclick=oeffneBeleg(\'' + it.id + '\') :: id=
+sammlung.html:L153:: [card-btn]  "PNG" :: onclick=downloadBeleg(\'' + it.id + '\',\'png\') :: id=
+sammlung.html:L156:: [card-btn]  "SVG" :: onclick=downloadBeleg(\'' + it.id + '\',\'svg\') :: id=
+sammlung.html:L157:: [card-btn]  "HTML" :: onclick=downloadBeleg(\'' + it.id + '\',\'html\') :: id=
+sammlung.html:L159:: [card-btn]  "Zwischenablage" :: onclick=kopiereBelegGrafik(\'' + it.id + '\') :: id=
+sammlung.html:L160:: [card-btn]  "Link" :: onclick=kopiereLink(\'' + it.id + '\') :: id=
+sammlung.html:L169:: [card-btn card-btn-danger]  "Löschen" :: onclick=deleteItem(\'' + it.id + '\') :: id=
+sammlung.html:L263:: []  "Überschreiben (bestehende Einträge ersetzen)" :: onclick= :: id=btnOverwrite
+sammlung.html:L264:: []  "Neue Sammlung anlegen" :: onclick= :: id=btnNew
+sammlung.html:L265:: []  "Abbrechen" :: onclick= :: id=btnCancel
+t-konto.html:L94:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereTKonto() :: id=
+vollkostenrechnung.html:L85:: []  "Werte auf Säulen ein/ausblenden" :: onclick=toggleDataLabels() :: id=
+vollkostenrechnung.html:L87:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=updateChart() :: id=
+vollkostenrechnung.html:L107:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=updateChart() :: id=
+vorkontierung.html:L81:: [btn-zufall] (+3 Zeilen) "Neue Aufgabe" :: onclick=generiereVorkontierung() :: id=
+vorkontierung.html:L91:: [card-btn]  "PNG" :: onclick=vorkontierungHerunterladenAlsPNG() :: id=
+vorkontierung.html:L92:: [card-btn]  "Office" :: onclick= :: id=officeButtonVorkontierung
+vorkontierung.html:L93:: [card-btn]  "HTML" :: onclick=vorkontierungHerunterladen() :: id=
+vorkontierung.html:L94:: [card-btn]  "Zwischenablage" :: onclick=vorkontierungKopiereInZwischenablage() :: id=
+zinsformel.html:L80:: [btn-uebernehmen] (+3 Zeilen) "Daten übernehmen" :: onclick=umstellen() :: id=
+zinsformel.html:L113:: [card-btn]  "HTML" :: onclick=zinsformelHerunterladen() :: id=
+zinsformel.html:L114:: [card-btn]  "Zwischenablage" :: onclick=zinsformelKopiereInZwischenablage() :: id=
