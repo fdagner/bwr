@@ -476,7 +476,7 @@ function dispatchDataOn(el, attr, e) {
     const args = (a.args || []).map(x =>
       x === '__THIS__' ? el :
       x === '__VALUE__' ? el.value :
-      x === '__EVENT__' ? e : x);
+      x === '__EVENT__' ? Object.assign({}, e, { currentTarget: el, target: (e && e.target) ? e.target : el }) : x);
     try { fn(...args); } catch (err) { console.error('Delegation-Fehler (' + a.fn + '):', err); }
   }
 }
