@@ -57,7 +57,7 @@
   <link rel="stylesheet" href="css/style.css?v=14">
   <link rel="stylesheet" href="css/jodit.min.css">
   <script src="js/libraries/js-yaml.min.js"></script>
-  <script src="js/utils.js?v=13"></script>
+  <script src="js/utils.js?v=14"></script>
   <script src="js/libraries/jodit.min.js?v=68"></script>
   <script src="js/joditeditor.js?v=69"></script>
 <script src="js/collection.js?v=36"></script>
@@ -237,17 +237,5 @@
 </main>
 
 <script src="js/lb8-6-gewerbesteuer.js"></script>
-<div w3-include-html="footer.html"></div>
-<script>
-
-  // Container sichtbar machen nach erster Generierung
-  const _origZeige = zeigeGewerbesteuerAufgaben;
-  window.zeigeGewerbesteuerAufgaben = function() {
-    _origZeige();
-    const c = document.getElementById("gstContainer");
-    if (c && c.innerHTML.trim()) c.style.display = "block";
-  };
-</script>
-
-</body>
+<div w3-include-html="footer.html"></div>`n</body>
 </html>

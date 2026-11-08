@@ -779,3 +779,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
     zeigeGewerbesteuerAufgaben();
 });
+
+// Container nach erster Generierung sichtbar machen (ehemals Inline-Script)
+(function() {
+  const _origZeige = window.zeigeGewerbesteuerAufgaben;
+  if (typeof _origZeige !== 'function') return;
+  window.zeigeGewerbesteuerAufgaben = function() {
+    _origZeige();
+    const c = document.getElementById('gstContainer');
+    if (c && c.innerHTML.trim()) c.style.display = 'block';
+  };
+})();

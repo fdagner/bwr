@@ -323,3 +323,11 @@ async function startOrganigramm() {
   $('firma').addEventListener('input', () => { modell.firma = $('firma').value; zeichne(); });
   erstelleModell();
 }
+
+// Organigramm beim Laden initial zeichnen (ehemals Inline-Script)
+(function() {
+  if (typeof startOrganigramm === 'function') {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startOrganigramm, { once: true });
+    else startOrganigramm();
+  }
+})();

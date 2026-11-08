@@ -96,11 +96,19 @@ function includeHTML() {
   });
 })();
 
-// Automatisches Nachladen von navigation.html / footer.html (w3-include-html),
-// damit die Inline-<script>includeHTML()</script>-Blöcke in den Seiten entfallen
-// können (CSP Phase 2).
+// Auto-include von navigation.html / footer.html (w3-include-html)
 (function autoInclude() {
   const run = () => { try { includeHTML(); } catch (e) { /* ignore */ } };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
+  else run();
+})();
+
+// Auto-Klick auf #defaultOpen (z. B. Hilfe-Seite: ersten Tab beim Laden aktivieren)
+(function autoDefaultOpen() {
+  const run = () => {
+    const el = document.getElementById('defaultOpen');
+    if (el && typeof el.click === 'function') el.click();
+  };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
   else run();
 })();
