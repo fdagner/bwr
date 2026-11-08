@@ -419,15 +419,33 @@ function loadURLParametersForBeleg(belegType, params) {
 function openTabFromURL(tabName) {
     const tabId = TAB_MAPPING[tabName] || tabName;
     if (!tabId) return false;
-    
-    // Finde den Tab-Button
-    const tabButton = document.querySelector(`.tablinks[onclick*="openCity(event, '${tabId}')"]`);
-    if (tabButton) {
-        tabButton.click();
-        return true;
+
+    // Tab-Inhalte umschalten (robust, unabhängig von Inline-onclick-Handler-Delegation)
+    const tabcontents = document.getElementsByClassName('tabcontent');
+    for (let i = 0; i < tabcontents.length; i++) tabcontents[i].style.display = 'none';
+    const target = document.getElementById(tabId);
+    if (!target) return false;
+    target.style.display = 'block';
+
+    // Aktiven Tab-Button markieren
+    const tablinks = document.getElementsByClassName('tablinks');
+    for (let i = 0; i < tablinks.length; i++) tablinks[i].className = tablinks[i].className.replace(/\s*active/g, '');
+    for (let i = 0; i < tablinks.length; i++) {
+        const attr = tablinks[i].getAttribute('data-on-click') || '';
+        if (attr.indexOf(tabId) !== -1) { tablinks[i].className += ' active'; break; }
     }
-    
-    return false;
+
+    // moodleDropdown ein-/ausblenden (wie openCity)
+    let moodleDropdown = document.getElementById('moodleDropdown');
+    if (moodleDropdown) {
+        if (tabId === 't-konto' || tabId === 'buchungssatz' || tabId === 'vorkontierung' ||
+            tabId === 'einkauf' || tabId === 'verkauf') {
+            moodleDropdown.style.display = 'block';
+        } else {
+            moodleDropdown.style.display = 'none';
+        }
+    }
+    return true;
 }
 
 /**
