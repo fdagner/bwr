@@ -858,7 +858,7 @@ function erstelleGeschaeftsfallButton(nummer, daten, isGutschrift = false) {
   const name = namen[belegtyp] || '📄 Beleg';
 
   return `<button class="geschaeftsfall-beleg-button"
-    onclick="window.open('${url}', '_blank')"
+    data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
     style="width:100%;padding:10px 12px;font-size:14px;">
     ${name} ${nummer} erstellen
   </button>`;
@@ -869,7 +869,7 @@ function erstelleAngebotButton(nummer, daten, buchstabe = 'a') {
   return `
         <button
             class="geschaeftsfall-beleg-button angebot-button"
-            onclick="window.open('${url}', '_blank')"
+            data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
             title="Angebot für Aufgabe ${nummer} als SVG öffnen"
              style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
@@ -899,7 +899,7 @@ function erstelleAngebotMailButton(nummer, daten) {
   return `
         <button
             class="geschaeftsfall-beleg-button angebot-mail-button"
-            onclick="window.open(einkaufMailUrlErzeugen(${quelle}), '_blank')"
+            data-url="${einkaufMailUrlErzeugen(quelle)}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
             title="Angebots-Mail des Lieferers für Aufgabe ${nummer} öffnen"
             style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
@@ -915,7 +915,7 @@ function erstelleMailRuecksendungButton(nummer, daten, buchstabe = 'b') {
   return `
         <button
             class="geschaeftsfall-beleg-button angebot-mail-button"
-            onclick="window.open(einkaufMailUrlErzeugen(${quelle}), '_blank')"
+            data-url="${einkaufMailUrlErzeugen(quelle)}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
             title="Mail vom Lieferer (Gutschrift für die Leihverpackung) für Aufgabe ${nummer} öffnen"
             style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
@@ -929,7 +929,7 @@ function erstelleRechnungButton(nummer, daten, buchstabe = 'b') {
   return `
         <button
             class="geschaeftsfall-beleg-button rechnung-button"
-            onclick="window.open('${url}', '_blank')"
+            data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
             title="Eingangsrechnung für Aufgabe ${nummer} als SVG öffnen"
             style="width: 100%; padding: 9px 11px; font-size: 13px;"
         >

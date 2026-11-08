@@ -183,7 +183,7 @@ function zeigeValidierungsFehler(errors) {
   banner.id = 'av-validierungs-banner';
   banner.style.cssText = 'background:#fdecea;border:1px solid #e53935;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:0.88em;color:#b71c1c;line-height:1.7;';
   banner.innerHTML = `<strong>⚠️ Eingabefehler:</strong><ul style="margin:4px 0 0 16px;padding:0;">${errors.map(e => `<li>${e}</li>`).join('')}</ul>`;
-  const btn = document.querySelector('button[onclick="zeigeZufaelligenSatz()"]');
+  const btn = document.querySelector('button[data-on-click*="zeigeZufaelligenSatz"]');
   if (btn) btn.insertAdjacentElement('beforebegin', banner);
 }
 
@@ -604,15 +604,15 @@ function zeigeZufaelligenSatz() {
 
   const belegHtml = `
   <div style="${S.belegZeile}; margin-top:20px;">
-    <button class="geschaeftsfall-beleg-button" onclick="window.open(avMailUrlErzeugen(${mailQuelleA}),'_blank')"
+    <button class="geschaeftsfall-beleg-button" data-url="${avMailUrlErzeugen(mailQuelleA)}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
             style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
       📧 Angebot A per Mail (${nameA})
     </button>
-    <button class="geschaeftsfall-beleg-button" onclick="window.open(avMailUrlErzeugen(${mailQuelleB}),'_blank')"
+    <button class="geschaeftsfall-beleg-button" data-url="${avMailUrlErzeugen(mailQuelleB)}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
             style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
       📧 Angebot B per Mail (${nameB})
     </button>
-    <button class="geschaeftsfall-beleg-button" onclick="window.open('${belegUrl}','_blank')"
+    <button class="geschaeftsfall-beleg-button" data-url="${belegUrl}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
             style="width:100%;padding:10px 12px;font-size:14px;">
       📄 Eingangsrechnung erstellen
     </button>
@@ -834,7 +834,7 @@ function toggleKiPromptVorschau() {
 // ============================================================================
 document.addEventListener('DOMContentLoaded', function () {
   // "Neue Zufallswerte"-Button direkt vor "Aufgabe erstellen" einfügen
-  const aufgabeBtn = document.querySelector('button[onclick="zeigeZufaelligenSatz()"]');
+  const aufgabeBtn = document.querySelector('button[data-on-click*="zeigeZufaelligenSatz"]');
   if (aufgabeBtn && !document.getElementById('avNeueZufallswerteBtn')) {
     const zBtn = document.createElement('button');
     zBtn.id = 'avNeueZufallswerteBtn';

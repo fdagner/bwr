@@ -1171,7 +1171,7 @@ const url = verkaufErzeugeURLFuerBeleg(daten, 'rechnung');
     return `
         <button
             class="geschaeftsfall-beleg-button"
-            onclick="window.open('${url}', '_blank')"
+            data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
             title="${titleText}"
             style="width: 100%; padding: 10px 12px; font-size: 14px;"
         >
@@ -1185,7 +1185,7 @@ function verkaufErstelleAngebotButton(nummer, daten, buchstabe = 'a') {
 
     return `
         <button class="geschaeftsfall-beleg-button angebot-button"
-                onclick="window.open('${url}', '_blank')"
+                data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
                 title="Angebot für Aufgabe ${nummer} erstellen"
                 style="width: 100%; padding: 10px 12px; font-size: 14px;">
             📄 ${nummer}${buchstabe}. Angebot erstellen
@@ -1214,7 +1214,7 @@ function verkaufErstelleMailButton(nummer, daten) {
     const quelle = verkaufMailQuelleAnlegen('mail', daten);
     return `
         <button class="geschaeftsfall-beleg-button mail-button"
-                onclick="window.open(verkaufMailUrlErzeugen(${quelle}), '_blank')"
+                data-url="${verkaufMailUrlErzeugen(quelle)}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
                 title="Anfrage-Mail des Kunden für Aufgabe ${nummer} öffnen"
                 style="width:100%; padding:10px 12px; font-size:14px;">
             📧 ${nummer}. Anfrage per Mail (Kunde)
@@ -1227,7 +1227,7 @@ function verkaufErstelleAngebotMailButton(nummer, daten) {
     const quelle = verkaufMailQuelleAnlegen('mailangebot', daten);
     return `
         <button class="geschaeftsfall-beleg-button angebot-mail-button"
-                onclick="window.open(verkaufMailUrlErzeugen(${quelle}), '_blank')"
+                data-url="${verkaufMailUrlErzeugen(quelle)}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
                 title="Angebot-Mail des Lieferers für Aufgabe ${nummer} öffnen"
                 style="width:100%; padding:10px 12px; font-size:14px;">
             📧 ${nummer}a. Angebot per Mail (Lieferer)
@@ -1239,7 +1239,7 @@ function verkaufErstelleRechnungButton(nummer, daten, buchstabe = 'b') {
     const url = verkaufErzeugeURLFuerBeleg(daten, 'rechnung');
     return `
         <button class="geschaeftsfall-beleg-button rechnung-button"
-                onclick="window.open('${url}', '_blank')"
+                data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
                 title="Ausgangsrechnung für Aufgabe ${nummer} erstellen"
                 style="width:100%; padding:10px 12px; font-size:14px;">
             📄 ${nummer}${buchstabe}. Ausgangsrechnung erstellen

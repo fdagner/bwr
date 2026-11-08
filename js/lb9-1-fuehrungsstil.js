@@ -401,7 +401,7 @@ function toggleKiPromptVorschau() {
 // MOODLE-XML-EXPORT – FÜHRUNGSSTIL – Fragetyp „Zuordnung“ (matching),
 // alle Aufgaben in EINER Frage
 // Liest die Aufgaben-Boxen (.fs-aufgabe) direkt aus der Seite – inklusive
-// Änderungen im bearbeitbaren Bereich. Button: onclick="exportiereMoodle()"
+// Änderungen im bearbeitbaren Bereich. Button: data-on-click='[{"fn":"exportiereMoodle","args":[]}]'
 // ============================================================================
 
 const MOODLE_FS_PRAEFIX = '9.1-01#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung

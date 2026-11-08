@@ -561,7 +561,7 @@ function renderBelegButtons() {
   btnWrap1.style.margin = '12px 0';
   btnWrap1.innerHTML = `
     <button class="geschaeftsfall-beleg-button"
-      onclick="window.open('${rechnungURL}','_blank')"
+      data-url="${rechnungURL}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
       style="width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;">
       📄 Rechnung erstellen
     </button>`;
@@ -571,7 +571,7 @@ function renderBelegButtons() {
   btnWrap2.style.margin = '12px 0';
   btnWrap2.innerHTML = `
     <button class="geschaeftsfall-beleg-button"
-      onclick="window.open('${karteURL}','_blank')"
+      data-url="${karteURL}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
       style="width:100%; padding:10px 12px; font-size:14px;">
       🗂️ Anlagenkarte erstellen
     </button>`;

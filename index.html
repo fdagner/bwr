@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: ws: wss:; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: ws: wss:; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
   <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -204,71 +204,7 @@
         </div></div></details>
 <br>
            
-        <!-- JavaScript für Drag & Drop (direkt danach oder in deinem <script>-Block) -->
-      <script>
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const dropZoneText = document.getElementById('dropZoneText');
-
-        // Klick → Dateidialog öffnen
-        dropZone.addEventListener('click', () => fileInput.click());
-
-        // Drag-over → visuelles Feedback
-        dropZone.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          dropZone.style.borderColor = 'var(--accent-color)';
-          dropZone.style.background = '#f0f8ff';
-          dropZoneText.textContent = 'Loslassen zum Hochladen';
-        });
-
-        // Drag-leave → zurücksetzen
-        dropZone.addEventListener('dragleave', () => {
-          dropZone.style.borderColor = '#ccc';
-          dropZone.style.background = 'white';
-          dropZoneText.textContent = 'Datei hierher ziehen oder klicken';
-        });
-
-        // Drop → Datei übernehmen und verarbeiten
-        dropZone.addEventListener('drop', (e) => {
-          e.preventDefault();
-          dropZone.style.borderColor = '#ccc';
-          dropZone.style.background = 'white';
-          dropZoneText.textContent = 'Datei hierher ziehen oder klicken';
-
-          const files = e.dataTransfer.files;
-          if (files.length > 0) {
-            fileInput.files = files;
-            handleFileUpload();           // Deine Upload-Funktion aufrufen
-            dropZoneText.textContent = 'Hochgeladen: ' + files[0].name;
-          }
-        });
-      </script>
-
-      <script>
-
-        function updateLocalStorageStatus(status) {
-          document.getElementById('localStorageStatus').textContent = status;
-        }
-
-        function loadUploadedDataFromLocalStorage() {
-          const uploadedDataJSON = localStorage.getItem('uploadedYamlCompanyData');
-          if (uploadedDataJSON) {
-            updateLocalStorageStatus('Daten werden aus dem Browserspeicher verwendet.');
-            try {
-              const uploadedData = JSON.parse(uploadedDataJSON);
-              // Verarbeiten Sie die geladenen Daten
-            } catch (error) {
-              console.error("Error parsing uploaded data from Local Storage:", error);
-            }
-          } else {
-            updateLocalStorageStatus('Standarddaten werden verwendet.');
-          }
-        }
-
-        // Rufen Sie die Funktion zum Laden der Daten aus dem Local Storage auf
-        loadUploadedDataFromLocalStorage();
-      </script>
-        <details>
+        <!-- JavaScript für Drag & Drop (direkt danach oder in deinem <details>
         <summary><strong>Unternehmen manuell hinzufügen</strong></summary>
           <h3>Meine hinzugefügten Unternehmen</h3>
       <div id="userCompanyList" style="margin-top: 15px;">
@@ -497,54 +433,11 @@
    
 
 
-    <script>
-      let slideIndex = 1;
-      let autoTimer;                  // für das automatische Intervall
-
-      showSlides(slideIndex);
-
-      // Manuelle Weiter-/Zurück-Navigation
-      function plusSlides(n) {
-        clearTimeout(autoTimer);    // Automatik stoppen
-        showSlides(slideIndex += n);
-        startAuto();                // danach wieder automatisch starten
-      }
-
-      // Direkt zu einer bestimmten Folie springen (falls du Dots/Punkte hast – sonst ignorierbar)
-      function currentSlide(n) {
-        clearTimeout(autoTimer);
-        showSlides(slideIndex = n);
-        startAuto();
-      }
-
-      function showSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("mySlides");
-
-        if (n > slides.length) { slideIndex = 1; }
-        if (n < 1) { slideIndex = slides.length; }
-
-        for (i = 0; i < slides.length; i++) {
-          slides[i].style.display = "none";
-        }
-
-        slides[slideIndex - 1].style.display = "block";
-      }
-
-      // Automatik starten / neu starten
-      function startAuto() {
-        autoTimer = setTimeout(() => {
-          plusSlides(1);          // nächste Folie
-        }, 3000);                   // 3000 ms = 3 Sekunden
-      }
-
-      startAuto();                    // beim Laden sofort starten
-    </script>
-
-  </main>
+    </main>
   <script src="js/index.js?v=5"></script>
   <div w3-include-html="footer.html"></div>
 
-  </body>
+  <script src="js/index-inline.js"></script>
+</body>
 
 </html>

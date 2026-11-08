@@ -193,7 +193,7 @@ updateZiele();
 // alle Aufgaben in EINER Frage
 // Wird NACH lb7-2-unternehmensziele.js eingebunden. Liest die Lösungstabelle
 // (#ziele-body-l) direkt aus der Seite – inklusive Änderungen, die Sie im
-// bearbeitbaren Bereich vorgenommen haben. Button: onclick="exportiereMoodleZiele()"
+// bearbeitbaren Bereich vorgenommen haben. Button: data-on-click='[{"fn":"exportiereMoodleZiele","args":[]}]'
 // ============================================================================
 
 const MOODLE_ZIELE_PRAEFIX = '7.2-03#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung

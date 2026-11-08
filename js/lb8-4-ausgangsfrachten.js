@@ -408,7 +408,7 @@ function erstelleBelegButton(nummer, geschaeftsfall) {
   return `
     <button
       class="geschaeftsfall-beleg-button"
-      onclick="window.open('${url}', '_blank')"
+      data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
       title="Rechnung für Aufgabe ${nummer} erstellen"
       style="width: 100%; padding: 10px 12px; font-size: 14px; margin-bottom: 8px;"
     >

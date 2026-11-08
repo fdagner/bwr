@@ -738,7 +738,7 @@ function toggleKiPromptVorschauProz() {
 // ============================================================================
 // MOODLE-XML-EXPORT – PROZENTDIAGRAMM (Fragetyp „Lückentext“ / cloze)
 // Wird NACH lb7-1-prozentdiagramm.js eingebunden.
-// Nutzt die globale Variable letzteProzentDaten. Button: onclick="exportiereMoodle()"
+// Nutzt die globale Variable letzteProzentDaten. Button: data-on-click='[{"fn":"exportiereMoodle","args":[]}]'
 // ============================================================================
 
 // ── Einstellungen ───────────────────────────────────────────────────────────

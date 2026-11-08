@@ -32,7 +32,7 @@ function initPortfolioInputs() {
 
     let removeBtn = '';
     if (!entry.isFixed) {
-      removeBtn = `<button type="button" class="remove-btn" onclick="removePortfolioEntry(${index})">✕ Entfernen</button>`;
+      removeBtn = `<button type="button" class="remove-btn" data-on-click='[{"fn":"removePortfolioEntry","args":[${index}]}]'>✕ Entfernen</button>`;
     }
 
     div.innerHTML = `

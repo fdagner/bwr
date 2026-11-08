@@ -300,7 +300,7 @@ function toggleKiPromptVorschau() {
 // alle Merkmale in EINER Frage
 // Liest die Lösungstabelle (h2.loesung + table) direkt aus der Seite –
 // inklusive Änderungen im bearbeitbaren Bereich.
-// Button: onclick="exportiereMoodle()"
+// Button: data-on-click='[{"fn":"exportiereMoodle","args":[]}]'
 // ============================================================================
 
 const MOODLE_AO_PRAEFIX = '9.1-02#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung

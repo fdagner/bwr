@@ -740,7 +740,7 @@ function erstelleBelegURL(gf) {
 function erstelleBelegButtonV(nummer, gf) {
   const url = erstelleBelegURL(gf);
   return `<button class="geschaeftsfall-beleg-button"
-    onclick="window.open('${url}', '_blank')"
+    data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
     title="Ausgangsrechnung für Aufgabe ${nummer} erstellen"
     style="width:100%;padding:10px 12px;font-size:14px;margin-bottom:8px;">
     📄 ${nummer}. Ausgangsrechnung erstellen</button>`;

@@ -450,6 +450,12 @@ window.parseNumericValue = parseNumericValue;
 window.pick = pick;
 window.shuffle = shuffle;
 
+// Helper für window.open in data-on-click (Phase 2: Inline-onclick in JS-Templates entfernt)
+window.__openDataUrl = function (el) {
+  const url = el && el.dataset ? el.dataset.url : null;
+  if (url) window.open(url, '_blank');
+};
+
 // ============================================================================
 // EVENT-DELEGATION (Phase 1 der Inline-Handler-Entfernung)
 // ============================================================================

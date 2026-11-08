@@ -954,7 +954,7 @@ function renderBelegButtons() {
     wrap.style.margin = '12px 0';
     wrap.innerHTML = `
       <button class="geschaeftsfall-beleg-button"
-        onclick="window.open('${rechnungURL}','_blank')"
+        data-url="${rechnungURL}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
         style="width:100%; padding:10px 12px; font-size:14px;">
         📄 Eingangsrechnung${letzteAufgabe.anbieter.length > 1 ? ' Angebot ' + a.nummer : ''}
       </button>`;

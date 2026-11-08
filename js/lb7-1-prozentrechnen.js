@@ -812,7 +812,7 @@ function toggleKiPromptVorschau() {
 // MOODLE-XML-EXPORT – PROZENTRECHNEN (Fragetyp „Kurzantwort“ / shortanswer)
 // Wird NACH lb7-1-prozentrechnen.js eingebunden (braucht keine weitere Datei).
 // Nutzt die globalen Variablen letzteGenerierteAufgaben und AUFGABEN_TYPEN_DEF
-// des Generators. Button: onclick="exportiereMoodle()"
+// des Generators. Button: data-on-click='[{"fn":"exportiereMoodle","args":[]}]'
 // ============================================================================
 
 // ── Einstellungen ───────────────────────────────────────────────────────────

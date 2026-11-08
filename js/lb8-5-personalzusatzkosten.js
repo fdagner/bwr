@@ -441,7 +441,7 @@ function toggleKiPromptVorschau() {
 // MOODLE-XML-EXPORT – PERSONALZUSATZKOSTEN – Fragetyp „Zuordnung“ (matching),
 // alle Aufgaben in EINER Frage
 // Liest die Aufgaben-Boxen (.pz-aufgabe) direkt aus der Seite – inklusive
-// Änderungen im bearbeitbaren Bereich. Button: onclick="exportiereMoodle()"
+// Änderungen im bearbeitbaren Bereich. Button: data-on-click='[{"fn":"exportiereMoodle","args":[]}]'
 // ============================================================================
 
 const MOODLE_PZ_PRAEFIX = '8.5-01#T';   // ANPASSEN: Kennung Ihrer Aufgabensammlung

@@ -144,3 +144,17 @@ function includeHTML() {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tryRun, { once: true });
   else tryRun();
 })();
+
+
+// Seitenaufruf-Zaehler (ehemals Inline-Script in footer.html)
+(function () {
+  const isLocal = window.location.hostname === 'localhost' ||
+                  window.location.hostname === '127.0.0.1' ||
+                  window.location.hostname === '';
+  if (isLocal) return;
+  const aktuelleSeite = window.location.pathname || '/';
+  fetch('https://fdagner.de/counter.php?page=' + encodeURIComponent(aktuelleSeite))
+    .then(response => response.json())
+    .then(data => { console.log('Zaehler aktualisiert:', data); })
+    .catch(error => { console.log('Zaehler konnte nicht geladen werden'); });
+})();

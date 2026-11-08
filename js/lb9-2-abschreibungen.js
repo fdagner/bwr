@@ -592,7 +592,7 @@ stroke: {
       buttonDiv.innerHTML = `
         <button
           class="geschaeftsfall-beleg-button"
-          onclick="window.open('${rechnungURL}', '_blank')"
+          data-url="${rechnungURL}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
           title="Rechnung für Aufgabe 8 erstellen"
           style="width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;"
         >
@@ -607,7 +607,7 @@ stroke: {
       buttonDiv.innerHTML = `
         <button
           class="geschaeftsfall-beleg-button"
-          onclick="window.open('${anlagenkarteURL}', '_blank')"
+          data-url="${anlagenkarteURL}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
           title="Anlagenkarte für Aufgabe 9 erstellen"
           style="width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;"
         >

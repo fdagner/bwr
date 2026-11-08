@@ -503,7 +503,7 @@ function aktienErstelleBelegButton(daten) {
 
     return `
                     <button class="geschaeftsfall-beleg-button"
-                            onclick="window.open('${url}', '_blank')"
+                            data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
                             title="${artText} als SVG-Beleg öffnen"
                             style="width: 100%; padding: 10px 12px; font-size: 14px;">
                         📄 ${artText} erstellen
@@ -551,7 +551,7 @@ function dividendenErstelleBelegButton(daten) {
     const url = dividendenErzeugeURLFuerBeleg(daten);
     return `
                     <button class="geschaeftsfall-beleg-button"
-                            onclick="window.open('${url}', '_blank')"
+                            data-url="${url}" data-on-click='[{"fn":"__openDataUrl","args":[]}]'
                             title="Kontoauszug als SVG-Beleg öffnen"
                             style="width: 100%; padding: 10px 12px; font-size: 14px;">
                         🏦 Kontoauszug erstellen

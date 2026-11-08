@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: ws: wss:; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: ws: wss:; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; media-src 'self' data: blob:">
   <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,114 +26,7 @@
     <div id="uebersicht" class="box"></div>
 </main>
     <div w3-include-html="footer.html"></div>
-    <script>
-      (function () {
-        const fmt = (v) => (typeof v === 'number') ? v.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : v;
-        const fmtPct = (v) => (typeof v === 'number') ? (v + ' %') : v;
-
-        function section(titel, rows) {
-          let html = `<h3>${titel}</h3><table style="border-collapse:collapse;width:100%;max-width:960px;margin:0 0 1.5rem;table-layout:fixed;">`;
-          html += '<thead><tr><th style="text-align:left;padding:6px;border-bottom:2px solid #ccc;width:35%;">Fachbegriff</th><th style="text-align:left;padding:6px;border-bottom:2px solid #ccc;width:15%;">Wert</th><th style="text-align:left;padding:6px;border-bottom:2px solid #ccc;width:30%;">Beschreibung</th><th style="text-align:left;padding:6px;border-bottom:2px solid #ccc;width:20%;">Verwendet in</th></tr></thead><tbody>';
-          rows.forEach(r => {
-            const verw = (r.verwendung || []).map(v => v.url ? `<a href="${v.url}" style="margin-right:6px;">${v.label}</a>` : `<span style="margin-right:6px;color:#888;">${v.label}</span>`).join(' ');
-            html += `<tr><td style="padding:6px;border-bottom:1px solid #eee;font-weight:600;" title="Konstante: ${r.name}">${r.fachbegriff || r.name}</td><td style="padding:6px;border-bottom:1px solid #eee;font-weight:600;">${r.wert}</td><td style="padding:6px;border-bottom:1px solid #eee;color:#555;">${r.beschreibung}</td><td style="padding:6px;border-bottom:1px solid #eee;font-size:0.85rem;">${verw || '–'}</td></tr>`;
-          });
-          html += '</tbody></table>';
-          return html;
-        }
-
-        const container = document.getElementById('uebersicht');
-        let out = '';
-
-        // Steuern
-out += section('Steuern (Umsatzsteuer)', [
-          { name: 'UST_REGEL', fachbegriff: 'Umsatzsteuer (Regelsatz)', wert: fmtPct(UST_REGEL), beschreibung: 'Regelsatz (derzeit 19 %)', verwendung: [
-            { label: 'lb7-1-prozentrechnen', url: 'lb7-1-prozentrechnen.html' },
-            { label: 'lb7-3-buchungssatz', url: 'lb7-3-buchungssatz.html' },
-            { label: 'lb7-4-einkauf', url: 'lb7-4-einkauf.html' },
-            { label: 'lb7-4-verkauf', url: 'lb7-4-verkauf.html' },
-            { label: 'lb7-4-vordruck', url: 'lb7-4-vordruck.html' },
-            { label: 'lb8-1-bestandskonten', url: 'lb8-1-bestandskonten.html' },
-            { label: 'lb8-1-einkauf', url: 'lb8-1-einkauf.html' },
-            { label: 'lb8-2-angebotsvergleich', url: 'lb8-2-angebotsvergleich.html' },
-            { label: 'lb8-3-buchungmarketing', url: 'lb8-3-buchungmarketing.html' },
-            { label: 'lb8-4-ausgangsfrachten', url: 'lb8-4-ausgangsfrachten.html' },
-            { label: 'lb8-4-verkauf', url: 'lb8-4-verkauf.html' },
-            { label: 'lb9-2-abschreibungen', url: 'lb9-2-abschreibungen.html' },
-            { label: 'lb9-2-sachanlagen', url: 'lb9-2-sachanlagen.html' },
-            { label: 'lb9-4-buchungenkapitalanlage', url: 'lb9-4-buchungenkapitalanlage.html' },
-            { label: 'ewb', url: 'ewb.html' },
-            { label: 'pwb', url: 'pwb.html' },
-            { label: 'belege', url: 'belege.html' },
-          ] },
-          { name: 'UST_ERMAESSIGT', fachbegriff: 'Umsatzsteuer (ermäßigt)', wert: fmtPct(UST_ERMAESSIGT), beschreibung: 'Ermäßigter Satz (derzeit 7 %, z. B. Lebensmittel, Bücher)', verwendung: [
-            { label: 'lb7-1-prozentrechnen', url: 'lb7-1-prozentrechnen.html' },
-            { label: 'lb8-3-buchungmarketing', url: 'lb8-3-buchungmarketing.html' },
-          ] },
-        ]);
-
-        // Familie
-out += section('Familie', [
-          { name: 'KINDERGELD', fachbegriff: 'Kindergeld', wert: fmt(KINDERGELD) + ' €', beschreibung: 'Kindergeld pro Kind und Monat', verwendung: [
-            { label: 'lb7-1-einkommensarten', url: 'lb7-1-einkommensarten.html' },
-            { label: 'lb7-1-haushaltsplan', url: 'lb7-1-haushaltsplan.html' },
-            { label: 'lb7-1-infografik', url: 'lb7-1-infografik.html' },
-          ] },
-          { name: 'KINDERFREIBETRAG.jahr', fachbegriff: 'Kinderfreibetrag (Jahrgang)', wert: KINDERFREIBETRAG.jahr, beschreibung: 'Gültiger Jahrgang', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'KINDERFREIBETRAG.einschlBeaEUR', fachbegriff: 'Kinderfreibetrag (inkl. BEA)', wert: fmt(KINDERFREIBETRAG.einschlBeaEUR) + ' €', beschreibung: 'Freibetrag pro Kind und Jahr (beide Elternteile zusammen, inkl. BEA)', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'KINDERFREIBETRAG.jeElternteilEUR', fachbegriff: 'Kinderfreibetrag (je Elternteil)', wert: fmt(KINDERFREIBETRAG.jeElternteilEUR) + ' €', beschreibung: 'Freibetrag pro Kind und Jahr, je Elternteil', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-        ]);
-
-        // Zinsen
-out += section('Zinsen', [
-          { name: 'HAUPTREFINANZIERUNGSSATZ', fachbegriff: 'Hauptrefinanzierungssatz', wert: fmtPct(HAUPTREFINANZIERUNGSSATZ), beschreibung: 'Standard-Ankerwert in % p. a.', verwendung: [ { label: 'lb9-3-kreditvergleich', url: 'lb9-3-kreditvergleich.html' } ] },
-          { name: 'MINDEST_NOMINALZINS', fachbegriff: 'Mindestnominalzins', wert: fmtPct(MINDEST_NOMINALZINS), beschreibung: 'Mindestzins in % p. a.', verwendung: [ { label: 'lb9-3-kreditvergleich', url: 'lb9-3-kreditvergleich.html' } ] },
-          { name: 'VERZUGSZAUSCHLAG_VERBRAUCHER', fachbegriff: 'Verzugszinszuschlag (Verbraucher)', wert: fmtPct(VERZUGSZAUSCHLAG_VERBRAUCHER), beschreibung: 'Prozentpunkte (§ 288 Abs. 1 BGB)', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'VERZUGSZAUSCHLAG_B2B', fachbegriff: 'Verzugszinszuschlag (B2B)', wert: fmtPct(VERZUGSZAUSCHLAG_B2B), beschreibung: 'Prozentpunkte (§ 288 Abs. 2 BGB)', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'BASISZINSSATZ', fachbegriff: 'Basiszinssatz', wert: fmtPct(BASISZINSSATZ), beschreibung: 'Basiszinssatz (gültig seit ' + BASISZINSSATZ_SEIT + ')', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'BASISZINSSATZ_SEIT', fachbegriff: 'Basiszinssatz (gültig seit)', wert: BASISZINSSATZ_SEIT, beschreibung: 'Gültigkeitsbeginn des Basiszinssatzes', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'MAHNPAUSCHALE', fachbegriff: 'Mahnpauschale', wert: fmt(MAHNPAUSCHALE) + ' €', beschreibung: 'Pauschale Unkostenvergütung je Mahnung (§ 288 Abs. 5 BGB)', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-        ]);
-
-        // Sozialversicherung
-        const bbg = BEITRAGSBEMESSUNGSGRENZEN;
-        out += section('Sozialversicherung (Beitragsbemessungsgrenzen, ' + bbg.jahr + ')', [
-          { name: 'BEITRAGSBEMESSUNGSGRENZEN.kvPvMonat', fachbegriff: 'BBG KV/PV (monatlich)', wert: fmt(bbg.kvPvMonat) + ' €', beschreibung: 'KV & PV, monatliche Grenze', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'BEITRAGSBEMESSUNGSGRENZEN.kvPvJahr', fachbegriff: 'BBG KV/PV (jährlich)', wert: fmt(bbg.kvPvJahr) + ' €', beschreibung: 'KV & PV, jährliche Grenze', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'BEITRAGSBEMESSUNGSGRENZEN.rvAvMonat', fachbegriff: 'BBG RV/ALV (monatlich)', wert: fmt(bbg.rvAvMonat) + ' €', beschreibung: 'RV & ALV, monatliche Grenze (bundeseinheitlich)', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'BEITRAGSBEMESSUNGSGRENZEN.rvAvJahr', fachbegriff: 'BBG RV/ALV (jährlich)', wert: fmt(bbg.rvAvJahr) + ' €', beschreibung: 'RV & ALV, jährliche Grenze', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-        ]);
-
-        // Mindestausbildungsvergütung
-        const mav = MINDESTAUSBILDUNGSVERGUETUNG;
-        const mavRows = [{ name: 'MINDESTAUSBILDUNGSVERGUETUNG.jahr', fachbegriff: 'Mindestausbildungsvergütung (Jahrgang)', wert: mav.jahr, beschreibung: 'Gültiger Jahrgang', verwendung: [ { label: 'belege', url: 'belege.html' } ] }];
-        Object.keys(mav.monatlich).forEach(k => {
-          mavRows.push({ name: `MINDESTAUSBILDUNGSVERGUETUNG.monatlich[${k}]`, fachbegriff: `Mindestausbildungsvergütung (Jahr ${k})`, wert: fmt(mav.monatlich[k]) + ' €', beschreibung: `Mindestvergütung im ${k}. Ausbildungsjahr (pro Monat)`, verwendung: [ { label: 'belege', url: 'belege.html' } ] });
-        });
-        out += section('Mindestausbildungsvergütung', mavRows);
-
-        // Einkommensteuertarif
-        const et = EINKOMMENSTEUERTARIF;
-out += section('Einkommensteuertarif (' + et.jahr + ')', [
-          { name: 'EINKOMMENSTEUERTARIF.grundfreibetragLedig', fachbegriff: 'Grundfreibetrag (Ledige)', wert: fmt(et.grundfreibetragLedig) + ' €', beschreibung: 'Grundfreibetrag (Ledige)', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'EINKOMMENSTEUERTARIF.grundfreibetragVerheiratet', fachbegriff: 'Grundfreibetrag (Verheiratete)', wert: fmt(et.grundfreibetragVerheiratet) + ' €', beschreibung: 'Grundfreibetrag (Verheiratete, Splitting)', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'EINKOMMENSTEUERTARIF.eingangssteuersatz', fachbegriff: 'Eingangssteuersatz', wert: fmtPct(et.eingangssteuersatz), beschreibung: 'Eingangssteuersatz', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'EINKOMMENSTEUERTARIF.spitzensteuersatz', fachbegriff: 'Spitzensteuersatz', wert: fmtPct(et.spitzensteuersatz), beschreibung: 'Spitzensteuersatz', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'EINKOMMENSTEUERTARIF.reichensteuersatz', fachbegriff: 'Reichensteuersatz', wert: fmtPct(et.reichensteuersatz), beschreibung: 'Reichensteuersatz', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'EINKOMMENSTEUERTARIF.zone1Bis', fachbegriff: 'Zone 1 (bis)', wert: fmt(et.zone1Bis) + ' €', beschreibung: 'Zone 1 bis', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'EINKOMMENSTEUERTARIF.zone2Bis', fachbegriff: 'Zone 2 (bis)', wert: fmt(et.zone2Bis) + ' €', beschreibung: 'Zone 2 bis', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-          { name: 'EINKOMMENSTEUERTARIF.proportionalBis', fachbegriff: 'Proportionalzone (bis)', wert: fmt(et.proportionalBis) + ' €', beschreibung: 'Proportionalzone bis', verwendung: [ { label: 'belege', url: 'belege.html' } ] },
-        ]);
-
-        // Kontenplan
-out += section('Kontenplan (KONTENPLAN)', [
-          { name: 'KONTENPLAN (Anzahl Konten)', wert: KONTENPLAN.length, beschreibung: 'Zentraler Kontenplan aus js/utils.js – ' + KONTENPLAN.length + ' Konten (Klassen 0–8)', verwendung: [ { label: 'alle Seiten', url: '' } ] },
-        ]);
-
-        container.innerHTML = out;
-      })();
-    </script>
-
+    <script src="js/parameter-uebersicht-inline.js"></script>
 </body>
 
 </html>

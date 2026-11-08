@@ -494,7 +494,7 @@ function erstelleBelegButton(nummer, gf) {
     <button
       class="geschaeftsfall-beleg-button"
       data-url="${url.replace(/"/g, '&quot;')}"
-      onclick="window.open(this.dataset.url, '_blank')"
+      data-on-click='[{"fn":"__openDataUrl","args":[]}]'
       title="${belegTypName} für Aufgabe ${nummer} erstellen"
       style="width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;"
     >

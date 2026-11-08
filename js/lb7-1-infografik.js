@@ -222,7 +222,7 @@ function addRow(label = "", value = "") {
         document.execCommand('insertText',false,t);
       "
     />
-    <button class="ig-btn-icon" onclick="removeRow(${id})">×</button>`;
+    <button class="ig-btn-icon" data-on-click='[{"fn":"removeRow","args":[${id}]}]'>×</button>`;
   document.getElementById("data-rows").appendChild(div);
   initDragRow(div);
 }

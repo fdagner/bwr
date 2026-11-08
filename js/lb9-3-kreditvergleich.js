@@ -220,7 +220,7 @@ function zeigeValidierungsFehler(errors) {
   banner.id = 'av-validierungs-banner';
   banner.style.cssText = 'background:#fdecea;border:1px solid #e53935;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:0.88em;color:#b71c1c;line-height:1.7;';
   banner.innerHTML = `<strong>⚠️ Eingabefehler:</strong><ul style="margin:4px 0 0 16px;padding:0;">${errors.map(e => `<li>${e}</li>`).join('')}</ul>`;
-  const btn = document.querySelector('button[onclick="zeigeZufaelligenSatz()"]');
+  const btn = document.querySelector('button[data-on-click*="zeigeZufaelligenSatz"]');
   if (btn) btn.insertAdjacentElement('beforebegin', banner);
 }
 
@@ -656,7 +656,7 @@ const DICE_PATH = 'M205.4 66.3C167 56 127.5 78.8 117.3 117.2L66.5 306.7C56.2 345
 
 document.addEventListener('DOMContentLoaded', function () {
   // "Zufallswerte"-Button (einheitlicher Aktionsbutton) direkt vor "Neue Aufgabe" einfügen
-  const aufgabeBtn = document.querySelector('button[onclick="zeigeZufaelligenSatz()"]');
+  const aufgabeBtn = document.querySelector('button[data-on-click*="zeigeZufaelligenSatz"]');
   if (aufgabeBtn && !document.getElementById('avNeueZufallswerteBtn')) {
     const zBtn = document.createElement('button');
     zBtn.id = 'avNeueZufallswerteBtn';

@@ -52,23 +52,3 @@
 </footer>
 
   
-<script>
-  // Prüfen, ob die Seite lokal läuft
-  const isLocal = window.location.hostname === 'localhost' 
-               || window.location.hostname === '127.0.0.1'
-               || window.location.hostname === '';
-
-  if (!isLocal) {
-    // Aktuelle Seite ermitteln
-    const aktuelleSeite = window.location.pathname || '/';
-
-      fetch('https://fdagner.de/counter.php?page=' + encodeURIComponent(aktuelleSeite))
-      .then(response => response.json())
-      .then(data => {
-        console.log('Zähler aktualisiert:', data);
-              })
-      .catch(error => {
-        console.log('Zähler konnte nicht geladen werden');
-      });
-  }
-</script>
