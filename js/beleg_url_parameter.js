@@ -131,6 +131,8 @@ const URL_PARAM_CONFIG = {
 
   // ========== KASSENBON ==========
   kassenbon: {
+    // Vorlage (Klassisch / eBon / Taxi)
+    art: { elementId: "svgDropdownKassenbon", type: "select" },
     // Beträge
     netto: { elementId: "kassenbonNettoInput", type: "input" },
     ust: {
@@ -442,6 +444,13 @@ function loadURLParametersForBeleg(belegType, params) {
       if (setFieldValue(paramConfig.elementId, value, paramConfig.type)) {
         setCount++;
         console.log(`  ✓ ${paramName} = ${value}`);
+        // Kassenbon-Vorlage: change feuern, damit die Artikel-2/3-Sichtbarkeit
+        // (Taxi ⇒ versteckt) sofort stimmt
+        if (paramConfig.elementId === "svgDropdownKassenbon") {
+          document
+            .getElementById("svgDropdownKassenbon")
+            ?.dispatchEvent(new Event("change", { bubbles: true }));
+        }
       }
     } else if (paramConfig.default) {
       // Setze Standardwert, falls kein Parameter übergeben wurde
