@@ -66,8 +66,8 @@
  <g font-size="18">
  <rect x="10" y="745" width="700" height="30" fill="#ccc"/>
  <text x="15" y="766" fill="#000" font-weight="bold">Fälligkeitstermine:</text>
- <text id="bescheidFristJahr1" x="360" y="766" fill="#000" text-anchor="middle" font-weight="bold">–</text>
- <text id="bescheidFristJahr2" x="540" y="766" fill="#000" text-anchor="middle" font-weight="bold">–</text>
+ <text id="bescheidFristJahr1" x="360" y="766" fill="#000" text-anchor="middle" font-weight="bold"><tspan id="bescheidFristJahr1Datum">–</tspan><tspan class="bescheidFristJahr" data-jahroffset="0"></tspan></text>
+ <text id="bescheidFristJahr2" x="540" y="766" fill="#000" text-anchor="middle" font-weight="bold"><tspan id="bescheidFristJahr2Datum">–</tspan><tspan class="bescheidFristJahr" data-jahroffset="1"></tspan></text>
  </g>
 
 <circle cx="10" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />

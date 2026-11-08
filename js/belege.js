@@ -4051,9 +4051,54 @@ const BELEG_APPLY_CONFIG = {
           fristElem.textContent = fristen[0] || "–";
         }
         const fristJahr1 = document.getElementById("bescheidFristJahr1");
-        if (fristJahr1) fristJahr1.textContent = fristen[0] || "–";
         const fristJahr2 = document.getElementById("bescheidFristJahr2");
-        if (fristJahr2) fristJahr2.textContent = fristen[1] || "–";
+        if (fristJahr1 || fristJahr2) {
+          // Leiste: Datumspart + Jahres-Tspan (Skript-Modus füllt die Jahre
+          // beim Rendern dynamisch – wichtig für den inline SVG-Export)
+          const jahrJetzt = new Date().getFullYear();
+          const spalten = [
+            {
+              element: fristJahr1,
+              datumId: "bescheidFristJahr1Datum",
+              term: fristen[0],
+              jahr: jahrJetzt,
+              offset: 0,
+            },
+            {
+              element: fristJahr2,
+              datumId: "bescheidFristJahr2Datum",
+              term: fristen[1],
+              jahr: jahrJetzt + 1,
+              offset: 1,
+            },
+          ];
+          for (const spalte of spalten) {
+            if (!spalte.element) continue;
+            const ma = String(spalte.term || "").match(
+              /^(\d{1,2}\.\d{1,2})\.?(.*)$/,
+            );
+            const datumSpan = document.getElementById(spalte.datumId);
+            let jahrSpan = null;
+            for (const kind of spalte.element.childNodes) {
+              if (
+                kind.nodeType === 1 &&
+                kind.classList &&
+                kind.classList.contains("bescheidFristJahr")
+              ) {
+                jahrSpan = kind;
+                break;
+              }
+            }
+            if (datumSpan) datumSpan.textContent = ma ? ma[1] + "." : "–";
+            if (jahrSpan) {
+              jahrSpan.textContent = scriptAktivFrist
+                ? String(spalte.jahr)
+                : ma && ma[2]
+                  ? ma[2]
+                  : "";
+            }
+          }
+        }
 
         // Live-Anzeige im Formular mit aktualisieren
         const anzeigeElem = document.getElementById("bescheidFristAnzeige");
@@ -4593,6 +4638,11 @@ function handleYearScript(config) {
         config.jahrClass +
         '");' +
         "elements.forEach(function(el) { el.textContent = new Date().getFullYear(); });" +
+        // Jahres-Tspans (z. B. Fälligkeitstermine im Bescheid): Jahr aus dem
+        // View-Jahr + Offset (data-jahroffset), damit inline SVG immer das
+        // richtige Jahr zeigt
+        'var fj = document.querySelectorAll(".bescheidFristJahr");' +
+        'fj.forEach(function(el) { el.textContent = new Date().getFullYear() + parseInt(el.getAttribute("data-jahroffset") || "0", 10); });' +
         "}";
       customDefs.appendChild(script);
     }
