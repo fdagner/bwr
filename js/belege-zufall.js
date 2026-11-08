@@ -453,7 +453,9 @@ async function belegZurSammlung(containerId) {
 function aktualisiereSammlungButtons() {
   const offene = !!(window.belegAusSammlung && window.belegAusSammlung.id);
   document
-    .querySelectorAll('button[onclick*="belegZurSammlung("]')
+    .querySelectorAll(
+      'button[data-on-click*="belegZurSammlung"], button[onclick*="belegZurSammlung("]',
+    )
     .forEach(function (btn) {
       if (offene) {
         btn.textContent = "+ Speichern";

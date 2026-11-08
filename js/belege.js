@@ -1532,8 +1532,23 @@ function restoreOpenedBeleg(item) {
     const tabName = tabMap[belegType] || belegType;
     if (typeof openTabFromURL === "function") openTabFromURL(tabName);
     for (const [elId, info] of Object.entries(item.formState.fields)) {
+      const el = document.getElementById(elId);
+      const vorher = el ? String(el.value) : null;
       if (typeof setFieldValue === "function") {
         setFieldValue(elId, info.value, info.type);
+      }
+      // Selekt-Umschaltung "nachziehen": change-Event feuern, damit die
+      // Listener greifen (z.B. Bescheidart → Grundsteuer/Kfz-Felder,
+      // Kassenbon → Artikel 2/3). setFieldValue setzt nur .value.
+      if (
+        el &&
+        el.tagName === "SELECT" &&
+        info.type !== "checkbox" &&
+        String(el.value) !== vorher
+      ) {
+        try {
+          el.dispatchEvent(new Event("change", { bubbles: true }));
+        } catch (e) {}
       }
     }
     const savedHtml = item.htmlContent || item.formState.containerHtml || "";
