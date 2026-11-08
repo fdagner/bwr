@@ -112,3 +112,35 @@ function includeHTML() {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
   else run();
 })();
+
+
+// Modellunternehmen-Anzeige in der Navigation (ehemals Inline-Script in navigation.html)
+(function () {
+  function upd() {
+    var el = document.getElementById("modellunternehmenAnzeige");
+    if (!el) return;
+    var name = (localStorage.getItem('myCompany') || '').trim();
+    if (name) {
+      el.innerHTML = 'Modellunternehmen: <strong>' + name + '</strong>';
+      el.style.background = '--accent-color';
+      el.style.color = '#fff';
+      el.style.fontSize = '14px';
+    } else {
+      el.innerHTML = '<a href="index.html#modellunternehmen" style="color:#5a4500; text-decoration: underline; font-weight: 600; font-size: 14px;">kein Modellunternehmen - hier auswaehlen</a>';
+      el.style.background = 'rgba(255, 193, 7, 0.35)';
+      el.style.color = '#5a4500';
+      el.style.fontSize = '14px';
+    }
+  }
+  const tryRun = () => {
+    if (document.getElementById('modellunternehmenAnzeige')) {
+      upd();
+      setInterval(upd, 2000);
+      window.addEventListener('storage', function (e) { if (e.key === 'myCompany') upd(); });
+    } else {
+      setTimeout(tryRun, 200);
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tryRun, { once: true });
+  else tryRun();
+})();

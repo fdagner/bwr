@@ -4,30 +4,7 @@
     <span>meinBwR</span>
   </span>
   <span id="modellunternehmenAnzeige" style="font-size: 14px; font-weight: 500; background: #1466a6; color: #fff; padding: 4px 10px; border-radius: 8px; white-space: normal; overflow-wrap: anywhere; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 1px 3px rgba(0,0,0,0.15); display: inline-block; min-width: 230px; max-width: 100%; flex: 0 1 auto; text-align: center;">Modellunternehmen: (keines gewählt)</span>
-  <script>
-  (function () {
-    function upd() {
-      var el = document.getElementById('modellunternehmenAnzeige');
-      if (!el) return;
-      var name = (localStorage.getItem('myCompany') || '').trim();
-      if (name) {
-        el.innerHTML = 'Modellunternehmen: <strong>' + name + '</strong>';
-        el.style.background = '--accent-color';
-        el.style.color = '#fff';
-        el.style.fontSize = '14px';
-      } else {
-        el.innerHTML = '<a href="index.html#modellunternehmen" style="color:#5a4500; text-decoration: underline; font-weight: 600; font-size: 14px;">⚠ kein Modellunternehmen – hier auswählen</a>';
-        el.style.background = 'rgba(255, 193, 7, 0.35)';
-        el.style.color = '#5a4500';
-        el.style.fontSize = '14px';
-      }
-    }
-    upd();
-    setInterval(upd, 2000);
-    window.addEventListener('storage', function (e) { if (e.key === 'myCompany') upd(); });
-  })();
-  </script>
-</h1>
+  </h1>
 <button class="nav-toggle" aria-label="Menü" aria-expanded="false">☰ Menü</button>
 <div class="navbar">
   <a href="index.html">Start</a>
