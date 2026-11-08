@@ -234,14 +234,33 @@
           try {
             editor.focus();
           } catch (e) {}
-          try {
-            editor.selection.restore();
-          } catch (e) {}
-          if (savedRange) {
+          // Cursorposition wiederherstellen – Reihenfolge:
+          // 1) zuletzt getrackte Auswahl im Editor,
+          // 2) Jodits save/restore-Marker vom Dialog-Öffnen,
+          // 3) Fenster-Auswahl – NUR wenn sie wirklich innerhalb des
+          //    Editors liegt (sonst landet das Einfügen am Dokumentanfang).
+          let gesetzt = false;
+          if (editor._letzteAuswahl) {
             try {
-              const sel = window.getSelection();
-              sel.removeAllRanges();
-              sel.addRange(savedRange);
+              editor.s.selectRange(editor._letzteAuswahl.cloneRange());
+              gesetzt = true;
+            } catch (e) {}
+          }
+          if (!gesetzt) {
+            try {
+              editor.selection.restore();
+              gesetzt = true;
+            } catch (e) {}
+          }
+          if (!gesetzt && savedRange) {
+            try {
+              if (editor.container.contains(savedRange.commonAncestorContainer)) {
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(savedRange);
+              } else {
+                savedRange = null;
+              }
             } catch (e) {}
           }
           let html = content;
@@ -763,6 +782,20 @@
       if (editor && editor.container) {
         editor.container.style.removeProperty("min-width");
       }
+      // Merker: letzte Auswahl innerhalb des Editors. "Beleg einfügen"
+      // braucht sie, weil der Auswahl-Dialog den Fokus wegnimmt und Jodits
+      // eigene save/restore den Cursor verlieren kann (Einfügen oben).
+      try {
+        editor._letzteAuswahl = null;
+        editor.e.on("selectionchange", function () {
+          try {
+            const rg = editor.s.range;
+            if (rg && editor.container.contains(rg.commonAncestorContainer)) {
+              editor._letzteAuswahl = rg.cloneRange();
+            }
+          } catch (ev) {}
+        });
+      } catch (ev) {}
     } catch (e) {
       console.error("Jodit.make failed", e);
       el._joditInitializing = false;

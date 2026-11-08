@@ -3,7 +3,7 @@
   </defs>
 
   <!-- Kontoauszug-Rahmen -->
-<rect x="0" y="0" width="760" height="380" fill="#fff" stroke="#000" stroke-width="1" />
+<rect x="0.5" y="0.5" width="759" height="379" fill="#fff" stroke="#000" stroke-width="1" />
  <!-- Überschrift -->
 <rect x="1" y="1" width="758" height="120" fill="#f5f5f5"/>
 <text x="10" y="35" font-family="Verdana" font-size="28" text-anchor="start" fill="darkblue">LOHN-/GEHALTSJOURNAL</text>

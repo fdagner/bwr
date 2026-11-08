@@ -1,7 +1,7 @@
 <svg id="rechnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 720 1050" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:720px;border: 0px solid #ccc" >
   <defs id="customDefs"/>
   <!--Gruppe für Firmeninformationen-->
-     <rect x="0" y="0" width="718" height="1048" stroke="#aaa" stroke-width="1" fill="#fff"/>
+     <rect x="0.5" y="0.5" width="719" height="1049" stroke="#aaa" stroke-width="1" fill="#fff"/>
     <path class="colorSVG" d="M0 0 H550 A550 130 0 0 1 0 130 Z" fill="#7db9f5"/>
     <rect x="0" y="-420" width="718" height="420" fill="#fff"/>
     <rect class="colorSVG" x="0" y="950" width="718" height="100" fill="#7db9f5"/>

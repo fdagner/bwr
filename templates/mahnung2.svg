@@ -1,7 +1,7 @@
 <svg id="mahnungSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 760" font-family="Arial" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px">
  <defs id="customDefsMahnung"/>
  <!--Papier-->
- <rect x="0" y="0" width="720" height="755" stroke="#ccc" stroke-width="1" fill="white" />
+ <rect x="0.5" y="0.5" width="719" height="754" stroke="#ccc" stroke-width="1" fill="white" />
  <!--Akzentstreifen links (Farbe aus der YAML über customLogic)-->
  <rect id="mahnungAkzentlinie" x="0" y="0" width="10" height="755" fill="red" />
  <!--Kopfband (Neutralton)-->

@@ -10,7 +10,7 @@
   </defs>
 
   <!-- Post-it Grundfläche (hellgelb) -->
-  <rect x="0" y="0" width="520" height="520" rx="8" ry="8" fill="#fffde7" filter="url(#shadow)" stroke="#f0e68c" stroke-width="1"/>
+  <rect x="0.5" y="0.5" width="519" height="519" rx="8" ry="8" fill="#fffde7" filter="url(#shadow)" stroke="#f0e68c" stroke-width="1"/>
 
   <!-- Titel -->
   <g class="hand" fill="#1a237e">

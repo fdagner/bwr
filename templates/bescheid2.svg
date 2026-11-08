@@ -1,7 +1,7 @@
 <svg id="bescheidSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 720" font-family="Arial" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px">
  <defs id="customDefsBescheid"/>
  <!--Gruppe für Firmeninformationen-->
-<rect x="0" y="0" width="720" height="715" stroke="#ccc" stroke-width="1" fill="white" />
+<rect x="0.5" y="0.5" width="719" height="714" stroke="#ccc" stroke-width="1" fill="white" />
 <rect x="0" y="120" width="720" height="5" fill="#FF4D00" />
  <g id="liefererInformationen2" fill="#000">
  <text x="700" y="75" font-size="34" font-weight="bold" text-anchor="end">Abfallwirtschaft <tspan class="bescheidOrt"></tspan></text>
