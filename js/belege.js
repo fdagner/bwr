@@ -2002,13 +2002,9 @@ function bescheidKfzFristen(zulassungText, ohneJahrErzwungen) {
   // wenn im Beleg kein Jahr gedruckt werden soll (Jahr-Feld leer)
   const mitJahr = ohneJahrErzwungen === true ? false : info.mitJahr;
 
-  const heute = new Date();
-  heute.setHours(0, 0, 0, 0);
-
-  // Erste Frist = Zulassung + 1 Monat, danach jährlich wiederkehrend;
-  // überholte Termine werden um je ein Jahr verschoben.
+  // Erste Frist = Zulassung + 1 Monat, danach jährlich wiederkehrend.
   // Monatswechsel mit Tag-Klemme (z. B. 31.01. + 1 Monat → 28./29.02.)
-  let termin = new Date(
+  const termin = new Date(
     zulassung.getFullYear(),
     zulassung.getMonth() + 1,
     Math.min(
@@ -2016,19 +2012,10 @@ function bescheidKfzFristen(zulassungText, ohneJahrErzwungen) {
       new Date(zulassung.getFullYear(), zulassung.getMonth() + 2, 0).getDate(),
     ),
   );
-  while (termin < heute) {
-    termin = new Date(
-      termin.getFullYear() + 1,
-      termin.getMonth(),
-      termin.getDate(),
-    );
-  }
-  const termine = [];
-  for (let i = 0; i < 2; i++) {
-    termine.push(
-      new Date(termin.getFullYear() + i, termin.getMonth(), termin.getDate()),
-    );
-  }
+  const termine = [
+    termin,
+    new Date(termin.getFullYear() + 1, termin.getMonth(), termin.getDate()),
+  ];
   return termine.map((x) => bescheidKfzDatumText(x, mitJahr));
 }
 
@@ -4042,12 +4029,11 @@ const BELEG_APPLY_CONFIG = {
           jahrFeldFrist.value.trim() === "";
         const fristen = bescheidKfzFristen(zulassungInput.value, fristOhneJahr);
         const fristText = fristen.length ? fristen.join(" und ") : "–";
-        // "bescheidFrist" = die allererste Fälligkeit (Zulassung + 1 Monat,
-        // auch rückwirkend); die Termine-Leiste zeigt die nächste offene-rate
+        // bescheidFrist + Termine-Leiste = die ersten beiden jährlichen
+        // Fälligkeitstermine (Erst-Frist, danach + 1 Jahr)
         const fristElem = document.getElementById("bescheidFrist");
         if (fristElem) {
-          fristElem.textContent =
-            bescheidKfzErsteFrist(zulassungInput.value, fristOhneJahr) || "–";
+          fristElem.textContent = fristen[0] || "–";
         }
         const fristJahr1 = document.getElementById("bescheidFristJahr1");
         if (fristJahr1) fristJahr1.textContent = fristen[0] || "–";
