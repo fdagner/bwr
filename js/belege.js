@@ -3518,6 +3518,7 @@ const VALIDATION_RULES = {
     wertpapiereISINInput: { max: 12, label: "ISIN" },
     bescheidFahrzeugInput: { max: 50, label: "Fahrzeug (Kfz-Bescheid)" },
     bescheidZulassungInput: { max: 25, label: "Zulassung (Kfz-Bescheid)" },
+    jahrBescheid: { max: 4, label: "Jahr (Bescheid)" },
     jahr: { max: 4, label: "Jahr (Rechnung)" },
     jahrKontoauszug: { max: 6, label: "Jahr (Kontoauszug)" },
     jahrWertpapiere: { max: 6, label: "Jahr (Wertpapiere)" },
