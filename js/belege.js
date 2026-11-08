@@ -3708,13 +3708,17 @@ const BELEG_APPLY_CONFIG = {
         const ustText = ustEl ? ustEl.value.trim() : "19";
         const nettoWert = parseFloat(nettoText.replace(",", ".")) || 0;
         const ustWert = parseFloat(ustText.replace(",", ".")) || 0;
+        // Kein Netto-Betrag eingetragen → Zeile ohne Preis anzeigen
         artikel.push({
           zweck,
-          netto: nettoWert,
+          netto: nettoText === "" ? null : nettoWert,
           ust: ustWert,
-          brutto: FormatHelper.roundToTwo(
-            nettoWert + (nettoWert * ustWert) / 100,
-          ),
+          brutto:
+            nettoText === ""
+              ? null
+              : FormatHelper.roundToTwo(
+                  nettoWert + (nettoWert * ustWert) / 100,
+                ),
           // Kennzeichen nur, wenn ein Netto-Betrag eingetragen ist
           mitBetrag: nettoText !== "",
         });
@@ -3750,9 +3754,13 @@ const BELEG_APPLY_CONFIG = {
         });
         const nettoElem = document.getElementById("kassenbonBetrag" + n);
         if (nettoElem)
-          nettoElem.textContent = FormatHelper.currency(artikelObj.netto);
+          nettoElem.textContent = artikelObj.mitBetrag
+            ? FormatHelper.currency(artikelObj.netto)
+            : "";
         document.querySelectorAll("." + bruttoClass).forEach((element) => {
-          element.textContent = FormatHelper.currency(artikelObj.brutto);
+          element.textContent = artikelObj.mitBetrag
+            ? FormatHelper.currency(artikelObj.brutto)
+            : "";
         });
       });
 
@@ -3765,13 +3773,14 @@ const BELEG_APPLY_CONFIG = {
       document.getElementById("kassenbonTransaktionsnummer").textContent =
         RandomHelper.sevenDigit();
 
-      // Summen über alle Artikel
-      const summeNetto = artikel.reduce((s, a) => s + a.netto, 0);
-      const summeUSTBetrag = artikel.reduce(
+      // Summen über alle Artikel (Zeilen ohne Betrag zählen nicht mit)
+      const mitBetragListe = artikel.filter((a) => a.mitBetrag);
+      const summeNetto = mitBetragListe.reduce((s, a) => s + a.netto, 0);
+      const summeUSTBetrag = mitBetragListe.reduce(
         (s, a) => s + FormatHelper.roundToTwo((a.netto * a.ust) / 100),
         0,
       );
-      const summeBrutto = artikel.reduce((s, a) => s + a.brutto, 0);
+      const summeBrutto = mitBetragListe.reduce((s, a) => s + a.brutto, 0);
 
       document.getElementById("kassenbonNetto").textContent =
         FormatHelper.currency(summeNetto);
