@@ -3540,17 +3540,17 @@ const VALIDATION_RULES = {
     },
     quittungNettoInput: { min: 0, max: 9999, label: "Quittung Nettobetrag" },
     quittungUSTInput: { min: 0, max: 99, label: "Quittung UST" },
-    kassenbonNettoInput: { min: 0, max: 9999, label: "Kassenbon Nettobetrag" },
+    kassenbonNettoInput: { min: 0, max: 5000, label: "Kassenbon Nettobetrag" },
     kassenbonUSTInput: { min: 0, max: 99, label: "Kassenbon UST" },
     kassenbonNettoInput2: {
       min: 0,
-      max: 9999,
+      max: 5000,
       label: "Kassenbon Nettobetrag 2",
     },
     kassenbonUSTInput2: { min: 0, max: 99, label: "Kassenbon UST 2" },
     kassenbonNettoInput3: {
       min: 0,
-      max: 9999,
+      max: 5000,
       label: "Kassenbon Nettobetrag 3",
     },
     kassenbonUSTInput3: { min: 0, max: 99, label: "Kassenbon UST 3" },
@@ -3723,13 +3723,18 @@ const BELEG_APPLY_CONFIG = {
         if (zeile) zeile.style.display = artikel.length >= n ? "" : "none";
       }
 
-      // Artikelzeilen füllen
+      // Artikelzeilen füllen (Bezeichnung ab 22 Zeichen mit "…" kürzen,
+      // damit sie nicht in den Netto-Preis läuft)
       artikel.forEach((artikelObj, idx) => {
         const n = idx + 1;
         const zweckId = "kassenbonZweck" + (n === 1 ? "" : n);
         const bruttoClass = "kassenbonBrutto" + (n === 1 ? "1" : String(n));
         const zweckElem = document.getElementById(zweckId);
-        if (zweckElem) zweckElem.textContent = artikelObj.zweck;
+        if (zweckElem) {
+          const zweck = artikelObj.zweck;
+          zweckElem.textContent =
+            zweck.length > 22 ? zweck.slice(0, 21).trimEnd() + "…" : zweck;
+        }
         const nettoElem = document.getElementById("kassenbonBetrag" + n);
         if (nettoElem)
           nettoElem.textContent = FormatHelper.currency(artikelObj.netto);

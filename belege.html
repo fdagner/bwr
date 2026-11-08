@@ -1315,8 +1315,19 @@
 
             <div class="grid3">
               <!-- Beträge -->
-              <fieldset class="betrag-gruppe">
-                <legend>Beträge</legend>
+              <!-- Artikel 1 -->
+              <fieldset id="kassenbonArtikel1">
+                <legend>Artikel 1</legend>
+
+                <div class="form-field">
+                  <label for="kassenbonZweckInput">Bezeichnung</label>
+                  <input
+                    type="text"
+                    id="kassenbonZweckInput"
+                    placeholder="Zweck"
+                    maxlength="50"
+                  />
+                </div>
 
                 <div class="form-field">
                   <label for="kassenbonNettoInput">Nettobetrag</label>
@@ -1325,7 +1336,7 @@
                     id="kassenbonNettoInput"
                     placeholder="netto"
                     min="0"
-                    max="9999"
+                    max="5000"
                   />
                 </div>
 
@@ -1344,16 +1355,6 @@
               <!-- Weitere Daten -->
               <fieldset class="details-gruppe">
                 <legend>Weitere Daten</legend>
-
-                <div class="form-field">
-                  <label for="kassenbonZweckInput">Bezeichnung</label>
-                  <input
-                    type="text"
-                    id="kassenbonZweckInput"
-                    placeholder="Zweck"
-                    maxlength="50"
-                  />
-                </div>
 
                 <div class="form-field">
                   <label for="kassenbonDropdownZahlungsart">Zahlungsart</label>
@@ -1477,7 +1478,7 @@
                     id="kassenbonNettoInput2"
                     placeholder="netto"
                     min="0"
-                    max="9999"
+                    max="5000"
                   />
                 </div>
 
@@ -1513,7 +1514,7 @@
                     id="kassenbonNettoInput3"
                     placeholder="netto"
                     min="0"
-                    max="9999"
+                    max="5000"
                   />
                 </div>
 
@@ -3659,7 +3660,7 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
       </section>
     </main>
     <div w3-include-html="footer.html"></div>
-    <script src="js/belege.js?v=56"></script>
+    <script src="js/belege.js?v=57"></script>
     <script src="js/collection.js?v=36"></script>
     <script src="js/belege-zufall.js?v=26"></script>
     <script src="js/beleg_url_parameter.js?v=28"></script>
