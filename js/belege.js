@@ -2048,10 +2048,11 @@ function loadKassenbonData() {
 function loadCompanyDataforKassenbon() {
   const selectedCompanyName = document.getElementById(
     "datenKassenbonKunde",
-  ).value;
+  )?.value;
   const selectedCompany = yamlData.find(
     (company) => company.unternehmen.name === selectedCompanyName,
   );
+  if (!selectedCompany) return;
 
   let kassenbonStrasseKunde = document.getElementById("kassenbonStrasseKunde");
   if (kassenbonStrasseKunde) {
@@ -3503,6 +3504,8 @@ const VALIDATION_RULES = {
     kontoauszugVorgang3Input: { max: 45, label: "Kontoauszug Vorgang 3" },
     quittungZweckInput: { max: 50, label: "Quittung Zweck" },
     kassenbonZweckInput: { max: 50, label: "Kassenbon Artikel" },
+    kassenbonZweckInput2: { max: 50, label: "Kassenbon Artikel 2" },
+    kassenbonZweckInput3: { max: 50, label: "Kassenbon Artikel 3" },
     newspaperHeadlineInput: { max: 150, label: "Zeitungs-Überschrift" },
     newspaperTextInput: { max: 5000, label: "Zeitungs-Text" },
     newspaperSourceInput: { max: 150, label: "Zeitungs-Quelle" },
@@ -3539,6 +3542,18 @@ const VALIDATION_RULES = {
     quittungUSTInput: { min: 0, max: 99, label: "Quittung UST" },
     kassenbonNettoInput: { min: 0, max: 9999, label: "Kassenbon Nettobetrag" },
     kassenbonUSTInput: { min: 0, max: 99, label: "Kassenbon UST" },
+    kassenbonNettoInput2: {
+      min: 0,
+      max: 9999,
+      label: "Kassenbon Nettobetrag 2",
+    },
+    kassenbonUSTInput2: { min: 0, max: 99, label: "Kassenbon UST 2" },
+    kassenbonNettoInput3: {
+      min: 0,
+      max: 9999,
+      label: "Kassenbon Nettobetrag 3",
+    },
+    kassenbonUSTInput3: { min: 0, max: 99, label: "Kassenbon UST 3" },
     anlagenkarteAnschaffungskostenInput: {
       min: 0,
       max: 999999,
@@ -3678,8 +3693,50 @@ const BELEG_APPLY_CONFIG = {
     scriptId: "customJsKassenbon",
     scriptFunction: "SVGonLoadKassenbon",
     dataFunction: () => {
-      let kassenbonZweck = document.getElementById("kassenbonZweckInput").value;
-      document.getElementById("kassenbonZweck").textContent = kassenbonZweck;
+      // Kassenbon: bis zu 3 Artikel (Taxi-Vorlage nutzt nur Artikel 1)
+      const artikel = [];
+      for (let n = 1; n <= 3; n++) {
+        const suffix = n === 1 ? "" : String(n);
+        const zweckEl = document.getElementById("kassenbonZweckInput" + suffix);
+        const nettoEl = document.getElementById("kassenbonNettoInput" + suffix);
+        const ustEl = document.getElementById("kassenbonUSTInput" + suffix);
+        if (!zweckEl || !nettoEl) continue;
+        const zweck = zweckEl.value.trim();
+        const nettoText = nettoEl.value.trim();
+        if (zweck === "" && nettoText === "") continue;
+        const ustText = ustEl ? ustEl.value.trim() : "19";
+        const nettoWert = parseFloat(nettoText.replace(",", ".")) || 0;
+        const ustWert = parseFloat(ustText.replace(",", ".")) || 0;
+        artikel.push({
+          zweck,
+          netto: nettoWert,
+          ust: ustWert,
+          brutto: FormatHelper.roundToTwo(
+            nettoWert + (nettoWert * ustWert) / 100,
+          ),
+        });
+      }
+
+      // Artikelzeilen 2/3 ein-/ausblenden (nur Klassisch/eBon haben sie)
+      for (let n = 2; n <= 3; n++) {
+        const zeile = document.getElementById("kassenbonArtikel" + n + "Zeile");
+        if (zeile) zeile.style.display = artikel.length >= n ? "" : "none";
+      }
+
+      // Artikelzeilen füllen
+      artikel.forEach((artikelObj, idx) => {
+        const n = idx + 1;
+        const zweckId = "kassenbonZweck" + (n === 1 ? "" : n);
+        const bruttoClass = "kassenbonBrutto" + (n === 1 ? "1" : String(n));
+        const zweckElem = document.getElementById(zweckId);
+        if (zweckElem) zweckElem.textContent = artikelObj.zweck;
+        const nettoElem = document.getElementById("kassenbonBetrag" + n);
+        if (nettoElem)
+          nettoElem.textContent = FormatHelper.currency(artikelObj.netto);
+        document.querySelectorAll("." + bruttoClass).forEach((element) => {
+          element.textContent = FormatHelper.currency(artikelObj.brutto);
+        });
+      });
 
       const selectedTag = document.getElementById("tagKassenbon").value;
       const selectedMonat = document.getElementById("monatKassenbon").value;
@@ -3690,29 +3747,30 @@ const BELEG_APPLY_CONFIG = {
       document.getElementById("kassenbonTransaktionsnummer").textContent =
         RandomHelper.sevenDigit();
 
-      let kassenbonNetto =
-        document.getElementById("kassenbonNettoInput").value || "0";
+      // Summen über alle Artikel
+      const summeNetto = artikel.reduce((s, a) => s + a.netto, 0);
+      const summeUSTBetrag = artikel.reduce(
+        (s, a) => s + FormatHelper.roundToTwo((a.netto * a.ust) / 100),
+        0,
+      );
+      const summeBrutto = artikel.reduce((s, a) => s + a.brutto, 0);
+
       document.getElementById("kassenbonNetto").textContent =
-        FormatHelper.currency(kassenbonNetto);
+        FormatHelper.currency(summeNetto);
 
-      let kassenbonUST =
-        document.getElementById("kassenbonUSTInput").value || "0";
-      document.getElementById("kassenbonUST").textContent = kassenbonUST;
+      // UST-Satz anzeigen, wenn alle Artikel denselben Satz haben
+      const saetze = [...new Set(artikel.map((a) => String(a.ust)))];
+      document.getElementById("kassenbonUST").textContent =
+        saetze.length === 1 ? saetze[0] : "";
 
-      let kassenbonUSTBetrag = FormatHelper.roundToTwo(
-        (kassenbonNetto * kassenbonUST) / 100,
-      );
       document.getElementById("kassenbonUSTBetrag").textContent =
-        FormatHelper.currency(kassenbonUSTBetrag);
+        FormatHelper.currency(FormatHelper.roundToTwo(summeUSTBetrag));
 
-      let kassenbonBrutto =
-        parseFloat(kassenbonNetto) + parseFloat(kassenbonUSTBetrag);
-      let kassenbonBruttoElements = Array.from(
-        document.getElementsByClassName("kassenbonBrutto"),
+      Array.from(document.getElementsByClassName("kassenbonBrutto")).forEach(
+        (element) => {
+          element.textContent = FormatHelper.currency(summeBrutto);
+        },
       );
-      kassenbonBruttoElements.forEach((element) => {
-        element.textContent = FormatHelper.currency(kassenbonBrutto);
-      });
 
       let kassenbonZahlungsart = document.getElementById(
         "kassenbonDropdownZahlungsart",

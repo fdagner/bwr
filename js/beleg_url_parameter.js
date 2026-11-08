@@ -143,6 +143,14 @@ const URL_PARAM_CONFIG = {
     bezeichnung: { elementId: "kassenbonZweckInput", type: "input" },
     zahlungsart: { elementId: "kassenbonDropdownZahlungsart", type: "select" },
 
+    // Artikel 2 / 3 (nur Kassenbon/eBon, nicht Taxi)
+    bezeichnung2: { elementId: "kassenbonZweckInput2", type: "input" },
+    netto2: { elementId: "kassenbonNettoInput2", type: "input" },
+    ust2: { elementId: "kassenbonUSTInput2", type: "input" },
+    bezeichnung3: { elementId: "kassenbonZweckInput3", type: "input" },
+    netto3: { elementId: "kassenbonNettoInput3", type: "input" },
+    ust3: { elementId: "kassenbonUSTInput3", type: "input" },
+
     // Datum
     tag: { elementId: "tagKassenbon", type: "select" },
     monat: { elementId: "monatKassenbon", type: "select" },

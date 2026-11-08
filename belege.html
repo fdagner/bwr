@@ -1455,6 +1455,79 @@
                   </label>
                 </div>
               </fieldset>
+
+              <!-- Artikel 2 / 3 (nur Kassenbon/eBon, nicht Taxi) -->
+              <fieldset id="kassenbonArtikel2" style="display: none">
+                <legend>Artikel 2</legend>
+
+                <div class="form-field">
+                  <label for="kassenbonZweckInput2">Bezeichnung</label>
+                  <input
+                    type="text"
+                    id="kassenbonZweckInput2"
+                    placeholder="Zweck"
+                    maxlength="50"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="kassenbonNettoInput2">Nettobetrag</label>
+                  <input
+                    type="number"
+                    id="kassenbonNettoInput2"
+                    placeholder="netto"
+                    min="0"
+                    max="9999"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="kassenbonUSTInput2">Umsatzsteuersatz (%)</label>
+                  <input
+                    type="number"
+                    id="kassenbonUSTInput2"
+                    value="19"
+                    min="0"
+                    max="99"
+                  />
+                </div>
+              </fieldset>
+
+              <fieldset id="kassenbonArtikel3" style="display: none">
+                <legend>Artikel 3</legend>
+
+                <div class="form-field">
+                  <label for="kassenbonZweckInput3">Bezeichnung</label>
+                  <input
+                    type="text"
+                    id="kassenbonZweckInput3"
+                    placeholder="Zweck"
+                    maxlength="50"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="kassenbonNettoInput3">Nettobetrag</label>
+                  <input
+                    type="number"
+                    id="kassenbonNettoInput3"
+                    placeholder="netto"
+                    min="0"
+                    max="9999"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="kassenbonUSTInput3">Umsatzsteuersatz (%)</label>
+                  <input
+                    type="number"
+                    id="kassenbonUSTInput3"
+                    value="19"
+                    min="0"
+                    max="99"
+                  />
+                </div>
+              </fieldset>
             </div>
           </section>
 
@@ -3586,11 +3659,11 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
       </section>
     </main>
     <div w3-include-html="footer.html"></div>
-    <script src="js/belege.js?v=55"></script>
+    <script src="js/belege.js?v=56"></script>
     <script src="js/collection.js?v=36"></script>
     <script src="js/belege-zufall.js?v=26"></script>
-    <script src="js/beleg_url_parameter.js?v=27"></script>
+    <script src="js/beleg_url_parameter.js?v=28"></script>
     <script src="js/beleg_import.js?v=12"></script>
-    <script src="js/belege-inline.js?v=2"></script>
+    <script src="js/belege-inline.js?v=3"></script>
   </body>
 </html>

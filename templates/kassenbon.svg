@@ -1,8 +1,8 @@
-<svg id="kassenbonSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 400 650" style="height: auto;padding:2px;max-width: 400px;">
+<svg id="kassenbonSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 400 750" style="height: auto;padding:2px;max-width: 400px;">
      <defs id="customDefsKassenbon">
 
      </defs>
-<rect x="0" y="0" width="400" height="650" fill="#f5f5f5"/>
+<rect x="0" y="0" width="400" height="750" fill="#f5f5f5"/>
 <text id="kassenbonName" x="200" y="50" font-family="Arial" fill="#000" font-size="26" text-anchor="middle"></text>
 <text x="200" y="80" font-family="Arial" fill="#000" font-size="16" text-anchor="middle"><tspan id="kassenbonStrasse"></tspan>, <tspan id="kassenbonplz"></tspan> <tspan id="kassenbonOrt"></tspan></text>
 <text x="200" y="100" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">Öffnungszeiten: Mo-Sa 10-20 Uhr, So geschlossen</text>
@@ -11,21 +11,32 @@
 <text x="20" y="200" font-family="Arial" fill="#000" font-size="20"></text>
 <text id="kassenbonZweck" x="20" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="start"></text>
 <text id="kassenbonBetrag1" x="200" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
-<rect x="150" y="225" width="240" height="1" fill="#000" />
-<text class="kassenbonBrutto" x="390" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
-<rect x="150" y="258" width="240" height="1" fill="#000" />
-<rect x="150" y="262" width="240" height="1" fill="#000" />
-<text x="200" y="250" font-family="Arial" fill="#000" font-size="20" text-anchor="middle">Summe</text><text class="kassenbonBrutto" x="390" y="250" font-size="20" text-anchor="end"></text>
-<text x="20" y="340" font-family="Arial" fill="#000" font-size="20"><tspan x="60" text-anchor="middle">Netto</tspan><tspan id="kassenbonUST" x="175" text-anchor="middle"></tspan> % <tspan x="225" text-anchor="middle">UST</tspan><tspan x="340" text-anchor="middle">Brutto</tspan></text>
-<text x="20" y="380" font-family="Arial" fill="#000" font-size="20" font-weight="bold"><tspan  id="kassenbonNetto" x="60" text-anchor="middle"></tspan><tspan id="kassenbonUSTBetrag" x="200" text-anchor="middle"></tspan><tspan class="kassenbonBrutto" x="340" text-anchor="middle"></tspan></text>
-<line x1="10" y1="400" x2="390" y2="400" style="stroke:#000; stroke-width:2; stroke-dasharray: 5,5;" />
-<text id="kassenbonZahlungsart" x="200" y="440" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
-<text id="kassenbonTransaktionsnummer" x="200" y="460" font-family="Arial" fill="#000" font-size="16" text-anchor="middle"></text>
-<text x="200" y="490" font-family="Arial" fill="#000" font-size="24" text-anchor="middle">***</text>
-<text x="200" y="520" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">UID: <tspan  id="kassenbonUSTID"></tspan></text>
-<text x="200" y="540" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">Steuer-Nr: <tspan  id="kassenbonSteuernummer"></tspan></text>
-<text x="200" y="590" font-family="Arial" fill="#000" font-size="18" text-anchor="middle">Vielen Dank für Ihren Einkauf!</text>
-<g transform="translate(100,0)">
+<text class="kassenbonBrutto1" x="390" y="200" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
+<!-- Artikel 2 / 3 (werden bei leerer Eingabe ausgeblendet) -->
+<g id="kassenbonArtikel2Zeile">
+<text id="kassenbonZweck2" x="20" y="230" font-family="Arial" fill="#000" font-size="20" text-anchor="start"></text>
+<text id="kassenbonBetrag2" x="200" y="230" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
+<text class="kassenbonBrutto2" x="390" y="230" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
+</g>
+<g id="kassenbonArtikel3Zeile">
+<text id="kassenbonZweck3" x="20" y="260" font-family="Arial" fill="#000" font-size="20" text-anchor="start"></text>
+<text id="kassenbonBetrag3" x="200" y="260" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
+<text class="kassenbonBrutto3" x="390" y="260" font-family="Arial" fill="#000" font-size="20" text-anchor="end"></text>
+</g>
+<rect x="150" y="280" width="240" height="1" fill="#000" />
+<text x="200" y="312" font-family="Arial" fill="#000" font-size="20" text-anchor="middle">Summe</text><text class="kassenbonBrutto" x="390" y="312" font-size="20" text-anchor="end"></text>
+<rect x="150" y="320" width="240" height="1" fill="#000" />
+<rect x="150" y="324" width="240" height="1" fill="#000" />
+<text x="20" y="380" font-family="Arial" fill="#000" font-size="20"><tspan x="60" text-anchor="middle">Netto</tspan><tspan id="kassenbonUST" x="175" text-anchor="middle"></tspan> % <tspan x="225" text-anchor="middle">UST</tspan><tspan x="340" text-anchor="middle">Brutto</tspan></text>
+<text x="20" y="420" font-family="Arial" fill="#000" font-size="20" font-weight="bold"><tspan  id="kassenbonNetto" x="60" text-anchor="middle"></tspan><tspan id="kassenbonUSTBetrag" x="200" text-anchor="middle"></tspan><tspan class="kassenbonBrutto" x="340" text-anchor="middle"></tspan></text>
+<line x1="10" y1="440" x2="390" y2="440" style="stroke:#000; stroke-width:2; stroke-dasharray: 5,5;" />
+<text id="kassenbonZahlungsart" x="200" y="480" font-family="Arial" fill="#000" font-size="20" text-anchor="middle"></text>
+<text id="kassenbonTransaktionsnummer" x="200" y="500" font-family="Arial" fill="#000" font-size="16" text-anchor="middle"></text>
+<text x="200" y="530" font-family="Arial" fill="#000" font-size="24" text-anchor="middle">***</text>
+<text x="200" y="560" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">UID: <tspan  id="kassenbonUSTID"></tspan></text>
+<text x="200" y="580" font-family="Arial" fill="#000" font-size="16" text-anchor="middle">Steuer-Nr: <tspan  id="kassenbonSteuernummer"></tspan></text>
+<text x="200" y="618" font-family="Arial" fill="#000" font-size="18" text-anchor="middle">Vielen Dank für Ihren Einkauf!</text>
+<g transform="translate(100,60)">
   <!-- Strichcode-Linien -->
   <rect x="5" y="600" width="1" height="80" fill="#000000" />
   <rect x="10" y="600" width="2" height="80" fill="#000000" />

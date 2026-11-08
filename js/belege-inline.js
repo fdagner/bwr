@@ -90,6 +90,20 @@ if (jahrBescheidFeld) {
   });
 }
 
+// Kassenbon: Artikel 2/3 nur bei Klassisch/eBon, nicht bei Taxi
+const kassenbonDropdown = document.getElementById("svgDropdownKassenbon");
+if (kassenbonDropdown) {
+  const kassenbonArtikelSichtbar = () => {
+    const taxi = kassenbonDropdown.value === "kassenbontaxi.svg";
+    ["kassenbonArtikel2", "kassenbonArtikel3"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = taxi ? "none" : "";
+    });
+  };
+  kassenbonDropdown.addEventListener("change", kassenbonArtikelSichtbar);
+  window.addEventListener("load", kassenbonArtikelSichtbar);
+}
+
 // "Skript verwenden": aktuelles Jahr ins Jahr-Feld eintragen (das Feld ist
 // dann gesperrt – das per SVG-Skript übergebene Jahr entspricht dem Feld)
 const scriptJahrBescheidBox = document.getElementById("scriptJahrBescheid");
