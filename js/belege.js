@@ -3503,9 +3503,9 @@ const VALIDATION_RULES = {
     kontoauszugVorgang2Input: { max: 45, label: "Kontoauszug Vorgang 2" },
     kontoauszugVorgang3Input: { max: 45, label: "Kontoauszug Vorgang 3" },
     quittungZweckInput: { max: 50, label: "Quittung Zweck" },
-    kassenbonZweckInput: { max: 20, label: "Kassenbon Artikel" },
-    kassenbonZweckInput2: { max: 20, label: "Kassenbon Artikel 2" },
-    kassenbonZweckInput3: { max: 20, label: "Kassenbon Artikel 3" },
+    kassenbonZweckInput: { max: 23, label: "Kassenbon Artikel" },
+    kassenbonZweckInput2: { max: 23, label: "Kassenbon Artikel 2" },
+    kassenbonZweckInput3: { max: 23, label: "Kassenbon Artikel 3" },
     newspaperHeadlineInput: { max: 150, label: "Zeitungs-Überschrift" },
     newspaperTextInput: { max: 5000, label: "Zeitungs-Text" },
     newspaperSourceInput: { max: 150, label: "Zeitungs-Quelle" },
@@ -3715,6 +3715,8 @@ const BELEG_APPLY_CONFIG = {
           brutto: FormatHelper.roundToTwo(
             nettoWert + (nettoWert * ustWert) / 100,
           ),
+          // Kennzeichen nur, wenn ein Netto-Betrag eingetragen ist
+          mitBetrag: nettoText !== "",
         });
       }
 
@@ -3734,10 +3736,12 @@ const BELEG_APPLY_CONFIG = {
         if (zweckElem) {
           const zweck = artikelObj.zweck;
           zweckElem.textContent =
-            zweck.length > 20 ? zweck.slice(0, 19).trimEnd() + "…" : zweck;
+            zweck.length > 23 ? zweck.slice(0, 22).trimEnd() + "…" : zweck;
         }
-        // Kennzeichen A (regulär) / B (vermindert) / C (steuerfrei)
+        // Kennzeichen A (regulär) / B (vermindert) / C (steuerfrei) –
+        // nur wenn ein Betrag eingetragen ist
         const code =
+          artikelObj.mitBetrag &&
           typeof window.UST_KENNZEICHEN === "function"
             ? window.UST_KENNZEICHEN(artikelObj.ust)
             : "";
