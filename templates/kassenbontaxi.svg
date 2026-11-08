@@ -20,7 +20,7 @@
 <text x="20" y="100" font-family="Arial" fill="#000" font-size="14" text-anchor="start">Taxiruf rund um die Uhr!</text>
 <text x="20" y="140" font-family="Arial" fill="#000" font-size="16">Fahrt am <tspan id="kassenbonTag"></tspan>.<tspan id="kassenbonMonat"></tspan>.<tspan class="aktuellesJahrKassenbon"></tspan> um <tspan id="kassenbonUhrzeit"></tspan></text>
 <text x="20" y="170" font-family="Arial" fill="#000" font-size="16" text-anchor="start">Von: <tspan id="kassenbonStrasseKunde"></tspan> nach Bahnhofsplatz 1, <tspan id="kassenbonOrtKunde"></tspan></text>
-<text x="20" y="200" font-family="Arial" fill="#000" font-size="16" text-anchor="start">Für eine: <tspan class="kassenbonUstCode1" fill="#666" font-size="12"></tspan><tspan id="kassenbonZweck" dx="6"></tspan></text>
+<text x="16" y="200" font-family="Arial" fill="#000" font-size="16" text-anchor="start">Für eine: <tspan class="kassenbonUstCode1" fill="#666" font-size="12"></tspan><tspan id="kassenbonZweck" dx="6"></tspan></text>
 <line x1="10" y1="220" x2="640" y2="220" style="stroke:#000; stroke-width:2; stroke-dasharray: 5,5;" />
 <text x="20" y="260" font-family="Arial" fill="#000" font-size="20"><tspan x="150" text-anchor="middle">Netto</tspan><tspan id="kassenbonUST" x="305" text-anchor="middle"></tspan> % <tspan x="355" text-anchor="middle">UST</tspan><tspan x="500" text-anchor="middle">Brutto</tspan></text>
 <text x="20" y="280" font-family="Arial" fill="#000" font-size="20" font-weight="bold"><tspan  id="kassenbonNetto" x="150" text-anchor="middle"></tspan><tspan id="kassenbonUSTBetrag" x="325" text-anchor="middle"></tspan><tspan class="kassenbonBrutto" x="500" text-anchor="middle"></tspan></text>
