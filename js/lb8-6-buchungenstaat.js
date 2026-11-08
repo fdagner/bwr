@@ -483,16 +483,10 @@ function erstelleKfzBescheidURL(geschaeftsfall) {
     fahrzeuge[Math.floor(Math.random() * fahrzeuge.length)],
   );
 
-  // Zulassung: zufälliges Datum innerhalb der letzten zwei Jahre
-  const jetzt = new Date();
-  const zulassung = new Date(
-    jetzt.getTime() - Math.random() * 2 * 365 * 24 * 60 * 60 * 1000,
-  );
-  const p2 = (n) => n.toString().padStart(2, "0");
-  params.set(
-    "zulassung",
-    `${p2(zulassung.getDate())}.${p2(zulassung.getMonth() + 1)}.${zulassung.getFullYear()}`,
-  );
+  // Zulassung: immer im aktuellen Jahr, immer Januar (zufälliger Tag)
+  const jahr = new Date().getFullYear();
+  const tag = String(Math.floor(Math.random() * 31) + 1).padStart(2, "0");
+  params.set("zulassung", `${tag}.01.${jahr}`);
 
   // Betrag = KFZ-Steuer des Geschäftsfalls
   const betrag = geschaeftsfall.betragFormatted.replace(/[€\s]/g, "").trim();
