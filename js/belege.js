@@ -3535,6 +3535,7 @@ const VALIDATION_RULES = {
     wertpapiereAnzahlInput: { min: 1, max: 5000, label: "Wertpapiere Anzahl" },
     bescheidMessbetragInput: { min: 0, max: 9999, label: "Messbetrag" },
     bescheidHebesatzInput: { min: 0, max: 999, label: "Hebesatz" },
+    bescheidBetragInput: { min: 0, max: 99999, label: "Betrag (Kfz-Steuer)" },
     mahnungBetragInput: { min: 0, max: 9999999, label: "Rechnungsbetrag" },
     mahnungZinssatzInput: { min: 0, max: 30, label: "Verzugszinssatz" },
     mahnungPauschaleInput: { min: 0, max: 999, label: "Mahngebühren" },
@@ -3975,6 +3976,29 @@ const BELEG_APPLY_CONFIG = {
       if (fahrzeugInput) {
         const fahrzeugElem = document.getElementById("bescheidFahrzeug");
         if (fahrzeugElem) fahrzeugElem.textContent = fahrzeugInput.value || "–";
+      }
+      const betragInput = document.getElementById("bescheidBetragInput");
+      if (betragInput) {
+        const betragElem = document.getElementById("bescheidKfzBetrag");
+        if (betragElem) {
+          const betrag = betragInput.value.trim();
+          if (betrag === "") {
+            betragElem.textContent = "–";
+          } else {
+            // Deutsche Eingaben ("1.234,50") korrekt parsen:
+            // Punkt = Tausender, Komma = Dezimalstelle
+            let betragText = betrag.replace(/\s|€/g, "");
+            if (betragText.includes(",")) {
+              betragText = betragText.replace(/\./g, "").replace(",", ".");
+            } else {
+              betragText = betragText.replace(/\./g, "");
+            }
+            const betragWert = parseFloat(betragText);
+            betragElem.textContent = !isNaN(betragWert)
+              ? FormatHelper.currency(betragWert)
+              : betrag;
+          }
+        }
       }
       const zulassungInput = document.getElementById("bescheidZulassungInput");
       if (zulassungInput) {

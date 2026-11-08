@@ -226,6 +226,7 @@ const URL_PARAM_CONFIG = {
     // cleanValueForInput (sonst würde "15.03.2025" zu "15.03" verkürzt)
     fahrzeug: { elementId: "bescheidFahrzeugInput", type: "text" },
     zulassung: { elementId: "bescheidZulassungInput", type: "date" },
+    betrag: { elementId: "bescheidBetragInput", type: "text" },
 
     // Datum
     tag: { elementId: "tagBescheid", type: "select" },
