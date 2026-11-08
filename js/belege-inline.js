@@ -43,18 +43,20 @@ function bescheidKfzFristAnzeige() {
   const anzeige = document.getElementById("bescheidFristAnzeige");
   if (!anzeige) return;
   // Frist ohne Jahr, wenn kein Jahr im Beleg steht (Jahr-Feld leer
-  // oder Zulassung ohne Jahr); „Skript verwenden" druckt immer ein Jahr
+  // oder Zulassung ohne Jahr); „Skript verwenden" druckt immer ein Jahr;
+  // "20.." im Jahr-Feld druckt den Platzhalter "20.." statt eines Jahres
   const scriptJahr = document.getElementById("scriptJahrBescheid");
   const jahrFeld = document.getElementById("jahrBescheid");
-  const ohneJahr =
-    !(scriptJahr && scriptJahr.checked) &&
-    jahrFeld &&
-    jahrFeld.value.trim() === "";
+  const scriptAktiv = !!(scriptJahr && scriptJahr.checked);
+  const jahrText = jahrFeld ? jahrFeld.value.trim() : "";
+  const ohneJahr = !scriptAktiv && jahrText === "";
+  const jahrAnzeige = !scriptAktiv && jahrText === "20.." ? "20.." : null;
   const fristen =
     typeof window.bescheidKfzFristen === "function"
       ? window.bescheidKfzFristen(
           document.getElementById("bescheidZulassungInput").value,
           ohneJahr,
+          jahrAnzeige,
         )
       : [];
   anzeige.textContent = fristen.length
@@ -85,6 +87,21 @@ if (jahrBescheidFeld) {
     jahrBescheidFeld.dataset.kfzUser = "1";
     delete jahrBescheidFeld.dataset.kfzAuto;
     bescheidKfzFristAnzeige();
+  });
+}
+
+// "Skript verwenden": aktuelles Jahr ins Jahr-Feld eintragen (das Feld ist
+// dann gesperrt – das per SVG-Skript übergebene Jahr entspricht dem Feld)
+const scriptJahrBescheidBox = document.getElementById("scriptJahrBescheid");
+if (scriptJahrBescheidBox) {
+  scriptJahrBescheidBox.addEventListener("change", () => {
+    if (
+      scriptJahrBescheidBox.checked &&
+      typeof bescheidKfzFristAnzeige === "function"
+    ) {
+      jahrBescheidFeld.value = String(new Date().getFullYear());
+      bescheidKfzFristAnzeige();
+    }
   });
 }
 
