@@ -1967,6 +1967,33 @@ function bescheidKfzDatum(zulassungText) {
   return { datum, mitJahr };
 }
 
+// Helfer: Datum als "TT.MM." oder "TT.MM.JJJJ" formatieren
+function bescheidKfzDatumText(x, mitJahr) {
+  return `${String(x.getDate()).padStart(2, "0")}.${String(
+    x.getMonth() + 1,
+  ).padStart(2, "0")}${mitJahr ? "." + x.getFullYear() : "."}`;
+}
+
+// Die allererste Fälligkeit (Zulassung + 1 Monat) – auch rückwirkend,
+// wenn sie bereits vergangen ist (z. B. Zulassung 15.03.2025 → 15.04.2025).
+// Optional kann die Ausgabe ohne Jahr erzwungen werden (kein Jahr im Beleg).
+function bescheidKfzErsteFrist(zulassungText, ohneJahrErzwungen) {
+  const info = bescheidKfzDatum(zulassungText);
+  if (!info) return null;
+  const mitJahr = ohneJahrErzwungen === true ? false : info.mitJahr;
+  const z = info.datum;
+  // Monatswechsel mit Tag-Klemme (z. B. 31.01. + 1 Monat → 28./29.02.)
+  const termin = new Date(
+    z.getFullYear(),
+    z.getMonth() + 1,
+    Math.min(
+      z.getDate(),
+      new Date(z.getFullYear(), z.getMonth() + 2, 0).getDate(),
+    ),
+  );
+  return bescheidKfzDatumText(termin, mitJahr);
+}
+
 function bescheidKfzFristen(zulassungText, ohneJahrErzwungen) {
   const info = bescheidKfzDatum(zulassungText);
   if (!info) return [];
@@ -2002,15 +2029,12 @@ function bescheidKfzFristen(zulassungText, ohneJahrErzwungen) {
       new Date(termin.getFullYear() + i, termin.getMonth(), termin.getDate()),
     );
   }
-  const alsText = (x) =>
-    `${String(x.getDate()).padStart(2, "0")}.${String(
-      x.getMonth() + 1,
-    ).padStart(2, "0")}${mitJahr ? "." + x.getFullYear() : "."}`;
-  return termine.map(alsText);
+  return termine.map((x) => bescheidKfzDatumText(x, mitJahr));
 }
 
 window.bescheidKfzFristen = bescheidKfzFristen;
 window.bescheidKfzDatum = bescheidKfzDatum;
+window.bescheidKfzErsteFrist = bescheidKfzErsteFrist;
 
 // Mahnung: Absender (Gläubiger) aus dem Absender-Dropdown laden
 function loadMahnungData() {
@@ -4018,8 +4042,13 @@ const BELEG_APPLY_CONFIG = {
           jahrFeldFrist.value.trim() === "";
         const fristen = bescheidKfzFristen(zulassungInput.value, fristOhneJahr);
         const fristText = fristen.length ? fristen.join(" und ") : "–";
+        // "bescheidFrist" = die allererste Fälligkeit (Zulassung + 1 Monat,
+        // auch rückwirkend); die Termine-Leiste zeigt die nächste offene-rate
         const fristElem = document.getElementById("bescheidFrist");
-        if (fristElem) fristElem.textContent = fristen[0] || "–";
+        if (fristElem) {
+          fristElem.textContent =
+            bescheidKfzErsteFrist(zulassungInput.value, fristOhneJahr) || "–";
+        }
         const fristJahr1 = document.getElementById("bescheidFristJahr1");
         if (fristJahr1) fristJahr1.textContent = fristen[0] || "–";
         const fristJahr2 = document.getElementById("bescheidFristJahr2");

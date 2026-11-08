@@ -55,7 +55,7 @@
  <text x="20" y="635" fill="#333">Die Frist beginnt einen Monat nach der Zulassung und wiederholt sich jährlich.</text>
  <line x1="20" y1="645" x2="700" y2="645" stroke="#000" stroke-width="1"/>
  <rect x="20" y="646" width="680" height="35" fill="#d9f2e2"/>
- <text x="20" y="670" fill="#000" font-weight="bold">Nächste Fälligkeit am: <tspan id="bescheidFrist" font-weight="bold">–</tspan></text>
+ <text x="20" y="670" fill="#000" font-weight="bold">Erstmals fällig am: <tspan id="bescheidFrist" font-weight="bold">–</tspan></text>
  <text x="550" y="670" fill="#000" font-weight="bold" text-anchor="end">Jahresbetrag: <tspan id="bescheidKfzBetrag" font-weight="bold">–</tspan></text>
  <line x1="20" y1="682" x2="700" y2="682" stroke="#000" stroke-width="1"/>
  </g>
