@@ -1,7 +1,7 @@
-<svg id="bescheidSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 760" font-family="Arial" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px">
+<svg id="bescheidSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 720 810" font-family="Arial" style="height: auto;background-color:#fff;padding:0px;width:100%;max-width:720px;border: 1px solid #ccc;border-bottom:0px">
  <defs id="customDefsBescheid"/>
  <!--Gruppe für Firmeninformationen-->
-<rect x="0" y="0" width="720" height="755" stroke="#ccc" stroke-width="1" fill="white" />
+<rect x="0" y="0" width="720" height="805" stroke="#ccc" stroke-width="1" fill="white" />
  <rect x="0" y="120" width="720" height="5" fill="#1a6f4b" />
  <g id="liefererInformationen2" fill="#000">
  <text x="700" y="75" font-size="34" font-weight="bold" text-anchor="end">Zollamt <tspan class="bescheidOrt"></tspan></text>
@@ -55,57 +55,57 @@
  <text x="20" y="635" fill="#333">Die Frist beginnt einen Monat nach der Zulassung und wiederholt sich jährlich.</text>
  <line x1="20" y1="645" x2="700" y2="645" stroke="#000" stroke-width="1"/>
  <rect x="20" y="646" width="680" height="35" fill="#d9f2e2"/>
- <text x="20" y="670" fill="#000" font-weight="bold">Erstmals fällig am: <tspan id="bescheidFrist" font-weight="bold">–</tspan></text>
+ <text x="20" y="670" fill="#000" font-weight="bold">Nächste Fälligkeit am: <tspan id="bescheidFrist" font-weight="bold">–</tspan></text>
  <text x="550" y="670" fill="#000" font-weight="bold" text-anchor="end">Jahresbetrag: <tspan id="bescheidKfzBetrag" font-weight="bold">–</tspan></text>
  <line x1="20" y1="682" x2="700" y2="682" stroke="#000" stroke-width="1"/>
  </g>
 
- <text x="20" y="700" fill="#000" font-size="17" text-anchor="start">Die Kraftfahrzeugsteuer ist jährlich zum angegebenen Termin zu entrichten.</text>
+ <text x="20" y="715" fill="#000" font-size="17" text-anchor="start">Die Kraftfahrzeugsteuer ist jährlich zum angegebenen Termin zu entrichten.</text>
 
  <!--Gruppe für Fälligkeit-->
  <g font-size="18">
- <rect x="10" y="715" width="700" height="30" fill="#ccc"/>
- <text x="15" y="736" fill="#000" font-weight="bold">Fälligkeitstermine:</text>
- <text id="bescheidFristJahr1" x="360" y="736" fill="#000" text-anchor="middle" font-weight="bold">–</text>
- <text id="bescheidFristJahr2" x="540" y="736" fill="#000" text-anchor="middle" font-weight="bold">–</text>
+ <rect x="10" y="745" width="700" height="30" fill="#ccc"/>
+ <text x="15" y="766" fill="#000" font-weight="bold">Fälligkeitstermine:</text>
+ <text id="bescheidFristJahr1" x="360" y="766" fill="#000" text-anchor="middle" font-weight="bold">–</text>
+ <text id="bescheidFristJahr2" x="540" y="766" fill="#000" text-anchor="middle" font-weight="bold">–</text>
  </g>
 
-<circle cx="10" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="30" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="50" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="70" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="90" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="110" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="130" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="150" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="170" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="190" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="210" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="230" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="250" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="270" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="290" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="310" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="330" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="350" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="370" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="390" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="410" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="430" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="450" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="470" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="490" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="510" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="530" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="550" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="570" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="590" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="610" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="630" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="650" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="670" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="690" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="710" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="730" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
-<circle cx="750" cy="760" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="10" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="30" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="50" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="70" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="90" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="110" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="130" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="150" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="170" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="190" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="210" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="230" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="250" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="270" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="290" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="310" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="330" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="350" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="370" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="390" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="410" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="430" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="450" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="470" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="490" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="510" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="530" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="550" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="570" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="590" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="610" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="630" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="650" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="670" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="690" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="710" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="730" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
+<circle cx="750" cy="805" r="10" stroke-width="1" stroke="gray" fill="white" />
 </svg>
