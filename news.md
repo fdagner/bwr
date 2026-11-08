@@ -3,6 +3,7 @@
 - [neu] **Belege-Vorlagen** - Neue Vorlagen, die digitale Software nachbilden, zum Beispiel in [Rechnung](belege.html?beleg=rechnung), [Anlagenkarte](belege.html?beleg=anlagenkarte), [Kassenbon](belege.html?beleg=kassenbon)
 - [neu] **Neuer Bescheid** - Kraftfahrzeugsteuer: Brief vom Zollamt mit Fahrzeug, Zulassung (auch ohne Jahr), fälschungssicherer Dokumentennummer, Briefdatum (Zulassung + 7 Tage) und automatisch berechneter jährlicher Frist [Bescheid](belege.html?beleg=bescheid)
 - [neu] **Neue Aufgabe in LB 8.1: Abschlussbuchungssätze** - [Abschlussbuchungssätze](lb8-1-abschlussbuchungssaetze.html)
+- [neu] **Beleg: Kraftfahrzeugsteuer** - [Belege](belege.html?beleg=bescheid&art=bescheid4.svg)
 
 ## 2026-11-06 | November 2026
 
