@@ -398,11 +398,15 @@ function zeigeKontleHinweis(text, typ) {
     ';">' +
     text +
     "</div>" +
-    '<button onclick="this.closest(\'div\').parentElement.remove()" style="margin-top:16px;padding:8px 24px;background:' +
+    '<button id="kontleHinweisOk" style="margin-top:16px;padding:8px 24px;background:' +
     farbe +
     ';color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:1rem;">OK</button>';
   overlay.appendChild(box);
   document.body.appendChild(overlay);
+  // CSP-kompatibel: Listener statt Inline-onclick
+  (box.querySelector("#kontleHinweisOk") || {}).onclick = function () {
+    overlay.remove();
+  };
   // Auto-Entfernung nach 4 Sekunden
   setTimeout(() => {
     if (overlay.parentElement) overlay.remove();
@@ -423,9 +427,13 @@ function zeigeAntwort(secret) {
     '<div style="font-size:2.2rem;font-weight:800;color:#2c5f2d;letter-spacing:4px;margin-bottom:16px;">' +
     secret +
     "</div>" +
-    '<button onclick="this.closest(\'div\').parentElement.remove()" style="padding:10px 28px;background:#2c5f2d;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:1rem;">OK</button>';
+    '<button id="kontleAntwortOk" style="padding:10px 28px;background:#2c5f2d;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:1rem;">OK</button>';
   overlay.appendChild(box);
   document.body.appendChild(overlay);
+  // CSP-kompatibel: Listener statt Inline-onclick
+  (box.querySelector("#kontleAntwortOk") || {}).onclick = function () {
+    overlay.remove();
+  };
 }
 
 function loadGame() {
