@@ -186,6 +186,7 @@ const geschaeftsfallTypen = {
     konto: KFZST,
     behoerden: ["Hauptzollamt", "Zollamt"],
     belegtyp: "kontoauszug",
+    kfzBescheid: true, // zusätzlich Beleg "Bescheid Kfz-Steuer" (bescheid4.svg) anbieten
     bescheidArt: null,
     zahlungsarten: [
       { text: " per Lastschrift abgebucht ", konto: BK },
@@ -466,6 +467,45 @@ function erstelleKontoauszugURL(geschaeftsfall) {
 }
 
 // ============================================================================
+// BELEG-URL: BESCHEID KRAFTFAHRZEUGSTEUER (bescheid4.svg)
+//   beleg=bescheid&art=bescheid4.svg&fahrzeug=…&zulassung=…&betrag=…
+// Zufälliges Fahrzeug / Zulassungsdatum, Betrag = KFZ-Steuer des Falls.
+// ============================================================================
+function erstelleKfzBescheidURL(geschaeftsfall) {
+  const params = new URLSearchParams();
+  params.set("beleg", "bescheid");
+  params.set("art", "bescheid4.svg");
+
+  // Zufälliges, neutrales Fahrzeug
+  const fahrzeuge = ["Pkw", "Lkw", "Transporter", "Lieferwagen"];
+  params.set(
+    "fahrzeug",
+    fahrzeuge[Math.floor(Math.random() * fahrzeuge.length)],
+  );
+
+  // Zulassung: zufälliges Datum innerhalb der letzten zwei Jahre
+  const jetzt = new Date();
+  const zulassung = new Date(
+    jetzt.getTime() - Math.random() * 2 * 365 * 24 * 60 * 60 * 1000,
+  );
+  const p2 = (n) => n.toString().padStart(2, "0");
+  params.set(
+    "zulassung",
+    `${p2(zulassung.getDate())}.${p2(zulassung.getMonth() + 1)}.${zulassung.getFullYear()}`,
+  );
+
+  // Betrag = KFZ-Steuer des Geschäftsfalls
+  const betrag = geschaeftsfall.betragFormatted.replace(/[€\s]/g, "").trim();
+  params.set("betrag", betrag);
+
+  // Unternehmen
+  const kundeValue = document.getElementById("staatKunde")?.value?.trim() || "";
+  if (kundeValue) params.set("unternehmen", kundeValue);
+
+  return `belege.html?${params.toString()}`;
+}
+
+// ============================================================================
 // BELEG-URL ERSTELLEN
 // URL-Parameter-Schema (bescheid):
 //   beleg=bescheid
@@ -534,6 +574,7 @@ function erstelleBelegURL(geschaeftsfall) {
 // ============================================================================
 function erstelleBelegButton(nummer, geschaeftsfall) {
   const url = erstelleBelegURL(geschaeftsfall);
+  const typ = geschaeftsfall.typDaten;
 
   // Kein Bescheid → leeren Platzhalter zurückgeben (damit Nummerierung stimmt)
   if (!url) {
@@ -548,21 +589,41 @@ function erstelleBelegButton(nummer, geschaeftsfall) {
   }
 
   const belegTypName =
-    geschaeftsfall.typDaten.belegtyp === "kontoauszug"
+    typ.belegtyp === "kontoauszug"
       ? "Kontoauszug"
       : "Bescheid";
 
-  // URL sicher als data-Attribut speichern, onclick liest daraus
-  return `
+  const urlAttribut = url.replace(/"/g, "&quot;");
+  let html = `
     <button
       class="geschaeftsfall-beleg-button"
-      data-url="${url.replace(/"/g, "&quot;")}"
+      data-url="${urlAttribut}"
       data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
       title="${belegTypName} für Aufgabe ${nummer} erstellen"
       style="width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;"
     >
       📄 ${nummer}. ${belegTypName} erstellen
     </button>`;
+
+  // KFZ-Steuer: zusätzlich den Bescheid (Zollamt) anbieten
+  if (typ.kfzBescheid) {
+    const bescheidUrl = erstelleKfzBescheidURL(geschaeftsfall).replace(
+      /"/g,
+      "&quot;",
+    );
+    html += `
+    <button
+      class="geschaeftsfall-beleg-button"
+      data-url="${bescheidUrl}"
+      data-on-click='[{"fn":"__openDataUrl","args":["__THIS__"]}]'
+      title="Bescheid Kraftfahrzeugsteuer für Aufgabe ${nummer} erstellen"
+      style="width:100%; padding:10px 12px; font-size:14px; margin-bottom:8px;"
+    >
+      📄 ${nummer}. Bescheid Kfz-Steuer erstellen
+    </button>`;
+  }
+
+  return html;
 }
 
 // ============================================================================
