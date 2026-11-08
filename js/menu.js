@@ -95,3 +95,12 @@ function includeHTML() {
     nav.querySelectorAll('.open').forEach(el => el.classList.remove('open'));
   });
 })();
+
+// Automatisches Nachladen von navigation.html / footer.html (w3-include-html),
+// damit die Inline-<script>includeHTML()</script>-Blöcke in den Seiten entfallen
+// können (CSP Phase 2).
+(function autoInclude() {
+  const run = () => { try { includeHTML(); } catch (e) { /* ignore */ } };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
+  else run();
+})();

@@ -27,9 +27,6 @@
 </main>
     <div w3-include-html="footer.html"></div>
     <script>
-      includeHTML();
-    </script>
-    <script>
       (function () {
         const fmt = (v) => (typeof v === 'number') ? v.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : v;
         const fmtPct = (v) => (typeof v === 'number') ? (v + ' %') : v;
