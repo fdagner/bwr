@@ -42,10 +42,19 @@ function updateFields() {
 function bescheidKfzFristAnzeige() {
   const anzeige = document.getElementById("bescheidFristAnzeige");
   if (!anzeige) return;
+  // Frist ohne Jahr, wenn kein Jahr im Beleg steht (Jahr-Feld leer
+  // oder Zulassung ohne Jahr); „Skript verwenden" druckt immer ein Jahr
+  const scriptJahr = document.getElementById("scriptJahrBescheid");
+  const jahrFeld = document.getElementById("jahrBescheid");
+  const ohneJahr =
+    !(scriptJahr && scriptJahr.checked) &&
+    jahrFeld &&
+    jahrFeld.value.trim() === "";
   const fristen =
     typeof window.bescheidKfzFristen === "function"
       ? window.bescheidKfzFristen(
           document.getElementById("bescheidZulassungInput").value,
+          ohneJahr,
         )
       : [];
   anzeige.textContent = fristen.length
@@ -69,6 +78,7 @@ if (jahrBescheidFeld) {
   jahrBescheidFeld.addEventListener("input", () => {
     jahrBescheidFeld.dataset.kfzUser = "1";
     delete jahrBescheidFeld.dataset.kfzAuto;
+    bescheidKfzFristAnzeige();
   });
 }
 

@@ -1967,11 +1967,13 @@ function bescheidKfzDatum(zulassungText) {
   return { datum, mitJahr };
 }
 
-function bescheidKfzFristen(zulassungText) {
+function bescheidKfzFristen(zulassungText, ohneJahrErzwungen) {
   const info = bescheidKfzDatum(zulassungText);
   if (!info) return [];
   const zulassung = info.datum;
-  const mitJahr = info.mitJahr;
+  // Optional: auch bei Zulassung mit Jahr die Frist ohne Jahr ausgeben,
+  // wenn im Beleg kein Jahr gedruckt werden soll (Jahr-Feld leer)
+  const mitJahr = ohneJahrErzwungen === true ? false : info.mitJahr;
 
   const heute = new Date();
   heute.setHours(0, 0, 0, 0);
@@ -4006,7 +4008,15 @@ const BELEG_APPLY_CONFIG = {
         if (zulassungElem)
           zulassungElem.textContent = zulassungInput.value || "–";
 
-        const fristen = bescheidKfzFristen(zulassungInput.value);
+        // Frist: ohne Jahr ausgeben, wenn im Beleg kein Jahr gedruckt wird
+        // (Jahr-Feld vom Nutzer geleert; „Skript verwenden" druckt immer ein Jahr)
+        const scriptJahrFrist = document.getElementById("scriptJahrBescheid");
+        const jahrFeldFrist = document.getElementById("jahrBescheid");
+        const fristOhneJahr =
+          !(scriptJahrFrist && scriptJahrFrist.checked) &&
+          jahrFeldFrist &&
+          jahrFeldFrist.value.trim() === "";
+        const fristen = bescheidKfzFristen(zulassungInput.value, fristOhneJahr);
         const fristText = fristen.length ? fristen.join(" und ") : "–";
         const fristElem = document.getElementById("bescheidFrist");
         if (fristElem) fristElem.textContent = fristen[0] || "–";
