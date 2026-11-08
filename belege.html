@@ -1346,6 +1346,67 @@
                 </div>
               </fieldset>
 
+              <!-- Artikel 2 / 3 (nur Kassenbon/eBon, nicht Taxi) -->
+              <fieldset id="kassenbonArtikel2" style="display: none">
+                <legend>Artikel 2</legend>
+
+                <div class="form-field">
+                  <label for="kassenbonZweckInput2">Bezeichnung</label>
+                  <input
+                    type="text"
+                    id="kassenbonZweckInput2"
+                    placeholder="Zweck"
+                    maxlength="50"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="kassenbonNettoInput2">Nettobetrag</label>
+                  <input
+                    type="number"
+                    id="kassenbonNettoInput2"
+                    placeholder="netto"
+                    min="0"
+                    max="5000"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="kassenbonUSTInput2">Umsatzsteuersatz</label>
+                  <select id="kassenbonUSTInput2"></select>
+                </div>
+              </fieldset>
+
+              <fieldset id="kassenbonArtikel3" style="display: none">
+                <legend>Artikel 3</legend>
+
+                <div class="form-field">
+                  <label for="kassenbonZweckInput3">Bezeichnung</label>
+                  <input
+                    type="text"
+                    id="kassenbonZweckInput3"
+                    placeholder="Zweck"
+                    maxlength="50"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="kassenbonNettoInput3">Nettobetrag</label>
+                  <input
+                    type="number"
+                    id="kassenbonNettoInput3"
+                    placeholder="netto"
+                    min="0"
+                    max="5000"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label for="kassenbonUSTInput3">Umsatzsteuersatz</label>
+                  <select id="kassenbonUSTInput3"></select>
+                </div>
+              </fieldset>
+
               <!-- Weitere Daten -->
               <fieldset class="details-gruppe">
                 <legend>Weitere Daten</legend>
@@ -1448,67 +1509,6 @@
                     />
                     Skript verwenden
                   </label>
-                </div>
-              </fieldset>
-
-              <!-- Artikel 2 / 3 (nur Kassenbon/eBon, nicht Taxi) -->
-              <fieldset id="kassenbonArtikel2" style="display: none">
-                <legend>Artikel 2</legend>
-
-                <div class="form-field">
-                  <label for="kassenbonZweckInput2">Bezeichnung</label>
-                  <input
-                    type="text"
-                    id="kassenbonZweckInput2"
-                    placeholder="Zweck"
-                    maxlength="50"
-                  />
-                </div>
-
-                <div class="form-field">
-                  <label for="kassenbonNettoInput2">Nettobetrag</label>
-                  <input
-                    type="number"
-                    id="kassenbonNettoInput2"
-                    placeholder="netto"
-                    min="0"
-                    max="5000"
-                  />
-                </div>
-
-                <div class="form-field">
-                  <label for="kassenbonUSTInput2">Umsatzsteuersatz</label>
-                  <select id="kassenbonUSTInput2"></select>
-                </div>
-              </fieldset>
-
-              <fieldset id="kassenbonArtikel3" style="display: none">
-                <legend>Artikel 3</legend>
-
-                <div class="form-field">
-                  <label for="kassenbonZweckInput3">Bezeichnung</label>
-                  <input
-                    type="text"
-                    id="kassenbonZweckInput3"
-                    placeholder="Zweck"
-                    maxlength="50"
-                  />
-                </div>
-
-                <div class="form-field">
-                  <label for="kassenbonNettoInput3">Nettobetrag</label>
-                  <input
-                    type="number"
-                    id="kassenbonNettoInput3"
-                    placeholder="netto"
-                    min="0"
-                    max="5000"
-                  />
-                </div>
-
-                <div class="form-field">
-                  <label for="kassenbonUSTInput3">Umsatzsteuersatz</label>
-                  <select id="kassenbonUSTInput3"></select>
                 </div>
               </fieldset>
             </div>
