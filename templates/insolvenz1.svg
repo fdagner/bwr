@@ -22,8 +22,8 @@
     <circle cx="130" cy="46" r="11" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
     <path d="M134.3 42 a5.6 5.6 0 1 0 1.2 4.6" fill="none" stroke="#5a6470" stroke-width="1.9" />
     <path d="M134.6 42.2 l3.6 -0.6 -0.5 3.8 z" fill="#5a6470" />
-    <rect x="142" y="37" width="380" height="18" rx="9" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
-    <text x="152" y="50.5" font-size="12" fill="#454d55">https://www.insolvenzbekanntmachungen.de/…</text>
+    <rect x="142" y="37" width="220" height="18" rx="9" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
+    <text x="152" y="50.5" font-size="12" fill="#454d55">https://www.insolvenzbekanntmach...</text>
     <line x1="24" y1="68.5" x2="536" y2="68.5" stroke="#d6dce2" stroke-width="1" />
     <!-- Bekanntmachungstext -->
     <text x="30" y="96">In dem Verfahren über den Antrag von</text>

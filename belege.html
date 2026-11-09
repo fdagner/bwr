@@ -3664,29 +3664,22 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 <legend>Art des Verfahrens</legend>
 
                 <div class="form-field">
-                  <label for="svgDropdownInsolvenz">Auswählen</label>
+                  <label for="svgDropdownInsolvenz">Auswählen:</label>
                   <select
                     id="svgDropdownInsolvenz"
                     data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
                   >
                     <option value="insolvenz1.svg" selected>Eröffnung</option>
-                    <option value="insolvenz2.svg" disabled>
-                      Schlusstermin (folgt)
-                    </option>
-                    <option value="insolvenz3.svg" disabled>
-                      Gläubigerversammlung (folgt)
-                    </option>
                   </select>
                 </div>
               </fieldset>
 
-              <!-- Schuldner/-in (insolventes Unternehmen aus der YAML,
-                   nicht das gespeicherte Modellunternehmen und kein Insolvenzverwalter) -->
-              <fieldset class="vorlage-gruppe">
-                <legend>Schuldnerin</legend>
+             
+              <fieldset class="vorlage-red">
+                <legend>Schuldner/-in</legend>
 
                 <div class="form-field">
-                  <label for="datenInsolvenzSchuldner">Schuldner/-in</label>
+                  <label for="datenInsolvenzSchuldner">Auswählen:</label>
                   <select
                     id="datenInsolvenzSchuldner"
                     data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
@@ -3695,11 +3688,11 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
               </fieldset>
 
               <!-- Modellunternehmen: wird fuer spaetere Verfahrensphasen benoetigt -->
-              <fieldset class="vorlage-gruppe">
+              <fieldset class="vorlage-green">
                 <legend>Modellunternehmen</legend>
 
                 <div class="form-field">
-                  <label for="datenInsolvenzModellunternehmen">Modellunternehmen</label>
+                  <label for="datenInsolvenzModellunternehmen">Auswählen:</label>
                   <select
                     id="datenInsolvenzModellunternehmen"
                     data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
@@ -3739,19 +3732,7 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 />
               </div>
 
-              <div class="form-field">
-                <label for="insolvenzUhrzeitInput">Eröffnung um (Uhrzeit)</label>
-                <input
-                  type="text"
-                  id="insolvenzUhrzeitInput"
-                  value="09.00"
-                  maxlength="8"
-                  placeholder="z. B. 09.00"
-                  data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
-                />
-              </div>
-
-              <div class="form-field">
+                 <div class="form-field">
                 <label for="insolvenzFristInput">Anmeldefrist (§ 38 InsO)</label>
                 <input
                   type="text"
@@ -3778,7 +3759,7 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 Die Eröffnungszeit wird zufällig vormittags angesetzt.
                 Die Anmeldefrist wird automatisch auf Eröffnung + 6 Wochen
                 gesetzt, solange das Feld leer ist. Verwalter stammen aus
-                „js/unternehmen.yml“ (Branche „Insolvenzverwaltung“).
+                Branche „Insolvenzverwaltung“.
               </small>
             </p>
           </section>
