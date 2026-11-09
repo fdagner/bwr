@@ -8,8 +8,24 @@ function openCity(evt, cityName) {
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
+  var target = document.getElementById(cityName);
+  if (target) target.style.display = "block";
+  // Aktiven Tab markieren (evt kann null sein, z. B. Aufruf über das
+  // Mobile-Dropdown) → dann per data-on-click den passenden Button suchen.
+  if (evt && evt.currentTarget) {
+    evt.currentTarget.className += " active";
+  } else {
+    for (i = 0; i < tablinks.length; i++) {
+      var dc = tablinks[i].getAttribute("data-on-click") || "";
+      if (dc.indexOf('"' + cityName + '"') !== -1) {
+        tablinks[i].className += " active";
+        break;
+      }
+    }
+  }
+  // Mobile-Dropdown synchronisieren
+  var dd = document.getElementById("tabDropdown");
+  if (dd) dd.value = cityName;
 
   // Hide or show the details element based on the active tab
   let moodleDropdown = document.getElementById("moodleDropdown");
@@ -111,6 +127,46 @@ const optionshtml2canvas = {
       includeHTML();
     } catch (e) {
       /* ignore */
+    }
+  };
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", run, { once: true });
+  else run();
+})();
+
+// Mobile-Tab-Dropdown (belege.html): aus den .tab-Buttons befüllen
+(function initTabDropdown() {
+  const run = () => {
+    const dd = document.getElementById("tabDropdown");
+    const nav = document.querySelector("nav.tab");
+    if (!dd || !nav) return;
+    if (dd.options.length > 0) return; // nicht doppelt befüllen
+    const buttons = Array.from(nav.querySelectorAll("button.tablinks"));
+    buttons.forEach((btn) => {
+      let city = "";
+      try {
+        const spec = JSON.parse(btn.getAttribute("data-on-click") || "[]");
+        const call = Array.isArray(spec) ? spec[0] : null;
+        if (call && call.fn === "openCity" && Array.isArray(call.args))
+          city = call.args[1] || "";
+      } catch (e) {}
+      if (!city) return;
+      const opt = document.createElement("option");
+      opt.value = city;
+      opt.textContent = (btn.textContent || "").trim();
+      dd.appendChild(opt);
+    });
+    dd.addEventListener("change", () => {
+      if (dd.value) openCity(null, dd.value);
+    });
+    // Aktiven Tab (falls openCity bereits lief) spiegeln
+    const active = nav.querySelector("button.tablinks.active");
+    if (active) {
+      try {
+        const spec = JSON.parse(active.getAttribute("data-on-click") || "[]");
+        const city = (spec[0] && spec[0].args && spec[0].args[1]) || "";
+        if (city) dd.value = city;
+      } catch (e) {}
     }
   };
   if (document.readyState === "loading")

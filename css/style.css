@@ -592,6 +592,20 @@ fieldset:hover {
    TABS
    ============================================ */
 
+.tab-dropdown {
+  display: none;
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  border: 2px solid var(--border-light);
+  border-radius: 6px;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
 .tab {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
@@ -1055,7 +1069,11 @@ footer {
   }
 
   .tab {
-    grid-template-columns: 1fr;
+    display: none;
+  }
+
+  .tab-dropdown {
+    display: block;
   }
 
   .tab button {
