@@ -2744,6 +2744,14 @@ function insolvenzOptionenBefuellen() {
   if (!schuldnerSel || !verwalterSel) return;
 
   const schuldner = insolvenzSchuldnerKandidaten();
+  // Wie in den anderen Beleg-Dropdowns: nach Branche (dann Name) sortiert
+  schuldner.sort((a, b) => {
+    const bA = a.unternehmen?.branche || "",
+      bB = b.unternehmen?.branche || "";
+    return bA !== bB
+      ? bA.localeCompare(bB)
+      : (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
+  });
   const verwalter = insolvenzVerwalterKandidaten();
 
   const baue = (sel, liste) => {
@@ -2784,6 +2792,42 @@ function insolvenzOptionenBefuellen() {
   };
   zufallsAuswahl(schuldnerSel, schuldner);
   zufallsAuswahl(verwalterSel, verwalter);
+
+  // Modellunternehmen-Dropdown (wird für spätere Verfahrensphasen benötigt):
+  // alle Unternehmen der Branche "Modellunternehmen", vorausgewählt ist das
+  // gespeicherte Modellunternehmen (myCompany).
+  const modellSel = document.getElementById("datenInsolvenzModellunternehmen");
+  if (modellSel) {
+    const modell = (yamlData || []).filter(
+      (c) =>
+        (c.unternehmen?.branche || "").trim() === "Modellunternehmen" &&
+        c.unternehmen?.name,
+    );
+    modell.sort((a, b) => {
+      const bA = a.unternehmen?.branche || "",
+        bB = b.unternehmen?.branche || "";
+      return bA !== bB
+        ? bA.localeCompare(bB)
+        : (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
+    });
+    if (modellSel.options.length !== modell.length + 1)
+      baue(modellSel, modell);
+    // Auswählen: gespeichertes myCompany, sonst erster Eintrag
+    if (
+      !modellSel.value ||
+      !Array.from(modellSel.options).some((o) => o.value === modellSel.value)
+    ) {
+      const myCompany = (localStorage.getItem("myCompany") || "").trim();
+      const match = myCompany
+        ? Array.from(modellSel.options).find((o) => o.value === myCompany)
+        : null;
+      modellSel.value = match
+        ? match.value
+        : modell.length > 0
+          ? modell[0].unternehmen.name
+          : "";
+    }
+  }
 }
 
 // Deutsche TT.MM.JJJJ-Daten: n Tage weiterrechnen (nur volle Jahresangabe)
