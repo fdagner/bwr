@@ -1,51 +1,59 @@
-<svg id="insolvenzSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1080" font-family="Arial" style="height:auto;background-color:#fff;padding:0px;width:100%;max-width:760px;">
+<svg id="insolvenzSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1400" font-family="Arial" font-size="34" style="height:auto;background-color:#fff;padding:0px;width:100%;max-width:760px;">
   <!-- Tablet-Gehaeuse (typischer schwarzer Rand), Hochformat -->
-  <rect x="5" y="5" width="750" height="1070" rx="52" fill="#17181c" />
-  <rect x="5" y="5" width="750" height="1070" rx="52" fill="none" stroke="#2a2c33" stroke-width="2" />
+  <rect x="5" y="5" width="750" height="1390" rx="52" fill="#17181c" />
+  <rect x="5" y="5" width="750" height="1390" rx="52" fill="none" stroke="#2a2c33" stroke-width="2" />
   <circle cx="380" cy="16" r="4" fill="#3a3d45" />
   <defs>
-    <clipPath id="insolvenzScreenClip"><rect x="26" y="26" width="708" height="1028" rx="14" /></clipPath>
+    <clipPath id="insolvenzScreenClip"><rect x="26" y="26" width="708" height="1348" rx="14" /></clipPath>
   </defs>
   <!-- Bildschirm -->
-  <rect x="26" y="26" width="708" height="1028" rx="14" fill="#ffffff" />
+  <rect x="26" y="26" width="708" height="1348" rx="14" fill="#ffffff" />
   <g clip-path="url(#insolvenzScreenClip)" fill="#23262b">
-    <!-- Dezente Browser-Chrome: Menueleiste + Adresszeile -->
-    <rect x="26" y="26" width="708" height="96" fill="#eef1f4" />
-    <text x="52" y="55" font-size="15" fill="#6a727c">Ablage&#160;&#160;&#160;Bearbeiten&#160;&#160;&#160;Ansicht&#160;&#160;&#160;Hilfe</text>
-    <circle cx="700" cy="44" r="3" fill="#7a828c" />
-    <circle cx="714" cy="44" r="3" fill="#7a828c" />
-    <circle cx="728" cy="44" r="3" fill="#7a828c" />
-    <rect x="44" y="70" width="648" height="38" rx="19" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
-    <path d="M60 83 L54 89 L60 95" fill="none" stroke="#5a6470" stroke-width="2.2" />
-    <path d="M70 89 a7 7 0 1 1 2 5" fill="none" stroke="#5a6470" stroke-width="2" />
+    <!-- Dezente Browser-Chrome: Home / Zurueck / Vor / Neuladen + Adresszeile -->
+    <rect x="26" y="26" width="708" height="88" fill="#eef1f4" />
+    <circle cx="52" cy="48" r="13" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
+    <path d="M52 40.2 l-8.4 6.9 h3 v5.4 h10.8 v-5.4 h3 z" fill="#5a6470" />
+    <circle cx="88" cy="48" r="13" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
+    <path d="M95.5 48 H81" fill="none" stroke="#5a6470" stroke-width="2.3" stroke-linecap="round" />
+    <path d="M85.5 43.2 l-5 4.8 5 4.8" fill="none" stroke="#5a6470" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="124" cy="48" r="13" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
+    <path d="M116.5 48 H131" fill="none" stroke="#5a6470" stroke-width="2.3" stroke-linecap="round" />
+    <path d="M126.5 43.2 l5 4.8 -5 4.8" fill="none" stroke="#5a6470" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="160" cy="48" r="13" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
+    <path d="M165.3 43.2 a6.8 6.8 0 1 0 1.5 5.6" fill="none" stroke="#5a6470" stroke-width="2.2" />
+    <path d="M165.6 43.4 l4.4 -0.8 -0.6 4.6 z" fill="#5a6470" />
+    <rect x="44" y="70" width="648" height="36" rx="18" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
     <!-- URL laeuft bewusst ueber den rechten Bildschirmrand (abgeschnitten) -->
-    <text x="82" y="94" font-size="16" fill="#454d55">https://www.insolvenzbekanntmachungen.de/bekanntmachungsergebnisse?suchbegriff=Egelseer</text>
+    <text x="60" y="93" font-size="17" fill="#454d55">https://www.insolvenzbekanntmachungen.de/bekanntmachungsergebnisse?suchbegriff=Egelseer</text>
+    <line x1="26" y1="114.5" x2="734" y2="114.5" stroke="#d6dce2" stroke-width="1" />
     <!-- Bekanntmachungstext -->
-    <text x="50" y="170" font-size="22">In dem Verfahren über den Antrag von</text>
-    <text id="insolvenzSchuldnerZeile1" x="50" y="212">###</text>
-    <text id="insolvenzSchuldnerZeile2" x="50" y="246">###</text>
-    <text id="insolvenzSchuldnerVertreter" x="50" y="280">###</text>
-    <text x="50" y="318">Registergericht: <tspan id="insolvenzRegistergericht">###</tspan></text>
-    <text x="50" y="354">- Schuldner/-in -</text>
-    <text x="50" y="420">[...]</text>
-    <text x="50" y="478">auf Eröffnung des Insolvenzverfahrens</text>
-    <text x="50" y="510">über das eigene Vermögen</text>
-    <text x="50" y="572">1.</text>
-    <text x="108" y="572">Das Insolvenzverfahren über das Vermögen</text>
-    <text x="108" y="606">der Schuldner/-in wird wegen</text>
-    <text x="108" y="640"><tspan id="insolvenzGrund">###</tspan> am</text>
-    <text x="108" y="672"><tspan id="insolvenzOeffnungDatum">###</tspan> um <tspan id="insolvenzOeffnungZeit">###</tspan> Uhr eröffnet.</text>
-    <text x="50" y="716">2.</text>
-    <text x="108" y="716">Zum Insolvenzverwalter wird bestellt:</text>
-    <text x="140" y="750"><tspan id="insolvenzVerwalterName" text-decoration="underline">###</tspan></text>
-    <text id="insolvenzVerwalterAdresse" x="140" y="784">###</text>
-    <text x="140" y="816">Telefon: <tspan id="insolvenzVerwalterTelefon">###</tspan></text>
-    <text x="140" y="848">Telefax: <tspan id="insolvenzVerwalterTelefax">###</tspan></text>
-    <text x="140" y="880">Email: <tspan id="insolvenzVerwalterEmail" fill="#1155cc" text-decoration="underline">###</tspan></text>
-    <text x="50" y="930">3.</text>
-    <text x="108" y="930">Die Insolvenzgläubiger werden aufgefordert,</text>
-    <text x="108" y="962">Insolvenzforderungen (§ 38 InsO) bis zum</text>
-    <text x="108" y="994"><tspan id="insolvenzFrist">###</tspan> bei dem Insolvenzverwalter schriftlich</text>
-    <text x="108" y="1022">anzumelden.</text>
+    <text x="44" y="178">In dem Verfahren über den Antrag von</text>
+    <text id="insolvenzSchuldnerZeile1" x="44" y="224">###</text>
+    <text id="insolvenzSchuldnerZeile2" x="44" y="268">###</text>
+    <text id="insolvenzSchuldnerVertreter" x="44" y="312">vertreten durch den Geschäftsführer</text>
+    <text id="insolvenzSchuldnerInhaber" x="44" y="356">###</text>
+    <text x="44" y="400">Registergericht: <tspan id="insolvenzRegistergericht">###</tspan></text>
+    <text x="44" y="440">- Schuldner/-in -</text>
+    <text x="44" y="500">[...]</text>
+    <text x="44" y="560">auf Eröffnung des Insolvenzverfahrens</text>
+    <text x="44" y="604">über das eigene Vermögen</text>
+    <text x="44" y="664">1.</text>
+    <text x="92" y="664">Das Insolvenzverfahren über das</text>
+    <text x="92" y="708">Vermögen der Schuldner/-in wird wegen</text>
+    <text id="insolvenzGrund" x="92" y="752">###</text>
+    <text x="92" y="800">am <tspan id="insolvenzOeffnungDatum">###</tspan> um <tspan id="insolvenzOeffnungZeit">###</tspan> Uhr eröffnet.</text>
+    <text x="44" y="864">2.</text>
+    <text x="92" y="864">Zum Insolvenzverwalter wird bestellt:</text>
+    <text id="insolvenzVerwalterName" x="128" y="904" text-decoration="underline">###</text>
+    <text id="insolvenzVerwalterAdresse" x="128" y="944">###</text>
+    <text x="128" y="980">Telefon: <tspan id="insolvenzVerwalterTelefon">###</tspan></text>
+    <text x="128" y="1016">Telefax: <tspan id="insolvenzVerwalterTelefax">###</tspan></text>
+    <text x="128" y="1052">Email: <tspan id="insolvenzVerwalterEmail" fill="#1155cc" text-decoration="underline">###</tspan></text>
+    <text x="44" y="1108">3.</text>
+    <text x="92" y="1108">Die Insolvenzgläubiger werden</text>
+    <text x="92" y="1148">aufgefordert, Insolvenzforderungen</text>
+    <text x="92" y="1188">(§ 38 InsO) bis zum <tspan id="insolvenzFrist">###</tspan></text>
+    <text x="92" y="1228">bei dem Insolvenzverwalter schriftlich</text>
+    <text x="92" y="1264">anzumelden.</text>
   </g>
 </svg>

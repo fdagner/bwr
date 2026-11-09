@@ -2864,12 +2864,13 @@ function insolvenzDatenAnwenden() {
   if (schuldner) {
     const u = schuldner.unternehmen;
     const firma = `${u.name}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
-    svgText("insolvenzSchuldnerZeile1", `${firma}, ${u.adresse?.strasse || ""},`);
-    svgText("insolvenzSchuldnerZeile2", `${u.adresse?.plz || ""} ${u.adresse?.ort || ""},`);
+    svgText("insolvenzSchuldnerZeile1", `${firma},`);
     svgText(
-      "insolvenzSchuldnerVertreter",
-      "vertreten durch den Geschäftsführer" + (u.inhaber ? ` ${u.inhaber}` : ""),
+      "insolvenzSchuldnerZeile2",
+      `${u.adresse?.strasse || ""}, ${u.adresse?.plz || ""} ${u.adresse?.ort || ""},`,
     );
+    svgText("insolvenzSchuldnerVertreter", "vertreten durch den Geschäftsführer");
+    svgText("insolvenzSchuldnerInhaber", u.inhaber || "");
   }
   svgText("insolvenzRegistergericht", gericht);
   svgText("insolvenzGrund", grund);
