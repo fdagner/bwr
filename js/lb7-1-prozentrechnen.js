@@ -1243,6 +1243,18 @@ function mpBaueXml(aufgaben) {
     antworten.forEach((a) => {
       xml += `    <answer fraction="100" format="moodle_auto_format">\n      <text>${mpEsc(a)}</text>\n      <feedback format="html">\n        <text></text>\n      </feedback>\n    </answer>\n`;
     });
+    // Hinweise (Mehrfachversuche, Fragetyp Kurzantwort):
+    // für beide Versuchsstufen einen hint ausgeben – ansprechend formatiert
+    // (farbiger Hinweis-Text), damit die Rückfrage in Moodle auffällt.
+    const hintStil =
+      "margin:4px 0;padding:8px 14px;border:1px solid #e0b4b4;background:#fdecea;border-radius:8px;color:#b03030;";
+    const hinweise = [
+      `<div style="${hintStil}"><strong>❌ Leider falsch!</strong></div>`,
+      `<div style="${hintStil}"><strong>❌ Immer noch nicht richtig!</strong></div>`,
+    ];
+    hinweise.forEach((h) => {
+      xml += `    <hint format="html">\n      <text>${mpCdata(h)}</text>\n    </hint>\n`;
+    });
     xml += `  </question>\n\n`;
   });
 
