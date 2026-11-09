@@ -2725,17 +2725,14 @@ function insolvenzVerwalterKandidaten() {
   );
 }
 
-// Schuldnerin: jedes Unternehmen aus der YAML außer Modellunternehmen
-// und Insolvenzverwaltern
+// Schuldner/-in: alle Unternehmen aus der YAML AUCH das Modellunternehmen
+// – nur das gespeicherte Modellunternehmen (myCompany) ist ausgeschlossen
+// (das insolvente Unternehmen ist nicht das eigene).
 function insolvenzSchuldnerKandidaten() {
-  return (yamlData || []).filter((c) => {
-    const branche = (c.unternehmen?.branche || "").trim();
-    return (
-      c.unternehmen?.name &&
-      branche !== "Modellunternehmen" &&
-      branche !== INSOLVENZ_VERWALTER_BRANCHE
-    );
-  });
+  const myCompany = (localStorage.getItem("myCompany") || "").trim();
+  return (yamlData || []).filter(
+    (c) => c.unternehmen?.name && c.unternehmen.name.trim() !== myCompany,
+  );
 }
 
 // Dropdowns Schuldner/Verwalter befüllen – idempotent: nur neu aufbauen,
@@ -2760,7 +2757,9 @@ function insolvenzOptionenBefuellen() {
     liste.forEach((c) => {
       const o = document.createElement("option");
       o.value = c.unternehmen.name;
-      o.text = c.unternehmen.name;
+      o.text = c.unternehmen.branche
+        ? `${c.unternehmen.branche} – ${c.unternehmen.name} ${c.unternehmen.rechtsform || ""}`.trim()
+        : c.unternehmen.name;
       sel.appendChild(o);
     });
     if (aktuell && Array.from(sel.options).some((o) => o.value === aktuell))
@@ -2772,13 +2771,19 @@ function insolvenzOptionenBefuellen() {
   if (verwalterSel.options.length !== verwalter.length + 1)
     baue(verwalterSel, verwalter);
 
-  // Gültige Auswahl sicherstellen (Standard: erster Eintrag)
-  const sichereAuswahl = (sel, liste) => {
-    if (!sel.value || !Array.from(sel.options).some((o) => o.value === sel.value))
-      sel.value = liste.length > 0 ? liste[0].unternehmen.name : "";
+  // Fehlende Auswahl zufällig setzen (auch ein Modellunternehmen möglich,
+  // jedoch niemals das gespeicherte – die Kandidatenliste filtert das schon).
+  const zufallsAuswahl = (sel, liste) => {
+    if (sel.value && Array.from(sel.options).some((o) => o.value === sel.value))
+      return;
+    if (liste.length === 0) {
+      sel.value = "";
+      return;
+    }
+    sel.value = liste[Math.floor(Math.random() * liste.length)].unternehmen.name;
   };
-  sichereAuswahl(schuldnerSel, schuldner);
-  sichereAuswahl(verwalterSel, verwalter);
+  zufallsAuswahl(schuldnerSel, schuldner);
+  zufallsAuswahl(verwalterSel, verwalter);
 }
 
 // Deutsche TT.MM.JJJJ-Daten: n Tage weiterrechnen (nur volle Jahresangabe)
@@ -2821,16 +2826,22 @@ function insolvenzDatenAnwenden() {
     const el = document.getElementById(id);
     if (el && !(el.value || "").trim()) el.value = wert;
   };
+  // Zufällige Uhrzeit am Vormittag (08.00 – 11.45)
+  const naechsterSchritt = [0, 15, 30, 45];
+  const zufallsUhrzeitVormittags = () => {
+    const stunde = 8 + Math.floor(Math.random() * 4);
+    const minute = naechsterSchritt[Math.floor(Math.random() * 4)];
+    const p = (n) => String(n).padStart(2, "0");
+    return `${p(stunde)}.${p(minute)}`;
+  };
 
   if (schuldner) {
     const u = schuldner.unternehmen;
-    setzeDefault(
-      "insolvenzGerichtInput",
-      "Amtsgericht " + (u.adresse?.ort || ""),
-    );
-    const d = new Date();
-    const p = (n) => String(n).padStart(2, "0");
-    setzeDefault("insolvenzOeffnungDateInput", `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`);
+    setzeDefault("insolvenzOeffnungDateInput", (() => {
+      const d = new Date();
+      const p = (n) => String(n).padStart(2, "0");
+      return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
+    })());
   }
   const datumText = (
     document.getElementById("insolvenzOeffnungDateInput")?.value || ""
@@ -2838,15 +2849,14 @@ function insolvenzDatenAnwenden() {
   setzeDefault("insolvenzFristInput", insolvenzDatumPlusTage(datumText, 42));
 
   const datum = datumText || "TT.MM.JJJJ";
-  const zeit =
-    (document.getElementById("insolvenzUhrzeitInput")?.value || "").trim() ||
-    "09.00";
+  const zeit = zufallsUhrzeitVormittags();
   const grund =
     document.getElementById("insolvenzGrundInput")?.value ||
     "Zahlungsunfähigkeit und Überschuldung";
-  const gericht =
-    (document.getElementById("insolvenzGerichtInput")?.value || "").trim() ||
-    "Amtsgericht ###";
+  // Ort des Registergerichts = Ort der Schuldner/-in
+  const gericht = schuldner?.unternehmen?.adresse?.ort
+    ? "Amtsgericht " + schuldner.unternehmen.adresse.ort
+    : "Amtsgericht ###";
   const frist =
     (document.getElementById("insolvenzFristInput")?.value || "").trim() ||
     "TT.MM.JJJJ";
@@ -2855,11 +2865,11 @@ function insolvenzDatenAnwenden() {
     const u = schuldner.unternehmen;
     const firma = `${u.name}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
     svgText("insolvenzSchuldnerZeile1", `${firma}, ${u.adresse?.strasse || ""},`);
+    svgText("insolvenzSchuldnerZeile2", `${u.adresse?.plz || ""} ${u.adresse?.ort || ""},`);
     svgText(
-      "insolvenzSchuldnerZeile2",
-      `${u.adresse?.plz || ""} ${u.adresse?.ort || ""}, vertreten durch den Geschäftsführer`,
+      "insolvenzSchuldnerVertreter",
+      "vertreten durch den Geschäftsführer" + (u.inhaber ? ` ${u.inhaber}` : ""),
     );
-    svgText("insolvenzSchuldnerInhaber", u.inhaber ? ` ${u.inhaber}` : "");
   }
   svgText("insolvenzRegistergericht", gericht);
   svgText("insolvenzGrund", grund);

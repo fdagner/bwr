@@ -1,39 +1,51 @@
-<svg id="insolvenzSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 760" font-family="Arial" style="height:auto;background-color:#fff;padding:0px;width:100%;max-width:1000px;">
-  <!-- Tablet-Gehaeuse (typischer schwarzer Rand) -->
-  <rect x="4" y="4" width="992" height="752" rx="48" fill="#17181c" />
-  <rect x="4" y="4" width="992" height="752" rx="48" fill="none" stroke="#2a2c33" stroke-width="2" />
-  <circle cx="500" cy="15" r="4" fill="#3a3d45" />
+<svg id="insolvenzSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1080" font-family="Arial" style="height:auto;background-color:#fff;padding:0px;width:100%;max-width:760px;">
+  <!-- Tablet-Gehaeuse (typischer schwarzer Rand), Hochformat -->
+  <rect x="5" y="5" width="750" height="1070" rx="52" fill="#17181c" />
+  <rect x="5" y="5" width="750" height="1070" rx="52" fill="none" stroke="#2a2c33" stroke-width="2" />
+  <circle cx="380" cy="16" r="4" fill="#3a3d45" />
   <defs>
-    <clipPath id="insolvenzScreenClip"><rect x="26" y="26" width="948" height="708" rx="14" /></clipPath>
+    <clipPath id="insolvenzScreenClip"><rect x="26" y="26" width="708" height="1028" rx="14" /></clipPath>
   </defs>
   <!-- Bildschirm -->
-  <rect x="26" y="26" width="948" height="708" rx="14" fill="#ffffff" />
+  <rect x="26" y="26" width="708" height="1028" rx="14" fill="#ffffff" />
   <g clip-path="url(#insolvenzScreenClip)" fill="#23262b">
-    <!-- Adresszeile: URL laeuft bewusst ueber den rechten Bildschirmrand (abgeschnitten) -->
-    <rect x="26" y="26" width="948" height="48" fill="#eef1f4" />
-    <path d="M44 44 L38 50 L44 56" fill="none" stroke="#5a6470" stroke-width="2.4" />
-    <text x="52" y="56" font-size="17" fill="#454d55">https://www.insolvenzbekanntmachungen.de/bekanntmachungsergebnisse?suchoption=0&amp;suchbegriff=</text>
+    <!-- Dezente Browser-Chrome: Menueleiste + Adresszeile -->
+    <rect x="26" y="26" width="708" height="96" fill="#eef1f4" />
+    <text x="52" y="55" font-size="15" fill="#6a727c">Ablage&#160;&#160;&#160;Bearbeiten&#160;&#160;&#160;Ansicht&#160;&#160;&#160;Hilfe</text>
+    <circle cx="700" cy="44" r="3" fill="#7a828c" />
+    <circle cx="714" cy="44" r="3" fill="#7a828c" />
+    <circle cx="728" cy="44" r="3" fill="#7a828c" />
+    <rect x="44" y="70" width="648" height="38" rx="19" fill="#ffffff" stroke="#d6dce2" stroke-width="1" />
+    <path d="M60 83 L54 89 L60 95" fill="none" stroke="#5a6470" stroke-width="2.2" />
+    <path d="M70 89 a7 7 0 1 1 2 5" fill="none" stroke="#5a6470" stroke-width="2" />
+    <!-- URL laeuft bewusst ueber den rechten Bildschirmrand (abgeschnitten) -->
+    <text x="82" y="94" font-size="16" fill="#454d55">https://www.insolvenzbekanntmachungen.de/bekanntmachungsergebnisse?suchbegriff=Egelseer</text>
     <!-- Bekanntmachungstext -->
-    <text x="54" y="116" font-size="19">In dem Verfahren über den Antrag von</text>
-    <text id="insolvenzSchuldnerZeile1" x="54" y="156">###</text>
-    <text id="insolvenzSchuldnerZeile2" x="54" y="182">###<tspan id="insolvenzSchuldnerInhaber"></tspan></text>
-    <text x="54" y="210">Registergericht: <tspan id="insolvenzRegistergericht">###</tspan></text>
-    <text x="54" y="240">- Schuldnerin -</text>
-    <text x="54" y="292">[...]</text>
-    <text x="54" y="340">auf Eröffnung des Insolvenzverfahrens über das eigene Vermögen</text>
-    <text x="54" y="404">1.</text>
-    <text x="96" y="404">Das Insolvenzverfahren über das Vermögen der Schuldnerin wird</text>
-    <text x="96" y="430">wegen <tspan id="insolvenzGrund">###</tspan> am <tspan id="insolvenzOeffnungDatum">###</tspan> um <tspan id="insolvenzOeffnungZeit">###</tspan> Uhr eröffnet.</text>
-    <text x="54" y="458">2.</text>
-    <text x="96" y="458">Zum Insolvenzverwalter wird bestellt:</text>
-    <text x="150" y="490"><tspan id="insolvenzVerwalterName" text-decoration="underline">###</tspan></text>
-    <text id="insolvenzVerwalterAdresse" x="150" y="518">###</text>
-    <text x="150" y="546">Telefon: <tspan id="insolvenzVerwalterTelefon">###</tspan></text>
-    <text x="150" y="574">Telefax: <tspan id="insolvenzVerwalterTelefax">###</tspan></text>
-    <text x="150" y="602">Email: <tspan id="insolvenzVerwalterEmail" fill="#1155cc" text-decoration="underline">###</tspan></text>
-    <text x="54" y="650">3.</text>
-    <text x="96" y="650">Die Insolvenzgläubiger werden aufgefordert, Insolvenzforderungen (§</text>
-    <text x="96" y="676">38 InsO) bis zum <tspan id="insolvenzFrist">###</tspan> bei dem Insolvenzverwalter schriftlich</text>
-    <text x="96" y="702">anzumelden.</text>
+    <text x="50" y="170" font-size="22">In dem Verfahren über den Antrag von</text>
+    <text id="insolvenzSchuldnerZeile1" x="50" y="212">###</text>
+    <text id="insolvenzSchuldnerZeile2" x="50" y="246">###</text>
+    <text id="insolvenzSchuldnerVertreter" x="50" y="280">###</text>
+    <text x="50" y="318">Registergericht: <tspan id="insolvenzRegistergericht">###</tspan></text>
+    <text x="50" y="354">- Schuldner/-in -</text>
+    <text x="50" y="420">[...]</text>
+    <text x="50" y="478">auf Eröffnung des Insolvenzverfahrens</text>
+    <text x="50" y="510">über das eigene Vermögen</text>
+    <text x="50" y="572">1.</text>
+    <text x="108" y="572">Das Insolvenzverfahren über das Vermögen</text>
+    <text x="108" y="606">der Schuldner/-in wird wegen</text>
+    <text x="108" y="640"><tspan id="insolvenzGrund">###</tspan> am</text>
+    <text x="108" y="672"><tspan id="insolvenzOeffnungDatum">###</tspan> um <tspan id="insolvenzOeffnungZeit">###</tspan> Uhr eröffnet.</text>
+    <text x="50" y="716">2.</text>
+    <text x="108" y="716">Zum Insolvenzverwalter wird bestellt:</text>
+    <text x="140" y="750"><tspan id="insolvenzVerwalterName" text-decoration="underline">###</tspan></text>
+    <text id="insolvenzVerwalterAdresse" x="140" y="784">###</text>
+    <text x="140" y="816">Telefon: <tspan id="insolvenzVerwalterTelefon">###</tspan></text>
+    <text x="140" y="848">Telefax: <tspan id="insolvenzVerwalterTelefax">###</tspan></text>
+    <text x="140" y="880">Email: <tspan id="insolvenzVerwalterEmail" fill="#1155cc" text-decoration="underline">###</tspan></text>
+    <text x="50" y="930">3.</text>
+    <text x="108" y="930">Die Insolvenzgläubiger werden aufgefordert,</text>
+    <text x="108" y="962">Insolvenzforderungen (§ 38 InsO) bis zum</text>
+    <text x="108" y="994"><tspan id="insolvenzFrist">###</tspan> bei dem Insolvenzverwalter schriftlich</text>
+    <text x="108" y="1022">anzumelden.</text>
   </g>
 </svg>

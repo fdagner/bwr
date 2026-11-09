@@ -255,12 +255,10 @@ const URL_PARAM_CONFIG = {
     verfahren: { elementId: "svgDropdownInsolvenz", type: "select" },
     schuldner: { elementId: "datenInsolvenzSchuldner", type: "select" },
     verwalter: { elementId: "datenInsolvenzVerwalter", type: "select" },
-    gericht: { elementId: "insolvenzGerichtInput", type: "text" },
     grund: { elementId: "insolvenzGrundInput", type: "select" },
     // type "text": verhindert die Zahlen-Konvertierung von
     // cleanValueForInput (sonst würde "01.07.2026" zu "1.07" verkürzt)
     datum: { elementId: "insolvenzOeffnungDateInput", type: "text" },
-    uhrzeit: { elementId: "insolvenzUhrzeitInput", type: "text" },
     frist: { elementId: "insolvenzFristInput", type: "text" },
   },
 

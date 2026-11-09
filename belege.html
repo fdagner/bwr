@@ -3680,30 +3680,17 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 </div>
               </fieldset>
 
-              <!-- Schuldnerin (insolventes Unternehmen aus der YAML,
-                   nicht das Modellunternehmen und kein Insolvenzverwalter) -->
+              <!-- Schuldner/-in (insolventes Unternehmen aus der YAML,
+                   nicht das gespeicherte Modellunternehmen und kein Insolvenzverwalter) -->
               <fieldset class="vorlage-gruppe">
                 <legend>Schuldnerin</legend>
 
                 <div class="form-field">
-                  <label for="datenInsolvenzSchuldner"
-                    >Insolventes Unternehmen</label
-                  >
+                  <label for="datenInsolvenzSchuldner">Schuldner/-in</label>
                   <select
                     id="datenInsolvenzSchuldner"
                     data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
                   ></select>
-                </div>
-                <div class="form-field">
-                  <label for="insolvenzGerichtInput">Registergericht</label>
-                  <input
-                    type="text"
-                    id="insolvenzGerichtInput"
-                    value=""
-                    maxlength="40"
-                    placeholder="z. B. Amtsgericht Fürth"
-                    data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
-                  />
                 </div>
               </fieldset>
             </div>
@@ -3774,6 +3761,8 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
 
             <p style="margin: 2px 0">
               <small style="font-size: 0.85em; color: #6b7280">
+                Registergericht = Amtsgericht am Ort der Schuldner/-in.
+                Die Eröffnungszeit wird zufällig vormittags angesetzt.
                 Die Anmeldefrist wird automatisch auf Eröffnung + 6 Wochen
                 gesetzt, solange das Feld leer ist. Verwalter stammen aus
                 „js/unternehmen.yml“ (Branche „Insolvenzverwaltung“).
@@ -3865,10 +3854,10 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
       </section>
     </main>
     <div w3-include-html="footer.html"></div>
-    <script src="js/belege.js?v=64"></script>
+    <script src="js/belege.js?v=65"></script>
     <script src="js/collection.js?v=36"></script>
     <script src="js/belege-zufall.js?v=27"></script>
-    <script src="js/beleg_url_parameter.js?v=30"></script>
+    <script src="js/beleg_url_parameter.js?v=31"></script>
     <script src="js/beleg_import.js?v=12"></script>
     <script src="js/belege-inline.js?v=5"></script>
   </body>
