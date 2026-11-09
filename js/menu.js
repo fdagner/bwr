@@ -137,7 +137,10 @@ const optionshtml2canvas = {
     var name = (localStorage.getItem("myCompany") || "").trim();
     if (name) {
       el.innerHTML = "Modellunternehmen: <strong>" + name + "</strong>";
-      el.style.background = "--accent-color";
+      // Gültige CSS-Zuweisung (vorher: background = "--accent-color" → ungültig
+      // und wurde verworfen → gelber Hintergrund blieb bis zum Reload).
+      // #1466a6 = derselbe Wert wie der Inline-Style in navigation.html.
+      el.style.background = "#1466a6";
       el.style.color = "#fff";
       el.style.fontSize = "14px";
     } else {
