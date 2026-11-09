@@ -250,6 +250,20 @@ const URL_PARAM_CONFIG = {
     unternehmen: { elementId: "datenBescheid", type: "select" },
   },
 
+  // ========== INSOLVENZVERFAHREN ==========
+  insolvenz: {
+    verfahren: { elementId: "svgDropdownInsolvenz", type: "select" },
+    schuldner: { elementId: "datenInsolvenzSchuldner", type: "select" },
+    verwalter: { elementId: "datenInsolvenzVerwalter", type: "select" },
+    gericht: { elementId: "insolvenzGerichtInput", type: "text" },
+    grund: { elementId: "insolvenzGrundInput", type: "select" },
+    // type "text": verhindert die Zahlen-Konvertierung von
+    // cleanValueForInput (sonst würde "01.07.2026" zu "1.07" verkürzt)
+    datum: { elementId: "insolvenzOeffnungDateInput", type: "text" },
+    uhrzeit: { elementId: "insolvenzUhrzeitInput", type: "text" },
+    frist: { elementId: "insolvenzFristInput", type: "text" },
+  },
+
   // ========== MAHNUNG ==========
   mahnung: {
     // Mahnstufe
@@ -350,6 +364,8 @@ const TAB_MAPPING = {
   gehaltsabrechnung: "lohnabrechnung",
   lohnjournal: "lohnjournal",
   bescheid: "bescheid",
+  insolvenz: "insolvenz",
+  insolvenzverfahren: "insolvenz",
   mahnung: "mahnung",
   zahlungserinnerung: "mahnung",
   "letzte-mahnung": "mahnung",
@@ -375,6 +391,7 @@ const APPLY_FUNCTIONS = {
   lohnabrechnung: "lohnabrechnungApplySVGholen",
   lohnjournal: "journalApplySVGholen",
   bescheid: "bescheidApplySVGholen",
+  insolvenz: "insolvenzApplySVGholen",
   mahnung: "mahnungApplySVGholen",
   anlagenkarte: "anlagenkarteApplySVGholen",
   wertpapiere: "wertpapiereApplySVGholen",
@@ -718,6 +735,7 @@ function initializeURLParameters() {
         "kassenbon",
         "lohnjournal",
         "bescheid",
+        "insolvenz",
         "mahnung",
         "anlagenkarte",
         "wertpapiere",

@@ -200,6 +200,12 @@
         >
           Wertpapiere
         </button>
+        <button
+          class="tablinks"
+          data-on-click='[{"fn":"openCity","args":["__EVENT__","insolvenz"]}]'
+        >
+          Insolvenz
+        </button>
       </nav>
 
       <section id="import" class="tabcontent">
@@ -3642,13 +3648,228 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
           </button>
         </nav>
       </section>
+
+      <section id="insolvenz" class="tabcontent">
+        <header>
+          <h2>Insolvenzverfahren</h2>
+        </header>
+
+        <form class="box insolvenz-form">
+          <section class="form-section">
+            <h3>Verfahrensart und Beteiligte</h3>
+
+            <div class="grid3">
+              <!-- Verfahrensart / Vorlage (weitere Phasen in Vorbereitung) -->
+              <fieldset class="vorlage-gruppe">
+                <legend>Art des Verfahrens</legend>
+
+                <div class="form-field">
+                  <label for="svgDropdownInsolvenz">Auswählen</label>
+                  <select
+                    id="svgDropdownInsolvenz"
+                    data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                  >
+                    <option value="insolvenz1.svg" selected>Eröffnung</option>
+                    <option value="insolvenz2.svg" disabled>
+                      Schlusstermin (folgt)
+                    </option>
+                    <option value="insolvenz3.svg" disabled>
+                      Gläubigerversammlung (folgt)
+                    </option>
+                  </select>
+                </div>
+              </fieldset>
+
+              <!-- Schuldnerin (insolventes Unternehmen aus der YAML,
+                   nicht das Modellunternehmen und kein Insolvenzverwalter) -->
+              <fieldset class="vorlage-gruppe">
+                <legend>Schuldnerin</legend>
+
+                <div class="form-field">
+                  <label for="datenInsolvenzSchuldner"
+                    >Insolventes Unternehmen</label
+                  >
+                  <select
+                    id="datenInsolvenzSchuldner"
+                    data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                  ></select>
+                </div>
+                <div class="form-field">
+                  <label for="insolvenzGerichtInput">Registergericht</label>
+                  <input
+                    type="text"
+                    id="insolvenzGerichtInput"
+                    value=""
+                    maxlength="40"
+                    placeholder="z. B. Amtsgericht Fürth"
+                    data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                  />
+                </div>
+              </fieldset>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <h3>Eröffnungsbeschluss</h3>
+
+            <div class="grid3">
+              <div class="form-field">
+                <label for="insolvenzGrundInput">Grund</label>
+                <select
+                  id="insolvenzGrundInput"
+                  data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                >
+                  <option value="Zahlungsunfähigkeit und Überschuldung" selected>
+                    Zahlungsunfähigkeit und Überschuldung
+                  </option>
+                  <option value="Zahlungsunfähigkeit">Zahlungsunfähigkeit</option>
+                  <option value="Überschuldung">Überschuldung</option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="insolvenzOeffnungDateInput">Eröffnung am</label>
+                <input
+                  type="text"
+                  id="insolvenzOeffnungDateInput"
+                  value=""
+                  maxlength="10"
+                  placeholder="TT.MM.JJJJ"
+                  data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="insolvenzUhrzeitInput">Eröffnung um (Uhrzeit)</label>
+                <input
+                  type="text"
+                  id="insolvenzUhrzeitInput"
+                  value="09.00"
+                  maxlength="8"
+                  placeholder="z. B. 09.00"
+                  data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="insolvenzFristInput">Anmeldefrist (§ 38 InsO)</label>
+                <input
+                  type="text"
+                  id="insolvenzFristInput"
+                  value=""
+                  maxlength="10"
+                  placeholder="TT.MM.JJJJ"
+                  data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="datenInsolvenzVerwalter">Insolvenzverwalter</label>
+                <select
+                  id="datenInsolvenzVerwalter"
+                  data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                ></select>
+              </div>
+            </div>
+
+            <p style="margin: 2px 0">
+              <small style="font-size: 0.85em; color: #6b7280">
+                Die Anmeldefrist wird automatisch auf Eröffnung + 6 Wochen
+                gesetzt, solange das Feld leer ist. Verwalter stammen aus
+                „js/unternehmen.yml“ (Branche „Insolvenzverwaltung“).
+              </small>
+            </p>
+          </section>
+
+          <!-- Aktionen -->
+          <section class="form-section form-actions">
+            <button
+              type="button"
+              class="btn-uebernehmen"
+              data-on-click='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 640 640"
+                fill="currentColor"
+                height="16"
+                width="16"
+                aria-hidden="true"
+              >
+                <path
+                  d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320C528 205.1 434.9 112 320 112zM390.7 233.9C398.5 223.2 413.5 220.8 424.2 228.6C434.9 236.4 437.3 251.4 429.5 262.1L307.4 430.1C303.3 435.8 296.9 439.4 289.9 439.9C282.9 440.4 276 437.9 271.1 433L215.2 377.1C205.8 367.7 205.8 352.5 215.2 343.2C224.6 333.9 239.8 333.8 249.1 343.2L285.1 379.2L390.7 234z"
+                />
+              </svg>
+              Daten übernehmen
+            </button>
+          </section>
+        </form>
+
+        <!-- Vorschau -->
+        <section class="preview-section">
+          <div
+            id="insolvenzContainer"
+            style="min-width: 330px"
+            contenteditable="true"
+          ></div>
+        </section>
+
+        <!-- Export-Buttons -->
+        <nav class="exportButtons" aria-label="Export-Optionen">
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"exportDokument","args":["insolvenz","png"]}]'
+            data-tooltip="Als PNG herunterladen"
+            aria-label="Als PNG herunterladen"
+          >
+            PNG
+          </button>
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"exportDokument","args":["insolvenz","svg"]}]'
+            data-tooltip="Als SVG herunterladen"
+            aria-label="Als SVG herunterladen"
+          >
+            SVG
+          </button>
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"exportDokument","args":["insolvenz","clipboard"]}]'
+            data-tooltip="Als SVG-Code in Zwischenablage herunterladen"
+          >
+            SVG-Code
+          </button>
+
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["insolvenz"]}]'
+            data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
+            aria-label="Beleg-Grafik in die Zwischenablage kopieren"
+          >
+            Zwischenablage
+          </button>
+          <button
+            class="card-btn"
+            type="button"
+            data-on-click='[{"fn":"belegZurSammlung","args":["insolvenzContainer"]}]'
+            data-tooltip="Zur Sammlung hinzufügen"
+            aria-label="Zur Sammlung hinzufügen"
+          >
+            + Sammlung
+          </button>
+        </nav>
+      </section>
     </main>
     <div w3-include-html="footer.html"></div>
-    <script src="js/belege.js?v=63"></script>
+    <script src="js/belege.js?v=64"></script>
     <script src="js/collection.js?v=36"></script>
-    <script src="js/belege-zufall.js?v=26"></script>
-    <script src="js/beleg_url_parameter.js?v=29"></script>
+    <script src="js/belege-zufall.js?v=27"></script>
+    <script src="js/beleg_url_parameter.js?v=30"></script>
     <script src="js/beleg_import.js?v=12"></script>
-    <script src="js/belege-inline.js?v=4"></script>
+    <script src="js/belege-inline.js?v=5"></script>
   </body>
 </html>

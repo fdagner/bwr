@@ -147,6 +147,23 @@ if (scriptJahrBescheidBox) {
   });
 }
 
+// Insolvenz: Anmeldefrist automatisch = Eröffnung + 6 Wochen (§ 38 InsO),
+// solange das Frist-Feld leer ist (Nutzer eingetragene Frist bleibt).
+(function () {
+  const insolvenzOeffnung = document.getElementById("insolvenzOeffnungDateInput");
+  if (!insolvenzOeffnung) return;
+  insolvenzOeffnung.addEventListener("input", () => {
+    const frist = document.getElementById("insolvenzFristInput");
+    if (
+      frist &&
+      !frist.value.trim() &&
+      typeof insolvenzDatumPlusTage === "function"
+    ) {
+      frist.value = insolvenzDatumPlusTage(insolvenzOeffnung.value, 42);
+    }
+  });
+})();
+
 // Ersetzt BEIDE bisherigen load-Handler (addEventListener + window.onload)
 window.addEventListener("load", function () {
   // Bescheidart aus URL setzen (falls gültig)

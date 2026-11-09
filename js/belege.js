@@ -1509,6 +1509,7 @@ function restoreOpenedBeleg(item) {
     anlagenkarte: "anlagenkarte",
     wertpapiere: "wertpapiere",
     mahnung: "mahnung",
+    insolvenz: "insolvenz",
   };
   const rawMarkup =
     item.htmlContent ||
@@ -2711,6 +2712,183 @@ async function bescheidApplySVGholen(validationUeberspringen = false) {
   await applyBelegWithSVG("bescheid", validationUeberspringen);
 }
 
+// ============================================================================
+// INSOLVENZVERFAHREN
+// ============================================================================
+const INSOLVENZ_VERWALTER_BRANCHE = "Insolvenzverwaltung";
+
+function insolvenzVerwalterKandidaten() {
+  return (yamlData || []).filter(
+    (c) =>
+      (c.unternehmen?.branche || "").trim() ===
+        INSOLVENZ_VERWALTER_BRANCHE && c.unternehmen?.name,
+  );
+}
+
+// Schuldnerin: jedes Unternehmen aus der YAML außer Modellunternehmen
+// und Insolvenzverwaltern
+function insolvenzSchuldnerKandidaten() {
+  return (yamlData || []).filter((c) => {
+    const branche = (c.unternehmen?.branche || "").trim();
+    return (
+      c.unternehmen?.name &&
+      branche !== "Modellunternehmen" &&
+      branche !== INSOLVENZ_VERWALTER_BRANCHE
+    );
+  });
+}
+
+// Dropdowns Schuldner/Verwalter befüllen – idempotent: nur neu aufbauen,
+// wenn die Kandidatenliste sich geändert hat; getroffene Auswahl bleibt.
+function insolvenzOptionenBefuellen() {
+  if (!Array.isArray(yamlData) || yamlData.length === 0) return;
+  const schuldnerSel = document.getElementById("datenInsolvenzSchuldner");
+  const verwalterSel = document.getElementById("datenInsolvenzVerwalter");
+  if (!schuldnerSel || !verwalterSel) return;
+
+  const schuldner = insolvenzSchuldnerKandidaten();
+  const verwalter = insolvenzVerwalterKandidaten();
+
+  const baue = (sel, liste) => {
+    const aktuell = sel.value;
+    sel.innerHTML = "";
+    const leer = document.createElement("option");
+    leer.value = "";
+    leer.text = "— bitte auswählen —";
+    leer.disabled = true;
+    sel.appendChild(leer);
+    liste.forEach((c) => {
+      const o = document.createElement("option");
+      o.value = c.unternehmen.name;
+      o.text = c.unternehmen.name;
+      sel.appendChild(o);
+    });
+    if (aktuell && Array.from(sel.options).some((o) => o.value === aktuell))
+      sel.value = aktuell;
+  };
+
+  if (schuldnerSel.options.length !== schuldner.length + 1)
+    baue(schuldnerSel, schuldner);
+  if (verwalterSel.options.length !== verwalter.length + 1)
+    baue(verwalterSel, verwalter);
+
+  // Gültige Auswahl sicherstellen (Standard: erster Eintrag)
+  const sichereAuswahl = (sel, liste) => {
+    if (!sel.value || !Array.from(sel.options).some((o) => o.value === sel.value))
+      sel.value = liste.length > 0 ? liste[0].unternehmen.name : "";
+  };
+  sichereAuswahl(schuldnerSel, schuldner);
+  sichereAuswahl(verwalterSel, verwalter);
+}
+
+// Deutsche TT.MM.JJJJ-Daten: n Tage weiterrechnen (nur volle Jahresangabe)
+function insolvenzDatumPlusTage(text, tage) {
+  const m = String(text || "")
+    .trim()
+    .match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if (!m) return "";
+  const d = new Date(
+    parseInt(m[3], 10),
+    parseInt(m[2], 10) - 1,
+    parseInt(m[1], 10),
+  );
+  d.setDate(d.getDate() + tage);
+  const p = (n) => String(n).padStart(2, "0");
+  return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
+}
+
+// Füllt die SVG-Elemente des Eröffnungsbekanntmachungs-Belegs
+function insolvenzDatenAnwenden() {
+  const schuldnerSel = document.getElementById("datenInsolvenzSchuldner");
+  const verwalterSel = document.getElementById("datenInsolvenzVerwalter");
+  if (!schuldnerSel || !verwalterSel) return;
+
+  insolvenzOptionenBefuellen();
+
+  const schuldner = (yamlData || []).find(
+    (c) => c.unternehmen?.name === schuldnerSel.value,
+  );
+  const verwalter = (yamlData || []).find(
+    (c) => c.unternehmen?.name === verwalterSel.value,
+  );
+
+  const svgText = (id, wert) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = wert == null ? "" : String(wert);
+  };
+  // Formularfeld-Defaults nur setzen, solange Felder leer sind
+  const setzeDefault = (id, wert) => {
+    const el = document.getElementById(id);
+    if (el && !(el.value || "").trim()) el.value = wert;
+  };
+
+  if (schuldner) {
+    const u = schuldner.unternehmen;
+    setzeDefault(
+      "insolvenzGerichtInput",
+      "Amtsgericht " + (u.adresse?.ort || ""),
+    );
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, "0");
+    setzeDefault("insolvenzOeffnungDateInput", `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`);
+  }
+  const datumText = (
+    document.getElementById("insolvenzOeffnungDateInput")?.value || ""
+  ).trim();
+  setzeDefault("insolvenzFristInput", insolvenzDatumPlusTage(datumText, 42));
+
+  const datum = datumText || "TT.MM.JJJJ";
+  const zeit =
+    (document.getElementById("insolvenzUhrzeitInput")?.value || "").trim() ||
+    "09.00";
+  const grund =
+    document.getElementById("insolvenzGrundInput")?.value ||
+    "Zahlungsunfähigkeit und Überschuldung";
+  const gericht =
+    (document.getElementById("insolvenzGerichtInput")?.value || "").trim() ||
+    "Amtsgericht ###";
+  const frist =
+    (document.getElementById("insolvenzFristInput")?.value || "").trim() ||
+    "TT.MM.JJJJ";
+
+  if (schuldner) {
+    const u = schuldner.unternehmen;
+    const firma = `${u.name}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
+    svgText("insolvenzSchuldnerZeile1", `${firma}, ${u.adresse?.strasse || ""},`);
+    svgText(
+      "insolvenzSchuldnerZeile2",
+      `${u.adresse?.plz || ""} ${u.adresse?.ort || ""}, vertreten durch den Geschäftsführer`,
+    );
+    svgText("insolvenzSchuldnerInhaber", u.inhaber ? ` ${u.inhaber}` : "");
+  }
+  svgText("insolvenzRegistergericht", gericht);
+  svgText("insolvenzGrund", grund);
+  svgText("insolvenzOeffnungDatum", datum);
+  svgText("insolvenzOeffnungZeit", zeit);
+  svgText("insolvenzFrist", frist);
+
+  if (verwalter) {
+    const v = verwalter.unternehmen;
+    svgText("insolvenzVerwalterName", v.name || "");
+    svgText(
+      "insolvenzVerwalterAdresse",
+      `${v.adresse?.strasse || ""}, ${v.adresse?.plz || ""} ${v.adresse?.ort || ""}`.replace(/^,\s*/, ""),
+    );
+    svgText("insolvenzVerwalterTelefon", v.kontakt?.telefon || "");
+    svgText("insolvenzVerwalterTelefax", v.kontakt?.telefax || "");
+    svgText("insolvenzVerwalterEmail", v.kontakt?.email || "");
+  }
+}
+
+async function insolvenzApplySVGholen(validationUeberspringen = false) {
+  // Schuldner-/Verwalter-Selects vor dem Rendern sicher befüllt haben,
+  // damit Sammlung/URL-Parameter die Werte wie bei den anderen Belegen
+  // setzen können.
+  insolvenzOptionenBefuellen();
+  await applyBelegWithSVG("insolvenz", validationUeberspringen);
+}
+window.insolvenzApplySVGholen = insolvenzApplySVGholen;
+
 async function mahnungApplySVGholen(validationUeberspringen = false) {
   // Absender automatisch vorbelegen: 'myCompany' (localStorage) oder
   // das erste erfasste Modellunternehmen – solange nichts gewählt wurde.
@@ -2764,6 +2942,7 @@ async function alleBelegeAutomatischErstellen() {
     ["Mahnung", () => mahnungApplySVGholen(still)],
     ["Anlagenkarte", () => anlagenkarteApplySVGholen(still)],
     ["Wertpapiere", () => wertpapiereApplySVGholen(still)],
+    ["Insolvenz", () => insolvenzApplySVGholen(still)],
     ["Lohnjournal", () => journalApplySVGholen(still)],
     ["Lohnabrechnung", () => lohnabrechnungApplySVGholen(still)],
   ];
@@ -3217,6 +3396,13 @@ const EXPORT_CONFIG = {
     label: "Bescheid",
     firmaSelect: "datenBescheid",
     praep: "für",
+  },
+  insolvenz: {
+    id: "insolvenzContainer",
+    name: "insolvenzbekanntmachung",
+    label: "Insolvenzbekanntmachung",
+    firmaSelect: "datenInsolvenzSchuldner",
+    praep: "über",
   },
   mahnung: {
     id: "mahnungContainer",
@@ -4218,6 +4404,13 @@ const BELEG_APPLY_CONFIG = {
       }
 
       loadBescheidData();
+    },
+  },
+  insolvenz: {
+    svgDropdown: "svgDropdownInsolvenz",
+    container: "insolvenzContainer",
+    dataFunction: () => {
+      insolvenzDatenAnwenden();
     },
   },
   mahnung: {
