@@ -2911,10 +2911,10 @@ function insolvenzDatenAnwenden() {
     svgText("insolvenzSchuldnerZeile1", `${firma},`);
     svgText(
       "insolvenzSchuldnerZeile2",
-      `${u.adresse?.strasse || ""}, ${u.adresse?.plz || ""} ${u.adresse?.ort || ""},`,
+      `${u.adresse?.strasse || ""}, ${u.adresse?.plz || ""} ${u.adresse?.ort || ""}`,
     );
     svgText("insolvenzSchuldnerVertreter", "vertreten durch den Geschäftsführer");
-    svgText("insolvenzSchuldnerInhaber", u.inhaber || "");
+    svgText("insolvenzSchuldnerInhaber", u.inhaber ? ` ${u.inhaber}` : "");
   }
   svgText("insolvenzRegistergericht", gericht);
   svgText("insolvenzGrund", grund);
