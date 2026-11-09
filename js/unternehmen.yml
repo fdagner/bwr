@@ -4635,7 +4635,7 @@
     branche: "Insolvenzverwaltung"
     name: "Rechtsanwalt Exner Joachim"
     motto: ""
-    bank: ""
+    bank: "Stadt- und Kreissparkasse Nürnberg"
     rechtsform: ""
     logo: ""
     adresse:
@@ -4649,10 +4649,10 @@
       email: "advo@ra-exner.de"
       internet: "ra-exner.de"
     ust_id: ""
-    steuernummer: ""
-    iban: ""
-    bic: ""
-    inhaber: ""
+    steuernummer: "240/216/50501"
+    iban: "DE89760500110009512305"
+    bic: "BYLADEM1001"
+    inhaber: "Rechtsanwalt Exner Joachim"
     akzent: "#f5f5f5"
 
 - unternehmen:
@@ -4660,7 +4660,7 @@
     branche: "Insolvenzverwaltung"
     name: "Rechtsanwalt Brandmayer Silke"
     motto: ""
-    bank: ""
+    bank: "Sparkasse Fürth"
     rechtsform: ""
     logo: ""
     adresse:
@@ -4674,10 +4674,10 @@
       email: "kanzlei@ra-brandmayer.de"
       internet: "ra-brandmayer.de"
     ust_id: ""
-    steuernummer: ""
-    iban: ""
-    bic: ""
-    inhaber: ""
+    steuernummer: "124/001/50602"
+    iban: "DE18762500220001471605"
+    bic: "BYLADEM1FUR"
+    inhaber: "Rechtsanwalt Brandmayer Silke"
     akzent: "#f5f5f5"
 
 - unternehmen:
@@ -4685,7 +4685,7 @@
     branche: "Insolvenzverwaltung"
     name: "Rechtsanwalt Kopplow Wiebke"
     motto: ""
-    bank: ""
+    bank: "Stadtsparkasse Augsburg"
     rechtsform: ""
     logo: ""
     adresse:
@@ -4699,10 +4699,10 @@
       email: "post@kopplow-insolvenz.de"
       internet: "kopplow-insolvenz.de"
     ust_id: ""
-    steuernummer: ""
-    iban: ""
-    bic: ""
-    inhaber: ""
+    steuernummer: "102/001/50703"
+    iban: "DE13720500200015221908"
+    bic: "BYLADEM1AUG"
+    inhaber: "Rechtsanwalt Kopplow Wiebke"
     akzent: "#f5f5f5"
 
 - unternehmen:
@@ -4710,7 +4710,7 @@
     branche: "Insolvenzverwaltung"
     name: "Rechtsanwalt Oxenknecht Assad"
     motto: ""
-    bank: ""
+    bank: "Sparkasse Regensburg"
     rechtsform: ""
     logo: ""
     adresse:
@@ -4724,10 +4724,10 @@
       email: "verwaltung@ra-oxenknecht.de"
       internet: "ra-oxenknecht.de"
     ust_id: ""
-    steuernummer: ""
-    iban: ""
-    bic: ""
-    inhaber: ""
+    steuernummer: "244/001/50804"
+    iban: "DE93750500000123456789"
+    bic: "BYLADEM1RGB"
+    inhaber: "Rechtsanwalt Oxenknecht Assad"
     akzent: "#f5f5f5"
 
 - unternehmen:
@@ -4735,7 +4735,7 @@
     branche: "Insolvenzverwaltung"
     name: "Rechtsanwalt Steinbock Vera"
     motto: ""
-    bank: ""
+    bank: "Stadtsparkasse München"
     rechtsform: ""
     logo: ""
     adresse:
@@ -4749,10 +4749,10 @@
       email: "kanzlei@ra-steinbock.de"
       internet: "ra-steinbock.de"
     ust_id: ""
-    steuernummer: ""
-    iban: ""
-    bic: ""
-    inhaber: ""
+    steuernummer: "143/001/50905"
+    iban: "DE41701500000012345678"
+    bic: "SSKMDEMMXXX"
+    inhaber: "Rechtsanwalt Steinbock Vera"
     akzent: "#f5f5f5"
 
 - unternehmen:
@@ -4760,7 +4760,7 @@
     branche: "Insolvenzverwaltung"
     name: "Rechtsanwalt Herzig Lorenz"
     motto: ""
-    bank: ""
+    bank: "Sparkasse Mainfranken Würzburg"
     rechtsform: ""
     logo: ""
     adresse:
@@ -4774,8 +4774,8 @@
       email: "info@ra-herzig.de"
       internet: "ra-herzig.de"
     ust_id: ""
-    steuernummer: ""
-    iban: ""
-    bic: ""
-    inhaber: ""
+    steuernummer: "241/001/51006"
+    iban: "DE11790500000123456789"
+    bic: "BYLADEM1WUE"
+    inhaber: "Rechtsanwalt Herzig Lorenz"
     akzent: "#f5f5f5"
