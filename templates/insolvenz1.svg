@@ -1,13 +1,13 @@
-<svg id="insolvenzSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 940" font-family="Arial" font-size="18" style="height:auto;background-color:#fff;padding:0px;width:100%;max-width:560px;">
+<svg id="insolvenzSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 890" font-family="Arial" font-size="18" style="height:auto;background-color:#fff;padding:0px;width:100%;max-width:560px;">
   <!-- Tablet-Gehaeuse (typischer schwarzer Rand), schmales Hochformat -->
-  <rect x="5" y="5" width="550" height="930" rx="46" fill="#17181c" />
-  <rect x="5" y="5" width="550" height="930" rx="46" fill="none" stroke="#2a2c33" stroke-width="2" />
+  <rect x="5" y="5" width="550" height="880" rx="46" fill="#17181c" />
+  <rect x="5" y="5" width="550" height="880" rx="46" fill="none" stroke="#2a2c33" stroke-width="2" />
   <circle cx="280" cy="15" r="3.5" fill="#3a3d45" />
   <defs>
-    <clipPath id="insolvenzScreenClip"><rect x="24" y="24" width="512" height="892" rx="12" /></clipPath>
+    <clipPath id="insolvenzScreenClip"><rect x="24" y="24" width="512" height="842" rx="12" /></clipPath>
   </defs>
   <!-- Bildschirm -->
-  <rect x="24" y="24" width="512" height="892" rx="12" fill="#ffffff" />
+  <rect x="24" y="24" width="512" height="842" rx="12" fill="#ffffff" />
   <g clip-path="url(#insolvenzScreenClip)" fill="#23262b">
     <!-- Dezente Browser-Chrome: Home / Zurueck / Vor / Neuladen + Adresszeile -->
     <rect x="24" y="24" width="512" height="44" fill="#eef1f4" />
