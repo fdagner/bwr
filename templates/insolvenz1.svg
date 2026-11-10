@@ -37,7 +37,7 @@
     <text x="30" y="336">über das eigene Vermögen</text>
     <text x="30" y="376">1.</text>
     <text x="62" y="376">Das Insolvenzverfahren über das Vermögen</text>
-    <text x="62" y="404">der Schuldner/-in wird wegen</text>
+    <text x="62" y="404">wird wegen</text>
     <text id="insolvenzGrund" x="62" y="432">###</text>
     <text x="62" y="460">am <tspan id="insolvenzOeffnungDatum">###</tspan> um <tspan id="insolvenzOeffnungZeit">###</tspan> Uhr eröffnet.</text>
     <text x="30" y="506">2.</text>
