@@ -119,7 +119,11 @@
     <main>
       <div w3-include-html="navigation.html"></div>
       <h2>Belege</h2>
-      <select id="tabDropdown" class="tab-dropdown" aria-label="Beleg auswählen"></select>
+      <select
+        id="tabDropdown"
+        class="tab-dropdown"
+        aria-label="Beleg auswählen"
+      ></select>
       <nav class="tab">
         <button
           class="tablinks"
@@ -1680,7 +1684,12 @@
             <div class="form-field" style="margin-top: 8px">
               <label
                 for="emailLogoCheckbox"
-                style="display: flex; align-items: center; gap: 8px; cursor: pointer"
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  cursor: pointer;
+                "
               >
                 <input
                   type="checkbox"
@@ -3685,12 +3694,13 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                     data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
                   >
                     <option value="insolvenz1.svg" selected>Eröffnung</option>
-                    <option value="insolvenz2.svg">Zweifelhafte Forderung</option>
+                    <option value="insolvenz2.svg">
+                      Schlussverteilung mit Insolvenzquote
+                    </option>
                   </select>
                 </div>
               </fieldset>
 
-             
               <fieldset class="vorlage-red">
                 <legend>Schuldner/-in</legend>
 
@@ -3708,7 +3718,9 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 <legend>Modellunternehmen</legend>
 
                 <div class="form-field">
-                  <label for="datenInsolvenzModellunternehmen">Auswählen:</label>
+                  <label for="datenInsolvenzModellunternehmen"
+                    >Auswählen:</label
+                  >
                   <select
                     id="datenInsolvenzModellunternehmen"
                     data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
@@ -3718,20 +3730,27 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
             </div>
           </section>
 
-          <section class="form-section">
-            <h3>Eröffnungsbeschluss</h3>
+          <!-- Eröffnungsbeschluss: bei Verfahrensart „Zweifelhafte Forderung“
+               bleiben nur Titel(Wechsel)/Verwalter sichtbar -->
+          <section class="form-section" id="insolvenzEroeffnungSektion">
+            <h3 id="insolvenzEroeffnungTitel">Eröffnungsbeschluss</h3>
 
-            <div class="grid3">
+            <div class="grid3" id="insolvenzEroeffnungDetails">
               <div class="form-field">
                 <label for="insolvenzGrundInput">Grund</label>
                 <select
                   id="insolvenzGrundInput"
                   data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
                 >
-                  <option value="Zahlungsunfähigkeit und Überschuldung" selected>
+                  <option
+                    value="Zahlungsunfähigkeit und Überschuldung"
+                    selected
+                  >
                     Zahlungsunfähigkeit und Überschuldung
                   </option>
-                  <option value="Zahlungsunfähigkeit">Zahlungsunfähigkeit</option>
+                  <option value="Zahlungsunfähigkeit">
+                    Zahlungsunfähigkeit
+                  </option>
                   <option value="Überschuldung">Überschuldung</option>
                 </select>
               </div>
@@ -3748,8 +3767,10 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 />
               </div>
 
-                 <div class="form-field">
-                <label for="insolvenzFristInput">Anmeldefrist (§ 38 InsO)</label>
+              <div class="form-field">
+                <label for="insolvenzFristInput"
+                  >Anmeldefrist (§ 38 InsO)</label
+                >
                 <input
                   type="text"
                   id="insolvenzFristInput"
@@ -3759,30 +3780,34 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                   data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
                 />
               </div>
+            </div>
 
               <div class="form-field">
-                <label for="datenInsolvenzVerwalter">Insolvenzverwalter</label>
+                <label id="insolvenzVerwalterLabel" for="datenInsolvenzVerwalter">Insolvenzverwalter</label>
                 <select
                   id="datenInsolvenzVerwalter"
                   data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
                 ></select>
               </div>
-            </div>
 
-            <p style="margin: 2px 0">
+            <p id="insolvenzEroeffnungHinweis" style="margin: 2px 0">
               <small style="font-size: 0.85em; color: #6b7280">
-                Registergericht = Amtsgericht am Ort der Schuldner/-in.
-                Die Eröffnungszeit wird zufällig vormittags angesetzt.
-                Die Anmeldefrist wird automatisch auf Eröffnung + 6 Wochen
-                gesetzt, solange das Feld leer ist. Verwalter stammen aus
-                Branche „Insolvenzverwaltung“.
+                Registergericht = Amtsgericht am Ort der Schuldner/-in. Die
+                Eröffnungszeit wird zufällig vormittags angesetzt. Die
+                Anmeldefrist wird automatisch auf Eröffnung + 6 Wochen gesetzt,
+                solange das Feld leer ist. Verwalter stammen aus Branche
+                „Insolvenzverwaltung“.
               </small>
             </p>
           </section>
 
           <!-- Felder für die Vorlage „Zweifelhafte Forderung“ (nur bei
                dieser Verfahrensart sichtbar) -->
-          <section class="form-section" id="insolvenzForderungSektion" style="display: none">
+          <section
+            class="form-section"
+            id="insolvenzForderungSektion"
+            style="display: none"
+          >
             <h3>Zweifelhafte Forderung</h3>
 
             <div class="grid3">

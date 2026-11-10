@@ -2917,6 +2917,15 @@ function insolvenzDatumPlusTage(text, tage) {
   return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
 }
 
+// Deutsche Betragsnotation („14.875,50“, „14875“, „2 380“) in eine Zahl
+// umwandeln – null, wenn nichts Sinnvolles im Feld steht.
+function insolvenzParseBetrag(text) {
+  const t = String(text || "").replace(/€/g, "").replace(/\s+/g, "");
+  if (!t) return null;
+  const n = Number(t.replace(/\./g, "").replace(",", "."));
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
 // Füllt die SVG-Elemente der Insolvenz-Belege (Eröffnung + „Zweifelhafte
 // Forderung"). Vorlagen-spezifische IDs existieren nur in der jeweiligen
 // SVG; fehlende Elemente werden von svgText ignoriert.
@@ -3015,6 +3024,17 @@ function insolvenzDatenAnwenden() {
   if (forderungSektion) {
     forderungSektion.style.display = vorlage2Aktiv ? "" : "none";
   }
+  // Eröffnungs-Optionen ausblenden, wenn Schlussverteilung gewählt ist –
+  // der Insolvenzverwalter bleibt in beiden Verfahrensarten sichtbar.
+  const setzeSichtbar = (id, sichtbar) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = sichtbar ? "" : "none";
+  };
+  setzeSichtbar("insolvenzEroeffnungDetails", !vorlage2Aktiv);
+  setzeSichtbar("insolvenzEroeffnungHinweis", !vorlage2Aktiv);
+  const titel = document.getElementById("insolvenzEroeffnungTitel");
+  if (titel) titel.textContent = vorlage2Aktiv ? "Insolvenzverwalter" : "Eröffnungsbeschluss";
+  setzeSichtbar("insolvenzVerwalterLabel", !vorlage2Aktiv);
 
   if (schuldner) {
     const u = schuldner.unternehmen;
@@ -3027,23 +3047,16 @@ function insolvenzDatenAnwenden() {
     const az = `${zufallsInt(50, 899)} ${
       azBuchstaben[zufallsInt(0, azBuchstaben.length - 1)]
     } ${zufallsInt(100, 499)}/${zufallsInt(1, 29)}`;
-    // Forderungsbetrag im Stil „14.875,00 €“ (deutsche Formatierung mit
-    // Tausenderpunkt). Eingabe im Feld (z. B. „14.875,50“ oder „14875“)
-    // hat Vorrang, leer = zufällig.
+    // Betrag im Feld (z. B. „14.875,50“ oder „14875“) hat Vorrang,
+    // leer = zufällig. Maximale Höhe 999.999,00 €.
     const betragInput = document.getElementById("insolvenzForderungBetragInput");
-    const parseBetrag = (text) => {
-      const t = String(text || "").replace(/€/g, "").replace(/\s+/g, "");
-      if (!t) return null;
-      const n = Number(t.replace(/\./g, "").replace(",", "."));
-      return Number.isFinite(n) && n > 0 ? n : null;
-    };
     const formatBetrag = (n) => n.toLocaleString("de-DE", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-    const betragEingabe = parseBetrag(betragInput?.value);
+    const betragEingabe = insolvenzParseBetrag(betragInput?.value);
     const betrag = betragEingabe
-      ? formatBetrag(betragEingabe)
+      ? formatBetrag(Math.min(betragEingabe, 999999))
       : `${zufallsInt(5000, 35000).toLocaleString("de-DE")},${String(zufallsInt(0, 99)).padStart(2, "0")}`;
     // Insolvenzquote: freie Eingabe möglich (z. B. 33 %); ungültig/leer =
     // fester Default 20 %. Glatte Vorschläge in 5er-Schritten über die Liste.
@@ -3892,6 +3905,23 @@ function validateInputs(still = false) {
         "Die Gesamtsumme (Menge * Einzelpreis) Pos. 2 darf nicht höher als 999.999.999,00 sein.",
       );
     return false;
+  }
+
+  // Spezielle Validierung: Forderungsbetrag der Insolvenz-Vorlage 2
+  // (leer ist erlaubt = Zufallswert, aber wenn gesetzt: plausibel &
+  // maximal 999.999,00 €)
+  const insolvenzBetragInput = document.getElementById(
+    "insolvenzForderungBetragInput",
+  );
+  if (insolvenzBetragInput && insolvenzBetragInput.value.trim()) {
+    const betrag = insolvenzParseBetrag(insolvenzBetragInput.value);
+    if (betrag === null || betrag > 999999) {
+      if (!still)
+        zeigeModal(
+          "Bitte geben Sie beim Forderungsbetrag einen gültigen Wert bis max. 999.999,00 € ein.",
+        );
+      return false;
+    }
   }
 
   return true;

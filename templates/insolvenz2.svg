@@ -29,7 +29,7 @@
   </defs>
   <g clip-path="url(#pdfSeiteClip2)" fill="#23262b">
     <!-- Schreiben des Insolvenzverwalters (ohne Anrede) -->
-    <text x="78" y="100">ich darf Sie bezüglich meiner Tätigkeit</text>
+    <text x="78" y="100">Ich darf Sie bezüglich meiner Tätigkeit</text>
     <text x="78" y="126">als Insolvenzverwalter (Bestellung gem. § 56</text>
     <text x="78" y="152">Abs. 1 InsO) auf folgende amtliche Bekanntmachung</text>
     <text x="78" y="178">hinweisen:</text>
@@ -53,6 +53,6 @@
     <text x="78" y="540" font-weight="bold">Mit freundlichen Grüßen</text>
     <text id="insolvenzVerwalterInitialien" x="78" y="592" font-size="26" fill="#23335c" font-family="'Segoe Script','Bradley Hand','Comic Sans MS',cursive">###</text>
     <text id="insolvenzVerwalterName2" x="78" y="624" text-decoration="underline">###</text>
-    <text x="78" y="650">Rechtsanwalt</text>
+    <text x="78" y="650">Insolvenzverwaltung</text>
   </g>
 </svg>
