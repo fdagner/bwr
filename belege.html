@@ -1676,6 +1676,21 @@
                 <select id="datenEmailKunde" class="meinUnternehmen"></select>
               </div>
             </div>
+
+            <div class="form-field" style="margin-top: 8px">
+              <label
+                for="emailLogoCheckbox"
+                style="display: flex; align-items: center; gap: 8px; cursor: pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="emailLogoCheckbox"
+                  checked
+                  data-on-change='[{"fn":"emailLogoUmschalten","args":[]}]'
+                />
+                Logo des Absenders hinzufügen (optional)
+              </label>
+            </div>
           </section>
 
           <!-- Vorlagenwechsel wendet die Vorlage automatisch an;
@@ -3848,10 +3863,10 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
       </section>
     </main>
     <div w3-include-html="footer.html"></div>
-    <script src="js/belege.js?v=70"></script>
+    <script src="js/belege.js?v=72"></script>
     <script src="js/collection.js?v=36"></script>
     <script src="js/belege-zufall.js?v=27"></script>
-    <script src="js/beleg_url_parameter.js?v=31"></script>
+    <script src="js/beleg_url_parameter.js?v=32"></script>
     <script src="js/beleg_import.js?v=12"></script>
     <script src="js/belege-inline.js?v=5"></script>
   </body>

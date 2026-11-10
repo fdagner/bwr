@@ -177,6 +177,9 @@ const URL_PARAM_CONFIG = {
     // Unternehmen
     absender: { elementId: "datenEmail", type: "select" },
     empfaenger: { elementId: "datenEmailKunde", type: "select" },
+
+    // Optionales Logo
+    logo: { elementId: "emailLogoCheckbox", type: "checkbox" },
   },
 
   // ========== ZEITUNGSARTIKEL ==========

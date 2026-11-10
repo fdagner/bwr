@@ -361,7 +361,20 @@ const BELEG_FIELD_MAPPING = {
       emailInhaber: "unternehmen.inhaber",
     },
     customLogic: (data) => {
-      loadLogoToSVG(data.unternehmen.logo, "emailSVG", "logo-placeholderEmail");
+      const cb = document.getElementById("emailLogoCheckbox");
+      const svg = document.getElementById("emailSVG");
+      const wrapper = svg?.parentElement;
+      if (cb?.checked) {
+        if (wrapper) wrapper.style.display = "flex";
+        loadLogoToSVG(data.unternehmen.logo, "emailSVG", "logo-placeholderEmail");
+      } else {
+        if (wrapper) wrapper.style.display = "none";
+        svg?.querySelectorAll("#uploaded-image, #uploaded-logo").forEach((el) =>
+          el.remove(),
+        );
+        const ph = document.getElementById("logo-placeholderEmail");
+        if (ph) ph.setAttribute("opacity", "0");
+      }
     },
   },
   kunde: {
@@ -1853,6 +1866,42 @@ function loadKontoauszugData() {
 function loadEmailData() {
   loadBelegData("email", "datenEmail");
 }
+
+// Entfernt ein zuvor geladenes Logo aus der Mail-SVG (optionaler Modus).
+function emailLogoEntfernen() {
+  const svg = document.getElementById("emailSVG");
+  if (!svg) return;
+  svg.querySelectorAll("#uploaded-image, #uploaded-logo").forEach((el) =>
+    el.remove(),
+  );
+  const ph = document.getElementById("logo-placeholderEmail");
+  if (ph) ph.setAttribute("opacity", "0");
+  // Platzhalter-Wrapper ausblenden, damit Absender/Mail nach links rücken
+  if (svg.parentElement) svg.parentElement.style.display = "none";
+}
+
+// Schaltet das Logo in der Mail-Vorschau an/aus (Checkbox).
+function emailLogoUmschalten() {
+  const cb = document.getElementById("emailLogoCheckbox");
+  const svg = document.getElementById("emailSVG");
+  const wrapper = svg?.parentElement;
+  const absender = document.getElementById("datenEmail")?.value;
+  const data = (yamlData || []).find(
+    (c) => c.unternehmen?.name === absender,
+  );
+  if (cb?.checked && data) {
+    if (wrapper) wrapper.style.display = "flex";
+    loadLogoToSVG(data.unternehmen.logo, "emailSVG", "logo-placeholderEmail");
+  } else {
+    if (wrapper) wrapper.style.display = "none";
+    svg?.querySelectorAll("#uploaded-image, #uploaded-logo").forEach((el) =>
+      el.remove(),
+    );
+    const ph = document.getElementById("logo-placeholderEmail");
+    if (ph) ph.setAttribute("opacity", "0");
+  }
+}
+window.emailLogoUmschalten = emailLogoUmschalten;
 
 // Wendet die aktuell gewählte Mailvorlage an: Vorlage rendern und
 // Firmen-/Empfängerdaten sofort einsetzen. Wird beim Wechsel des Vorlagen-
