@@ -1192,9 +1192,31 @@ function exportPNG(
 
   // HTML-Typen (E-Mail, Zeitung, ...): wie bisher
   if (!svg) {
-    html2canvas(container, { scale, backgroundColor: "#ffffff" }).then(
-      download,
-    );
+    // Container beim Export auf die tatsächliche Beleg-Breite (z. B. 700 px
+    // bei der Mail) begrenzen und Padding/Outline entfernen – sonst nimmt
+    // html2canvas den umgebenden Leerraum (Padding, gestreckter Container)
+    // mit und der Export ist rechts zu breit.
+    const zielBreite =
+      exportWidth ||
+      (container.firstElementChild && container.firstElementChild.offsetWidth) ||
+      container.scrollWidth;
+    const prev = {
+      width: container.style.width,
+      padding: container.style.padding,
+      outline: container.style.outline,
+      margin: container.style.margin,
+    };
+    container.style.width = zielBreite + "px";
+    container.style.padding = "0";
+    container.style.outline = "none";
+    container.style.margin = "0";
+    html2canvas(container, { scale, backgroundColor: "#ffffff" }).then((canvas) => {
+      container.style.width = prev.width;
+      container.style.padding = prev.padding;
+      container.style.outline = prev.outline;
+      container.style.margin = prev.margin;
+      download(canvas);
+    });
     return;
   }
 
