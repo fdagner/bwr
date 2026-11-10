@@ -263,6 +263,9 @@ const URL_PARAM_CONFIG = {
     // cleanValueForInput (sonst würde "01.07.2026" zu "1.07" verkürzt)
     datum: { elementId: "insolvenzOeffnungDateInput", type: "text" },
     frist: { elementId: "insolvenzFristInput", type: "text" },
+    // Vorlage 2 „Zweifelhafte Forderung“
+    betrag: { elementId: "insolvenzForderungBetragInput", type: "text" },
+    quote: { elementId: "insolvenzQuoteInput", type: "text" },
   },
 
   // ========== MAHNUNG ==========

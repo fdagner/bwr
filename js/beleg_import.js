@@ -18,6 +18,7 @@ const BELEG_SVG_ID_MAPPING = {
   anlagenkarteSVG: "anlagenkarte",
   wertpapiereSVG: "wertpapiere",
   lohnabrechnungSVG: "lohnabrechnung",
+  insolvenzSVG: "insolvenz", // beide Insolvenz-Vorlagen (Eröffnung + Vorlage 2)
   angebotSVG: "rechnung", // Angebot nutzt Rechnung-Tab
   gutschriftSVG: "rechnung", // Gutschrift nutzt Rechnung-Tab
 };
@@ -112,6 +113,17 @@ const BELEG_DETECTION_PATTERNS = {
       "lohnabrechnungSteuerklasse",
     ],
     texts: ["Lohnabrechnung", "Steuerklasse"],
+    minMatches: 2,
+  },
+  insolvenz: {
+    ids: [
+      "insolvenzGrund",
+      "insolvenzOeffnungDatum",
+      "insolvenzFrist",
+      "insolvenzBoxZeile1",
+      "insolvenzForderungZeile2",
+    ],
+    texts: ["Insolvenzverfahren", "Insolvenzverwalter", "Schlussverteilung"],
     minMatches: 2,
   },
 };
@@ -275,6 +287,15 @@ function showImportSummary(belegType, extractedData, tabName) {
     ],
     email: ["emailName", "emailKunde", "emailSubject"],
     newspaper: ["ueberschrift", "quelle"],
+    insolvenz: [
+      "_insolvenzSchuldner",
+      "_insolvenzVerwalter",
+      "insolvenzGrund",
+      "insolvenzOeffnungDatum",
+      "insolvenzFrist",
+      "_insolvenzBetrag",
+      "_insolvenzQuote",
+    ],
   };
 
   const FIELD_LABELS = {
@@ -322,6 +343,13 @@ function showImportSummary(belegType, extractedData, tabName) {
     emailSubject: "Betreff",
     ueberschrift: "Überschrift",
     quelle: "Quelle",
+    _insolvenzSchuldner: "Schuldner/-in",
+    _insolvenzVerwalter: "Insolvenzverwalter",
+    _insolvenzBetrag: "Forderungsbetrag",
+    _insolvenzQuote: "Insolvenzquote",
+    insolvenzGrund: "Grund",
+    insolvenzOeffnungDatum: "Eröffnung am",
+    insolvenzFrist: "Anmeldefrist",
   };
 
   const BELEG_LABELS = {
@@ -337,6 +365,7 @@ function showImportSummary(belegType, extractedData, tabName) {
     mahnung: "Mahnung",
     email: "E-Mail",
     newspaper: "Zeitungsartikel",
+    insolvenz: "Insolvenzverfahren",
   };
 
   statusEl.style.backgroundColor = "#e8f5e9";
@@ -648,6 +677,41 @@ function extractBelegData(svgDoc, belegType) {
       (!data.bezugskosten || !/\d/.test(data.bezugskosten))
     ) {
       data.bezugskosten = data.bezugskostenSumme;
+    }
+  }
+
+  // Insolvenz: Schuldner/Verwalter/Betrag/Quote aus dem Brieftext ableiten
+  // (die Roh-IDs enthalten zusammengesetzte Sätze, nicht einzeln ablegbare
+  // Werte). Unterstrich-Keys sind interne Helfer für Summary + Formular.
+  else if (belegType === "insolvenz") {
+    // Verwalter (Vorlage 1: mit „Rechtsanwalt“-Präfix, Vorlage 2: ohne)
+    const verwalterRaw =
+      data.insolvenzVerwalterName || data.insolvenzVerwalterName2 || "";
+    if (verwalterRaw) data._insolvenzVerwalter = verwalterRaw;
+
+    if (data.insolvenzBoxZeile1 || data.insolvenzForderungZeile2) {
+      // Vorlage 2 „Zweifelhafte Forderung“: Firma aus der Bekanntmachung
+      const firmaMatch = String(data.insolvenzBoxZeile2 || "").match(
+        /der Firma (.+?),\s*$/,
+      );
+      // Betrag im Stil „2.380,00 €“
+      const betragMatch = String(
+        data.insolvenzForderungZeile2 || "",
+      ).match(/beträgt\s+((?:\d{1,3}(?:\.\d{3})*|\d+)(?:,\d{1,2})?)/);
+      // Quote im Stil „Insolvenzquote von 20 %“
+      const quoteMatch = String(
+        data.insolvenzForderungZeile3 || "",
+      ).match(/Insolvenzquote von\s+(\d+(?:,\d+)?)/);
+      if (firmaMatch) {
+        data._insolvenzFirma = firmaMatch[1].trim();
+        data._insolvenzSchuldner =
+          `${data._insolvenzFirma} ${data.insolvenzBoxZeile3 || ""}`.trim();
+      }
+      if (betragMatch) data._insolvenzBetrag = betragMatch[1];
+      if (quoteMatch) data._insolvenzQuote = quoteMatch[1].replace(",", ".");
+    } else if (data.insolvenzSchuldnerZeile1) {
+      // Vorlage 1 „Eröffnungsbeschluss“: Adresszeile + PLZ/Ort kombiniert
+      data._insolvenzSchuldner = `${data.insolvenzSchuldnerZeile1} ${data.insolvenzSchuldnerZeile2 || ""}`.trim();
     }
   }
 
@@ -1120,6 +1184,73 @@ async function fillFormWithExtractedData(belegType, extractedData) {
     const zinsWert = parseFloat(zinsText.replace(/[^\d.]/g, ""));
     const zinsInput = document.getElementById("mahnungZinssatzInput");
     if (zinsInput && !isNaN(zinsWert)) zinsInput.value = zinsWert;
+  }
+
+  // Insolvenz: Vorlage erkennen, Schuldner/Verwalter zuordnen und die
+  // Vorlage laden+befüllen (nach dem generischen Lauf, damit Grund/Datum/
+  // Frist schon gesetzt sind)
+  if (belegType === "insolvenz") {
+    const istVorlage2 = !!(
+      extractedData.insolvenzBoxZeile1 || extractedData.insolvenzForderungZeile2
+    );
+    const vorlageSel = document.getElementById("svgDropdownInsolvenz");
+    if (vorlageSel && [...vorlageSel.options].some((o) => o.value === (istVorlage2 ? "insolvenz2.svg" : "insolvenz1.svg"))) {
+      vorlageSel.value = istVorlage2 ? "insolvenz2.svg" : "insolvenz1.svg";
+      fieldsSet++;
+    }
+
+    // Schuldner/Verwalter über YAML-Matcher in die Dropdowns stellen
+    const setzeUnternehmen = (elementId, searchText) => {
+      if (!searchText) return false;
+      const firma = findCompanyInYaml(searchText);
+      const sel = document.getElementById(elementId);
+      if (firma && sel && [...sel.options].some((o) => o.value === firma)) {
+        sel.value = firma;
+        return true;
+      }
+      return false;
+    };
+    if (
+      setzeUnternehmen(
+        "datenInsolvenzSchuldner",
+        extractedData._insolvenzSchuldner ||
+          [
+            extractedData.insolvenzSchuldnerZeile1,
+            extractedData.insolvenzSchuldnerZeile2,
+          ]
+            .filter(Boolean)
+            .join(" "),
+      )
+    )
+      fieldsSet++;
+    if (
+      setzeUnternehmen(
+        "datenInsolvenzVerwalter",
+        extractedData._insolvenzVerwalter,
+      )
+    )
+      fieldsSet++;
+
+    // Betrag (deutsche Notation direkt übernehmbar) + Quote für Vorlage 2
+    if (extractedData._insolvenzBetrag) {
+      const betragInput = document.getElementById("insolvenzForderungBetragInput");
+      if (betragInput) {
+        betragInput.value = extractedData._insolvenzBetrag;
+        fieldsSet++;
+      }
+    }
+    if (extractedData._insolvenzQuote) {
+      const quoteInput = document.getElementById("insolvenzQuoteInput");
+      if (quoteInput) {
+        quoteInput.value = String(extractedData._insolvenzQuote).replace(".", ",");
+        fieldsSet++;
+      }
+    }
+
+    // SVG je nach Verfahrensart laden und Daten einsetzen
+    if (typeof window.insolvenzApplySVGholen === "function") {
+      await window.insolvenzApplySVGholen(true);
+    }
   }
 
   console.log(`${fieldsSet} Felder wurden befüllt`);
