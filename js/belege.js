@@ -2908,12 +2908,8 @@ function insolvenzDatenAnwenden() {
   if (schuldner) {
     const u = schuldner.unternehmen;
     const firma = `${u.name}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
-    svgText(
-      "insolvenzSchuldnerZeile1",
-      `${firma}, ${u.adresse?.strasse || ""},`,
-    );
+    svgText("insolvenzSchuldnerZeile1", `${firma}, ${u.adresse?.strasse || ""},`);
     svgText("insolvenzSchuldnerZeile2", `${u.adresse?.plz || ""} ${u.adresse?.ort || ""},`);
-    svgText("insolvenzSchuldnerVertreter", "vertreten durch den Geschäftsführer");
     svgText("insolvenzSchuldnerInhaber", u.inhaber ? ` ${u.inhaber}` : "");
   }
   svgText("insolvenzRegistergericht", gericht);
