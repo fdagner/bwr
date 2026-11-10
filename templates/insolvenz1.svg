@@ -29,7 +29,7 @@
     <text x="30" y="96">In dem Verfahren über den Antrag von</text>
     <text x="30" y="124"><tspan id="insolvenzSchuldnerZeile1">###</tspan></text>
     <text id="insolvenzSchuldnerZeile2" x="30" y="152">###</text>
-    <text id="insolvenzSchuldnerVertreter" x="30" y="180">vertreten durch den Geschäftsführer<tspan id="insolvenzSchuldnerInhaber">###</tspan></text>
+    <text x="30" y="180">vertreten durch<tspan id="insolvenzSchuldnerInhaber">###</tspan></text>
     <text x="30" y="208">Registergericht: <tspan id="insolvenzRegistergericht">###</tspan></text>
     <text x="30" y="236">- Schuldner/-in -</text>
     <text x="30" y="272">[...]</text>
