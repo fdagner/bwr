@@ -2917,7 +2917,9 @@ function insolvenzDatumPlusTage(text, tage) {
   return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
 }
 
-// Füllt die SVG-Elemente des Eröffnungsbekanntmachungs-Belegs
+// Füllt die SVG-Elemente der Insolvenz-Belege (Eröffnung + „Zweifelhafte
+// Forderung"). Vorlagen-spezifische IDs existieren nur in der jeweiligen
+// SVG; fehlende Elemente werden von svgText ignoriert.
 function insolvenzDatenAnwenden() {
   const schuldnerSel = document.getElementById("datenInsolvenzSchuldner");
   const verwalterSel = document.getElementById("datenInsolvenzVerwalter");
@@ -2999,6 +3001,91 @@ function insolvenzDatenAnwenden() {
     svgText("insolvenzVerwalterTelefon", v.kontakt?.telefon || "");
     svgText("insolvenzVerwalterTelefax", v.kontakt?.telefax || "");
     svgText("insolvenzVerwalterEmail", v.kontakt?.email || "");
+  }
+
+  // ===== Vorlage „Zweifelhafte Forderung“ (templates/insolvenz2.svg) =====
+  // Sektion nur anzeigen, wenn diese Verfahrensart gewählt ist; die IDs
+  // existieren nur in dieser Vorlage (svgText ignoriert fehlende Elemente).
+  const vorlage2Aktiv = (document
+    .getElementById("svgDropdownInsolvenz")
+    ?.value || "").endsWith("insolvenz2.svg");
+  const forderungSektion = document.getElementById(
+    "insolvenzForderungSektion",
+  );
+  if (forderungSektion) {
+    forderungSektion.style.display = vorlage2Aktiv ? "" : "none";
+  }
+
+  if (schuldner) {
+    const u = schuldner.unternehmen;
+    const firma = `${u.name}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
+    const gerichtOrt = u.adresse?.ort || "###";
+    // Aktenzeichen im Stil „112 BT 421/12„
+    const azBuchstaben = ["BT", "IN", "O", "IK"];
+    const zufallsInt = (min, max) =>
+      min + Math.floor(Math.random() * (max - min + 1));
+    const az = `${zufallsInt(50, 899)} ${
+      azBuchstaben[zufallsInt(0, azBuchstaben.length - 1)]
+    } ${zufallsInt(100, 499)}/${zufallsInt(1, 29)}`;
+    // Forderungsbetrag im Stil „14.875,00 €“ (deutsche Formatierung mit
+    // Tausenderpunkt). Eingabe im Feld (z. B. „14.875,50“ oder „14875“)
+    // hat Vorrang, leer = zufällig.
+    const betragInput = document.getElementById("insolvenzForderungBetragInput");
+    const parseBetrag = (text) => {
+      const t = String(text || "").replace(/€/g, "").replace(/\s+/g, "");
+      if (!t) return null;
+      const n = Number(t.replace(/\./g, "").replace(",", "."));
+      return Number.isFinite(n) && n > 0 ? n : null;
+    };
+    const formatBetrag = (n) => n.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    const betragEingabe = parseBetrag(betragInput?.value);
+    const betrag = betragEingabe
+      ? formatBetrag(betragEingabe)
+      : `${zufallsInt(5000, 35000).toLocaleString("de-DE")},${String(zufallsInt(0, 99)).padStart(2, "0")}`;
+    // Insolvenzquote: freie Eingabe möglich (z. B. 33 %); ungültig/leer =
+    // fester Default 20 %. Glatte Vorschläge in 5er-Schritten über die Liste.
+    const quoteInput = document.getElementById("insolvenzQuoteInput");
+    let quote = parseFloat((quoteInput?.value || "").replace(",", "."));
+    if (!Number.isFinite(quote) || quote <= 0) quote = 20;
+    quote = Math.max(1, Math.min(100, Math.round(quote * 10) / 10));
+    const quoteText = quote % 1 === 0 ? String(quote) : quote.toFixed(1);
+    if (quoteInput) quoteInput.value = quoteText.replace(".", ",");
+
+    svgText("insolvenzBoxZeile1", `${az}. Im Insolvenzverfahren über`);
+    svgText("insolvenzBoxZeile2", `das Vermögen der Firma ${firma},`);
+    svgText(
+      "insolvenzBoxZeile3",
+      `${u.adresse?.strasse || ""}, ${u.adresse?.plz || ""} ${gerichtOrt}, findet mit`,
+    );
+    svgText("insolvenzBoxGericht", gerichtOrt);
+    svgText(
+      "insolvenzForderungZeile2",
+      `${firma} beträgt ${betrag} €. Eine`,
+    );
+    svgText(
+      "insolvenzForderungZeile3",
+      `Insolvenzquote von ${quote} % wurde ermittelt. Die`,
+    );
+  }
+  if (verwalter) {
+    // Namen ggf. um das Präfix „Rechtsanwalt“ kürzen, da die Vorlage den
+    // Zusatz in einer eigenen Zeile unter dem Namen zeigt.
+    const name2 = (verwalter.unternehmen?.name || "").replace(
+      /^Rechtsanwalt\s+/i,
+      "",
+    );
+    svgText("insolvenzVerwalterName2", name2);
+    // Unterschrift: nur angedeutete Initialien (z. B. „E. J.“)
+    const initialien = name2
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((wort) => `${wort[0].toUpperCase()}.`)
+      .join(" ");
+    svgText("insolvenzVerwalterInitialien", initialien);
   }
 }
 

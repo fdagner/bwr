@@ -1,0 +1,58 @@
+<svg id="insolvenzSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 820" font-family="Arial" font-size="15" style="height:auto;background-color:#fff;padding:0px;width:100%;max-width:560px;">
+  <!-- Vorlage: Schreiben des Insolvenzverwalters (Zweifelhafte Forderung),
+       dargestellt in einem PDF-Viewer -->
+  <!-- Viewer-Hintergrund -->
+  <rect x="0" y="0" width="560" height="820" rx="10" fill="#e7e9ec" />
+  <!-- Viewer-Symbolleiste -->
+  <rect x="0" y="0" width="560" height="36" rx="10" fill="#494c50" />
+  <rect x="0" y="18" width="560" height="18" fill="#494c50" />
+  <!-- Datei-Icon + Dateiname -->
+  <rect x="14" y="10" width="16" height="17" rx="2" fill="#e05757" />
+  <text x="22" y="22" font-size="7" font-weight="bold" fill="#ffffff" text-anchor="middle">PDF</text>
+  <text x="38" y="23" font-size="12" fill="#d9dce0">schreiben-schlussverteilung.pdf</text>
+  <!-- Zoom - / 100 % / Zoom + -->
+  <line x1="288" y1="18" x2="298" y2="18" stroke="#d9dce0" stroke-width="2" stroke-linecap="round" />
+  <text x="308" y="22.5" font-size="11" fill="#d9dce0">100 %</text>
+  <line x1="346" y1="18" x2="356" y2="18" stroke="#d9dce0" stroke-width="2" stroke-linecap="round" />
+  <line x1="351" y1="13" x2="351" y2="23" stroke="#d9dce0" stroke-width="2" stroke-linecap="round" />
+  <!-- Seitenzahl + Download -->
+  <text x="456" y="22.5" font-size="11" fill="#d9dce0">1 / 1</text>
+  <path d="M504 12 v9 m-4 -4 l4 4 4 -4" fill="none" stroke="#d9dce0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M498 26 h12" fill="none" stroke="#d9dce0" stroke-width="1.8" stroke-linecap="round" />
+  <!-- Dokumentseite (A4) mit Schatten -->
+  <rect x="42" y="57" width="484" height="685" rx="2" fill="#c9ccd1" />
+  <rect x="38" y="52" width="484" height="685" rx="2" fill="#ffffff" stroke="#cfd3d8" stroke-width="1" />
+  <!-- Scrollleiste -->
+  <rect x="551" y="56" width="5" height="120" rx="2.5" fill="#b9bdc2" />
+  <defs>
+    <clipPath id="pdfSeiteClip2"><rect x="38" y="52" width="484" height="685" /></clipPath>
+  </defs>
+  <g clip-path="url(#pdfSeiteClip2)" fill="#23262b">
+    <!-- Schreiben des Insolvenzverwalters (ohne Anrede) -->
+    <text x="78" y="100">ich darf Sie bezüglich meiner Tätigkeit</text>
+    <text x="78" y="126">als Insolvenzverwalter (Bestellung gem. § 56</text>
+    <text x="78" y="152">Abs. 1 InsO) auf folgende amtliche Bekanntmachung</text>
+    <text x="78" y="178">hinweisen:</text>
+
+    <!-- Grau hinterlegter Kasten: Amtliche Bekanntmachung -->
+    <rect x="70" y="198" width="420" height="156" fill="#e2e2e2" />
+    <text id="insolvenzBoxZeile1" x="280" y="226" text-anchor="middle">###</text>
+    <text id="insolvenzBoxZeile2" x="280" y="254" text-anchor="middle">###</text>
+    <text id="insolvenzBoxZeile3" x="280" y="282" text-anchor="middle">###</text>
+    <text x="280" y="310" text-anchor="middle">Zustimmung des Amtsgerichts <tspan id="insolvenzBoxGericht">###</tspan> die</text>
+    <text x="280" y="338" text-anchor="middle">Schlussverteilung statt.</text>
+
+    <!-- Forderung / Quoteninformation -->
+    <text x="78" y="388">Ihre angemeldete Forderung gegenüber der Firma</text>
+    <text id="insolvenzForderungZeile2" x="78" y="414">###</text>
+    <text id="insolvenzForderungZeile3" x="78" y="440">###</text>
+    <text x="78" y="466">Überweisung auf Ihr Bankkonto wurde bereits</text>
+    <text x="78" y="492">in Auftrag gegeben.</text>
+
+    <!-- Grußformel + Unterschrift (angedeutete Initialien) + Verwalter -->
+    <text x="78" y="540" font-weight="bold">Mit freundlichen Grüßen</text>
+    <text id="insolvenzVerwalterInitialien" x="78" y="592" font-size="26" fill="#23335c" font-family="'Segoe Script','Bradley Hand','Comic Sans MS',cursive">###</text>
+    <text id="insolvenzVerwalterName2" x="78" y="624" text-decoration="underline">###</text>
+    <text x="78" y="650">Rechtsanwalt</text>
+  </g>
+</svg>

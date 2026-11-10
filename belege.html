@@ -3685,6 +3685,7 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                     data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
                   >
                     <option value="insolvenz1.svg" selected>Eröffnung</option>
+                    <option value="insolvenz2.svg">Zweifelhafte Forderung</option>
                   </select>
                 </div>
               </fieldset>
@@ -3775,6 +3776,69 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 Die Anmeldefrist wird automatisch auf Eröffnung + 6 Wochen
                 gesetzt, solange das Feld leer ist. Verwalter stammen aus
                 Branche „Insolvenzverwaltung“.
+              </small>
+            </p>
+          </section>
+
+          <!-- Felder für die Vorlage „Zweifelhafte Forderung“ (nur bei
+               dieser Verfahrensart sichtbar) -->
+          <section class="form-section" id="insolvenzForderungSektion" style="display: none">
+            <h3>Zweifelhafte Forderung</h3>
+
+            <div class="grid3">
+              <fieldset class="preisanpassung-gruppe">
+                <legend>Forderungsbetrag</legend>
+                <div class="form-field">
+                  <label for="insolvenzForderungBetragInput">Betrag (€)</label>
+                  <input
+                    type="text"
+                    id="insolvenzForderungBetragInput"
+                    value=""
+                    placeholder="z. B. 14.875,00"
+                    data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                  />
+                </div>
+              </fieldset>
+
+              <fieldset class="vorlage-blue">
+                <legend>Insolvenzquote</legend>
+                <div class="form-field">
+                  <label for="insolvenzQuoteInput">Quote (%)</label>
+                  <input
+                    type="number"
+                    id="insolvenzQuoteInput"
+                    value="20"
+                    min="1"
+                    max="100"
+                    step="1"
+                    list="insolvenzQuoteVorschlag"
+                    data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+                  />
+                  <datalist id="insolvenzQuoteVorschlag">
+                    <option value="10"></option>
+                    <option value="15"></option>
+                    <option value="20"></option>
+                    <option value="25"></option>
+                    <option value="30"></option>
+                    <option value="35"></option>
+                    <option value="40"></option>
+                    <option value="45"></option>
+                    <option value="50"></option>
+                    <option value="55"></option>
+                    <option value="60"></option>
+                    <option value="65"></option>
+                    <option value="70"></option>
+                    <option value="75"></option>
+                  </datalist>
+                </div>
+              </fieldset>
+            </div>
+
+            <p style="margin: 2px 0">
+              <small style="font-size: 0.85em; color: #6b7280">
+                Nur für die Vorlage „Zweifelhafte Forderung“. Forderungsbetrag
+                leer = zufällig erzeugt. Quote frei einstellbar; über die
+                Vorschlagsliste glatte Werte in 5er-Schritten (10–75 %).
               </small>
             </p>
           </section>
