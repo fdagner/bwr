@@ -1137,6 +1137,42 @@ function aktualisiereLoesung() {
   }
 }
 
+function exportiereMoodle() {
+  const fallTyp = (document.getElementById("bmVariante") || {}).value || "1";
+  if (fallTyp !== "2") {
+    zeigeModal(
+      "Moodle-Export ist nur für den Fall-Typ „Nur Diagramm (Bestellmenge ablesen)“ verfügbar. Bitte diesen Fall-Typ wählen und neu generieren.",
+    );
+    return;
+  }
+
+  const menge = parseInt(
+    document.getElementById("optimaleBestellmenge")?.value,
+    10,
+  );
+  if (!(menge > 0)) {
+    zeigeModal("Bitte zuerst eine Aufgabe erstellen („Neue Aufgabe“).");
+    return;
+  }
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>Optimale Bestellmenge (Diagramm)</text></name>\n    <questiontext format="html"><text><![CDATA[{1:NUMERICAL:${menge}#0}]]></text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
+
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  const dateiname = `quiz-bestellmenge-diagramm-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+window.exportiereMoodle = exportiereMoodle;
+
 document.addEventListener("DOMContentLoaded", function () {
   // Hier wird generiereContainer() beim Laden der Seite ausgeführt
   berechneOptimaleBestellmengeUndHaeufigkeit();
