@@ -943,7 +943,7 @@ function pdBaueClozeXml(daten) {
   xml += `    <questiontext format="html">\n      <text>${pdCdata(fragetext)}</text>\n`;
   xml += `      <file name="${bildName}" path="/" encoding="base64">${base64}</file>\n    </questiontext>\n`;
   xml += `    <generalfeedback format="html">\n      <text>${pdCdata(rechenweg)}</text>\n    </generalfeedback>\n`;
-  xml += `    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <penalty>0</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
   xml += `  </question>\n\n</quiz>\n`;
   return xml;
 }

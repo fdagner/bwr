@@ -319,7 +319,7 @@ function exportiereMoodle() {
     <name><text>${mxEsc(titel)}</text></name>
     <questiontext format="html"><text>${mxCdata(fragetext)}</text></questiontext>
     <generalfeedback format="html"><text></text></generalfeedback>
-    <penalty>0.3333333</penalty>
+    <penalty>0</penalty>
     <hidden>0</hidden>
   </question>
 </quiz>`;

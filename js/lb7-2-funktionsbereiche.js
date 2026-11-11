@@ -464,7 +464,7 @@ function fbBaueXml(aufgaben) {
   xml += `    <questiontext format="html">\n      <text>${fbCdata("<p>Lies die folgenden Aussagen. Entscheide jeweils, ob die Aussage <strong>wahr</strong> oder <strong>falsch</strong> ist, und begründe deine Entscheidung.</p>")}</text>\n    </questiontext>\n`;
   xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
   xml += `    <defaultgrade>${punkte}</defaultgrade>\n`;
-  xml += `    <penalty>0.3333333</penalty>\n`;
+  xml += `    <penalty>0</penalty>\n`;
   xml += `    <hidden>0</hidden>\n`;
   xml += `    <idnumber></idnumber>\n`;
   xml += `    <shuffleanswers>true</shuffleanswers>\n`;

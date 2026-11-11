@@ -473,7 +473,7 @@ function mxBaueClozeXml(aufgaben) {
     xml += `    <questiontext format="html">\n      <text>${mxCdata(frage)}</text>\n    </questiontext>\n`;
     xml += `    <generalfeedback format="html">\n      <text>${mxCdata(feedback)}</text>\n    </generalfeedback>\n`;
     xml += `    <defaultgrade>${punkte}</defaultgrade>\n`;
-    xml += `    <penalty>0.3333333</penalty>\n`;
+    xml += `    <penalty>0</penalty>\n`;
     xml += `    <hidden>0</hidden>\n`;
     xml += `    <idnumber></idnumber>\n`;
     xml += `  </question>\n\n`;

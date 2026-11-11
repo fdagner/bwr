@@ -162,7 +162,7 @@ function baueMoodleXml(fragen, praefix) {
     xml += `    <questiontext format="html">\n      <text>${moodleCdata(f.text)}</text>\n    </questiontext>\n`;
     xml += `    <generalfeedback format="html">\n      <text>${moodleCdata(f.feedback || "")}</text>\n    </generalfeedback>\n`;
     xml += `    <defaultgrade>${punkte.toFixed(7)}</defaultgrade>\n`;
-    xml += `    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+    xml += `    <penalty>0</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
     xml += `    <chartofaccountsid>${MOODLE_KONTENPLAN_ID}</chartofaccountsid>\n`;
     xml += `    <accountsindropdown>0</accountsindropdown>\n    <numberformat>de</numberformat>\n`;
     xml += `    <extraentrydeduction>0.0000000</extraentrydeduction>\n    <allornothinggrading>0</allornothinggrading>\n`;

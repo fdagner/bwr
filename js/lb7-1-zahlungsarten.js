@@ -715,7 +715,7 @@ function zxBaueMultichoiceXml(aufgaben) {
     xml += `    <name>\n      <text>${zxEsc(titel)}</text>\n    </name>\n`;
     xml += `    <questiontext format="html">\n      <text>${zxCdata(`<p>${text}</p><p><em>${MOODLE_ZAHL_ANWEISUNG}</em></p>`)}</text>\n    </questiontext>\n`;
     xml += `    <generalfeedback format="html">\n      <text>${zxCdata(rueckmeldung)}</text>\n    </generalfeedback>\n`;
-    xml += `    <defaultgrade>1</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+    xml += `    <defaultgrade>1</defaultgrade>\n    <penalty>0</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
     xml += `    <single>true</single>\n    <shuffleanswers>true</shuffleanswers>\n    <answernumbering>abc</answernumbering>\n    <showstandardinstruction>0</showstandardinstruction>\n`;
     xml += `    <correctfeedback format="html">\n      <text>${zxCdata("<p>Die Antwort ist richtig.</p>")}</text>\n    </correctfeedback>\n`;
     xml += `    <partiallycorrectfeedback format="html">\n      <text>${zxCdata("<p>Die Antwort ist teilweise richtig.</p>")}</text>\n    </partiallycorrectfeedback>\n`;

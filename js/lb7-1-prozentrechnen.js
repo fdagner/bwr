@@ -1239,7 +1239,7 @@ function mpBaueXml(aufgaben) {
     xml += `    <name>\n      <text>${mpEsc(titel)}</text>\n    </name>\n`;
     xml += `    <questiontext format="html">\n      <text>${mpCdata(`<p>${text}</p>`)}</text>\n    </questiontext>\n`;
     xml += `    <generalfeedback format="html">\n      <text>${mpCdata(rechenweg)}</text>\n    </generalfeedback>\n`;
-    xml += `    <defaultgrade>1</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n    <usecase>0</usecase>\n`;
+    xml += `    <defaultgrade>1</defaultgrade>\n    <penalty>0</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n    <usecase>0</usecase>\n`;
     antworten.forEach((a) => {
       xml += `    <answer fraction="100" format="moodle_auto_format">\n      <text>${mpEsc(a)}</text>\n      <feedback format="html">\n        <text></text>\n      </feedback>\n    </answer>\n`;
     });

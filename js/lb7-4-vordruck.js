@@ -593,7 +593,7 @@ function exportiereMoodle() {
   // Vordruck mit Cloze-Syntax (Blanks mit ?) generieren
   const clozeHtml = erstelleVordruck(verkName, verkInfo, produkt, mitRabatt, true);
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>Vordruck Ausgangsrechnung</text></name>\n    <questiontext format="html"><text>${vdCdata(clozeHtml)}</text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>Vordruck Ausgangsrechnung</text></name>\n    <questiontext format="html"><text>${vdCdata(clozeHtml)}</text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
 
   const d = new Date();
   const p = (n) => String(n).padStart(2, "0");

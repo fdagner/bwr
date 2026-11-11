@@ -491,7 +491,7 @@ function maBaueMatchingXml(aufgaben) {
   xml += `    <name>\n      <text>${maEsc(titel)}</text>\n    </name>\n`;
   xml += `    <questiontext format="html">\n      <text>${maCdata(`<p>${MOODLE_AO_ANWEISUNG}</p>`)}</text>\n    </questiontext>\n`;
   xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
-  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
   xml += `    <shuffleanswers>true</shuffleanswers>\n`;
   xml += `    <correctfeedback format="html">\n      <text>${maCdata("<p>Die Antwort ist richtig.</p>")}</text>\n    </correctfeedback>\n`;
   xml += `    <partiallycorrectfeedback format="html">\n      <text>${maCdata("<p>Die Antwort ist teilweise richtig.</p>")}</text>\n    </partiallycorrectfeedback>\n`;

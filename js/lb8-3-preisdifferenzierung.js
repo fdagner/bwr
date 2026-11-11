@@ -768,7 +768,7 @@ function mxBaueMatchingXml(aufgaben) {
   xml += `    <name>\n      <text>${mxEsc(titel)}</text>\n    </name>\n`;
   xml += `    <questiontext format="html">\n      <text>${mxCdata(`<p>${MOODLE_PREIS_ANWEISUNG}</p>`)}</text>\n    </questiontext>\n`;
   xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
-  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
   xml += `    <shuffleanswers>true</shuffleanswers>\n`;
   xml += `    <correctfeedback format="html">\n      <text>${mxCdata("<p>Die Antwort ist richtig.</p>")}</text>\n    </correctfeedback>\n`;
   xml += `    <partiallycorrectfeedback format="html">\n      <text>${mxCdata("<p>Die Antwort ist teilweise richtig.</p>")}</text>\n    </partiallycorrectfeedback>\n`;
@@ -856,7 +856,7 @@ function baueFallClozeXml() {
   xml += `    <name>\n      <text>${mxEsc(titel)}</text>\n    </name>\n`;
   xml += `    <questiontext format="html">\n      <text>${mxCdata(fragetext)}</text>\n    </questiontext>\n`;
   xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
-  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n    <penalty>0</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n`;
   xml += `    <shuffleanswers>false</shuffleanswers>\n`;
   xml += `  </question>\n\n</quiz>\n`;
   return xml;

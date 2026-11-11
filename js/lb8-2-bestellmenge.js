@@ -1177,7 +1177,7 @@ async function exportiereMoodle() {
     : `Ermittle aus dem Diagramm die optimale Bestellmenge.<br>{1:NUMERICAL:=${menge}#0}`;
 
   const basis = Math.floor(Math.random() * 900000) + 100000;
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>8.2-01#T${basis}-Ermitteln</text></name>\n    <questiontext format="html"><text><![CDATA[${frageText}]]></text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>8.2-01#T${basis}-Ermitteln</text></name>\n    <questiontext format="html"><text><![CDATA[${frageText}]]></text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
 
   const d = new Date();
   const p = (n) => String(n).padStart(2, "0");
