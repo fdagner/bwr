@@ -80,8 +80,8 @@ function generiereAufgaben() {
   // Moodle-Button-Beschriftung an den aktuellen Fragetyp anpassen
   window.exportMoodleLabel = () =>
     typ === "fallbeispiel"
-      ? "Moodle-Lückentext (cloze, XML)"
-      : "Moodle-Zuordnung (matching, XML)";
+      ? "Moodle-Fragetyp (Lückentext, XML)"
+      : "Moodle-Fragetyp (Zuordnung, XML)";
   if (typeof window.updateMoodleButtonLabel === "function")
     window.updateMoodleButtonLabel();
 }
