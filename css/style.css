@@ -279,8 +279,8 @@ button svg {
    ============================================ */
 
 input {
-  flex: 1;
-  padding: 6px 6px;
+  flex: 0 0 auto;
+  padding: 10px 14px;
   border: 2px solid var(--border-light);
   border-radius: 6px;
   background-color: var(--surface);
