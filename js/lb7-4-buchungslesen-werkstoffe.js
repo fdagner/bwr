@@ -398,9 +398,21 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("unternehmenSelect")
     ?.addEventListener("change", generiereAufgabe);
-});
 
-document.addEventListener("yamlDataLoaded", () => {
-  fillUnternehmenSelect();
-  generiereAufgabe();
+  // Dropdown befüllen, sobald Unternehmensdaten da sind (Standard-Muster
+  // wie lb8-2/lb9-3: Daten schon da → sofort, sonst auf Event warten –
+  // das Event kann VOR DOMContentLoaded feuern).
+  if (yamlData && yamlData.length > 0) {
+    fillUnternehmenSelect();
+    generiereAufgabe();
+  } else {
+    document.addEventListener(
+      "yamlDataLoaded",
+      () => {
+        fillUnternehmenSelect();
+        generiereAufgabe();
+      },
+      { once: true },
+    );
+  }
 });
