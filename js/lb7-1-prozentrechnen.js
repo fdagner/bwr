@@ -1235,13 +1235,22 @@ function mpBaueXml(aufgaben) {
     const rechenweg = `<p><strong>Rechenweg</strong></p>${effDef.buildLoesung(eintrag, d)}`;
     const antworten = mpAntworten(eff, eintrag, d);
 
+    // Lob-Grafik für diese Frage: zufällig eines der drei SVGs; alle
+    // richtigen Antworten derselben Frage bekommen dasselbe Bild im
+    // Feedback (IDs pro Frage eindeutig, damit mehrere Fragen auf einer
+    // Moodle-Seite sich keine Gradient-/Clip-IDs teilen).
+    const lobGrafik = mpSvgEindeutig(
+      MP_LOB_GRAPHIKEN[Math.floor(Math.random() * MP_LOB_GRAPHIKEN.length)],
+      `q${i + 1}`,
+    );
+
     xml += `  <question type="shortanswer">\n`;
     xml += `    <name>\n      <text>${mpEsc(titel)}</text>\n    </name>\n`;
     xml += `    <questiontext format="html">\n      <text>${mpCdata(`<p>${text}</p>`)}</text>\n    </questiontext>\n`;
     xml += `    <generalfeedback format="html">\n      <text>${mpCdata(rechenweg)}</text>\n    </generalfeedback>\n`;
     xml += `    <defaultgrade>1</defaultgrade>\n    <penalty>0</penalty>\n    <hidden>0</hidden>\n    <idnumber></idnumber>\n    <usecase>0</usecase>\n`;
     antworten.forEach((a) => {
-      xml += `    <answer fraction="100" format="moodle_auto_format">\n      <text>${mpEsc(a)}</text>\n      <feedback format="html">\n        <text></text>\n      </feedback>\n    </answer>\n`;
+      xml += `    <answer fraction="100" format="moodle_auto_format">\n      <text>${mpEsc(a)}</text>\n      <feedback format="html">\n        <text>${mpCdata(`<div style="margin:8px 0;">${lobGrafik}</div>`)}</text>\n      </feedback>\n    </answer>\n`;
     });
     // Hinweise (Mehrfachversuche, Fragetyp Kurzantwort):
     // für beide Versuchsstufen einen hint ausgeben – ansprechend formatiert
@@ -1295,3 +1304,259 @@ document.addEventListener("DOMContentLoaded", () => {
     if (vorschauEl) vorschauEl.textContent = erstelleKiPromptText();
   }, 300);
 });
+
+// ── Lob-Grafiken für das Feedback richtiger Antworten (Moodle-Export) ───────
+// Pro Frage wird zufällig eines der drei SVGs gewählt; alle richtigen
+// Antworten derselben Frage erhalten dasselbe SVG.
+const MP_LOB_GRAPHIKEN = [
+  `<svg style="width: 250px; max-width: 100%; height: auto;" viewBox="30 205 724 770">
+  <title>Gut gemacht!</title>
+  <defs>
+    <radialGradient id="ball" cx="38%" cy="28%" r="85%">
+      <stop offset="0" stop-color="#ffb23d"></stop>
+      <stop offset="0.5" stop-color="#ff9112"></stop>
+      <stop offset="1" stop-color="#e46f00"></stop>
+    </radialGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffae3f"></stop>
+      <stop offset="1" stop-color="#f58a12"></stop>
+    </linearGradient>
+    <radialGradient id="iris" cx="40%" cy="35%" r="75%">
+      <stop offset="0" stop-color="#7a3d12"></stop>
+      <stop offset="0.6" stop-color="#3b1a07"></stop>
+      <stop offset="1" stop-color="#1a0902"></stop>
+    </radialGradient>
+    <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ff5d57" stop-opacity="0.75"></stop>
+      <stop offset="1" stop-color="#ff5d57" stop-opacity="0"></stop>
+    </radialGradient>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.18"></stop>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"></stop>
+    </radialGradient>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14"></feGaussianBlur>
+    </filter>
+    <clipPath id="mouthClip">
+      <path d="M300 496 Q366 530 434 486 Q430 560 366 572 Q306 562 300 496 Z"></path>
+    </clipPath>
+  </defs>
+
+  <!-- Schatten unter dem Ball -->
+  <ellipse cx="350" cy="724" rx="225" ry="26" fill="url(#shadow)"></ellipse>
+
+  <!-- Ball -->
+  <ellipse cx="348" cy="478" rx="242" ry="255" fill="url(#ball)"></ellipse>
+  <ellipse cx="240" cy="290" rx="115" ry="62" transform="rotate(-28 240 290)" fill="#ffffff" opacity="0.22" filter="url(#blur)"></ellipse>
+
+  <!-- Augenbrauen -->
+  <g fill="none" stroke="#6b2f0a" stroke-width="10" stroke-linecap="round">
+    <path d="M218 356 Q243 316 278 324"></path>
+    <path d="M410 306 Q440 290 472 320"></path>
+  </g>
+
+  <!-- Linkes Auge -->
+  <ellipse cx="268" cy="432" rx="52" ry="57" fill="#ffffff"></ellipse>
+  <ellipse cx="272" cy="441" rx="33" ry="37" fill="url(#iris)"></ellipse>
+  <circle cx="261" cy="422" r="10" fill="#ffffff"></circle>
+  <circle cx="291" cy="459" r="5" fill="#ffffff" opacity="0.9"></circle>
+
+  <!-- Rechtes Auge -->
+  <ellipse cx="448" cy="414" rx="50" ry="56" fill="#ffffff"></ellipse>
+  <ellipse cx="442" cy="423" rx="33" ry="37" fill="url(#iris)"></ellipse>
+  <circle cx="431" cy="404" r="10" fill="#ffffff"></circle>
+  <circle cx="461" cy="441" r="5" fill="#ffffff" opacity="0.9"></circle>
+
+  <!-- Wangen -->
+  <ellipse cx="222" cy="505" rx="40" ry="28" fill="url(#cheek)"></ellipse>
+  <ellipse cx="508" cy="468" rx="40" ry="28" fill="url(#cheek)"></ellipse>
+
+  <!-- Mund -->
+  <path d="M300 496 Q366 530 434 486 Q430 560 366 572 Q306 562 300 496 Z" fill="#5a1a06"></path>
+  <g clip-path="url(#mouthClip)">
+    <ellipse cx="368" cy="568" rx="52" ry="32" fill="#ff6b5a"></ellipse>
+  </g>
+
+  <!-- Hand mit Daumen hoch -->
+  <g stroke="#dd7408" stroke-width="3" stroke-linejoin="round">
+    <path d="M548 565 C550 535 585 518 618 518 L712 545 L712 600 C690 630 640 640 592 630 C562 624 546 600 548 565 Z" fill="url(#skin)"></path>
+    <rect x="626" y="366" width="52" height="170" rx="26" fill="url(#skin)"></rect>
+    <rect x="620" y="562" width="92" height="40" rx="20" fill="url(#skin)"></rect>
+    <rect x="616" y="524" width="108" height="42" rx="21" fill="url(#skin)"></rect>
+    <rect x="614" y="486" width="114" height="42" rx="21" fill="url(#skin)"></rect>
+    <rect x="618" y="448" width="108" height="42" rx="21" fill="url(#skin)"></rect>
+  </g>
+  <rect x="637" y="382" width="9" height="62" rx="4.5" fill="#ffffff" opacity="0.3"></rect>
+
+  <!-- Text: Schatten + Vordergrund -->
+  <g font-family="'Baloo 2','Nunito','Arial Rounded MT Bold','Segoe UI',Arial,sans-serif" font-size="132" font-weight="900" text-anchor="middle">
+    <text x="392" y="920" textLength="705" lengthAdjust="spacingAndGlyphs" fill="#2e8b2a">Gut gemacht!</text>
+    <text x="392" y="910" textLength="705" lengthAdjust="spacingAndGlyphs" fill="#5cbf36">Gut gemacht!</text>
+  </g>
+</svg>`,
+  `<svg style="width: 250px; max-width: 100%; height: auto;" viewBox="30 205 724 770">
+  <title>Weiter so!</title>
+  <defs>
+    <radialGradient id="ball" cx="38%" cy="28%" r="85%">
+      <stop offset="0" stop-color="#7accff"></stop>
+      <stop offset="0.5" stop-color="#3b9be8"></stop>
+      <stop offset="1" stop-color="#1f6fc2"></stop>
+    </radialGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6cbcf5"></stop>
+      <stop offset="1" stop-color="#2f86d8"></stop>
+    </linearGradient>
+    <radialGradient id="iris" cx="40%" cy="35%" r="75%">
+      <stop offset="0" stop-color="#3a6ea8"></stop>
+      <stop offset="0.6" stop-color="#132a4d"></stop>
+      <stop offset="1" stop-color="#08142a"></stop>
+    </radialGradient>
+    <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ff6b8a" stop-opacity="0.7"></stop>
+      <stop offset="1" stop-color="#ff6b8a" stop-opacity="0"></stop>
+    </radialGradient>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.18"></stop>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"></stop>
+    </radialGradient>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14"></feGaussianBlur>
+    </filter>
+    <clipPath id="mouthClip">
+      <path d="M300 496 Q366 530 434 486 Q430 560 366 572 Q306 562 300 496 Z"></path>
+    </clipPath>
+  </defs>
+
+  <!-- Schatten unter dem Ball -->
+  <ellipse cx="350" cy="724" rx="225" ry="26" fill="url(#shadow)"></ellipse>
+
+  <!-- Ball -->
+  <ellipse cx="348" cy="478" rx="242" ry="255" fill="url(#ball)"></ellipse>
+  <ellipse cx="240" cy="290" rx="115" ry="62" transform="rotate(-28 240 290)" fill="#ffffff" opacity="0.25" filter="url(#blur)"></ellipse>
+
+  <!-- Augenbrauen -->
+  <g fill="none" stroke="#0f2f5a" stroke-width="10" stroke-linecap="round">
+    <path d="M218 356 Q243 316 278 324"></path>
+    <path d="M410 316 Q445 292 482 316"></path>
+  </g>
+
+  <!-- Linkes Auge -->
+  <ellipse cx="268" cy="432" rx="52" ry="57" fill="#ffffff"></ellipse>
+  <ellipse cx="272" cy="441" rx="33" ry="37" fill="url(#iris)"></ellipse>
+  <circle cx="261" cy="422" r="10" fill="#ffffff"></circle>
+  <circle cx="291" cy="459" r="5" fill="#ffffff" opacity="0.9"></circle>
+
+  <!-- Rechtes Auge (zwinkernd) -->
+  <path d="M402 430 Q448 390 494 430" fill="none" stroke="#0f2f5a" stroke-width="11" stroke-linecap="round"></path>
+
+  <!-- Wangen -->
+  <ellipse cx="222" cy="505" rx="40" ry="28" fill="url(#cheek)"></ellipse>
+  <ellipse cx="508" cy="468" rx="40" ry="28" fill="url(#cheek)"></ellipse>
+
+  <!-- Mund -->
+  <path d="M300 496 Q366 530 434 486 Q430 560 366 572 Q306 562 300 496 Z" fill="#0f2a4d"></path>
+  <g clip-path="url(#mouthClip)">
+    <ellipse cx="368" cy="568" rx="52" ry="32" fill="#ff6b5a"></ellipse>
+  </g>
+
+  <!-- Hand mit Daumen hoch -->
+  <g stroke="#1b64b0" stroke-width="3" stroke-linejoin="round">
+    <path d="M548 565 C550 535 585 518 618 518 L712 545 L712 600 C690 630 640 640 592 630 C562 624 546 600 548 565 Z" fill="url(#skin)"></path>
+    <rect x="626" y="366" width="52" height="170" rx="26" fill="url(#skin)"></rect>
+    <rect x="620" y="562" width="92" height="40" rx="20" fill="url(#skin)"></rect>
+    <rect x="616" y="524" width="108" height="42" rx="21" fill="url(#skin)"></rect>
+    <rect x="614" y="486" width="114" height="42" rx="21" fill="url(#skin)"></rect>
+    <rect x="618" y="448" width="108" height="42" rx="21" fill="url(#skin)"></rect>
+  </g>
+  <rect x="637" y="382" width="9" height="62" rx="4.5" fill="#ffffff" opacity="0.35"></rect>
+
+  <!-- Text: Schatten + Vordergrund -->
+  <g font-family="'Baloo 2','Nunito','Arial Rounded MT Bold','Segoe UI',Arial,sans-serif" font-size="132" font-weight="900" text-anchor="middle">
+    <text x="392" y="920" textLength="600" lengthAdjust="spacingAndGlyphs" fill="#d96f00">Weiter so!</text>
+    <text x="392" y="910" textLength="600" lengthAdjust="spacingAndGlyphs" fill="#ff9112">Weiter so!</text>
+  </g>
+</svg>`,
+  `<svg style="width: 250px; max-width: 100%; height: auto;" viewBox="30 205 724 770">
+  <title>Super!</title>
+  <defs>
+    <radialGradient id="ball" cx="38%" cy="28%" r="85%">
+      <stop offset="0" stop-color="#ffb3d6"></stop>
+      <stop offset="0.5" stop-color="#ff62ab"></stop>
+      <stop offset="1" stop-color="#d93a85"></stop>
+    </radialGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffa6d0"></stop>
+      <stop offset="1" stop-color="#ee5aa0"></stop>
+    </linearGradient>
+    <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ff3d6e" stop-opacity="0.6"></stop>
+      <stop offset="1" stop-color="#ff3d6e" stop-opacity="0"></stop>
+    </radialGradient>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.18"></stop>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"></stop>
+    </radialGradient>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14"></feGaussianBlur>
+    </filter>
+    <clipPath id="mouthClip">
+      <path d="M290 490 Q366 535 442 478 Q438 566 366 580 Q298 568 290 490 Z"></path>
+    </clipPath>
+  </defs>
+
+  <!-- Schatten unter dem Ball -->
+  <ellipse cx="350" cy="724" rx="225" ry="26" fill="url(#shadow)"></ellipse>
+
+  <!-- Ball -->
+  <ellipse cx="348" cy="478" rx="242" ry="255" fill="url(#ball)"></ellipse>
+  <ellipse cx="240" cy="290" rx="115" ry="62" transform="rotate(-28 240 290)" fill="#ffffff" opacity="0.28" filter="url(#blur)"></ellipse>
+
+  <!-- Augenbrauen -->
+  <g fill="none" stroke="#6b1f48" stroke-width="10" stroke-linecap="round">
+    <path d="M214 352 Q243 312 282 318"></path>
+    <path d="M404 304 Q440 286 478 312"></path>
+  </g>
+
+  <!-- Glückliche Augen -->
+  <g fill="none" stroke="#4a1233" stroke-width="12" stroke-linecap="round">
+    <path d="M216 442 Q268 392 320 442"></path>
+    <path d="M398 426 Q448 376 498 426"></path>
+  </g>
+
+  <!-- Wangen -->
+  <ellipse cx="214" cy="510" rx="42" ry="29" fill="url(#cheek)"></ellipse>
+  <ellipse cx="514" cy="470" rx="42" ry="29" fill="url(#cheek)"></ellipse>
+
+  <!-- Mund (großes Grinsen) -->
+  <path d="M290 490 Q366 535 442 478 Q438 566 366 580 Q298 568 290 490 Z" fill="#5a1236"></path>
+  <g clip-path="url(#mouthClip)">
+    <ellipse cx="368" cy="578" rx="58" ry="34" fill="#ff7a8a"></ellipse>
+    <path d="M300 488 Q366 522 436 480 L436 506 Q366 546 300 514 Z" fill="#ffffff"></path>
+  </g>
+
+  <!-- Hand mit Daumen hoch -->
+  <g stroke="#c2307a" stroke-width="3" stroke-linejoin="round">
+    <path d="M548 565 C550 535 585 518 618 518 L712 545 L712 600 C690 630 640 640 592 630 C562 624 546 600 548 565 Z" fill="url(#skin)"></path>
+    <rect x="626" y="366" width="52" height="170" rx="26" fill="url(#skin)"></rect>
+    <rect x="620" y="562" width="92" height="40" rx="20" fill="url(#skin)"></rect>
+    <rect x="616" y="524" width="108" height="42" rx="21" fill="url(#skin)"></rect>
+    <rect x="614" y="486" width="114" height="42" rx="21" fill="url(#skin)"></rect>
+    <rect x="618" y="448" width="108" height="42" rx="21" fill="url(#skin)"></rect>
+  </g>
+  <rect x="637" y="382" width="9" height="62" rx="4.5" fill="#ffffff" opacity="0.35"></rect>
+
+  <!-- Text: Schatten + Vordergrund -->
+  <g font-family="'Baloo 2','Nunito','Arial Rounded MT Bold','Segoe UI',Arial,sans-serif" font-size="132" font-weight="900" text-anchor="middle">
+    <text x="392" y="920" textLength="430" lengthAdjust="spacingAndGlyphs" fill="#e09000">Super!</text>
+    <text x="392" y="910" textLength="430" lengthAdjust="spacingAndGlyphs" fill="#ffc90e">Super!</text>
+  </g>
+</svg>`,
+];
+
+// Erzeugt eine Variante des SVG mit frage-eindeutigen IDs (Moodle rendert
+// mehrere Fragen pro Seite – doppelte Gradient-/Clip-IDs würden kollidieren).
+function mpSvgEindeutig(svg, suffix) {
+  return String(svg)
+    .replace(/id="([^"]+)"/g, (m, id) => `id="${id}-${suffix}"`)
+    .replace(/url\(#([^)]+)\)/g, (m, id) => `url(#${id}-${suffix})`);
+}
