@@ -107,7 +107,9 @@ function geschaeftsfall(key, b) {
   const wst = b.werkstoff || cfg.label;
   const unternehmenName =
     document.getElementById("unternehmenSelect")?.value || "";
-  const kunde = unternehmenName ? ` ${unternehmenName}` : "";
+  const kunde = unternehmenName
+    ? ` ${unternehmenName}`
+    : " [Modellunternehmen]";
   const texte = {
     VE: `${kunde} beschafft ${wst} im Wert von ${formatBetrag(b.betrag)}\u00a0€ netto auf Ziel.`,
     BK: `${kunde} kauft ${wst} im Wert von ${formatBetrag(b.betrag)}\u00a0€ netto per Banküberweisung.`,
