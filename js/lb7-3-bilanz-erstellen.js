@@ -74,6 +74,7 @@ function getRandomValueInRange(min, max) {
 // ============================================================================
 
 let letztePosten = [];
+let letzteBilanzLoesung = null; // für Moodle-Export
 
 // ============================================================================
 // KI-ASSISTENT PROMPT
@@ -161,6 +162,21 @@ function generiereAufgabe() {
 
   // ── Aufgabe: unsortierte Postenliste ──────────────────────────────────
   const shuffled = shuffle(posten);
+
+  // Lösungsdaten für Moodle-Export merken (nach shuffled, da TDZ)
+  letzteBilanzLoesung = {
+    av,
+    uv,
+    fk,
+    avSumme,
+    uvSumme,
+    fkSumme,
+    bilanzsumme,
+    ek,
+    posten,
+    shuffled,
+  };
+
   let aufgabenHTML = `
     <h2>Aufgabe: Eine Bilanz erstellen</h2>
     <h3>Erstelle aus den folgenden Bilanzposten die vollständige Bilanz zum 1. Januar.</h3>
@@ -283,6 +299,178 @@ function toggleKiPromptVorschau() {
     vorschau.style.display = "none";
     btn.textContent = "Prompt anzeigen ▼";
   }
+}
+
+// ============================================================================
+// MOODLE-XML-EXPORT – FREITEXT (essay): Bilanz erstellen
+// ============================================================================
+// Aufgabe: unsortierte Bilanzposten-Liste + Aufforderung, die Bilanz zu
+// erstellen. Vorlage (HTML-Editor): leere Bilanz (Aktiva/Passiva) zum
+// Ausfüllen. Bewerterinformation: die Lösung (gefüllte Bilanz).
+
+const MOODLE_BILANZ_PUNKTE = 3; // 3 Punkte je Frage
+
+function mbEsc(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function mbCdata(s) {
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
+}
+
+// Leere Bilanz (Aktiva/Passiva) als HTML-Editor-Vorlage
+function mbLeereBilanzHtml() {
+  let html = `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
+  html += `<thead><tr style="background:#eee;">
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:25%;">Aktiva</th>
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:center; width:25%;">Betrag</th>
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:25%; border-left:1px solid #ccc;">Passiva</th>
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:center; width:25%;">Betrag</th>
+  </tr></thead><tbody>`;
+  // Leere Zeilen für Aktiva/Passiva (8 Zeilen als Platzhalter)
+  for (let i = 0; i < 8; i++) {
+    html += `<tr style="border-top:1px solid #AAAAAA;">
+      <td style="padding:4px 6px;">&nbsp;</td>
+      <td style="padding:4px 6px;text-align:right;">&nbsp;</td>
+      <td style="padding:4px 6px;border-left:1px solid #AAAAAA;">&nbsp;</td>
+      <td style="padding:4px 6px;text-align:right;">&nbsp;</td>
+    </tr>`;
+  }
+  html += `<tr style="border-top:2px solid #AAAAAA; border-bottom:6px double #AAAAAA;">
+    <td style="padding:4px 6px; font-weight:bold;">Bilanzsumme</td>
+    <td style="padding:4px 6px; text-align:right; font-weight:bold;">&nbsp;</td>
+    <td style="padding:4px 6px; border-left:1px solid #AAAAAA; font-weight:bold;">Bilanzsumme</td>
+    <td style="padding:4px 6px; text-align:right; font-weight:bold;">&nbsp;</td>
+  </tr>`;
+  html += `</tbody></table>`;
+  return html;
+}
+
+// Aufgaben-HTML (unsortierte Bilanzposten)
+function mbAufgabeHtml() {
+  if (!letztePosten || !letztePosten.length) return "";
+  let html = `<h3>Erstelle aus den folgenden Bilanzposten die vollständige Bilanz zum 1. Januar.</h3>`;
+  html += `<table style="border-collapse: collapse; font-family:calibri; background-color:#fff; min-width:400px; max-width:600px; line-height:1.4;">`;
+  html += `<tbody><tr style="background-color:#ccc;"><th style="text-align:left;padding:4px 6px;">Bilanzposten</th><th style="text-align:right;padding:4px 6px;">Betrag</th></tr>`;
+  letztePosten.forEach((p) => {
+    html += `<tr style="border-top:1px solid #AAAAAA;"><td style="padding:4px 6px;">${mbEsc(p.name)}</td><td style="padding:4px 6px;text-align:right;">${formatCurrency(p.wert)}</td></tr>`;
+  });
+  html += `</tbody></table>`;
+  return html;
+}
+
+// Lösungs-HTML (gefüllte Bilanz)
+function mbLoesungHtml() {
+  const L = letzteBilanzLoesung;
+  if (!L) return "";
+  const { av, uv, fk, avSumme, uvSumme, fkSumme, bilanzsumme, ek } = L;
+
+  let html = `<table style="border-collapse: collapse; font-family:calibri; background-color:#fff; min-width:700px; max-width:1400px; line-height:1;">`;
+  html += `<tbody><tr style="background-color:#ccc;">
+    <th style="width:25%;text-align:left;padding-left:6px;">Aktiva</th>
+    <th colspan="2" style="text-align:center;">Eröffnungsbilanz 1. Januar</th>
+    <th style="width:25%;text-align:right;padding-right:6px">Passiva</th>
+  </tr>`;
+  html += `<tr style="border-top:1px solid #AAAAAA;">
+    <td style="width:25%"><b>I. Anlagevermögen</b></td>
+    <td style="width:25%;text-align:right;padding-right:4px;"></td>
+    <td style="width:25%;border-left:1px solid #AAAAAA;padding-left:6px;"><b>I. Eigenkapital</b></td>
+    <td style="width:25%;text-align:right;padding-right:4px;">${formatCurrency(ek)}</td>
+  </tr>`;
+
+  const aktivaZeilen = [
+    ...av.map((p) => ({ label: p.name, value: formatCurrency(p.wert) })),
+    { label: "II. Umlaufvermögen", value: "", bold: true },
+    ...uv.map((p) => ({ label: p.name, value: formatCurrency(p.wert) })),
+  ];
+  const passivaZeilen = [
+    { label: "II. Fremdkapital", value: "", bold: true },
+    ...fk.map((p) => ({ label: p.name, value: formatCurrency(p.wert) })),
+  ];
+  const zeilenAnzahl = Math.max(aktivaZeilen.length, passivaZeilen.length);
+  for (let i = 0; i < zeilenAnzahl; i++) {
+    const a = aktivaZeilen[i];
+    const p = passivaZeilen[i];
+    const aLabel = a ? (a.bold ? `<b>${a.label}</b>` : a.label) : "";
+    const pLabel = p ? (p.bold ? `<b>${p.label}</b>` : p.label) : "";
+    html += `<tr style="border-top:1px solid #AAAAAA;">
+      <td style="width:25%">${aLabel}</td>
+      <td style="width:25%;text-align:right;padding-right:4px;">${a ? a.value : ""}</td>
+      <td style="width:25%;border-left:1px solid #AAAAAA;padding-left:6px;">${pLabel}</td>
+      <td style="width:25%;text-align:right;padding-right:4px;">${p ? p.value : ""}</td>
+    </tr>`;
+  }
+  html += `<tr style="border-bottom:6px double #AAAAAA;border-top:2px solid #AAAAAA;">
+    <td style="width:25%"></td>
+    <td style="text-align:right;padding-right:2px;font-weight:bold">${formatCurrency(bilanzsumme)}</td>
+    <td style="border-left:1px solid #AAAAAA;padding-left:6px;padding-right:4px;"></td>
+    <td style="text-align:right;padding-right:4px;font-weight:bold">${formatCurrency(bilanzsumme)}</td>
+  </tr>`;
+  html += `</tbody></table>`;
+  return html;
+}
+
+function mbBaueXml() {
+  if (!letztePosten || !letztePosten.length || !letzteBilanzLoesung) {
+    return null;
+  }
+  const basis = Math.floor(Math.random() * 900000) + 100000;
+  const titel = `7.3-${basis}meinBwR-Bilanz`;
+  const aufgabe = mbAufgabeHtml();
+  const vorlage = mbLeereBilanzHtml();
+  const loesung = mbLoesungHtml();
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+  xml += `  <question type="essay">\n`;
+  xml += `    <name>\n      <text>${mbEsc(titel)}</text>\n    </name>\n`;
+  xml += `    <questiontext format="html">\n      <text>${mbCdata(aufgabe + "<p><strong>Aufgabe:</strong> Erstelle aus den Bilanzposten die vollständige Bilanz zum 1. Januar und trage sie in die Vorlage ein.</p>")}</text>\n    </questiontext>\n`;
+  xml += `    <defaultgrade>${MOODLE_BILANZ_PUNKTE}</defaultgrade>\n`;
+  xml += `    <penalty>0</penalty>\n`;
+  xml += `    <hidden>0</hidden>\n`;
+  xml += `    <idnumber></idnumber>\n`;
+  xml += `    <responseformat>editor</responseformat>\n`;
+  xml += `    <responserequired>1</responserequired>\n`;
+  xml += `    <responsefieldlines>20</responsefieldlines>\n`;
+  xml += `    <attachments>0</attachments>\n`;
+  xml += `    <attachmentsrequired>0</attachmentsrequired>\n`;
+  xml += `    <maxbytes>0</maxbytes>\n`;
+  xml += `    <filetypeslist></filetypeslist>\n`;
+  xml += `    <responsetemplate format="html">\n      <text>${mbCdata(vorlage)}</text>\n    </responsetemplate>\n`;
+  xml += `    <graderinfo format="html">\n      <text>${mbCdata(loesung)}</text>\n    </graderinfo>\n`;
+  xml += `  </question>\n\n`;
+  xml += "</quiz>\n";
+  return xml;
+}
+
+function exportiereMoodle() {
+  if (!letztePosten || !letztePosten.length || !letzteBilanzLoesung) {
+    zeigeModal("Bitte zuerst eine Aufgabe erstellen (Neue Aufgabe).");
+    return;
+  }
+  const xml = mbBaueXml();
+  if (!xml) {
+    zeigeModal("Export fehlgeschlagen: keine Aufgabe vorhanden.");
+    return;
+  }
+
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  const dateiname = `quiz-bilanz-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 // ============================================================================
