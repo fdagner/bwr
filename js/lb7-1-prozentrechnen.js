@@ -6,14 +6,13 @@ let letzteGenerierteAufgaben = [];
 
 // ── Hilfsfunktionen ──────────────────────────────────────────────────────────
 
-// Euro-Beträge: Tausenderpunkt nach deutschem Standard (1.000 €)
+// Euro-Beträge: immer zwei Kommastellen (500,00 €), Tausenderpunkt nach
+// deutschem Standard (1.000 €)
 function fmtE(n) {
-  return Number.isInteger(n)
-    ? n.toLocaleString("de-DE")
-    : n.toLocaleString("de-DE", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
+  return n.toLocaleString("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 // Stückzahlen (Personen, Schüler, mAh usw.): schmales Leerzeichen als Tausendertrenner (1 000)
 function fmt(n) {
