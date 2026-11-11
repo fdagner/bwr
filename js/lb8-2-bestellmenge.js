@@ -373,6 +373,10 @@ function roundUpToNearest(number) {
 let lagerkosten;
 let bedarf;
 function berechneOptimaleBestellmengeUndHaeufigkeit() {
+  // Export-Button nur bei "Nur Diagramm" anzeigen
+  const _fallTyp = (document.getElementById("bmVariante") || {}).value || "1";
+  const _exportBtns = document.querySelector(".export-buttons");
+  if (_exportBtns) _exportBtns.style.display = _fallTyp === "2" ? "" : "none";
   let optimaleBestellmenge = parseInt(
     document.getElementById("optimaleBestellmenge").value,
     10,
