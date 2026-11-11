@@ -986,7 +986,7 @@ function mlBaueXml(aufgaben) {
     xml += `    <penalty>0</penalty>\n`;
     xml += `    <hidden>0</hidden>\n`;
     xml += `    <idnumber></idnumber>\n`;
-    xml += `    <responseformat>html</responseformat>\n`;
+    xml += `    <responseformat>editor</responseformat>\n`;
     xml += `    <responserequired>1</responserequired>\n`;
     xml += `    <responsefieldlines>20</responsefieldlines>\n`;
     xml += `    <attachments>0</attachments>\n`;
