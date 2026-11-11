@@ -110,6 +110,8 @@ const aufgabenThemen = [
         [200, 300, 500, 500, 600, 400, 200],
         [300, 400, 500, 500, 450, 300, 200],
         [200, 400, 600, 400, 300, 200, 200],
+        [240, 320, 400, 400, 480, 320, 240],
+        [280, 360, 480, 480, 600, 360, 280],
       ];
       const werte = pick(basisSets);
 
@@ -185,7 +187,7 @@ const aufgabenThemen = [
         "Kleidung",
         "Verkehr",
       ];
-      const gesamt = pick([1800, 2000, 2400, 2800, 3000, 3200]);
+      const gesamt = pick([1800, 2000, 2400, 2800, 3000, 3200, 3600, 4000]);
       const anteilSets = [
         [25, 40, 15, 10, 10],
         [30, 35, 10, 10, 15],
@@ -263,7 +265,7 @@ const aufgabenThemen = [
       ];
       const shuffledZiele = shuffle(reiseziele).slice(0, 5);
 
-      const gv = pick([2500, 3000, 4500]);
+      const gv = pick([2400, 2500, 3000, 3200, 4500]);
       const p = pick([10, 20, 25, 50, 75, 100]);
       const tv = gv + (gv * p) / 100;
       const span = tv - gv;
@@ -407,6 +409,20 @@ const aufgabenThemen = [
           werte: [350, 300, 200, 500, 450],
           p: -10,
         },
+        {
+          startKap: 400,
+          sparrate: 400,
+          zinssatz: 10,
+          werte: [40, 80, 120, 160, 200],
+          p: 25,
+        },
+        {
+          startKap: 800,
+          sparrate: 800,
+          zinssatz: 5,
+          werte: [40, 80, 120, 160, 120],
+          p: -25,
+        },
       ];
       const config = pick(konfigurationen);
       const { startKap, zinssatz } = config;
@@ -517,6 +533,14 @@ const aufgabenThemen = [
         {
           monate: ["Januar", "Februar", "März", "April", "Mai"],
           werte: [400, 300, 200, 100, 300],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [240, 320, 80, 160, 400],
+        },
+        {
+          monate: ["Januar", "Februar", "März", "April", "Mai"],
+          werte: [400, 320, 80, 160, 240],
         },
       ];
       const eindeutig = energieSets.filter((s) => {
@@ -774,7 +798,7 @@ Wichtige Prozentformeln:
 - Absolute Veränderung: Endwert − Ausgangswert
 - Relative Veränderung: (Endwert − Ausgangswert) ÷ Ausgangswert × 100
 
-Alle Aufgaben haben ganzzahlige Ergebnisse (Vielfache von 5 oder 10).
+Alle Aufgaben haben ganzzahlige Ergebnisse (Vielfache von 5 oder 10 sowie von 4 oder 8).
 
 Methodik bei Rückfragen:
 - Welche Werte liest du aus dem Diagramm ab?
