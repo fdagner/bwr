@@ -174,6 +174,24 @@ function fuellDropdownVD() {
       vdUnternehmen = my;
     }
   }
+  // Fertigerzeugnisse aus der YAML in das Produktfeld übernehmen (falls vorhanden)
+  fuellProduktAusYaml();
+}
+
+// Füllt das Produktfeld (vdProdukt) mit einem zufälligen Fertigerzeugnis
+// des gewählten Unternehmens, falls in der YAML vorhanden.
+function fuellProduktAusYaml() {
+  const sel = document.getElementById("vdKunde");
+  const produktInput = document.getElementById("vdProdukt");
+  if (!sel || !produktInput) return;
+  const name = sel.value?.trim();
+  if (!name) return;
+  const e = (yamlData || []).find((c) => c.unternehmen?.name === name);
+  const fertig = e?.unternehmen?.fertigerzeugnisse?.hauptwerk;
+  if (Array.isArray(fertig) && fertig.length > 0) {
+    const pick = fertig[Math.floor(Math.random() * fertig.length)];
+    if (pick?.name) produktInput.value = pick.name;
+  }
 }
 
 function getUnternehmenInfoVD(name) {
@@ -268,7 +286,7 @@ const VARIANTEN_MIT_RABATT = [
 // → Word-kompatibler Copy-Paste
 // ============================================================================
 
-function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
+function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt, clozeAktiv = false) {
   const kaeufer = getZufaelligenKaeuferVD(verkName);
 
   // ── Beträge ──────────────────────────────────────────────────────────────
@@ -310,7 +328,7 @@ function erstelleVordruck(verkName, verkInfo, produkt, mitRabatt) {
   const leerFelder = variante.felder;
   const rueckwaerts = variante.rueckwaerts;
 
-  const clozeAktiv = document.getElementById("optClozeVD")?.checked ?? false;
+  // clozeAktiv kommt jetzt als Parameter (für Export true, für Anzeige false)
 
   // ── Hilfsfunktionen ──────────────────────────────────────────────────────
   const mono = `font-family:'Courier New',monospace;`;
@@ -551,6 +569,49 @@ function erstelleVordrucke() {
 }
 
 // ============================================================================
+// MOODLE-XML-EXPORT – CLOZE (Lückentext) für Vordruck Ausgangsrechnung
+// ============================================================================
+function vdEsc(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+function vdCdata(s) {
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
+}
+
+function exportiereMoodle() {
+  const verkName = document.getElementById("vdKunde")?.value?.trim() || "";
+  const produkt =
+    document.getElementById("vdProdukt")?.value?.trim() || "Fertigerzeugnisse";
+  const mitRabatt = document.getElementById("optMitRabattVD")?.checked ?? false;
+  const verkInfo = getUnternehmenInfoVD(verkName);
+
+  // Vordruck mit Cloze-Syntax (Blanks mit ?) generieren
+  const clozeHtml = erstelleVordruck(verkName, verkInfo, produkt, mitRabatt, true);
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>Vordruck Ausgangsrechnung</text></name>\n    <questiontext format="html"><text>${vdCdata(clozeHtml)}</text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
+
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  const dateiname = `quiz-vordruck-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+window.exportiereMoodle = exportiereMoodle;
+
+// ============================================================================
 // KI-ASSISTENT PROMPT
 // ============================================================================
 
@@ -634,6 +695,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (sel)
     sel.addEventListener("change", () => {
       vdUnternehmen = sel.value;
+      fuellProduktAusYaml();
     });
 
   const vorschau = document.getElementById("kiPromptVorschau");

@@ -133,21 +133,6 @@
               <input type="checkbox" id="optMitRabattVD" />
               Rabatt einbeziehen
             </label>
-            <label
-              style="
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                cursor: pointer;
-              "
-            >
-              <input
-                type="checkbox"
-                id="optClozeVD"
-                data-on-change='[{"fn":"aktualisiereClozeAnzeige","args":[]}]'
-              />
-              Moodle-Cloze-Syntax einbinden
-            </label>
           </div>
 
           <!-- Unternehmen + Produkt -->
@@ -294,9 +279,11 @@
         <!-- Ende KI-Assistent -->
       </div>
       <!-- /#generator-container -->
+      <div class="export-buttons" data-exports="moodle" data-moodle-label="Moodle-Lückentext (cloze, XML)" data-moodle-title="Moodle-Lückentext (cloze)"></div>
     </main>
 
-    <script src="js/lb7-4-vordruck.js"></script>
+    <script src="js/export-buttons.js"></script>
+    <script src="js/lb7-4-vordruck.js?v=2"></script>
     <div w3-include-html="footer.html"></div>
   </body>
 </html>
