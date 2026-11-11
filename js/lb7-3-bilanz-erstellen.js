@@ -201,7 +201,7 @@ function generiereAufgabe() {
 
   // ── Lösung: sortierte Bilanz ───────────────────────────────────────────
   let loesungHTML = `<h2 class="loesung">Lösung</h2>
-    <table style="border-collapse: collapse;font-family:calibri;background-color:#fff;min-width:700px;max-width:1400px;line-height:1;">
+    <table style="border-collapse: collapse;font-family:calibri;background-color:#fff;min-width:700px;max-width:1400px;line-height:1;margin:0 auto;" class="bilanz-tabelle">
       <tbody>
         <tr style="background-color:#ccc;">
           <th style="width:25%;text-align:left;padding-left:6px;">Aktiva</th>
@@ -328,7 +328,7 @@ function mbLeereBilanzHtml() {
   if (!L) return "";
   const { av, uv, fk } = L;
 
-  let html = `<table style="border-collapse: collapse; font-family:calibri; background-color:#fff; min-width:700px; max-width:1400px; line-height:1;">`;
+  let html = `<table class="bilanz-tabelle" style="border-collapse: collapse; font-family:calibri; background-color:#fff; min-width:700px; max-width:1400px; line-height:1; margin:0 auto;">`;
   html += `<thead><tr style="background-color:#ccc;">
     <th style="width:25%;text-align:left;padding-left:6px;"></th>
     <th colspan="2" style="text-align:center;">Eröffnungsbilanz 1. Januar</th>
@@ -393,7 +393,7 @@ function mbLoesungHtml() {
   if (!L) return "";
   const { av, uv, fk, avSumme, uvSumme, fkSumme, bilanzsumme, ek } = L;
 
-  let html = `<table style="border-collapse: collapse; font-family:calibri; background-color:#fff; min-width:700px; max-width:1400px; line-height:1;">`;
+  let html = `<table class="bilanz-tabelle" style="border-collapse: collapse; font-family:calibri; background-color:#fff; min-width:700px; max-width:1400px; line-height:1; margin:0 auto;">`;
   html += `<tbody><tr style="background-color:#ccc;">
     <th style="width:25%;text-align:left;padding-left:6px;">Aktiva</th>
     <th colspan="2" style="text-align:center;">Eröffnungsbilanz 1. Januar</th>

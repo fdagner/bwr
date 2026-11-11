@@ -2087,6 +2087,13 @@ select:focus {
     margin-right: auto !important;
     max-width: 100% !important;
   }
+  #Container table.bilanz-tabelle {
+    width: 100% !important;
+  }
+  #Container table.bilanz-tabelle td,
+  #Container table.bilanz-tabelle th {
+    width: 25% !important;
+  }
 
       /* Aufgabe und Lösung sauber trennen */
   .jodit-container, .jodit-workplace, .jodit-wysiwyg {
