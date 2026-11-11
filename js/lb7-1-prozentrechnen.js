@@ -1,6 +1,7 @@
 // ============================================================================
 // PROZENTRECHNEN – ALLTAGSAUFGABEN GENERATOR
-// Alle Ergebnisse ganzzahlig (Vielfache von 5 oder 10) – rückwärts konstruiert
+// Alle Ergebnisse ganzzahlig (Vielfache von 5 oder 10, ergänzt um Vielfache
+// von 4 oder 8 bei p = 25) – rückwärts konstruiert
 // ============================================================================
 let letzteGenerierteAufgaben = [];
 
@@ -45,6 +46,9 @@ const AUFGABEN_DB = [
       { G: 160, p: 25 },
       { G: 100, p: 20 },
       { G: 240, p: 25 },
+      { G: 48, p: 25 },
+      { G: 72, p: 25 },
+      { G: 128, p: 25 },
     ],
     textW: (d) =>
       `Eine Winterjacke kostet ${fmtE(d.G)} €. Im Winterschlussverkauf gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
@@ -74,6 +78,9 @@ const AUFGABEN_DB = [
       { G: 500, p: 20 },
       { G: 1000, p: 20 },
       { G: 480, p: 25 },
+      { G: 320, p: 25 },
+      { G: 640, p: 25 },
+      { G: 880, p: 25 },
     ],
     textW: (d) =>
       `Ein Smartphone kostet ${fmtE(d.G)} €. Der Händler gibt ${d.p} % Rabatt. Berechne den Rabattbetrag.`,
@@ -103,6 +110,9 @@ const AUFGABEN_DB = [
       { G: 500, p: 20 },
       { G: 1000, p: 20 },
       { G: 300, p: 20 },
+      { G: 240, p: 25 },
+      { G: 560, p: 25 },
+      { G: 720, p: 25 },
     ],
     textW: (d) =>
       `Ein Fahrrad kostet ${fmtE(d.G)} €. Im Herbst gibt es ${d.p} % Saisonrabatt. Berechne die Ersparnis in Euro.`,
@@ -132,6 +142,9 @@ const AUFGABEN_DB = [
       { G: 60, p: 20 },
       { G: 160, p: 25 },
       { G: 200, p: 20 },
+      { G: 64, p: 25 },
+      { G: 72, p: 25 },
+      { G: 96, p: 25 },
     ],
     textW: (d) =>
       `Ein Paar Turnschuhe kostet ${fmtE(d.G)} €. Im Sale gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
@@ -161,6 +174,9 @@ const AUFGABEN_DB = [
       { G: 300, p: 20 },
       { G: 800, p: 25 },
       { G: 200, p: 25 },
+      { G: 320, p: 25 },
+      { G: 480, p: 25 },
+      { G: 560, p: 25 },
     ],
     textW: (d) =>
       `Eine Spielekonsole kostet ${fmtE(d.G)} €. Am Black Friday gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
@@ -281,6 +297,9 @@ const AUFGABEN_DB = [
       { G: 60, p: 20 },
       { G: 50, p: 20 },
       { G: 120, p: 25 },
+      { G: 16, p: 25 },
+      { G: 24, p: 25 },
+      { G: 32, p: 25 },
     ],
     textW: (d) =>
       `Lisa bekommt ${fmtE(d.G)} € Taschengeld im Monat und spart ${d.p} % davon. Berechne den monatlichen Sparbetrag.`,
@@ -310,6 +329,9 @@ const AUFGABEN_DB = [
       { G: 30, p: 20 },
       { G: 50, p: 20 },
       { G: 100, p: 20 },
+      { G: 28, p: 25 },
+      { G: 48, p: 25 },
+      { G: 88, p: 25 },
     ],
     textW: (d) =>
       `Ein Handytarif kostet ${fmtE(d.G)} € im Monat. Der Anbieter gewährt ${d.p} % Rabatt im ersten Jahr. Berechne die monatliche Ersparnis.`,
@@ -339,6 +361,7 @@ const AUFGABEN_DB = [
       { G: 12, p: 25 },
       { G: 8, p: 25 },
       { G: 16, p: 25 },
+      { G: 24, p: 25 },
     ],
     textW: (d) =>
       `Eine Kinokarte kostet ${fmtE(d.G)} €. Montags gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag.`,
@@ -368,6 +391,9 @@ const AUFGABEN_DB = [
       { G: 60, p: 20 },
       { G: 160, p: 25 },
       { G: 200, p: 20 },
+      { G: 64, p: 25 },
+      { G: 72, p: 25 },
+      { G: 96, p: 25 },
     ],
     textW: (d) =>
       `Ein Schulranzen kostet ${fmtE(d.G)} €. Beim Schulanfangsangebot gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
@@ -398,6 +424,9 @@ const AUFGABEN_DB = [
       { G: 200, p: 25 },
       { G: 160, p: 25 },
       { G: 50, p: 20 },
+      { G: 64, p: 25 },
+      { G: 72, p: 25 },
+      { G: 88, p: 25 },
     ],
     textW: (d) =>
       `Der Wocheneinkauf kostet ${fmtE(d.G)} €. Mit der App spart man ${d.p} %. Berechne die Ersparnis in Euro.`,
@@ -427,6 +456,9 @@ const AUFGABEN_DB = [
       { G: 50, p: 20 },
       { G: 60, p: 25 },
       { G: 80, p: 25 },
+      { G: 28, p: 25 },
+      { G: 36, p: 25 },
+      { G: 44, p: 25 },
     ],
     textW: (d) =>
       `Ein Drogerieeinkauf kostet ${fmtE(d.G)} €. Mit der Kundenkarte spart man ${d.p} %. Berechne die Ersparnis in Euro.`,
@@ -456,6 +488,9 @@ const AUFGABEN_DB = [
       { G: 200, p: 25 },
       { G: 160, p: 25 },
       { G: 300, p: 20 },
+      { G: 64, p: 25 },
+      { G: 128, p: 25 },
+      { G: 232, p: 25 },
     ],
     textW: (d) =>
       `Eine Kaffeemaschine kostet ${fmtE(d.G)} €. Im Angebot gibt es ${d.p} % Rabatt. Berechne den Rabattbetrag in Euro.`,
@@ -486,6 +521,9 @@ const AUFGABEN_DB = [
       { G: 40, p: 25 },
       { G: 20, p: 20 },
       { G: 30, p: 10 },
+      { G: 24, p: 25 },
+      { G: 28, p: 25 },
+      { G: 36, p: 25 },
     ],
     textW: (d) =>
       `Eine Klasse hat ${fmt(d.G)} Schüler. ${d.p} % kommen mit dem Fahrrad zur Schule. Berechne die Anzahl dieser Schüler.`,
@@ -515,6 +553,9 @@ const AUFGABEN_DB = [
       { G: 800, p: 25 },
       { G: 400, p: 20 },
       { G: 600, p: 20 },
+      { G: 480, p: 25 },
+      { G: 640, p: 25 },
+      { G: 720, p: 25 },
     ],
     textW: (d) =>
       `Eine Schule hat ${fmt(d.G)} Schüler. ${d.p} % nutzen die Schulbibliothek regelmäßig. Berechne die Anzahl dieser Schüler.`,
@@ -544,6 +585,9 @@ const AUFGABEN_DB = [
       { G: 4000, p: 25 },
       { G: 8000, p: 25 },
       { G: 6000, p: 20 },
+      { G: 2400, p: 25 },
+      { G: 3200, p: 25 },
+      { G: 4800, p: 25 },
     ],
     textW: (d) =>
       `Eine Gemeinde hat ${fmt(d.G)} Einwohner. ${d.p} % besitzen ein Auto. Berechne die Anzahl der Autobesitzer.`,
@@ -573,6 +617,9 @@ const AUFGABEN_DB = [
       { G: 400, p: 20 },
       { G: 80, p: 20 },
       { G: 100, p: 20 },
+      { G: 64, p: 25 },
+      { G: 96, p: 25 },
+      { G: 168, p: 25 },
     ],
     textW: (d) =>
       `Ein Unternehmen beschäftigt ${fmt(d.G)} Mitarbeiter. ${d.p} % sind in Teilzeit tätig. Berechne die Anzahl der Teilzeitbeschäftigten.`,
@@ -602,6 +649,9 @@ const AUFGABEN_DB = [
       { G: 500, p: 20 },
       { G: 80, p: 25 },
       { G: 100, p: 20 },
+      { G: 64, p: 25 },
+      { G: 96, p: 25 },
+      { G: 216, p: 25 },
     ],
     textW: (d) =>
       `Ein Sportverein hat ${fmt(d.G)} Mitglieder. ${d.p} % davon nehmen an Turnieren teil. Berechne die Anzahl der Turnierteilnehmer.`,
@@ -631,6 +681,9 @@ const AUFGABEN_DB = [
       { G: 8000, p: 25 },
       { G: 10000, p: 20 },
       { G: 6000, p: 20 },
+      { G: 2400, p: 25 },
+      { G: 3200, p: 25 },
+      { G: 4800, p: 25 },
     ],
     textW: (d) =>
       `In einer Stadt gibt es ${fmt(d.G)} Wahlberechtigte. Die Wahlbeteiligung beträgt ${d.p} %. Berechne die Anzahl der Wähler.`,
@@ -661,6 +714,9 @@ const AUFGABEN_DB = [
       { G: 8000, p: 25 },
       { G: 2000, p: 25 },
       { G: 3000, p: 20 },
+      { G: 3200, p: 25 },
+      { G: 4800, p: 25 },
+      { G: 6400, p: 25 },
     ],
     textW: (d) =>
       `Ein Smartphone-Akku fasst ${fmt(d.G)} mAh. Nach dem Laden ist er zu ${d.p} % geladen. Berechne die geladene Kapazität in mAh.`,
@@ -690,6 +746,9 @@ const AUFGABEN_DB = [
       { G: 80, p: 25 },
       { G: 160, p: 25 },
       { G: 60, p: 20 },
+      { G: 72, p: 25 },
+      { G: 96, p: 25 },
+      { G: 152, p: 25 },
     ],
     textW: (d) =>
       `Ein Tablet braucht ${fmt(d.G)} Minuten zum vollständigen Aufladen. Der Akku ist bereits zu ${d.p} % geladen. Berechne die bisherige Ladezeit in Minuten.`,
