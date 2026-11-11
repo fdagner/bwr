@@ -876,6 +876,158 @@ function toggleKiPromptVorschau() {
 }
 
 // ============================================================================
+// MOODLE-XML-EXPORT – FREITEXT (essay) FÜR UNTERNEHMENSZIELE/LEITBILD
+// ============================================================================
+// Eine Frage pro Leitbild: Fallbeispiel als Aufgabenstellung, leere
+// „Ziele herausarbeiten"-Tabelle als HTML-Editor-Vorlage, Lösungstabelle
+// als Bewerterinformation (nur für Bewerter sichtbar).
+
+const MOODLE_LEITBILD_PRAEFIX = "7.2-"; // Lernbereich 7.2
+const MOODLE_LEITBILD_TITELENDE = "meinBwR-Leitbild";
+const MOODLE_LEITBILD_PUNKTE = 3; // 3 Punkte je Frage
+
+function mlEsc(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function mlCdata(s) {
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
+}
+
+// Fallbeispiel-HTML (Aufgabenstellung) – ohne Tabellen
+function mlFallbeispielHtml(lb, nr, gesamt) {
+  const titel =
+    gesamt > 1 ? `Fallbeispiel: Leitbild ${nr}` : "Fallbeispiel: Leitbild";
+  let html = `<h2>${titel}</h2>`;
+  html += `<h3>Lies das folgende Unternehmens-Leitbild sorgfältig durch. Leite daraus in Stichworten die <strong>ökonomischen</strong>, <strong>ökologischen</strong> und <strong>sozialen</strong> Ziele des Unternehmens ab und trage sie in die Tabelle ein.</h3>`;
+  html += `<div style="border:1px solid #ccc; border-left:5px solid #1a237e; border-radius:6px; padding:20px 24px; margin:16px 0; background:#fafafa; max-width:680px;">`;
+  html += `<h3 style="margin-bottom:4px; color:#1a237e;">${mlEsc(lb.firma)}</h3>`;
+  html += `<p style="color:#546e7a; font-size:0.85rem; margin-bottom:14px; font-style:italic;">Branche: ${mlEsc(lb.branche)}</p>`;
+  html += `<p style="margin-bottom:14px;">${mlEsc(lb.intro)} ${mlEsc(lb.fuell)}</p>`;
+  const alleSaetze = shuffle(
+    lb.sektionen.flatMap((sek) => sek.saetze.map((s) => s.satz)),
+  );
+  const mitte = Math.ceil(alleSaetze.length / 2);
+  html += `<p style="margin-bottom:10px;">${mlEsc(alleSaetze.slice(0, mitte).join(" "))}</p>`;
+  html += `<p style="margin-bottom:4px;">${mlEsc(alleSaetze.slice(mitte).join(" "))}</p>`;
+  html += `<p style="margin-top:16px; font-style:italic; color:#546e7a;">${mlEsc(lb.schluss)}</p>`;
+  html += `</div>`;
+  return html;
+}
+
+// Leere „Ziele herausarbeiten"-Tabelle (Schüler füllt aus)
+function mlLeereTabelleHtml(nr, gesamt) {
+  const tabellenTitel =
+    gesamt > 1
+      ? `Tabelle ${nr} – Ziele herausarbeiten`
+      : "Tabelle – Ziele herausarbeiten";
+  let html = `<h3>${tabellenTitel}</h3>`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
+  html += `<thead><tr style="background:#eee;">
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:33%;">Ökonomische Ziele<br><span style="font-weight:400; font-size:0.83rem;">(wirtschaftlich)</span></th>
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:33%;">Ökologische Ziele<br><span style="font-weight:400; font-size:0.83rem;">(Umwelt)</span></th>
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:33%;">Soziale Ziele<br><span style="font-weight:400; font-size:0.83rem;">(Menschen)</span></th>
+  </tr></thead><tbody>`;
+  for (let i = 0; i < 5; i++) {
+    html += `<tr>
+      <td style="border:1px solid #ccc; padding:6px 10px; height:34px;">&nbsp;</td>
+      <td style="border:1px solid #ccc; padding:6px 10px; height:34px;">&nbsp;</td>
+      <td style="border:1px solid #ccc; padding:6px 10px; height:34px;">&nbsp;</td>
+    </tr>`;
+  }
+  html += `</tbody></table>`;
+  return html;
+}
+
+// Lösungstabelle (Bewerterinformation)
+function mlLoesungHtml(lb, nr, gesamt) {
+  const loesungTitel = gesamt > 1 ? `Lösung ${nr}` : "Lösung";
+  let html = `<h3>${loesungTitel}</h3>`;
+  html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
+  html += `<thead><tr style="background:#eee;">
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:33%;">Ökonomische Ziele</th>
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:33%;">Ökologische Ziele</th>
+    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:33%;">Soziale Ziele</th>
+  </tr></thead><tbody><tr>`;
+  html += `<td style="border:1px solid #ccc; padding:7px 10px; vertical-align:top;">${lb.loesung.okon.map((kw) => badge(kw, FARBEN.okon)).join("")}</td>`;
+  html += `<td style="border:1px solid #ccc; padding:7px 10px; vertical-align:top;">${lb.loesung.oeko.map((kw) => badge(kw, FARBEN.oeko)).join("")}</td>`;
+  html += `<td style="border:1px solid #ccc; padding:7px 10px; vertical-align:top;">${lb.loesung.soz.map((kw) => badge(kw, FARBEN.soz)).join("")}</td>`;
+  html += `</tr></tbody></table>`;
+  return html;
+}
+
+function mlBaueXml(aufgaben) {
+  const basis = Math.floor(Math.random() * 900000) + 100000;
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+
+  aufgaben.forEach((lb, i) => {
+    const nr = i + 1;
+    const gesamt = aufgaben.length;
+    const id = `${basis}${String(nr).padStart(3, "0")}`;
+    const titel = `${MOODLE_LEITBILD_PRAEFIX}${id}${MOODLE_LEITBILD_TITELENDE}`;
+
+    const fallbeispiel = mlFallbeispielHtml(lb, nr, gesamt);
+    const tabelleLeer = mlLeereTabelleHtml(nr, gesamt);
+    const loesung = mlLoesungHtml(lb, nr, gesamt);
+
+    const frageText = `${fallbeispiel}<p><strong>Aufgabe:</strong> Trage die ökonomischen, ökologischen und sozialen Ziele in die Tabelle ein.</p>`;
+    const vorlage = tabelleLeer;
+    const bewerterInfo = loesung;
+
+    xml += `  <question type="essay">\n`;
+    xml += `    <name>\n      <text>${mlEsc(titel)}</text>\n    </name>\n`;
+    xml += `    <questiontext format="html">\n      <text>${mlCdata(frageText)}</text>\n    </questiontext>\n`;
+    xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
+    xml += `    <defaultgrade>${MOODLE_LEITBILD_PUNKTE}</defaultgrade>\n`;
+    xml += `    <penalty>0</penalty>\n`;
+    xml += `    <hidden>0</hidden>\n`;
+    xml += `    <idnumber></idnumber>\n`;
+    xml += `    <responseformat>html</responseformat>\n`;
+    xml += `    <responserequired>1</responserequired>\n`;
+    xml += `    <responsefieldlines>20</responsefieldlines>\n`;
+    xml += `    <attachments>0</attachments>\n`;
+    xml += `    <attachmentsrequired>0</attachmentsrequired>\n`;
+    xml += `    <maxbytes>0</maxbytes>\n`;
+    xml += `    <filetypeslist></filetypeslist>\n`;
+    xml += `    <responsetemplate format="html">\n      <text>${mlCdata(vorlage)}</text>\n    </responsetemplate>\n`;
+    xml += `    <graderinfo format="html">\n      <text>${mlCdata(bewerterInfo)}</text>\n    </graderinfo>\n`;
+    xml += `  </question>\n\n`;
+  });
+
+  return xml + "</quiz>\n";
+}
+
+function exportiereMoodleLeitbild() {
+  if (
+    typeof letzteGenerierteAufgaben === "undefined" ||
+    !letzteGenerierteAufgaben.length
+  ) {
+    zeigeModal("Bitte zuerst Leitbilder erstellen.");
+    return;
+  }
+  const xml = mlBaueXml(letzteGenerierteAufgaben);
+
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  const dateiname = `quiz-leitbild-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ============================================================================
 // INITIALISIERUNG
 // ============================================================================
 document.addEventListener("DOMContentLoaded", function () {
