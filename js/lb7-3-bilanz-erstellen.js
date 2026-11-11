@@ -323,33 +323,59 @@ function mbCdata(s) {
   );
 }
 
-// Leere Bilanz (Aktiva/Passiva) als HTML-Editor-Vorlage
+// Leere Bilanz (Aktiva/Passiva) als HTML-Editor-Vorlage – spiegelt
+// die Lösungsbilanz (mbLoesungHtml) im Aufbau, aber mit leeren Zellen
+// (Schüler füllt Posten-Namen und Beträge ein).
 function mbLeereBilanzHtml() {
-  let html = `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
-  html += `<thead><tr style="background:#eee;">
-    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:25%;">Aktiva</th>
-    <th style="border:1px solid #ccc; padding:6px 10px; text-align:center; width:25%;">Betrag</th>
-    <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:25%; border-left:1px solid #ccc;">Passiva</th>
-    <th style="border:1px solid #ccc; padding:6px 10px; text-align:center; width:25%;">Betrag</th>
+  const L = letzteBilanzLoesung;
+  if (!L) return "";
+  const { av, uv, fk } = L;
+
+  let html = `<table style="border-collapse: collapse; font-family:calibri; background-color:#fff; min-width:700px; max-width:1400px; line-height:1;">`;
+  html += `<thead><tr style="background-color:#ccc;">
+    <th style="width:25%;text-align:left;padding-left:6px;">Aktiva</th>
+    <th colspan="2" style="text-align:center;">Eröffnungsbilanz 1. Januar</th>
+    <th style="width:25%;text-align:right;padding-right:6px">Passiva</th>
   </tr></thead><tbody>`;
-  // Leere Zeilen für Aktiva/Passiva (8 Zeilen als Platzhalter)
-  for (let i = 0; i < 8; i++) {
+  html += `<tr style="border-top:1px solid #AAAAAA;">
+    <td style="width:25%"><b>I. Anlagevermögen</b></td>
+    <td style="width:25%;text-align:right;padding-right:4px;"></td>
+    <td style="width:25%;border-left:1px solid #AAAAAA;padding-left:6px;"><b>I. Eigenkapital</b></td>
+    <td style="width:25%;text-align:right;padding-right:4px;"></td>
+  </tr>`;
+
+  const aktivaZeilen = [
+    ...av.map(() => ({ label: "", value: "" })),
+    { label: "II. Umlaufvermögen", value: "", bold: true },
+    ...uv.map(() => ({ label: "", value: "" })),
+  ];
+  const passivaZeilen = [
+    { label: "II. Fremdkapital", value: "", bold: true },
+    ...fk.map(() => ({ label: "", value: "" })),
+  ];
+  const zeilenAnzahl = Math.max(aktivaZeilen.length, passivaZeilen.length);
+  for (let i = 0; i < zeilenAnzahl; i++) {
+    const a = aktivaZeilen[i];
+    const p = passivaZeilen[i];
+    const aLabel = a ? (a.bold ? `<b>${a.label}</b>` : a.label) : "";
+    const pLabel = p ? (p.bold ? `<b>${p.label}</b>` : p.label) : "";
     html += `<tr style="border-top:1px solid #AAAAAA;">
-      <td style="padding:4px 6px;">&nbsp;</td>
-      <td style="padding:4px 6px;text-align:right;">&nbsp;</td>
-      <td style="padding:4px 6px;border-left:1px solid #AAAAAA;">&nbsp;</td>
-      <td style="padding:4px 6px;text-align:right;">&nbsp;</td>
+      <td style="width:25%">${aLabel}</td>
+      <td style="width:25%;text-align:right;padding-right:4px;">${a ? a.value : ""}</td>
+      <td style="width:25%;border-left:1px solid #AAAAAA;padding-left:6px;">${pLabel}</td>
+      <td style="width:25%;text-align:right;padding-right:4px;">${p ? p.value : ""}</td>
     </tr>`;
   }
-  html += `<tr style="border-top:2px solid #AAAAAA; border-bottom:6px double #AAAAAA;">
-    <td style="padding:4px 6px; font-weight:bold;">Bilanzsumme</td>
-    <td style="padding:4px 6px; text-align:right; font-weight:bold;">&nbsp;</td>
-    <td style="padding:4px 6px; border-left:1px solid #AAAAAA; font-weight:bold;">Bilanzsumme</td>
-    <td style="padding:4px 6px; text-align:right; font-weight:bold;">&nbsp;</td>
+  html += `<tr style="border-bottom:6px double #AAAAAA;border-top:2px solid #AAAAAA;">
+    <td style="width:25%"></td>
+    <td style="text-align:right;padding-right:2px;font-weight:bold"></td>
+    <td style="border-left:1px solid #AAAAAA;padding-left:6px;padding-right:4px;"></td>
+    <td style="text-align:right;padding-right:4px;font-weight:bold"></td>
   </tr>`;
   html += `</tbody></table>`;
   return html;
 }
+
 
 // Aufgaben-HTML (unsortierte Bilanzposten)
 function mbAufgabeHtml() {
