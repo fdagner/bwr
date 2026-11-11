@@ -254,7 +254,7 @@ function generiereAufgabe() {
       </tbody>
     </table>`;
 
-  container.innerHTML = aufgabenHTML + loesungHTML;
+  container.innerHTML = aufgabenHTML + "\n" + mbLeereBilanzHtml() + "\n" + loesungHTML;
 
   const vorschau = document.getElementById("kiPromptVorschau");
   if (vorschau && getComputedStyle(vorschau).display !== "none") {
