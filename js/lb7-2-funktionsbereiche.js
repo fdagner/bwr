@@ -1,3 +1,5 @@
+let letzteGenerierteFunktionsbereiche = [];
+
 // ============================================================================
 // AUSSAGEN-DATENBANK
 // ============================================================================
@@ -224,6 +226,7 @@ function zeigeZufaelligeWahrFalsch() {
 
   const anzahl = parseInt(document.getElementById("anzahlAussagen").value) || 6;
   const ausgewaehlte = shuffle(aussagenDatenbank).slice(0, anzahl);
+  letzteGenerierteFunktionsbereiche = ausgewaehlte;
 
   // ── SVG Übersicht ─────────────────────────────────────────────────────────
   const svgHTML = `
@@ -423,6 +426,98 @@ function zeigeZufaelligeWahrFalsch() {
   });
 
   container.innerHTML = aufgabenHTML + loesungenHTML;
+}
+
+// ============================================================================
+// MOODLE-XML-EXPORT – ZUORDNUNG WAHR/FALSCH (matching)
+// ============================================================================
+// Eine Frage pro Export: Aussagen werden den Antworten „wahr"/„falsch"
+// zugeordnet. Lösung + Hinweise für Mehrfachversuche wie bei
+// lb7-2-unternehmensziele.
+
+const MOODLE_FB_PRAEFIX = "7.2-"; // Lernbereich 7.2
+const MOODLE_FB_TITELENDE = "meinBwR-Funktionsbereiche";
+const MOODLE_FB_PUNKTE = 1; // 1 Punkt je Aussage
+
+function fbEsc(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function fbCdata(s) {
+  return (
+    "<![CDATA[" + String(s ?? "").replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>"
+  );
+}
+
+function fbBaueXml(aufgaben) {
+  const basis = Math.floor(Math.random() * 900000) + 100000;
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n';
+
+  const titel = `${MOODLE_FB_PRAEFIX}${basis}${MOODLE_FB_TITELENDE}`;
+  const punkte = aufgaben.length * MOODLE_FB_PUNKTE;
+
+  xml += `  <question type="matching">\n`;
+  xml += `    <name>\n      <text>${fbEsc(titel)}</text>\n    </name>\n`;
+  xml += `    <questiontext format="html">\n      <text>${fbCdata("<p>Lies die folgenden Aussagen. Entscheide jeweils, ob die Aussage <strong>wahr</strong> oder <strong>falsch</strong> ist, und begründe deine Entscheidung.</p>")}</text>\n    </questiontext>\n`;
+  xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
+  xml += `    <defaultgrade>${punkte}</defaultgrade>\n`;
+  xml += `    <penalty>0.3333333</penalty>\n`;
+  xml += `    <hidden>0</hidden>\n`;
+  xml += `    <idnumber></idnumber>\n`;
+  xml += `    <shuffleanswers>true</shuffleanswers>\n`;
+  xml += `    <correctfeedback format="html">\n      <text>${fbCdata("<p>Die Zuordnung ist richtig.</p>")}</text>\n    </correctfeedback>\n`;
+  xml += `    <partiallycorrectfeedback format="html">\n      <text>${fbCdata("<p>Die Zuordnung ist teilweise richtig.</p>")}</text>\n    </partiallycorrectfeedback>\n`;
+  xml += `    <incorrectfeedback format="html">\n      <text>${fbCdata("<p>Die Zuordnung ist falsch.</p>")}</text>\n    </incorrectfeedback>\n`;
+  xml += `    <shownumcorrect/>\n`;
+
+  // Hinweise (Mehrfachversuche): zwei gestufte Hinweise
+  const fbHintStil =
+    "margin:4px 0;padding:8px 14px;border:1px solid #e0b4b4;background:#fdecea;border-radius:8px;color:#b03030;";
+  const fbHinweise = [
+    `<div style="${fbHintStil}"><strong>❌ Leider falsch!</strong></div>`,
+    `<div style="${fbHintStil}"><strong>❌ Immer noch nicht richtig!</strong></div>`,
+  ];
+  fbHinweise.forEach((h) => {
+    xml += `    <hint format="html">\n      <text>${fbCdata(h)}</text>\n    </hint>\n`;
+  });
+
+  aufgaben.forEach(({ aussage, korrekt }) => {
+    xml += `    <subquestion format="html">\n`;
+    xml += `      <text>${fbCdata(`<p>${fbEsc(aussage)}</p>`)}</text>\n`;
+    xml += `      <answer>\n        <text>${fbEsc(korrekt ? "wahr" : "falsch")}</text>\n      </answer>\n`;
+    xml += `    </subquestion>\n`;
+  });
+
+  xml += `  </question>\n\n</quiz>\n`;
+  return xml;
+}
+
+function exportiereMoodle() {
+  if (
+    !Array.isArray(letzteGenerierteFunktionsbereiche) ||
+    !letzteGenerierteFunktionsbereiche.length
+  ) {
+    zeigeModal("Bitte zuerst Aussagen erstellen (Neue Aufgabe).");
+    return;
+  }
+  const xml = fbBaueXml(letzteGenerierteFunktionsbereiche);
+
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  const dateiname = `quiz-funktionsbereiche-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.xml`;
+
+  const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = dateiname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 // ============================================================================
