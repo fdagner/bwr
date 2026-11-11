@@ -1141,7 +1141,7 @@ function aktualisiereLoesung() {
   }
 }
 
-function exportiereMoodle() {
+async function exportiereMoodle() {
   const fallTyp = (document.getElementById("bmVariante") || {}).value || "1";
   if (fallTyp !== "2") {
     zeigeModal(
@@ -1159,7 +1159,24 @@ function exportiereMoodle() {
     return;
   }
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>Optimale Bestellmenge (Diagramm)</text></name>\n    <questiontext format="html"><text><![CDATA[{1:NUMERICAL:=${menge}#0}]]></text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
+  // Diagramm als Base64-PNG einbetten (falls verfügbar)
+  let bildHtml = "";
+  try {
+    if (bestellChart && typeof bestellChart.dataURI === "function") {
+      const { imgURI } = await bestellChart.dataURI({ scale: 1 });
+      if (imgURI) {
+        bildHtml = `<img src="${imgURI}" alt="Diagramm Optimale Bestellmenge" style="max-width:100%;height:auto;display:block;margin:0 auto 8px;" />`;
+      }
+    }
+  } catch (e) {
+    console.warn("Diagramm konnte nicht für Export gerendert werden:", e);
+  }
+
+  const frageText = bildHtml
+    ? `${bildHtml}<br>{1:NUMERICAL:=${menge}#0}`
+    : `{1:NUMERICAL:=${menge}#0}`;
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>Optimale Bestellmenge (Diagramm)</text></name>\n    <questiontext format="html"><text><![CDATA[${frageText}]]></text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
 
   const d = new Date();
   const p = (n) => String(n).padStart(2, "0");
