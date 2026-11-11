@@ -2094,6 +2094,14 @@ select:focus {
   #Container table.bilanz-tabelle th {
     width: 25% !important;
   }
+  /* Gedruckter Inhalt liegt in .druck-bereich (Kopie des Editors) */
+  .druck-bereich table.bilanz-tabelle {
+    width: 100% !important;
+  }
+  .druck-bereich table.bilanz-tabelle td,
+  .druck-bereich table.bilanz-tabelle th {
+    width: 25% !important;
+  }
 
       /* Aufgabe und Lösung sauber trennen */
   .jodit-container, .jodit-workplace, .jodit-wysiwyg {
