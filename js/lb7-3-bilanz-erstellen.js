@@ -443,7 +443,7 @@ function mbBaueXml() {
     return null;
   }
   const basis = Math.floor(Math.random() * 900000) + 100000;
-  const titel = `7.3-${basis}meinBwR-Bilanz`;
+  const titel = `7.3-07#R${basis}-Rechnen der einzelnen Fragen`;
   const aufgabe = mbAufgabeHtml();
   const vorlage = mbLeereBilanzHtml();
   const loesung = mbLoesungHtml();
