@@ -283,6 +283,18 @@ function mzBaueMatchingXml(aufgaben) {
     xml += `    </subquestion>\n`;
   });
 
+  // Hinweise (Mehrfachversuche): zwei gestufte Hinweise, formatiert wie
+  // bei der Prozentrechnen-Export (rot auf hellrosa).
+  const mzHintStil =
+    "margin:4px 0;padding:8px 14px;border:1px solid #e0b4b4;background:#fdecea;border-radius:8px;color:#b03030;";
+  const mzHinweise = [
+    `<div style="${mzHintStil}"><strong>❌ Leider falsch!</strong></div>`,
+    `<div style="${mzHintStil}"><strong>❌ Immer noch nicht richtig!</strong></div>`,
+  ];
+  mzHinweise.forEach((h) => {
+    xml += `    <hint format="html">\n      <text>${mzCdata(h)}</text>\n    </hint>\n`;
+  });
+
   xml += `  </question>\n\n</quiz>\n`;
   return xml;
 }
