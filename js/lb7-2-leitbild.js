@@ -982,7 +982,6 @@ function mlBaueXml(aufgaben) {
     xml += `  <question type="essay">\n`;
     xml += `    <name>\n      <text>${mlEsc(titel)}</text>\n    </name>\n`;
     xml += `    <questiontext format="html">\n      <text>${mlCdata(frageText)}</text>\n    </questiontext>\n`;
-    xml += `    <generalfeedback format="html">\n      <text></text>\n    </generalfeedback>\n`;
     xml += `    <defaultgrade>${MOODLE_LEITBILD_PUNKTE}</defaultgrade>\n`;
     xml += `    <penalty>0</penalty>\n`;
     xml += `    <hidden>0</hidden>\n`;
