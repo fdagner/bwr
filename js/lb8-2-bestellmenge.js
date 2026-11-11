@@ -1159,7 +1159,7 @@ function exportiereMoodle() {
     return;
   }
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>Optimale Bestellmenge (Diagramm)</text></name>\n    <questiontext format="html"><text><![CDATA[{1:NUMERICAL:${menge}#0}]]></text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz>\n  <question type="cloze">\n    <name><text>Optimale Bestellmenge (Diagramm)</text></name>\n    <questiontext format="html"><text><![CDATA[{1:NUMERICAL:=${menge}#0}]]></text></questiontext>\n    <generalfeedback format="html"><text></text></generalfeedback>\n    <penalty>0.3333333</penalty>\n    <hidden>0</hidden>\n  </question>\n</quiz>\n`;
 
   const d = new Date();
   const p = (n) => String(n).padStart(2, "0");
