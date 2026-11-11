@@ -323,9 +323,6 @@ function mbCdata(s) {
   );
 }
 
-// Leere Bilanz (Aktiva/Passiva) als HTML-Editor-Vorlage – spiegelt
-// die Lösungsbilanz (mbLoesungHtml) im Aufbau, aber mit leeren Zellen
-// (Schüler füllt Posten-Namen und Beträge ein).
 function mbLeereBilanzHtml() {
   const L = letzteBilanzLoesung;
   if (!L) return "";
@@ -333,24 +330,24 @@ function mbLeereBilanzHtml() {
 
   let html = `<table style="border-collapse: collapse; font-family:calibri; background-color:#fff; min-width:700px; max-width:1400px; line-height:1;">`;
   html += `<thead><tr style="background-color:#ccc;">
-    <th style="width:25%;text-align:left;padding-left:6px;">Aktiva</th>
+    <th style="width:25%;text-align:left;padding-left:6px;"></th>
     <th colspan="2" style="text-align:center;">Eröffnungsbilanz 1. Januar</th>
-    <th style="width:25%;text-align:right;padding-right:6px">Passiva</th>
+    <th style="width:25%;text-align:right;padding-right:6px"></th>
   </tr></thead><tbody>`;
   html += `<tr style="border-top:1px solid #AAAAAA;">
-    <td style="width:25%"><b>I. Anlagevermögen</b></td>
+    <td style="width:25%"></td>
     <td style="width:25%;text-align:right;padding-right:4px;"></td>
-    <td style="width:25%;border-left:1px solid #AAAAAA;padding-left:6px;"><b>I. Eigenkapital</b></td>
+    <td style="width:25%;border-left:1px solid #AAAAAA;padding-left:6px;"></td>
     <td style="width:25%;text-align:right;padding-right:4px;"></td>
   </tr>`;
 
   const aktivaZeilen = [
     ...av.map(() => ({ label: "", value: "" })),
-    { label: "II. Umlaufvermögen", value: "", bold: true },
+    { label: "", value: "", bold: true },
     ...uv.map(() => ({ label: "", value: "" })),
   ];
   const passivaZeilen = [
-    { label: "II. Fremdkapital", value: "", bold: true },
+    { label: "", value: "", bold: true },
     ...fk.map(() => ({ label: "", value: "" })),
   ];
   const zeilenAnzahl = Math.max(aktivaZeilen.length, passivaZeilen.length);
