@@ -146,10 +146,19 @@ function renderExportButtons() {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "card-btn";
-      btn.setAttribute("data-tooltip", cfg.title);
-      btn.setAttribute("aria-label", cfg.title);
-      btn.title = cfg.title;
-      btn.textContent = cfg.label;
+      // Seiten-spezifische Beschriftung für Moodle-Export (Fragetyp anzeigen)
+      let title = cfg.title;
+      let label = cfg.label;
+      if (key === "moodle") {
+        const customLabel = container.getAttribute("data-moodle-label");
+        const customTitle = container.getAttribute("data-moodle-title");
+        if (customLabel) label = customLabel;
+        if (customTitle) title = customTitle;
+      }
+      btn.setAttribute("data-tooltip", title);
+      btn.setAttribute("aria-label", title);
+      btn.title = title;
+      btn.textContent = label;
       btn.addEventListener("click", () => window[cfg.fn]());
       if (cfg.id) btn.id = cfg.id;
       container.appendChild(btn);
@@ -165,6 +174,34 @@ window.exportSVG = exportSVG;
 window.exportOffice = exportOffice;
 window.exportPrint = exportPrint;
 window.exportMoodle = exportMoodle;
+
+// Dynamische Moodle-Button-Beschriftung (für Seiten mit wechselndem Fragetyp,
+// z. B. lb8-3-preisdifferenzierung). Wird von der Seite via
+// window.exportMoodleLabel = () => "..." gesetzt und dann aufgerufen.
+window.updateMoodleButtonLabel = function () {
+  let label = null;
+  let title = null;
+  if (typeof window.exportMoodleLabel === "function") {
+    try {
+      label = window.exportMoodleLabel();
+    } catch (e) {}
+  }
+  document.querySelectorAll(".export-buttons").forEach((container) => {
+    const customLabel = container.getAttribute("data-moodle-label");
+    const customTitle = container.getAttribute("data-moodle-title");
+    if (customLabel && !label) label = customLabel;
+    if (customTitle && !title) title = customTitle;
+  });
+  document.querySelectorAll(".export-buttons .card-btn").forEach((btn) => {
+    if (!/moodle/i.test(btn.textContent || "")) return;
+    if (label) btn.textContent = label;
+    if (title) {
+      btn.title = title;
+      btn.setAttribute("data-tooltip", title);
+      btn.setAttribute("aria-label", title);
+    }
+  });
+};
 window.dateinameExport = dateinameExport;
 window.renderExportButtons = renderExportButtons;
 

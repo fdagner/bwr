@@ -77,6 +77,13 @@ function generiereAufgaben() {
   } else {
     zeigeZufaelligePreisdifferenzierung();
   }
+  // Moodle-Button-Beschriftung an den aktuellen Fragetyp anpassen
+  window.exportMoodleLabel = () =>
+    typ === "fallbeispiel"
+      ? "Moodle-Lückentext (cloze, XML)"
+      : "Moodle-Zuordnung (matching, XML)";
+  if (typeof window.updateMoodleButtonLabel === "function")
+    window.updateMoodleButtonLabel();
 }
 
 // ============================================================================
