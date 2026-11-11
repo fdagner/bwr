@@ -2080,6 +2080,14 @@ select:focus {
     border: none;
   }
 
+  /* Bilanz-Tabellen im Druck zentrieren, damit die vertikale
+     Trennlinie (Aktiva/Passiva) in der Seitenmitte bleibt */
+  #Container table {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 100% !important;
+  }
+
       /* Aufgabe und Lösung sauber trennen */
   .jodit-container, .jodit-workplace, .jodit-wysiwyg {
     display: block !important;
