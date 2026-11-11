@@ -192,20 +192,13 @@
           </svg>
           Neue Aufgabe
         </button>
-        <button
-          type="button"
-          class="btn-zufall"
-          data-on-click='[{"fn":"exportiereMoodleLeitbild","args":[]}]'
-          style="margin-left: 8px;"
-        >
-          Moodle-Freitext (XML)
-        </button>
       </div>
       <div
         id="Container"
         style="min-width: 780px; flex: 1"
         contenteditable="true"
       ></div>
+      <div class="export-buttons" data-exports="moodle"></div>
 
       <!-- ══════════════════════════════════════════════════════════════════════
        KI-ASSISTENT PROMPT
@@ -289,7 +282,8 @@
       <!-- Ende KI-Assistent -->
     </main>
 
-    <script src="js/lb7-2-leitbild.js?v=2"></script>
+    <script src="js/export-buttons.js"></script>
+<script src="js/lb7-2-leitbild.js?v=2"></script>
     <div w3-include-html="footer.html"></div>
   </body>
 </html>

@@ -1002,7 +1002,7 @@ function mlBaueXml(aufgaben) {
   return xml + "</quiz>\n";
 }
 
-function exportiereMoodleLeitbild() {
+function exportiereMoodle() {
   if (
     typeof letzteGenerierteAufgaben === "undefined" ||
     !letzteGenerierteAufgaben.length
