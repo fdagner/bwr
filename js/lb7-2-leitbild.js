@@ -710,7 +710,7 @@ function renderLeitbildBlock(lb, nr, gesamt) {
 
   // Lösungstabelle
   const loesungTitel = gesamt > 1 ? `Lösung ${nr}` : "Lösung";
-  html += `<h2 style="margin-top:2em;">${loesungTitel}</h2>`;
+  html += `<h2 class="loesung" style="margin-top:2em;">${loesungTitel}</h2>`;
   html += `<table style="border-collapse:collapse; font-size:0.9rem; width:100%; max-width:680px;">`;
   html += `<thead><tr style="background:#eee;">
     <th style="border:1px solid #ccc; padding:6px 10px; text-align:left; width:33%;">Ökonomische Ziele</th>
