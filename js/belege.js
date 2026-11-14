@@ -366,12 +366,16 @@ const BELEG_FIELD_MAPPING = {
       const wrapper = svg?.parentElement;
       if (cb?.checked) {
         if (wrapper) wrapper.style.display = "flex";
-        loadLogoToSVG(data.unternehmen.logo, "emailSVG", "logo-placeholderEmail");
+        loadLogoToSVG(
+          data.unternehmen.logo,
+          "emailSVG",
+          "logo-placeholderEmail",
+        );
       } else {
         if (wrapper) wrapper.style.display = "none";
-        svg?.querySelectorAll("#uploaded-image, #uploaded-logo").forEach((el) =>
-          el.remove(),
-        );
+        svg
+          ?.querySelectorAll("#uploaded-image, #uploaded-logo")
+          .forEach((el) => el.remove());
         const ph = document.getElementById("logo-placeholderEmail");
         if (ph) ph.setAttribute("opacity", "0");
       }
@@ -1198,7 +1202,8 @@ function exportPNG(
     // mit und der Export ist rechts zu breit.
     const zielBreite =
       exportWidth ||
-      (container.firstElementChild && container.firstElementChild.offsetWidth) ||
+      (container.firstElementChild &&
+        container.firstElementChild.offsetWidth) ||
       container.scrollWidth;
     const prev = {
       width: container.style.width,
@@ -1210,13 +1215,15 @@ function exportPNG(
     container.style.padding = "0";
     container.style.outline = "none";
     container.style.margin = "0";
-    html2canvas(container, { scale, backgroundColor: "#ffffff" }).then((canvas) => {
-      container.style.width = prev.width;
-      container.style.padding = prev.padding;
-      container.style.outline = prev.outline;
-      container.style.margin = prev.margin;
-      download(canvas);
-    });
+    html2canvas(container, { scale, backgroundColor: "#ffffff" }).then(
+      (canvas) => {
+        container.style.width = prev.width;
+        container.style.padding = prev.padding;
+        container.style.outline = prev.outline;
+        container.style.margin = prev.margin;
+        download(canvas);
+      },
+    );
     return;
   }
 
@@ -1893,9 +1900,9 @@ function loadEmailData() {
 function emailLogoEntfernen() {
   const svg = document.getElementById("emailSVG");
   if (!svg) return;
-  svg.querySelectorAll("#uploaded-image, #uploaded-logo").forEach((el) =>
-    el.remove(),
-  );
+  svg
+    .querySelectorAll("#uploaded-image, #uploaded-logo")
+    .forEach((el) => el.remove());
   const ph = document.getElementById("logo-placeholderEmail");
   if (ph) ph.setAttribute("opacity", "0");
   // Platzhalter-Wrapper ausblenden, damit Absender/Mail nach links rücken
@@ -1908,17 +1915,15 @@ function emailLogoUmschalten() {
   const svg = document.getElementById("emailSVG");
   const wrapper = svg?.parentElement;
   const absender = document.getElementById("datenEmail")?.value;
-  const data = (yamlData || []).find(
-    (c) => c.unternehmen?.name === absender,
-  );
+  const data = (yamlData || []).find((c) => c.unternehmen?.name === absender);
   if (cb?.checked && data) {
     if (wrapper) wrapper.style.display = "flex";
     loadLogoToSVG(data.unternehmen.logo, "emailSVG", "logo-placeholderEmail");
   } else {
     if (wrapper) wrapper.style.display = "none";
-    svg?.querySelectorAll("#uploaded-image, #uploaded-logo").forEach((el) =>
-      el.remove(),
-    );
+    svg
+      ?.querySelectorAll("#uploaded-image, #uploaded-logo")
+      .forEach((el) => el.remove());
     const ph = document.getElementById("logo-placeholderEmail");
     if (ph) ph.setAttribute("opacity", "0");
   }
@@ -2791,8 +2796,8 @@ const INSOLVENZ_VERWALTER_BRANCHE = "Insolvenzverwaltung";
 function insolvenzVerwalterKandidaten() {
   return (yamlData || []).filter(
     (c) =>
-      (c.unternehmen?.branche || "").trim() ===
-        INSOLVENZ_VERWALTER_BRANCHE && c.unternehmen?.name,
+      (c.unternehmen?.branche || "").trim() === INSOLVENZ_VERWALTER_BRANCHE &&
+      c.unternehmen?.name,
   );
 }
 
@@ -2859,7 +2864,8 @@ function insolvenzOptionenBefuellen() {
       sel.value = "";
       return;
     }
-    sel.value = liste[Math.floor(Math.random() * liste.length)].unternehmen.name;
+    sel.value =
+      liste[Math.floor(Math.random() * liste.length)].unternehmen.name;
   };
   zufallsAuswahl(schuldnerSel, schuldner);
   zufallsAuswahl(verwalterSel, verwalter);
@@ -2881,8 +2887,7 @@ function insolvenzOptionenBefuellen() {
         ? bA.localeCompare(bB)
         : (a.unternehmen?.name || "").localeCompare(b.unternehmen?.name || "");
     });
-    if (modellSel.options.length !== modell.length + 1)
-      baue(modellSel, modell);
+    if (modellSel.options.length !== modell.length + 1) baue(modellSel, modell);
     // Auswählen: gespeichertes myCompany, sonst erster Eintrag
     if (
       !modellSel.value ||
@@ -2920,15 +2925,18 @@ function insolvenzDatumPlusTage(text, tage) {
 // Deutsche Betragsnotation („14.875,50“, „14875“, „2 380“) in eine Zahl
 // umwandeln – null, wenn nichts Sinnvolles im Feld steht.
 function insolvenzParseBetrag(text) {
-  const t = String(text || "").replace(/€/g, "").replace(/\s+/g, "");
+  const t = String(text || "")
+    .replace(/€/g, "")
+    .replace(/\s+/g, "");
   if (!t) return null;
   const n = Number(t.replace(/\./g, "").replace(",", "."));
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
-// Füllt die SVG-Elemente der Insolvenz-Belege (Eröffnung + „Zweifelhafte
-// Forderung"). Vorlagen-spezifische IDs existieren nur in der jeweiligen
-// SVG; fehlende Elemente werden von svgText ignoriert.
+// Füllt die SVG-Elemente der Insolvenz-Belege (Eröffnung, „Zweifelhafte
+// Forderung“ und „Abweisung mit Liquidation“). Vorlagen-spezifische IDs
+// existieren nur in der jeweiligen SVG; fehlende Elemente werden von
+// svgText ignoriert.
 function insolvenzDatenAnwenden() {
   const schuldnerSel = document.getElementById("datenInsolvenzSchuldner");
   const verwalterSel = document.getElementById("datenInsolvenzVerwalter");
@@ -2963,11 +2971,14 @@ function insolvenzDatenAnwenden() {
 
   if (schuldner) {
     const u = schuldner.unternehmen;
-    setzeDefault("insolvenzOeffnungDateInput", (() => {
-      const d = new Date();
-      const p = (n) => String(n).padStart(2, "0");
-      return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
-    })());
+    setzeDefault(
+      "insolvenzOeffnungDateInput",
+      (() => {
+        const d = new Date();
+        const p = (n) => String(n).padStart(2, "0");
+        return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
+      })(),
+    );
   }
   const datumText = (
     document.getElementById("insolvenzOeffnungDateInput")?.value || ""
@@ -2990,8 +3001,14 @@ function insolvenzDatenAnwenden() {
   if (schuldner) {
     const u = schuldner.unternehmen;
     const firma = `${u.name}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
-    svgText("insolvenzSchuldnerZeile1", `${firma}, ${u.adresse?.strasse || ""},`);
-    svgText("insolvenzSchuldnerZeile2", `${u.adresse?.plz || ""} ${u.adresse?.ort || ""},`);
+    svgText(
+      "insolvenzSchuldnerZeile1",
+      `${firma}, ${u.adresse?.strasse || ""},`,
+    );
+    svgText(
+      "insolvenzSchuldnerZeile2",
+      `${u.adresse?.plz || ""} ${u.adresse?.ort || ""},`,
+    );
     svgText("insolvenzSchuldnerInhaber", u.inhaber ? ` ${u.inhaber}` : "");
   }
   svgText("insolvenzRegistergericht", gericht);
@@ -3005,38 +3022,53 @@ function insolvenzDatenAnwenden() {
     svgText("insolvenzVerwalterName", v.name || "");
     svgText(
       "insolvenzVerwalterAdresse",
-      `${v.adresse?.strasse || ""}, ${v.adresse?.plz || ""} ${v.adresse?.ort || ""}`.replace(/^,\s*/, ""),
+      `${v.adresse?.strasse || ""}, ${v.adresse?.plz || ""} ${v.adresse?.ort || ""}`.replace(
+        /^,\s*/,
+        "",
+      ),
     );
     svgText("insolvenzVerwalterTelefon", v.kontakt?.telefon || "");
     svgText("insolvenzVerwalterTelefax", v.kontakt?.telefax || "");
     svgText("insolvenzVerwalterEmail", v.kontakt?.email || "");
   }
 
-  // ===== Vorlage „Zweifelhafte Forderung“ (templates/insolvenz2.svg) =====
-  // Sektion nur anzeigen, wenn diese Verfahrensart gewählt ist; die IDs
-  // existieren nur in dieser Vorlage (svgText ignoriert fehlende Elemente).
-  const vorlage2Aktiv = (document
-    .getElementById("svgDropdownInsolvenz")
-    ?.value || "").endsWith("insolvenz2.svg");
-  const forderungSektion = document.getElementById(
-    "insolvenzForderungSektion",
-  );
+  // ===== Schreiben-Vorlagen (templates/insolvenz2.svg und
+  // templates/insolvenz3.svg) =====
+  // Sektion nur anzeigen, wenn eine dieser Verfahrensarten gewählt ist; die
+  // IDs existieren nur in den jeweiligen Vorlagen (svgText ignoriert
+  // fehlende Elemente).
+  const gewaehlteVorlage =
+    document.getElementById("svgDropdownInsolvenz")?.value || "";
+  const vorlage2Aktiv = gewaehlteVorlage.endsWith("insolvenz2.svg");
+  const vorlage3Aktiv = gewaehlteVorlage.endsWith("insolvenz3.svg");
+  const vorlageSchreibenAktiv = vorlage2Aktiv || vorlage3Aktiv;
+  const forderungSektion = document.getElementById("insolvenzForderungSektion");
   if (forderungSektion) {
-    forderungSektion.style.display = vorlage2Aktiv ? "" : "none";
+    forderungSektion.style.display = vorlageSchreibenAktiv ? "" : "none";
   }
-  // Eröffnungs-Optionen ausblenden, wenn Schlussverteilung gewählt ist –
-  // der Insolvenzverwalter bleibt in beiden Verfahrensarten sichtbar.
+  // Eröffnungs-Optionen ausblenden, wenn eine Schreiben-Vorlage gewählt ist –
+  // der Insolvenzverwalter bleibt in allen Verfahrensarten sichtbar.
   const setzeSichtbar = (id, sichtbar) => {
     const el = document.getElementById(id);
     if (el) el.style.display = sichtbar ? "" : "none";
   };
-  setzeSichtbar("insolvenzEroeffnungDetails", !vorlage2Aktiv);
-  setzeSichtbar("insolvenzEroeffnungHinweis", !vorlage2Aktiv);
+  setzeSichtbar("insolvenzEroeffnungDetails", !vorlageSchreibenAktiv);
+  setzeSichtbar("insolvenzEroeffnungHinweis", !vorlageSchreibenAktiv);
   const titel = document.getElementById("insolvenzEroeffnungTitel");
-  if (titel) titel.textContent = vorlage2Aktiv ? "Insolvenzverwalter" : "Eröffnungsbeschluss";
-  setzeSichtbar("insolvenzVerwalterLabel", !vorlage2Aktiv);
+  if (titel)
+    titel.textContent = vorlageSchreibenAktiv
+      ? "Insolvenzverwalter"
+      : "Eröffnungsbeschluss";
+  setzeSichtbar("insolvenzVerwalterLabel", !vorlageSchreibenAktiv);
+  // Insolvenzquote nur bei der Vorlage „Zweifelhafte Forderung“ relevant
+  setzeSichtbar("insolvenzQuoteGruppe", !vorlage3Aktiv);
+  const forderungTitel = document.getElementById("insolvenzForderungTitel");
+  if (forderungTitel)
+    forderungTitel.textContent = vorlage3Aktiv
+      ? "Forderung"
+      : "Zweifelhafte Forderung";
 
-  if (schuldner) {
+  if (schuldner && vorlage2Aktiv) {
     const u = schuldner.unternehmen;
     const firma = `${u.name}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
     const gerichtOrt = u.adresse?.ort || "###";
@@ -3049,11 +3081,14 @@ function insolvenzDatenAnwenden() {
     } ${zufallsInt(100, 499)}/${zufallsInt(1, 29)}`;
     // Betrag im Feld (z. B. „14.875,50“ oder „14875“) hat Vorrang,
     // leer = zufällig. Maximale Höhe 999.999,00 €.
-    const betragInput = document.getElementById("insolvenzForderungBetragInput");
-    const formatBetrag = (n) => n.toLocaleString("de-DE", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    const betragInput = document.getElementById(
+      "insolvenzForderungBetragInput",
+    );
+    const formatBetrag = (n) =>
+      n.toLocaleString("de-DE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     const betragEingabe = insolvenzParseBetrag(betragInput?.value);
     const betrag = betragEingabe
       ? formatBetrag(Math.min(betragEingabe, 999999))
@@ -3074,14 +3109,37 @@ function insolvenzDatenAnwenden() {
       `${u.adresse?.strasse || ""}, ${u.adresse?.plz || ""} ${gerichtOrt}, findet mit`,
     );
     svgText("insolvenzBoxGericht", gerichtOrt);
-    svgText(
-      "insolvenzForderungZeile2",
-      `${firma} beträgt ${betrag} €. Eine`,
-    );
+    svgText("insolvenzForderungZeile2", `${firma} beträgt ${betrag} €. Eine`);
     svgText(
       "insolvenzForderungZeile3",
       `Insolvenzquote von ${quote} % wurde ermittelt. Die`,
     );
+  }
+
+  // ===== Vorlage „Abweisung mit Liquidation“ (templates/insolvenz3.svg) =====
+  if (schuldner && vorlage3Aktiv) {
+    const u = schuldner.unternehmen;
+    const firma = `${u.name}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
+    // Betrag im Feld (z. B. „14.875,50“ oder „14875“) hat Vorrang,
+    // leer = zufällig. Maximale Höhe 999.999,00 €.
+    const betragInput = document.getElementById(
+      "insolvenzForderungBetragInput",
+    );
+    const formatBetrag = (n) =>
+      n.toLocaleString("de-DE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    const zufallsInt = (min, max) =>
+      min + Math.floor(Math.random() * (max - min + 1));
+    const betragEingabe = insolvenzParseBetrag(betragInput?.value);
+    const betrag = betragEingabe
+      ? formatBetrag(Math.min(betragEingabe, 999999))
+      : `${zufallsInt(5000, 35000).toLocaleString("de-DE")},${String(zufallsInt(0, 99)).padStart(2, "0")}`;
+
+    svgText("insolvenzAbweisungZeile2", `der Firma ${firma},`);
+    svgText("insolvenzAbweisungZeile3", "wurde abgewiesen.");
+    svgText("insolvenzAbweisungForderung", `${firma} beträgt ${betrag} €.`);
   }
   if (verwalter) {
     // Namen ggf. um das Präfix „Rechtsanwalt“ kürzen, da die Vorlage den
@@ -4185,8 +4243,7 @@ const BELEG_APPLY_CONFIG = {
         // Kennzeichen A (regulär) / B (vermindert) / C (steuerfrei) –
         // nur wenn ein Betrag eingetragen ist
         const code =
-          artikelObj.mitBetrag &&
-          typeof window.UST_KENNZEICHEN === "function"
+          artikelObj.mitBetrag && typeof window.UST_KENNZEICHEN === "function"
             ? window.UST_KENNZEICHEN(artikelObj.ust)
             : "";
         document.querySelectorAll(".kassenbonUstCode" + n).forEach((el) => {

@@ -3697,6 +3697,9 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                     <option value="insolvenz2.svg">
                       Schlussverteilung mit Insolvenzquote
                     </option>
+                    <option value="insolvenz3.svg">
+                      Abweisung mit Liquidation
+                    </option>
                   </select>
                 </div>
               </fieldset>
@@ -3801,14 +3804,14 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
             </p>
           </section>
 
-          <!-- Felder für die Vorlage „Zweifelhafte Forderung“ (nur bei
-               dieser Verfahrensart sichtbar) -->
+          <!-- Felder für die Schreiben-Vorlagen „Zweifelhafte Forderung“ und
+               „Abweisung mit Liquidation“ (nur bei diesen sichtbar) -->
           <section
             class="form-section"
             id="insolvenzForderungSektion"
             style="display: none"
           >
-            <h3>Zweifelhafte Forderung</h3>
+            <h3 id="insolvenzForderungTitel">Zweifelhafte Forderung</h3>
 
             <div class="grid3">
               <fieldset class="preisanpassung-gruppe">
@@ -3825,7 +3828,7 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 </div>
               </fieldset>
 
-              <fieldset class="vorlage-blue">
+              <fieldset class="vorlage-blue" id="insolvenzQuoteGruppe">
                 <legend>Insolvenzquote</legend>
                 <div class="form-field">
                   <label for="insolvenzQuoteInput">Quote (%)</label>
@@ -3861,9 +3864,11 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
 
             <p style="margin: 2px 0">
               <small style="font-size: 0.85em; color: #6b7280">
-                Nur für die Vorlage „Zweifelhafte Forderung“. Forderungsbetrag
-                leer = zufällig erzeugt. Quote frei einstellbar; über die
-                Vorschlagsliste glatte Werte in 5er-Schritten (10–75 %).
+                Nur für die Schreiben-Vorlagen „Zweifelhafte Forderung“ und
+                „Abweisung mit Liquidation“. Forderungsbetrag leer = zufällig
+                erzeugt. Die Quote ist nur bei „Zweifelhafte Forderung“
+                sichtbar; über die Vorschlagsliste glatte Werte in
+                5er-Schritten (10–75 %).
               </small>
             </p>
           </section>

@@ -1,3 +1,7 @@
+## 2026-11-14 | November 2026
+
+- [neu] **Belege Insolvenz** - [Insolvenz](belege.html?beleg=insolvenz)
+
 ## 2026-11-08 | November 2026
 
 - [neu] **Belege-Vorlagen** - Neue Vorlagen, die digitale Software nachbilden, zum Beispiel in [Rechnung](belege.html?beleg=rechnung), [Anlagenkarte](belege.html?beleg=anlagenkarte), [Kassenbon](belege.html?beleg=kassenbon)
