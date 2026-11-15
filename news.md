@@ -1,6 +1,6 @@
 ## 2026-11-14 | November 2026
 
-- [neu] **Export zu E-Rechnungen** - Rechnungsbelege können nun auch als offizielle E-Rechnung exportiert werden (XRechnung, XML-Format). Mit einem E-Rechnungs-Viewer können diese Daten gelesen werden, z .B. [E-Rechnung-Anzeigen](https://e-rechnung-anzeigen.de/oeffnen/), [Elster](https://www.elster.de/eportal/e-rechnung) oder [sevdesk](https://sevdesk.de/e-rechnung-viewer/)
+- [neu] **Export zu E-Rechnungen** - Rechnungsbelege können nun auch als offizielle E-Rechnung exportiert werden (XRechnung, XML-Format). Mit einem E-Rechnungs-Viewer können diese Daten gelesen werden, z. B. [E-Rechnung-Anzeigen](https://e-rechnung-anzeigen.de/oeffnen/), [Elster](https://www.elster.de/eportal/e-rechnung), [sevdesk](https://sevdesk.de/e-rechnung-viewer/) oder per Software: [Quba](https://quba-viewer.org/),
 - [neu] **Belege Insolvenz** - [Insolvenz](belege.html?beleg=insolvenz)
 
 ## 2026-11-08 | November 2026
