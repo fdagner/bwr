@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ubl:Invoice xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+  <cbc:ID>208</cbc:ID>
+  <cbc:IssueDate>2026-11-15</cbc:IssueDate>
+  <cbc:DueDate>2026-12-15</cbc:DueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+  <cbc:BuyerReference>K151</cbc:BuyerReference>
+  <cac:AccountingSupplierParty>
+      <cac:Party>
+        <cbc:EndpointID schemeID="EM">info@abc-bikes.bayern</cbc:EndpointID>
+        <cac:PartyName>
+          <cbc:Name>ABC-Bikes e. Kfr.</cbc:Name>
+        </cac:PartyName>
+        <cac:PostalAddress>
+          <cbc:StreetName>Schwabacher Weg 50</cbc:StreetName>
+          <cbc:CityName>Ingolstadt</cbc:CityName>
+          <cbc:PostalZone>85049</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode>DE</cbc:IdentificationCode>
+          </cac:Country>
+        </cac:PostalAddress>
+        <cac:PartyTaxScheme>
+          <cbc:CompanyID>DE123456789</cbc:CompanyID>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <cac:PartyTaxScheme>
+          <cbc:CompanyID>181/001/11111</cbc:CompanyID>
+          <cac:TaxScheme>
+            <cbc:ID>FC</cbc:ID>
+          </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <cac:PartyLegalEntity>
+          <cbc:RegistrationName>Erna Kistner</cbc:RegistrationName>
+        </cac:PartyLegalEntity>
+        <cac:Contact>
+          <cbc:Name>Erna Kistner</cbc:Name>
+          <cbc:Telephone>0841 0802020</cbc:Telephone>
+          <cbc:ElectronicMail>info@abc-bikes.bayern</cbc:ElectronicMail>
+        </cac:Contact>
+      </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+      <cac:Party>
+        <cbc:EndpointID schemeID="EM">info@lackart.de</cbc:EndpointID>
+        <cac:PartyName>
+          <cbc:Name>Lack Art GmbH</cbc:Name>
+        </cac:PartyName>
+        <cac:PostalAddress>
+          <cbc:StreetName>Farbenstraße 12</cbc:StreetName>
+          <cbc:CityName>Berlin</cbc:CityName>
+          <cbc:PostalZone>10115</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode>DE</cbc:IdentificationCode>
+          </cac:Country>
+        </cac:PostalAddress>
+        <cac:PartyTaxScheme>
+          <cbc:CompanyID>DE987654321</cbc:CompanyID>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <cac:PartyTaxScheme>
+          <cbc:CompanyID>21/002/22222</cbc:CompanyID>
+          <cac:TaxScheme>
+            <cbc:ID>FC</cbc:ID>
+          </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <cac:PartyLegalEntity>
+          <cbc:RegistrationName>Max Merlin</cbc:RegistrationName>
+        </cac:PartyLegalEntity>
+        <cac:Contact>
+          <cbc:Name>Max Merlin</cbc:Name>
+          <cbc:Telephone>+49 30 123456</cbc:Telephone>
+          <cbc:ElectronicMail>info@lackart.de</cbc:ElectronicMail>
+        </cac:Contact>
+      </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cbc:ActualDeliveryDate>2026-11-15</cbc:ActualDeliveryDate>
+  </cac:Delivery>
+    <cac:PaymentMeans>
+      <cbc:PaymentMeansCode>58</cbc:PaymentMeansCode>
+      <cbc:PaymentID>208</cbc:PaymentID>
+      <cac:PayeeFinancialAccount>
+        <cbc:ID>DE89370400440532013000</cbc:ID>
+        <cbc:Name>BavarianBank</cbc:Name>
+        <cac:FinancialInstitutionBranch>
+          <cbc:ID>COBADEFFXXX</cbc:ID>
+        </cac:FinancialInstitutionBranch>
+      </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:PaymentTerms>
+      <cbc:Note>SKONTO 2.00% / 10 TAGE</cbc:Note>
+    </cac:PaymentTerms>
+    <cac:AllowanceCharge>
+      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+      <cbc:AllowanceChargeReason>Rabatt</cbc:AllowanceChargeReason>
+      <cbc:Amount currencyID="EUR">40.65</cbc:Amount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>19.00</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:AllowanceCharge>
+    <cac:AllowanceCharge>
+      <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+      <cbc:AllowanceChargeReason>Versand</cbc:AllowanceChargeReason>
+      <cbc:Amount currencyID="EUR">12.50</cbc:Amount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>19.00</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:AllowanceCharge>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="EUR">149.12</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="EUR">784.85</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="EUR">149.12</cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID>S</cbc:ID>
+          <cbc:Percent>19.00</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+      <cbc:LineExtensionAmount currencyID="EUR">813.00</cbc:LineExtensionAmount>
+      <cbc:TaxExclusiveAmount currencyID="EUR">784.85</cbc:TaxExclusiveAmount>
+      <cbc:TaxInclusiveAmount currencyID="EUR">933.97</cbc:TaxInclusiveAmount>
+      <cbc:AllowanceTotalAmount currencyID="EUR">40.65</cbc:AllowanceTotalAmount>
+      <cbc:ChargeTotalAmount currencyID="EUR">12.50</cbc:ChargeTotalAmount>
+      <cbc:PayableAmount currencyID="EUR">933.97</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine>
+      <cbc:ID>1</cbc:ID>
+      <cbc:InvoicedQuantity unitCode="KGM">12</cbc:InvoicedQuantity>
+      <cbc:LineExtensionAmount currencyID="EUR">546.00</cbc:LineExtensionAmount>
+      <cac:Item>
+        <cbc:Name>Aluminiumrohre</cbc:Name>
+        <cac:ClassifiedTaxCategory>
+          <cbc:ID>S</cbc:ID>
+          <cbc:Percent>19.00</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:ClassifiedTaxCategory>
+      </cac:Item>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="EUR">45.50</cbc:PriceAmount>
+      </cac:Price>
+    </cac:InvoiceLine>
+    <cac:InvoiceLine>
+      <cbc:ID>2</cbc:ID>
+      <cbc:InvoicedQuantity unitCode="H87">3</cbc:InvoicedQuantity>
+      <cbc:LineExtensionAmount currencyID="EUR">267.00</cbc:LineExtensionAmount>
+      <cac:Item>
+        <cbc:Name>Schaltwerke</cbc:Name>
+        <cac:ClassifiedTaxCategory>
+          <cbc:ID>S</cbc:ID>
+          <cbc:Percent>19.00</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:ClassifiedTaxCategory>
+      </cac:Item>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="EUR">89.00</cbc:PriceAmount>
+      </cac:Price>
+    </cac:InvoiceLine>
+</ubl:Invoice>

@@ -201,7 +201,7 @@ const optionshtml2canvas = {
       el.style.fontSize = "14px";
     } else {
       el.innerHTML =
-        '<a href="index.html#modellunternehmen" style="color:#5a4500; text-decoration: underline; font-weight: 600; font-size: 14px;">kein Modellunternehmen - hier auswaehlen</a>';
+        '<a href="index.html#modellunternehmen" style="color:#5a4500; text-decoration: underline; font-weight: 600; font-size: 14px;">kein Modellunternehmen - hier auswählen</a>';
       el.style.background = "rgba(255, 193, 7, 0.35)";
       el.style.color = "#5a4500";
       el.style.fontSize = "14px";
