@@ -3806,10 +3806,457 @@ function exportDokument(typ, format) {
         copyToClipboard(config.id);
       }
       break;
+    case "xrechnung":
+      exportXRechnung(typ);
+      break;
     default:
       console.error("Unbekanntes Format:", format);
   }
 }
+
+// ============================================================================
+// E-RECHNUNG (XRECHNUNG-EXPORT)
+// ============================================================================
+// Erzeugt aus dem aktuell erzeugten Beleg im Rechnungs-Tab eine elektronische
+// Rechnung nach XRechnung 3.0 (UBL, EN 16931) als XML-Download. Die Datei kann
+// z. B. im ELSTER-e-Rechnungsportal (www.elster.de/eportal/e-rechnung)
+// hochgeladen und angezeigt werden.
+//   - Rechnungsvorlagen  → UBL "Invoice"  (Typ 380)
+//   - Gutschriftsvorlagen → UBL "CreditNote" (Typ 381)
+//   - Angebote → kein E-Rechnungs-Format, Hinweis per Modal
+
+// XRechnung-3.0-CIUS-Kennung (BT-24): exakt wie in den offiziellen
+// KoSIT-Testdokumenten (Testsuite 01.01a). Der KoSIT-Validator lädt damit
+// das deutsche XRechnung-3.0-Regelwerk (BR-DE-Regeln).
+const XRECHNUNG_CUSTOMIZATION_ID =
+  "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0";
+const XRECHNUNG_PROFILE_ID = "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0";
+
+// Merker, damit wiederholte Downloads dieselbe Nummer zeigen, wenn der Beleg
+// noch nicht neu erzeugt wurde (rechnungsNummer ist leer).
+let xrechnungErsatzNummer = null;
+
+// Vorlage im Rechnungs-Tab klassifizieren: "invoice" | "creditnote" | "angebot"
+function xrechnungBelegart() {
+  const vorlage = document.getElementById("svgDropdown")?.value || "";
+  if (vorlage.startsWith("gutschrift")) return "creditnote";
+  if (vorlage.startsWith("angebot")) return "angebot";
+  return "invoice";
+}
+
+// XML-Sonderzeichen maskieren (& < > " ')
+function xmlEscape(text) {
+  return String(text ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+// Betrag mit 2 Nachkommastellen, Punkt-Dezimaltrenner (UBL verlangt das)
+function xmlBetrag(n) {
+  const v = Math.round((Number(n) || 0) * 100) / 100;
+  return v.toFixed(2);
+}
+
+// Freie Text-Einheit aus dem Formular auf UN/ECE Rec 20 (unitCode) abbilden.
+// Nicht erkannte Einheiten → C62 („Einheit", generisch).
+function xrechnungUnitCode(einheit) {
+  const e = String(einheit || "").trim().toLowerCase();
+  const map = {
+    stück: "H87",
+    "stück.": "H87",
+    stk: "H87",
+    stck: "H87",
+    pcs: "H87",
+    piece: "H87",
+    kg: "KGM",
+    kgr: "KGM",
+    g: "GRM",
+    gramm: "GRM",
+    t: "TNE",
+    to: "TNE",
+    tonne: "TNE",
+    m: "MTR",
+    meter: "MTR",
+    "m²": "MTK",
+    m2: "MTK",
+    qm: "MTK",
+    "m³": "MTQ",
+    m3: "MTQ",
+    cbm: "MTQ",
+    l: "LTR",
+    liter: "LTR",
+    li: "LTR",
+    ml: "MLT",
+    km: "KMT",
+    cm: "CMT",
+    mm: "MMT",
+    h: "HUR",
+    std: "HUR",
+    stunde: "HUR",
+    stunden: "HUR",
+    tag: "DAY",
+    tage: "DAY",
+    woche: "WEE",
+    wochen: "WEE",
+    monat: "MON",
+    monate: "MON",
+    jahr: "ANN",
+    jahre: "ANN",
+  };
+  return map[e] || "C62";
+}
+
+// Unternehmen aus dem yamlData-Pool anhand des Select-Werts holen
+function xrechnungUnternehmenHolen(selectId) {
+  const name = document.getElementById(selectId)?.value;
+  const daten = (yamlData || []).find(
+    (item) => item.unternehmen?.name === name,
+  );
+  return daten?.unternehmen || null;
+}
+
+// Rechnungsnummer des aktuell erzeugten Belegs (leer = Ersatz-Nummer merken)
+function xrechnungRechnungsnummer() {
+  const el = document.getElementById("rechnungsNummer");
+  const nummer = (el?.textContent || "").trim();
+  if (nummer) {
+    xrechnungErsatzNummer = null;
+    return nummer;
+  }
+  if (!xrechnungErsatzNummer) {
+    xrechnungErsatzNummer = String(Math.floor(Math.random() * 900) + 100);
+  }
+  return xrechnungErsatzNummer;
+}
+
+// Kundennummer (BT-10 BuyerReference), aus dem gerenderten Beleg gelesen
+function xrechnungBuyerReference() {
+  const el = document.getElementById("nummerKunde");
+  const nummer = (el?.textContent || "").trim();
+  return nummer ? `K${nummer}` : "keine Angabe";
+}
+
+// Alle Werte des aktuell erzeugten Belegs sammeln; null, wenn unvollständig
+function xrechnungDatenSammeln() {
+  const lieferer = xrechnungUnternehmenHolen("datenLieferer");
+  const kunde = xrechnungUnternehmenHolen("datenKunde");
+  if (!lieferer || !kunde) return null;
+
+  const getZahl = (id) => parseFloat(document.getElementById(id)?.value) || 0;
+  const getWert = (id) => (document.getElementById(id)?.value || "").trim();
+
+  // Positionen: nur befüllte Zeilen (Menge + Einzelpreis vorhanden)
+  const zeilen = [];
+  const positionen = [
+    {
+      id: 1,
+      name: getWert("artikelInput"),
+      menge: getZahl("mengeInput"),
+      einheit: getWert("einheitInput"),
+      einzelpreis: getZahl("einzelpreisInput"),
+    },
+    {
+      id: 2,
+      name: getWert("artikelInput2"),
+      menge: getZahl("mengeInput2"),
+      einheit: getWert("einheitInput2"),
+      einzelpreis: getZahl("einzelpreisInput2"),
+    },
+  ];
+  for (const p of positionen) {
+    if (p.menge > 0 && p.einzelpreis > 0) {
+      zeilen.push({
+        id: p.id,
+        name: p.name || `Position ${p.id}`,
+        menge: p.menge,
+        einheit: p.einheit,
+        einzelpreis: p.einzelpreis,
+        summe: p.menge * p.einzelpreis,
+      });
+    }
+  }
+  if (zeilen.length === 0) return null;
+
+  const rabattProzent = getZahl("rabattInput");
+  const bezugskosten = getZahl("bezugskostenInput");
+  const bezugskostenArt = getWert("bezugskostenArtInput") || "Bezugskosten";
+  const ustProzent = getZahl("umsatzsteuerInput");
+
+  const zwischensumme = zeilen.reduce((sum, z) => sum + z.summe, 0);
+  const rabattsumme = (zwischensumme * rabattProzent) / 100;
+  const nettowert = zwischensumme - rabattsumme + bezugskosten;
+  const ustSumme = ustProzent > 0 ? (nettowert * ustProzent) / 100 : 0;
+  const brutto = nettowert + ustSumme;
+
+  // Belegdatum: Tag/Monat-Selects + Jahr-Feld (leer = aktuelles Jahr)
+  const tag = getWert("tag") || "01";
+  const monat = getWert("monat") || "01";
+  let jahr = getWert("jahr");
+  if (!/^\d{4}$/.test(jahr)) jahr = String(new Date().getFullYear());
+  const datum = `${jahr}-${monat}-${tag}`;
+
+  const zahlungszielRaw = getWert("zahlungszielInput");
+  const zahlungszielTage = parseInt(zahlungszielRaw, 10) || 0;
+  const skontoProzent = getZahl("skontoInput");
+  const skontofristTage = getZahl("skontofristInput");
+
+  // Fälligkeitsdatum (BT-9): Belegdatum + Zahlungsziel-Tage; ohne Ziel = ohne DueDate
+  let faelligkeit = null;
+  if (zahlungszielRaw !== "") {
+    const d = new Date(`${monat}/${tag}/${jahr}`);
+    d.setDate(d.getDate() + zahlungszielTage);
+    const p = (n) => String(n).padStart(2, "0");
+    faelligkeit = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  }
+
+  return {
+    lieferer,
+    kunde,
+    nummer: xrechnungRechnungsnummer(),
+    datum,
+    faelligkeit,
+    zeilen,
+    zwischensumme,
+    nettowert,
+    rabattProzent,
+    rabattsumme,
+    bezugskosten,
+    bezugskostenArt,
+    ustProzent,
+    ustSumme,
+    brutto,
+    zahlungszielTage,
+    skontoProzent,
+    skontofristTage,
+  };
+}
+
+// Adress-/Kontaktdaten einer Partei (Lieferer oder Empfänger) als UBL-Party
+function xrechnungParteiXML(u) {
+  const adresse = u.adresse || {};
+  const kontakt = u.kontakt || {};
+  const ust = u.ust_id || "";
+  const steuernummer = u.steuernummer || "";
+  const name = `${u.name || ""}${u.rechtsform ? " " + u.rechtsform : ""}`.trim();
+  const einzug = "      ";
+
+  return `      <cac:Party>
+        <cbc:EndpointID schemeID="EM">${xmlEscape(kontakt.email || "")}</cbc:EndpointID>
+        <cac:PartyName>
+          <cbc:Name>${xmlEscape(name)}</cbc:Name>
+        </cac:PartyName>
+        <cac:PostalAddress>
+          <cbc:StreetName>${xmlEscape(adresse.strasse || "")}</cbc:StreetName>
+          <cbc:CityName>${xmlEscape(adresse.ort || "")}</cbc:CityName>
+          <cbc:PostalZone>${xmlEscape(adresse.plz || "")}</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode>DE</cbc:IdentificationCode>
+          </cac:Country>
+        </cac:PostalAddress>
+${ust ? `        <cac:PartyTaxScheme>\n          <cbc:CompanyID>${xmlEscape(ust)}</cbc:CompanyID>\n          <cac:TaxScheme>\n            <cbc:ID>VAT</cbc:ID>\n          </cac:TaxScheme>\n        </cac:PartyTaxScheme>\n` : ""}${steuernummer ? `        <cac:PartyTaxScheme>\n          <cbc:CompanyID>${xmlEscape(steuernummer)}</cbc:CompanyID>\n          <cac:TaxScheme>\n            <cbc:ID>FC</cbc:ID>\n          </cac:TaxScheme>\n        </cac:PartyTaxScheme>\n` : ""}        <cac:PartyLegalEntity>
+          <cbc:RegistrationName>${xmlEscape(u.inhaber || name)}</cbc:RegistrationName>
+        </cac:PartyLegalEntity>
+        <cac:Contact>
+          <cbc:Name>${xmlEscape(u.inhaber || "")}</cbc:Name>
+          <cbc:Telephone>${xmlEscape(kontakt.telefon || "")}</cbc:Telephone>
+          <cbc:ElectronicMail>${xmlEscape(kontakt.email || "")}</cbc:ElectronicMail>
+        </cac:Contact>
+      </cac:Party>`;
+}
+
+// Kopf (ID, Datum, Typcode, Währung, BuyerReference) der beiden Dokumentarten
+function xrechnungKopfXML(daten, typcode, tagTyp) {
+  return `  <cbc:CustomizationID>${XRECHNUNG_CUSTOMIZATION_ID}</cbc:CustomizationID>
+  <cbc:ProfileID>${XRECHNUNG_PROFILE_ID}</cbc:ProfileID>
+  <cbc:ID>${xmlEscape(daten.nummer)}</cbc:ID>
+  <cbc:IssueDate>${daten.datum}</cbc:IssueDate>
+${daten.faelligkeit ? `  <cbc:DueDate>${daten.faelligkeit}</cbc:DueDate>\n` : ""}  <cbc:${tagTyp}>${typcode}</cbc:${tagTyp}>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+  <cbc:BuyerReference>${xmlEscape(xrechnungBuyerReference())}</cbc:BuyerReference>`;
+}
+
+// Positionen als UBL-Zeilen (InvoiceLine bzw. CreditNoteLine)
+function xrechnungZeilenXML(daten, zeilenTag, mengenTag, ustProzent) {
+  const taxId = ustProzent > 0 ? "S" : "Z";
+  const percent = xmlBetrag(ustProzent);
+  return daten.zeilen
+    .map(
+      (z) => `    <cac:${zeilenTag}>
+      <cbc:ID>${z.id}</cbc:ID>
+      <cbc:${mengenTag} unitCode="${xrechnungUnitCode(z.einheit)}">${z.menge}</cbc:${mengenTag}>
+      <cbc:LineExtensionAmount currencyID="EUR">${xmlBetrag(z.summe)}</cbc:LineExtensionAmount>
+      <cac:Item>
+        <cbc:Name>${xmlEscape(z.name)}</cbc:Name>
+        <cac:ClassifiedTaxCategory>
+          <cbc:ID>${taxId}</cbc:ID>
+          <cbc:Percent>${percent}</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:ClassifiedTaxCategory>
+      </cac:Item>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="EUR">${xmlBetrag(z.einzelpreis)}</cbc:PriceAmount>
+      </cac:Price>
+    </cac:${zeilenTag}>`,
+    )
+    .join("\n");
+}
+
+// Rabatt/Bezugskosten als AllowanceCharge (nur wenn vorhanden)
+function xrechnungAllowanceChargeXML(daten, ustProzent) {
+  const taxId = ustProzent > 0 ? "S" : "Z";
+  const percent = xmlBetrag(ustProzent);
+  const teile = [];
+  if (daten.rabattsumme > 0) {
+    teile.push(`    <cac:AllowanceCharge>
+      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+      <cbc:AllowanceChargeReason>Rabatt</cbc:AllowanceChargeReason>
+      <cbc:Amount currencyID="EUR">${xmlBetrag(daten.rabattsumme)}</cbc:Amount>
+      <cac:TaxCategory>
+        <cbc:ID>${taxId}</cbc:ID>
+        <cbc:Percent>${percent}</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:AllowanceCharge>`);
+  }
+  if (daten.bezugskosten > 0) {
+    teile.push(`    <cac:AllowanceCharge>
+      <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+      <cbc:AllowanceChargeReason>${xmlEscape(daten.bezugskostenArt)}</cbc:AllowanceChargeReason>
+      <cbc:Amount currencyID="EUR">${xmlBetrag(daten.bezugskosten)}</cbc:Amount>
+      <cac:TaxCategory>
+        <cbc:ID>${taxId}</cbc:ID>
+        <cbc:Percent>${percent}</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:AllowanceCharge>`);
+  }
+  return teile.length ? teile.join("\n") + "\n" : "";
+}
+
+// Zahlungsbedingungen: PaymentMeans (SEPA-Überweisung) + Skonto-Hinweis
+function xrechnungZahlungXML(daten) {
+  const u = daten.lieferer;
+  const bank = u.bank || "";
+  const skontoText =
+    daten.skontoProzent > 0
+      ? `    <cac:PaymentTerms>
+      <cbc:Note>SKONTO ${xmlBetrag(daten.skontoProzent)}% / ${daten.skontofristTage} TAGE</cbc:Note>
+    </cac:PaymentTerms>
+`
+      : "";
+  return `    <cac:PaymentMeans>
+      <cbc:PaymentMeansCode>58</cbc:PaymentMeansCode>
+      <cbc:PaymentID>${xmlEscape(daten.nummer)}</cbc:PaymentID>
+      <cac:PayeeFinancialAccount>
+        <cbc:ID>${xmlEscape(u.iban || "")}</cbc:ID>
+        <cbc:Name>${xmlEscape(bank)}</cbc:Name>
+        <cac:FinancialInstitutionBranch>
+          <cbc:ID>${xmlEscape(u.bic || "")}</cbc:ID>
+        </cac:FinancialInstitutionBranch>
+      </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+${skontoText}`;
+}
+
+// Steueraufschlüsselung + Gesamtsummen ( BT-105/BT-110/BT-112/BT-115 )
+function xrechnungSummenXML(daten, ustProzent) {
+  const taxId = ustProzent > 0 ? "S" : "Z";
+  const percent = xmlBetrag(ustProzent);
+  return `    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="EUR">${xmlBetrag(daten.ustSumme)}</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="EUR">${xmlBetrag(daten.nettowert)}</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="EUR">${xmlBetrag(daten.ustSumme)}</cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID>${taxId}</cbc:ID>
+          <cbc:Percent>${percent}</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+      <cbc:LineExtensionAmount currencyID="EUR">${xmlBetrag(daten.zwischensumme)}</cbc:LineExtensionAmount>
+      <cbc:TaxExclusiveAmount currencyID="EUR">${xmlBetrag(daten.nettowert)}</cbc:TaxExclusiveAmount>
+      <cbc:TaxInclusiveAmount currencyID="EUR">${xmlBetrag(daten.brutto)}</cbc:TaxInclusiveAmount>
+${daten.rabattsumme > 0 ? `      <cbc:AllowanceTotalAmount currencyID="EUR">${xmlBetrag(daten.rabattsumme)}</cbc:AllowanceTotalAmount>\n` : ""}${daten.bezugskosten > 0 ? `      <cbc:ChargeTotalAmount currencyID="EUR">${xmlBetrag(daten.bezugskosten)}</cbc:ChargeTotalAmount>\n` : ""}      <cbc:PayableAmount currencyID="EUR">${xmlBetrag(daten.brutto)}</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>`;
+}
+
+// Komplettes UBL-Dokument bauen ("invoice" | "creditnote")
+// Wurzelelement mit ubl:-Präfix wie in den offiziellen KoSIT-Beispielen –
+// manche Empfänger (z. B. sevdesk-Viewer) erkennen anhand des Wurzel-Tags,
+// ob eine E-Rechnung vorliegt.
+function bauXRechnungXML(daten, belegart) {
+  const istGutschrift = belegart === "creditnote";
+  const wurzel = istGutschrift ? "CreditNote" : "Invoice";
+  const namespace = `urn:oasis:names:specification:ubl:schema:xsd:${wurzel}-2`;
+  const zeilenTag = istGutschrift ? "CreditNoteLine" : "InvoiceLine";
+  const mengenTag = istGutschrift ? "CreditedQuantity" : "InvoicedQuantity";
+  const typcode = istGutschrift ? "381" : "380";
+  const typTag = istGutschrift ? "CreditNoteTypeCode" : "InvoiceTypeCode";
+  const ustProzent = daten.ustProzent;
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<ubl:${wurzel} xmlns:ubl="${namespace}"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+${xrechnungKopfXML(daten, typcode, typTag)}
+  <cac:AccountingSupplierParty>
+${xrechnungParteiXML(daten.lieferer)}
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+${xrechnungParteiXML(daten.kunde)}
+  </cac:AccountingCustomerParty>
+${istGutschrift ? "" : `  <cac:Delivery>
+    <cbc:ActualDeliveryDate>${daten.datum}</cbc:ActualDeliveryDate>
+  </cac:Delivery>\n`}${xrechnungZahlungXML(daten)}${xrechnungAllowanceChargeXML(daten, ustProzent)}${xrechnungSummenXML(daten, ustProzent)}
+${xrechnungZeilenXML(daten, zeilenTag, mengenTag, ustProzent)}
+</ubl:${wurzel}>`;
+}
+
+// Export: Belegart prüfen, XML bauen und herunterladen
+function exportXRechnung(typ) {
+  const belegart = xrechnungBelegart();
+  if (belegart === "angebot") {
+    zeigeModal(
+      "Angebote können nicht als E-Rechnung exportiert werden. E-Rechnungen gibt es nur für Rechnungen und Gutschriften.",
+    );
+    return;
+  }
+
+  const daten = xrechnungDatenSammeln();
+  if (!daten) {
+    zeigeModal(
+      "Bitte zuerst Lieferer und Empfänger auswählen und mindestens eine Position mit Menge und Einzelpreis angeben.",
+    );
+    return;
+  }
+
+  const xml = bauXRechnungXML(daten, belegart);
+  const blob = new Blob([xml], {
+    type: "application/xml;charset=utf-8",
+  });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `${exportDatumString()}_${sanitizeFilenamePart(
+    buildExportTitel(typ),
+  )}_xrechnung.xml`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+window.exportXRechnung = exportXRechnung;
 
 function emailHerunterladen() {
   const emailHTML = document

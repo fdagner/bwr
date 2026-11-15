@@ -731,6 +731,16 @@
           <button
             class="card-btn"
             type="button"
+            data-on-click='[{"fn":"exportDokument","args":["rechnung","xrechnung"]}]'
+            data-tooltip="Als E-Rechnung (XRechnung/XML) herunterladen"
+            aria-label="Als E-Rechnung (XRechnung/XML) herunterladen"
+          >
+            XML (E-Rechnung)
+          </button>
+
+          <button
+            class="card-btn"
+            type="button"
             data-on-click='[{"fn":"kopiereGrafikInZwischenablage","args":["rechnung"]}]'
             data-tooltip="Beleg-Grafik in die Zwischenablage kopieren"
             aria-label="Beleg-Grafik in die Zwischenablage kopieren"
@@ -3785,13 +3795,15 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
               </div>
             </div>
 
-              <div class="form-field">
-                <label id="insolvenzVerwalterLabel" for="datenInsolvenzVerwalter">Insolvenzverwalter</label>
-                <select
-                  id="datenInsolvenzVerwalter"
-                  data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
-                ></select>
-              </div>
+            <div class="form-field">
+              <label id="insolvenzVerwalterLabel" for="datenInsolvenzVerwalter"
+                >Insolvenzverwalter</label
+              >
+              <select
+                id="datenInsolvenzVerwalter"
+                data-on-change='[{"fn":"insolvenzApplySVGholen","args":[]}]'
+              ></select>
+            </div>
 
             <p id="insolvenzEroeffnungHinweis" style="margin: 2px 0">
               <small style="font-size: 0.85em; color: #6b7280">
@@ -3867,8 +3879,8 @@ Im aktuellen wirtschaftlichen Umfeld erfreuen sich Aktien als Geldanlage wachsen
                 Nur für die Schreiben-Vorlagen „Zweifelhafte Forderung“ und
                 „Abweisung mit Liquidation“. Forderungsbetrag leer = zufällig
                 erzeugt. Die Quote ist nur bei „Zweifelhafte Forderung“
-                sichtbar; über die Vorschlagsliste glatte Werte in
-                5er-Schritten (10–75 %).
+                sichtbar; über die Vorschlagsliste glatte Werte in 5er-Schritten
+                (10–75 %).
               </small>
             </p>
           </section>
